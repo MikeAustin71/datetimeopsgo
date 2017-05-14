@@ -34,61 +34,84 @@ const (
 	// tzUTC - UTC Time Zone IANA database
 	// identifier
 	TzUTC = "Zulu"
+
+	NeutralDateFmt = "2006-01-02 15:04:05.000000000"
 )
 
 // TimeZoneUtility - Time Zone Data and Methods
 type TimeZoneUtility struct {
-	TimeIn         time.Time
-	TimeInLoc      *time.Location
-	TimeInZoneStr  string
-	TimeOut        time.Time
-	TimeOutLoc     *time.Location
-	TimeOutZoneStr string
-	TimeUTC        time.Time
+	TimeIn     time.Time
+	TimeInLoc  *time.Location
+	TimeOut    time.Time
+	TimeOutLoc *time.Location
+	TimeUTC    time.Time
+}
+
+// TimeWithoutLocation - Returns a Time String containing
+// NO time zone.
+func (tzu *TimeZoneUtility) TimeWithoutLocation(t time.Time) string {
+	return t.Format(NeutralDateFmt)
 }
 
 // ConvertTz - Convert Time from existing time zone to targetTZone.
-// The results are stored in the TimeZoneUtility data structure
-func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, targetTZone string) error {
+// The results are stored in the TimeZoneUtility data structure.
+// Input Parameters
+// tIn - time.Time initial time
+// tInIanaTz - The IANA time zone string associated with tIn parameter
+// targetIanaTz - The IANA time zone to which tIn will be converted
+func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, tInIanaTz string, targetIanaTz string) error {
 
-	if targetTZone == "" {
-		return errors.New("TimeZoneUtility:ConvertTz() Error: targetTZone is empty")
+	if tInIanaTz == "" {
+		return errors.New("TimeZoneUtility:ConvertTz() Error: tInIanaTz is empty")
 	}
 
-	tzUTC, err := time.LoadLocation("Zulu")
+	if targetIanaTz == "" {
+		return errors.New("TimeZoneUtility:ConvertTz() Error: targetIanaTz is empty")
+	}
+
+	tInNoLocStr := tzu.TimeWithoutLocation(tIn)
+
+	tzIn, err := time.LoadLocation(tInIanaTz)
 
 	if err != nil {
-		return errors.New("TimeZoneUtility:ConvertTz() - Error Loading UTC Time Zone " + err.Error())
+		return fmt.Errorf("TimeZoneUtility:ConvertTz() - Error Loading Input IANA Time Zone 'tInIanaTz', %v. Errors: %v ", tInIanaTz, err.Error())
 	}
 
-	tzOut, err := time.LoadLocation(targetTZone)
+	tzOut, err := time.LoadLocation(targetIanaTz)
 
 	if err != nil {
-		return fmt.Errorf("TimeZoneUtility:ConvertTz() - Error Loading Target Time Zone %v. Errors: %v ", targetTZone, err.Error())
+		return fmt.Errorf("TimeZoneUtility:ConvertTz() - Error Loading Target IANA Time Zone 'targetIanaTz', %v. Errors: %v ", targetIanaTz, err.Error())
 	}
 
-	tzu.setTimeIn(tIn)
+	tInWithTz, err := time.ParseInLocation(NeutralDateFmt, tInNoLocStr, tzIn)
 
-	tzu.setTimeOut(tIn.In(tzOut))
+	if err != nil {
+		return fmt.Errorf("TimeZoneUtility:ConvertTz() - Error ParseInLocation tIn with Time Zone , %v. Errors: %v ", tInNoLocStr, err.Error())
+	}
 
-	tzu.setUTCTime(tIn, tzUTC)
+	tzu.SetTimeIn(tInWithTz)
+
+	tzu.SetTimeOut(tInWithTz.In(tzOut))
+
+	tzu.SetUTCTime(tInWithTz)
 
 	return nil
 }
 
-func (tzu *TimeZoneUtility) setTimeIn(tIn time.Time) {
+// SetTimeIn - Assigns value to field 'TimeIn'
+func (tzu *TimeZoneUtility) SetTimeIn(tIn time.Time) {
 	tzu.TimeIn = tIn
 	tzu.TimeInLoc = tIn.Location()
-	tzu.TimeInZoneStr = tzu.TimeInLoc.String()
 }
 
-func (tzu *TimeZoneUtility) setTimeOut(tOut time.Time) {
+// SetTimeOut - Assigns value to field 'TimeOut'
+func (tzu *TimeZoneUtility) SetTimeOut(tOut time.Time) {
 	tzu.TimeOut = tOut
 	tzu.TimeOutLoc = tOut.Location()
-	tzu.TimeOutZoneStr = tzu.TimeOutLoc.String()
 }
 
-func (tzu *TimeZoneUtility) setUTCTime(t time.Time, utcLoc *time.Location) {
+// SetUTCTime - Assigns UTC Time to field 'TimeUTC'
+func (tzu *TimeZoneUtility) SetUTCTime(t time.Time) {
 
-	tzu.TimeUTC = t.In(utcLoc)
+	tzu.TimeUTC = t.UTC()
 }

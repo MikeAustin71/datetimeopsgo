@@ -65,12 +65,11 @@ func TestGetDateTimeEverything(t *testing.T) {
 
 func TestCustomDateTimeFormat(t *testing.T) {
 	dt := DateTimeUtility{}
-	fmt := FmtDateTimeEverything
 	tstr := "04/29/2017 19:54:30.123456489 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	result := dt.GetDateTimeCustomFmt(testTime, fmt)
+	result := dt.GetDateTimeCustomFmt(testTime, FmtDateTimeEverything)
 
 	if result != expected {
 		t.Error(fmt.Sprintf("Expected: %v, got", expected), result)
