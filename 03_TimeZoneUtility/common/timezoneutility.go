@@ -59,6 +59,7 @@ func (tzu *TimeZoneUtility) TimeWithoutLocation(t time.Time) string {
 // tIn - time.Time initial time
 // tInIanaTz - The IANA time zone string associated with tIn parameter
 // targetIanaTz - The IANA time zone to which tIn will be converted
+// Output Values are returned in the tzu (TimeZoneUtility) data structure
 func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, tInIanaTz string, targetIanaTz string) error {
 
 	if tInIanaTz == "" {
@@ -67,6 +68,10 @@ func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, tInIanaTz string, targetIan
 
 	if targetIanaTz == "" {
 		return errors.New("TimeZoneUtility:ConvertTz() Error: targetIanaTz is empty")
+	}
+
+	if tIn.IsZero() {
+		return errors.New("TimeZoneUtility:ConvertTz() Error: Input parameter tIn is zero and INVALID")
 	}
 
 	tInNoLocStr := tzu.TimeWithoutLocation(tIn)

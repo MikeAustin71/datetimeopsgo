@@ -190,7 +190,9 @@ func Tex008() {
 	*/
 }
 
-func Tex009()  {
+// Tex009 - Demonstrates Time Conversion from
+// one time zone to another
+func Tex009() {
 	ianaPacificTz := "America/Los_Angeles"
 	ianaCentralTz := "America/Chicago"
 	tIn := time.Now()
@@ -212,5 +214,39 @@ func Tex009()  {
 		tzu.TimeOut:  2017-05-13 20:44:08.5476396 -0700 PDT
 		tzu.TimeOutLocation:  America/Los_Angeles
 		tzu.TimeUTC:  2017-05-14 03:44:08.5476396 +0000 UTC
+	*/
+}
+
+// Tex010 - Demonstrates the Zone() function
+func Tex010() {
+	ianaPacificTz := "America/Los_Angeles"
+	ianaCentralTz := "America/Chicago"
+	tIn := time.Now()
+	tzu := TimeZoneUtility{}
+	tzu.ConvertTz(tIn, ianaCentralTz, ianaPacificTz)
+
+	fmt.Println("Original Time: ", tIn)
+	fmt.Println("Original Time Location: ", tIn.Location())
+	fmt.Println("tzu.TimeIn: ", tzu.TimeIn)
+	fmt.Println("tzu.TimeInLocation: ", tzu.TimeInLoc)
+	fmt.Println("tzu.TimeOut: ", tzu.TimeOut)
+	fmt.Println("tzu.TimeOutLocation: ", tzu.TimeOutLoc)
+	zoneName, offsetInt := tzu.TimeOut.Zone()
+	// Note: offsetInt is seconds east of UTC
+	fmt.Println("tzu.TimeOut Zone Name: ", zoneName)
+	fmt.Println("tzu.TimeOut Zone Offset: ", offsetInt)
+
+	fmt.Println("tzu.TimeUTC: ", tzu.TimeUTC)
+
+	/*
+		Original Time:  2017-05-14 22:27:42.2495266 -0500 CDT
+		Original Time Location:  Local
+		tzu.TimeIn:  2017-05-14 22:27:42.2495266 -0500 CDT
+		tzu.TimeInLocation:  America/Chicago
+		tzu.TimeOut:  2017-05-14 20:27:42.2495266 -0700 PDT
+		tzu.TimeOutLocation:  America/Los_Angeles
+		tzu.TimeOut Zone Name:  PDT
+		tzu.TimeOut Zone Offset:  -25200
+		tzu.TimeUTC:  2017-05-15 03:27:42.2495266 +0000 UTC
 	*/
 }
