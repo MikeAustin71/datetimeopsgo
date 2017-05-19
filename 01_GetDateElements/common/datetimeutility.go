@@ -133,17 +133,17 @@ func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration 
 
 	if rd >= YearNanoSeconds {
 		ed.Years = rd / YearNanoSeconds
-		rd -= (YearNanoSeconds * ed.Years)
+		rd -= YearNanoSeconds * ed.Years
 	}
 
-	if ed.Years > 0 || firstEle {
+	if ed.Years > 0 {
 		str = fmt.Sprintf("%v Years ", ed.Years)
 		firstEle = true
 	}
 
 	if rd >= DayNanoSeconds {
 		ed.Days = rd / DayNanoSeconds
-		rd -= (DayNanoSeconds * ed.Days)
+		rd -= DayNanoSeconds * ed.Days
 	}
 
 	if ed.Days > 0 || firstEle {
@@ -153,7 +153,7 @@ func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration 
 
 	if rd >= HourNanoSeconds {
 		ed.Hours = rd / HourNanoSeconds
-		rd -= (HourNanoSeconds * ed.Hours)
+		rd -= HourNanoSeconds * ed.Hours
 	}
 
 	if ed.Hours > 0 || firstEle {
@@ -163,7 +163,7 @@ func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration 
 
 	if rd >= MinuteNanoSeconds {
 		ed.Minutes = rd / MinuteNanoSeconds
-		rd -= (MinuteNanoSeconds * ed.Minutes)
+		rd -= MinuteNanoSeconds * ed.Minutes
 	}
 
 	if ed.Minutes > 0 || firstEle {
@@ -173,7 +173,7 @@ func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration 
 
 	if rd >= SecondNanoseconds {
 		ed.Seconds = rd / SecondNanoseconds
-		rd -= (SecondNanoseconds * ed.Seconds)
+		rd -= SecondNanoseconds * ed.Seconds
 	}
 
 	if ed.Seconds > 0 || firstEle {
@@ -183,7 +183,7 @@ func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration 
 
 	if rd >= MilliSecondNanoseconds {
 		ed.MilliSeconds = rd / MilliSecondNanoseconds
-		rd -= (MilliSecondNanoseconds * ed.MilliSeconds)
+		rd -= MilliSecondNanoseconds * ed.MilliSeconds
 	}
 
 	if ed.MilliSeconds > 0 || firstEle {
@@ -193,7 +193,7 @@ func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration 
 
 	if rd >= MicroSecondNanoseconds {
 		ed.MicroSeconds = rd / MicroSecondNanoseconds
-		rd -= (MicroSecondNanoseconds * ed.MicroSeconds)
+		rd -= MicroSecondNanoseconds * ed.MicroSeconds
 	}
 
 	if ed.MicroSeconds > 0 || firstEle {

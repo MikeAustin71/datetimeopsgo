@@ -1,6 +1,6 @@
 package main
 
-import common "MikeAustin71/datetimeopsgo/02_DateTimeUtility/common"
+import "MikeAustin71/datetimeopsgo/02_DateTimeUtility/common"
 
 /*
 import (

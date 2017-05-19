@@ -1,7 +1,7 @@
 package main
 
 import (
-	common "MikeAustin71/datetimeopsgo/01_GetDateElements/common"
+	"MikeAustin71/datetimeopsgo/01_GetDateElements/common"
 	"fmt"
 	"time"
 )
