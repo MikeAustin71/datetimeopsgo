@@ -148,7 +148,7 @@ func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration 
 		rd -= YearNanoSeconds * ed.Years
 	}
 
-	if ed.Years > 0  {
+	if ed.Years > 0 {
 		str = fmt.Sprintf("%v-Years ", ed.Years)
 		firstEle = true
 	}
