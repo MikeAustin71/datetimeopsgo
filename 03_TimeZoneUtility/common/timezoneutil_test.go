@@ -48,3 +48,60 @@ func TestTimeZoneUtilConvertTz(t *testing.T) {
 	}
 
 }
+
+func TestInvalidTzInConversion(t *testing.T) {
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	// Invalid Central Time Zone
+	ianaCentralTz := "AmericChicago"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu := TimeZoneUtility{}
+	err := tzu.ConvertTz(tIn, ianaCentralTz, ianaPacificTz)
+
+	if err == nil {
+		t.Error("ConvertTz failed to detect INVALID Time In Time Zone. Got:", "err==nil")
+	}
+
+}
+
+func TestInvalidTargetTzInConversion(t *testing.T) {
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	// Invalid Target Iana Time Zone
+	ianaPacificTz := time.Now().Location().String()
+	ianaCentralTz := "America/Chicago"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu := TimeZoneUtility{}
+	err := tzu.ConvertTz(tIn, ianaCentralTz, ianaPacificTz)
+
+	if err == nil {
+		t.Error("ConverTz() failed to detect INVALID Tartet Time Zone. Got: ", "err==nil")
+	}
+
+}
+
+func TestLocalIsInvalidIanaTimeZone(t *testing.T) {
+	tIn := time.Now()
+
+	tzu := TimeZoneUtility{}
+
+	result := tzu.IsIanaTzValid(tIn.Location().String())
+
+	if result == true {
+		t.Error("Expected Now() Location Location to be INVALID (false), got", result)
+	}
+
+}
+
+func TestCDTIsValidIanaTimeZone(t *testing.T) {
+
+	tzu := TimeZoneUtility{}
+
+	result := tzu.IsIanaTzValid("America/Chicago")
+
+	if result == false {
+		t.Error("Expected 'America/Chicago' to be VALID IANA Time Zone 'true', got", result)
+	}
+
+}

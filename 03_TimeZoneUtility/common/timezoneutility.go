@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"strings"
 )
 
 // NOTE: See https://golang.org/pkg/time/#LoadLocation
@@ -47,11 +48,6 @@ type TimeZoneUtility struct {
 	TimeUTC    time.Time
 }
 
-// TimeWithoutLocation - Returns a Time String containing
-// NO time zone.
-func (tzu *TimeZoneUtility) TimeWithoutLocation(t time.Time) string {
-	return t.Format(NeutralDateFmt)
-}
 
 // ConvertTz - Convert Time from existing time zone to targetTZone.
 // The results are stored in the TimeZoneUtility data structure.
@@ -62,12 +58,12 @@ func (tzu *TimeZoneUtility) TimeWithoutLocation(t time.Time) string {
 // Output Values are returned in the tzu (TimeZoneUtility) data structure
 func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, tInIanaTz string, targetIanaTz string) error {
 
-	if tInIanaTz == "" {
-		return errors.New("TimeZoneUtility:ConvertTz() Error: tInIanaTz is empty")
+	if !tzu.IsIanaTzValid(tInIanaTz) {
+		return errors.New("TimeZoneUtility:ConvertTz() Error: tInIanaTz is INVALID")
 	}
 
-	if targetIanaTz == "" {
-		return errors.New("TimeZoneUtility:ConvertTz() Error: targetIanaTz is empty")
+	if !tzu.IsIanaTzValid(targetIanaTz) {
+		return errors.New("TimeZoneUtility:ConvertTz() Error: targetIanaTz is INVALID")
 	}
 
 	if tIn.IsZero() {
@@ -103,6 +99,26 @@ func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, tInIanaTz string, targetIan
 	return nil
 }
 
+func(tzu *TimeZoneUtility) IsIanaTzValid(tzIana string) bool {
+
+	if tzIana == "" {
+		return false
+	}
+
+	if strings.ToLower(tzIana) == "local" {
+		return false
+	}
+
+	_, err := time.LoadLocation(tzIana)
+
+	if err != nil {
+		return false
+	}
+
+	return true
+
+}
+
 // SetTimeIn - Assigns value to field 'TimeIn'
 func (tzu *TimeZoneUtility) SetTimeIn(tIn time.Time) {
 	tzu.TimeIn = tIn
@@ -119,4 +135,10 @@ func (tzu *TimeZoneUtility) SetTimeOut(tOut time.Time) {
 func (tzu *TimeZoneUtility) SetUTCTime(t time.Time) {
 
 	tzu.TimeUTC = t.UTC()
+}
+
+// TimeWithoutLocation - Returns a Time String containing
+// NO time zone.
+func (tzu *TimeZoneUtility) TimeWithoutLocation(t time.Time) string {
+	return t.Format(NeutralDateFmt)
 }

@@ -62,7 +62,7 @@ func Tex003() {
 
 }
 
-// Tex004 - Example of how to parese a time string and
+// Tex004 - Example of how to parse a time string and
 // assign time zone to the 'Location' of the resulting
 // time.Time type
 func Tex004() {
