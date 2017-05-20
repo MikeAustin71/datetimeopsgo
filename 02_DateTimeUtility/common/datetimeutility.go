@@ -37,6 +37,7 @@ const (
 // ElapsedDuration - holds elements of
 // time duration
 type ElapsedDuration struct {
+	tDuration    time.Duration
 	Years        int64
 	Days         int64
 	Hours        int64
@@ -60,7 +61,7 @@ type DateTimeUtility struct {
 	TimeOut    time.Time
 	TimeStart  time.Time
 	TimeEnd    time.Time
-	Duration   time.Time
+	Duration   time.Duration
 	TimeInStr  string
 	TimeOutStr string
 	TimeFmtStr string
@@ -139,6 +140,7 @@ func (dt DateTimeUtility) GetDuration(startTime time.Time, endTime time.Time) (t
 func (dt DateTimeUtility) GetDurationBreakDown(d time.Duration) ElapsedDuration {
 	str := ""
 	ed := ElapsedDuration{}
+	ed.tDuration = d
 	ed.DefaultStr = fmt.Sprintf("%v", d)
 	firstEle := false
 	rd := int64(d)
