@@ -188,3 +188,121 @@ func TestGetDurationFromElapsedTime(t *testing.T) {
 	}
 
 }
+
+func TestTimePlusDuration(t *testing.T) {
+
+	tstr1 := "04/15/2017 19:54:30.123456489 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1, err1 := time.Parse(fmtstr, tstr1)
+
+	if err1 != nil {
+		t.Error("Error On Time Parse #1: ", err1.Error())
+	}
+
+	secondsInADay := (60 * 60 * 24)
+
+	dur := time.Duration(secondsInADay) * time.Second
+
+	du := DurationUtility{}
+
+	t2 := du.GetTimePlusDuration(t1, dur)
+
+	tstr2 := t2.Format(fmtstr)
+
+	expected := "04/16/2017 19:54:30.123456489 -0500 CDT"
+
+	if expected != tstr2 {
+		t.Error(fmt.Sprintf("GetTimePlusDuration() gave INVALID Result! Expected %v, got: ", expected), tstr2)
+	}
+
+}
+
+func TestAddDurations(t *testing.T) {
+
+	secondsInADay := (60 * 60 * 24)
+
+	secondsInTwoDays := (60 * 60 * 24 * 2)
+
+	// Adding duration of 1-day plus duration of 2-days should
+	// equal 3-days.
+	dur1 := time.Duration(secondsInADay) * time.Second
+
+	dur2 := time.Duration(secondsInTwoDays) * time.Second
+
+	du := DurationUtility{}
+
+	du2 := du.GetDurationBreakDown(dur1)
+
+	du2.AddDurationToThis(dur2)
+
+	expected := "3-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != du2.DurationStr {
+		t.Error(fmt.Sprintf("Expected Total Duration of Three Days, %v - Got: ", expected), du2.DurationStr)
+	}
+
+}
+
+func TestDurationEquality(t *testing.T) {
+	secondsInADay := (60 * 60 * 24)
+
+	secondsInTwoDays := (60 * 60 * 24 * 2)
+
+	// Adding duration of 1-day plus duration of 2-days should
+	// equal 3-days.
+	dur1 := time.Duration(secondsInADay) * time.Second
+
+	dur2 := time.Duration(secondsInTwoDays) * time.Second
+
+	du := DurationUtility{}
+
+	du2 := du.GetDurationBreakDown(dur1)
+
+	du2.AddDurationToThis(dur2)
+
+	expected := "3-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != du2.DurationStr {
+		t.Error(fmt.Sprintf("Expected Total Duration of Three Days, %v - Got: ", expected), du2.DurationStr)
+	}
+
+	secondsInThreeDays := (60 * 60 * 24 * 3)
+	dur3 := time.Duration(secondsInThreeDays) * time.Second
+
+	du3 := du.GetDurationBreakDown(dur3)
+
+	result := du3.Equal(du2)
+
+	if result == false {
+		t.Error("Expected Two Data Utility Structures to be Equal or result = true, Got: ", result)
+	}
+}
+
+func TestAddDurationStructures(t *testing.T) {
+	secondsInADay := (60 * 60 * 24)
+
+	secondsInTwoDays := (60 * 60 * 24 * 2)
+
+	// Adding duration of 1-day plus duration of 2-days should
+	// equal 3-days.
+	dur1 := time.Duration(secondsInADay) * time.Second
+
+	dur2 := time.Duration(secondsInTwoDays) * time.Second
+
+	du := DurationUtility{}
+
+	du2 := du.GetDurationBreakDown(dur1)
+
+	du3 := du.GetDurationBreakDown(dur2)
+
+	du.CopyToThis(du2)
+
+	du.AddToThis(du3)
+
+	expected := "3-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != du.DurationStr {
+		t.Error(fmt.Sprintf("Expected Total Duration of Three Days, %v - Got: ", expected), du.DurationStr)
+	}
+
+}

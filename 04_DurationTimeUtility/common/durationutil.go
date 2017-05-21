@@ -200,7 +200,64 @@ func (du DurationUtility) GetDurationFromElapsedTime(elapsedTime DurationUtility
 
 }
 
-func (du DurationUtility) GetTargetTime(tStart time.Time, duration time.Duration) (time.Time, error) {
+func (du DurationUtility) GetTimePlusDuration(tStart time.Time, duration time.Duration) time.Time {
 
-	return time.Now(), nil
+	return tStart.Add(duration)
+}
+
+func (du *DurationUtility) CopyToThis(duIn DurationUtility) {
+	du.TimeDuration = duIn.TimeDuration
+	du.Years = duIn.Years
+	du.Days = duIn.Days
+	du.Hours = duIn.Hours
+	du.Minutes = duIn.Minutes
+	du.Seconds = duIn.Seconds
+	du.MilliSeconds = duIn.MilliSeconds
+	du.MicroSeconds = duIn.MicroSeconds
+	du.NanoSeconds = duIn.NanoSeconds
+	du.NanosecStr = duIn.NanosecStr
+	du.DurationStr = duIn.DurationStr
+	du.DefaultStr = duIn.DefaultStr
+
+	return
+}
+
+func (du *DurationUtility) AddToThis(duIn DurationUtility) {
+
+	durPlus := du.TimeDuration + duIn.TimeDuration
+
+	elapsedDuration := du.GetDurationBreakDown(durPlus)
+
+	du.CopyToThis(elapsedDuration)
+
+}
+
+func (du *DurationUtility) AddDurationToThis(duration time.Duration) {
+
+	durPlus := du.TimeDuration + duration
+
+	elapsedDuration := du.GetDurationBreakDown(durPlus)
+
+	du.CopyToThis(elapsedDuration)
+}
+
+func (du *DurationUtility) Equal(duIn DurationUtility) bool {
+
+	if du.TimeDuration != duIn.TimeDuration ||
+		du.Years != duIn.Years ||
+		du.Days != duIn.Days ||
+		du.Hours != duIn.Hours ||
+		du.Minutes != duIn.Minutes ||
+		du.Seconds != duIn.Seconds ||
+		du.MilliSeconds != duIn.MilliSeconds ||
+		du.MicroSeconds != duIn.MicroSeconds ||
+		du.NanoSeconds != duIn.NanoSeconds ||
+		du.NanosecStr != duIn.NanosecStr ||
+		du.DurationStr != duIn.DurationStr ||
+		du.DefaultStr != duIn.DefaultStr {
+		return false
+	}
+
+	return true
+
 }
