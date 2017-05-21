@@ -65,6 +65,9 @@ func (du DurationUtility) GetDuration(startTime time.Time, endTime time.Time) (t
 // and returns a breakdown of duration by years,
 // days, hours, minutes, seconds, milliseconds,
 // microseconds and nanoseconds.
+// NOTE: Years is arbitrarily set to the number of
+// nanoseconds in a standard 365-day year. The Years
+// calculation does NOT take Leap Years into account.
 func (du DurationUtility) GetDurationBreakDown(d time.Duration) DurationUtility {
 	str := ""
 	durationUtility := DurationUtility{TimeDuration: d}

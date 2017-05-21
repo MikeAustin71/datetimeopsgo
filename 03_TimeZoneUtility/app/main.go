@@ -15,11 +15,16 @@ import (
 */
 
 func main() {
-	now := time.Now()
-	x, _ := time.LoadLocation(now.Location().String())
-	y := now.Local().Location()
+	nowLocal := time.Now()
+	Cst, _ := time.LoadLocation("America/Chicago")
+	nowInCentralTime := nowLocal.In(Cst)
 
-	fmt.Println("x", x)
-	fmt.Println("y", y)
+	if nowInCentralTime.Equal(nowLocal) {
+		fmt.Println("Times are Equivalent")
+	} else {
+		fmt.Println("Times are NOT Equivalent")
+	}
+
+
 
 }

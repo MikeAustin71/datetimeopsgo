@@ -70,7 +70,7 @@ func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, tInIanaTz string, targetIan
 		return errors.New("TimeZoneUtility:ConvertTz() Error: Input parameter tIn is zero and INVALID")
 	}
 
-	tInNoLocStr := tzu.TimeWithoutLocation(tIn)
+	tInNoLocStr := tzu.TimeWithoutTimeZone(tIn)
 
 	tzIn, err := time.LoadLocation(tInIanaTz)
 
@@ -137,8 +137,8 @@ func (tzu *TimeZoneUtility) SetUTCTime(t time.Time) {
 	tzu.TimeUTC = t.UTC()
 }
 
-// TimeWithoutLocation - Returns a Time String containing
+// TimeWithoutTimeZone - Returns a Time String containing
 // NO time zone.
-func (tzu *TimeZoneUtility) TimeWithoutLocation(t time.Time) string {
+func (tzu *TimeZoneUtility) TimeWithoutTimeZone(t time.Time) string {
 	return t.Format(NeutralDateFmt)
 }
