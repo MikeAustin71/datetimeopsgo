@@ -199,7 +199,7 @@ func TestTimePlusDuration(t *testing.T) {
 		t.Error("Error On Time Parse #1: ", err1.Error())
 	}
 
-	secondsInADay := (60 * 60 * 24)
+	secondsInADay := 60 * 60 * 24
 
 	dur := time.Duration(secondsInADay) * time.Second
 
@@ -217,11 +217,39 @@ func TestTimePlusDuration(t *testing.T) {
 
 }
 
+func TestDurationUtility_GetTimeMinusDuration(t *testing.T) {
+	tstr1 := "04/15/2017 19:54:30.123456489 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	expected := "04/12/2017 19:54:30.123456489 -0500 CDT"
+	t1, err1 := time.Parse(fmtstr, tstr1)
+
+	if err1 != nil {
+		t.Error("Error On Time Parse #1: ", err1.Error())
+	}
+
+	secondsInADay := 60 * 60 * 24
+
+	duration3Days := secondsInADay * 3
+
+	dur := time.Duration(duration3Days) * time.Second
+
+	du := DurationUtility{}
+
+	subTime := du.GetTimeMinusDuration(t1, dur)
+
+	tstr2 := subTime.Format(fmtstr)
+
+	if tstr2 != expected {
+		t.Error(fmt.Sprintf("Expected Time string, '%v', instead got:", expected), tstr2)
+	}
+
+}
+
 func TestAddDurations(t *testing.T) {
 
-	secondsInADay := (60 * 60 * 24)
+	secondsInADay := 60 * 60 * 24
 
-	secondsInTwoDays := (60 * 60 * 24 * 2)
+	secondsInTwoDays := 60 * 60 * 24 * 2
 
 	// Adding duration of 1-day plus duration of 2-days should
 	// equal 3-days.
@@ -244,9 +272,9 @@ func TestAddDurations(t *testing.T) {
 }
 
 func TestDurationEquality(t *testing.T) {
-	secondsInADay := (60 * 60 * 24)
+	secondsInADay := 60 * 60 * 24
 
-	secondsInTwoDays := (60 * 60 * 24 * 2)
+	secondsInTwoDays := 60 * 60 * 24 * 2
 
 	// Adding duration of 1-day plus duration of 2-days should
 	// equal 3-days.
@@ -266,7 +294,7 @@ func TestDurationEquality(t *testing.T) {
 		t.Error(fmt.Sprintf("Expected Total Duration of Three Days, %v - Got: ", expected), du2.DurationStr)
 	}
 
-	secondsInThreeDays := (60 * 60 * 24 * 3)
+	secondsInThreeDays := 60 * 60 * 24 * 3
 	dur3 := time.Duration(secondsInThreeDays) * time.Second
 
 	du3 := du.GetDurationBreakDown(dur3)
@@ -279,9 +307,9 @@ func TestDurationEquality(t *testing.T) {
 }
 
 func TestAddDurationStructures(t *testing.T) {
-	secondsInADay := (60 * 60 * 24)
+	secondsInADay := 60 * 60 * 24
 
-	secondsInTwoDays := (60 * 60 * 24 * 2)
+	secondsInTwoDays := 60 * 60 * 24 * 2
 
 	// Adding duration of 1-day plus duration of 2-days should
 	// equal 3-days.
