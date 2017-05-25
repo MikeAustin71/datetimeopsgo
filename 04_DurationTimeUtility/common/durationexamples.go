@@ -75,7 +75,7 @@ func GetElapsedYears() {
 
 	ed := durationUtility.GetDurationBreakDown(dur)
 	fmt.Println("Elapsed Time: ", ed.DurationStr)
-	// Elapsed Time:  3-Years 75-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+	// Elapsed Time:  3-Years 74-Days 9-Hours 36-Minutes 26-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
 
 	fmt.Println("")
 	fmt.Println("Default Duration: ", ed.DefaultStr)
@@ -83,6 +83,47 @@ func GetElapsedYears() {
 
 	fmt.Println("")
 	fmt.Println("NanosecStr: ", ed.NanosecStr)
-	// NanosecStr:  3-Years 75-Days 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds
+	// NanosecStr:  3-Years 74-Days 9-Hours 36-Minutes 26-Seconds 0-Nanoseconds
+
+}
+
+/*
+	For the Gregorian calendar the average length of the calendar year
+	(the mean year) across the complete leap cycle of 400 years is 365.2425 days.
+	The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
+	49 minutes and 12 seconds
+	Sources:
+	https://en.wikipedia.org/wiki/Year
+	Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+*/
+func CalcNanosecondsPerYear(){
+	yearNow := YearNanoSeconds
+	yearGregorianSecs := int64(31556952) * SecondNanoseconds
+	// Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+	//Gregorian 365 days, 5 hours, 49 minutes and 12 seconds
+	yearG2 := (DayNanoSeconds * int64(365)) +
+		(HourNanoSeconds * int64(5)) +
+		(MinuteNanoSeconds * int64(49)) +
+		(SecondNanoseconds * int64(12))
+
+	yearGregorian := int64(31556952000011380)
+
+
+	AvgNanpSecsPerYear := int64(float64(365.2425) * float64(DayNanoSeconds))
+
+	fmt.Println("                            Year Now: ", yearNow)
+	fmt.Println("                      Gregorian Year: ", yearGregorian)
+	fmt.Println("  Gregorian Avg in hours/minutes/sec: ", yearG2)
+	fmt.Println("   Seconds In Average Gregorian Year: ", yearGregorianSecs)
+	fmt.Println("Avg Gregorian 365.2425 days per year: ", AvgNanpSecsPerYear)
+
+	/*
+																	Year Now:  31556952000000000
+														Gregorian Year:  31556952000011380
+				Gregorian Avg in hours/minutes/sec:  31556952000000000
+				 Seconds In Average Gregorian Year:  31556952000000000
+			Avg Gregorian 365.2425 days per year:  31556952000000000
+
+	 */
 
 }

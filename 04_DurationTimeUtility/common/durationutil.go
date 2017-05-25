@@ -21,7 +21,18 @@ const (
 	// DayNanoSeconds - Number of Nanoseconds in a 24-hour day
 	DayNanoSeconds = int64(1000 * 1000 * 1000 * 60 * 60 * 24)
 	// YearNanoSeconds - Number of Nanoseconds in a 365-day year
-	YearNanoSeconds = int64(1000 * 1000 * 1000 * 60 * 60 * 24 * 365)
+
+	/*
+	For the Gregorian calendar the average length of the calendar year
+	(the mean year) across the complete leap cycle of 400 years is 365.2425 days.
+	The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
+	49 minutes and 12 seconds.
+	Sources:
+	https://en.wikipedia.org/wiki/Year
+	Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+*/
+	YearNanoSeconds = int64(31556952000000000)
+
 )
 
 // DurationUtility - holds elements of
@@ -44,6 +55,7 @@ type DurationUtility struct {
 	DefaultStr string
 }
 
+
 func (du *DurationUtility) AddDurationToThis(duration time.Duration) {
 
 	durPlus := du.TimeDuration + duration
@@ -63,8 +75,28 @@ func (du *DurationUtility) AddToThis(duIn DurationUtility) {
 
 }
 
+// Empty - This method initializes
+// all of the fields in this
+// DurationUtility structure to thier
+// zero values.
+func (du *DurationUtility) Empty() {
+	du.TimeDuration = time.Duration(0)
+	du.Years = 0
+	du.Days = 0
+	du.Hours = 0
+	du.Minutes = 0
+	du.Seconds = 0
+	du.MilliSeconds = 0
+	du.MicroSeconds = 0
+	du.NanoSeconds = 0
+	du.NanosecStr = ""
+	du.DurationStr = ""
+	du.DefaultStr = ""
+
+}
 
 func (du *DurationUtility) CopyToThis(duIn DurationUtility) {
+	du.Empty()
 	du.TimeDuration = duIn.TimeDuration
 	du.Years = duIn.Years
 	du.Days = duIn.Days
@@ -118,6 +150,10 @@ func (du DurationUtility) GetDuration(startTime time.Time, endTime time.Time) (t
 	}
 
 	return endTime.Sub(startTime), nil
+}
+
+func (du DurationUtility) GenerateDuration(duIn DurationUtility) ( time.Duration, error){
+	return  du.GetDurationFromElapsedTime(duIn)
 }
 
 // GetDurationBreakDown - Receives a Duration type
