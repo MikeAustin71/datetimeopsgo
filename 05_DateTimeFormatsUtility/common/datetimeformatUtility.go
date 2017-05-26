@@ -76,7 +76,7 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYearFmts() error {
 
 	offsetFmts, _ := dtf.getTimeOffsets()
 
-	stdSeparators, _ := dtf.getStandardSeparators()
+	tzSeparators, _ := dtf.getTimeZoneSeparators()
 
 	timeZoneFmts, _ := dtf.getTimeZoneElements()
 
@@ -87,7 +87,7 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYearFmts() error {
 					for _, t := range timeFmts {
 						for _, tOffsetSep := range offsetSeparators {
 							for _, offFmt := range offsetFmts {
-								for _, stdSep := range stdSeparators {
+								for _, stdSep := range tzSeparators {
 									for _, tzF := range timeZoneFmts {
 										fmtGen := DateTimeFormatGenerator{
 											DayOfWeek:          dowk,
@@ -337,11 +337,13 @@ func (dtf DateTimeFormatUtility) getTimeElements() ([]string, error) {
 	timeElements := make([]string, 0, 512)
 
 	timeElements = append(timeElements, "15:04:05")
+	timeElements = append(timeElements, "15:04")
 	timeElements = append(timeElements, "15:04:05.000")
 	timeElements = append(timeElements, "15:04:05.000000")
 	timeElements = append(timeElements, "15:04:05.000000000")
 
 	timeElements = append(timeElements, "15:4:5")
+	timeElements = append(timeElements, "15:4")
 	timeElements = append(timeElements, "15:4:5.000")
 	timeElements = append(timeElements, "15:4:5.000000")
 	timeElements = append(timeElements, "15:4:5.000000000")
@@ -365,6 +367,33 @@ func (dtf DateTimeFormatUtility) getTimeElements() ([]string, error) {
 	timeElements = append(timeElements, "3:4:5P.M.")
 	timeElements = append(timeElements, "3:4:5 PM")
 	timeElements = append(timeElements, "3:4:5 P.M.")
+
+	timeElements = append(timeElements, "03:04pm")
+	timeElements = append(timeElements, "03:04p.m.")
+	timeElements = append(timeElements, "03:04 pm")
+	timeElements = append(timeElements, "03:04 p.m.")
+
+	timeElements = append(timeElements, "03:04PM")
+	timeElements = append(timeElements, "03:04P.M.")
+	timeElements = append(timeElements, "03:04 PM")
+	timeElements = append(timeElements, "03:04 P.M.")
+
+	timeElements = append(timeElements, "3:4pm")
+	timeElements = append(timeElements, "3:4p.m.")
+	timeElements = append(timeElements, "3:4 pm")
+	timeElements = append(timeElements, "3:4 p.m.")
+
+	timeElements = append(timeElements, "3:4PM")
+	timeElements = append(timeElements, "3:4P.M.")
+	timeElements = append(timeElements, "3:4 PM")
+	timeElements = append(timeElements, "3:4 P.M.")
+
+
+
+
+
+
+
 	timeElements = append(timeElements, "")
 
 	return timeElements, nil
@@ -388,6 +417,7 @@ func (dtf DateTimeFormatUtility) getTimeOffsetSeparators() ([]string, error) {
 	timeOffsetSeparators := make([]string, 0, 20)
 
 	timeOffsetSeparators = append(timeOffsetSeparators, " ")
+	timeOffsetSeparators = append(timeOffsetSeparators, "-")
 
 	return timeOffsetSeparators, nil
 }
@@ -400,6 +430,17 @@ func (dtf DateTimeFormatUtility) getTimeZoneElements() ([]string, error) {
 
 	return tzElements, nil
 }
+
+func (dtf DateTimeFormatUtility) getTimeZoneSeparators() ([]string, error) {
+	tzElements := make([]string, 0, 20)
+
+	tzElements = append(tzElements, " ")
+	tzElements = append(tzElements, "-")
+
+	return tzElements, nil
+}
+
+
 
 func (dtf DateTimeFormatUtility) getPredefinedFormats() ([]string, error) {
 	preDefinedFormats := make([]string, 0, 20)
