@@ -19,18 +19,21 @@ type DateTimeFormatGenerator struct {
 }
 
 type DateTimeFormatUtility struct {
-	DateTimeStringIn      string
-	FormatMap             map[int][]string
-	SelectedMapIdx        int
-	SelectedSliceIdx      int
-	SelectedFormat        string
-	DateTimeOut           time.Time
-	NumOfFormatsGenerated int
+	OriginalDateTimeStringIn  string
+	FormattedDateTimeStringIn string
+	FormatMap                 map[int]map[string]int
+	SelectedMapIdx            int
+	SelectedFormat            string
+	SelectedFormatSource      string
+	DictSearches              map[int]int
+	TotalNoOfDictSearches     int
+	DateTimeOut               time.Time
+	NumOfFormatsGenerated     int
 }
 
 func (dtf *DateTimeFormatUtility) GetAllDateTimeFormats() (err error) {
 
-	dtf.FormatMap = make(map[int][]string)
+	dtf.FormatMap = make(map[int]map[string]int)
 	dtf.NumOfFormatsGenerated = 0
 	dtf.assemblePreDefinedFormats()
 	dtf.assembleDayMthYearFmts()
@@ -39,11 +42,15 @@ func (dtf *DateTimeFormatUtility) GetAllDateTimeFormats() (err error) {
 }
 
 func (dtf *DateTimeFormatUtility) Empty() {
-	dtf.DateTimeStringIn = ""
+	dtf.OriginalDateTimeStringIn = ""
+	dtf.FormattedDateTimeStringIn = ""
 	dtf.DateTimeOut = time.Time{}
 	dtf.SelectedFormat = ""
+	dtf.SelectedFormatSource = ""
 	dtf.SelectedMapIdx = -1
-	dtf.SelectedSliceIdx = -1
+	dtf.DictSearches = make(map[int]int)
+	dtf.TotalNoOfDictSearches = 0
+
 }
 
 func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFormat string) (time.Time, error) {
@@ -51,14 +58,19 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 	dtf.Empty()
 	ftimeStr := strings.Trim(timeStr, " ")
 
-
 	if probableFormat != "" {
 		t, err := time.Parse(probableFormat, ftimeStr)
 
 		if err == nil {
 			dtf.SelectedFormat = probableFormat
+			dtf.SelectedFormatSource = "User Provided"
+			dtf.SelectedMapIdx = -1
 			dtf.DateTimeOut = t
-			dtf.DateTimeStringIn = ftimeStr
+			dtf.OriginalDateTimeStringIn = timeStr
+			dtf.FormattedDateTimeStringIn = ftimeStr
+			dtf.TotalNoOfDictSearches = 1
+			dtf.DictSearches[0] = 1
+
 			return t, nil
 		}
 
@@ -66,19 +78,24 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 
 	lenStr := len(ftimeStr)
 
-	lenTests := [7]int{lenStr, lenStr - 1, lenStr + 1, lenStr - 2, lenStr + 2, lenStr + 3, lenStr - 3}
+	lenTests := [7]int{lenStr - 1, lenStr, lenStr - 2, lenStr + 1, lenStr + 2, lenStr - 3, lenStr + 3}
 
 	for _, lTest := range lenTests {
 
-		t, idx, err := dtf.parseFormatMap(ftimeStr, lTest)
+		result, err := dtf.parseFormatMap(ftimeStr, lTest)
+
+		dtf.DictSearches[lTest] = result.TotalNoOfDictSearches
+		dtf.TotalNoOfDictSearches += result.TotalNoOfDictSearches
 
 		if err == nil {
-			dtf.SelectedFormat = dtf.FormatMap[lTest][idx]
-			dtf.SelectedMapIdx = lTest
-			dtf.SelectedSliceIdx = idx
-			dtf.DateTimeOut = t
-			dtf.DateTimeStringIn = ftimeStr
-			return t, nil
+			dtf.SelectedFormat = result.SelectedFormat
+			dtf.SelectedFormatSource = result.SelectedFormatSource
+			dtf.SelectedMapIdx = result.SelectedMapIdx
+			dtf.DateTimeOut = result.DateTimeOut
+			dtf.OriginalDateTimeStringIn = timeStr
+			dtf.FormattedDateTimeStringIn = result.FormattedDateTimeStringIn
+			dtf.TotalNoOfDictSearches = result.TotalNoOfDictSearches
+			return dtf.DateTimeOut, nil
 		}
 
 	}
@@ -88,7 +105,7 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 
 func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
 
-	dtf.FormatMap = make(map[int][]string)
+	dtf.FormatMap = make(map[int]map[string]int)
 
 	fmtStr := ""
 
@@ -116,24 +133,32 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
 	return nil
 }
 
-func (dtf *DateTimeFormatUtility) parseFormatMap(timeStr string, idx int) (t time.Time, ix int, err error) {
+func (dtf *DateTimeFormatUtility) parseFormatMap(timeStr string, idx int) (dtResult DateTimeFormatUtility, err error) {
 
 	if dtf.FormatMap[idx] == nil {
 		err = errors.New("Time String Length not found in Format Map!")
 		return
 	}
 
-	for i, f := range dtf.FormatMap[idx] {
+	for key := range dtf.FormatMap[idx] {
 
-		t, err = time.Parse(f, timeStr)
+		dtResult.TotalNoOfDictSearches++
+
+		t, err := time.Parse(key, timeStr)
 
 		if err == nil {
-			return t, i, err
+			dtResult.OriginalDateTimeStringIn = timeStr
+			dtResult.FormattedDateTimeStringIn = timeStr
+			dtResult.SelectedMapIdx = idx
+			dtResult.SelectedFormatSource = "Format Dictionary"
+			dtResult.DateTimeOut = t
+			dtResult.SelectedFormat = key
+			return dtResult, err
 		}
 
 	}
 
-	err = errors.New("Found Format Map formats, but failed to parse time string")
+	err = errors.New("Failed to parse time string")
 
 	return
 }
@@ -268,17 +293,15 @@ func (dtf *DateTimeFormatUtility) assignFormatStrToMap(fmtStr string) {
 		return
 	}
 
-	sliceCap := 25000
-
-	if l > 19 && l < 48 {
-		sliceCap = 100000
-	}
-
 	if dtf.FormatMap[l] == nil {
-		dtf.FormatMap[l] = make([]string, 0, sliceCap)
+		dtf.FormatMap[l] = make(map[string]int)
 	}
 
-	dtf.FormatMap[l] = append(dtf.FormatMap[l], fmtStr)
+	if dtf.FormatMap[l][fmtStr] != 0 {
+		return
+	}
+
+	dtf.FormatMap[l][fmtStr] = l
 	dtf.NumOfFormatsGenerated++
 }
 

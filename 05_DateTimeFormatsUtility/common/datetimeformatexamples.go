@@ -187,13 +187,13 @@ func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
 	etFmtOpts, _ := du.GetElapsedTime(startTime, endTimeGetFormats)
 	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DurationStr)
 
-	lFmts := NumStrUtility{}.DNumI64(int64(dtf.NumOfFormatsGenerated), ',')
+	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
 	fmt.Println("Number of Formats Generated: ", lFmts)
 	fmt.Println()
 
 	startTimeParse := time.Now()
 
-	t, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
+	_, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
 
 	endTimeParse := time.Now()
 	fmt.Println()
@@ -210,17 +210,30 @@ func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
 		return
 	}
 
+	dtf.OriginalDateTimeStringIn = dateTimeStr
+
+	printTimeParseResults(dtf)
+}
+
+func printTimeParseResults(dtf DateTimeFormatUtility) {
+
 	FmtDateTimeEverything := "Monday January 2, 2006 15:04:05 -0700 MST"
 	fmt.Println()
 	fmt.Println("--------------------------------")
 	fmt.Println("Successful Time Parse Operation!")
-	fmt.Println("Length of Input Time String: ", len(dateTimeStr))
-	fmt.Println("Length of Processed Time String: ", len(dtf.DateTimeStringIn))
+	fmt.Println("Original Input Date Time:", dtf.OriginalDateTimeStringIn)
+	fmt.Println("Formatted Input Date Time: ", dtf.FormattedDateTimeStringIn)
+	fmt.Println("Length of Original Input Time String: ", len(dtf.OriginalDateTimeStringIn))
+	fmt.Println("Length of Processed Time String: ", len(dtf.FormattedDateTimeStringIn))
 	fmt.Println("Time Format Map Key: ", dtf.SelectedMapIdx)
-	fmt.Println("Time Format Slice Index:", dtf.SelectedSliceIdx)
 	fmt.Println("Time Format Selected: ", dtf.SelectedFormat)
-	fmt.Println("Original Date Time:", dateTimeStr)
-	fmt.Println("Parsed time.Time:", t)
-	fmt.Println("Parsed Time with Everything Format: ", t.Format(FmtDateTimeEverything))
-
+	fmt.Println("Selected Time Format Source: ", dtf.SelectedFormatSource)
+	fmt.Println("Parsed time.Time:", dtf.DateTimeOut)
+	fmt.Println("Parsed Time with Everything Format: ", dtf.DateTimeOut.Format(FmtDateTimeEverything))
+	fmt.Println("Detailed Search Pattern: ")
+	for key, value := range dtf.DictSearches {
+		fmt.Println("Index Searched: ", key, "  Number of Searches per Index: ", value)
+	}
+	fmt.Println()
+	fmt.Println("Total Number of Searches Performed: ", dtf.TotalNoOfDictSearches)
 }

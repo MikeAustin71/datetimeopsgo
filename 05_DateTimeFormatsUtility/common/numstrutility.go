@@ -1,6 +1,9 @@
 package common
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 /*
 var numStrCurrencies = []rune{
@@ -24,13 +27,16 @@ type NumStrUtility struct {
 	StrOut             string
 }
 
-// DNumI64 - Return a delimited number string with
+
+func (ns NumStrUtility) DLimInt(num int, delimiter byte ) string {
+	return ns.DnumStr(strconv.Itoa(num), delimiter)
+}
+
+// DLimI64 - Return a delimited number string with
 // thousands separator (i.e. 1000000 -> 1,000,000)
-func (ns NumStrUtility) DNumI64(num int64, deLim byte) string {
+func (ns NumStrUtility) DLimI64(num int64, delimiter byte) string {
 
-	nstr := fmt.Sprintf("%v", num)
-
-	return ns.DnumStr(nstr, deLim)
+	return ns.DnumStr(fmt.Sprintf("%v", num), delimiter)
 }
 
 func (ns NumStrUtility) DlimDecCurrStr(rawStr string, thousandsSeparator rune, decimal rune, currency rune) string {
