@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"time"
 )
 
@@ -17,23 +18,57 @@ type DateTimeFormatGenerator struct {
 }
 
 type DateTimeFormatUtility struct {
-	DateTimeStringIn string
-	Formats          []string
-	SelectedFormat   string
-	DateTimeOut      time.Time
+	DateTimeStringIn      string
+	FormatMap             map[int][]string
+	SelectedFormat        string
+	DateTimeOut           time.Time
+	NumOfFormatsGenerated int
 }
 
 func (dtf *DateTimeFormatUtility) GetAllDateTimeFormats() (err error) {
-	dtf.Formats = make([]string, 0, 500000)
+
+	dtf.FormatMap = make(map[int][]string)
+	dtf.NumOfFormatsGenerated = 0
 	dtf.assemblePreDefinedFormats()
 	dtf.assembleDayMthYearFmts()
 
 	return
 }
 
-func (dtf *DateTimeFormatUtility) AssembleDayMthYears() error {
+func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFormat string) (t time.Time,
+	idx int, lenStr int, err error) {
 
-	dtf.Formats = make([]string, 0, 2048)
+	if probableFormat != "" {
+		t, err = time.Parse(probableFormat, timeStr)
+
+		if err == nil {
+			return
+		}
+
+	}
+
+	lenStr = len(timeStr) - 1
+
+	t, idx, err = dtf.parseFormatMap(timeStr, lenStr)
+
+	if err == nil {
+		return
+	}
+
+	lenStr++
+	t, idx, err = dtf.parseFormatMap(timeStr, lenStr)
+
+	if err == nil {
+		return
+	}
+
+	return t, idx, lenStr, errors.New("Falied to locate correct time format!")
+}
+
+func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
+
+	dtf.FormatMap = make(map[int][]string)
+
 	fmtStr := ""
 
 	dayOfWeek, _ := dtf.getDayOfWeekElements()
@@ -46,18 +81,40 @@ func (dtf *DateTimeFormatUtility) AssembleDayMthYears() error {
 			for _, mmddyyy := range mthDayYearFmts {
 
 				if dowk != "" && mmddyyy != "" {
-					fmtStr = (dowk + dowkSep + mmddyyy)
-					dtf.Formats = append(dtf.Formats, fmtStr)
+					fmtStr = dowk + dowkSep + mmddyyy
+					dtf.assignFormatStrToMap(fmtStr)
 				} else if dowk != "" && mmddyyy == "" {
-					dtf.Formats = append(dtf.Formats, dowk)
+					dtf.assignFormatStrToMap(dowk)
 				} else if dowk == "" && mmddyyy != "" {
-					dtf.Formats = append(dtf.Formats, mmddyyy)
+					dtf.assignFormatStrToMap(mmddyyy)
 				}
 			}
 		}
 	}
 
 	return nil
+}
+
+func (dtf *DateTimeFormatUtility) parseFormatMap(timeStr string, idx int) (t time.Time, ix int, err error) {
+
+	if dtf.FormatMap[idx] == nil {
+		err = errors.New("Time String Length not found in Format Map!")
+		return
+	}
+
+	for i, f := range dtf.FormatMap[idx] {
+
+		t, err = time.Parse(f, timeStr)
+
+		if err == nil {
+			return t, i, err
+		}
+
+	}
+
+	err = errors.New("Found Format Map formats, but failed to parse time string")
+
+	return
 }
 
 func (dtf *DateTimeFormatUtility) assembleDayMthYearFmts() error {
@@ -121,10 +178,13 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYearFmts() error {
 }
 
 func (dtf *DateTimeFormatUtility) assemblePreDefinedFormats() {
-	preDefFmts, _ := dtf.getPredefinedFormats()
+
+	preDefFmts := dtf.getPredefinedFormats()
 
 	for _, pdf := range preDefFmts {
-		dtf.Formats = append(dtf.Formats, pdf)
+
+		dtf.assignFormatStrToMap(pdf)
+
 	}
 
 }
@@ -156,7 +216,7 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Date
 	}
 
 	if dtfGen.OffsetElement != "" {
-		if fmtStr == "" || dtfGen.TimeElement==""{
+		if fmtStr == "" || dtfGen.TimeElement == "" {
 			return
 		} else {
 			fmtStr += dtfGen.OffsetSeparator
@@ -165,7 +225,7 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Date
 	}
 
 	if dtfGen.TimeZoneElement != "" {
-		if fmtStr == "" || dtfGen.TimeElement=="" {
+		if fmtStr == "" || dtfGen.TimeElement == "" {
 			return
 		} else {
 			fmtStr += dtfGen.TimeZoneSeparator
@@ -174,9 +234,31 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Date
 
 	}
 
-	dtf.Formats = append(dtf.Formats, fmtStr)
+	dtf.assignFormatStrToMap(fmtStr)
 
 	return
+}
+
+func (dtf *DateTimeFormatUtility) assignFormatStrToMap(fmtStr string) {
+
+	l := len(fmtStr)
+
+	if l == 0 {
+		return
+	}
+
+	sliceCap := 25000
+
+	if l > 19 && l < 48 {
+		sliceCap = 100000
+	}
+
+	if dtf.FormatMap[l] == nil {
+		dtf.FormatMap[l] = make([]string, 0, sliceCap)
+	}
+
+	dtf.FormatMap[l] = append(dtf.FormatMap[l], fmtStr)
+	dtf.NumOfFormatsGenerated++
 }
 
 func (dtf DateTimeFormatUtility) getDayOfWeekElements() ([]string, error) {
@@ -388,12 +470,6 @@ func (dtf DateTimeFormatUtility) getTimeElements() ([]string, error) {
 	timeElements = append(timeElements, "3:4 PM")
 	timeElements = append(timeElements, "3:4 P.M.")
 
-
-
-
-
-
-
 	timeElements = append(timeElements, "")
 
 	return timeElements, nil
@@ -431,7 +507,7 @@ func (dtf DateTimeFormatUtility) getTimeZoneElements() ([]string, error) {
 	return tzElements, nil
 }
 
-func (dtf DateTimeFormatUtility) getTimeZoneSeparators() ([]string, error) {
+func (dtf *DateTimeFormatUtility) getTimeZoneSeparators() ([]string, error) {
 	tzElements := make([]string, 0, 20)
 
 	tzElements = append(tzElements, " ")
@@ -440,9 +516,8 @@ func (dtf DateTimeFormatUtility) getTimeZoneSeparators() ([]string, error) {
 	return tzElements, nil
 }
 
+func (dtf *DateTimeFormatUtility) getPredefinedFormats() []string {
 
-
-func (dtf DateTimeFormatUtility) getPredefinedFormats() ([]string, error) {
 	preDefinedFormats := make([]string, 0, 20)
 
 	preDefinedFormats = append(preDefinedFormats, time.ANSIC)
@@ -461,5 +536,5 @@ func (dtf DateTimeFormatUtility) getPredefinedFormats() ([]string, error) {
 	preDefinedFormats = append(preDefinedFormats, time.StampMicro)
 	preDefinedFormats = append(preDefinedFormats, time.StampNano)
 
-	return preDefinedFormats, nil
+	return preDefinedFormats
 }

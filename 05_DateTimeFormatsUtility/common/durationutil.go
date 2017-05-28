@@ -170,6 +170,7 @@ func (du DurationUtility) GetDurationBreakDown(d time.Duration) DurationUtility 
 	firstEle := false
 	rd := int64(d)
 
+
 	if rd >= YearNanoSeconds {
 		durationUtility.Years = rd / YearNanoSeconds
 		rd -= YearNanoSeconds * durationUtility.Years
