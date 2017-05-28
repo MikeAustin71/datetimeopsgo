@@ -193,7 +193,7 @@ func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
 
 	startTimeParse := time.Now()
 
-	t, idx, lenStr, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
+	t, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
 
 	endTimeParse := time.Now()
 	fmt.Println()
@@ -210,13 +210,17 @@ func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
 		return
 	}
 
+	FmtDateTimeEverything := "Monday January 2, 2006 15:04:05 -0700 MST"
 	fmt.Println()
 	fmt.Println("--------------------------------")
 	fmt.Println("Successful Time Parse Operation!")
-	fmt.Println("Actual Length of Time String: ", len(dateTimeStr))
-	fmt.Println("Time Format Map Key: ", lenStr)
-	fmt.Println("Time Format Map Index:", idx)
+	fmt.Println("Length of Input Time String: ", len(dateTimeStr))
+	fmt.Println("Length of Processed Time String: ", len(dtf.DateTimeStringIn))
+	fmt.Println("Time Format Map Key: ", dtf.SelectedMapIdx)
+	fmt.Println("Time Format Slice Index:", dtf.SelectedSliceIdx)
+	fmt.Println("Time Format Selected: ", dtf.SelectedFormat)
 	fmt.Println("Original Date Time:", dateTimeStr)
 	fmt.Println("Parsed time.Time:", t)
+	fmt.Println("Parsed Time with Everything Format: ", t.Format(FmtDateTimeEverything))
 
 }

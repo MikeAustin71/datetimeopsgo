@@ -166,10 +166,14 @@ func (du DurationUtility) GenerateDuration(duIn DurationUtility) ( time.Duration
 func (du DurationUtility) GetDurationBreakDown(d time.Duration) DurationUtility {
 	str := ""
 	durationUtility := DurationUtility{TimeDuration: d}
-	durationUtility.DefaultStr = fmt.Sprintf("%v", d)
 	firstEle := false
 	rd := int64(d)
-
+	durationUtility.DefaultStr = fmt.Sprintf("%v", d)
+	if rd == 0 {
+		durationUtility.DurationStr = "0-Nanoseconds"
+		durationUtility.NanosecStr =  "0-Nanoseconds"
+		return durationUtility
+	}
 
 	if rd >= YearNanoSeconds {
 		durationUtility.Years = rd / YearNanoSeconds

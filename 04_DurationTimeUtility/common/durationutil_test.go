@@ -381,3 +381,29 @@ func TestDurationUtility_GenerateDuration(t *testing.T) {
 	}
 
 }
+
+func TestDurationUtility_GetDurationBreakDown_Zero_Duration(t *testing.T) {
+
+	du := DurationUtility{}
+
+	zeroDuration := time.Duration(0)
+
+	elapsedTime := du.GetDurationBreakDown(time.Duration(0))
+
+	expectedDurStr := "0-Nanoseconds"
+
+	if elapsedTime.TimeDuration != zeroDuration {
+		t.Errorf("Expected elapsedTime.TimeDuration == zero, instead got: %v", elapsedTime.TimeDuration)
+	}
+
+	if elapsedTime.NanosecStr != expectedDurStr {
+		t.Errorf("Expected elapsedTime.NanosecStr to equal '%v', instead got: %v",
+			expectedDurStr, elapsedTime.NanosecStr)
+	}
+
+	if elapsedTime.DurationStr != expectedDurStr {
+		t.Errorf("Expected elapsedTime.DurationStr to equal '%v', instead got: %v",
+			expectedDurStr, elapsedTime.DurationStr)
+
+	}
+}

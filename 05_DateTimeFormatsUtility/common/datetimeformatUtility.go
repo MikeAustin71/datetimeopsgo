@@ -2,6 +2,7 @@ package common
 
 import (
 	"errors"
+	"strings"
 	"time"
 )
 
@@ -20,6 +21,8 @@ type DateTimeFormatGenerator struct {
 type DateTimeFormatUtility struct {
 	DateTimeStringIn      string
 	FormatMap             map[int][]string
+	SelectedMapIdx        int
+	SelectedSliceIdx      int
 	SelectedFormat        string
 	DateTimeOut           time.Time
 	NumOfFormatsGenerated int
@@ -35,34 +38,52 @@ func (dtf *DateTimeFormatUtility) GetAllDateTimeFormats() (err error) {
 	return
 }
 
-func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFormat string) (t time.Time,
-	idx int, lenStr int, err error) {
+func (dtf *DateTimeFormatUtility) Empty() {
+	dtf.DateTimeStringIn = ""
+	dtf.DateTimeOut = time.Time{}
+	dtf.SelectedFormat = ""
+	dtf.SelectedMapIdx = -1
+	dtf.SelectedSliceIdx = -1
+}
+
+func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFormat string) (time.Time, error) {
+
+	dtf.Empty()
+	ftimeStr := strings.Trim(timeStr, " ")
+
 
 	if probableFormat != "" {
-		t, err = time.Parse(probableFormat, timeStr)
+		t, err := time.Parse(probableFormat, ftimeStr)
 
 		if err == nil {
-			return
+			dtf.SelectedFormat = probableFormat
+			dtf.DateTimeOut = t
+			dtf.DateTimeStringIn = ftimeStr
+			return t, nil
 		}
 
 	}
 
-	lenStr = len(timeStr) - 1
+	lenStr := len(ftimeStr)
 
-	t, idx, err = dtf.parseFormatMap(timeStr, lenStr)
+	lenTests := [7]int{lenStr, lenStr - 1, lenStr + 1, lenStr - 2, lenStr + 2, lenStr + 3, lenStr - 3}
 
-	if err == nil {
-		return
+	for _, lTest := range lenTests {
+
+		t, idx, err := dtf.parseFormatMap(ftimeStr, lTest)
+
+		if err == nil {
+			dtf.SelectedFormat = dtf.FormatMap[lTest][idx]
+			dtf.SelectedMapIdx = lTest
+			dtf.SelectedSliceIdx = idx
+			dtf.DateTimeOut = t
+			dtf.DateTimeStringIn = ftimeStr
+			return t, nil
+		}
+
 	}
 
-	lenStr++
-	t, idx, err = dtf.parseFormatMap(timeStr, lenStr)
-
-	if err == nil {
-		return
-	}
-
-	return t, idx, lenStr, errors.New("Falied to locate correct time format!")
+	return time.Time{}, errors.New("Failed to locate correct time format!")
 }
 
 func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
