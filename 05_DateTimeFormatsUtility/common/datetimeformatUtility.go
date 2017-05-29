@@ -2,7 +2,6 @@ package common
 
 import (
 	"errors"
-	"strings"
 	"time"
 )
 
@@ -36,7 +35,7 @@ func (dtf *DateTimeFormatUtility) GetAllDateTimeFormats() (err error) {
 	dtf.FormatMap = make(map[int]map[string]int)
 	dtf.NumOfFormatsGenerated = 0
 	dtf.assemblePreDefinedFormats()
-	dtf.assembleDayMthYearFmts()
+	dtf.assembleMthDayYearFmts()
 
 	return
 }
@@ -55,8 +54,17 @@ func (dtf *DateTimeFormatUtility) Empty() {
 
 func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFormat string) (time.Time, error) {
 
+	if timeStr == "" {
+		return time.Time{}, errors.New("Empty Time String!")
+	}
+
 	dtf.Empty()
-	ftimeStr := strings.Trim(timeStr, " ")
+
+	ftimeStr, err := StringUtility{}.TrimEndMultiple(timeStr, ' ')
+
+	if err != nil {
+		return time.Time{}, err
+	}
 
 	if probableFormat != "" {
 		t, err := time.Parse(probableFormat, ftimeStr)
@@ -163,7 +171,7 @@ func (dtf *DateTimeFormatUtility) parseFormatMap(timeStr string, idx int) (dtRes
 	return
 }
 
-func (dtf *DateTimeFormatUtility) assembleDayMthYearFmts() error {
+func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 
 	dayOfWeek, _ := dtf.getDayOfWeekElements()
 
@@ -205,7 +213,7 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYearFmts() error {
 										}
 
 										dtf.analyzeDofWeekMMDDYYYYTimeOffsetTz(fmtGen)
-
+										dtf.analyzeDofWeekMMDDYYYYTzTimeOffset(fmtGen)
 									}
 								}
 
@@ -219,6 +227,13 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYearFmts() error {
 		}
 
 	}
+
+	return nil
+}
+
+func (dtf *DateTimeFormatUtility) assembleMthDayTimeOffsetTzYearFmts() error {
+
+
 
 	return nil
 }
@@ -285,6 +300,58 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Date
 	return
 }
 
+func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTzTimeOffset(dtfGen DateTimeFormatGenerator){
+
+	fmtStr := ""
+
+	if dtfGen.DayOfWeek != "" {
+		fmtStr += dtfGen.DayOfWeek
+	}
+
+	if dtfGen.MthDayYear != "" {
+		if fmtStr == "" {
+			fmtStr = dtfGen.MthDayYear
+		} else {
+			fmtStr += dtfGen.DayOfWeekSeparator
+			fmtStr += dtfGen.MthDayYear
+		}
+	}
+
+	if dtfGen.TimeElement != "" {
+		if fmtStr == "" {
+			fmtStr = dtfGen.TimeElement
+		} else {
+			fmtStr += dtfGen.DateTimeSeparator
+			fmtStr += dtfGen.TimeElement
+		}
+	}
+
+	if dtfGen.TimeZoneElement != "" {
+		if fmtStr == "" || dtfGen.TimeElement == "" {
+			return
+		} else {
+			fmtStr += dtfGen.TimeZoneSeparator
+			fmtStr += dtfGen.TimeZoneElement
+		}
+
+	}
+
+	if dtfGen.OffsetElement != "" {
+		if fmtStr == "" || dtfGen.TimeElement == "" {
+			return
+		} else {
+			fmtStr += dtfGen.OffsetSeparator
+			fmtStr += dtfGen.OffsetElement
+		}
+	}
+
+
+	dtf.assignFormatStrToMap(fmtStr)
+
+	return
+
+}
+
 func (dtf *DateTimeFormatUtility) assignFormatStrToMap(fmtStr string) {
 
 	l := len(fmtStr)
@@ -331,14 +398,40 @@ func (dtf DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 
 	mthDayYr = append(mthDayYr, "2006-01-02")
 	mthDayYr = append(mthDayYr, "2006/01/02")
-	mthDayYr = append(mthDayYr, "2006.01.02")
 	mthDayYr = append(mthDayYr, "2006-1-2")
 	mthDayYr = append(mthDayYr, "2006/1/2")
-	mthDayYr = append(mthDayYr, "2006.1.2")
 
+	mthDayYr = append(mthDayYr, "2006-1-02")
+	mthDayYr = append(mthDayYr, "2006/1/02")
+	mthDayYr = append(mthDayYr, "2006-01-2")
+	mthDayYr = append(mthDayYr, "2006/01/2")
+
+	// European Date Formats
 	mthDayYr = append(mthDayYr, "02.01.06")
 	mthDayYr = append(mthDayYr, "02.01.2006")
 	mthDayYr = append(mthDayYr, "02.01.'06")
+
+	mthDayYr = append(mthDayYr, "2.1.06")
+	mthDayYr = append(mthDayYr, "2.1.2006")
+	mthDayYr = append(mthDayYr, "2.1.'06")
+
+	mthDayYr = append(mthDayYr, "2.01.06")
+	mthDayYr = append(mthDayYr, "2.01.2006")
+	mthDayYr = append(mthDayYr, "2.01.'06")
+
+	mthDayYr = append(mthDayYr, "02.1.06")
+	mthDayYr = append(mthDayYr, "02.1.2006")
+	mthDayYr = append(mthDayYr, "02.1.'06")
+
+
+	mthDayYr = append(mthDayYr, "02.January.'06")
+	mthDayYr = append(mthDayYr, "02.January.06")
+	mthDayYr = append(mthDayYr, "02.January.2006")
+
+	mthDayYr = append(mthDayYr, "02.Jan.'06")
+	mthDayYr = append(mthDayYr, "02.Jan.06")
+	mthDayYr = append(mthDayYr, "02.Jan.2006")
+	// ----------------------------------------------
 
 	mthDayYr = append(mthDayYr, "01-02-06")
 	mthDayYr = append(mthDayYr, "01-02-2006")
@@ -380,6 +473,8 @@ func (dtf DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr = append(mthDayYr, "January-02-06")
 	mthDayYr = append(mthDayYr, "January 2, 06")
 	mthDayYr = append(mthDayYr, "January 2, 2006")
+	mthDayYr = append(mthDayYr, "January _2, 2006")
+	mthDayYr = append(mthDayYr, "January _2, 06")
 
 	mthDayYr = append(mthDayYr, "2 January, 06")
 	mthDayYr = append(mthDayYr, "02 January, 06")
@@ -387,8 +482,10 @@ func (dtf DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr = append(mthDayYr, "02 January, 2006")
 	mthDayYr = append(mthDayYr, "2 January 06")
 	mthDayYr = append(mthDayYr, "02 January 06")
+	mthDayYr = append(mthDayYr, "_2 January 06")
 	mthDayYr = append(mthDayYr, "2 January 2006")
 	mthDayYr = append(mthDayYr, "02 January 2006")
+	mthDayYr = append(mthDayYr, "_2 January 2006")
 	mthDayYr = append(mthDayYr, "02/Jan/2006")
 	mthDayYr = append(mthDayYr, "2/Jan/2006")
 	mthDayYr = append(mthDayYr, "02/Jan/06")
@@ -422,11 +519,24 @@ func (dtf DateTimeFormatUtility) getMonthDayElements() ([]string, error) {
 
 	mthDayElements = append(mthDayElements, "Jan 2")
 	mthDayElements = append(mthDayElements, "January 2")
+	mthDayElements = append(mthDayElements, "Jan _2")
+	mthDayElements = append(mthDayElements, "January _2")
 	mthDayElements = append(mthDayElements, "01-02")
+	mthDayElements = append(mthDayElements, "01-_2")
 	mthDayElements = append(mthDayElements, "01/02")
+	mthDayElements = append(mthDayElements, "01/_2")
 	mthDayElements = append(mthDayElements, "1-2")
 	mthDayElements = append(mthDayElements, "1/2")
+	mthDayElements = append(mthDayElements, "01-2")
+	mthDayElements = append(mthDayElements, "01/2")
+	mthDayElements = append(mthDayElements, "1-02")
+	mthDayElements = append(mthDayElements, "1/02")
 	mthDayElements = append(mthDayElements, "0102")
+	// European Format Day Month
+	mthDayElements = append(mthDayElements, "02.01")
+	mthDayElements = append(mthDayElements, "2.1")
+	mthDayElements = append(mthDayElements, "02.1")
+	mthDayElements = append(mthDayElements, "2.01")
 
 	return mthDayElements, nil
 }
@@ -439,6 +549,18 @@ func (dtf DateTimeFormatUtility) getYears() ([]string, error) {
 	yearElements = append(yearElements, "'06")
 
 	return yearElements, nil
+}
+
+func (dtf DateTimeFormatUtility) getMthDayAfterSeparators() ([]string, error) {
+	mthDayAfterSeparators := make([]string, 0, 10)
+
+	mthDayAfterSeparators = append(mthDayAfterSeparators, " ")
+	mthDayAfterSeparators = append(mthDayAfterSeparators, ", ")
+	mthDayAfterSeparators = append(mthDayAfterSeparators, "T")
+	mthDayAfterSeparators = append(mthDayAfterSeparators, ":")
+
+	return mthDayAfterSeparators, nil
+
 }
 
 func (dtf DateTimeFormatUtility) getStandardSeparators() ([]string, error) {
