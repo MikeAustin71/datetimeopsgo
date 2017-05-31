@@ -24,7 +24,8 @@ func main() {
 	//tDateTime := "2016-11-26 16:26 -0600"
 	//tDateTime := "11/12/16 4:26 PM"
 	// tDateTime := "5/27/2017 11:42PM CDT"
-	tDateTime := "2016-11-26 16:26 CDT -0600"
-	common.TestParseDateTime(tDateTime, "")
+	// tDateTime := "2016-11-26 16:26 CDT -0600"
+	// common.TestParseDateTime(tDateTime, "")
+	common.WriteAllFormatsToFile()
 
 }

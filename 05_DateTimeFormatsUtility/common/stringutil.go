@@ -13,6 +13,31 @@ type StringUtility struct {
 	StrOut string
 }
 
+
+func (su StringUtility) ReadStrNewLineFromBuffer(buff []byte, previousPartialStr string, startIdx int) (outStr string, nextIdx int, isPartialStr bool){
+	sOut := make([] byte, 0, 512)
+	lastIdx := len(buff) - 1
+	lPrevPartStr := len(previousPartialStr)
+	if lPrevPartStr > 0 {
+		for i:=0; i < lPrevPartStr; i++ {
+			sOut = append(sOut, previousPartialStr[i])
+		}
+	}
+
+	for i := startIdx; i <= lastIdx; i++ {
+
+		if buff[i] == '\n' {
+			return string(sOut), (i+1), false
+		}
+
+		sOut = append(sOut,buff[i])
+
+	}
+
+	return string(sOut), -1, true
+
+}
+
 // StrCenterInStr - returns a string which includes
 // a left pad blank string plus the original string.
 // The complete string will effectively center the

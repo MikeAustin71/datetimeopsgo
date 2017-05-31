@@ -18,7 +18,7 @@ func WriteAllFormatsToFile() {
 
 	dtf := DateTimeFormatUtility{}
 
-	dtf.GetAllDateTimeFormats()
+	dtf.CreateAllFormatsInMemory()
 
 	endTimeGetFormats := time.Now()
 
@@ -29,7 +29,7 @@ func WriteAllFormatsToFile() {
 	lFmts := len(dtf.FormatMap)
 
 	if lFmts < 1 {
-		panic(errors.New("GetAllDateTimeFormats Completed, but no formats were created! FormatMap length == 0"))
+		panic(errors.New("CreateAllFormatsInMemory Completed, but no formats were created! FormatMap length == 0"))
 	}
 
 	fh := FileHelper{}
@@ -65,9 +65,9 @@ func WriteAllFormatsToFile() {
 
 		numOfKeys++
 
-		for _, fx := range dtf.FormatMap[k] {
+		for keyFmt, _ := range dtf.FormatMap[k] {
 			numOfFormats++
-			fh.WriteFileStr(fmt.Sprintf("Key: %v  - %v \n", k, fx), f)
+			fh.WriteFileStr(fmt.Sprintf("%07d %s\n", k, keyFmt), f)
 		}
 
 	}
@@ -77,10 +77,10 @@ func WriteAllFormatsToFile() {
 	etFileWrite, _ := du.GetElapsedTime(endTimeGetFormats, endTime)
 
 	et, _ := du.GetElapsedTime(startTime, endTime)
-
+	nu:= NumStrUtility{}
 	fmt.Println("Formats File Write Operation Completed to file: ", outputFile)
-	fmt.Println("Number Date Time formats Generated: ", numOfFormats)
-	fmt.Println("Number of Map Keys Generated: ", numOfKeys)
+	fmt.Println("Number Date Time formats Generated: ", nu.DLimInt(numOfFormats,','))
+	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(numOfKeys,','))
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	fmt.Println("Elapsed Run Time For Write File Operations: ", etFileWrite.DurationStr)
 	fmt.Println("Elapsed Run Time For All Operations: ", et.DurationStr)
@@ -91,14 +91,14 @@ func WriteAllFormatsToFile() {
 // The text file is small, currently about 3-kilobytes in size.
 // The data output to the text file describes the size of the
 // slices contained in dtf.FormatMap
-func WriteFormatDataToFile() {
+func WriteFormatStatsToFile() {
 	startTime := time.Now()
 
 	du := DurationUtility{}
 
 	dtf := DateTimeFormatUtility{}
 
-	dtf.GetAllDateTimeFormats()
+	dtf.CreateAllFormatsInMemory()
 
 	endTimeGetFormats := time.Now()
 
@@ -109,12 +109,12 @@ func WriteFormatDataToFile() {
 	lFmts := len(dtf.FormatMap)
 
 	if lFmts < 1 {
-		panic(errors.New("GetAllDateTimeFormats Completed, but no formats were created! FormatMap length == 0"))
+		panic(errors.New("CreateAllFormatsInMemory Completed, but no formats were created! FormatMap length == 0"))
 	}
 
 	fh := FileHelper{}
 
-	outputFile := "../formats/fmtRun.txt"
+	outputFile := "../formats/fmtStats.txt"
 
 	if fh.DoesFileExist(outputFile) {
 		err := fh.DeleteDirFile(outputFile)
@@ -140,14 +140,15 @@ func WriteFormatDataToFile() {
 	sort.Ints(keys)
 	numOfKeys := 0
 	numOfFormats := 0
-	sliceLen := 0
+	mapLen := 0
+	fh.WriteFileStr("Length - Number Of Formats\n",f)
 	for _, k := range keys {
 
 		numOfKeys++
-		sliceLen = len(dtf.FormatMap[k])
-		numOfFormats += sliceLen
+		mapLen = len(dtf.FormatMap[k])
+		numOfFormats += mapLen
 
-		fh.WriteFileStr(fmt.Sprintf("Key: %v  Length Of Format Slice: %v \n", k, sliceLen), f)
+		fh.WriteFileStr(fmt.Sprintf("%06d%18d\n", k, mapLen), f)
 	}
 
 	endTime := time.Now()
@@ -155,10 +156,10 @@ func WriteFormatDataToFile() {
 	etFileWrite, _ := du.GetElapsedTime(endTimeGetFormats, endTime)
 
 	et, _ := du.GetElapsedTime(startTime, endTime)
-
+	nu := NumStrUtility{}
 	fmt.Println("File Write Operation Completed to file: ", outputFile)
-	fmt.Println("Date Time formats Generated: ", numOfFormats)
-	fmt.Println("Number of Map Keys Generated: ", numOfKeys)
+	fmt.Println("Date Time formats Generated: ", nu.DLimInt(numOfFormats, ','))
+	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(numOfKeys,','))
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	fmt.Println("Elapsed Run Time For Write File Operations: ", etFileWrite.DurationStr)
 	fmt.Println("Elapsed Run Time For All Operations: ", et.DurationStr)
@@ -180,7 +181,7 @@ func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
 
 	dtf := DateTimeFormatUtility{}
 
-	dtf.GetAllDateTimeFormats()
+	dtf.CreateAllFormatsInMemory()
 
 	endTimeGetFormats := time.Now()
 

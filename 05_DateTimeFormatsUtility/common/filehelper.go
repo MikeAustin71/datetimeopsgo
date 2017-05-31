@@ -96,7 +96,7 @@ func (fh FileHelper) CopyFile(src, dst string) (err error) {
 
 		if !os.IsNotExist(err) {
 			// Must be PathError - Path does not exist
-			return fmt.Errorf("FileHelper:CopyFile(): Destination File Path Error - Path does NOT exist. Error: %v",err.Error())
+			return fmt.Errorf("FileHelper:CopyFile(): Destination File Path Error - Path does NOT exist. Error: %v", err.Error())
 		}
 	} else {
 		if !(dfi.Mode().IsRegular()) {
@@ -145,8 +145,6 @@ func (fh FileHelper) CopyFileContents(src, dst string) (err error) {
 
 	return
 }
-
-
 
 // CleanPathStr - Wrapper Function for filepath.Clean()
 // See: https://golang.org/pkg/path/filepath/#Clean
@@ -658,7 +656,7 @@ func (fh FileHelper) MoveFile(src, dst string) (err error) {
 	err = fh.DeleteDirFile(src)
 
 	if err != nil {
-		return fmt.Errorf("FileHelper:MoveFile() Successfully copied file from source, '%v', to destination '%v'; however deletion of source file failed! Error: %v",src,dst,err.Error())
+		return fmt.Errorf("FileHelper:MoveFile() Successfully copied file from source, '%v', to destination '%v'; however deletion of source file failed! Error: %v", src, dst, err.Error())
 	}
 
 	return
@@ -792,6 +790,10 @@ func (fh FileHelper) MakePurgeFilesFunc(dInfo *DirWalkInfo) func(string, os.File
 
 		return nil
 	}
+}
+
+func (fh FileHelper) ReadFileBytes(rFile *os.File, byteBuff []byte) (int, error) {
+	return rFile.Read(byteBuff)
 }
 
 // WriteFileStr - Wrapper for *os.File.WriteString. Writes a string

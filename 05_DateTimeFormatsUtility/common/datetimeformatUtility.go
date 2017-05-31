@@ -3,18 +3,29 @@ package common
 import (
 	"errors"
 	"time"
+	"fmt"
+	"os"
+	"strconv"
 )
 
+type DateTimeFormatRecord struct {
+	FmtLength 	int
+	FormatStr		string
+}
+
 type DateTimeFormatGenerator struct {
-	DayOfWeek          string
-	DayOfWeekSeparator string
-	MthDayYear         string
-	DateTimeSeparator  string
-	TimeElement        string
-	OffsetSeparator    string
-	OffsetElement      string
-	TimeZoneSeparator  string
-	TimeZoneElement    string
+	DayOfWeek            string
+	DayOfWeekSeparator   string
+	MthDay               string
+	MthDayYear           string
+	AfterMthDaySeparator string
+	DateTimeSeparator    string
+	TimeElement          string
+	OffsetSeparator      string
+	OffsetElement        string
+	TimeZoneSeparator    string
+	TimeZoneElement      string
+	Year                 string
 }
 
 type DateTimeFormatUtility struct {
@@ -30,13 +41,133 @@ type DateTimeFormatUtility struct {
 	NumOfFormatsGenerated     int
 }
 
-func (dtf *DateTimeFormatUtility) GetAllDateTimeFormats() (err error) {
+
+// CreateAllFormatsInMemory - Generates 11-million permutations of
+// Date Time Formats and stores them in memory as a series of
+// maps of maps using the field: DateTimeFormatUtility.FormatMap
+func (dtf *DateTimeFormatUtility) CreateAllFormatsInMemory() (err error) {
 
 	dtf.FormatMap = make(map[int]map[string]int)
 	dtf.NumOfFormatsGenerated = 0
 	dtf.assemblePreDefinedFormats()
 	dtf.assembleMthDayYearFmts()
 
+	return
+}
+
+// LoadAllFormatsFromFileIntoMemory - Loads all date time formats from a specified
+// text file into memory. The formats are stored in DateTimeFormatUtility.FormatMap
+func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName string) error {
+
+	fmtFile, err := os.Open(pathFileName)
+
+	if err != nil {
+		return fmt.Errorf ("LoadAllFormatsFromFileIntoMemory- Error Opening File: %v - Error: %v", pathFileName, err.Error())
+	}
+
+	defer fmtFile.Close()
+	const bufLen int = 500000
+	lastBufIdx := bufLen - 1
+	var buffer [] byte
+	outRecordBuff := make([] byte, 0)
+	IsEOF := false
+	idx := 0
+
+	for IsEOF == false {
+
+		buffer = make([] byte, bufLen)
+
+		n, err := fmtFile.Read(buffer)
+
+		if err != nil {
+			IsEOF = true
+		}
+
+		isPartialRec := false
+
+		idx = 0
+
+		for idx > -1  && n > 0{
+
+			idx, isPartialRec = dtf.extractFmtRecordFromBuffer(buffer, outRecordBuff,  idx, lastBufIdx)
+
+
+			if isPartialRec {
+
+				break
+
+			}
+
+			lOutBuff := len(outRecordBuff)
+
+			if lOutBuff < 7  {
+				return errors.New ("Length of Output Buffer is less than 7 chars!")
+			}
+
+
+			lenField := make([]byte, 7)
+
+			for i:=0; i < 7; i++ {
+				lenField[i] = outRecordBuff[i]
+			}
+
+			s:= string(lenField)
+
+			lFmt, err := strconv.Atoi(s)
+
+			if err != nil {
+				return fmt.Errorf("Error converting Format Length field from file. Length = %v ",s)
+			}
+
+			if lOutBuff < 8 + lFmt {
+				return fmt.Errorf("Found corrupted Output Buffer. Buffer Length %v, Length Field = %v, Output Buffer= %f",
+				lOutBuff, lFmt, string(outRecordBuff))
+			}
+
+			fmtField := make([]byte, lFmt)
+
+			for i:= 8 ; i < lOutBuff; i ++ {
+				fmtField[i-8] = outRecordBuff[i]
+			}
+
+			fmtStr := string(fmtField)
+
+			// Populate DateTimeFormatUtility.FormatMap
+			if dtf.FormatMap[lFmt] == nil {
+				dtf.FormatMap[lFmt] = make(map[string]int)
+			}
+
+			if dtf.FormatMap[lFmt][fmtStr] == 0 {
+				dtf.FormatMap[lFmt][fmtStr] = lFmt
+				dtf.NumOfFormatsGenerated++
+			}
+
+			outRecordBuff = make([] byte, 0)
+		}
+	}
+
+
+	return nil
+}
+
+
+func (dtf *DateTimeFormatUtility) extractFmtRecordFromBuffer(
+				inBuff []byte, outRecordBuff []byte, idx int, lastidx int)(nextIdx int, isPartialRec bool){
+
+	for i:=idx; i <= lastidx; i++ {
+
+		if inBuff[i] == '\n' {
+			nextIdx = i + 1
+			isPartialRec = false
+			return
+		}
+
+		outRecordBuff = append(outRecordBuff,inBuff[i])
+
+	}
+
+	nextIdx = -1
+	isPartialRec = true
 	return
 }
 
@@ -213,7 +344,6 @@ func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 										}
 
 										dtf.analyzeDofWeekMMDDYYYYTimeOffsetTz(fmtGen)
-										dtf.analyzeDofWeekMMDDYYYYTzTimeOffset(fmtGen)
 									}
 								}
 
@@ -223,7 +353,6 @@ func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 				}
 
 			}
-
 		}
 
 	}
@@ -233,9 +362,143 @@ func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 
 func (dtf *DateTimeFormatUtility) assembleMthDayTimeOffsetTzYearFmts() error {
 
+	dayOfWeek, _ := dtf.getDayOfWeekElements()
 
+	dayOfWeekSeparators, _ := dtf.getDayOfWeekSeparator()
+
+	mthDayElements, _ := dtf.getMonthDayElements()
+
+	afterMthDaySeparators, _ := dtf.getAfterMthDaySeparators()
+
+	timeFmts, _ := dtf.getTimeElements()
+
+	offsetSeparators, _ := dtf.getTimeOffsetSeparators()
+
+	offsetFmts, _ := dtf.getTimeOffsets()
+
+	tzSeparators, _ := dtf.getTimeZoneSeparators()
+
+	timeZoneFmts, _ := dtf.getTimeZoneElements()
+
+	yearElements, _ := dtf.getYears()
+
+	for _, dowk := range dayOfWeek {
+		for _, dowkSep := range dayOfWeekSeparators {
+			for _, mthDay := range mthDayElements {
+				for _, afterMthDaySeparator := range afterMthDaySeparators {
+					for _, t := range timeFmts {
+						for _, tOffsetSep := range offsetSeparators {
+							for _, offFmt := range offsetFmts {
+								for _, stdSep := range tzSeparators {
+									for _, tzF := range timeZoneFmts {
+										for _, yearEle := range yearElements {
+
+											fmtGen := DateTimeFormatGenerator{
+												DayOfWeek:            dowk,
+												DayOfWeekSeparator:   dowkSep,
+												MthDayYear:           mthDay,
+												AfterMthDaySeparator: afterMthDaySeparator,
+												TimeElement:          t,
+												OffsetSeparator:      tOffsetSep,
+												OffsetElement:        offFmt,
+												TimeZoneSeparator:    stdSep,
+												TimeZoneElement:      tzF,
+												Year:                 yearEle,
+											}
+
+											dtf.analyzeDofWeekMMDDTimeOffsetTzYYYY(fmtGen)
+
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+	}
 
 	return nil
+}
+
+func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen DateTimeFormatGenerator) {
+
+	fmtStr := ""
+	fmtStr2 := ""
+
+	if dtfGen.DayOfWeek != "" {
+		fmtStr += dtfGen.DayOfWeek
+	}
+
+	if dtfGen.MthDayYear != "" {
+		if fmtStr == "" {
+			fmtStr = dtfGen.MthDayYear
+		} else {
+			fmtStr += dtfGen.DayOfWeekSeparator
+			fmtStr += dtfGen.MthDayYear
+		}
+	}
+
+	if dtfGen.TimeElement != "" {
+		if fmtStr == "" {
+			fmtStr = dtfGen.TimeElement
+		} else {
+			fmtStr += dtfGen.DateTimeSeparator
+			fmtStr += dtfGen.TimeElement
+		}
+	}
+
+	fmtStr2 = fmtStr
+
+	if dtfGen.OffsetElement != "" &&
+		fmtStr != "" &&
+		dtfGen.TimeElement != "" {
+
+		fmtStr += dtfGen.OffsetSeparator
+		fmtStr += dtfGen.OffsetElement
+	}
+
+	if dtfGen.TimeZoneElement != "" &&
+		fmtStr != "" &&
+		dtfGen.TimeElement != "" {
+
+		fmtStr += dtfGen.TimeZoneSeparator
+		fmtStr += dtfGen.TimeZoneElement
+	}
+
+	if fmtStr != "" {
+		dtf.assignFormatStrToMap(fmtStr)
+	}
+
+	// Calculate variation of format string where
+	// Time Zone comes before Offset Element
+
+	if dtfGen.TimeZoneElement != "" &&
+		fmtStr2 == "" &&
+		dtfGen.TimeElement != "" {
+
+		fmtStr2 += dtfGen.TimeZoneSeparator
+		fmtStr2 += dtfGen.TimeZoneElement
+	}
+
+	if dtfGen.OffsetElement != "" &&
+		fmtStr2 != "" &&
+		dtfGen.TimeElement != "" {
+
+		fmtStr2 += dtfGen.OffsetSeparator
+		fmtStr2 += dtfGen.OffsetElement
+	}
+
+	if fmtStr2 != "" {
+		dtf.assignFormatStrToMap(fmtStr2)
+	}
+
+	return
+
 }
 
 func (dtf *DateTimeFormatUtility) assemblePreDefinedFormats() {
@@ -250,20 +513,21 @@ func (dtf *DateTimeFormatUtility) assemblePreDefinedFormats() {
 
 }
 
-func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen DateTimeFormatGenerator) {
+func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen DateTimeFormatGenerator) {
 
 	fmtStr := ""
+	fmtStr2 := ""
 
 	if dtfGen.DayOfWeek != "" {
 		fmtStr += dtfGen.DayOfWeek
 	}
 
-	if dtfGen.MthDayYear != "" {
+	if dtfGen.MthDay != "" {
 		if fmtStr == "" {
-			fmtStr = dtfGen.MthDayYear
+			fmtStr = dtfGen.MthDay
 		} else {
 			fmtStr += dtfGen.DayOfWeekSeparator
-			fmtStr += dtfGen.MthDayYear
+			fmtStr += dtfGen.MthDay
 		}
 	}
 
@@ -271,86 +535,57 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Date
 		if fmtStr == "" {
 			fmtStr = dtfGen.TimeElement
 		} else {
-			fmtStr += dtfGen.DateTimeSeparator
+			fmtStr += dtfGen.AfterMthDaySeparator
 			fmtStr += dtfGen.TimeElement
 		}
 	}
 
-	if dtfGen.OffsetElement != "" {
-		if fmtStr == "" || dtfGen.TimeElement == "" {
-			return
-		} else {
-			fmtStr += dtfGen.OffsetSeparator
-			fmtStr += dtfGen.OffsetElement
-		}
-	}
+	fmtStr2 = fmtStr
 
-	if dtfGen.TimeZoneElement != "" {
-		if fmtStr == "" || dtfGen.TimeElement == "" {
-			return
-		} else {
-			fmtStr += dtfGen.TimeZoneSeparator
-			fmtStr += dtfGen.TimeZoneElement
-		}
+	if dtfGen.OffsetElement != "" &&
+		fmtStr != "" &&
+		dtfGen.TimeElement != "" {
+		fmtStr += dtfGen.OffsetSeparator
+		fmtStr += dtfGen.OffsetElement
 
 	}
 
-	dtf.assignFormatStrToMap(fmtStr)
+	if dtfGen.TimeZoneElement != "" &&
+		fmtStr != "" &&
+		dtfGen.TimeElement != "" {
+		fmtStr += dtfGen.TimeZoneSeparator
+		fmtStr += dtfGen.TimeZoneElement
+	}
+
+	if fmtStr != "" {
+		dtf.assignFormatStrToMap(fmtStr)
+	}
+
+	// Calculate variation of format string where
+	// Time Zone comes before Offset Element
+
+	if dtfGen.TimeZoneElement != "" &&
+		fmtStr2 != "" &&
+		dtfGen.TimeElement != "" {
+		fmtStr2 += dtfGen.TimeZoneSeparator
+		fmtStr2 += dtfGen.TimeZoneElement
+	}
+
+	if dtfGen.OffsetElement != "" &&
+		fmtStr2 != "" &&
+		dtfGen.TimeElement != "" {
+		fmtStr2 += dtfGen.OffsetSeparator
+		fmtStr2 += dtfGen.OffsetElement
+
+	}
+
+	if fmtStr2 != "" {
+		dtf.assignFormatStrToMap(fmtStr)
+	}
 
 	return
 }
 
-func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTzTimeOffset(dtfGen DateTimeFormatGenerator){
-
-	fmtStr := ""
-
-	if dtfGen.DayOfWeek != "" {
-		fmtStr += dtfGen.DayOfWeek
-	}
-
-	if dtfGen.MthDayYear != "" {
-		if fmtStr == "" {
-			fmtStr = dtfGen.MthDayYear
-		} else {
-			fmtStr += dtfGen.DayOfWeekSeparator
-			fmtStr += dtfGen.MthDayYear
-		}
-	}
-
-	if dtfGen.TimeElement != "" {
-		if fmtStr == "" {
-			fmtStr = dtfGen.TimeElement
-		} else {
-			fmtStr += dtfGen.DateTimeSeparator
-			fmtStr += dtfGen.TimeElement
-		}
-	}
-
-	if dtfGen.TimeZoneElement != "" {
-		if fmtStr == "" || dtfGen.TimeElement == "" {
-			return
-		} else {
-			fmtStr += dtfGen.TimeZoneSeparator
-			fmtStr += dtfGen.TimeZoneElement
-		}
-
-	}
-
-	if dtfGen.OffsetElement != "" {
-		if fmtStr == "" || dtfGen.TimeElement == "" {
-			return
-		} else {
-			fmtStr += dtfGen.OffsetSeparator
-			fmtStr += dtfGen.OffsetElement
-		}
-	}
-
-
-	dtf.assignFormatStrToMap(fmtStr)
-
-	return
-
-}
 
 func (dtf *DateTimeFormatUtility) assignFormatStrToMap(fmtStr string) {
 
@@ -399,11 +634,10 @@ func (dtf DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr = append(mthDayYr, "2006-01-02")
 	mthDayYr = append(mthDayYr, "2006/01/02")
 	mthDayYr = append(mthDayYr, "2006-1-2")
-	mthDayYr = append(mthDayYr, "2006/1/2")
-
 	mthDayYr = append(mthDayYr, "2006-1-02")
-	mthDayYr = append(mthDayYr, "2006/1/02")
 	mthDayYr = append(mthDayYr, "2006-01-2")
+	mthDayYr = append(mthDayYr, "2006/1/2")
+	mthDayYr = append(mthDayYr, "2006/1/02")
 	mthDayYr = append(mthDayYr, "2006/01/2")
 
 	// European Date Formats
@@ -422,7 +656,6 @@ func (dtf DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr = append(mthDayYr, "02.1.06")
 	mthDayYr = append(mthDayYr, "02.1.2006")
 	mthDayYr = append(mthDayYr, "02.1.'06")
-
 
 	mthDayYr = append(mthDayYr, "02.January.'06")
 	mthDayYr = append(mthDayYr, "02.January.06")
@@ -551,13 +784,14 @@ func (dtf DateTimeFormatUtility) getYears() ([]string, error) {
 	return yearElements, nil
 }
 
-func (dtf DateTimeFormatUtility) getMthDayAfterSeparators() ([]string, error) {
+func (dtf DateTimeFormatUtility) getAfterMthDaySeparators() ([]string, error) {
 	mthDayAfterSeparators := make([]string, 0, 10)
 
 	mthDayAfterSeparators = append(mthDayAfterSeparators, " ")
 	mthDayAfterSeparators = append(mthDayAfterSeparators, ", ")
-	mthDayAfterSeparators = append(mthDayAfterSeparators, "T")
 	mthDayAfterSeparators = append(mthDayAfterSeparators, ":")
+	mthDayAfterSeparators = append(mthDayAfterSeparators, "T")
+	mthDayAfterSeparators = append(mthDayAfterSeparators, "")
 
 	return mthDayAfterSeparators, nil
 
@@ -567,6 +801,7 @@ func (dtf DateTimeFormatUtility) getStandardSeparators() ([]string, error) {
 	standardSeparators := make([]string, 0, 10)
 
 	standardSeparators = append(standardSeparators, " ")
+	standardSeparators = append(standardSeparators, "")
 
 	return standardSeparators, nil
 }
@@ -577,6 +812,7 @@ func (dtf DateTimeFormatUtility) getDateTimeSeparators() ([]string, error) {
 	dtTimeSeparators = append(dtTimeSeparators, " ")
 	dtTimeSeparators = append(dtTimeSeparators, ":")
 	dtTimeSeparators = append(dtTimeSeparators, "T")
+	dtTimeSeparators = append(dtTimeSeparators, "")
 
 	return dtTimeSeparators, nil
 }
@@ -660,6 +896,7 @@ func (dtf DateTimeFormatUtility) getTimeOffsetSeparators() ([]string, error) {
 
 	timeOffsetSeparators = append(timeOffsetSeparators, " ")
 	timeOffsetSeparators = append(timeOffsetSeparators, "-")
+	timeOffsetSeparators = append(timeOffsetSeparators, "")
 
 	return timeOffsetSeparators, nil
 }
@@ -678,6 +915,7 @@ func (dtf *DateTimeFormatUtility) getTimeZoneSeparators() ([]string, error) {
 
 	tzElements = append(tzElements, " ")
 	tzElements = append(tzElements, "-")
+	tzElements = append(tzElements, "")
 
 	return tzElements, nil
 }
