@@ -26,6 +26,6 @@ func main() {
 	// tDateTime := "5/27/2017 11:42PM CDT"
 	// tDateTime := "2016-11-26 16:26 CDT -0600"
 	// common.TestParseDateTime(tDateTime, "")
-	common.WriteAllFormatsToFile()
+	common.TestLoadandWriteFileAllFormats()
 
 }

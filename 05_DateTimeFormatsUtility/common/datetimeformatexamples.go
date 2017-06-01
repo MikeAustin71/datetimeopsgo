@@ -34,7 +34,7 @@ func WriteAllFormatsToFile() {
 
 	fh := FileHelper{}
 
-	outputFile := "../formats/datetimeformats.txt"
+	outputFile := "../format-files/datetimeformats.txt"
 
 	if fh.DoesFileExist(outputFile) {
 		err := fh.DeleteDirFile(outputFile)
@@ -77,10 +77,10 @@ func WriteAllFormatsToFile() {
 	etFileWrite, _ := du.GetElapsedTime(endTimeGetFormats, endTime)
 
 	et, _ := du.GetElapsedTime(startTime, endTime)
-	nu:= NumStrUtility{}
+	nu := NumStrUtility{}
 	fmt.Println("Formats File Write Operation Completed to file: ", outputFile)
-	fmt.Println("Number Date Time formats Generated: ", nu.DLimInt(numOfFormats,','))
-	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(numOfKeys,','))
+	fmt.Println("Number Date Time formats Generated: ", nu.DLimInt(numOfFormats, ','))
+	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(numOfKeys, ','))
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	fmt.Println("Elapsed Run Time For Write File Operations: ", etFileWrite.DurationStr)
 	fmt.Println("Elapsed Run Time For All Operations: ", et.DurationStr)
@@ -141,7 +141,7 @@ func WriteFormatStatsToFile() {
 	numOfKeys := 0
 	numOfFormats := 0
 	mapLen := 0
-	fh.WriteFileStr("Length - Number Of Formats\n",f)
+	fh.WriteFileStr("Length - Number Of Formats\n", f)
 	for _, k := range keys {
 
 		numOfKeys++
@@ -159,7 +159,7 @@ func WriteFormatStatsToFile() {
 	nu := NumStrUtility{}
 	fmt.Println("File Write Operation Completed to file: ", outputFile)
 	fmt.Println("Date Time formats Generated: ", nu.DLimInt(numOfFormats, ','))
-	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(numOfKeys,','))
+	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(numOfKeys, ','))
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	fmt.Println("Elapsed Run Time For Write File Operations: ", etFileWrite.DurationStr)
 	fmt.Println("Elapsed Run Time For All Operations: ", et.DurationStr)
@@ -214,6 +214,43 @@ func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 
 	printTimeParseResults(dtf)
+}
+
+func TestLoadandWriteFileAllFormats() {
+	dtf := DateTimeFormatUtility{}
+	fmtFile := "D:/go/work/src/MikeAustin71/datetimeopsgo/05_DateTimeFormatsUtility/format-files/TestRead.txt"
+	dtoR, err := dtf.LoadAllFormatsFromFileIntoMemory(fmtFile)
+
+	if err != nil {
+		panic(err)
+	}
+
+	nu := NumStrUtility{}
+	dtFmt := "2006-01-02 15:04:05.000000000"
+	fmt.Println("Results of LoadAllFormatsFromFileIntoMemory")
+	fmt.Println("-------------------------------------------")
+	fmt.Println("  Target Read File: ", dtoR.PathFileName)
+	fmt.Println("   Read Start Time: ", dtoR.FileReadStartTime.Format(dtFmt))
+	fmt.Println("     Read End Time: ", dtoR.FileReadEndTime.Format(dtFmt))
+	fmt.Println("      Elapsed Time: ", dtoR.ElapsedTimeForFileReadOps)
+	fmt.Println("Number of Map Keys: ", nu.DLimInt(dtoR.NumberOfFormatMapKeysGenerated, ','))
+	fmt.Println(" Number of Formats: ", nu.DLimInt(dtoR.NumberOfFormatsGenerated, ','))
+
+	outputFile := "D:/go/work/src/MikeAustin71/datetimeopsgo/05_DateTimeFormatsUtility/format-files/TestOutput.txt"
+	dtoW, err := dtf.WriteAllFormatsInMemoryToFile(outputFile)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Results of WriteAllFormatsInMemoryToFile")
+	fmt.Println("----------------------------------------")
+	fmt.Println("Target Write File: ", dtoW.OutputPathFileName)
+	fmt.Println(" Write Start Time: ", dtoW.FileWriteStartTime.Format(dtFmt))
+	fmt.Println("   Write End Time: ", dtoW.FileWriteEndTime.Format(dtFmt))
+	fmt.Println("Number of Map Keys: ", nu.DLimInt(dtoW.NumberOfFormatMapKeysGenerated, ','))
+	fmt.Println(" Number of Formats: ", nu.DLimInt(dtoW.NumberOfFormatsGenerated, ','))
+
 }
 
 func printTimeParseResults(dtf DateTimeFormatUtility) {
