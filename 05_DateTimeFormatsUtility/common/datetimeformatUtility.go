@@ -83,8 +83,6 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	dtf.FormatMap = make(map[int]map[string]int)
 	dtf.NumOfFormatsGenerated = 0
 
-
-
 	fmtFile, err := os.Open(pathFileName)
 
 	if err != nil {
@@ -93,7 +91,7 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 
 	defer fmtFile.Close()
 	const bufLen int = 2000
-	lastBufIdx := bufLen - 1
+	lastBufIdx := 0
 	var buffer []byte
 	var outRecordBuff []byte
 	IsEOF := false
@@ -102,7 +100,7 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	buffer = make([]byte, bufLen)
 
 	// Read File Operation
-	REDO:
+	// REDO:
 	for IsEOF == false {
 
 		n, err := fmtFile.Read(buffer)
@@ -112,6 +110,8 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 		}
 
 		idx = 0
+
+		lastBufIdx = n - 1
 
 		// Begin Read Record Operation
 		for n > 0 {
@@ -131,10 +131,9 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 
 				outRecordBuff = append(outRecordBuff, buffer[i])
 
-
-				if i >= lastBufIdx {
+				if i == lastBufIdx {
 					isPartialRec = true
-					goto REDO
+					idx = 0
 				}
 			}
 
@@ -143,16 +142,17 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 			// string Format.
 			lOutBuff := len(outRecordBuff)
 
-			if lOutBuff < 7 {
+			if isPartialRec || lOutBuff < 7 {
 				isPartialRec = true
-				goto REDO
+				break
 				// return frDto, errors.New("LoadAllFormatsFromFileIntoMemory(): Length of Output Buffer is less than 7 chars!")
 			}
 
 			lenField := make([]byte, 7)
 
-			for i := 0; i < 7; i++ {
-				lenField[i] = outRecordBuff[i]
+			for j := 0; j < 7; j++ {
+
+				lenField[j] = outRecordBuff[j]
 			}
 
 			s := string(lenField)
@@ -160,20 +160,23 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 			lFmt, err := strconv.Atoi(s)
 
 			if err != nil {
-				return frDto, fmt.Errorf("Error converting Format Length field from file. Length = %v ", s)
+				return frDto, fmt.Errorf(
+					"Error converting Format Length field from file. Length = %v. Idx= %v. Format Count: %v",
+					s, idx, frDto.NumberOfFormatsGenerated)
 			}
 
 			fmtFieldLastIdx := 7 + lFmt
 
 			if lOutBuff < fmtFieldLastIdx+1 {
-				return frDto, fmt.Errorf("Found corrupted Output Buffer. Buffer Length %v, Length Field = %v, Output Buffer= %f",
-					lOutBuff, lFmt, string(outRecordBuff))
+				return frDto, fmt.Errorf(
+					"Found corrupted Output Buffer. Buffer Length %v, Length Field = %v, Output Buffer= %s Format Count: %v",
+					lOutBuff, lFmt, string(outRecordBuff), frDto.NumberOfFormatsGenerated)
 			}
 
 			fmtField := make([]byte, lFmt)
 
-			for i := 8; i <= fmtFieldLastIdx; i++ {
-				fmtField[i-8] = outRecordBuff[i]
+			for k := 8; k <= fmtFieldLastIdx; k++ {
+				fmtField[k-8] = outRecordBuff[k]
 			}
 
 			fmtStr := string(fmtField)
@@ -190,12 +193,16 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 				frDto.NumberOfFormatsGenerated++
 			}
 
+			if idx > lastBufIdx {
+				break
+			}
+
 		}
 	}
 
 	frDto.FileReadEndTime = time.Now()
 	frDto.NumberOfFormatMapKeysGenerated = len(dtf.FormatMap)
-	du:= DurationUtility{}
+	du := DurationUtility{}
 	etFileWrite, _ := du.GetElapsedTime(frDto.FileReadStartTime, frDto.FileReadEndTime)
 	frDto.ElapsedTimeForFileReadOps = etFileWrite.DurationStr
 
@@ -215,7 +222,6 @@ func (dtf *DateTimeFormatUtility) WriteAllFormatsInMemoryToFile(pathFileName str
 	if lFmts < 1 {
 		return fwDto, errors.New("WriteAllFormatsInMemoryToFile() Error - There are NO Formats in Memory -  FormatMap length == 0")
 	}
-
 
 	outF, err := os.Create(pathFileName)
 
