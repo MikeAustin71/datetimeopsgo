@@ -32,44 +32,12 @@ func WriteAllFormatsToFile() {
 		panic(errors.New("CreateAllFormatsInMemory Completed, but no formats were created! FormatMap length == 0"))
 	}
 
-	fh := FileHelper{}
-
 	outputFile := "../format-files/datetimeformats.txt"
 
-	if fh.DoesFileExist(outputFile) {
-		err := fh.DeleteDirFile(outputFile)
-
-		if err != nil {
-			panic(errors.New("Error from DeleteDirFile() Error:" + err.Error()))
-		}
-	}
-
-	f, err := fh.CreateDirAndFile(outputFile)
+	writeDto, err := dtf.WriteAllFormatsInMemoryToFile(outputFile)
 
 	if err != nil {
-		panic(errors.New("Error from CreateDirAndFile Error:" + err.Error()))
-	}
-
-	defer f.Close()
-
-	var keys []int
-	for k := range dtf.FormatMap {
-		keys = append(keys, k)
-	}
-
-	sort.Ints(keys)
-	numOfKeys := 0
-	numOfFormats := 0
-
-	for _, k := range keys {
-
-		numOfKeys++
-
-		for keyFmt, _ := range dtf.FormatMap[k] {
-			numOfFormats++
-			fh.WriteFileStr(fmt.Sprintf("%07d %s\n", k, keyFmt), f)
-		}
-
+		panic(err)
 	}
 
 	endTime := time.Now()
@@ -79,8 +47,8 @@ func WriteAllFormatsToFile() {
 	et, _ := du.GetElapsedTime(startTime, endTime)
 	nu := NumStrUtility{}
 	fmt.Println("Formats File Write Operation Completed to file: ", outputFile)
-	fmt.Println("Number Date Time formats Generated: ", nu.DLimInt(numOfFormats, ','))
-	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(numOfKeys, ','))
+	fmt.Println("Number Date Time formats Generated: ", nu.DLimInt(writeDto.NumberOfFormatsGenerated, ','))
+	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(writeDto.NumberOfFormatMapKeysGenerated, ','))
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	fmt.Println("Elapsed Run Time For Write File Operations: ", etFileWrite.DurationStr)
 	fmt.Println("Elapsed Run Time For All Operations: ", et.DurationStr)
@@ -166,14 +134,65 @@ func WriteFormatStatsToFile() {
 
 }
 
-func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
+func TestParseSampleDateTimes() {
+	startTime := time.Now()
 
-	// tDateTime := "November 12, 2016"
-	// Without length filter: time was slower
-	//   Elapsed Time For Time Parse:  43-Milliseconds 499-Microseconds 100-Nanoseconds
+	du := DurationUtility{}
 
-	// With length filter
-	// Elapsed Time For Time Parse:  1-Milliseconds 998-Microseconds 900-Nanoseconds
+	dtf := DateTimeFormatUtility{}
+
+	dtf.CreateAllFormatsInMemory()
+
+	endTimeGetFormats := time.Now()
+
+	etFmtOpts, _ := du.GetElapsedTime(startTime, endTimeGetFormats)
+	fmt.Println("********************************************************")
+	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DurationStr)
+
+	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
+	fmt.Println("     Number of Formats Generated: ", lFmts)
+	fmt.Println("    Number of Map Keys Generated: ", len(dtf.FormatMap))
+	fmt.Println("********************************************************")
+	fmt.Println()
+
+	dateTimes := getDateTimeSamples()
+
+	for _, dtTime := range dateTimes {
+		TestParseDateTime(dtf, dtTime, "")
+	}
+
+}
+
+// TestParseDateTime - For running this parse method, be sure that formats
+// are loaded in memory in field DurationUtility.FormatMap.
+func TestParseDateTime(dtf DateTimeFormatUtility, dateTimeStr string, probableDateTimeFormat string) {
+
+	du := DurationUtility{}
+
+	startTimeParse := time.Now()
+
+	_, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
+
+	endTimeParse := time.Now()
+	fmt.Println()
+	etFmtOpts, _ := du.GetElapsedTime(startTimeParse, endTimeParse)
+	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DurationStr)
+
+	if err != nil {
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		fmt.Printf("Failure attempting to format date time: %v/n", dateTimeStr)
+		fmt.Println("Time Parse Failed - Error: ", err.Error())
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		return
+	}
+
+	dtf.OriginalDateTimeStringIn = dateTimeStr
+
+	printTimeParseResults(dtf)
+
+}
+
+func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTimeFormat string) {
 
 	startTime := time.Now()
 
@@ -216,6 +235,53 @@ func TestParseDateTime(dateTimeStr string, probableDateTimeFormat string) {
 	printTimeParseResults(dtf)
 }
 
+func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string) {
+
+	startTime := time.Now()
+
+	du := DurationUtility{}
+
+	dtf := DateTimeFormatUtility{}
+
+	drDto, err := dtf.LoadAllFormatsFromFileIntoMemory("../format-files/datetimeformats.txt")
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Elapsed Time For File Read and Format Creation: ", drDto.ElapsedTimeForFileReadOps)
+
+	nu := NumStrUtility{}
+
+	fmt.Println("Number of Formats Generated: ", nu.DLimInt(drDto.NumberOfFormatsGenerated, ','))
+	fmt.Println("   Number of Keys Generated: ", nu.DLimInt(drDto.NumberOfFormatMapKeysGenerated, ','))
+
+	startTimeParse := time.Now()
+
+	_, err = dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
+
+	endTimeParse := time.Now()
+	fmt.Println()
+	etFmtOpts, _ := du.GetElapsedTime(startTimeParse, endTimeParse)
+
+	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DurationStr)
+	fmt.Println("Actual Duration Value: ", etFmtOpts.TimeDuration)
+
+	etFmtOpts, _ = du.GetElapsedTime(startTime, endTimeParse)
+	fmt.Println("Total Elapsed Time For All Operations: ", etFmtOpts.DurationStr)
+	fmt.Println()
+
+	if err != nil {
+		fmt.Println("Time Parse Failed - Error: ", err.Error())
+		return
+	}
+
+	dtf.OriginalDateTimeStringIn = dateTimeStr
+
+	printTimeParseResults(dtf)
+
+}
+
 func TestLoadandWriteFileAllFormats() {
 	dtf := DateTimeFormatUtility{}
 	fmtFile := "D:/go/work/src/MikeAustin71/datetimeopsgo/05_DateTimeFormatsUtility/format-files/TestRead.txt"
@@ -253,11 +319,112 @@ func TestLoadandWriteFileAllFormats() {
 
 }
 
+func TestSingleDigitFormats() {
+
+	dateTimes := getDateTimeSamples()
+
+	tFmts := make([]string, 0, 20)
+
+	tFmts = append(tFmts, "2006-1-2")
+	tFmts = append(tFmts, "06-1-2")
+	tFmts = append(tFmts, "2006-1-2 15:4:5")
+	tFmts = append(tFmts, "2006-1-2 15:04:5")
+	tFmts = append(tFmts, "2006-1-2 15:04:05")
+	tFmts = append(tFmts, "2006-1-2 15:04")
+	tFmts = append(tFmts, "2006-1-2 15:4")
+	tFmts = append(tFmts, "06-1-2 15:4:5")
+	tFmts = append(tFmts, "2006-1-2 3:4:5 PM")
+	tFmts = append(tFmts, "06-1-2 3:4:5 pm")
+	tFmts = append(tFmts, "2006-1-2 3:4:5PM")
+	tFmts = append(tFmts, "06-1-2 3:4:5pm")
+	tFmts = append(tFmts, "2006-1-2 03:04:05PM")
+	tFmts = append(tFmts, "06-1-2 03:04:05pm")
+	tFmts = append(tFmts, "2006-1-2 3:4:5 P.M.")
+	tFmts = append(tFmts, "06-1-2 3:4:5 p.m.")
+	tFmts = append(tFmts, "2006-1-2 3:4:5P.M.")
+	tFmts = append(tFmts, "06-1-2 3:4:5p.m.")
+	tFmts = append(tFmts, "2006-1-2 3:4 P.M.")
+	tFmts = append(tFmts, "06-1-2 3:4 p.m.")
+	tFmts = append(tFmts, "2006-1-2 3:4P.M.")
+	tFmts = append(tFmts, "06-1-2 3:4p.m.")
+
+	tFmts = append(tFmts, "2006-1-2 3:04PM")
+	tFmts = append(tFmts, "06-1-2 3:04pm")
+	tFmts = append(tFmts, "2006-1-2 3:04P.M.")
+	tFmts = append(tFmts, "06-1-2 3:04p.m.")
+
+	tFmts = append(tFmts, "2006-1-2 3:04 P.M.")
+	tFmts = append(tFmts, "06-1-2 3:04 p.m.")
+	tFmts = append(tFmts, "2006-1-2 3:04P.M.")
+	tFmts = append(tFmts, "06-1-2 3:04p.m.")
+	tFmts = append(tFmts, "2016-11-26 16:26 CST -0600")
+	tFmts = append(tFmts, "2017-6-2 00:33:21 CDT -0500")
+	tFmts = append(tFmts, "2016-2-5 6:02 CDT -0600")
+	tFmts = append(tFmts, "June 12th, 2016 4:26 PM")
+
+	fmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
+
+	var isSuccess bool
+
+	for _, tDateTimeStr := range dateTimes {
+
+		isSuccess = false
+
+		for _, xFmt := range tFmts {
+
+			t, err := time.Parse(xFmt, tDateTimeStr)
+
+			if err == nil {
+				fmt.Println("Success = Input: ", tDateTimeStr, " Format: ", xFmt, " Output: ", t.Format(fmtDateTimeEverything))
+				isSuccess = true
+			}
+		}
+
+		if !isSuccess {
+			fmt.Println("Failure - Could Not Locatate Format for Time String: ", tDateTimeStr)
+		}
+
+	}
+
+	return
+}
+
+func getDateTimeSamples() []string {
+	dateTime := make([]string, 0)
+
+	dateTime = append(dateTime, "2016-11-26 16:26")
+	dateTime = append(dateTime, "2016-11-26 16:26:05")
+	dateTime = append(dateTime, "2016-11-26 16:6:5")
+	dateTime = append(dateTime, "2016-1-3 16:6")
+	dateTime = append(dateTime, "2016-12-23 2:16")
+	dateTime = append(dateTime, "2016-2-21 2:6")
+	dateTime = append(dateTime, "2016-12-3 2:16AM")
+	dateTime = append(dateTime, "2016-12-3 2:6AM")
+	dateTime = append(dateTime, "2016-2-23 11:6AM")
+	dateTime = append(dateTime, "2016-1-13 11:16AM")
+	dateTime = append(dateTime, "1 June 2017 11:16AM")
+	dateTime = append(dateTime, "1 Jan 2017 11:16AM")
+	dateTime = append(dateTime, "Friday June 2, 2017 21:5 -0600 CDT")
+	dateTime = append(dateTime, "November 12, 2016")
+	dateTime = append(dateTime, "Monday 11/12/2016 4:26 PM")
+	dateTime = append(dateTime, "June 1st, 2017 4:26 PM")
+	dateTime = append(dateTime, "June 3rd, 2017 4:26 PM")
+	dateTime = append(dateTime, "June 12th, 2016 4:26 PM")
+	dateTime = append(dateTime, "7-6-16 9:30AM")
+	dateTime = append(dateTime, "2016-11-26 16:26 -0600")
+	dateTime = append(dateTime, "5/27/2017 11:42PM CDT")
+	dateTime = append(dateTime, "12/2/2017 11:42PM CST")
+	dateTime = append(dateTime, "2016-11-26 16:26 CDT -0600")
+
+	return dateTime
+
+}
+
 func printTimeParseResults(dtf DateTimeFormatUtility) {
 
 	FmtDateTimeEverything := "Monday January 2, 2006 15:04:05 -0700 MST"
 	fmt.Println()
-	fmt.Println("--------------------------------")
+	fmt.Println("--------------------------------------------------------")
 	fmt.Println("Successful Time Parse Operation!")
 	fmt.Println("Original Input Date Time:", dtf.OriginalDateTimeStringIn)
 	fmt.Println("Formatted Input Date Time: ", dtf.FormattedDateTimeStringIn)
@@ -274,4 +441,6 @@ func printTimeParseResults(dtf DateTimeFormatUtility) {
 	}
 	fmt.Println()
 	fmt.Println("Total Number of Searches Performed: ", dtf.TotalNoOfDictSearches)
+	fmt.Println("--------------------------------------------------------")
+	fmt.Println()
 }

@@ -6,6 +6,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -47,6 +48,11 @@ type DateTimeFormatGenerator struct {
 	Year                 string
 }
 
+type SearchStrings struct {
+	AMPMSearchStrs             map[string]string
+	FirstSecondThirdSearchStrs map[string]string
+}
+
 type DateTimeFormatUtility struct {
 	OriginalDateTimeStringIn  string
 	FormattedDateTimeStringIn string
@@ -58,6 +64,7 @@ type DateTimeFormatUtility struct {
 	TotalNoOfDictSearches     int
 	DateTimeOut               time.Time
 	NumOfFormatsGenerated     int
+	FormatSearchReplaceStrs   SearchStrings
 }
 
 // CreateAllFormatsInMemory - Generates 11-million permutations of
@@ -69,6 +76,9 @@ func (dtf *DateTimeFormatUtility) CreateAllFormatsInMemory() (err error) {
 	dtf.NumOfFormatsGenerated = 0
 	dtf.assemblePreDefinedFormats()
 	dtf.assembleMthDayYearFmts()
+	dtf.assembleEdgeCaseFormats()
+	dtf.FormatSearchReplaceStrs.AMPMSearchStrs = dtf.getAMPMSearchStrs()
+	dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs = dtf.getFirstSecondThirdSearchStrs()
 
 	return
 }
@@ -103,7 +113,7 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	// REDO:
 	for IsEOF == false {
 
-		n, err := fmtFile.Read(buffer)
+		bytesRead, err := fmtFile.Read(buffer)
 
 		if err != nil {
 			IsEOF = true
@@ -111,10 +121,10 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 
 		idx = 0
 
-		lastBufIdx = n - 1
+		lastBufIdx = bytesRead - 1
 
 		// Begin Read Record Operation
-		for n > 0 {
+		for bytesRead > 0 {
 
 			if !isPartialRec {
 				outRecordBuff = make([]byte, 0)
@@ -145,7 +155,6 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 			if isPartialRec || lOutBuff < 7 {
 				isPartialRec = true
 				break
-				// return frDto, errors.New("LoadAllFormatsFromFileIntoMemory(): Length of Output Buffer is less than 7 chars!")
 			}
 
 			lenField := make([]byte, 7)
@@ -196,7 +205,6 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 			if idx > lastBufIdx {
 				break
 			}
-
 		}
 	}
 
@@ -308,6 +316,9 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 
 	ftimeStr, err := StringUtility{}.TrimEndMultiple(timeStr, ' ')
 
+	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.AMPMSearchStrs)
+	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs)
+
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -330,9 +341,15 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 
 	}
 
+	if len(dtf.FormatMap) == 0 {
+		return time.Time{}, errors.New("Format Map is EMPTY! Load Formats into DateTimeFormatUtility.FormatMap first!")
+	}
+
 	lenStr := len(ftimeStr)
 
 	lenTests := [7]int{lenStr - 1, lenStr, lenStr - 2, lenStr + 1, lenStr + 2, lenStr - 3, lenStr + 3}
+
+	dtf.TotalNoOfDictSearches = 0
 
 	for _, lTest := range lenTests {
 
@@ -348,7 +365,6 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 			dtf.DateTimeOut = result.DateTimeOut
 			dtf.OriginalDateTimeStringIn = timeStr
 			dtf.FormattedDateTimeStringIn = result.FormattedDateTimeStringIn
-			dtf.TotalNoOfDictSearches = result.TotalNoOfDictSearches
 			return dtf.DateTimeOut, nil
 		}
 
@@ -593,20 +609,16 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Date
 	// Time Zone comes before Offset Element
 
 	if dtfGen.TimeZoneElement != "" &&
-		fmtStr2 == "" &&
-		dtfGen.TimeElement != "" {
+		dtfGen.TimeElement != "" &&
+		fmtStr2 != "" &&
+		dtfGen.OffsetElement != "" {
 
 		fmtStr2 += dtfGen.TimeZoneSeparator
 		fmtStr2 += dtfGen.TimeZoneElement
-	}
-
-	if dtfGen.OffsetElement != "" &&
-		fmtStr2 != "" &&
-		dtfGen.TimeElement != "" {
-
 		fmtStr2 += dtfGen.OffsetSeparator
 		fmtStr2 += dtfGen.OffsetElement
 	}
+
 
 	if fmtStr2 != "" {
 		dtf.assignFormatStrToMap(fmtStr2)
@@ -626,6 +638,14 @@ func (dtf *DateTimeFormatUtility) assemblePreDefinedFormats() {
 
 	}
 
+}
+
+func (dtf *DateTimeFormatUtility) assembleEdgeCaseFormats() {
+	edgeCases := dtf.getEdgeCases()
+
+	for _, ecf := range edgeCases {
+		dtf.assignFormatStrToMap(ecf)
+	}
 }
 
 func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen DateTimeFormatGenerator) {
@@ -745,114 +765,61 @@ func (dtf DateTimeFormatUtility) getDayOfWeekSeparator() ([]string, error) {
 func (dtf DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr := make([]string, 0, 1024)
 
-	mthDayYr = append(mthDayYr, "2006-01-02")
-	mthDayYr = append(mthDayYr, "2006/01/02")
 	mthDayYr = append(mthDayYr, "2006-1-2")
-	mthDayYr = append(mthDayYr, "2006-1-02")
-	mthDayYr = append(mthDayYr, "2006-01-2")
 	mthDayYr = append(mthDayYr, "2006/1/2")
-	mthDayYr = append(mthDayYr, "2006/1/02")
-	mthDayYr = append(mthDayYr, "2006/01/2")
-
-	// European Date Formats
-	mthDayYr = append(mthDayYr, "02.01.06")
-	mthDayYr = append(mthDayYr, "02.01.2006")
-	mthDayYr = append(mthDayYr, "02.01.'06")
-
-	mthDayYr = append(mthDayYr, "2.1.06")
-	mthDayYr = append(mthDayYr, "2.1.2006")
-	mthDayYr = append(mthDayYr, "2.1.'06")
-
-	mthDayYr = append(mthDayYr, "2.01.06")
-	mthDayYr = append(mthDayYr, "2.01.2006")
-	mthDayYr = append(mthDayYr, "2.01.'06")
-
-	mthDayYr = append(mthDayYr, "02.1.06")
-	mthDayYr = append(mthDayYr, "02.1.2006")
-	mthDayYr = append(mthDayYr, "02.1.'06")
-
-	mthDayYr = append(mthDayYr, "02.January.'06")
-	mthDayYr = append(mthDayYr, "02.January.06")
-	mthDayYr = append(mthDayYr, "02.January.2006")
-
-	mthDayYr = append(mthDayYr, "02.Jan.'06")
-	mthDayYr = append(mthDayYr, "02.Jan.06")
-	mthDayYr = append(mthDayYr, "02.Jan.2006")
-	// ----------------------------------------------
-
-	mthDayYr = append(mthDayYr, "01-02-06")
-	mthDayYr = append(mthDayYr, "01-02-2006")
 	mthDayYr = append(mthDayYr, "1-2-06")
 	mthDayYr = append(mthDayYr, "1-2-2006")
-	mthDayYr = append(mthDayYr, "1-02-06")
-	mthDayYr = append(mthDayYr, "1-02-2006")
-	mthDayYr = append(mthDayYr, "01/02/06")
-	mthDayYr = append(mthDayYr, "01/02/2006")
 	mthDayYr = append(mthDayYr, "1/2/06")
-	mthDayYr = append(mthDayYr, "1/02/06")
 	mthDayYr = append(mthDayYr, "1/2/2006")
-	mthDayYr = append(mthDayYr, "1/02/2006")
 
-	mthDayYr = append(mthDayYr, "Jan-02-06")
-	mthDayYr = append(mthDayYr, "Jan 02 06")
-	mthDayYr = append(mthDayYr, "Jan 02, 06")
-	mthDayYr = append(mthDayYr, "Jan/02/06")
 	mthDayYr = append(mthDayYr, "Jan-2-06")
 	mthDayYr = append(mthDayYr, "Jan 2 06")
 	mthDayYr = append(mthDayYr, "Jan 2, 06")
 	mthDayYr = append(mthDayYr, "Jan/2/06")
-	mthDayYr = append(mthDayYr, "Jan 02 2006")
-	mthDayYr = append(mthDayYr, "Jan 2 2006")
-	mthDayYr = append(mthDayYr, "Jan-2-2006")
-	mthDayYr = append(mthDayYr, "Jan 02, 2006")
-	mthDayYr = append(mthDayYr, "Jan 2, 2006")
-
-	mthDayYr = append(mthDayYr, "Jan _2, 2006")
-	mthDayYr = append(mthDayYr, "Jan _2 2006")
 	mthDayYr = append(mthDayYr, "Jan _2 06")
 	mthDayYr = append(mthDayYr, "Jan _2, 06")
+	mthDayYr = append(mthDayYr, "Jan-2-2006")
+	mthDayYr = append(mthDayYr, "Jan 2 2006")
+	mthDayYr = append(mthDayYr, "Jan 2, 2006")
+	mthDayYr = append(mthDayYr, "Jan/2/2006")
+	mthDayYr = append(mthDayYr, "Jan _2 2006")
+	mthDayYr = append(mthDayYr, "Jan _2, 2006")
 
-	mthDayYr = append(mthDayYr, "January 02, 06")
-	mthDayYr = append(mthDayYr, "January 02, 2006")
-	mthDayYr = append(mthDayYr, "January 02 06")
-	mthDayYr = append(mthDayYr, "January 02 2006")
-	mthDayYr = append(mthDayYr, "January-02-2006")
-	mthDayYr = append(mthDayYr, "January-02-06")
+	mthDayYr = append(mthDayYr, "January-2-06")
+	mthDayYr = append(mthDayYr, "January 2 06")
 	mthDayYr = append(mthDayYr, "January 2, 06")
-	mthDayYr = append(mthDayYr, "January 2, 2006")
-	mthDayYr = append(mthDayYr, "January _2, 2006")
+	mthDayYr = append(mthDayYr, "January/2/06")
+	mthDayYr = append(mthDayYr, "January _2 06")
 	mthDayYr = append(mthDayYr, "January _2, 06")
+	mthDayYr = append(mthDayYr, "January-2-2006")
+	mthDayYr = append(mthDayYr, "January 2 2006")
+	mthDayYr = append(mthDayYr, "January 2, 2006")
+	mthDayYr = append(mthDayYr, "January/2/2006")
+	mthDayYr = append(mthDayYr, "January _2 2006")
+	mthDayYr = append(mthDayYr, "January _2, 2006")
 
+	// European Date Formats
+	mthDayYr = append(mthDayYr, "2.1.06")
+	mthDayYr = append(mthDayYr, "2.1.2006")
+	mthDayYr = append(mthDayYr, "2.1.'06")
+
+	mthDayYr = append(mthDayYr, "2/January/2006")
+	mthDayYr = append(mthDayYr, "2/January/06")
+	mthDayYr = append(mthDayYr, "2-January-2006")
+	mthDayYr = append(mthDayYr, "2-January-06")
 	mthDayYr = append(mthDayYr, "2 January, 06")
-	mthDayYr = append(mthDayYr, "02 January, 06")
 	mthDayYr = append(mthDayYr, "2 January, 2006")
-	mthDayYr = append(mthDayYr, "02 January, 2006")
 	mthDayYr = append(mthDayYr, "2 January 06")
-	mthDayYr = append(mthDayYr, "02 January 06")
-	mthDayYr = append(mthDayYr, "_2 January 06")
 	mthDayYr = append(mthDayYr, "2 January 2006")
-	mthDayYr = append(mthDayYr, "02 January 2006")
-	mthDayYr = append(mthDayYr, "_2 January 2006")
-	mthDayYr = append(mthDayYr, "02/Jan/2006")
+
 	mthDayYr = append(mthDayYr, "2/Jan/2006")
-	mthDayYr = append(mthDayYr, "02/Jan/06")
 	mthDayYr = append(mthDayYr, "2/Jan/06")
-	mthDayYr = append(mthDayYr, "02 Jan 06")
-	mthDayYr = append(mthDayYr, "02 Jan 2006")
+	mthDayYr = append(mthDayYr, "2-Jan-2006")
+	mthDayYr = append(mthDayYr, "2-Jan-06")
 	mthDayYr = append(mthDayYr, "2 Jan 06")
 	mthDayYr = append(mthDayYr, "2 Jan 2006")
-
-	mthDayYr = append(mthDayYr, "02 Jan, 06")
-	mthDayYr = append(mthDayYr, "02 Jan, 2006")
 	mthDayYr = append(mthDayYr, "2 Jan, 06")
 	mthDayYr = append(mthDayYr, "2 Jan, 2006")
-
-	// ? May cause problems
-	mthDayYr = append(mthDayYr, "06-01-02")
-	mthDayYr = append(mthDayYr, "06/01/02")
-	mthDayYr = append(mthDayYr, "060102")
-	mthDayYr = append(mthDayYr, "06-1-2")
-	mthDayYr = append(mthDayYr, "06/1/2")
 
 	mthDayYr = append(mthDayYr, "20060102")
 	mthDayYr = append(mthDayYr, "01022006")
@@ -868,16 +835,12 @@ func (dtf DateTimeFormatUtility) getMonthDayElements() ([]string, error) {
 	mthDayElements = append(mthDayElements, "January 2")
 	mthDayElements = append(mthDayElements, "Jan _2")
 	mthDayElements = append(mthDayElements, "January _2")
-	mthDayElements = append(mthDayElements, "01-02")
-	mthDayElements = append(mthDayElements, "01-_2")
-	mthDayElements = append(mthDayElements, "01/02")
-	mthDayElements = append(mthDayElements, "01/_2")
 	mthDayElements = append(mthDayElements, "1-2")
+	mthDayElements = append(mthDayElements, "1-_2")
 	mthDayElements = append(mthDayElements, "1/2")
-	mthDayElements = append(mthDayElements, "01-2")
-	mthDayElements = append(mthDayElements, "01/2")
-	mthDayElements = append(mthDayElements, "1-02")
-	mthDayElements = append(mthDayElements, "1/02")
+	mthDayElements = append(mthDayElements, "1/_2")
+	mthDayElements = append(mthDayElements, "1/2")
+	mthDayElements = append(mthDayElements, "1-2")
 	mthDayElements = append(mthDayElements, "0102")
 	// European Format Day Month
 	mthDayElements = append(mthDayElements, "02.01")
@@ -934,57 +897,23 @@ func (dtf DateTimeFormatUtility) getDateTimeSeparators() ([]string, error) {
 func (dtf DateTimeFormatUtility) getTimeElements() ([]string, error) {
 	timeElements := make([]string, 0, 512)
 
-	timeElements = append(timeElements, "15:04:05")
-	timeElements = append(timeElements, "15:04")
-	timeElements = append(timeElements, "15:04:05.000")
-	timeElements = append(timeElements, "15:04:05.000000")
-	timeElements = append(timeElements, "15:04:05.000000000")
-
 	timeElements = append(timeElements, "15:4:5")
 	timeElements = append(timeElements, "15:4")
 	timeElements = append(timeElements, "15:4:5.000")
 	timeElements = append(timeElements, "15:4:5.000000")
 	timeElements = append(timeElements, "15:4:5.000000000")
 
-	timeElements = append(timeElements, "03:04:05pm")
-	timeElements = append(timeElements, "03:04:05p.m.")
+	timeElements = append(timeElements, "15:04:05")
+	timeElements = append(timeElements, "15:04")
+	timeElements = append(timeElements, "15:04:05.000")
+	timeElements = append(timeElements, "15:04:05.000000")
+	timeElements = append(timeElements, "15:04:05.000000000")
+
 	timeElements = append(timeElements, "03:04:05 pm")
-	timeElements = append(timeElements, "03:04:05 p.m.")
-
-	timeElements = append(timeElements, "03:04:05PM")
-	timeElements = append(timeElements, "03:04:05P.M.")
-	timeElements = append(timeElements, "03:04:05 PM")
-	timeElements = append(timeElements, "03:04:05 P.M.")
-
-	timeElements = append(timeElements, "3:4:5pm")
-	timeElements = append(timeElements, "3:4:5p.m.")
 	timeElements = append(timeElements, "3:4:5 pm")
-	timeElements = append(timeElements, "3:4:5 p.m.")
-
-	timeElements = append(timeElements, "3:4:5PM")
-	timeElements = append(timeElements, "3:4:5P.M.")
-	timeElements = append(timeElements, "3:4:5 PM")
-	timeElements = append(timeElements, "3:4:5 P.M.")
-
-	timeElements = append(timeElements, "03:04pm")
-	timeElements = append(timeElements, "03:04p.m.")
 	timeElements = append(timeElements, "03:04 pm")
-	timeElements = append(timeElements, "03:04 p.m.")
-
-	timeElements = append(timeElements, "03:04PM")
-	timeElements = append(timeElements, "03:04P.M.")
-	timeElements = append(timeElements, "03:04 PM")
-	timeElements = append(timeElements, "03:04 P.M.")
-
-	timeElements = append(timeElements, "3:4pm")
-	timeElements = append(timeElements, "3:4p.m.")
+	timeElements = append(timeElements, "3:04 pm")
 	timeElements = append(timeElements, "3:4 pm")
-	timeElements = append(timeElements, "3:4 p.m.")
-
-	timeElements = append(timeElements, "3:4PM")
-	timeElements = append(timeElements, "3:4P.M.")
-	timeElements = append(timeElements, "3:4 PM")
-	timeElements = append(timeElements, "3:4 P.M.")
 
 	timeElements = append(timeElements, "")
 
@@ -1055,4 +984,237 @@ func (dtf *DateTimeFormatUtility) getPredefinedFormats() []string {
 	preDefinedFormats = append(preDefinedFormats, time.StampNano)
 
 	return preDefinedFormats
+}
+
+func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
+	// FmtDateTimeEverything = "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
+	edgeCases := make([]string, 0, 20)
+
+	edgeCases = append(edgeCases, "Monday January 2 15:4:5 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2, 15:4:5 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:4:5 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2, 15:4:5 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:4:5 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2, 15:4:5 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2 15:4:5 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:4:5 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:4:5 -0700 MST, 2006")
+
+	edgeCases = append(edgeCases, "Monday January 2 15:4 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2, 15:4 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:4 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2, 15:4 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:4 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2, 15:4 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2 15:4 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:4 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:4 -0700 MST, 2006")
+
+	edgeCases = append(edgeCases, "Monday January 2 15:04:05 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2, 15:04:05 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:04:05 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2, 15:04:05 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:04:05 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2, 15:04:05 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2 15:04:05 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:04:05 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:04:05 -0700 MST, 2006")
+
+	edgeCases = append(edgeCases, "Monday January 2 15:04 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2, 15:04 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:04 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2, 15:04 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:04 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2, 15:04 -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2 15:04 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Mon January 2 15:04 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Jan 2 15:04 -0700 MST, 2006")
+
+	edgeCases = append(edgeCases, "Monday January 2 3:4:5pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2, 3:4:5pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2 3:4:5pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2, 3:4:5pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2 3:4:5pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2, 3:4:5pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2 3:4:5pm -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Mon January 2 3:4:5pm -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Jan 2 3:4:5pm -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Monday January 2 3:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2, 3:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2 3:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Mon January 2, 3:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2 3:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Jan 2, 3:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "Monday January 2 15:4 -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Mon January 2 3:4pm -0700 MST, 2006")
+	edgeCases = append(edgeCases, "Jan 2 3:4pm -0700 MST, 2006")
+
+	return edgeCases
+}
+
+func (dtu *DateTimeFormatUtility) getFirstSecondThirdSearchStrs() map[string]string {
+	searchStrs := make(map[string]string)
+
+	searchStrs["1ST"] = "1"
+	searchStrs["2ND"] = "2"
+	searchStrs["3RD"] = "3"
+	searchStrs["4TH"] = "4"
+	searchStrs["5TH"] = "5"
+	searchStrs["6TH"] = "6"
+	searchStrs["7TH"] = "7"
+	searchStrs["8TH"] = "8"
+	searchStrs["9TH"] = "9"
+	searchStrs["10TH"] = "10"
+	searchStrs["11TH"] = "11"
+	searchStrs["12TH"] = "12"
+	searchStrs["13TH"] = "13"
+	searchStrs["14TH"] = "14"
+	searchStrs["15TH"] = "15"
+	searchStrs["16TH"] = "16"
+	searchStrs["17TH"] = "17"
+	searchStrs["18TH"] = "18"
+	searchStrs["19TH"] = "9"
+	searchStrs["20TH"] = "20"
+	searchStrs["21ST"] = "21"
+	searchStrs["22ND"] = "22"
+	searchStrs["23RD"] = "23"
+	searchStrs["24TH"] = "24"
+	searchStrs["25TH"] = "25"
+	searchStrs["26TH"] = "26"
+	searchStrs["27TH"] = "27"
+	searchStrs["28TH"] = "28"
+	searchStrs["29TH"] = "29"
+	searchStrs["30TH"] = "30"
+	searchStrs["31ST"] = "31"
+	searchStrs["1st"] = "1"
+	searchStrs["2nd"] = "2"
+	searchStrs["3rd"] = "3"
+	searchStrs["4th"] = "4"
+	searchStrs["5th"] = "5"
+	searchStrs["6th"] = "6"
+	searchStrs["7th"] = "7"
+	searchStrs["8th"] = "8"
+	searchStrs["9th"] = "9"
+	searchStrs["10th"] = "10"
+	searchStrs["11th"] = "11"
+	searchStrs["12th"] = "12"
+	searchStrs["13th"] = "13"
+	searchStrs["14th"] = "14"
+	searchStrs["15th"] = "15"
+	searchStrs["16th"] = "16"
+	searchStrs["17th"] = "17"
+	searchStrs["18th"] = "18"
+	searchStrs["19th"] = "9"
+	searchStrs["20th"] = "20"
+	searchStrs["21st"] = "21"
+	searchStrs["22nd"] = "22"
+	searchStrs["23rd"] = "23"
+	searchStrs["24th"] = "24"
+	searchStrs["25th"] = "25"
+	searchStrs["26th"] = "26"
+	searchStrs["27th"] = "27"
+	searchStrs["28th"] = "28"
+	searchStrs["29th"] = "29"
+	searchStrs["30th"] = "30"
+	searchStrs["31st"] = "31"
+
+	return searchStrs
+}
+
+func (dtu *DateTimeFormatUtility) getAMPMSearchStrs() map[string]string {
+	searchStrs := make(map[string]string)
+
+	searchStrs["0 PM"] = "0 pm"
+	searchStrs["1 PM"] = "1 pm"
+	searchStrs["2 PM"] = "2 pm"
+	searchStrs["3 PM"] = "3 pm"
+	searchStrs["4 PM"] = "4 pm"
+	searchStrs["5 PM"] = "5 pm"
+	searchStrs["6 PM"] = "6 pm"
+	searchStrs["7 PM"] = "7 pm"
+	searchStrs["8 PM"] = "8 pm"
+	searchStrs["9 PM"] = "9 pm"
+	searchStrs["0 P.M."] = "0 pm"
+	searchStrs["1 P.M."] = "1 pm"
+	searchStrs["2 P.M."] = "2 pm"
+	searchStrs["3 P.M."] = "3 pm"
+	searchStrs["4 P.M."] = "4 pm"
+	searchStrs["5 P.M."] = "5 pm"
+	searchStrs["6 P.M."] = "6 pm"
+	searchStrs["7 P.M."] = "7 pm"
+	searchStrs["8 P.M."] = "8 pm"
+	searchStrs["9 P.M."] = "9 pm"
+	searchStrs["0PM"] = "0 pm"
+	searchStrs["1PM"] = "1 pm"
+	searchStrs["2PM"] = "2 pm"
+	searchStrs["3PM"] = "3 pm"
+	searchStrs["4PM"] = "4 pm"
+	searchStrs["5PM"] = "5 pm"
+	searchStrs["6PM"] = "6 pm"
+	searchStrs["7PM"] = "7 pm"
+	searchStrs["8PM"] = "8 pm"
+	searchStrs["9PM"] = "9 pm"
+	searchStrs["0P.M."] = "0 pm"
+	searchStrs["1P.M."] = "1 pm"
+	searchStrs["2P.M."] = "2 pm"
+	searchStrs["3P.M."] = "3 pm"
+	searchStrs["4P.M."] = "4 pm"
+	searchStrs["5P.M."] = "5 pm"
+	searchStrs["6P.M."] = "6 pm"
+	searchStrs["7P.M."] = "7 pm"
+	searchStrs["8P.M."] = "8 pm"
+	searchStrs["9P.M."] = "9 pm"
+	searchStrs["0 AM"] = "0 am"
+	searchStrs["1 AM"] = "1 am"
+	searchStrs["2 AM"] = "2 am"
+	searchStrs["3 AM"] = "3 am"
+	searchStrs["4 AM"] = "4 am"
+	searchStrs["5 AM"] = "5 am"
+	searchStrs["6 AM"] = "6 am"
+	searchStrs["7 AM"] = "7 am"
+	searchStrs["8 AM"] = "8 am"
+	searchStrs["9 AM"] = "9 am"
+	searchStrs["0 A.M."] = "0 am"
+	searchStrs["1 A.M."] = "1 am"
+	searchStrs["2 A.M."] = "2 am"
+	searchStrs["3 A.M."] = "3 am"
+	searchStrs["4 A.M."] = "4 am"
+	searchStrs["5 A.M."] = "5 am"
+	searchStrs["6 A.M."] = "6 am"
+	searchStrs["7 A.M."] = "7 am"
+	searchStrs["8 A.M."] = "8 am"
+	searchStrs["9 A.M."] = "9 am"
+	searchStrs["0AM"] = "0 am"
+	searchStrs["1AM"] = "1 am"
+	searchStrs["2AM"] = "2 am"
+	searchStrs["3AM"] = "3 am"
+	searchStrs["4AM"] = "4 am"
+	searchStrs["5AM"] = "5 am"
+	searchStrs["6AM"] = "6 am"
+	searchStrs["7AM"] = "7 am"
+	searchStrs["8AM"] = "8 am"
+	searchStrs["9AM"] = "9 am"
+	searchStrs["0A.M."] = "0 am"
+	searchStrs["1A.M."] = "1 am"
+	searchStrs["2A.M."] = "2 am"
+	searchStrs["3A.M."] = "3 am"
+	searchStrs["4A.M."] = "4 am"
+	searchStrs["5A.M."] = "5 am"
+	searchStrs["6A.M."] = "6 am"
+	searchStrs["7A.M."] = "7 am"
+	searchStrs["8A.M."] = "8 am"
+	searchStrs["9A.M."] = "9 am"
+
+	return searchStrs
+}
+
+func (dtu *DateTimeFormatUtility) replaceDateTimeSequence(targetStr string, replaceMap map[string]string) string {
+
+	for key, replaceStr := range replaceMap {
+		if strings.Contains(targetStr, key) {
+			return strings.Replace(targetStr, key, replaceStr, 1)
+		}
+	}
+
+	return targetStr
 }
