@@ -430,7 +430,7 @@ func getDateTimeSamples() []string {
 
 func printTimeParseResults(dtf DateTimeFormatUtility) {
 
-	FmtDateTimeEverything := "Monday January 2, 2006 15:04:05 -0700 MST"
+	FmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	fmt.Println()
 	fmt.Println("--------------------------------------------------------")
 	fmt.Println("Successful Time Parse Operation!")

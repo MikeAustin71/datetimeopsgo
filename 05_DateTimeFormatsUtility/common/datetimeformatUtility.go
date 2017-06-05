@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -52,6 +53,7 @@ type SearchStrings struct {
 	AMPMSearchStrs             [][][]string
 	FirstSecondThirdSearchStrs [][][]string
 	PreTrimSearchStrs          [][][]string
+	TimeFmtRegEx               [][][]string
 }
 
 type DateTimeFormatUtility struct {
@@ -81,6 +83,7 @@ func (dtf *DateTimeFormatUtility) CreateAllFormatsInMemory() (err error) {
 	dtf.FormatSearchReplaceStrs.AMPMSearchStrs = dtf.getAMPMSearchStrs()
 	dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs = dtf.getFirstSecondThirdSearchStrs()
 	dtf.FormatSearchReplaceStrs.PreTrimSearchStrs = dtf.getPreTrimSearchStrings()
+	dtf.FormatSearchReplaceStrs.TimeFmtRegEx = dtf.getTimeFmtRegEx()
 
 	return
 }
@@ -302,6 +305,7 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 
 	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.AMPMSearchStrs)
 	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs)
+	ftimeStr = dtf.reformatSingleTimeString(ftimeStr, dtf.FormatSearchReplaceStrs.TimeFmtRegEx)
 
 	if err != nil {
 		return time.Time{}, err
@@ -335,12 +339,12 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(timeStr string, probableFo
 
 	// lenTests  lenStr -3 through lenStr + 3
 
-	if lenStr-1 > 0 {
-		lenTests = append(lenTests, lenStr-1)
-	}
-
 	if lenStr-2 > 0 {
 		lenTests = append(lenTests, lenStr-2)
+	}
+
+	if lenStr-1 > 0 {
+		lenTests = append(lenTests, lenStr-1)
 	}
 
 	lenTests = append(lenTests, lenStr+1)
@@ -819,8 +823,6 @@ func (dtf *DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr = append(mthDayYr, "2/January/06")
 	mthDayYr = append(mthDayYr, "2-January-2006")
 	mthDayYr = append(mthDayYr, "2-January-06")
-	mthDayYr = append(mthDayYr, "2 January, 06")
-	mthDayYr = append(mthDayYr, "2 January, 2006")
 	mthDayYr = append(mthDayYr, "2 January 06")
 	mthDayYr = append(mthDayYr, "2 January 2006")
 
@@ -830,8 +832,6 @@ func (dtf *DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr = append(mthDayYr, "2-Jan-06")
 	mthDayYr = append(mthDayYr, "2 Jan 06")
 	mthDayYr = append(mthDayYr, "2 Jan 2006")
-	mthDayYr = append(mthDayYr, "2 Jan, 06")
-	mthDayYr = append(mthDayYr, "2 Jan, 2006")
 
 	mthDayYr = append(mthDayYr, "20060102")
 	mthDayYr = append(mthDayYr, "01022006")
@@ -909,12 +909,6 @@ func (dtf *DateTimeFormatUtility) getDateTimeSeparators() ([]string, error) {
 func (dtf *DateTimeFormatUtility) getTimeElements() ([]string, error) {
 	timeElements := make([]string, 0, 512)
 
-	timeElements = append(timeElements, "15:4:5")
-	timeElements = append(timeElements, "15:4")
-	timeElements = append(timeElements, "15:4:5.000")
-	timeElements = append(timeElements, "15:4:5.000000")
-	timeElements = append(timeElements, "15:4:5.000000000")
-
 	timeElements = append(timeElements, "15:04:05")
 	timeElements = append(timeElements, "15:04")
 	timeElements = append(timeElements, "15:04:05.000")
@@ -922,11 +916,10 @@ func (dtf *DateTimeFormatUtility) getTimeElements() ([]string, error) {
 	timeElements = append(timeElements, "15:04:05.000000000")
 
 	timeElements = append(timeElements, "03:04:05 pm")
-	timeElements = append(timeElements, "3:4:5 pm")
 	timeElements = append(timeElements, "03:04 pm")
-	timeElements = append(timeElements, "3:04 pm")
-	timeElements = append(timeElements, "03:4 pm")
-	timeElements = append(timeElements, "3:4 pm")
+	timeElements = append(timeElements, "03:04:05.000 pm")
+	timeElements = append(timeElements, "03:04:05.000000 pm")
+	timeElements = append(timeElements, "03:04:05.000000000 pm")
 
 	timeElements = append(timeElements, "")
 
@@ -1003,16 +996,6 @@ func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
 	// FmtDateTimeEverything = "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	edgeCases := make([]string, 0, 20)
 
-	edgeCases = append(edgeCases, "Monday January 2 15:4:5 -0700 MST 2006")
-	edgeCases = append(edgeCases, "Mon January 2 15:4:5 -0700 MST 2006")
-	edgeCases = append(edgeCases, "Jan 2 15:4:5 -0700 MST 2006")
-	edgeCases = append(edgeCases, "January 2 15:4:5 -0700 MST 2006")
-
-	edgeCases = append(edgeCases, "Monday January 2 15:4 -0700 MST 2006")
-	edgeCases = append(edgeCases, "Mon January 2 15:4 -0700 MST 2006")
-	edgeCases = append(edgeCases, "Jan 2 15:4 -0700 MST 2006")
-	edgeCases = append(edgeCases, "January 2 15:4 -0700 MST 2006")
-
 	edgeCases = append(edgeCases, "Monday January 2 15:04:05 -0700 MST 2006")
 	edgeCases = append(edgeCases, "Mon January 2 15:04:05 -0700 MST 2006")
 	edgeCases = append(edgeCases, "Jan 2 15:04:05 -0700 MST 2006")
@@ -1023,23 +1006,23 @@ func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
 	edgeCases = append(edgeCases, "Jan 2 15:04 -0700 MST 2006")
 	edgeCases = append(edgeCases, "January 2 15:04 -0700 MST 2006")
 
-	edgeCases = append(edgeCases, "Monday January 2 3:4:5pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Mon January 2 3:4:5pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Jan 2 3:4:5pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Monday January 2 3:4:5pm -0700 MST, 2006")
-	edgeCases = append(edgeCases, "Monday January 2 3:4pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Mon January 2 3:4pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Jan 2 3:4pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "January 2 3:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "January 2 03:04 pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "January 2 03:04:05 pm -0700 MST 2006")
 
-	edgeCases = append(edgeCases, "Monday January 2 03:4:5pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Mon January 2 03:4:5pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Jan 2 3:4:5pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Monday January 2 03:4:5pm -0700 MST, 2006")
-	edgeCases = append(edgeCases, "Monday January 2 03:4pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Mon January 2 03:4pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "Jan 2 03:4pm -0700 MST 2006")
-	edgeCases = append(edgeCases, "January 2 03:4pm -0700 MST 2006")
+	edgeCases = append(edgeCases, "15:04:05 -0700 MST")
+	edgeCases = append(edgeCases, "3:04:05 pm -0700 MST")
+	edgeCases = append(edgeCases, "15:04 -0700 MST")
+	edgeCases = append(edgeCases, "3:04 pm -0700 MST")
+
+	edgeCases = append(edgeCases, "15:04:05 -0700")
+	edgeCases = append(edgeCases, "3:04:05 pm -0700")
+	edgeCases = append(edgeCases, "15:04 -0700")
+	edgeCases = append(edgeCases, "3:04 pm -0700")
+
+	edgeCases = append(edgeCases, "15:04:05")
+	edgeCases = append(edgeCases, "3:04:05 pm")
+	edgeCases = append(edgeCases, "15:04")
+	edgeCases = append(edgeCases, "3:04 pm")
 
 	return edgeCases
 }
@@ -1230,20 +1213,133 @@ func (dtf *DateTimeFormatUtility) getAMPMSearchStrs() [][][]string {
 func (dtf *DateTimeFormatUtility) getPreTrimSearchStrings() [][][]string {
 	d := make([][][]string, 0)
 	d = append(d, [][]string{{",", " "}})
-	d = append(d, [][]string{{"-hrs",":"}})
-	d = append(d, [][]string{{"-mins",":"}})
-	d = append(d, [][]string{{"-secs",""}})
-	d = append(d, [][]string{{"-min",":"}})
-	d = append(d, [][]string{{"-sec",""}})
+	d = append(d, [][]string{{"-hrs", ":"}})
+	d = append(d, [][]string{{"-mins", ":"}})
+	d = append(d, [][]string{{"-secs", ""}})
+	d = append(d, [][]string{{"-min", ":"}})
+	d = append(d, [][]string{{"-sec", ""}})
 
-	d = append(d, [][]string{{"-Hrs",":"}})
-	d = append(d, [][]string{{"-Mins",":"}})
-	d = append(d, [][]string{{"-Secs",""}})
-	d = append(d, [][]string{{"-Min",":"}})
-	d = append(d, [][]string{{"-Sec",""}})
-
+	d = append(d, [][]string{{"-Hrs", ":"}})
+	d = append(d, [][]string{{"-Mins", ":"}})
+	d = append(d, [][]string{{"-Secs", ""}})
+	d = append(d, [][]string{{"-Min", ":"}})
+	d = append(d, [][]string{{"-Sec", ""}})
 
 	return d
+}
+
+func (dtf *DateTimeFormatUtility) getTimeFmtRegEx() [][][]string {
+	d := make([][][]string, 0)
+	d = append(d, [][]string{{"\\d:\\d:\\d\\d", "%02d:%02d:%02d"}})       // 1:1:2
+	d = append(d, [][]string{{"\\d:\\d\\d:\\d\\d", "%02d:%02d:%02d"}})    // 1:2:2
+	d = append(d, [][]string{{"\\d\\d:\\d\\d:\\d\\d", "%02d:%02d:%02d"}}) // 2:2:2
+	d = append(d, [][]string{{"\\d\\d:\\d:\\d\\d", "%02d:%02d:%02d"}})    // 2:1:2
+	d = append(d, [][]string{{"\\d:\\d\\d:\\d", "%02d:%02d:%02d"}})       // 1:2:1
+	d = append(d, [][]string{{"\\d:\\d:\\d", "%02d:%02d:%02d"}})          // 1:1:1
+	d = append(d, [][]string{{"\\d\\d:\\d\\d:\\d", "%02d:%02d:%02d"}})    // 2:2:1
+	d = append(d, [][]string{{"\\d\\d:\\d:\\d", "%02d:%02d:%02d"}})       // 2:1:1
+
+	/*
+
+	   1-	1	1	1
+	   2-	1	1	2
+	   3-	1	2	2
+	   4-	1	2	1
+	   5-	2	2	2
+	   6-	2	1	1
+	   7-	2	2	1
+	   8-	2	1	2
+
+	*/
+
+	d = append(d, [][]string{{"\\d\\d:\\d\\d", "%02d:%02d"}}) // 2:2
+	d = append(d, [][]string{{"\\d:\\d\\d", "%02d:%02d"}})    // 1:2
+	d = append(d, [][]string{{"\\d\\d:\\d", "%02d:%02d"}})    // 2:1
+	d = append(d, [][]string{{"\\d:\\d", "%02d:%02d"}})       // 1:1
+
+	/*
+	   1- 1:1
+	   2- 1:2
+	   3- 2:1
+	   4- 2:2
+
+	*/
+
+	return d
+}
+
+func (dtf *DateTimeFormatUtility) reformatSingleTimeString(targetStr string, regExes [][][]string) string {
+
+	max := len(regExes)
+
+	for i := 0; i < max; i++ {
+		re := regexp.MustCompile(regExes[i][0][0])
+
+		idx := re.FindStringIndex(targetStr)
+
+		if idx == nil {
+			continue
+		}
+
+		extract := make([]byte, 0)
+		s := []byte(targetStr)
+
+		extract = s[idx[0]:idx[1]]
+
+		sExtract := string(extract)
+
+		timeElements := strings.Split(sExtract, ":")
+
+		lTElements := len(timeElements)
+
+		var replaceStr string
+
+		if lTElements == 2 {
+			i1, err := strconv.Atoi(timeElements[0])
+
+			if err != nil {
+				panic(fmt.Errorf("reformatSingleTimeString() Error converint Time Element 1 to ASCII. Error- %v", err.Error()))
+			}
+
+			i2, err := strconv.Atoi(timeElements[1])
+
+			if err != nil {
+				panic(fmt.Errorf("reformatSingleTimeString() Error converint Time Element 2 to ASCII. Error- %v", err.Error()))
+			}
+
+			replaceStr = fmt.Sprintf(regExes[i][0][1], i1, i2)
+		} else if lTElements == 3 {
+
+			i1, err := strconv.Atoi(timeElements[0])
+
+			if err != nil {
+				panic(fmt.Errorf("reformatSingleTimeString() Error converint Time Element 1 to ASCII. Error- %v", err.Error()))
+			}
+
+			i2, err := strconv.Atoi(timeElements[1])
+
+			if err != nil {
+				panic(fmt.Errorf("reformatSingleTimeString() Error converint Time Element 2 to ASCII. Error- %v", err.Error()))
+			}
+
+			i3, err := strconv.Atoi(timeElements[2])
+
+			if err != nil {
+				panic(fmt.Errorf("reformatSingleTimeString() Error converint Time Element 3 to ASCII. Error- %v", err.Error()))
+			}
+
+			replaceStr = fmt.Sprintf(regExes[i][0][1], i1, i2, i3)
+
+		} else {
+			continue
+		}
+
+		targetStr = strings.Replace(targetStr, sExtract, replaceStr, 1)
+
+		return targetStr
+	}
+
+	return targetStr
 }
 
 func (dtf *DateTimeFormatUtility) replaceMultipleStrSequence(targetStr string, replaceMap [][][]string) string {
