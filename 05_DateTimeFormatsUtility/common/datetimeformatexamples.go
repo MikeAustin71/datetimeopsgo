@@ -282,6 +282,14 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 
 }
 
+/*
+func TestMatchTimeFormats() {
+	tf1:= "\\d:\\d:\\d"
+
+
+}
+*/
+
 func TestLoadandWriteFileAllFormats() {
 	dtf := DateTimeFormatUtility{}
 	fmtFile := "D:/go/work/src/MikeAustin71/datetimeopsgo/05_DateTimeFormatsUtility/format-files/TestRead.txt"
@@ -436,8 +444,9 @@ func printTimeParseResults(dtf DateTimeFormatUtility) {
 	fmt.Println("Parsed time.Time:", dtf.DateTimeOut)
 	fmt.Println("Parsed Time with Everything Format: ", dtf.DateTimeOut.Format(FmtDateTimeEverything))
 	fmt.Println("Detailed Search Pattern: ")
-	for key, value := range dtf.DictSearches {
-		fmt.Println("Index Searched: ", key, "  Number of Searches per Index: ", value)
+	lDs := len(dtf.DictSearches)
+	for i := 0; i < lDs; i++ {
+		fmt.Println("Index Searched: ", dtf.DictSearches[i][0][0], "  Number of Searches per Index: ", dtf.DictSearches[i][0][1])
 	}
 	fmt.Println()
 	fmt.Println("Total Number of Searches Performed: ", dtf.TotalNoOfDictSearches)
