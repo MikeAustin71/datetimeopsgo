@@ -50,7 +50,6 @@ type DateTimeFormatGenerator struct {
 }
 
 type SearchStrings struct {
-	AMPMSearchStrs             [][][]string
 	FirstSecondThirdSearchStrs [][][]string
 	PreTrimSearchStrs          [][][]string
 	TimeFmtRegEx               [][][]string
@@ -86,7 +85,6 @@ func (dtf *DateTimeFormatUtility) CreateAllFormatsInMemory() (err error) {
 	dtf.assemblePreDefinedFormats()
 	dtf.assembleMthDayYearFmts()
 	dtf.assembleEdgeCaseFormats()
-	dtf.FormatSearchReplaceStrs.AMPMSearchStrs = dtf.getAMPMSearchStrs()
 	dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs = dtf.getFirstSecondThirdSearchStrs()
 	dtf.FormatSearchReplaceStrs.PreTrimSearchStrs = dtf.getPreTrimSearchStrings()
 	dtf.FormatSearchReplaceStrs.TimeFmtRegEx = dtf.getTimeFmtRegEx()
@@ -396,9 +394,9 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	ftimeStr, err := StringUtility{}.TrimEndMultiple(xtimeStr, ' ')
 
-	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.AMPMSearchStrs)
-	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs)
 	ftimeStr = dtf.reformatSingleTimeString(ftimeStr, dtf.FormatSearchReplaceStrs.TimeFmtRegEx)
+	ftimeStr = dtf.replaceAMPM(ftimeStr)
+	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs)
 
 	if err != nil {
 		return time.Time{}, err
@@ -1204,165 +1202,6 @@ func (dtf *DateTimeFormatUtility) getFirstSecondThirdSearchStrs() [][][]string {
 	return d
 }
 
-func (dtf *DateTimeFormatUtility) getAMPMSearchStrs() [][][]string {
-	d := make([][][]string, 0)
-
-	d = append(d, [][]string{{"0 PM", "0 pm"}})
-	d = append(d, [][]string{{"1 PM", "1 pm"}})
-	d = append(d, [][]string{{"2 PM", "2 pm"}})
-	d = append(d, [][]string{{"3 PM", "3 pm"}})
-	d = append(d, [][]string{{"4 PM", "4 pm"}})
-	d = append(d, [][]string{{"5 PM", "5 pm"}})
-	d = append(d, [][]string{{"6 PM", "6 pm"}})
-	d = append(d, [][]string{{"7 PM", "7 pm"}})
-	d = append(d, [][]string{{"8 PM", "8 pm"}})
-	d = append(d, [][]string{{"9 PM", "9 pm"}})
-	d = append(d, [][]string{{"0 P.M.", "0 pm"}})
-	d = append(d, [][]string{{"1 P.M.", "1 pm"}})
-	d = append(d, [][]string{{"2 P.M.", "2 pm"}})
-	d = append(d, [][]string{{"3 P.M.", "3 pm"}})
-	d = append(d, [][]string{{"4 P.M.", "4 pm"}})
-	d = append(d, [][]string{{"5 P.M.", "5 pm"}})
-	d = append(d, [][]string{{"6 P.M.", "6 pm"}})
-	d = append(d, [][]string{{"6 P.M.", "6 pm"}})
-	d = append(d, [][]string{{"7 P.M.", "7 pm"}})
-	d = append(d, [][]string{{"8 P.M.", "8 pm"}})
-	d = append(d, [][]string{{"9 P.M.", "9 pm"}})
-
-	d = append(d, [][]string{{"0 P.M", "0 pm"}})
-	d = append(d, [][]string{{"1 P.M", "1 pm"}})
-	d = append(d, [][]string{{"2 P.M", "2 pm"}})
-	d = append(d, [][]string{{"3 P.M", "3 pm"}})
-	d = append(d, [][]string{{"4 P.M", "4 pm"}})
-	d = append(d, [][]string{{"5 P.M", "5 pm"}})
-	d = append(d, [][]string{{"6 P.M", "6 pm"}})
-	d = append(d, [][]string{{"6 P.M", "6 pm"}})
-	d = append(d, [][]string{{"7 P.M", "7 pm"}})
-	d = append(d, [][]string{{"8 P.M", "8 pm"}})
-	d = append(d, [][]string{{"9 P.M", "9 pm"}})
-
-	d = append(d, [][]string{{"0 PM.", "0 pm"}})
-	d = append(d, [][]string{{"1 PM.", "1 pm"}})
-	d = append(d, [][]string{{"2 PM.", "2 pm"}})
-	d = append(d, [][]string{{"3 PM.", "3 pm"}})
-	d = append(d, [][]string{{"4 PM.", "4 pm"}})
-	d = append(d, [][]string{{"5 PM.", "5 pm"}})
-	d = append(d, [][]string{{"6 PM.", "6 pm"}})
-	d = append(d, [][]string{{"6 PM.", "6 pm"}})
-	d = append(d, [][]string{{"7 PM.", "7 pm"}})
-	d = append(d, [][]string{{"8 PM.", "8 pm"}})
-	d = append(d, [][]string{{"9 PM.", "9 pm"}})
-
-	d = append(d, [][]string{{"0PM", "0 pm"}})
-	d = append(d, [][]string{{"1PM", "1 pm"}})
-	d = append(d, [][]string{{"2PM", "2 pm"}})
-	d = append(d, [][]string{{"3PM", "3 pm"}})
-	d = append(d, [][]string{{"4PM", "4 pm"}})
-	d = append(d, [][]string{{"5PM", "5 pm"}})
-	d = append(d, [][]string{{"6PM", "6 pm"}})
-	d = append(d, [][]string{{"7PM", "7 pm"}})
-	d = append(d, [][]string{{"8PM", "8 pm"}})
-	d = append(d, [][]string{{"9PM", "9 pm"}})
-
-	d = append(d, [][]string{{"0pm", "0 pm"}})
-	d = append(d, [][]string{{"1pm", "1 pm"}})
-	d = append(d, [][]string{{"2pm", "2 pm"}})
-	d = append(d, [][]string{{"3pm", "3 pm"}})
-	d = append(d, [][]string{{"4pm", "4 pm"}})
-	d = append(d, [][]string{{"5pm", "5 pm"}})
-	d = append(d, [][]string{{"6pm", "6 pm"}})
-	d = append(d, [][]string{{"7pm", "7 pm"}})
-	d = append(d, [][]string{{"8pm", "8 pm"}})
-	d = append(d, [][]string{{"9pm", "9 pm"}})
-
-	d = append(d, [][]string{{"0 p.m.", "0 pm"}})
-	d = append(d, [][]string{{"1 p.m.", "1 pm"}})
-	d = append(d, [][]string{{"2 p.m.", "2 pm"}})
-	d = append(d, [][]string{{"3 p.m.", "3 pm"}})
-	d = append(d, [][]string{{"4 p.m.", "4 pm"}})
-	d = append(d, [][]string{{"5 p.m.", "5 pm"}})
-	d = append(d, [][]string{{"6 p.m.", "6 pm"}})
-	d = append(d, [][]string{{"7 p.m.", "7 pm"}})
-	d = append(d, [][]string{{"8 p.m.", "8 pm"}})
-	d = append(d, [][]string{{"9 p.m.", "9 pm"}})
-
-	d = append(d, [][]string{{"0P.M.", "0 pm"}})
-	d = append(d, [][]string{{"1P.M.", "1 pm"}})
-	d = append(d, [][]string{{"2P.M.", "2 pm"}})
-	d = append(d, [][]string{{"3P.M.", "3 pm"}})
-	d = append(d, [][]string{{"4P.M.", "4 pm"}})
-	d = append(d, [][]string{{"5P.M.", "5 pm"}})
-	d = append(d, [][]string{{"6P.M.", "6 pm"}})
-	d = append(d, [][]string{{"7P.M.", "7 pm"}})
-	d = append(d, [][]string{{"8P.M.", "8 pm"}})
-	d = append(d, [][]string{{"9P.M.", "9 pm"}})
-
-	d = append(d, [][]string{{"0 AM", "0 am"}})
-	d = append(d, [][]string{{"1 AM", "1 am"}})
-	d = append(d, [][]string{{"2 AM", "2 am"}})
-	d = append(d, [][]string{{"3 AM", "3 am"}})
-	d = append(d, [][]string{{"4 AM", "4 am"}})
-	d = append(d, [][]string{{"5 AM", "5 am"}})
-	d = append(d, [][]string{{"6 AM", "6 am"}})
-	d = append(d, [][]string{{"7 AM", "7 am"}})
-	d = append(d, [][]string{{"8 AM", "8 am"}})
-	d = append(d, [][]string{{"9 AM", "9 am"}})
-	d = append(d, [][]string{{"0 A.M.", "0 am"}})
-	d = append(d, [][]string{{"1 A.M.", "1 am"}})
-	d = append(d, [][]string{{"2 A.M.", "2 am"}})
-	d = append(d, [][]string{{"3 A.M.", "3 am"}})
-	d = append(d, [][]string{{"4 A.M.", "4 am"}})
-	d = append(d, [][]string{{"5 A.M.", "5 am"}})
-	d = append(d, [][]string{{"6 A.M.", "6 am"}})
-	d = append(d, [][]string{{"7 A.M.", "7 am"}})
-	d = append(d, [][]string{{"8 A.M.", "8 am"}})
-	d = append(d, [][]string{{"9 A.M.", "9 am"}})
-	d = append(d, [][]string{{"0AM", "0 am"}})
-	d = append(d, [][]string{{"1AM", "1 am"}})
-	d = append(d, [][]string{{"2AM", "2 am"}})
-	d = append(d, [][]string{{"3AM", "3 am"}})
-	d = append(d, [][]string{{"4AM", "4 am"}})
-	d = append(d, [][]string{{"5AM", "5 am"}})
-	d = append(d, [][]string{{"6AM", "6 am"}})
-	d = append(d, [][]string{{"7AM", "7 am"}})
-	d = append(d, [][]string{{"8AM", "8 am"}})
-	d = append(d, [][]string{{"9AM", "9 am"}})
-
-	d = append(d, [][]string{{"0am", "0 am"}})
-	d = append(d, [][]string{{"1am", "1 am"}})
-	d = append(d, [][]string{{"2am", "2 am"}})
-	d = append(d, [][]string{{"3am", "3 am"}})
-	d = append(d, [][]string{{"4am", "4 am"}})
-	d = append(d, [][]string{{"5am", "5 am"}})
-	d = append(d, [][]string{{"6am", "6 am"}})
-	d = append(d, [][]string{{"7am", "7 am"}})
-	d = append(d, [][]string{{"8am", "8 am"}})
-	d = append(d, [][]string{{"9am", "9 am"}})
-
-	d = append(d, [][]string{{"0 a.m.", "0 am"}})
-	d = append(d, [][]string{{"1 a.m.", "1 am"}})
-	d = append(d, [][]string{{"2 a.m.", "2 am"}})
-	d = append(d, [][]string{{"3 a.m.", "3 am"}})
-	d = append(d, [][]string{{"4 a.m.", "4 am"}})
-	d = append(d, [][]string{{"5 a.m.", "5 am"}})
-	d = append(d, [][]string{{"6 a.m.", "6 am"}})
-	d = append(d, [][]string{{"7 a.m.", "7 am"}})
-	d = append(d, [][]string{{"8 a.m.", "8 am"}})
-	d = append(d, [][]string{{"9 a.m.", "9 am"}})
-
-	d = append(d, [][]string{{"0A.M.", "0 am"}})
-	d = append(d, [][]string{{"1A.M.", "1 am"}})
-	d = append(d, [][]string{{"2A.M.", "2 am"}})
-	d = append(d, [][]string{{"3A.M.", "3 am"}})
-	d = append(d, [][]string{{"4A.M.", "4 am"}})
-	d = append(d, [][]string{{"5A.M.", "5 am"}})
-	d = append(d, [][]string{{"6A.M.", "6 am"}})
-	d = append(d, [][]string{{"7A.M.", "7 am"}})
-	d = append(d, [][]string{{"8A.M.", "8 am"}})
-	d = append(d, [][]string{{"9A.M.", "9 am"}})
-
-		return d
-}
 
 func (dtf *DateTimeFormatUtility) getPreTrimSearchStrings() [][][]string {
 	d := make([][][]string, 0)
@@ -1484,6 +1323,40 @@ func (dtf *DateTimeFormatUtility) replaceMultipleStrSequence(targetStr string, r
 
 			targetStr = strings.Replace(targetStr, replaceMap[i][0][0], replaceMap[i][0][1], instances)
 		}
+
+	}
+
+	return targetStr
+}
+
+func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
+	d := make([][][]string, 0)
+
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)a[.]*\\s{0,4}(?i)m[.]*", " am"}})
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)p[.]*\\s{0,4}(?i)m[.]*", " pm"}})
+
+	lD := len(d)
+
+	for i:=0; i < lD; i++ {
+		r, err := regexp.Compile(d[i][0][0])
+
+		if err != nil {
+			panic(fmt.Errorf("replaceAMPM() Regex failed to Compile. regex== %v. Error: %v", d[i][0][0], err.Error()))
+		}
+
+		bTargetStr := []byte(targetStr)
+
+		loc := r.FindIndex(bTargetStr)
+
+		if loc == nil {
+			continue
+		}
+
+		// Found regex expression
+
+		foundEx := string(bTargetStr[loc[0]+1:loc[1]])
+
+		return strings.Replace(targetStr,foundEx,d[i][0][1],1)
 
 	}
 
