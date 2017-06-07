@@ -39,7 +39,7 @@ func main() {
 	// tDateTime := "11/1/16 4:4:04.012 A.M."
 	// tDateTime:= "Monday June 5, 2017 17:24:46.064223400 -0500 CDT"
 	// tDateTime := "6-5-2017 17:30:17 -0700 PDT"
-	tDateTime := "11/12/16 4:04:0.012 PM"
+	// tDateTime := "11/12/16 4:04:0.012 PM"
 	// tDateTime := "11/2/16 04:04:0.012 PM"
 	//tDateTime := "11/12/16 4:04:00.012 PM"
 	//tDateTime := "11/12/16 04:4:0.012 PM"
@@ -57,6 +57,10 @@ func main() {
 	//tDateTime := "6/27/2017 23:26:01 -0500 CDT"
 	// tDateTime := "23:26:01 -0500 CDT"
 	// tDateTime := "11-26-2016 16:26 -0600 CST"
+	// tDateTime:= "Monday June 5th2017 17:24:46.064223400 -0500 CDT"
+	// tDateTime := "5/27/2017 11:42PMCDT"
+	//tDateTime := "06/1/2017 11:42 PM-0700 PDT"
+	tDateTime:= "06/1/2017 11:42   PM  -0700 PDT"
 
 	common.TestParseDateTimeCreateFormatsInMemory(tDateTime, "")
 // 11/12/16 4:04:0.012 PM

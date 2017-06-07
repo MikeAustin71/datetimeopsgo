@@ -50,7 +50,6 @@ type DateTimeFormatGenerator struct {
 }
 
 type SearchStrings struct {
-	FirstSecondThirdSearchStrs [][][]string
 	PreTrimSearchStrs          [][][]string
 	TimeFmtRegEx               [][][]string
 }
@@ -85,7 +84,7 @@ func (dtf *DateTimeFormatUtility) CreateAllFormatsInMemory() (err error) {
 	dtf.assemblePreDefinedFormats()
 	dtf.assembleMthDayYearFmts()
 	dtf.assembleEdgeCaseFormats()
-	dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs = dtf.getFirstSecondThirdSearchStrs()
+
 	dtf.FormatSearchReplaceStrs.PreTrimSearchStrs = dtf.getPreTrimSearchStrings()
 	dtf.FormatSearchReplaceStrs.TimeFmtRegEx = dtf.getTimeFmtRegEx()
 
@@ -391,12 +390,12 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 	dtf.Empty()
 
 	xtimeStr := dtf.replaceMultipleStrSequence(dateTimeStr, dtf.FormatSearchReplaceStrs.PreTrimSearchStrs)
+	xtimeStr = dtf.replaceDateSuffixStThRd(xtimeStr)
+	xtimeStr = dtf.reformatSingleTimeString(xtimeStr, dtf.FormatSearchReplaceStrs.TimeFmtRegEx)
+	xtimeStr = dtf.replaceAMPM(xtimeStr)
 
 	ftimeStr, err := StringUtility{}.TrimEndMultiple(xtimeStr, ' ')
 
-	ftimeStr = dtf.reformatSingleTimeString(ftimeStr, dtf.FormatSearchReplaceStrs.TimeFmtRegEx)
-	ftimeStr = dtf.replaceAMPM(ftimeStr)
-	ftimeStr = dtf.replaceDateTimeSequence(ftimeStr, dtf.FormatSearchReplaceStrs.FirstSecondThirdSearchStrs)
 
 	if err != nil {
 		return time.Time{}, err
@@ -1133,75 +1132,6 @@ func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
 	return edgeCases
 }
 
-func (dtf *DateTimeFormatUtility) getFirstSecondThirdSearchStrs() [][][]string {
-	d := make([][][]string, 0)
-
-	d = append(d, [][]string{{"1ST", "1"}})
-	d = append(d, [][]string{{"2ND", "2"}})
-	d = append(d, [][]string{{"3RD", "3"}})
-	d = append(d, [][]string{{"4TH", "4"}})
-	d = append(d, [][]string{{"5TH", "5"}})
-	d = append(d, [][]string{{"6TH", "6"}})
-	d = append(d, [][]string{{"7TH", "7"}})
-	d = append(d, [][]string{{"8TH", "8"}})
-	d = append(d, [][]string{{"9TH", "9"}})
-	d = append(d, [][]string{{"10TH", "10"}})
-	d = append(d, [][]string{{"11TH", "11"}})
-	d = append(d, [][]string{{"12TH", "12"}})
-	d = append(d, [][]string{{"13TH", "13"}})
-	d = append(d, [][]string{{"14TH", "14"}})
-	d = append(d, [][]string{{"15TH", "15"}})
-	d = append(d, [][]string{{"16TH", "16"}})
-	d = append(d, [][]string{{"17TH", "17"}})
-	d = append(d, [][]string{{"18TH", "18"}})
-	d = append(d, [][]string{{"19TH", "9"}})
-	d = append(d, [][]string{{"20TH", "20"}})
-	d = append(d, [][]string{{"21ST", "21"}})
-	d = append(d, [][]string{{"22ND", "22"}})
-	d = append(d, [][]string{{"23RD", "23"}})
-	d = append(d, [][]string{{"24TH", "24"}})
-	d = append(d, [][]string{{"25TH", "25"}})
-	d = append(d, [][]string{{"26TH", "26"}})
-	d = append(d, [][]string{{"27TH", "27"}})
-	d = append(d, [][]string{{"28TH", "28"}})
-	d = append(d, [][]string{{"29TH", "29"}})
-	d = append(d, [][]string{{"30TH", "30"}})
-	d = append(d, [][]string{{"31ST", "31"}})
-	d = append(d, [][]string{{"1st", "1"}})
-	d = append(d, [][]string{{"2nd", "2"}})
-	d = append(d, [][]string{{"3rd", "3"}})
-	d = append(d, [][]string{{"4th", "4"}})
-	d = append(d, [][]string{{"5th", "5"}})
-	d = append(d, [][]string{{"6th", "6"}})
-	d = append(d, [][]string{{"7th", "7"}})
-	d = append(d, [][]string{{"8th", "8"}})
-	d = append(d, [][]string{{"9th", "9"}})
-	d = append(d, [][]string{{"10th", "10"}})
-	d = append(d, [][]string{{"11th", "11"}})
-	d = append(d, [][]string{{"12th", "12"}})
-	d = append(d, [][]string{{"13th", "13"}})
-	d = append(d, [][]string{{"14th", "14"}})
-	d = append(d, [][]string{{"15th", "15"}})
-	d = append(d, [][]string{{"16th", "16"}})
-	d = append(d, [][]string{{"17th", "17"}})
-	d = append(d, [][]string{{"18th", "18"}})
-	d = append(d, [][]string{{"19th", "9"}})
-	d = append(d, [][]string{{"20th", "20"}})
-	d = append(d, [][]string{{"21st", "21"}})
-	d = append(d, [][]string{{"22nd", "22"}})
-	d = append(d, [][]string{{"23rd", "23"}})
-	d = append(d, [][]string{{"24th", "24"}})
-	d = append(d, [][]string{{"25th", "25"}})
-	d = append(d, [][]string{{"26th", "26"}})
-	d = append(d, [][]string{{"27th", "27"}})
-	d = append(d, [][]string{{"28th", "28"}})
-	d = append(d, [][]string{{"29th", "29"}})
-	d = append(d, [][]string{{"30th", "30"}})
-	d = append(d, [][]string{{"31st", "31"}})
-
-	return d
-}
-
 
 func (dtf *DateTimeFormatUtility) getPreTrimSearchStrings() [][][]string {
 	d := make([][][]string, 0)
@@ -1332,8 +1262,8 @@ func (dtf *DateTimeFormatUtility) replaceMultipleStrSequence(targetStr string, r
 func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
 	d := make([][][]string, 0)
 
-	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)a[.]*\\s{0,4}(?i)m[.]*", " am"}})
-	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)p[.]*\\s{0,4}(?i)m[.]*", " pm"}})
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)a[.]*\\s{0,4}(?i)m[.]*", " am "}})
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)p[.]*\\s{0,4}(?i)m[.]*", " pm "}})
 
 	lD := len(d)
 
@@ -1363,16 +1293,42 @@ func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
 	return targetStr
 }
 
-func (dtf *DateTimeFormatUtility) replaceDateTimeSequence(targetStr string, replaceMap [][][]string) string {
+func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) string {
+// \d{1}\s{0,4}(?i)t\s{0,4}(?i)h
+	d := make([][][]string, 0)
 
-	max := len(replaceMap)
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)s\\s{0,4}(?i)t", " "}})
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)n\\s{0,4}(?i)d", " "}})
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)r\\s{0,4}(?i)d", " "}})
+	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)t\\s{0,4}(?i)h", " "}})
 
-	for i := 0; i < max; i++ {
-		if strings.Contains(targetStr, replaceMap[i][0][0]) {
-			return strings.Replace(targetStr, replaceMap[i][0][0], replaceMap[i][0][1], 1)
+	lD := len(d)
+
+	for i:=0; i < lD; i++ {
+		r, err := regexp.Compile(d[i][0][0])
+
+		if err != nil {
+			panic(fmt.Errorf("replaceDateSuffixStThRd() Regex failed to Compile. regex== %v. Error: %v", d[i][0][0], err.Error()))
 		}
+
+		bTargetStr := []byte(targetStr)
+
+		loc := r.FindIndex(bTargetStr)
+
+		if loc == nil {
+			continue
+		}
+
+		// Found regex expression
+
+		foundEx := string(bTargetStr[loc[0]+1:loc[1]])
+
+		return strings.Replace(targetStr,foundEx,d[i][0][1],1)
 
 	}
 
+
+
 	return targetStr
 }
+

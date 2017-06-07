@@ -50,6 +50,7 @@ func getXDateTimeSamples() [][][]string {
 	d = append(d, [][]string{{"November 12, 11:26pm -0600 CST 2016", "Saturday November 12, 2016 23:26:00.000000000 -0600 CST"}})
 	d = append(d, [][]string{{"12 November 2016 23:26:00 -0600 CST", "Saturday November 12, 2016 23:26:00.000000000 -0600 CST"}})
 	d = append(d, [][]string{{"November 12, 2016 11:6pm +0000 UTC", "Saturday November 12, 2016 23:06:00.000000000 +0000 UTC"}})
+	d = append(d, [][]string{{"November 12, 2016 11:6 p m +0000 UTC", "Saturday November 12, 2016 23:06:00.000000000 +0000 UTC"}})
 	d = append(d, [][]string{{"November 12, 2016 1:6pm +0000 UTC", "Saturday November 12, 2016 13:06:00.000000000 +0000 UTC"}})
 	d = append(d, [][]string{{"November 12, 2016 1:06pm -0500 EST", "Saturday November 12, 2016 13:06:00.000000000 -0500 EST"}})
 	d = append(d, [][]string{{"2016-11-12 13:6 -0500 EST", "Saturday November 12, 2016 13:06:00.000000000 -0500 EST"}})
@@ -57,7 +58,7 @@ func getXDateTimeSamples() [][][]string {
 	d = append(d, [][]string{{"2016-11-12 23:26:00 +0000 UTC", "Saturday November 12, 2016 23:26:00.000000000 +0000 UTC"}})
 	d = append(d, [][]string{{"2016-11-12 23:26:00Z", "Saturday November 12, 2016 23:26:00.000000000 +0000 UTC"}})
 	d = append(d, [][]string{{"2017-6-12 11:26 p.m. Z", "Monday June 12, 2017 23:26:00.000000000 +0000 UTC"}})
-	d = append(d, [][]string{{"2017-11-26 16:26 -0600", "Sunday November 26, 2017 16:26:00.000000000 -0600 CST"}})
+	d = append(d, [][]string{{"2017-11-26 16:26 -0600 CST", "Sunday November 26, 2017 16:26:00.000000000 -0600 CST"}})
 	d = append(d, [][]string{{"2017-6-5 17:16 +0100 BST", "Monday June 5, 2017 17:16:00.000000000 +0100 BST"}})
 	d = append(d, [][]string{{"2017-6-05 17:16 +0100 BST", "Monday June 5, 2017 17:16:00.000000000 +0100 BST"}})
 	d = append(d, [][]string{{"2017-06-5 17:16 +0100 BST", "Monday June 5, 2017 17:16:00.000000000 +0100 BST"}})
@@ -67,6 +68,7 @@ func getXDateTimeSamples() [][][]string {
 	d = append(d, [][]string{{"11/12/16 4:4:4.012 AM", "Saturday November 12, 2016 04:04:04.012000000 +0000 UTC"}})
 	d = append(d, [][]string{{"11/1/16 4:4:04.012 A.M.", "Tuesday November 1, 2016 04:04:04.012000000 +0000 UTC"}})
 	d = append(d, [][]string{{"11/1/2016 4:4:04.012 A.M.", "Tuesday November 1, 2016 04:04:04.012000000 +0000 UTC"}})
+	d = append(d, [][]string{{"11/1/2016 4:4:04.012 A.M. ", "Tuesday November 1, 2016 04:04:04.012000000 +0000 UTC"}})
 	d = append(d, [][]string{{"Monday June 5, 2017 17:24:46.064223400 -0500 CDT", "Monday June 5, 2017 17:24:46.064223400 -0500 CDT"}})
 	d = append(d, [][]string{{"6-5-2017 17:30:17 -0700 PDT", "Monday June 5, 2017 17:30:17.000000000 -0700 PDT"}})
 	d = append(d, [][]string{{"06-05-2017 17:30:17 -0700 PDT", "Monday June 5, 2017 17:30:17.000000000 -0700 PDT"}})
@@ -95,6 +97,10 @@ func getXDateTimeSamples() [][][]string {
 	d = append(d, [][]string{{"23:26:01 -0500 CDT", "Saturday January 1, 0000 23:26:01.000000000 -0500 CDT"}})
 	d = append(d, [][]string{{"11-26-2016 16:26 -0600 CST", "Saturday November 26, 2016 16:26:00.000000000 -0600 CST"}})
 	d = append(d, [][]string{{"11-26-2016 16:26:0 -0600 CST", "Saturday November 26, 2016 16:26:00.000000000 -0600 CST"}})
+	d = append(d, [][]string{{"Monday June 5th2017 17:24:46.064223400 -0500 CDT", "Monday June 5, 2017 17:24:46.064223400 -0500 CDT"}})
+	d = append(d, [][]string{{"5/27/2017 11:42PMCDT", "Saturday May 27, 2017 23:42:00.000000000 -0500 CDT"}})
+	d = append(d, [][]string{{"06/1/2017 11:42 PM-0700 PDT", "Thursday June 1, 2017 23:42:00.000000000 -0700 PDT"}})
+	d = append(d, [][]string{{"06/1/2017 11:42:00   PM  -0700 PDT", "Thursday June 1, 2017 23:42:00.000000000 -0700 PDT"}})
 
 	return d
 }
