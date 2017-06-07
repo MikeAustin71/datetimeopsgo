@@ -60,7 +60,7 @@ func main() {
 	// tDateTime:= "Monday June 5th2017 17:24:46.064223400 -0500 CDT"
 	// tDateTime := "5/27/2017 11:42PMCDT"
 	//tDateTime := "06/1/2017 11:42 PM-0700 PDT"
-	tDateTime:= "06/1/2017 11:42   PM  -0700 PDT"
+	tDateTime:= "June 3rd, 2017 11:42:00PM -0700 PDT"
 
 	common.TestParseDateTimeCreateFormatsInMemory(tDateTime, "")
 // 11/12/16 4:04:0.012 PM

@@ -101,6 +101,9 @@ func getXDateTimeSamples() [][][]string {
 	d = append(d, [][]string{{"5/27/2017 11:42PMCDT", "Saturday May 27, 2017 23:42:00.000000000 -0500 CDT"}})
 	d = append(d, [][]string{{"06/1/2017 11:42 PM-0700 PDT", "Thursday June 1, 2017 23:42:00.000000000 -0700 PDT"}})
 	d = append(d, [][]string{{"06/1/2017 11:42:00   PM  -0700 PDT", "Thursday June 1, 2017 23:42:00.000000000 -0700 PDT"}})
+	d = append(d, [][]string{{"June 1st, 2017 11:42:00PM -0700 PDT", "Thursday June 1, 2017 23:42:00.000000000 -0700 PDT"}})
+	d = append(d, [][]string{{"June 2nd 2017 11:42:00PM -0700 PDT", "Friday June 2, 2017 23:42:00.000000000 -0700 PDT"}})
+	d = append(d, [][]string{{"June 3rd, 2017 11:42:00PM -0700 PDT", "Saturday June 3, 2017 23:42:00.000000000 -0700 PDT"}})
 
 	return d
 }

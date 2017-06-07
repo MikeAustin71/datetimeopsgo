@@ -394,7 +394,7 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 	xtimeStr = dtf.reformatSingleTimeString(xtimeStr, dtf.FormatSearchReplaceStrs.TimeFmtRegEx)
 	xtimeStr = dtf.replaceAMPM(xtimeStr)
 
-	ftimeStr, err := StringUtility{}.TrimEndMultiple(xtimeStr, ' ')
+	ftimeStr, err := dtf.trimEndMultiple(xtimeStr, ' ')
 
 
 	if err != nil {
@@ -466,6 +466,12 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 	}
 
 	lenTests = append(lenTests, lenStr+5)
+
+	if lenStr-6 > 0 {
+		lenTests = append(lenTests, lenStr-6)
+	}
+
+	lenTests = append(lenTests, lenStr+6)
 
 	lenLenTests := len(lenTests)
 
@@ -1332,3 +1338,53 @@ func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) stri
 	return targetStr
 }
 
+// TrimEndMultiple- Performs the following operations on strings:
+// 1. Trims Right and Left for all instances of 'trimChar'
+// 2. Within the interior of a string, multiple instances
+// 		of 'trimChar' are reduce to a single instance.
+func (dtf *DateTimeFormatUtility) trimEndMultiple(targetStr string, trimChar rune) (rStr string, err error) {
+
+	if targetStr=="" {
+		err = errors.New("trimEndMultiple() - Empty targetStr")
+		return
+	}
+
+	fStr := []rune(targetStr)
+	lenTargetStr := len(fStr)
+	outputStr := make([]rune,lenTargetStr)
+	lenTargetStr--
+	idx := lenTargetStr
+	foundFirstChar := false
+
+	for i:=lenTargetStr; i >= 0; i-- {
+
+		if !foundFirstChar && fStr[i] == trimChar {
+			continue
+		}
+
+		if i > 0 && fStr[i] == trimChar && fStr[i-1] == trimChar {
+			continue
+		}
+
+		if i==0 && fStr[i] == trimChar {
+			continue
+		}
+
+		foundFirstChar = true
+		outputStr[idx] = fStr[i]
+		idx--
+	}
+
+	if idx != lenTargetStr {
+		idx++
+	}
+
+	if outputStr[idx] == trimChar {
+		idx++
+	}
+
+	result := string(outputStr[idx:])
+
+	return result, nil
+
+}
