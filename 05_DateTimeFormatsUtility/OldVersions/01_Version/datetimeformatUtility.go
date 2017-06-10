@@ -1,5 +1,8 @@
 package common
 
+/*
+
+
 import (
 	"errors"
 	"fmt"
@@ -9,8 +12,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"sync"
-	"runtime"
 )
 
 type DateTimeWriteFormatsToFileDto struct {
@@ -56,14 +57,13 @@ type SearchStrings struct {
 	TimeFmtRegEx               [][][]string
 }
 
-type ParseDateTimeDto struct {
+type parseDateTimeDto struct {
 	IsSuccessful							bool
 	FormattedDateTimeStringIn string
 	SelectedMapIdx            int
 	SelectedFormat            string
 	TotalNoOfDictSearches			int
 	DateTimeOut               time.Time
-	err												error
 }
 
 type DateTimeFormatUtility struct {
@@ -445,12 +445,7 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	lenTests := make([]int, 0)
 
-
 	// lenTests  lenStr -3 through lenStr + 3
-
-	if lenStr-3 > 0 {
-		lenTests = append(lenTests, lenStr-3)
-	}
 
 	if lenStr-2 > 0 {
 		lenTests = append(lenTests, lenStr-2)
@@ -460,23 +455,13 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 		lenTests = append(lenTests, lenStr-1)
 	}
 
+	lenTests = append(lenTests, lenStr+1)
+
 	lenTests = append(lenTests, lenStr)
 
-	dtf.TotalNoOfDictSearches = 0
-	dtf.OriginalDateTimeStringIn = dateTimeStr
-	dtf.FormattedDateTimeStringIn = ftimeStr
-	dtf.DateTimeOut = time.Time{}
-
-
-	if len(lenTests) > 2 {
-		if dtf.doParseRun(lenTests, ftimeStr){
-			return dtf.DateTimeOut, nil
-		}
+	if lenStr-3 > 0 {
+		lenTests = append(lenTests, lenStr-3)
 	}
-
-	lenTests = make([]int, 0)
-
-	lenTests = append(lenTests, lenStr+1)
 
 	lenTests = append(lenTests, lenStr+2)
 
@@ -500,61 +485,37 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	lenTests = append(lenTests, lenStr+6)
 
-
-	if lenStr-7 > 0 {
-		lenTests = append(lenTests, lenStr-6)
-	}
-
-	lenTests = append(lenTests, lenStr+7)
-
-	if dtf.doParseRun(lenTests, ftimeStr){
-		return dtf.DateTimeOut, nil
-	}
-
-
-	return time.Time{}, errors.New("Failed to locate correct time format!")
-}
-
-func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) bool {
-	msg := make(chan ParseDateTimeDto)
-	done := make(chan bool)
-	var wg sync.WaitGroup
-
-	isSuccessfulParse := false
 	lenLenTests := len(lenTests)
 
+	dtf.TotalNoOfDictSearches = 0
+	msg := make(chan MessageDto)
+	done := make(chan bool)
 
 	for i := 0; i < lenLenTests; i++ {
-		wg.Add(1)
-		go dtf.parseFormatMap(msg, done, &wg, ftimeStr, lenTests[i], dtf.FormatMap[lenTests[i]])
 
-	}
-
-	go parseWaitForIt(&wg, msg)
-
-
-
-	for m := range msg {
+		result, err := dtf.parseFormatMap(ftimeStr, lenTests[i])
 
 		dtf.DictSearches =
-			append(dtf.DictSearches, [][]int{{m.SelectedMapIdx, m.TotalNoOfDictSearches}})
-		dtf.TotalNoOfDictSearches += m.TotalNoOfDictSearches
+			append(dtf.DictSearches, [][]int{{lenTests[i], result.TotalNoOfDictSearches}})
+		dtf.TotalNoOfDictSearches += result.TotalNoOfDictSearches
 
-		if m.IsSuccessful {
-			isSuccessfulParse = true
-			dtf.SelectedFormat = m.SelectedFormat
-			dtf.SelectedFormatSource = "Format Map Dictionary"
-			dtf.SelectedMapIdx = m.SelectedMapIdx
-			dtf.DateTimeOut = m.DateTimeOut
+		if err == nil {
+			dtf.SelectedFormat = result.SelectedFormat
+			dtf.SelectedFormatSource = result.SelectedFormatSource
+			dtf.SelectedMapIdx = result.SelectedMapIdx
+			dtf.DateTimeOut = result.DateTimeOut
+			dtf.OriginalDateTimeStringIn = dateTimeStr
+			dtf.FormattedDateTimeStringIn = result.FormattedDateTimeStringIn
+			return dtf.DateTimeOut, nil
 		}
+
 	}
 
-	return  isSuccessfulParse
-}
+	dtf.OriginalDateTimeStringIn = dateTimeStr
+	dtf.FormattedDateTimeStringIn = ftimeStr
+	dtf.DateTimeOut = time.Time{}
 
-func parseWaitForIt(wg *sync.WaitGroup, msg chan ParseDateTimeDto) {
-	wg.Wait()
-	close(msg)
+	return time.Time{}, errors.New("Failed to locate correct time format!")
 }
 
 func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
@@ -587,58 +548,34 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
 	return nil
 }
 
-func (dtf *DateTimeFormatUtility) parseFormatMap(
-	msg chan<- ParseDateTimeDto, done chan bool,
-	wg *sync.WaitGroup, timeStr string, idx int, fmtMap map[string]int) {
+func (dtf *DateTimeFormatUtility) parseFormatMap(timeStr string, idx int) (dtResult DateTimeFormatUtility, err error) {
 
-	dto := ParseDateTimeDto{}
+	if dtf.FormatMap[idx] == nil {
+		err = errors.New("Time String Length not found in Format Map!")
+		return
+	}
 
-	dto.FormattedDateTimeStringIn = timeStr
-	dto.SelectedMapIdx = idx
+	for key := range dtf.FormatMap[idx] {
 
-
-	for key := range fmtMap {
-
-		dto.TotalNoOfDictSearches++
+		dtResult.TotalNoOfDictSearches++
 
 		t, err := time.Parse(key, timeStr)
 
-		select {
-			case <-done:
-				msg <- dto
-				wg.Done()
-				return
-			default:
-				if err == nil {
-					dto.DateTimeOut = t
-					dto.SelectedFormat = key
-					dto.IsSuccessful = true
-					msg <- dto
-					done <- true
-					close(done)
-					wg.Done()
-					runtime.Gosched()
-					return
-				}
-			}
-
-		runtime.Gosched()
-	}
-
-
-	for {
-		select {
-		case <-done:
-			msg <- dto
-			wg.Done()
-			return
-		default:
-			time.Sleep(50 * time.Millisecond)
+		if err == nil {
+			dtResult.OriginalDateTimeStringIn = timeStr
+			dtResult.FormattedDateTimeStringIn = timeStr
+			dtResult.SelectedMapIdx = idx
+			dtResult.SelectedFormatSource = "Format Dictionary"
+			dtResult.DateTimeOut = t
+			dtResult.SelectedFormat = key
+			return dtResult, err
 		}
+
 	}
 
+	err = errors.New("Failed to parse time string")
 
-
+	return
 }
 
 func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
@@ -1248,31 +1185,31 @@ func (dtf *DateTimeFormatUtility) getTimeFmtRegEx() [][][]string {
 	d = append(d, [][]string{{"\\d:\\d\\d:\\d", "%02d:%02d:%02d"}})    		// 1:2:1
 	d = append(d, [][]string{{"\\d:\\d:\\d", "%02d:%02d:%02d"}})          // 1:1:1
 
-	/*
 
-	   1-	1	1	1
-	   2-	1	1	2
-	   3-	1	2	2
-	   4-	1	2	1
-	   5-	2	2	2
-	   6-	2	1	1
-	   7-	2	2	1
-	   8-	2	1	2
 
-	*/
+	//   1-	1	1	1
+	//   2-	1	1	2
+	//   3-	1	2	2
+	//   4-	1	2	1
+	//   5-	2	2	2
+	//   6-	2	1	1
+	//   7-	2	2	1
+	//   8-	2	1	2
+
+
 
 	d = append(d, [][]string{{"\\d\\d:\\d\\d", "%02d:%02d"}}) // 2:2
 	d = append(d, [][]string{{"\\d\\d:\\d", "%02d:%02d"}})    // 2:1
 	d = append(d, [][]string{{"\\d:\\d\\d", "%02d:%02d"}})    // 1:2
 	d = append(d, [][]string{{"\\d:\\d", "%02d:%02d"}})       // 1:1
 
-	/*
-	   1- 1:1
-	   2- 1:2
-	   3- 2:1
-	   4- 2:2
 
-	*/
+	//   1- 1:1
+	//   2- 1:2
+	//   3- 2:1
+	//   4- 2:2
+
+
 
 	return d
 }
@@ -1465,3 +1402,4 @@ func (dtf *DateTimeFormatUtility) trimEndMultiple(targetStr string, trimChar run
 	return result, nil
 
 }
+*/

@@ -53,16 +53,18 @@ func main() {
 	//tDateTime := "2016/11/26 16:2:3 PDT -0700"
 	//tDateTime := "June 12th, 2016 4:26 PM"
 	//tDateTime := "05.03.2017"
-	//tDateTime := "2017.3.5"
-	//tDateTime := "6/27/2017 23:26:01 -0500 CDT"
+	tDateTime := "2017.3.5"
+	// tDateTime := "6/27/2017 23:26:01 -0500 CDT"
+	// tDateTime := "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	// tDateTime := "23:26:01 -0500 CDT"
 	// tDateTime := "11-26-2016 16:26 -0600 CST"
 	// tDateTime:= "Monday June 5th2017 17:24:46.064223400 -0500 CDT"
 	// tDateTime := "5/27/2017 11:42PMCDT"
 	//tDateTime := "06/1/2017 11:42 PM-0700 PDT"
-	tDateTime:= "June 3rd, 2017 11:42:00PM -0700 PDT"
+	// tDateTime:= "June 3rd, 2017 11:42:00PM -0700 PDT"
 
-	common.TestParseDateTimeCreateFormatsInMemory(tDateTime, "")
+	common.TestParseDateTimeCreateFormatsInMemory( tDateTime, "")
+
 // 11/12/16 4:04:0.012 PM
 	//FmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	//fmt.Println("Time Now: ", time.Now().Format(FmtDateTimeEverything))

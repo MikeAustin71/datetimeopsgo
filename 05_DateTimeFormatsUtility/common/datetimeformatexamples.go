@@ -153,7 +153,7 @@ func TestParseDateTime(dtf DateTimeFormatUtility, dateTimeStr string, probableDa
 
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 
-	printTimeParseResults(dtf)
+	printSuccessfulTimeParseResults(dtf)
 
 }
 
@@ -191,17 +191,15 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	fmt.Println()
 
 	if err != nil {
-		fmt.Println("Time Parse Failed - Error: ", err.Error())
-		fmt.Println()
-		fmt.Println(" Original Date Time String: ", dateTimeStr)
-		fmt.Println("Formatted Date Time String: ", dtf.FormattedDateTimeStringIn)
+		printTimeParseErrorResults(dtf, err)
 		return
 	}
 
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 
-	printTimeParseResults(dtf)
+	printSuccessfulTimeParseResults(dtf)
 }
+
 
 func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string) {
 
@@ -240,13 +238,13 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 	fmt.Println()
 
 	if err != nil {
-		fmt.Println("Time Parse Failed - Error: ", err.Error())
+		printTimeParseErrorResults(dtf, err)
 		return
 	}
 
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 
-	printTimeParseResults(dtf)
+	printSuccessfulTimeParseResults(dtf)
 
 }
 
@@ -432,7 +430,7 @@ func getDateTimeSamples() []string {
 
 }
 
-func printTimeParseResults(dtf DateTimeFormatUtility) {
+func printSuccessfulTimeParseResults(dtf DateTimeFormatUtility) {
 
 	FmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	fmt.Println()
@@ -456,4 +454,20 @@ func printTimeParseResults(dtf DateTimeFormatUtility) {
 	fmt.Println("Total Number of Searches Performed: ", dtf.TotalNoOfDictSearches)
 	fmt.Println("--------------------------------------------------------")
 	fmt.Println()
+}
+
+func printTimeParseErrorResults(dtf DateTimeFormatUtility, err error) {
+	nu := NumStrUtility{}
+	fmt.Println("Time Parse Failed - Error: ", err.Error())
+	fmt.Println()
+	fmt.Println(" Original Date Time String: ", dtf.OriginalDateTimeStringIn)
+	fmt.Println("Formatted Date Time String: ", dtf.FormattedDateTimeStringIn)
+	fmt.Println(" Total Number of Searches: ", nu.DLimInt(dtf.TotalNoOfDictSearches, ','))
+	fmt.Println("Detailed Search Pattern: ")
+	lDs := len(dtf.DictSearches)
+	for i := 0; i < lDs; i++ {
+		fmt.Println("Index Searched: ", dtf.DictSearches[i][0][0], "  Number of Searches per Index: ", dtf.DictSearches[i][0][1])
+	}
+	return
+
 }
