@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 	"runtime"
+	"sync/atomic"
 )
 
 type DateTimeWriteFormatsToFileDto struct {
@@ -509,13 +510,13 @@ func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) b
 
 	lenLenTests := len(lenTests)
 	msg := make(chan ParseDateTimeDto)
-	done := make(chan bool)
+	done := uint64(0)
 
 	isSuccessfulParse := false
 
 	for i := 0; i < lenLenTests; i++ {
 
-		go dtf.parseFormatMap(msg, done, ftimeStr, lenTests[i], dtf.FormatMap[lenTests[i]])
+		go dtf.parseFormatMap(msg, &done, ftimeStr, lenTests[i], dtf.FormatMap[lenTests[i]])
 
 	}
 
@@ -524,6 +525,12 @@ func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) b
 
 	for m := range msg {
 		cnt++
+
+		if cnt == lenLenTests {
+			close(msg)
+			runtime.Gosched()
+		}
+
 		dtf.DictSearches =
 			append(dtf.DictSearches, [][]int{{m.SelectedMapIdx, m.TotalNoOfDictSearches}})
 		dtf.TotalNoOfDictSearches += m.TotalNoOfDictSearches
@@ -534,13 +541,9 @@ func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) b
 			dtf.SelectedFormatSource = "Format Map Dictionary"
 			dtf.SelectedMapIdx = m.SelectedMapIdx
 			dtf.DateTimeOut = m.DateTimeOut
-			return true
-		} else {
-			if cnt == lenLenTests {
-				close(msg)
-				runtime.Gosched()
-			}
+
 		}
+
 	}
 
 	return  isSuccessfulParse
@@ -548,13 +551,14 @@ func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) b
 
 
 func (dtf *DateTimeFormatUtility) parseFormatMap(
-	msg chan<- ParseDateTimeDto, done chan bool, timeStr string, idx int, fmtMap map[string]int) {
+	msg chan<- ParseDateTimeDto, done *uint64, timeStr string, idx int, fmtMap map[string]int) {
+
+	var doneTest uint64
 
 	dto := ParseDateTimeDto{}
 
 	dto.FormattedDateTimeStringIn = timeStr
 	dto.SelectedMapIdx = idx
-	// time.Sleep(5 * time.Microsecond)
 
 	for key := range fmtMap {
 
@@ -562,45 +566,27 @@ func (dtf *DateTimeFormatUtility) parseFormatMap(
 
 		t, err := time.Parse(key, timeStr)
 
-		select {
-			case <-done:
-				msg <- dto
-				return
-			default:
-				if err == nil {
-					// done <- true
-					// close(done)
-					dto.DateTimeOut = t
-					dto.SelectedFormat = key
-					dto.IsSuccessful = true
-					msg <- dto
-					runtime.Gosched()
-					return
-				}
-			}
+		doneTest = atomic.LoadUint64(done)
 
-		runtime.Gosched()
-	}
-
-/*
-	for {
-		select {
-		case <-done:
+		if doneTest > 0 {
 			msg <- dto
 			return
-		default:
-			runtime.Gosched()
-			time.Sleep(5 * time.Microsecond)
 		}
+
+		if err == nil {
+			atomic.AddUint64(done, 1)
+			dto.DateTimeOut = t
+			dto.SelectedFormat = key
+			dto.IsSuccessful = true
+			msg <- dto
+			runtime.Gosched()
+			return
+		}
+
 	}
-*/
 
 
-	// runtime.Gosched()
-
-	// time.Sleep(250 * time.Millisecond)
 	msg <- dto
-	runtime.Gosched()
 	return
 
 }
