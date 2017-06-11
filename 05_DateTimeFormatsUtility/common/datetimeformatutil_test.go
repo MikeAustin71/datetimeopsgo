@@ -10,13 +10,14 @@ func TestDateTimeFormatUtility_ParseDateTimeStrings(t *testing.T) {
 
 	dtf.CreateAllFormatsInMemory()
 
-	dtSamples := getXDateTimeSamples()
+	dtSamples := GetXDateTimeSamples()
 
 	ls := len(dtSamples)
 	fmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 
 	for i := 0; i < ls; i++ {
 
+		fmt.Printf("Item: %v  Date Time String : %v \n", i, dtSamples[i][0][0])
 		ti, err := dtf.ParseDateTimeString(dtSamples[i][0][0], "")
 
 		if err != nil {
@@ -35,7 +36,7 @@ func TestDateTimeFormatUtility_ParseDateTimeStrings(t *testing.T) {
 
 }
 
-func getXDateTimeSamples() [][][]string {
+func GetXDateTimeSamples() [][][]string {
 	d := make([][][]string, 0)
 	// FmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	d = append(d, [][]string{{"Saturday 11/12/2016 4:26 PM", "Saturday November 12, 2016 16:26:00.000000000 +0000 UTC"}})

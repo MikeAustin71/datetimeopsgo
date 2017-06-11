@@ -460,9 +460,10 @@ func printTimeParseErrorResults(dtf DateTimeFormatUtility, err error) {
 	nu := NumStrUtility{}
 	fmt.Println("Time Parse Failed - Error: ", err.Error())
 	fmt.Println()
-	fmt.Println(" Original Date Time String: ", dtf.OriginalDateTimeStringIn)
-	fmt.Println("Formatted Date Time String: ", dtf.FormattedDateTimeStringIn)
-	fmt.Println(" Total Number of Searches: ", nu.DLimInt(dtf.TotalNoOfDictSearches, ','))
+	fmt.Println("        Original Date Time String: ", dtf.OriginalDateTimeStringIn)
+	fmt.Println("       Formatted Date Time String: ", dtf.FormattedDateTimeStringIn)
+	fmt.Println("Length Formatted Date Time String: ", len(dtf.FormattedDateTimeStringIn))
+	fmt.Println("         Total Number of Searches: ", nu.DLimInt(dtf.TotalNoOfDictSearches, ','))
 	fmt.Println("Detailed Search Pattern: ")
 	lDs := len(dtf.DictSearches)
 	for i := 0; i < lDs; i++ {

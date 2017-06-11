@@ -138,7 +138,7 @@ func (ns NumStrUtility) DnumStr(pureNumStr string, thousandsSeparator byte) stri
 			outStr[outIdx] = pureNumStr[i]
 			outIdx--
 
-			if iCnt == 3 {
+			if iCnt == 3 && i != 0 {
 				iCnt = 0
 				outStr[outIdx] = thousandsSeparator
 				outIdx--

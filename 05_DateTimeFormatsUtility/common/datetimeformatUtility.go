@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"sync"
 	"runtime"
 )
 
@@ -443,118 +442,167 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	lenStr := len(ftimeStr)
 
-	lenTests := make([]int, 0)
+	lenSequence := make([][]int,0)
 
-
-	// lenTests  lenStr -3 through lenStr + 3
-
-	if lenStr-3 > 0 {
-		lenTests = append(lenTests, lenStr-3)
+	lenTests := []int {
+						lenStr-2,
+						lenStr-3,
+						lenStr-1,
+						lenStr,
+						lenStr+1,
+						lenStr+2,
+						lenStr+3,
+						lenStr-4,
+						lenStr+4,
+						lenStr-5,
+						lenStr+5,
+						lenStr-6,
+						lenStr+6,
+						lenStr-7,
+						lenStr+7,
+						lenStr-8,
+						lenStr+8,
+						lenStr-9,
+						lenStr+9,
 	}
 
-	if lenStr-2 > 0 {
-		lenTests = append(lenTests, lenStr-2)
-	}
-
-	if lenStr-1 > 0 {
-		lenTests = append(lenTests, lenStr-1)
-	}
-
-	lenTests = append(lenTests, lenStr)
 
 	dtf.TotalNoOfDictSearches = 0
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 	dtf.FormattedDateTimeStringIn = ftimeStr
 	dtf.DateTimeOut = time.Time{}
 
+	threshold := 5
 
-	if len(lenTests) > 2 {
-		if dtf.doParseRun(lenTests, ftimeStr){
+	ary := make([]int,0)
+	for i:=0; i < len(lenTests); i++ {
+
+		if dtf.FormatMap[lenTests[i]] !=nil {
+			ary = append(ary, lenTests[i])
+		}
+
+		if len(ary) == threshold {
+			lenSequence = append(lenSequence, ary)
+			ary = make([]int,0)
+		}
+
+	}
+
+	if len(lenSequence) > 0 {
+		lenSequence = append(lenSequence, ary)
+	}
+
+
+
+	for j:=0; j < len(lenSequence); j++ {
+
+		if dtf.doParseRun(lenSequence[j], ftimeStr){
 			return dtf.DateTimeOut, nil
 		}
+
 	}
-
-	lenTests = make([]int, 0)
-
-	lenTests = append(lenTests, lenStr+1)
-
-	lenTests = append(lenTests, lenStr+2)
-
-	lenTests = append(lenTests, lenStr+3)
-
-	if lenStr-4 > 0 {
-		lenTests = append(lenTests, lenStr-4)
-	}
-
-	lenTests = append(lenTests, lenStr+4)
-
-	if lenStr-5 > 0 {
-		lenTests = append(lenTests, lenStr-5)
-	}
-
-	lenTests = append(lenTests, lenStr+5)
-
-	if lenStr-6 > 0 {
-		lenTests = append(lenTests, lenStr-6)
-	}
-
-	lenTests = append(lenTests, lenStr+6)
-
-
-	if lenStr-7 > 0 {
-		lenTests = append(lenTests, lenStr-6)
-	}
-
-	lenTests = append(lenTests, lenStr+7)
-
-	if dtf.doParseRun(lenTests, ftimeStr){
-		return dtf.DateTimeOut, nil
-	}
-
 
 	return time.Time{}, errors.New("Failed to locate correct time format!")
 }
 
 func (dtf *DateTimeFormatUtility) doParseRun(lenTests [] int, ftimeStr string) bool {
+
+	lenLenTests := len(lenTests)
 	msg := make(chan ParseDateTimeDto)
 	done := make(chan bool)
-	var wg sync.WaitGroup
 
 	isSuccessfulParse := false
-	lenLenTests := len(lenTests)
-
 
 	for i := 0; i < lenLenTests; i++ {
-		wg.Add(1)
-		go dtf.parseFormatMap(msg, done, &wg, ftimeStr, lenTests[i], dtf.FormatMap[lenTests[i]])
+
+		go dtf.parseFormatMap(msg, done, ftimeStr, lenTests[i], dtf.FormatMap[lenTests[i]])
 
 	}
 
-	go parseWaitForIt(&wg, msg)
 
-
+	cnt := 0
 
 	for m := range msg {
-
+		cnt++
 		dtf.DictSearches =
 			append(dtf.DictSearches, [][]int{{m.SelectedMapIdx, m.TotalNoOfDictSearches}})
 		dtf.TotalNoOfDictSearches += m.TotalNoOfDictSearches
 
-		if m.IsSuccessful {
+		if m.IsSuccessful && !isSuccessfulParse {
 			isSuccessfulParse = true
 			dtf.SelectedFormat = m.SelectedFormat
 			dtf.SelectedFormatSource = "Format Map Dictionary"
 			dtf.SelectedMapIdx = m.SelectedMapIdx
 			dtf.DateTimeOut = m.DateTimeOut
+			return true
+		} else {
+			if cnt == lenLenTests {
+				close(msg)
+				runtime.Gosched()
+			}
 		}
 	}
 
 	return  isSuccessfulParse
 }
 
-func parseWaitForIt(wg *sync.WaitGroup, msg chan ParseDateTimeDto) {
-	wg.Wait()
-	close(msg)
+
+func (dtf *DateTimeFormatUtility) parseFormatMap(
+	msg chan<- ParseDateTimeDto, done chan bool, timeStr string, idx int, fmtMap map[string]int) {
+
+	dto := ParseDateTimeDto{}
+
+	dto.FormattedDateTimeStringIn = timeStr
+	dto.SelectedMapIdx = idx
+	// time.Sleep(5 * time.Microsecond)
+
+	for key := range fmtMap {
+
+		dto.TotalNoOfDictSearches++
+
+		t, err := time.Parse(key, timeStr)
+
+		select {
+			case <-done:
+				msg <- dto
+				return
+			default:
+				if err == nil {
+					// done <- true
+					// close(done)
+					dto.DateTimeOut = t
+					dto.SelectedFormat = key
+					dto.IsSuccessful = true
+					msg <- dto
+					runtime.Gosched()
+					return
+				}
+			}
+
+		runtime.Gosched()
+	}
+
+/*
+	for {
+		select {
+		case <-done:
+			msg <- dto
+			return
+		default:
+			runtime.Gosched()
+			time.Sleep(5 * time.Microsecond)
+		}
+	}
+*/
+
+
+	// runtime.Gosched()
+
+	// time.Sleep(250 * time.Millisecond)
+	msg <- dto
+	runtime.Gosched()
+	return
+
 }
 
 func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
@@ -587,59 +635,7 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
 	return nil
 }
 
-func (dtf *DateTimeFormatUtility) parseFormatMap(
-	msg chan<- ParseDateTimeDto, done chan bool,
-	wg *sync.WaitGroup, timeStr string, idx int, fmtMap map[string]int) {
 
-	dto := ParseDateTimeDto{}
-
-	dto.FormattedDateTimeStringIn = timeStr
-	dto.SelectedMapIdx = idx
-
-
-	for key := range fmtMap {
-
-		dto.TotalNoOfDictSearches++
-
-		t, err := time.Parse(key, timeStr)
-
-		select {
-			case <-done:
-				msg <- dto
-				wg.Done()
-				return
-			default:
-				if err == nil {
-					dto.DateTimeOut = t
-					dto.SelectedFormat = key
-					dto.IsSuccessful = true
-					msg <- dto
-					done <- true
-					close(done)
-					wg.Done()
-					runtime.Gosched()
-					return
-				}
-			}
-
-		runtime.Gosched()
-	}
-
-
-	for {
-		select {
-		case <-done:
-			msg <- dto
-			wg.Done()
-			return
-		default:
-			time.Sleep(50 * time.Millisecond)
-		}
-	}
-
-
-
-}
 
 func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 
@@ -1185,6 +1181,7 @@ func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
 	edgeCases := make([]string, 0, 20)
 
 	edgeCases = append(edgeCases, "Monday January 2 15:04:05 -0700 MST 2006")
+
 	edgeCases = append(edgeCases, "Mon January 2 15:04:05 -0700 MST 2006")
 	edgeCases = append(edgeCases, "Jan 2 15:04:05 -0700 MST 2006")
 	edgeCases = append(edgeCases, "January 2 15:04:05 -0700 MST 2006")
