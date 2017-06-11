@@ -475,6 +475,11 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	threshold := 5
 
+	if lenStr >= 30 {
+		threshold = 8
+	}
+
+
 	ary := make([]int,0)
 	for i:=0; i < len(lenTests); i++ {
 
