@@ -59,12 +59,12 @@ func main() {
 	//tDateTime := "12 Nov 2016"
 	//tDateTime := "23:26:01 -0500 CDT"
 	//tDateTime := "11-26-2016 16:26 -0600 CST"
-	tDateTime:= "Monday June 5th2017 17:24:46.064223400 -0500 CDT"
+	// tDateTime:= "Monday June 5th2017 17:24:46.064223400 -0500 CDT"
 	//tDateTime := "5/27/2017 11:42PMCDT"
 	// tDateTime := "06/1/2017 11:42 PM-0700 PDT"
 	//tDateTime:= "June 3rd, 2017 11:42:00PM -0700 PDT"
 	//tDateTime:= "2017-6-12 11:26 p.m. Z"
-	//tDateTime := "November 12, 11:26pm -0600 CST 2016"
+	tDateTime := "November 12, 11:26pm -0600 CST 2016"
 	//tDateTime := "Saturday 11/12/2016 4:26 PM"
 
 	common.TestParseDateTimeCreateFormatsInMemory( tDateTime, "")

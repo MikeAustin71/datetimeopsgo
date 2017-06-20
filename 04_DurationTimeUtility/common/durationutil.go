@@ -9,17 +9,17 @@ import (
 
 const (
 	// MicroSecondNanoseconds - Number of Nanoseconds in a Microsecond
-	MicroSecondNanoseconds = int64(1000)
+	MicroSecondNanoseconds = int64(time.Microsecond)
 	// MilliSecondNanoseconds - Number of Nanoseconds in a MilliSecond
-	MilliSecondNanoseconds = int64(1000 * 1000)
+	MilliSecondNanoseconds = int64(time.Millisecond)
 	// SecondNanoseconds - Number of Nanoseconds in a Second
-	SecondNanoseconds = int64(1000 * 1000 * 1000)
+	SecondNanoseconds = int64(time.Second)
 	// MinuteNanoSeconds - Number of Nanoseconds in a minute
-	MinuteNanoSeconds = int64(1000 * 1000 * 1000 * 60)
+	MinuteNanoSeconds = int64(time.Minute)
 	// HourNanoSeconds - Number of Nanoseconds in an hour
-	HourNanoSeconds = int64(1000 * 1000 * 1000 * 60 * 60)
+	HourNanoSeconds = int64(time.Hour)
 	// DayNanoSeconds - Number of Nanoseconds in a 24-hour day
-	DayNanoSeconds = int64(1000 * 1000 * 1000 * 60 * 60 * 24)
+	DayNanoSeconds = int64(24) * HourNanoSeconds
 	// YearNanoSeconds - Number of Nanoseconds in a 365-day year
 
 	/*
@@ -77,7 +77,7 @@ func (du *DurationUtility) AddToThis(duIn DurationUtility) {
 
 // Empty - This method initializes
 // all of the fields in this
-// DurationUtility structure to thier
+// DurationUtility structure to their
 // zero values.
 func (du *DurationUtility) Empty() {
 	du.TimeDuration = time.Duration(0)
@@ -150,6 +150,18 @@ func (du DurationUtility) GetDuration(startTime time.Time, endTime time.Time) (t
 	}
 
 	return endTime.Sub(startTime), nil
+}
+
+func (du DurationUtility) GetDurationBySeconds(seconds int64) (time.Duration) {
+
+	return time.Duration(seconds) * time.Second
+
+}
+
+func (du DurationUtility) GetDurationByMinutes(minutes int64) (time.Duration) {
+
+	return time.Duration(minutes) * time.Minute
+
 }
 
 func (du DurationUtility) GenerateDuration(duIn DurationUtility) ( time.Duration, error){

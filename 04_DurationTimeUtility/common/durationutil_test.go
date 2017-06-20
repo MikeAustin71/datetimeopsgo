@@ -334,6 +334,32 @@ func TestDurationEquality(t *testing.T) {
 	}
 }
 
+func TestDurationUtility_GetDurationBySeconds(t *testing.T) {
+	du := DurationUtility{}
+
+	dur := du.GetDurationBySeconds(10)
+
+	expectedDur := SecondNanoseconds * int64(10)
+
+	if expectedDur != int64(dur) {
+		t.Errorf("Expected duration 10 seconds: %v, received duration: %v",int64(expectedDur), dur)
+	}
+
+}
+
+func TestDurationUtility_GetDurationByMinutes(t *testing.T) {
+	du := DurationUtility{}
+	dur := du.GetDurationByMinutes(5)
+
+	expectedDur := MinuteNanoSeconds * int64(5)
+
+	if expectedDur != int64(dur) {
+		t.Errorf("Expected duration 10 minutes: %v, received duration: %v",int64(expectedDur), dur)
+	}
+
+
+}
+
 func TestAddDurationStructures(t *testing.T) {
 	secondsInADay := 60 * 60 * 24
 
