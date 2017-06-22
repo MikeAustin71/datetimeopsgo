@@ -92,8 +92,8 @@ func TestElapsedYearsBreakdown(t *testing.T) {
 
 	du := durationUtility.GetDurationBreakDown(dur)
 
-	expected := "3-Years 74-Days 9-Hours 36-Minutes 26-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
+	//expected := "3-Years 74-Days 9-Hours 36-Minutes 26-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 75-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 	if du.DurationStr != expected {
 		t.Error(fmt.Sprintf("Expected: %v, got:", expected), du.DurationStr)
 	}
@@ -432,4 +432,24 @@ func TestDurationUtility_GetDurationBreakDown_Zero_Duration(t *testing.T) {
 			expectedDurStr, elapsedTime.DurationStr)
 
 	}
+}
+
+func TestDurationUtility_CalculateTargetTimeFromMinusDuration(t *testing.T) {
+	tstr1 := "04/15/2017 19:54:30.123456489 +0000 UTC"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	du := DurationUtility{}
+
+	t1, _ := time.Parse(fmtstr, tstr1)
+
+	du.CalculateTargetTimeFromMinusDuration(t1, 1, 0,
+		0, 0 , 0, 0, 0, 0, )
+
+	tstr2 := du.StartDateTime.Format(fmtstr)
+
+	expected := "04/15/2016 19:54:30.123456489 +0000 UTC"
+
+	if tstr2 != expected {
+		t.Errorf("Error: Expected 1-Year duration Start Time of %v. Received %v", expected, tstr2)
+	}
+
 }

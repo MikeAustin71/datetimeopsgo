@@ -1,6 +1,7 @@
 package common
 
-import (
+import
+(
 	"errors"
 	"fmt"
 	"time"
@@ -97,7 +98,7 @@ func GetElapsedYears() {
 	Source: https://en.wikipedia.org/wiki/Gregorian_calendar
 */
 func CalcNanosecondsPerYear(){
-	yearNow := YearNanoSeconds
+	yearNow := StdYearNanoSeconds
 	yearGregorianSecs := int64(31556952) * SecondNanoseconds
 	// Source: https://en.wikipedia.org/wiki/Gregorian_calendar
 	//Gregorian 365 days, 5 hours, 49 minutes and 12 seconds
@@ -126,4 +127,68 @@ func CalcNanosecondsPerYear(){
 
 	 */
 
+}
+
+func GetTargetTimeFromMinusDuration() {
+	tstr1 := "04/15/2017 19:54:30.123456489 +0000 UTC"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	du := DurationUtility{}
+
+	t1, _ := time.Parse(fmtstr, tstr1)
+
+	du.CalculateTargetTimeFromMinusDuration(t1, 1, 0,
+		0, 0 , 0, 0, 0, 0, )
+
+	tstr2 := du.StartDateTime.Format(fmtstr)
+
+	fmt.Println("tstr1: ", t1.Format(fmtstr))
+	fmt.Println("tstr2: ", tstr2)
+
+	d1 := time.Duration((365*24)) * time.Hour
+
+	t3 := t1.Add(-d1)
+
+	fmt.Println("   t3: ", t3.Format(fmtstr))
+	/*
+		tstr1:  04/15/2017 19:54:30.123456489 +0000 UTC
+		tstr2:  04/15/2016 19:54:30.123456489 +0000 UTC
+			 t3:  04/15/2016 19:54:30.123456489 +0000 UTC
+  */
+
+}
+
+func ExampleElapsedYearsBreakdown() error {
+	t1str := "02/15/2014 19:54:30 -0500 CDT"
+	t2str := "04/30/2017 22:58:32 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	durationUtility := DurationUtility{}
+	t1, err := time.Parse(fmtstr, t1str)
+	if err != nil {
+		return fmt.Errorf("Time Parse1 Error:", err.Error())
+	}
+
+	t2, err := time.Parse(fmtstr, t2str)
+	if err != nil {
+		return fmt.Errorf ("Time Parse2 Error:", err.Error())
+	}
+
+	dur, err := durationUtility.GetDuration(t1, t2)
+	if err != nil {
+		return fmt.Errorf("Get Duration Failed: ", err.Error())
+	}
+
+	du := durationUtility.GetDurationBreakDown(dur)
+
+	expected := "3-Years 74-Days 9-Hours 36-Minutes 26-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+/*
+	if du.DurationStr != expected {
+		return fmt.Errorf(fmt.Sprintf("Expected: %v, got:", expected), du.DurationStr)
+	}
+*/
+	fmt.Println("    Expected: ", expected)
+	fmt.Println("Duration Str: ", du.DurationStr)
+	fmt.Println(" Default Str: ", du.DefaultStr)
+	fmt.Println( "  Hours Str: ", du.HoursStr)
+
+	return nil
 }
