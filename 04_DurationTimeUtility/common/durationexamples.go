@@ -137,7 +137,7 @@ func GetTargetTimeFromMinusDuration() {
 	t1, _ := time.Parse(fmtstr, tstr1)
 
 	du.CalculateTargetTimeFromMinusDuration(t1, 1, 0,
-		0, 0 , 0, 0, 0, 0, )
+		0, 0 , 0, 0, 0, 0, 0)
 
 	tstr2 := du.StartDateTime.Format(fmtstr)
 
@@ -154,6 +154,46 @@ func GetTargetTimeFromMinusDuration() {
 		tstr2:  04/15/2016 19:54:30.123456489 +0000 UTC
 			 t3:  04/15/2016 19:54:30.123456489 +0000 UTC
   */
+
+}
+
+func GetTargetTimeFromMinusDuration2(){
+	tstr1 := "04/15/2017 19:54:30.123456489 +0000 UTC"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	du := DurationUtility{}
+
+	t1, _ := time.Parse(fmtstr, tstr1)
+	fmt.Println()
+	fmt.Println("     Common End Time: ", t1.Format(fmtstr))
+
+	du.CalculateTargetTimeFromMinusDuration(t1, 1, 2,
+		3, 0 , 0, 0, 0, 0, 0)
+
+	fmt.Println("Calculated StartTime: ", du.StartDateTime.Format(fmtstr))
+
+	tVerify := t1.AddDate(-1,-2,-3)
+
+	fmt.Println("    Verify StartTime: ", tVerify.Format(fmtstr))
+
+}
+
+func GetTargetTimeFromPlusDuration() {
+	tstr1 := "04/15/2017 19:54:30.123456489 +0000 UTC"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	du := DurationUtility{}
+
+	t1, _ := time.Parse(fmtstr, tstr1)
+	fmt.Println()
+	fmt.Println(" Common Start Time: ", t1.Format(fmtstr))
+
+	du.CalculateTargetTimeFromPlusDuration(t1,1, 2, 3, 0, 0 ,0 ,
+							0 ,0,0)
+
+	fmt.Println("Calculated EndTime: ", du.EndDateTime.Format(fmtstr))
+
+	tVerify := t1.AddDate(1,2,3)
+
+	fmt.Println("    Verify EndTime: ", tVerify.Format(fmtstr))
 
 }
 
@@ -191,4 +231,29 @@ func ExampleElapsedYearsBreakdown() error {
 	fmt.Println( "  Hours Str: ", du.HoursStr)
 
 	return nil
+}
+
+func ExampleCalcDurationElements() {
+	t1Str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1Str)
+	t2 := t1.AddDate(4, 0, 2 )
+
+	td := t2.Sub(t1)
+
+	du := DurationUtility{StartDateTime:t1, TimeDuration:td}
+	du.CalculateDurationElements()
+	du.CalculateDurationStrings()
+
+	fmt.Println("   du.DurationStr: ", du.DurationStr)
+	fmt.Println("         Expected: ", "4-Years 2-Days")
+	fmt.Println()
+	fmt.Println(" du.StartDateTime: ", du.StartDateTime.Format(fmtstr) )
+	fmt.Println("Verify Start Time: ", t1.Format(fmtstr))
+	fmt.Println()
+	fmt.Println("   du.EndDateTime: ", du.EndDateTime.Format(fmtstr))
+	fmt.Println(" Verfity End Time: ", t2.Format(fmtstr))
+
 }
