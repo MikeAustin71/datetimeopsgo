@@ -3,9 +3,8 @@ package common
 import (
 	"errors"
 	"fmt"
-	"strings"
-	"time"
 	"math"
+	"time"
 )
 
 const (
@@ -48,6 +47,8 @@ type DurationUtility struct {
 	TimeDuration  time.Duration
 	Years         int64
 	YearsNanosecs int64
+	Months        int64
+	MonthNanosecs int64
 	Days          int64
 	Hours         int64
 	Minutes       int64
@@ -77,7 +78,7 @@ func (du *DurationUtility) AddDurationToThis(duration time.Duration) {
 
 	durPlus := du.TimeDuration + duration
 
-	elapsedDuration := du.GetDurationBreakDown(durPlus)
+	elapsedDuration := du.GetDurationBreakDown(du.StartDateTime, durPlus)
 
 	du.CopyToThis(elapsedDuration)
 }
@@ -88,7 +89,7 @@ func (du *DurationUtility) AddToThis(duIn DurationUtility) {
 
 	durPlus := du.TimeDuration + duIn.TimeDuration
 
-	elapsedDuration := du.GetDurationBreakDown(durPlus)
+	elapsedDuration := du.GetDurationBreakDown(du.StartDateTime, durPlus)
 
 	du.CopyToThis(elapsedDuration)
 
@@ -96,7 +97,7 @@ func (du *DurationUtility) AddToThis(duIn DurationUtility) {
 
 // CalculateDurationFromTimes - Calculate a duration from
 // 'startTime' and 'endTime' values passed to this method.
-// Results are stored int he curretn DurationUtility data
+// Results are stored int he current DurationUtility data
 // structure.
 func (du *DurationUtility) CalculateDurationFromTimes(startTime time.Time, endTime time.Time) error {
 
@@ -121,26 +122,47 @@ func (du *DurationUtility) CalculateDurationFromTimes(startTime time.Time, endTi
 	return nil
 }
 
-// CalculateDurationFromElements - Calculates duration from
-// the values for Years, Days, Hours, Minutes, Seconds,
-// Milliseconds, Microseconds and Nanoseconds stored in
-// the existing DurationUtility data structure.
-// Note: 'Years' calculation is based on 'Standard' Years
-// consisting of 365 24-hour days.
+// CalculateDurationFromElements -This method is used to calculate durations based on the
+// existing time element values of the DurationUtility data structure (i.e. Years, Months,
+// Days, Hours, Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds) To use this
+// method properly first set the data structure's StartDateTime and then fill in the time
+// element values as needed (Years, Months, Days, Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds). !!!! StartDateTime !!! is required!!!! If you fail to
+// to populate DurationUtility.StartDateTime before calling this method, the starting
+// date time will default to time.Now().UTC()!!!
+//
+// Note: You can set time elements to negative values. In this case, StartDateTime will be
+// converted to EndDateTime and StartDateTime will be re-calculated accordingly.
+//
+// Example call: du := DurationUtility{StartDateTime: t1, Years: 2, Months: 3}
+//               du.CalculateDurationFromElements()
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 func (du *DurationUtility) CalculateDurationFromElements() {
 
-	var dns int64
+	if du.StartDateTime.IsZero() {
+		du.StartDateTime = time.Now().UTC()
+	}
 
-	dns = du.Years * StdYearNanoSeconds
-	dns += du.Days * DayNanoSeconds
-	dns += du.Hours * HourNanoSeconds
-	dns += du.Minutes * MinuteNanoSeconds
-	dns += du.Seconds * SecondNanoseconds
-	dns += du.MilliSeconds * MilliSecondNanoseconds
-	dns += du.MicroSeconds * MicroSecondNanoseconds
-	dns += du.NanoSeconds
+	startDate := du.StartDateTime
+	addTime :=  (du.Hours * HourNanoSeconds) + (du.Minutes * MinuteNanoSeconds) +
+		(du.Seconds * SecondNanoseconds) + (du.MilliSeconds * MilliSecondNanoseconds) +
+		(du.MicroSeconds * MicroSecondNanoseconds) + du.NanoSeconds
 
-	du.TimeDuration = time.Duration(dns)
+	endDate := startDate.AddDate(int(du.Years), int(du.Months), int(du.Days)).Add(time.Duration(addTime))
+
+	du.Empty()
+
+	if endDate.Before(startDate) {
+		du.StartDateTime = endDate
+		du.EndDateTime = startDate
+	} else {
+		du.StartDateTime = startDate
+		du.EndDateTime = endDate
+	}
+
+	du.TimeDuration = du.EndDateTime.Sub(du.StartDateTime)
+
+	du.CalculateDurationElements()
 	du.CalculateDurationStrings()
 
 	return
@@ -151,90 +173,93 @@ func (du *DurationUtility) CalculateDurationFromElements() {
 // value stored in the existing DurationUtility.
 func (du *DurationUtility) CalculateDurationStrings() {
 
-	str := ""
-	firstEle := false
+	yearsElement := ""
+	monthsElement := ""
+	daysElement := ""
+	hoursElement := "0-Hours "
+	minutesElement := "0-Minutes "
+	secondsElement := "0-Seconds "
+	millisecondsElement := "0-Milliseconds "
+	microsecondsElement := "0-Microseconds "
+	nanosecondsElement := "0-Nanoseconds"
+
 	rd := int64(du.TimeDuration)
 	du.DefaultStr = fmt.Sprintf("%v", du.TimeDuration)
 	if rd == 0 {
-		du.DurationStr = "0-Nanoseconds"
-		du.NanosecStr = "0-Nanoseconds"
+		du.DurationStr = hoursElement + minutesElement +
+			secondsElement + millisecondsElement +
+			microsecondsElement + nanosecondsElement
+		du.NanosecStr = hoursElement + minutesElement +
+
+			secondsElement + nanosecondsElement
+
+		du.DaysStr = "0-Days " +
+			hoursElement + minutesElement +
+			secondsElement + millisecondsElement +
+			microsecondsElement + nanosecondsElement
+
+		du.HoursStr = hoursElement + minutesElement +
+			secondsElement + millisecondsElement +
+			microsecondsElement + nanosecondsElement
+
 		return
 	}
 
 	if du.Years > 0 {
-		str = fmt.Sprintf("%v-Years ", du.Years)
-		firstEle = true
+		yearsElement = fmt.Sprintf("%v-Years ", du.Years)
+		monthsElement = "0-Months "
+		daysElement = "0-Days "
 	}
 
-	hoursElement := ""
-	minutesElement := ""
-	secondsElement := ""
-	millisecondsElement := ""
-	microsecondsElement := ""
-	nanosecondsElement := ""
-
-	if du.Days > 0 || firstEle {
-		str += fmt.Sprintf("%v-Days ", du.Days)
-		firstEle = true
+	if du.Months > 0 {
+		monthsElement = fmt.Sprintf("%v-Months ", du.Months)
+		daysElement = "0-Days "
 	}
 
-	if du.Hours > 0 || firstEle {
-		hoursElement = fmt.Sprintf("%v-Hours ", du.Hours)
-		str += hoursElement
-		firstEle = true
+	if du.Days > 0 {
+		daysElement = fmt.Sprintf("%v-Days ", du.Days)
 	}
 
-	if du.Minutes > 0 || firstEle {
-		minutesElement = fmt.Sprintf("%v-Minutes ", du.Minutes)
-		str += minutesElement
-		firstEle = true
-	}
+	hoursElement = fmt.Sprintf("%v-Hours ", du.Hours)
 
-	if du.Seconds > 0 || firstEle {
-		secondsElement = fmt.Sprintf("%v-Seconds ", du.Seconds)
-		str += secondsElement
-		firstEle = true
-	}
+	minutesElement = fmt.Sprintf("%v-Minutes ", du.Minutes)
+
+	secondsElement = fmt.Sprintf("%v-Seconds ", du.Seconds)
 
 	rn := (du.MilliSeconds * MilliSecondNanoseconds) +
 		(du.MicroSeconds * MicroSecondNanoseconds) +
 		du.NanoSeconds
 
-	du.NanosecStr = str + fmt.Sprintf("%v-Nanoseconds", rn)
+	totalNanoseconds := fmt.Sprintf("%v-Nanoseconds", rn)
+	du.NanosecStr = yearsElement + monthsElement + daysElement +
+		hoursElement + minutesElement + secondsElement +
+		totalNanoseconds
 
-	if du.MilliSeconds > 0 || firstEle {
-		millisecondsElement = fmt.Sprintf("%v-Milliseconds ", du.MilliSeconds)
-		str += millisecondsElement
-		firstEle = true
-	}
+	millisecondsElement = fmt.Sprintf("%v-Milliseconds ", du.MilliSeconds)
 
-	if du.MicroSeconds > 0 || firstEle {
-		microsecondsElement = fmt.Sprintf("%v-Microseconds ", du.MicroSeconds)
-		str += microsecondsElement
-		firstEle = true
-	}
+	microsecondsElement = fmt.Sprintf("%v-Microseconds ", du.MicroSeconds)
 
-	if du.NanoSeconds > 0 || firstEle {
-		nanosecondsElement = fmt.Sprintf("%v-Nanoseconds", du.NanoSeconds)
-		str += nanosecondsElement
-		firstEle = true
-	}
+	nanosecondsElement = fmt.Sprintf("%v-Nanoseconds", du.NanoSeconds)
 
-	du.DurationStr = strings.TrimRight(str, " ")
+	du.DurationStr = yearsElement + monthsElement + daysElement +
+		hoursElement + minutesElement + secondsElement +
+		millisecondsElement + microsecondsElement +
+		nanosecondsElement
 
-	consolDays := (du.Years * 365) + du.Days
+	consolDays := (du.YearsNanosecs + du.MonthNanosecs +
+		(du.Days * DayNanoSeconds)) / DayNanoSeconds
 
-	du.DaysStr = strings.TrimRight(fmt.Sprintf("%v-Days ", consolDays)+
-		hoursElement+minutesElement+secondsElement+
-		millisecondsElement+microsecondsElement+
-		nanosecondsElement, " ")
+	du.DaysStr = fmt.Sprintf("%v-Days ", consolDays) +
+		hoursElement + minutesElement + secondsElement +
+		millisecondsElement + microsecondsElement +
+		nanosecondsElement
 
 	consolHours := (consolDays * 24) + du.Hours
 
-	du.HoursStr = strings.TrimRight(fmt.Sprintf("%v-Hours ", consolHours)+
-		minutesElement+secondsElement+
-		millisecondsElement+microsecondsElement+
-		nanosecondsElement, " ")
+	du.HoursStr = fmt.Sprintf("%v-Hours ", consolHours) +
+		minutesElement + secondsElement +
+		millisecondsElement + microsecondsElement +
+		nanosecondsElement
 
 	return
 }
@@ -257,27 +282,45 @@ func (du *DurationUtility) CalculateDurationElements() {
 		du.StartDateTime = time.Now().UTC()
 	}
 
-
 	du.EndDateTime = du.StartDateTime.Add(du.TimeDuration)
 
-
-	iDateTime := du.StartDateTime
+	yearDateTime := du.StartDateTime
 	i := 0
-
-	for iDateTime.Before(du.EndDateTime) {
+	var prevDateTime time.Time
+	for yearDateTime.Before(du.EndDateTime) {
+		prevDateTime = yearDateTime
 		i++
-		iDateTime = du.StartDateTime.AddDate(i, 0, 0)
+		yearDateTime = du.StartDateTime.AddDate(i, 0, 0)
 	}
 
 	i -= 1
 
 	if i > 0 {
-		iDateTime = du.StartDateTime.AddDate(i, 0, 0)
+		yearDateTime = prevDateTime
 		du.Years = int64(i)
-		du.YearsNanosecs =  int64(iDateTime.Sub(du.StartDateTime))
+		du.YearsNanosecs = int64(yearDateTime.Sub(du.StartDateTime))
 		rd -= du.YearsNanosecs
 	}
 
+	i = 0
+
+	mthDateTime := yearDateTime
+
+	for mthDateTime.Before(du.EndDateTime) {
+		prevDateTime = mthDateTime
+		i++
+		mthDateTime = yearDateTime.AddDate(0, i, 0)
+	}
+
+	i -= 1
+
+	if i > 0 {
+		mthDateTime = prevDateTime
+		du.Months = int64(i)
+		du.MonthNanosecs = int64(mthDateTime.Sub(yearDateTime))
+		rd -= du.MonthNanosecs
+
+	}
 
 	if rd >= DayNanoSeconds {
 		du.Days = rd / DayNanoSeconds
@@ -422,7 +465,6 @@ func (du *DurationUtility) CalculateTargetTimeFromPlusDuration(startDateTime tim
 	aMicroseconds := int64(math.Abs(float64(microseconds)))
 	aNanoseconds := int64(math.Abs(float64(nanoseconds)))
 
-
 	intermediateDate := time.Time{}
 
 	if aYears != 0 || aMonths != 0 || aDays != 0 {
@@ -500,8 +542,6 @@ func (du *DurationUtility) CalculateTargetTimeFromMinusDuration(endDateTime time
 	du.CalculateDurationElements()
 	du.CalculateDurationStrings()
 
-
-
 	return
 }
 
@@ -515,6 +555,8 @@ func (du *DurationUtility) CopyToThis(duIn DurationUtility) {
 	du.EndDateTime = duIn.EndDateTime
 	du.Years = duIn.Years
 	du.YearsNanosecs = duIn.YearsNanosecs
+	du.Months = duIn.Months
+	du.MonthNanosecs = duIn.MonthNanosecs
 	du.Days = duIn.Days
 	du.Hours = duIn.Hours
 	du.Minutes = duIn.Minutes
@@ -540,6 +582,8 @@ func (du *DurationUtility) Equal(duIn DurationUtility) bool {
 		du.EndDateTime != duIn.EndDateTime ||
 		du.Years != duIn.Years ||
 		du.YearsNanosecs != duIn.YearsNanosecs ||
+		du.Months != duIn.Months ||
+		du.MonthNanosecs != duIn.MonthNanosecs ||
 		du.Days != duIn.Days ||
 		du.Hours != duIn.Hours ||
 		du.Minutes != duIn.Minutes ||
@@ -569,6 +613,8 @@ func (du *DurationUtility) Empty() {
 	du.EndDateTime = time.Time{}
 	du.Years = 0
 	du.YearsNanosecs = 0
+	du.Months = 0
+	du.MonthNanosecs = 0
 	du.Days = 0
 	du.Hours = 0
 	du.Minutes = 0
@@ -597,19 +643,20 @@ func (du *DurationUtility) EmptyCalcs() {
 
 // GetDuration - Returns a time.Duration structure defining the duration between
 // input parameters startTime and endTime
-func (du DurationUtility) GetDuration(startTime time.Time, endTime time.Time) (time.Duration, error) {
-
-	def := time.Duration(0)
+func (du *DurationUtility) GetDuration(startTime time.Time, endTime time.Time) (DurationUtility, error) {
 
 	if startTime.Equal(endTime) {
-		return def, nil
+		return DurationUtility{}, nil
 	}
 
 	if endTime.Before(startTime) {
-		return def, errors.New("DurationUtility.GetDuration() Error: endTime less than startTime")
+		return DurationUtility{}, errors.New("DurationUtility.GetDuration() Error: endTime less than startTime")
 	}
 
-	return endTime.Sub(startTime), nil
+	d2 := DurationUtility{StartDateTime:startTime, EndDateTime:endTime, TimeDuration: endTime.Sub(startTime)}
+	d2.CalculateDurationElements()
+	d2.CalculateDurationStrings()
+	return d2, nil
 }
 
 func (du DurationUtility) GetDurationBySeconds(seconds int64) time.Duration {
@@ -635,9 +682,13 @@ func (du DurationUtility) GenerateDuration(duIn DurationUtility) (time.Duration,
 // NOTE: Years is arbitrarily set to the number of
 // nanoseconds in a standard 365-day year. The Years
 // calculation does NOT take Leap Years into account.
-func (du DurationUtility) GetDurationBreakDown(d time.Duration) DurationUtility {
+func (du DurationUtility) GetDurationBreakDown(startTime time.Time, d time.Duration) DurationUtility {
 
-	durationUtility := DurationUtility{TimeDuration: d}
+	if startTime.IsZero() {
+		startTime = time.Now().UTC()
+	}
+
+	durationUtility := DurationUtility{StartDateTime:startTime, TimeDuration: d}
 	durationUtility.CalculateDurationElements()
 	durationUtility.CalculateDurationStrings()
 	return durationUtility
@@ -650,7 +701,8 @@ func (du DurationUtility) GetDurationBreakDown(d time.Duration) DurationUtility 
 func (du DurationUtility) GetDurationFromElapsedTime(elapsedTime DurationUtility) (time.Duration, error) {
 	var dns int64
 
-	dns = elapsedTime.Years * StdYearNanoSeconds
+	dns = elapsedTime.YearsNanosecs
+	dns += elapsedTime.MonthNanosecs
 	dns += elapsedTime.Days * DayNanoSeconds
 	dns += elapsedTime.Hours * HourNanoSeconds
 	dns += elapsedTime.Minutes * MinuteNanoSeconds
@@ -679,12 +731,12 @@ func (du DurationUtility) GetElapsedTime(startTime time.Time, endTime time.Time)
 		return DurationUtility{}, errors.New(s)
 	}
 
-	return du.GetDurationBreakDown(dur), nil
+	return dur, nil
 
 }
 
 // GetTimePlusDuration - Returns time plus input duration as a time.Time type.
-func (du DurationUtility) GetTimePlusDuration(tStartTime time.Time, duration time.Duration) time.Time {
+func (du *DurationUtility) GetTimePlusDuration(tStartTime time.Time, duration time.Duration) time.Time {
 
 	return tStartTime.Add(duration)
 }
@@ -694,3 +746,31 @@ func (du DurationUtility) GetTimeMinusDuration(tStartTime time.Time, duration ti
 
 	return tStartTime.Add(-duration)
 }
+
+func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time, duration time.Duration)  error {
+
+	if startDateTime.IsZero() {
+		return fmt.Errorf("DurationUtility.SetStartTimeDuration() Error - Start Time is Zero!")
+	}
+
+	x := int64(duration)
+
+	du.Empty()
+
+	if x < 0 {
+		du.StartDateTime =  startDateTime.Add(duration)
+		du.EndDateTime = startDateTime
+		du.TimeDuration =  time.Duration(int64(math.Abs(float64(int64(duration)))))
+	} else {
+		du.StartDateTime = startDateTime
+		du.EndDateTime = startDateTime.Add(duration)
+		du.TimeDuration = duration
+	}
+
+	du.CalculateDurationElements()
+	du.CalculateDurationStrings()
+
+	return nil
+
+}
+

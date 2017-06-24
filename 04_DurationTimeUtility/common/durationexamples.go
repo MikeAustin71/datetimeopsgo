@@ -1,7 +1,6 @@
 package common
 
-import
-(
+import (
 	"errors"
 	"fmt"
 	"time"
@@ -74,7 +73,7 @@ func GetElapsedYears() {
 		panic(fmt.Errorf("Get Duration Failed: %v", err))
 	}
 
-	ed := durationUtility.GetDurationBreakDown(dur)
+	ed := durationUtility.GetDurationBreakDown(dur.StartDateTime, dur.TimeDuration)
 	fmt.Println("Elapsed Time: ", ed.DurationStr)
 	// Elapsed Time:  3-Years 74-Days 9-Hours 36-Minutes 26-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
 
@@ -97,7 +96,7 @@ func GetElapsedYears() {
 	https://en.wikipedia.org/wiki/Year
 	Source: https://en.wikipedia.org/wiki/Gregorian_calendar
 */
-func CalcNanosecondsPerYear(){
+func CalcNanosecondsPerYear() {
 	yearNow := StdYearNanoSeconds
 	yearGregorianSecs := int64(31556952) * SecondNanoseconds
 	// Source: https://en.wikipedia.org/wiki/Gregorian_calendar
@@ -109,7 +108,6 @@ func CalcNanosecondsPerYear(){
 
 	yearGregorian := int64(31556952000011380)
 
-
 	AvgNanpSecsPerYear := int64(float64(365.2425) * float64(DayNanoSeconds))
 
 	fmt.Println("                            Year Now: ", yearNow)
@@ -119,13 +117,13 @@ func CalcNanosecondsPerYear(){
 	fmt.Println("Avg Gregorian 365.2425 days per year: ", AvgNanpSecsPerYear)
 
 	/*
-																	Year Now:  31556952000000000
-														Gregorian Year:  31556952000011380
-				Gregorian Avg in hours/minutes/sec:  31556952000000000
-				 Seconds In Average Gregorian Year:  31556952000000000
-			Avg Gregorian 365.2425 days per year:  31556952000000000
+																Year Now:  31556952000000000
+													Gregorian Year:  31556952000011380
+			Gregorian Avg in hours/minutes/sec:  31556952000000000
+			 Seconds In Average Gregorian Year:  31556952000000000
+		Avg Gregorian 365.2425 days per year:  31556952000000000
 
-	 */
+	*/
 
 }
 
@@ -137,14 +135,14 @@ func GetTargetTimeFromMinusDuration() {
 	t1, _ := time.Parse(fmtstr, tstr1)
 
 	du.CalculateTargetTimeFromMinusDuration(t1, 1, 0,
-		0, 0 , 0, 0, 0, 0, 0)
+		0, 0, 0, 0, 0, 0, 0)
 
 	tstr2 := du.StartDateTime.Format(fmtstr)
 
 	fmt.Println("tstr1: ", t1.Format(fmtstr))
 	fmt.Println("tstr2: ", tstr2)
 
-	d1 := time.Duration((365*24)) * time.Hour
+	d1 := time.Duration((365 * 24)) * time.Hour
 
 	t3 := t1.Add(-d1)
 
@@ -153,11 +151,11 @@ func GetTargetTimeFromMinusDuration() {
 		tstr1:  04/15/2017 19:54:30.123456489 +0000 UTC
 		tstr2:  04/15/2016 19:54:30.123456489 +0000 UTC
 			 t3:  04/15/2016 19:54:30.123456489 +0000 UTC
-  */
+	*/
 
 }
 
-func GetTargetTimeFromMinusDuration2(){
+func GetTargetTimeFromMinusDuration2() {
 	tstr1 := "04/15/2017 19:54:30.123456489 +0000 UTC"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	du := DurationUtility{}
@@ -167,11 +165,11 @@ func GetTargetTimeFromMinusDuration2(){
 	fmt.Println("     Common End Time: ", t1.Format(fmtstr))
 
 	du.CalculateTargetTimeFromMinusDuration(t1, 1, 2,
-		3, 0 , 0, 0, 0, 0, 0)
+		3, 0, 0, 0, 0, 0, 0)
 
 	fmt.Println("Calculated StartTime: ", du.StartDateTime.Format(fmtstr))
 
-	tVerify := t1.AddDate(-1,-2,-3)
+	tVerify := t1.AddDate(-1, -2, -3)
 
 	fmt.Println("    Verify StartTime: ", tVerify.Format(fmtstr))
 
@@ -186,12 +184,12 @@ func GetTargetTimeFromPlusDuration() {
 	fmt.Println()
 	fmt.Println(" Common Start Time: ", t1.Format(fmtstr))
 
-	du.CalculateTargetTimeFromPlusDuration(t1,1, 2, 3, 0, 0 ,0 ,
-							0 ,0,0)
+	du.CalculateTargetTimeFromPlusDuration(t1, 1, 2, 3, 0, 0, 0,
+		0, 0, 0)
 
 	fmt.Println("Calculated EndTime: ", du.EndDateTime.Format(fmtstr))
 
-	tVerify := t1.AddDate(1,2,3)
+	tVerify := t1.AddDate(1, 2, 3)
 
 	fmt.Println("    Verify EndTime: ", tVerify.Format(fmtstr))
 
@@ -209,7 +207,7 @@ func ExampleElapsedYearsBreakdown() error {
 
 	t2, err := time.Parse(fmtstr, t2str)
 	if err != nil {
-		return fmt.Errorf ("Time Parse2 Error:", err.Error())
+		return fmt.Errorf("Time Parse2 Error:", err.Error())
 	}
 
 	dur, err := durationUtility.GetDuration(t1, t2)
@@ -217,18 +215,18 @@ func ExampleElapsedYearsBreakdown() error {
 		return fmt.Errorf("Get Duration Failed: ", err.Error())
 	}
 
-	du := durationUtility.GetDurationBreakDown(dur)
+	du := durationUtility.GetDurationBreakDown(dur.StartDateTime, dur.TimeDuration)
 
 	expected := "3-Years 74-Days 9-Hours 36-Minutes 26-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-/*
-	if du.DurationStr != expected {
-		return fmt.Errorf(fmt.Sprintf("Expected: %v, got:", expected), du.DurationStr)
-	}
-*/
+	/*
+		if du.DurationStr != expected {
+			return fmt.Errorf(fmt.Sprintf("Expected: %v, got:", expected), du.DurationStr)
+		}
+	*/
 	fmt.Println("    Expected: ", expected)
 	fmt.Println("Duration Str: ", du.DurationStr)
 	fmt.Println(" Default Str: ", du.DefaultStr)
-	fmt.Println( "  Hours Str: ", du.HoursStr)
+	fmt.Println("  Hours Str: ", du.HoursStr)
 
 	return nil
 }
@@ -239,21 +237,100 @@ func ExampleCalcDurationElements() {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
 	t1, _ := time.Parse(fmtstr, t1Str)
-	t2 := t1.AddDate(4, 0, 2 )
+	t2 := t1.AddDate(4, 0, 2)
 
 	td := t2.Sub(t1)
 
-	du := DurationUtility{StartDateTime:t1, TimeDuration:td}
+	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
 	du.CalculateDurationElements()
 	du.CalculateDurationStrings()
+	expected := "4-Years 0-Months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	fmt.Println("   du.DurationStr: ", du.DurationStr)
-	fmt.Println("         Expected: ", "4-Years 2-Days")
+	fmt.Println("         Expected: ", expected)
 	fmt.Println()
-	fmt.Println(" du.StartDateTime: ", du.StartDateTime.Format(fmtstr) )
+	fmt.Println(" du.StartDateTime: ", du.StartDateTime.Format(fmtstr))
 	fmt.Println("Verify Start Time: ", t1.Format(fmtstr))
 	fmt.Println()
 	fmt.Println("   du.EndDateTime: ", du.EndDateTime.Format(fmtstr))
 	fmt.Println(" Verfity End Time: ", t2.Format(fmtstr))
+
+	// Output
+	// "4-Years 0-Months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+}
+
+func ExampleCalcMthDurationElements() {
+	t1Str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1Str)
+	t2 := t1.AddDate(4, 3, 2)
+
+	td := t2.Sub(t1)
+
+	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
+	du.CalculateDurationElements()
+	du.CalculateDurationStrings()
+	expected := "4-Years 3-Months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	fmt.Println("   du.DurationStr: ", du.DurationStr)
+	fmt.Println("         Expected: ", expected)
+	fmt.Println()
+	fmt.Println(" du.StartDateTime: ", du.StartDateTime.Format(fmtstr))
+	fmt.Println("Verify Start Time: ", t1.Format(fmtstr))
+	fmt.Println()
+	fmt.Println("   du.EndDateTime: ", du.EndDateTime.Format(fmtstr))
+	fmt.Println(" Verfity End Time: ", t2.Format(fmtstr))
+}
+
+func ExampleElapsedYearsBreakdown2() {
+	t1str := "02/15/2014 19:54:30.000000000 -0500 CDT"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	expected1 := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	durationUtility := DurationUtility{}
+	t1, err := time.Parse(fmtstr, t1str)
+	if err != nil {
+		panic(fmt.Errorf("Time Parse1 Error:", err.Error()))
+	}
+
+	t2, err := time.Parse(fmtstr, t2str)
+	if err != nil {
+		panic(fmt.Errorf("Time Parse2 Error:", err.Error()))
+	}
+
+	dur, err := durationUtility.GetDuration(t1, t2)
+
+	if err != nil {
+		panic(fmt.Errorf("Get Duration Failed: ", err.Error()))
+	}
+
+	du := durationUtility.GetDurationBreakDown(dur.StartDateTime, dur.TimeDuration)
+
+	if du.DurationStr != expected1 {
+		panic(fmt.Errorf("Expected: %v, got:", expected1, du.DurationStr))
+	}
+
+	t3 := t1.AddDate(3, 2, 15).Add(time.Duration(int64((3 * HourNanoSeconds) + (4 * MinuteNanoSeconds) + (2 * SecondNanoseconds))))
+
+	fmt.Println("Duration Start Date Time: ", du.StartDateTime.Format(fmtstr))
+	fmt.Println("  Duration End Date Time: ", du.EndDateTime.Format(fmtstr))
+	fmt.Println("      t3 Verify End Time: ", t3.Format(fmtstr))
+	fmt.Println("          du.DurationStr: ", du.DurationStr)
+	fmt.Println("    Expected DurationStr: ", expected1)
+	fmt.Println("           Time Duration: ", du.TimeDuration)
+	fmt.Println("     Time Duration int64: ", int64(du.TimeDuration))
+
+	/* Output
+	Duration Start Date Time:  02/15/2014 19:54:30.000000000 -0500 CDT
+    Duration End Date Time:  04/30/2017 22:58:32.000000000 -0500 CDT
+        t3 Verify End Time:  04/30/2017 22:58:32.000000000 -0500 CDT
+            du.DurationStr:  3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+      Expected DurationStr:  3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+             Time Duration:  28083h4m2s
+       Time Duration int64:  101099042000000000
+	*/
 
 }

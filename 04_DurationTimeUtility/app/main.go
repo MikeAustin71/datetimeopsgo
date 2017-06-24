@@ -15,6 +15,6 @@ import (
 
 func main() {
 
-	common.ExampleCalcDurationElements()
+	common.ExampleElapsedYearsBreakdown2()
 
 }
