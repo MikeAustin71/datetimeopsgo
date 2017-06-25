@@ -67,10 +67,10 @@ func main() {
 	tDateTime := "November 12, 11:26pm -0600 CST 2016"
 	//tDateTime := "Saturday 11/12/2016 4:26 PM"
 
-	common.TestParseDateTimeCreateFormatsInMemory( tDateTime, "")
+	common.TestParseDateTimeCreateFormatsInMemory(tDateTime, "")
 	// common.HammerSampleDateTimes()
 
-// 11/12/16 4:04:0.012 PM
+	// 11/12/16 4:04:0.012 PM
 	//FmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	//fmt.Println("Time Now: ", time.Now().Format(FmtDateTimeEverything))
 	//common.TestParseSampleDateTimes()
@@ -80,7 +80,7 @@ func main() {
 	// 2006-01-02 15:04 -0700 MST
 	// 0000024 2006-1-2 15:04 MST -0700
 
-/*
+	/*
 		t, err := time.Parse("15:04:05 -0700 MST", tDateTime)
 
 		if err != nil {
@@ -90,6 +90,6 @@ func main() {
 		fmt.Println("Success!")
 		fmt.Println("Original Time: ", tDateTime)
 		fmt.Println("  Parsed Time: ", t)
-*/
+	*/
 
 }

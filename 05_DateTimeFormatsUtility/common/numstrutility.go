@@ -27,8 +27,7 @@ type NumStrUtility struct {
 	StrOut             string
 }
 
-
-func (ns NumStrUtility) DLimInt(num int, delimiter byte ) string {
+func (ns NumStrUtility) DLimInt(num int, delimiter byte) string {
 	return ns.DnumStr(strconv.Itoa(num), delimiter)
 }
 

@@ -179,11 +179,10 @@ func (tzu *TimeZoneUtility) ReclassifyTimeWithNewTz(tIn time.Time, tZone string)
 		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() Error: Input Time Zone is INVALID!")
 	}
 
-
 	tzNew, err := time.LoadLocation(tZone)
 
 	if err != nil {
-		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() - Error from time.Location('%v') - Error: %v",tZone, err.Error())
+		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() - Error from time.Location('%v') - Error: %v", tZone, err.Error())
 	}
 
 	tOut, err := time.ParseInLocation(NeutralDateFmt, strTime, tzNew)

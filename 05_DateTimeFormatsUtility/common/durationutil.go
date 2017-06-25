@@ -23,16 +23,15 @@ const (
 	// YearNanoSeconds - Number of Nanoseconds in a 365-day year
 
 	/*
-	For the Gregorian calendar the average length of the calendar year
-	(the mean year) across the complete leap cycle of 400 years is 365.2425 days.
-	The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
-	49 minutes and 12 seconds.
-	Sources:
-	https://en.wikipedia.org/wiki/Year
-	Source: https://en.wikipedia.org/wiki/Gregorian_calendar
-*/
+		For the Gregorian calendar the average length of the calendar year
+		(the mean year) across the complete leap cycle of 400 years is 365.2425 days.
+		The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
+		49 minutes and 12 seconds.
+		Sources:
+		https://en.wikipedia.org/wiki/Year
+		Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+	*/
 	YearNanoSeconds = int64(31556952000000000)
-
 )
 
 // DurationUtility - holds elements of
@@ -54,7 +53,6 @@ type DurationUtility struct {
 	// DefaultStr - Example: 61h26m46.864197832s - format provided by 'go' library
 	DefaultStr string
 }
-
 
 func (du *DurationUtility) AddDurationToThis(duration time.Duration) {
 
@@ -134,7 +132,6 @@ func (du *DurationUtility) Equal(duIn DurationUtility) bool {
 
 }
 
-
 // GetDuration - Returns a time.Duration structure defining the duration between
 // input parameters startTime and endTime
 func (du DurationUtility) GetDuration(startTime time.Time, endTime time.Time) (time.Duration, error) {
@@ -152,8 +149,8 @@ func (du DurationUtility) GetDuration(startTime time.Time, endTime time.Time) (t
 	return endTime.Sub(startTime), nil
 }
 
-func (du DurationUtility) GenerateDuration(duIn DurationUtility) ( time.Duration, error){
-	return  du.GetDurationFromElapsedTime(duIn)
+func (du DurationUtility) GenerateDuration(duIn DurationUtility) (time.Duration, error) {
+	return du.GetDurationFromElapsedTime(duIn)
 }
 
 // GetDurationBreakDown - Receives a Duration type
@@ -171,7 +168,7 @@ func (du DurationUtility) GetDurationBreakDown(d time.Duration) DurationUtility 
 	durationUtility.DefaultStr = fmt.Sprintf("%v", d)
 	if rd == 0 {
 		durationUtility.DurationStr = "0-Nanoseconds"
-		durationUtility.NanosecStr =  "0-Nanoseconds"
+		durationUtility.NanosecStr = "0-Nanoseconds"
 		return durationUtility
 	}
 
@@ -285,7 +282,6 @@ func (du DurationUtility) GetDurationFromElapsedTime(elapsedTime DurationUtility
 
 }
 
-
 // GetElapsedTime - calculates the elapsed time
 // between input parameters startTime and endTime.
 // The result is returned in an DurationUtility
@@ -315,4 +311,3 @@ func (du DurationUtility) GetTimeMinusDuration(tStartTime time.Time, duration ti
 
 	return tStartTime.Add(-duration)
 }
-

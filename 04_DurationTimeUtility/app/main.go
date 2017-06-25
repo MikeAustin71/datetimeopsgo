@@ -15,6 +15,6 @@ import (
 
 func main() {
 
-	common.ExampleElapsedYearsBreakdown2()
+	common.ExampleElapsedYearsBreakdown()
 
 }

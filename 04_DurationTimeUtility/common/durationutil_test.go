@@ -93,7 +93,6 @@ func TestElapsedYearsBreakdown(t *testing.T) {
 
 	du := durationUtility.GetDurationBreakDown(dur.StartDateTime, dur.TimeDuration)
 
-
 	if du.DurationStr != expected {
 		t.Error(fmt.Sprintf("Expected: %v, got:", expected), du.DurationStr)
 	}
@@ -360,7 +359,7 @@ func TestDurationUtility_GetDurationBySeconds(t *testing.T) {
 	expectedDur := SecondNanoseconds * int64(10)
 
 	if expectedDur != int64(dur) {
-		t.Errorf("Expected duration 10 seconds: %v, received duration: %v",int64(expectedDur), dur)
+		t.Errorf("Expected duration 10 seconds: %v, received duration: %v", int64(expectedDur), dur)
 	}
 
 }
@@ -372,9 +371,8 @@ func TestDurationUtility_GetDurationByMinutes(t *testing.T) {
 	expectedDur := MinuteNanoSeconds * int64(5)
 
 	if expectedDur != int64(dur) {
-		t.Errorf("Expected duration 10 minutes: %v, received duration: %v",int64(expectedDur), dur)
+		t.Errorf("Expected duration 10 minutes: %v, received duration: %v", int64(expectedDur), dur)
 	}
-
 
 }
 
@@ -465,8 +463,7 @@ func TestDurationUtility_CalculateTargetTimeFromMinusDuration(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, tstr1)
 
-	du.CalculateTargetTimeFromMinusDuration(t1, 1, 0,
-		0, 0 , 0, 0, 0, 0, 0)
+	du.CalcTargetTimeFromMinusDuration(t1, TimesDto{Years: 1})
 
 	tstr2 := du.StartDateTime.Format(fmtstr)
 
@@ -484,13 +481,13 @@ func TestDurationUtility_CalculateDurationElements_Years(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
 	t1, _ := time.Parse(fmtstr, t1Str)
-	t2 := t1.AddDate(4, 0, 2 )
+	t2 := t1.AddDate(4, 0, 2)
 
 	td := t2.Sub(t1)
 
-	du := DurationUtility{StartDateTime:t1, TimeDuration:td}
-	du.CalculateDurationElements()
-	du.CalculateDurationStrings()
+	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
+	du.CalcDurationElements()
+	du.CalcDurationStrings()
 	expected := "4-Years 0-Months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if du.DurationStr != expected {
@@ -505,13 +502,13 @@ func TestDurationUtility_CalculateDurationElements_Months(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
 	t1, _ := time.Parse(fmtstr, t1Str)
-	t2 := t1.AddDate(4, 3, 2 )
+	t2 := t1.AddDate(4, 3, 2)
 
 	td := t2.Sub(t1)
 
-	du := DurationUtility{StartDateTime:t1, TimeDuration:td}
-	du.CalculateDurationElements()
-	du.CalculateDurationStrings()
+	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
+	du.CalcDurationElements()
+	du.CalcDurationStrings()
 	expected := "4-Years 3-Months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if du.DurationStr != expected {
@@ -546,7 +543,7 @@ func TestDurationUtility_SetStartTimeDuration(t *testing.T) {
 		t.Errorf("Expected End Time: %v. Error - Received %v", t2fmt, du.EndDateTime.Format(fmtstr))
 	}
 
-	expected2 := fmt.Sprintf("%v",dur)
+	expected2 := fmt.Sprintf("%v", dur)
 	actual := fmt.Sprintf("%v", du.TimeDuration)
 
 	if expected2 != actual {
@@ -566,10 +563,9 @@ func TestDurationUtility_CalculateDurationFromElements(t *testing.T) {
 	t2fmt := t2.Format(fmtstr)
 	dur := int64(101099042000000000)
 
+	du := DurationUtility{StartDateTime: t1, Years: 3, Months: 2, Days: 15, Hours: 4, Minutes: 4, Seconds: 2}
 
-	du := DurationUtility{StartDateTime:t1, Years:3, Months:2, Days:15, Hours:4, Minutes:4, Seconds:2}
-
-	du.CalculateDurationFromElements()
+	du.CalcDurationFromElements()
 
 	if du.DurationStr != expected {
 		t.Errorf("Expected Duration %v. Error - Received %v", expected, du.DurationStr)
@@ -602,10 +598,9 @@ func TestDurationUtility_CalculateDurationFromMinusElements(t *testing.T) {
 	t2fmt := t2.Format(fmtstr)
 	//dur := time.Duration(int64(101099042000000000))
 
+	du := DurationUtility{StartDateTime: t2, Years: -3, Months: -2, Days: -15, Hours: -3, Minutes: -4, Seconds: -2}
 
-	du := DurationUtility{StartDateTime:t2, Years:-3, Months:-2, Days:-15, Hours:-3, Minutes:-4, Seconds:-2}
-
-	du.CalculateDurationFromElements()
+	du.CalcDurationFromElements()
 
 	if du.DurationStr != expected {
 		t.Errorf("Expected Duration %v. Error - Received %v", expected, du.DurationStr)
@@ -628,3 +623,33 @@ func TestDurationUtility_CalculateDurationFromMinusElements(t *testing.T) {
 
 }
 
+func TestDurationUtility_DurationStrings(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	durationUtility := DurationUtility{}
+	dur, err := durationUtility.GetDuration(t1, t2)
+
+	if err != nil {
+		t.Errorf("Get Duration Failed: ", err.Error())
+	}
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != dur.DurationStr {
+		t.Errorf("Expected Duration String: %v. Instead, received %v.", expected, dur.DurationStr)
+	}
+
+	/*
+		fmt.Println(" Expected Dur: ", expected)
+		fmt.Println(" Duration Str: ", du.DurationStr)
+		fmt.Println("  Default Str: ", du.DefaultStr)
+		fmt.Println("    Hours Str: ", du.HoursStr)
+		fmt.Println("    Weeks Str: ", du.YearsMthsWeeksStr)
+		fmt.Println("Cum Weeks Str: ", du.CumWeeksStr)
+	*/
+}

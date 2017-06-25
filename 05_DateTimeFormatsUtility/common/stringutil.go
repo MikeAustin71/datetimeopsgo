@@ -63,26 +63,25 @@ func (su StringUtility) StrGetCharCnt(targetStr string) int {
 	return len([]rune(targetStr))
 }
 
-
 // TrimEndMultiple- Performs the following operations on strings:
 // 1. Trims Right and Left for all instances of 'trimChar'
 // 2. Within the interior of a string, multiple instances
 // 		of 'trimChar' are reduce to a single instance.
 func (su StringUtility) TrimEndMultiple(targetStr string, trimChar rune) (rStr string, err error) {
 
-	if targetStr=="" {
+	if targetStr == "" {
 		err = errors.New("Empty targetStr")
 		return
 	}
 
 	fStr := []rune(targetStr)
 	lenTargetStr := len(fStr)
-	outputStr := make([]rune,lenTargetStr)
+	outputStr := make([]rune, lenTargetStr)
 	lenTargetStr--
 	idx := lenTargetStr
 	foundFirstChar := false
 
-	for i:=lenTargetStr; i >= 0; i-- {
+	for i := lenTargetStr; i >= 0; i-- {
 
 		if !foundFirstChar && fStr[i] == trimChar {
 			continue
@@ -92,7 +91,7 @@ func (su StringUtility) TrimEndMultiple(targetStr string, trimChar rune) (rStr s
 			continue
 		}
 
-		if i==0 && fStr[i] == trimChar {
+		if i == 0 && fStr[i] == trimChar {
 			continue
 		}
 
@@ -115,7 +114,7 @@ func (su StringUtility) TrimEndMultiple(targetStr string, trimChar rune) (rStr s
 
 }
 
-func (su StringUtility) SwapRune(currentStr string, oldRune rune, newRune rune) (string, error){
+func (su StringUtility) SwapRune(currentStr string, oldRune rune, newRune rune) (string, error) {
 
 	if currentStr == "" {
 		return currentStr, nil
@@ -125,7 +124,7 @@ func (su StringUtility) SwapRune(currentStr string, oldRune rune, newRune rune) 
 
 	lrStr := len(rStr)
 
-	for i:=0; i < lrStr; i++ {
+	for i := 0; i < lrStr; i++ {
 		if rStr[i] == oldRune {
 			rStr[i] = newRune
 		}
