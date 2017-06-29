@@ -1,655 +1,318 @@
 package common
 
 import (
-	"fmt"
 	"testing"
 	"time"
 )
 
-func TestSimpleDurationBreakdown(t *testing.T) {
-	t1str := "04/28/2017 19:54:30 -0500 CDT"
-	t2str := "04/30/2017 22:58:32 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05 -0700 MST"
-	durationUtility := DurationUtility{}
-	t1, err := time.Parse(fmtstr, t1str)
+func TestDurationUtility_SetStartEndTimes(t *testing.T) {
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+
+	dur := DurationUtility{}
+
+	dur.SetStartEndTimes(t1, t2)
+
+	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
+		t.Errorf("Error: Expected DurationUtility.StartDateTime of %v. Instead, got %v ", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	}
+
+	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
+		t.Errorf("Error: Expected DurationUtility.EndDateTime of %v. Instead, got %v ", t1OutStr, dur.EndDateTime.Format(fmtstr))
+	}
+
+	tOutDur := t2.Sub(t1)
+
+	if tOutDur != dur.TimeDuration {
+		t.Errorf("Error: Expected DurationUtility.TimeDuration of %v. Instead, got %v", tOutDur, dur.TimeDuration)
+	}
+
+	dDto, err := dur.GetYearMthDays()
+
 	if err != nil {
-		t.Error("Time Parse1 Error:", err.Error())
+		t.Errorf("Error from DurationUtility.GetYearMthDays. Error: %v", err.Error())
 	}
 
-	t2, err := time.Parse(fmtstr, t2str)
-	if err != nil {
-		t.Error("Time Parse2 Error:", err.Error())
-	}
-
-	dur, err := durationUtility.GetDuration(t1, t2)
-	if err != nil {
-		t.Error("Get Duration Failed: ", err.Error())
-	}
-
-	ed := durationUtility.GetDurationBreakDown(dur.StartDateTime, dur.TimeDuration)
-
-	ex1 := "2-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
-	if ed.DurationStr != ex1 {
-		t.Error(fmt.Sprintf("Expected duration string of %v, got", ex1), ed.DurationStr)
-	}
-	// 2-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
-
-	ex2 := "51h4m2s"
-
-	if ed.DefaultStr != ex2 {
-		t.Error(fmt.Sprintf("Expected default druation string: %v, got", ex2), ed.DefaultStr)
-	}
-}
-
-func TestTimeDurationReturn(t *testing.T) {
-	t1str := "04/28/2017 19:54:30 -0500 CDT"
-	t2str := "04/30/2017 22:58:32 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05 -0700 MST"
-	durationUtility := DurationUtility{}
-	t1, err := time.Parse(fmtstr, t1str)
-	if err != nil {
-		t.Error("Time Parse1 Error:", err.Error())
-	}
-
-	t2, err := time.Parse(fmtstr, t2str)
-	if err != nil {
-		t.Error("Time Parse2 Error:", err.Error())
-	}
-
-	dur, err := durationUtility.GetDuration(t1, t2)
-	if err != nil {
-		t.Error("Get Duration Failed: ", err.Error())
-	}
-
-	du := durationUtility.GetDurationBreakDown(dur.StartDateTime, dur.TimeDuration)
-
-	if du.TimeDuration != dur.TimeDuration {
-		t.Error(fmt.Sprintf("Expected Time Duration %v, got:", du.TimeDuration), dur)
-	}
-
-}
-
-func TestElapsedYearsBreakdown(t *testing.T) {
-	t1str := "02/15/2014 19:54:30 -0600 CST"
-	t2str := "04/30/2017 22:58:32 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	durationUtility := DurationUtility{}
-	t1, err := time.Parse(fmtstr, t1str)
+
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
+	}
+
+	dDto, err = dur.GetYearsMthsWeeksTime()
 	if err != nil {
-		t.Error("Time Parse1 Error:", err.Error())
+		t.Errorf("Error from DurationUtility.GetYearsMthsWeeksTime. Error: %v", err.Error())
 	}
 
-	t2, err := time.Parse(fmtstr, t2str)
+	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+	}
+
+	dDto, err = dur.GetDefaultDuration()
 	if err != nil {
-		t.Error("Time Parse2 Error:", err.Error())
+		t.Errorf("Error from DurationUtility.GetDefaultDuration. Error: %v", err.Error())
 	}
 
-	dur, err := durationUtility.GetDuration(t1, t2)
+	expected = "28082h4m2s"
+
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected Default Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+	}
+
+	dDto, err = dur.GetDaysDuration()
 	if err != nil {
-		t.Error("Get Duration Failed: ", err.Error())
+		t.Errorf("Error from DurationUtility.GetDaysDuration. Error: %v", err.Error())
 	}
 
-	du := durationUtility.GetDurationBreakDown(dur.StartDateTime, dur.TimeDuration)
+	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	if du.DurationStr != expected {
-		t.Error(fmt.Sprintf("Expected: %v, got:", expected), du.DurationStr)
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected Days Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
-	t3 := t1.AddDate(3, 2, 15).Add(time.Duration(int64((3 * HourNanoSeconds) + (4 * MinuteNanoSeconds) + (2 * SecondNanoseconds))))
-
-	t3EndStr := t3.Format(fmtstr)
-	dEndStr := du.EndDateTime.Format(fmtstr)
-
-	if t3EndStr != dEndStr {
-		t.Errorf("Expected EndTime: %v Error - Instead got %v", t3EndStr, dEndStr)
+	dDto, err = dur.GetHoursDuration()
+	if err != nil {
+		t.Errorf("Error from DurationUtility.GetHoursDuration. Error: %v", err.Error())
 	}
 
-}
+	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-func TestElapsedTimeBreakdown(t *testing.T) {
-	tstr1 := "04/15/2017 19:54:30.123456489 -0500 CDT"
-	tstr2 := "04/18/2017 09:21:16.987654321 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, err1 := time.Parse(fmtstr, tstr1)
-
-	if err1 != nil {
-		t.Error("Error On Time Parse #1: ", err1.Error())
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected Hours Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
-	t2, err2 := time.Parse(fmtstr, tstr2)
-
-	if err2 != nil {
-		t.Error("Error On Time Parse #2: ", err2.Error())
+	dDto, err = dur.GetYrMthWkDayHourSecNanosecsDuration()
+	if err != nil {
+		t.Errorf("Error from DurationUtility.GetYrMthWkDayHourSecNanosecsDuration. Error: %v", err.Error())
 	}
 
-	durationUtility := DurationUtility{}
+	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds"
 
-	ed, err4 := durationUtility.GetElapsedTime(t1, t2)
-	if err4 != nil {
-		t.Error("Error On GetElapsedTime: ", err4.Error())
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YrMthWkDayHourSecNanosec Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
-	ex1 := "2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds"
-
-	if ed.DurationStr != ex1 {
-		t.Error(fmt.Sprintf("Expected %v, got", ex1), ed.DurationStr)
+	dDto, err = dur.GetWeeksDaysDuration()
+	if err != nil {
+		t.Errorf("Error from DurationUtility.GetWeeksDaysDuration. Error: %v", err.Error())
 	}
 
-	ex2 := "61h26m46.864197832s"
+	expected = "167-Weeks 1-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	if ed.DefaultStr != ex2 {
-		t.Error(fmt.Sprintf("Expected %v, got", ex2), ed.DefaultStr)
-	}
-
-	ex3 := "2-Days 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds"
-
-	if ex3 != ed.NanosecStr {
-		t.Error(fmt.Sprintf("Expected %v, got", ex3), ed.NanosecStr)
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected Weeks Days Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
 }
 
-func TestGetDurationFromElapsedTime(t *testing.T) {
-	tstr1 := "04/15/2017 19:54:30.123456489 -0500 CDT"
-	tstr2 := "04/18/2017 09:21:16.987654321 -0500 CDT"
+func TestDurationUtility_SetStartEndTimes_02(t *testing.T) {
+
+	t1str := "02/15/2014 19:54:30.123456789 -0600 CST"
+	t2str := "04/30/2017 22:58:32.987654321 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, err1 := time.Parse(fmtstr, tstr1)
 
-	if err1 != nil {
-		t.Error("Error On Time Parse #1: ", err1.Error())
-	}
+	t1, _ := time.Parse(fmtstr, t1str)
 
-	t2, err2 := time.Parse(fmtstr, tstr2)
+	t2, _ := time.Parse(fmtstr, t2str)
 
-	if err2 != nil {
-		t.Error("Error On Time Parse #2: ", err2.Error())
-	}
+	dur := DurationUtility{}
 
-	du := DurationUtility{}
+	dur.SetStartEndTimes(t1, t2)
 
-	dur, err3 := du.GetDuration(t1, t2)
-
-	if err3 != nil {
-		t.Error("Error On GetDuration(t1,t2) : ", err3.Error())
-	}
-
-	ed, err4 := du.GetElapsedTime(t1, t2)
-
-	if err4 != nil {
-		t.Error("Error On GetElapsedTime(t1,t2) : ", err4.Error())
-	}
-
-	dur2, err5 := du.GetDurationFromElapsedTime(ed)
-
-	if err5 != nil {
-		t.Error("Error on GetDurationFromElapsedTime(ed) :", err5.Error())
-	}
-
-	if dur.TimeDuration != dur2 {
-		t.Error(fmt.Sprintf("Duration #1 is NOT Equal to Duration #2. Expected %v , got:", dur), dur2)
-	}
-
-	if dur.TimeDuration != ed.TimeDuration {
-		t.Error(fmt.Sprintf("Duration Utility Time Duration is NOT Equal to Duration #2. Expected %v , got:", ed.TimeDuration), dur2)
-	}
-
-}
-
-func TestTimePlusDuration(t *testing.T) {
-
-	tstr1 := "04/15/2017 19:54:30.123456489 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, err1 := time.Parse(fmtstr, tstr1)
-
-	if err1 != nil {
-		t.Error("Error On Time Parse #1: ", err1.Error())
-	}
-
-	secondsInADay := 60 * 60 * 24
-
-	dur := time.Duration(secondsInADay) * time.Second
-
-	du := DurationUtility{}
-
-	t2 := du.GetTimePlusDuration(t1, dur)
-
-	tstr2 := t2.Format(fmtstr)
-
-	expected := "04/16/2017 19:54:30.123456489 -0500 CDT"
-
-	if expected != tstr2 {
-		t.Error(fmt.Sprintf("GetTimePlusDuration() gave INVALID Result! Expected %v, got: ", expected), tstr2)
-	}
-
-}
-
-func TestDurationUtility_GetTimeMinusDuration(t *testing.T) {
-	tstr1 := "04/15/2017 19:54:30.123456489 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	expected := "04/12/2017 19:54:30.123456489 -0500 CDT"
-	t1, err1 := time.Parse(fmtstr, tstr1)
-
-	if err1 != nil {
-		t.Error("Error On Time Parse #1: ", err1.Error())
-	}
-
-	secondsInADay := 60 * 60 * 24
-
-	duration3Days := secondsInADay * 3
-
-	dur := time.Duration(duration3Days) * time.Second
-
-	du := DurationUtility{}
-
-	subTime := du.GetTimeMinusDuration(t1, dur)
-
-	tstr2 := subTime.Format(fmtstr)
-
-	if tstr2 != expected {
-		t.Error(fmt.Sprintf("Expected Time string, '%v', instead got:", expected), tstr2)
-	}
-
-}
-
-func TestDurationUtility_GetTimeMinusDuration_02(t *testing.T) {
-	tstr1 := "04/15/2017 19:54:30.000000000 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	expected := "04/10/2017 19:54:30.000000000 -0500 CDT"
-	t1, err := time.Parse(fmtstr, tstr1)
+	dDto, err := dur.GetYrMthWkDayHourSecNanosecsDuration()
 
 	if err != nil {
-		t.Error("Error On Time Parse #1: ", err.Error())
+		t.Errorf("Error from DurationUtility.GetYrMthWkDayHourSecNanosecsDuration. Error: %v", err.Error())
 	}
 
-	du := DurationUtility{Days: 5}
+	expected := "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 864197532-Nanoseconds"
 
-	dur, err := du.GenerateDuration(du)
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YrMthWkDayHourSecNanosec Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+	}
+
+}
+
+func TestDurationUtility_SetStartEndTimes_03(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.123456789 -0600 CST"
+	t2str := "04/30/2017 22:58:32.987654321 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	dur := DurationUtility{}
+
+	dur.SetStartEndTimes(t2, t1)
+
+	dDto, err := dur.GetYearsMthsWeeksTime()
+	if err != nil {
+		t.Errorf("Error from DurationUtility.GetYearsMthsWeeksTime. Error: %v", err.Error())
+	}
+
+	expected := "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 864-Milliseconds 197-Microseconds 532-Nanoseconds"
+
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+	}
+
+}
+
+func TestDurationUtility_SetStartEndTimes_04(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.123456789 -0600 CST"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	dur := DurationUtility{}
+
+	dur.SetStartEndTimes(t1, t1)
+
+	dDto, err := dur.GetYearsMthsWeeksTime()
+	if err != nil {
+		t.Errorf("Error from DurationUtility.GetYearsMthsWeeksTime. Error: %v", err.Error())
+	}
+
+	expected := "0-Nanoseconds"
+
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+	}
+
+}
+
+func TestDurationUtility_SetStartTimePlusTime(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	dur := DurationUtility{}
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, Days: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	dur.SetStartTimePlusTime(t1, timeDto)
+
+	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	}
+
+	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
+	}
+
+	if t12Dur != dur.TimeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, dur.TimeDuration)
+	}
+
+	dDto, err := dur.GetYearMthDays()
 
 	if err != nil {
-		t.Errorf("Error returned from du.GenerateDuration(du). Error %v ", err.Error())
+		t.Errorf("Error from DurationUtility.GetYearMthDays. Error: %v", err.Error())
 	}
 
-	subTime := du.GetTimeMinusDuration(t1, dur)
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	tstr2 := subTime.Format(fmtstr)
-
-	if tstr2 != expected {
-		t.Error(fmt.Sprintf("Expected Time string 5-days before orignal time. Time Expected, '%v', instead got:", expected), tstr2)
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
 }
 
-func TestAddDurations(t *testing.T) {
-
-	tstr1 := "04/15/2017 19:54:30.000000000 -0500 CDT"
+func TestDurationUtility_SetStartTimeMinusTime(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, _ := time.Parse(fmtstr, tstr1)
 
-	secondsInADay := 60 * 60 * 24
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
 
-	secondsInTwoDays := 60 * 60 * 24 * 2
+	dur := DurationUtility{}
 
-	// Adding duration of 1-day plus duration of 2-days should
-	// equal 3-days.
-	dur1 := time.Duration(secondsInADay) * time.Second
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, Days: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur2 := time.Duration(secondsInTwoDays) * time.Second
+	dur.SetStartTimeMinusTime(t2, timeDto)
 
-	du := DurationUtility{}
-
-	du2 := du.GetDurationBreakDown(t1, dur1)
-
-	du2.AddDurationToThis(dur2)
-
-	expected := "3-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
-	if expected != du2.DurationStr {
-		t.Error(fmt.Sprintf("Expected Total Duration of Three Days, %v - Got: ", expected), du2.DurationStr)
+	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
 	}
 
-}
-
-func TestDurationEquality(t *testing.T) {
-
-	tstr1 := "04/15/2017 19:54:30.000000000 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, _ := time.Parse(fmtstr, tstr1)
-
-	secondsInADay := 60 * 60 * 24
-
-	secondsInTwoDays := 60 * 60 * 24 * 2
-
-	// Adding duration of 1-day plus duration of 2-days should
-	// equal 3-days.
-	dur1 := time.Duration(secondsInADay) * time.Second
-
-	dur2 := time.Duration(secondsInTwoDays) * time.Second
-
-	du := DurationUtility{}
-
-	du2 := du.GetDurationBreakDown(t1, dur1)
-
-	du2.AddDurationToThis(dur2)
-
-	expected := "3-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
-	if expected != du2.DurationStr {
-		t.Error(fmt.Sprintf("Expected Total Duration of Three Days, %v - Got: ", expected), du2.DurationStr)
+	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
 	}
 
-	secondsInThreeDays := 60 * 60 * 24 * 3
-	dur3 := time.Duration(secondsInThreeDays) * time.Second
-
-	du3 := du.GetDurationBreakDown(t1, dur3)
-
-	result := du3.Equal(du2)
-
-	if result == false {
-		t.Error("Expected Two Data Utility Structures to be Equal or result = true, Got: ", result)
-	}
-}
-
-func TestDurationUtility_GetDurationBySeconds(t *testing.T) {
-	du := DurationUtility{}
-
-	dur := du.GetDurationBySeconds(10)
-
-	expectedDur := SecondNanoseconds * int64(10)
-
-	if expectedDur != int64(dur) {
-		t.Errorf("Expected duration 10 seconds: %v, received duration: %v", int64(expectedDur), dur)
+	if t12Dur != dur.TimeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, dur.TimeDuration)
 	}
 
-}
-
-func TestDurationUtility_GetDurationByMinutes(t *testing.T) {
-	du := DurationUtility{}
-	dur := du.GetDurationByMinutes(5)
-
-	expectedDur := MinuteNanoSeconds * int64(5)
-
-	if expectedDur != int64(dur) {
-		t.Errorf("Expected duration 10 minutes: %v, received duration: %v", int64(expectedDur), dur)
-	}
-
-}
-
-func TestAddDurationStructures(t *testing.T) {
-	tstr1 := "04/15/2017 19:54:30.000000000 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, _ := time.Parse(fmtstr, tstr1)
-
-	secondsInADay := 60 * 60 * 24
-
-	secondsInTwoDays := 60 * 60 * 24 * 2
-
-	// Adding duration of 1-day plus duration of 2-days should
-	// equal 3-days.
-	dur1 := time.Duration(secondsInADay) * time.Second
-
-	dur2 := time.Duration(secondsInTwoDays) * time.Second
-
-	du := DurationUtility{}
-
-	du2 := du.GetDurationBreakDown(t1, dur1)
-
-	du3 := du.GetDurationBreakDown(t1, dur2)
-
-	du.CopyToThis(du2)
-
-	du.AddToThis(du3)
-
-	expected := "3-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
-	if expected != du.DurationStr {
-		t.Error(fmt.Sprintf("Expected Total Duration of Three Days, %v - Got: ", expected), du.DurationStr)
-	}
-
-}
-
-func TestDurationUtility_GenerateDuration(t *testing.T) {
-	du := DurationUtility{Days: 3}
-
-	dur, err := du.GenerateDuration(du)
+	dDto, err := dur.GetYearMthDays()
 
 	if err != nil {
-		t.Errorf("TestDurationUtility_GenerateDuration error from GenerateDuration - Error: %v", err.Error())
+		t.Errorf("Error from DurationUtility.GetYearMthDays. Error: %v", err.Error())
 	}
 
-	nanoSecs := int64(dur)
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	nanoSecs3Days := DayNanoSeconds * int64(3)
-
-	if nanoSecs != nanoSecs3Days {
-		t.Errorf("Expected 3-days equivalent nanoseconds==%v, actually received:%v", nanoSecs3Days, nanoSecs)
-	}
-
-}
-
-func TestDurationUtility_GetDurationBreakDown_Zero_Duration(t *testing.T) {
-
-	du := DurationUtility{}
-
-	zeroDuration := time.Duration(0)
-
-	elapsedTime := du.GetDurationBreakDown(time.Time{}, time.Duration(0))
-
-	expectedDurStr := "0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
-	expectedNanoSecStr := "0-Hours 0-Minutes 0-Seconds 0-Nanoseconds"
-
-	if elapsedTime.TimeDuration != zeroDuration {
-		t.Errorf("Expected elapsedTime.TimeDuration == zero, instead got: %v", elapsedTime.TimeDuration)
-	}
-
-	if elapsedTime.NanosecStr != expectedNanoSecStr {
-		t.Errorf("Expected elapsedTime.NanosecStr to equal '%v', instead got: %v",
-			expectedNanoSecStr, elapsedTime.NanosecStr)
-	}
-
-	if elapsedTime.DurationStr != expectedDurStr {
-		t.Errorf("Expected elapsedTime.DurationStr to equal '%v', instead got: %v",
-			expectedDurStr, elapsedTime.DurationStr)
-
-	}
-}
-
-func TestDurationUtility_CalculateTargetTimeFromMinusDuration(t *testing.T) {
-	tstr1 := "04/15/2017 19:54:30.123456489 +0000 UTC"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	du := DurationUtility{}
-
-	t1, _ := time.Parse(fmtstr, tstr1)
-
-	du.CalcTargetTimeFromMinusDuration(t1, TimesDto{Years: 1})
-
-	tstr2 := du.StartDateTime.Format(fmtstr)
-
-	expected := "04/15/2016 19:54:30.123456489 +0000 UTC"
-
-	if tstr2 != expected {
-		t.Errorf("Error: Expected 1-Year duration Start Time of %v. Received %v", expected, tstr2)
-	}
-
-}
-
-func TestDurationUtility_CalculateDurationElements_Years(t *testing.T) {
-	t1Str := "04/30/2017 22:58:32.000000000 -0500 CDT"
-
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-
-	t1, _ := time.Parse(fmtstr, t1Str)
-	t2 := t1.AddDate(4, 0, 2)
-
-	td := t2.Sub(t1)
-
-	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
-	du.CalcDurationElements()
-	du.CalcDurationStrings()
-	expected := "4-Years 0-Months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
-	if du.DurationStr != expected {
-		t.Errorf("Expected Duration %v. Error - Received %v", expected, du.DurationStr)
-	}
-
-}
-
-func TestDurationUtility_CalculateDurationElements_Months(t *testing.T) {
-	t1Str := "04/30/2017 22:58:32.000000000 -0500 CDT"
-
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-
-	t1, _ := time.Parse(fmtstr, t1Str)
-	t2 := t1.AddDate(4, 3, 2)
-
-	td := t2.Sub(t1)
-
-	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
-	du.CalcDurationElements()
-	du.CalcDurationStrings()
-	expected := "4-Years 3-Months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-
-	if du.DurationStr != expected {
-		t.Errorf("Expected Duration %v. Error - Received %v", expected, du.DurationStr)
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
 }
 
 func TestDurationUtility_SetStartTimeDuration(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
-	t2str := "04/30/2017 23:58:32.000000000 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	expected := "3-Years 2-Months 15-Days 4-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	du := DurationUtility{}
-	t1, _ := time.Parse(fmtstr, t1str)
-	t1fmt := t1.Format(fmtstr)
-	t2, _ := time.Parse(fmtstr, t2str)
-	t2fmt := t2.Format(fmtstr)
-	dur := time.Duration(int64(101099042000000000))
-
-	du.SetStartTimeDuration(t1, dur)
-
-	if du.DurationStr != expected {
-		t.Errorf("Expected Duration %v. Error - Received %v", expected, du.DurationStr)
-	}
-
-	if t1fmt != du.StartDateTime.Format(fmtstr) {
-		t.Errorf("Expected Start Time: %v. Error - Received %v", t1fmt, du.StartDateTime.Format(fmtstr))
-	}
-
-	if t2fmt != du.EndDateTime.Format(fmtstr) {
-		t.Errorf("Expected End Time: %v. Error - Received %v", t2fmt, du.EndDateTime.Format(fmtstr))
-	}
-
-	expected2 := fmt.Sprintf("%v", dur)
-	actual := fmt.Sprintf("%v", du.TimeDuration)
-
-	if expected2 != actual {
-		t.Errorf("Expected duration, %v. Error - Received duration %v.", expected2, actual)
-	}
-
-}
-
-func TestDurationUtility_CalculateDurationFromElements(t *testing.T) {
-	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
-	t2str := "04/30/2017 23:58:32.000000000 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, _ := time.Parse(fmtstr, t1str)
-	expected := "3-Years 2-Months 15-Days 4-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	t1fmt := t1.Format(fmtstr)
-	t2, _ := time.Parse(fmtstr, t2str)
-	t2fmt := t2.Format(fmtstr)
-	dur := int64(101099042000000000)
-
-	du := DurationUtility{StartDateTime: t1, Years: 3, Months: 2, Days: 15, Hours: 4, Minutes: 4, Seconds: 2}
-
-	du.CalcDurationFromElements()
-
-	if du.DurationStr != expected {
-		t.Errorf("Expected Duration %v. Error - Received %v", expected, du.DurationStr)
-	}
-
-	if t1fmt != du.StartDateTime.Format(fmtstr) {
-		t.Errorf("Expected Start Time: %v. Error - Received %v", t1fmt, du.StartDateTime.Format(fmtstr))
-	}
-
-	if t2fmt != du.EndDateTime.Format(fmtstr) {
-		t.Errorf("Expected End Time: %v. Error - Received %v", t2fmt, du.EndDateTime.Format(fmtstr))
-	}
-
-	actual := int64(du.TimeDuration)
-
-	if dur != actual {
-		t.Errorf("Expected duration, %v. Error - Received duration %v.", dur, actual)
-	}
-
-}
-
-func TestDurationUtility_CalculateDurationFromMinusElements(t *testing.T) {
-	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
 	t1, _ := time.Parse(fmtstr, t1str)
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	t1fmt := t1.Format(fmtstr)
+	t1OutStr := t1.Format(fmtstr)
 	t2, _ := time.Parse(fmtstr, t2str)
-	t2fmt := t2.Format(fmtstr)
-	//dur := time.Duration(int64(101099042000000000))
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
 
-	du := DurationUtility{StartDateTime: t2, Years: -3, Months: -2, Days: -15, Hours: -3, Minutes: -4, Seconds: -2}
+	dur := DurationUtility{}
 
-	du.CalcDurationFromElements()
+	dur.SetStartTimeDuration(t1, t12Dur)
 
-	if du.DurationStr != expected {
-		t.Errorf("Expected Duration %v. Error - Received %v", expected, du.DurationStr)
+	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
 	}
 
-	if t1fmt != du.StartDateTime.Format(fmtstr) {
-		t.Errorf("Expected Start Time: %v. Error - Received %v", t1fmt, du.StartDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
 	}
 
-	if t2fmt != du.EndDateTime.Format(fmtstr) {
-		t.Errorf("Expected End Time: %v. Error - Received %v", t2fmt, du.EndDateTime.Format(fmtstr))
+	if t12Dur != dur.TimeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, dur.TimeDuration)
 	}
 
-	expected2 := fmt.Sprintf("28082h4m2s")
-	actual := fmt.Sprintf("%v", du.TimeDuration)
-
-	if expected2 != actual {
-		t.Errorf("Expected duration, %v. Error - Received duration %v.", expected2, actual)
-	}
-
-}
-
-func TestDurationUtility_DurationStrings(t *testing.T) {
-	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
-	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	t1, _ := time.Parse(fmtstr, t1str)
-
-	t2, _ := time.Parse(fmtstr, t2str)
-
-	durationUtility := DurationUtility{}
-	dur, err := durationUtility.GetDuration(t1, t2)
+	dDto, err := dur.GetYearMthDays()
 
 	if err != nil {
-		t.Errorf("Get Duration Failed: ", err.Error())
+		t.Errorf("Error from DurationUtility.GetYearMthDays. Error: %v", err.Error())
 	}
 
 	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	if expected != dur.DurationStr {
-		t.Errorf("Expected Duration String: %v. Instead, received %v.", expected, dur.DurationStr)
+	if expected != dDto.DisplayStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
-	/*
-		fmt.Println(" Expected Dur: ", expected)
-		fmt.Println(" Duration Str: ", du.DurationStr)
-		fmt.Println("  Default Str: ", du.DefaultStr)
-		fmt.Println("    Hours Str: ", du.HoursStr)
-		fmt.Println("    Weeks Str: ", du.YearsMthsWeeksStr)
-		fmt.Println("Cum Weeks Str: ", du.CumWeeksStr)
-	*/
 }
