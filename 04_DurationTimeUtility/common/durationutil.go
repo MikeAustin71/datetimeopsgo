@@ -822,8 +822,13 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time, duratio
 		du.TimeDuration = duration
 	}
 
-	return nil
+	err := du.ValidateDurationBaseData()
 
+	if err != nil {
+		return fmt.Errorf("DurationUtility.SetStartEndTimes() ERROR - %v", err.Error())
+	}
+
+	return nil
 }
 
 // SetStartEndTimes - Calculate duration values and save the results in the DurationUtility
@@ -889,6 +894,12 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 	du.TimeDuration = time.Duration(dur.CalcTotalNanoSecs())
 	du.EndDateTime = du.StartDateTime.Add(du.TimeDuration)
 
+	err := du.ValidateDurationBaseData()
+
+	if err != nil {
+		return fmt.Errorf("DurationUtility.SetStartEndTimes() ERROR - %v", err.Error())
+	}
+
 	return nil
 }
 
@@ -926,6 +937,12 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDt
 	du.StartDateTime = sTime
 	du.TimeDuration = time.Duration(ns * -1)
 	du.EndDateTime = startDateTime
+
+	err := du.ValidateDurationBaseData()
+
+	if err != nil {
+		return fmt.Errorf("DurationUtility.SetStartEndTimes() ERROR - %v", err.Error())
+	}
 
 	return nil
 }
