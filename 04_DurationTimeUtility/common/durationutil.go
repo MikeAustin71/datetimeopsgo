@@ -1041,7 +1041,7 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) {
 func (du *DurationUtility) calcWeeksFromDuration(dDto *DurationDto) {
 	rd := int64(dDto.TimeDuration)
 
-	rd -= (dDto.YearsNanosecs + dDto.MonthsNanosecs)
+	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs
 
 	if rd >= WeekNanoSeconds {
 		dDto.Weeks = rd / WeekNanoSeconds
@@ -1055,8 +1055,8 @@ func (du *DurationUtility) calcDaysFromDuration(dDto *DurationDto) {
 
 	rd := int64(dDto.TimeDuration)
 
-	rd -= (dDto.YearsNanosecs + dDto.MonthsNanosecs +
-		dDto.WeeksNanosecs)
+	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
+		dDto.WeeksNanosecs
 
 	if rd >= DayNanoSeconds {
 		dDto.Days = rd / DayNanoSeconds
@@ -1068,8 +1068,8 @@ func (du *DurationUtility) calcHoursMinSecs(dDto *DurationDto) {
 
 	rd := int64(dDto.TimeDuration)
 
-	rd -= (dDto.YearsNanosecs + dDto.MonthsNanosecs +
-		dDto.WeeksNanosecs + dDto.DaysNanosecs)
+	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
+		dDto.WeeksNanosecs + dDto.DaysNanosecs
 
 	if rd >= HourNanoSeconds {
 		dDto.Hours = rd / HourNanoSeconds
@@ -1094,9 +1094,9 @@ func (du *DurationUtility) calcHoursMinSecs(dDto *DurationDto) {
 func (du *DurationUtility) calcMilliSeconds(dDto *DurationDto) {
 	rd := int64(dDto.TimeDuration)
 
-	rd -= (dDto.YearsNanosecs + dDto.MonthsNanosecs +
+	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
 		dDto.WeeksNanosecs + dDto.DaysNanosecs + dDto.HoursNanosecs +
-		dDto.MinutesNanosecs + dDto.SecondsNanosecs)
+		dDto.MinutesNanosecs + dDto.SecondsNanosecs
 
 	if rd >= MilliSecondNanoseconds {
 		dDto.Milliseconds = rd / MilliSecondNanoseconds
@@ -1108,10 +1108,10 @@ func (du *DurationUtility) calcMilliSeconds(dDto *DurationDto) {
 func (du *DurationUtility) calcMicroSeconds(dDto *DurationDto) {
 	rd := int64(dDto.TimeDuration)
 
-	rd -= (dDto.YearsNanosecs + dDto.MonthsNanosecs +
+	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
 		dDto.WeeksNanosecs + dDto.DaysNanosecs + dDto.HoursNanosecs +
 		dDto.MinutesNanosecs + dDto.SecondsNanosecs +
-		dDto.MillisecondsNanosecs)
+		dDto.MillisecondsNanosecs
 
 	if rd >= MicroSecondNanoseconds {
 		dDto.Microseconds = rd / MicroSecondNanoseconds
@@ -1124,10 +1124,10 @@ func (du *DurationUtility) calcNanoseconds(dDto *DurationDto) {
 
 	rd := int64(dDto.TimeDuration)
 
-	rd -= (dDto.YearsNanosecs + dDto.MonthsNanosecs +
+	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
 		dDto.WeeksNanosecs + dDto.DaysNanosecs + dDto.HoursNanosecs +
 		dDto.MinutesNanosecs + dDto.SecondsNanosecs +
-		dDto.MillisecondsNanosecs + dDto.MicrosecondsNanosecs)
+		dDto.MillisecondsNanosecs + dDto.MicrosecondsNanosecs
 
 	dDto.Nanoseconds = rd
 
