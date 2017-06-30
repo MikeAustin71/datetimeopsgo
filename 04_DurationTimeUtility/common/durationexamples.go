@@ -59,7 +59,7 @@ func ExampleSetStartEndTimes() {
 
 	fmt.Println()
 	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetYrMthWkDayHourSecNanosecsDuration()
+	dDto, err = dur.GetYrMthWkDayHrMinSecNanosecs()
 	if err != nil {
 		panic(err)
 	}

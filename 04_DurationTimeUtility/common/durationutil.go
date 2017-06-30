@@ -6,6 +6,41 @@ import (
 	"math"
 	"time"
 )
+/*
+	The principal component of this library is the DurationUtility. This
+	type plus associated methods is used to manage and control time
+	duration calculations.
+
+	Usage requires two operations:
+	1. You must first initialize the DurationUtility type using one of the
+		 four 'Set' methods shown below:
+		 	a. SetStartTimeDuration()
+		 	b. SetStartEndTimes()
+		 	c. SetStartTimePlusTime()
+		 	d. SetSTartTimeMinusTime()
+
+	2. After the DurationUtility is initialized in step one above, you are free
+		 to call any of the following 'Get' methods in order to return
+		 formatted time durations. A call to any of these methods will
+		 return a DurationDto which contains a record of the duration
+		 calculation broken down by years, months, weeks, days, hours,
+		 minutes, seconds, milliseconds, microseconds and nanoseconds.
+		 In addition, the DurationDto contains a field named, 'DisplayStr'
+		 which contains the formatted text version of the duration output.
+
+			a. GetYearsMthDays()
+			b. GetYearsMthsWeeksTime()
+			c. GetWeeksDaysDuration()
+			d. GetDaysDuration()
+			e. GetHoursDuration()
+			f. GetYrMthsWkDayHourSecNanosecDuration()
+			g. GetNanosecondsDuration()
+			h. GetDefaultDuration()
+			i. GetGregorianYearDuration()
+
+
+ */
+
 
 const (
 	// MicroSecondNanoseconds - Number of Nanoseconds in a Microsecond
@@ -272,6 +307,55 @@ type DurationUtility struct {
 	TimeDuration  time.Duration
 }
 
+
+// CopyToThis - Receives and incoming DurationUtility data
+// structure and copies the values to the current DurationUtility
+// data structure.
+func (du *DurationUtility) CopyToThis(duIn DurationUtility) {
+	du.Empty()
+	du.TimeDuration = duIn.TimeDuration
+	du.StartDateTime = duIn.StartDateTime
+	du.EndDateTime = duIn.EndDateTime
+
+	return
+}
+
+// Copy - Returns a deep copy of the current
+// DurationUtility data fields.
+func (du *DurationUtility) Copy() DurationUtility {
+	duOut := DurationUtility{}
+	duOut.TimeDuration = du.TimeDuration
+	duOut.StartDateTime = du.StartDateTime
+	duOut.EndDateTime = du.EndDateTime
+
+	return duOut
+}
+
+// Equal - This method may be used to determine if two
+// DurationUtility data structures are equivalent.
+func (du *DurationUtility) Equal(duIn DurationUtility) bool {
+
+	if du.TimeDuration != duIn.TimeDuration ||
+		du.StartDateTime != duIn.StartDateTime ||
+		du.EndDateTime != duIn.EndDateTime {
+
+		return false
+	}
+
+	return true
+
+}
+
+// Empty - This method initializes
+// all of the fields in this
+// DurationUtility structure to their
+// zero values.
+func (du *DurationUtility) Empty() {
+	du.TimeDuration = time.Duration(0)
+	du.StartDateTime = time.Time{}
+	du.EndDateTime = time.Time{}
+}
+
 // GetYearMthDays - Calculates Duration and breakdowns
 // time elements by Years, Months, days, hours, minutes,
 // seconds, milliseconds, microseconds and nanoseconds.
@@ -528,10 +612,10 @@ func (du *DurationUtility) GetHoursDuration() (DurationDto, error) {
 
 }
 
-// GetYrMthWkDayHourSecNanosecsDuration - Returns duration formatted
+// GetYrMthWkDayHrMinSecNanosecs - Returns duration formatted
 // as Year, Month, Day, Hour, Second and Nanoseconds.
 // Example: 3-Years 2-Months 3-Weeks 2-Days 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
-func (du *DurationUtility) GetYrMthWkDayHourSecNanosecsDuration() (DurationDto, error) {
+func (du *DurationUtility) GetYrMthWkDayHrMinSecNanosecs() (DurationDto, error) {
 	rd := int64(du.TimeDuration)
 
 	dDto := DurationDto{}
@@ -691,53 +775,6 @@ func (du *DurationUtility) GetGregorianYearDuration() (DurationDto, error) {
 
 }
 
-// CopyToThis - Receives and incoming DurationUtility data
-// structure and copies the values to the current DurationUtility
-// data structure.
-func (du *DurationUtility) CopyToThis(duIn DurationUtility) {
-	du.Empty()
-	du.TimeDuration = duIn.TimeDuration
-	du.StartDateTime = duIn.StartDateTime
-	du.EndDateTime = duIn.EndDateTime
-
-	return
-}
-
-// Copy - Returns a deep copy of the current
-// DurationUtility data fields.
-func (du *DurationUtility) Copy() DurationUtility {
-	duOut := DurationUtility{}
-	duOut.TimeDuration = du.TimeDuration
-	duOut.StartDateTime = du.StartDateTime
-	duOut.EndDateTime = du.EndDateTime
-
-	return duOut
-}
-
-// Equal - This method may be used to determine if two
-// DurationUtility data structures are equivalent.
-func (du *DurationUtility) Equal(duIn DurationUtility) bool {
-
-	if du.TimeDuration != duIn.TimeDuration ||
-		du.StartDateTime != duIn.StartDateTime ||
-		du.EndDateTime != duIn.EndDateTime {
-
-		return false
-	}
-
-	return true
-
-}
-
-// Empty - This method initializes
-// all of the fields in this
-// DurationUtility structure to their
-// zero values.
-func (du *DurationUtility) Empty() {
-	du.TimeDuration = time.Duration(0)
-	du.StartDateTime = time.Time{}
-	du.EndDateTime = time.Time{}
-}
 
 // GetDurationFromStartEndTimes - Computes the duration
 // by subtracting Starting Date Time from the Ending Date
