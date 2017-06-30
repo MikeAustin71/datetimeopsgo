@@ -175,3 +175,26 @@ func TestReclassifyTimeAsMountain(t *testing.T) {
 	}
 
 }
+
+func TestTimeZoneUtility_MakeDateTz(t *testing.T) {
+	tPacific := "2017-04-29 17:54:30 -0700 PDT"
+	fmtstr := "2006-01-02 15:04:05 -0700 MST"
+
+	dtTzDto := DateTzDto{Year:2017, Month:4, Day: 29, Hour:17, Minute:54, Second:30, IANATimeZone:"America/Los_Angeles"}
+
+	tzu := TimeZoneUtility{}
+
+	tOut, err := tzu.MakeDateTz(dtTzDto)
+
+
+	if err != nil {
+		t.Errorf("Error returned from TimeZoneUtility.MakeDateTz(). Error: %v", err.Error())
+	}
+
+	tOutStr := tOut.Format(fmtstr)
+
+	if tPacific != tOutStr {
+		t.Errorf("Error - Expected output time string: %v. Instead, got %v.",tPacific, tOutStr)
+	}
+
+}
