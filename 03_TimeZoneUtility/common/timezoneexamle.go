@@ -275,30 +275,28 @@ func Tex011() {
 
 	tCDT, _ := time.Parse(fmtstr, tstr)
 
-	err := tz.ConvertTz(tCDT, TzUsEast)
+	tzuOut, err := tz.ConvertTz(tCDT, TzUsEast)
 
 	if err != nil {
 		fmt.Println("TimeZoneUtility:ConverTz(tCDT,TzUsEast) returned Error: " + err.Error())
 		return
 	}
 
-	tzEast := TimeZoneUtility{}
 
-	tzEast.CopyToThis(tz)
-	tzEast.Description = "CDT to Eastern Time Zone Conversion"
-	printOutTimeZoneFields(tzEast)
+	tzuEast := TimeZoneUtility{}
+	tzuEast.CopyToThis(tzuOut)
+	tzuEast.Description = "CDT to Eastern Time Zone Conversion"
+	printOutTimeZoneFields(tzuEast)
 
-	tz.Empty()
-
-	err = tz.ConvertTz(tzEast.TimeOut, "Local")
+	tzuLocal, err := tz.ConvertTz(tzuEast.TimeOut, "Local")
 
 	if err != nil {
-		fmt.Println("TimeZoneUtility:ConverTz(tzEast.TimeOut,'Local') returned Error: " + err.Error())
+		fmt.Println("TimeZoneUtility:ConverTz(tzuEast.TimeOut,'Local') returned Error: " + err.Error())
 		return
 	}
 
-	tz.Description = "Eastern to Local Conversion using 'Local' tz"
-	printOutTimeZoneFields(tz)
+	tzuLocal.Description = "Eastern to Local Conversion using 'Local' tz"
+	printOutTimeZoneFields(tzuLocal)
 
 }
 

@@ -9,7 +9,8 @@ import (
 // NOTE: See https://golang.org/pkg/time/#LoadLocation
 // and https://www.iana.org/time-zones to ensure that
 // the IANA Time Zone Database is properly configured
-// on your system.
+// on your system. Note: IANA Time Zone Data base is
+// equivalent to 'tz database'.
 const (
 	// TzUsEast - USA Eastern Time Zone
 	// IANA database identifier
@@ -72,33 +73,32 @@ type TimeZoneUtility struct {
 // Output Values are returned in the tzu (TimeZoneUtility)
 // data fields. tzu.TimeOut contains the correct time in the 'target' time
 // zone.
-func (tzu *TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) error {
+func (tzu TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) (TimeZoneUtility, error) {
 
-	isValidTz, _, _ := tzu.IsValidTimeZone(targetTz)
+	tzuOut := TimeZoneUtility{}
 
-	if !isValidTz {
-		return errors.New(fmt.Sprintf("TimeZoneUtility:ConvertTz() Error: targetTz is INVALID!! Input Time Zone == %v", targetTz))
+	if isValidTz, _, _ := tzu.IsValidTimeZone(targetTz); !isValidTz {
+		return tzuOut, errors.New(fmt.Sprintf("TimeZoneUtility:ConvertTz() Error: targetTz is INVALID!! Input Time Zone == %v", targetTz))
 	}
 
 	if tIn.IsZero() {
-		return errors.New("TimeZoneUtility:ConvertTz() Error: Input parameter time, 'tIn' is zero and INVALID")
+		return tzuOut, errors.New("TimeZoneUtility:ConvertTz() Error: Input parameter time, 'tIn' is zero and INVALID")
 	}
 
 	tzOut, err := time.LoadLocation(targetTz)
 
 	if err != nil {
-		return fmt.Errorf("TimeZoneUtility:ConvertTz() - Error Loading Target IANA Time Zone 'targetTz', %v. Errors: %v ", targetTz, err.Error())
+		return tzuOut, fmt.Errorf("TimeZoneUtility:ConvertTz() - Error Loading Target IANA Time Zone 'targetTz', %v. Errors: %v ", targetTz, err.Error())
 	}
 
-	tzu.Empty()
 
-	tzu.SetTimeIn(tIn)
+	tzuOut.SetTimeIn(tIn)
 
-	tzu.SetTimeOut(tIn.In(tzOut))
+	tzuOut.SetTimeOut(tIn.In(tzOut))
 
-	tzu.SetUTCTime(tIn)
+	tzuOut.SetUTCTime(tIn)
 
-	return nil
+	return tzuOut, nil
 }
 
 
