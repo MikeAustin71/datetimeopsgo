@@ -64,10 +64,12 @@ func main() {
 	// tDateTime := "06/1/2017 11:42 PM-0700 PDT"
 	//tDateTime:= "June 3rd, 2017 11:42:00PM -0700 PDT"
 	//tDateTime:= "2017-6-12 11:26 p.m. Z"
-	tDateTime := "November 12, 11:26pm -0600 CST 2016"
+	//tDateTime := "November 12, 11:26pm -0600 CST 2016"
 	//tDateTime := "Saturday 11/12/2016 4:26 PM"
 
-	common.TestParseDateTimeCreateFormatsInMemory(tDateTime, "")
+	common.TestParseSampleDateTimes()
+	//common.TestParseDateTimeCreateFormatsInMemory(tDateTime, "")
+	// common.TestParseDateTimeCreateFormatsInMemory(tDateTime, "")
 	// common.HammerSampleDateTimes()
 
 	// 11/12/16 4:04:0.012 PM

@@ -20,9 +20,9 @@ func WriteAllFormatsToFile() {
 	dtf.CreateAllFormatsInMemory()
 
 	endTimeGetFormats := time.Now()
-
-	etFmtOpts, _ := du.GetElapsedTime(startTime, endTimeGetFormats)
-	fmt.Println("Elapsed Time For Format Map Creation: ", etFmtOpts.DurationStr)
+	du.SetStartEndTimes(startTime, endTimeGetFormats)
+	etFmtOpts, _ := du.GetYearMthDays()
+	fmt.Println("Elapsed Time For Format Map Creation: ", etFmtOpts.DisplayStr)
 	fmt.Println()
 
 	lFmts := len(dtf.FormatMap)
@@ -41,16 +41,20 @@ func WriteAllFormatsToFile() {
 
 	endTime := time.Now()
 
-	etFileWrite, _ := du.GetElapsedTime(endTimeGetFormats, endTime)
+	du.SetStartEndTimes(endTimeGetFormats, endTime)
+	etFileWrite, _ := du.GetYearMthDays()
 
-	et, _ := du.GetElapsedTime(startTime, endTime)
+	d2 := DurationUtility{}
+
+	d2.SetStartEndTimes(startTime, endTime)
+	et, _ := d2.GetYearMthDays()
 	nu := NumStrUtility{}
 	fmt.Println("Formats File Write Operation Completed to file: ", outputFile)
 	fmt.Println("Number Date Time formats Generated: ", nu.DLimInt(writeDto.NumberOfFormatsGenerated, ','))
 	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(writeDto.NumberOfFormatMapKeysGenerated, ','))
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-	fmt.Println("Elapsed Run Time For Write File Operations: ", etFileWrite.DurationStr)
-	fmt.Println("Elapsed Run Time For All Operations: ", et.DurationStr)
+	fmt.Println("Elapsed Run Time For Write File Operations: ", etFileWrite.DisplayStr)
+	fmt.Println("Elapsed Run Time For All Operations: ", et.DisplayStr)
 
 }
 
@@ -68,12 +72,13 @@ func WriteFormatStatsToFile() {
 
 	endTimeCreateFormats := time.Now()
 	du := DurationUtility{}
-	etFmtOpts, _ := du.GetElapsedTime(startTime, endTimeCreateFormats)
+	du.SetStartEndTimes(startTime, endTimeCreateFormats)
+	etFmtOpts, _ := du.GetYearMthDays()
 	nu := NumStrUtility{}
 
 	fmt.Println("                 Format Map Creation Stats                          ")
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-	fmt.Println("Elapsed Time For Format Map Creation: ", etFmtOpts.DurationStr)
+	fmt.Println("Elapsed Time For Format Map Creation: ", etFmtOpts.DisplayStr)
 	fmt.Println("Number of Formats Created: ", nu.DLimInt(dtf.NumOfFormatsGenerated, ','))
 	fmt.Println("Number of Format Map Keys Created: ", nu.DLimInt(len(dtf.FormatMap), ','))
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -101,17 +106,17 @@ func WriteFormatStatsToFile() {
 func HammerSampleDateTimes() {
 	startTime := time.Now()
 
-	du := DurationUtility{}
-
 	dtf := DateTimeFormatUtility{}
 
 	dtf.CreateAllFormatsInMemory()
 
 	endTimeGetFormats := time.Now()
+	du := DurationUtility{}
 
-	etFmtOpts, _ := du.GetElapsedTime(startTime, endTimeGetFormats)
+	du.SetStartEndTimes(startTime, endTimeGetFormats)
+	etFmtOpts, _ := du.GetYearMthDays()
 	fmt.Println("********************************************************")
-	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DurationStr)
+	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DisplayStr)
 
 	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
 	fmt.Println("     Number of Formats Generated: ", lFmts)
@@ -134,11 +139,11 @@ func HammerSampleDateTimes() {
 	}
 
 	hammerEndTime := time.Now()
-
-	etParseOpts, _ := du.GetElapsedTime(hammerStartTime, hammerEndTime)
+	du.SetStartEndTimes(hammerStartTime, hammerEndTime)
+	etParseOpts, _ := du.GetYearMthDays()
 
 	fmt.Println("********************************************************")
-	fmt.Println("Elapsed Time For Parse Tests: ", etParseOpts.DurationStr)
+	fmt.Println("Elapsed Time For Parse Tests: ", etParseOpts.DisplayStr)
 	fmt.Println("Number of cycles: ", hammerCycles)
 	fmt.Println("Number of Tests per cycle: ", hammerTestsPerCycle)
 	fmt.Println("Total Tests: ", totalTests)
@@ -157,9 +162,10 @@ func TestParseSampleDateTimes() {
 
 	endTimeGetFormats := time.Now()
 
-	etFmtOpts, _ := du.GetElapsedTime(startTime, endTimeGetFormats)
+	du.SetStartEndTimes(startTime, endTimeGetFormats)
+	etFmtOpts, _ := du.GetYearMthDays()
 	fmt.Println("********************************************************")
-	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DurationStr)
+	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DisplayStr)
 
 	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
 	fmt.Println("     Number of Formats Generated: ", lFmts)
@@ -179,16 +185,16 @@ func TestParseSampleDateTimes() {
 // are loaded in memory in field DurationUtility.FormatMap.
 func TestParseDateTime(dtf DateTimeFormatUtility, dateTimeStr string, probableDateTimeFormat string) {
 
-	du := DurationUtility{}
-
 	startTimeParse := time.Now()
 
 	_, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
 
 	endTimeParse := time.Now()
 	fmt.Println()
-	etFmtOpts, _ := du.GetElapsedTime(startTimeParse, endTimeParse)
-	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DurationStr)
+	du := DurationUtility{}
+	du.SetStartEndTimes(startTimeParse, endTimeParse)
+	etFmtOpts, _ := du.GetYearMthDays()
+	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DisplayStr)
 
 	if err != nil {
 		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
@@ -217,8 +223,9 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 
 	endTimeGetFormats := time.Now()
 
-	etFmtOpts, _ := du.GetElapsedTime(startTime, endTimeGetFormats)
-	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DurationStr)
+	du.SetStartEndTimes(startTime, endTimeGetFormats)
+	etFmtOpts, _ := du.GetYearMthDays()
+	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DisplayStr)
 
 	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
 	fmt.Println("Number of Formats Generated: ", lFmts)
@@ -230,12 +237,14 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 
 	endTimeParse := time.Now()
 	fmt.Println()
-	etFmtOpts, _ = du.GetElapsedTime(startTimeParse, endTimeParse)
-	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DurationStr)
+	du.SetStartEndTimes(startTimeParse, endTimeParse)
+	etFmtOpts, _ = du.GetYearMthDays()
+	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DisplayStr)
 	fmt.Println("Actual Duration Value: ", etFmtOpts.TimeDuration)
 
-	etFmtOpts, _ = du.GetElapsedTime(startTime, endTimeParse)
-	fmt.Println("Total Elapsed Time For All Operations: ", etFmtOpts.DurationStr)
+	du.SetStartEndTimes(startTime, endTimeParse)
+	etFmtOpts, _ = du.GetYearMthDays()
+	fmt.Println("Total Elapsed Time For All Operations: ", etFmtOpts.DisplayStr)
 	fmt.Println()
 
 	if err != nil {
@@ -275,13 +284,15 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 
 	endTimeParse := time.Now()
 	fmt.Println()
-	etFmtOpts, _ := du.GetElapsedTime(startTimeParse, endTimeParse)
+	du.SetStartEndTimes(startTimeParse, endTimeParse)
+	etFmtOpts, _ := du.GetYearMthDays()
 
-	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DurationStr)
+	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DisplayStr)
 	fmt.Println("Actual Duration Value: ", etFmtOpts.TimeDuration)
 
-	etFmtOpts, _ = du.GetElapsedTime(startTime, endTimeParse)
-	fmt.Println("Total Elapsed Time For All Operations: ", etFmtOpts.DurationStr)
+	du.SetStartEndTimes(startTime, endTimeParse)
+	etFmtOpts, _ = du.GetYearMthDays()
+	fmt.Println("Total Elapsed Time For All Operations: ", etFmtOpts.DisplayStr)
 	fmt.Println()
 
 	if err != nil {
