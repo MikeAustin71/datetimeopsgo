@@ -259,7 +259,7 @@ func ExampleCalcDurationElements() {
 
 	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
 	du.CalcYearsMthsDaysDuration()
-	du.GetYearMthDays()
+	du.GetYearMthDaysTime()
 	expected := "4-Years 0-months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	fmt.Println("   du.DurationStr: ", du.DurationStr)
@@ -288,7 +288,7 @@ func ExampleCalcMthDurationElements() {
 
 	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
 	du.CalcYearsMthsDaysDuration()
-	du.GetYearMthDays()
+	du.GetYearMthDaysTime()
 	expected := "4-Years 3-months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	fmt.Println("   du.DurationStr: ", du.DurationStr)

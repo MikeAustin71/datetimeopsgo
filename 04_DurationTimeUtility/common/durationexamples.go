@@ -18,7 +18,7 @@ func ExampleSetStartEndTimes() {
 
 	dur.SetStartEndTimes(t1, t2)
 
-	dDto, err := dur.GetYearMthDays()
+	dDto, err := dur.GetYearMthDaysTime()
 
 	if err != nil {
 		panic(err)
@@ -41,7 +41,7 @@ func ExampleSetStartEndTimes() {
 	fmt.Println()
 
 	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetDaysDuration()
+	dDto, err = dur.GetDaysTime()
 	if err != nil {
 		panic(err)
 	}
@@ -50,7 +50,7 @@ func ExampleSetStartEndTimes() {
 
 	fmt.Println()
 	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetHoursDuration()
+	dDto, err = dur.GetHoursTime()
 	if err != nil {
 		panic(err)
 	}
@@ -70,7 +70,7 @@ func ExampleSetStartEndTimes() {
 	fmt.Println()
 
 	expected = "167-Weeks 1-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetWeeksDaysDuration()
+	dDto, err = dur.GetWeeksDaysTime()
 
 	if err != nil {
 		panic(err)

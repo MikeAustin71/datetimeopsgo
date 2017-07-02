@@ -6,6 +6,7 @@ import (
 	"math"
 	"time"
 )
+
 /*
 	The principal component of this library is the DurationUtility. This
 	type plus associated methods is used to manage and control time
@@ -30,17 +31,16 @@ import (
 
 			a. GetYearsMthDays()
 			b. GetYearsMthsWeeksTime()
-			c. GetWeeksDaysDuration()
-			d. GetDaysDuration()
-			e. GetHoursDuration()
+			c. GetWeeksDaysTime()
+			d. GetDaysTime()
+			e. GetHoursTime()
 			f. GetYrMthsWkDayHourSecNanosecDuration()
 			g. GetNanosecondsDuration()
 			h. GetDefaultDuration()
 			i. GetGregorianYearDuration()
 
 
- */
-
+*/
 
 const (
 	// MicroSecondNanoseconds - Number of Nanoseconds in a Microsecond
@@ -307,7 +307,6 @@ type DurationUtility struct {
 	TimeDuration  time.Duration
 }
 
-
 // CopyToThis - Receives and incoming DurationUtility data
 // structure and copies the values to the current DurationUtility
 // data structure.
@@ -356,12 +355,82 @@ func (du *DurationUtility) Empty() {
 	du.EndDateTime = time.Time{}
 }
 
-// GetYearMthDays - Calculates Duration and breakdowns
+// GetYearMthDaysTimeAbbrv - Abbreviated formatting of Years, Months,
+// Days, Hours, Minutes, Seconds, Milliseconds, Microseconds and
+// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+// Abbreviated Years Mths Days Time Duration - Example Return:
+// 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (du *DurationUtility) GetYearMthDaysTimeAbbrv() (DurationDto, error) {
+
+	rd := int64(du.TimeDuration)
+
+	dDto := DurationDto{}
+
+	if rd == 0 {
+		dDto.DisplayStr = "0-Nanoseconds"
+		return dDto, nil
+	}
+
+	du.calcBaseData(&dDto)
+
+	du.calcYearsFromDuration(&dDto)
+
+	du.calcMonthsFromDuration(&dDto)
+
+	du.calcDaysFromDuration(&dDto)
+
+	du.calcHoursMinSecs(&dDto)
+
+	du.calcMilliSeconds(&dDto)
+
+	du.calcMicroSeconds(&dDto)
+
+	du.calcNanoseconds(&dDto)
+
+	yearsElement := ""
+
+	monthsElement := ""
+
+	daysElement := ""
+
+	if dDto.Years > 0 {
+		yearsElement = fmt.Sprintf("%v-Years ", dDto.Years)
+	}
+
+	if dDto.Months > 0 {
+		monthsElement = fmt.Sprintf("%v-Months ", dDto.Months)
+	}
+
+	if dDto.Days > 0 {
+		daysElement = fmt.Sprintf("%v-Days ", dDto.Days)
+	}
+
+	str := fmt.Sprintf("%v-Hours ", dDto.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", dDto.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", dDto.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", dDto.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", dDto.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", dDto.Nanoseconds)
+
+	dDto.DisplayStr = yearsElement + monthsElement + daysElement + str
+
+	return dDto, nil
+
+}
+
+// GetYearMthDaysTime - Calculates Duration and breakdowns
 // time elements by Years, Months, days, hours, minutes,
 // seconds, milliseconds, microseconds and nanoseconds.
 // Example DisplayStr:
-// YearsMthsDays Duration - Example: 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (du *DurationUtility) GetYearMthDays() (DurationDto, error) {
+// Years Mths Days Time Duration - Example Return:
+// 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (du *DurationUtility) GetYearMthDaysTime() (DurationDto, error) {
 
 	rd := int64(du.TimeDuration)
 
@@ -409,6 +478,86 @@ func (du *DurationUtility) GetYearMthDays() (DurationDto, error) {
 	dDto.DisplayStr = str
 
 	return dDto, nil
+}
+
+// GetYearsMthsWeeksTimeAbbrv - Abbreviated formatting of Years, Months,
+// Weeks, Days, Hours, Minutes, Seconds, Milliseconds, Microseconds,
+// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds, Nanoseconds are displayed. Example return when Years,
+// Months, Weeks and Days are zero:
+// 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (du *DurationUtility) GetYearsMthsWeeksTimeAbbrv() (DurationDto, error) {
+	rd := int64(du.TimeDuration)
+
+	dDto := DurationDto{}
+
+	if rd == 0 {
+		dDto.DisplayStr = "0-Nanoseconds"
+		return dDto, nil
+	}
+
+	du.calcBaseData(&dDto)
+
+	du.calcYearsFromDuration(&dDto)
+
+	du.calcMonthsFromDuration(&dDto)
+
+	du.calcWeeksFromDuration(&dDto)
+
+	du.calcDaysFromDuration(&dDto)
+
+	du.calcHoursMinSecs(&dDto)
+
+	du.calcMilliSeconds(&dDto)
+
+	du.calcMicroSeconds(&dDto)
+
+	du.calcNanoseconds(&dDto)
+
+	yearsElement := ""
+
+	monthsElement := ""
+
+	weeksElement := ""
+
+	daysElement := ""
+
+	if dDto.Years > 0 {
+		yearsElement = fmt.Sprintf("%v-Years ", dDto.Years)
+	}
+
+	if dDto.Months > 0 {
+		monthsElement = fmt.Sprintf("%v-Months ", dDto.Months)
+	}
+
+	if dDto.Weeks > 0 {
+		weeksElement = fmt.Sprintf("%v-Weeks ", dDto.Weeks)
+	}
+
+	if dDto.Days > 0 {
+		daysElement = fmt.Sprintf("%v-Days ", dDto.Days)
+	}
+
+	hoursElement := fmt.Sprintf("%v-Hours ", dDto.Hours)
+
+	minutesElement := fmt.Sprintf("%v-Minutes ", dDto.Minutes)
+
+	secondsElement := fmt.Sprintf("%v-Seconds ", dDto.Seconds)
+
+	millisecondsElement := fmt.Sprintf("%v-Milliseconds ", dDto.Milliseconds)
+
+	microsecondsElement := fmt.Sprintf("%v-Microseconds ", dDto.Microseconds)
+
+	nanosecondsElement := fmt.Sprintf("%v-Nanoseconds", dDto.Nanoseconds)
+
+	dDto.DisplayStr = yearsElement + monthsElement +
+		weeksElement + daysElement +
+		hoursElement + minutesElement + secondsElement +
+		millisecondsElement + microsecondsElement +
+		nanosecondsElement
+
+	return dDto, nil
+
 }
 
 // GetYearsMthsWeeksTime - Example Return:
@@ -472,9 +621,9 @@ func (du *DurationUtility) GetYearsMthsWeeksTime() (DurationDto, error) {
 
 }
 
-// GetWeeksDaysDuration - Example DisplayStr
+// GetWeeksDaysTime - Example DisplayStr
 // 126-Weeks 1-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (du *DurationUtility) GetWeeksDaysDuration() (DurationDto, error) {
+func (du *DurationUtility) GetWeeksDaysTime() (DurationDto, error) {
 	rd := int64(du.TimeDuration)
 
 	dDto := DurationDto{}
@@ -522,11 +671,11 @@ func (du *DurationUtility) GetWeeksDaysDuration() (DurationDto, error) {
 
 }
 
-// GetDaysDuration - Returns duration formatted as
+// GetDaysTime - Returns duration formatted as
 // days, hours, minutes, seconds, milliseconds, microseconds,
 // and nanoseconds.
 // Example: 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (du *DurationUtility) GetDaysDuration() (DurationDto, error) {
+func (du *DurationUtility) GetDaysTime() (DurationDto, error) {
 	rd := int64(du.TimeDuration)
 
 	dDto := DurationDto{}
@@ -569,10 +718,10 @@ func (du *DurationUtility) GetDaysDuration() (DurationDto, error) {
 	return dDto, nil
 }
 
-// GetHoursDuration - Returns duration formatted as hours,
+// GetHoursTime - Returns duration formatted as hours,
 // minutes, seconds, milliseconds, microseconds, nanoseconds.
 // Example: 152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (du *DurationUtility) GetHoursDuration() (DurationDto, error) {
+func (du *DurationUtility) GetHoursTime() (DurationDto, error) {
 	rd := int64(du.TimeDuration)
 
 	dDto := DurationDto{}
@@ -774,7 +923,6 @@ func (du *DurationUtility) GetGregorianYearDuration() (DurationDto, error) {
 	return dDto, nil
 
 }
-
 
 // GetDurationFromStartEndTimes - Computes the duration
 // by subtracting Starting Date Time from the Ending Date

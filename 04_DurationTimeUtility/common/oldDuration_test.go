@@ -489,7 +489,7 @@ func TestDurationUtility_CalculateDurationElements_Years(t *testing.T) {
 
 	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
 	du.CalcYearsMthsDaysDuration()
-	du.GetYearMthDays()
+	du.GetYearMthDaysTime()
 	expected := "4-Years 0-months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if du.DurationStr != expected {
@@ -510,7 +510,7 @@ func TestDurationUtility_CalculateDurationElements_Months(t *testing.T) {
 
 	du := DurationUtility{StartDateTime: t1, TimeDuration: td}
 	du.CalcYearsMthsDaysDuration()
-	du.GetYearMthDays()
+	du.GetYearMthDaysTime()
 	expected := "4-Years 3-months 2-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if du.DurationStr != expected {
