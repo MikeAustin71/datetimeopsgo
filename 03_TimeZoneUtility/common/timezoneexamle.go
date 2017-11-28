@@ -312,3 +312,23 @@ func printOutTimeZoneFields(tz TimeZoneUtility) {
 	fmt.Println("Time UTC :", tz.TimeUTC)
 
 }
+
+func ExampleDurationLocalUTCTime() {
+	t1UTCStr := "2017-07-02 22:00:18.423111300 +0000 UTC"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	t2LocalStr := "2017-07-02 17:00:18.423111300 -0500 CDT"
+	localTzStr := "America/Chicago"
+
+	t1, _ := time.Parse(fmtstr, t1UTCStr)
+
+	tz := TimeZoneUtility{}
+
+	tzLocal, _ := tz.ConvertTz(t1, localTzStr)
+	t1OutStr := t1.Format(fmtstr)
+	t2OutStr := tzLocal.TimeOut.Format(fmtstr)
+
+	fmt.Println("  t1UTCStr: ", t1UTCStr)
+	fmt.Println("  t1OutStr: ", t1OutStr)
+	fmt.Println("  t2OutStr: ", t2OutStr)
+	fmt.Println("t2LocalStr: ", t2LocalStr)
+}
