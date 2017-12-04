@@ -2,6 +2,7 @@ package main
 
 import (
 	"MikeAustin71/datetimeopsgo/TimeZoneUtility/common"
+
 )
 
 /*
@@ -14,5 +15,9 @@ import (
 */
 
 func main() {
+
 	common.ExampleDurationLocalUTCTime()
+
+
+
 }
