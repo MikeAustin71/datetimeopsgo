@@ -31,6 +31,10 @@ const (
 	// prefixed by day of the week
 	FmtDateTimeTzNanoDowYMD = "Monday 2006-01-02 15:04:05.000000000 -0700 MST"
 
+	// FmtDateTimeTzNanoDowYMD - Output date time to nano seconds with Year-Month-Date
+	// prefixed by day of the week
+	FmtDateTimeTzNanoYMDDow = "2006-01-02 Monday 15:04:05.000000000 -0700 MST"
+
 	// FmtDateTimeTzSec - Outputs date time to seconds with associated time zone
 	FmtDateTimeTzSec = "01/02/2006 15:04:05 -0700 MST"
 
@@ -110,6 +114,15 @@ func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDText(t time.Time) string {
 // EXAMPLE: Monday 2006-01-02 15:04:05.000000000 -0700 MST
 func (dt DateTimeUtility) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNanoDowYMD)
+}
+
+// GetDateTimeTzNanoSecYMDDowText - Outputs date time in string format using
+// the FmtDateTimeTzNanoYMDDow format which incorporates date time to nano seconds
+// and the associated time zone. In this format, the date is expressed as
+// Year-Month-Day (Example: 2017-12-06) followed by the day of the week.
+// EXAMPLE: 2006-01-02 Monday 15:04:05.000000000 -0700 MST
+func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDDowText(t time.Time) string {
+	return t.Format(FmtDateTimeTzNanoYMDDow)
 }
 
 // GetDateTimeEverything - Receives a time value and formats as
