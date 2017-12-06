@@ -21,8 +21,12 @@ const (
 	// FmtDateTimeSecText - Custom Date Time Format
 	FmtDateTimeSecText = "2006-01-02 15:04:05"
 
+	// FmtDateTimeTzNano - Outputs date time to nano seconds with associated time zone
 	FmtDateTimeTzNano = "01/02/2006 15:04:05.000000000 -0700 MST"
 
+	FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	// FmtDateTimeTzSec - Outputs date time to seconds with associated time zone
 	FmtDateTimeTzSec = "01/02/2006 15:04:05 -0700 MST"
 
 	// FmtDateTimeEverything - Custom Date Time Format showing virtually
@@ -75,6 +79,21 @@ func (dt DateTimeUtility) GetDateTimeSecText(t time.Time) string {
 func (dt DateTimeUtility) GetDateTimeNanoSecText(t time.Time) string {
 	// Time Format down to the nanosecond
 	return t.Format(FmtDateTimeNanoSecondStr)
+}
+
+// GetDateTimeTzNanoSecText - Outputs date time in string format using
+// the FmtDateTimeTzNano format which incorporates date time to nano seconds
+// and the associated time zone.
+func (dt DateTimeUtility) GetDateTimeTzNanoSecText(t time.Time) string {
+	return t.Format(FmtDateTimeTzNano)
+}
+
+// GetDateTimeTzNanoSecYMDText - Outputs date time in string format using
+// the FmtDateTimeTzNanoYMD format which incorporates date time to nano seconds
+// and the associated time zone. In this format, the date is expressed as
+// Year-Month-Day (Example: 2017-12-06)
+func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDText(t time.Time) string {
+	return t.Format(FmtDateTimeTzNanoYMD)
 }
 
 // GetDateTimeEverything - Receives a time value and formats as
