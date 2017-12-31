@@ -33,7 +33,7 @@ const (
 	// prefixed by day of the week
 	FmtDateTimeTzNanoDowYMD = "Monday 2006-01-02 15:04:05.000000000 -0700 MST"
 
-	// FmtDateTimeTzNanoDowYMD - Output date time to nano seconds with Year-Month-Date
+	// FmtDateTimeTzNanoYMDDow - Output date time to nano seconds with Year-Month-Date
 	// prefixed by day of the week
 	FmtDateTimeTzNanoYMDDow = "2006-01-02 Monday 15:04:05.000000000 -0700 MST"
 
