@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+
 // WriteAllFormatsToFile - This method will write all generated
 // formats to a text file in this directory structure. Be advised,
 // currently, over 6-million formats are generated. The size of

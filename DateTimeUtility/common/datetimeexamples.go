@@ -5,6 +5,16 @@ import (
 	"time"
 )
 
+func ExampleTimeStampEverything(){
+	du := DateTimeUtility{}
+
+	fmt.Println("------------------------")
+	fmt.Println("  Testing Time Stamps")
+	fmt.Println("------------------------")
+	fmt.Println("   Time Stamp Everything Fmt: ", du.GetTimeStampEverything())
+	fmt.Println("Time Stamp AbbrvNano Sec Fmt: ", du.GetTimeStampYMDAbbrvDowNano())
+}
+
 // GetCurrentTimeAsInts - Breaks down time
 // to constituent elements as integers.
 func GetCurrentTimeAsInts() {
