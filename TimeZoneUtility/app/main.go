@@ -16,7 +16,7 @@ import (
 
 func main() {
 
-	common.ExampleDurationLocalUTCTime()
+	common.Tex021()
 
 
 

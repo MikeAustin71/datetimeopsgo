@@ -100,7 +100,89 @@ func TestInvalidTargetTzInConversion(t *testing.T) {
 
 }
 
-func TestTimeZoneUtility_IsValidTimeZone(t *testing.T) {
+func TestTimeZoneUtility_GetLocationIn01(t *testing.T) {
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu, _:= TimeZoneUtility{}.New(tIn, ianaPacificTz)
+
+	expectedLocation:="Local"
+
+	actualLocation, err := tzu.GetLocationIn()
+
+	if err != nil {
+		t.Errorf("Error returned from tzu.GetLocationIn(). Error='%v'", err.Error())
+	}
+
+	if expectedLocation != actualLocation {
+		t.Errorf("Expected Location='%v'. Instead, actual location='%v'",expectedLocation, actualLocation)
+	}
+
+}
+
+func TestTimeZoneUtility_GetLocationOut_01(t *testing.T) {
+
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu, _:= TimeZoneUtility{}.New(tIn, ianaPacificTz)
+
+	expectedLocation:="America/Los_Angeles"
+
+	actualLocation, err := tzu.GetLocationOut()
+
+	if err != nil {
+		t.Errorf("Error returned from tzu.GetLocationOut(). Error='%v'", err.Error())
+	}
+
+	if expectedLocation != actualLocation {
+		t.Errorf("Expected Location Out='%v'. Instead, actual location out='%v'",expectedLocation, actualLocation)
+	}
+}
+
+func TestTimeZoneUtility_GetZoneIn_01(t *testing.T) {
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu, _:= TimeZoneUtility{}.New(tIn, ianaPacificTz)
+
+	expectedZone := "CDT"
+	actualZone, err := tzu.GetZoneIn()
+
+	if err != nil {
+		t.Errorf("Error returned from tzu.GetZoneIn(). Error='%v'", err.Error())
+	}
+
+	if expectedZone != actualZone {
+		t.Errorf("Expected Zone In='%v'. Instead, actual Zone In='%v'",expectedZone, actualZone)
+	}
+
+}
+
+func TestTimeZoneUtility_GetZoneOut_01(t *testing.T) {
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu, _:= TimeZoneUtility{}.New(tIn, ianaPacificTz)
+
+	expectedZone := "PDT"
+	actualZone, err := tzu.GetZoneOut()
+
+	if err != nil {
+		t.Errorf("Error returned from tzu.GetZoneOut(). Error='%v'", err.Error())
+	}
+
+	if expectedZone != actualZone {
+		t.Errorf("Expected Zone Out='%v'. Instead, actual Zone Out='%v'",expectedZone, actualZone)
+	}
+
+}
+
+func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 	tIn := time.Now()
 
 	tzu := TimeZoneUtility{}
@@ -121,7 +203,7 @@ func TestTimeZoneUtility_IsValidTimeZone(t *testing.T) {
 
 }
 
-func TestCDTIsValidIanaTimeZone(t *testing.T) {
+func TestTimeZoneUtility_IsValidTimeZone02(t *testing.T) {
 
 	tzu := TimeZoneUtility{}
 
@@ -137,6 +219,26 @@ func TestCDTIsValidIanaTimeZone(t *testing.T) {
 
 	if isValidLocalTz == true {
 		t.Error("Expected 'America/Chicago' to yield isValidLocalTz = 'false', instead got", isValidLocalTz)
+	}
+
+}
+
+func TestTimeZoneUtility_New_01(t *testing.T) {
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	//tz := TimeZoneUtility{}
+	tzu, _:= TimeZoneUtility{}.New(tIn, ianaPacificTz)
+	expectedTimeIn := "2017-04-29 19:54:30 -0500 CDT"
+	if expectedTimeIn != tzu.TimeIn.String() {
+		t.Errorf("Expected Time In='%v'. Instead, Time In='%v'", expectedTimeIn, tzu.TimeIn.String() )
+	}
+
+	expectedTimeOut := "2017-04-29 17:54:30 -0700 PDT"
+
+	if expectedTimeOut != tzu.TimeOut.String() {
+		t.Errorf("Expected Time Out='%v'. Instead, Time Out='%v'", expectedTimeOut, tzu.TimeOut.String())
 	}
 
 }

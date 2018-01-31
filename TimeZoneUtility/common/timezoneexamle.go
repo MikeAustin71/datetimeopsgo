@@ -300,6 +300,40 @@ func Tex011() {
 
 }
 
+func Tex021() {
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	//tz := TimeZoneUtility{}
+	tzu, _:= TimeZoneUtility{}.New(tIn, ianaPacificTz)
+
+	fmt.Println("Original Time String: ", tstr)
+	fmt.Println("          tzu.TimeIn: ", tzu.TimeIn)
+	tinLoc, _ := tzu.GetLocationIn()
+	fmt.Println("  tzu.TimeInLocation: ", tinLoc)
+	tinZone, _ := tzu.GetZoneIn()
+	fmt.Println("      tzu.TimeInZone: ", tinZone)
+	fmt.Println("         tzu.TimeOut: ", tzu.TimeOut)
+	toutLoc, _ := tzu.GetLocationOut()
+	fmt.Println("tzu.TimeOutLocation: ", toutLoc)
+	toutZone, _ := tzu.GetZoneOut()
+	fmt.Println("    tzu.TimeOutZone: ", toutZone)
+	fmt.Println("        tzu.TimeUTC: ", tzu.TimeUTC)
+
+	/*
+		Original Time String:  04/29/2017 19:54:30 -0500 CDT
+							tzu.TimeIn:  2017-04-29 19:54:30 -0500 CDT
+			tzu.TimeInLocation:  Local
+					tzu.TimeInZone:  CDT
+						 tzu.TimeOut:  2017-04-29 17:54:30 -0700 PDT
+		tzu.TimeOutLocation:  America/Los_Angeles
+				tzu.TimeOutZone:  PDT
+						tzu.TimeUTC:  2017-04-30 00:54:30 +0000 UTC
+	*/
+}
+
+
 func printOutTimeZoneFields(tz TimeZoneUtility) {
 
 	fmt.Println()
