@@ -61,6 +61,7 @@ const (
 	// DayNanoSeconds - Number of Nanoseconds in a 24-hour day
 	DayNanoSeconds = int64(24) * HourNanoSeconds
 
+	// WeekNanoSeconds - Number of Nanoseconds in a 7-day week
 	WeekNanoSeconds = int64(7) * DayNanoSeconds
 
 	/*
@@ -73,6 +74,8 @@ const (
 		Source: https://en.wikipedia.org/wiki/Gregorian_calendar
 	*/
 
+	// GregorianYearNanoSeconds - Number of Nano Seconds in a
+	// Gregorian Year
 	GregorianYearNanoSeconds = int64(31556952000000000)
 )
 
@@ -91,6 +94,9 @@ type TimeDto struct {
 	Nanoseconds  int64
 }
 
+// ConvertToAbsoluteValues - Converts time components
+// (Years, months, weeks days, hours, seconds, etc.)
+// to absolute values.
 func (tDto *TimeDto) ConvertToAbsoluteValues() {
 	tDto.Years = int64(math.Abs(float64(tDto.Years)))
 	tDto.Months = int64(math.Abs(float64(tDto.Months)))
@@ -104,6 +110,8 @@ func (tDto *TimeDto) ConvertToAbsoluteValues() {
 	tDto.Nanoseconds = int64(math.Abs(float64(tDto.Nanoseconds)))
 }
 
+// ConvertToNegativeValues - Multiplies time component
+// values by -1
 func (tDto *TimeDto) ConvertToNegativeValues() {
 	tDto.ConvertToAbsoluteValues()
 	tDto.Years = tDto.Years * -1
@@ -118,6 +126,8 @@ func (tDto *TimeDto) ConvertToNegativeValues() {
 	tDto.Nanoseconds = tDto.Nanoseconds * -1
 }
 
+// DurationDto - This type holds duration
+// values as time components.
 type DurationDto struct {
 	StartDateTime        time.Time
 	EndDateTime          time.Time
@@ -145,6 +155,9 @@ type DurationDto struct {
 	DisplayStr           string
 }
 
+// CalcTotalNanoSecs - Adds up all the time elements
+// of the current DurationDto struct and converts
+// the value to nanoseconds.
 func (dDto *DurationDto) CalcTotalNanoSecs() int64 {
 	ns := dDto.YearsNanosecs
 	ns += dDto.MonthsNanosecs
@@ -160,6 +173,8 @@ func (dDto *DurationDto) CalcTotalNanoSecs() int64 {
 	return ns
 }
 
+// InitializeTime - Initializes a DurationDto Structure
+// from input parameter type TimeDto.
 func (dDto *DurationDto) InitializeTime(tDto TimeDto) {
 	dDto.EmptyTimeValues()
 	dDto.Years = tDto.Years
@@ -174,6 +189,9 @@ func (dDto *DurationDto) InitializeTime(tDto TimeDto) {
 	dDto.Nanoseconds = tDto.Nanoseconds
 }
 
+// Copy - Makes a deep copy of the current
+// DurationDto struct and returns it as a new
+// DurationDto instance.
 func (dDto *DurationDto) Copy() DurationDto {
 	d := DurationDto{}
 
@@ -205,6 +223,9 @@ func (dDto *DurationDto) Copy() DurationDto {
 	return d
 }
 
+// Empty() - Resets all the time elements
+// of the current DurationDto struct to their
+// initial or 'zero' values.
 func (dDto *DurationDto) Empty() {
 	dDto.StartDateTime = time.Time{}
 	dDto.EndDateTime = time.Time{}
@@ -232,6 +253,9 @@ func (dDto *DurationDto) Empty() {
 	dDto.DisplayStr = ""
 }
 
+// EmptyTimeValues - Resets only the time values
+// in the current DurationDto struct to their
+// initial or 'zero' values.
 func (dDto *DurationDto) EmptyTimeValues() {
 
 	dDto.Years = 0
@@ -257,6 +281,9 @@ func (dDto *DurationDto) EmptyTimeValues() {
 	dDto.DisplayStr = ""
 }
 
+// EmptyNanosecs - Resets all the Nanosecond
+// values in the current DurationDto struct to
+// zero.
 func (dDto *DurationDto) EmptyNanosecs() {
 	dDto.YearsNanosecs = 0
 	dDto.MonthsNanosecs = 0
@@ -271,6 +298,8 @@ func (dDto *DurationDto) EmptyNanosecs() {
 	dDto.DisplayStr = ""
 }
 
+// Equal - Determines whether the input DurationDto is
+// equal to the current DurationDto structure.
 func (dDto *DurationDto) Equal(dto2 DurationDto) bool {
 
 	if dDto.StartDateTime != dto2.StartDateTime ||
@@ -878,7 +907,7 @@ func (du *DurationUtility) GetDefaultDuration() (DurationDto, error) {
 // Sources:
 // https://en.wikipedia.org/wiki/Year
 // Source: https://en.wikipedia.org/wiki/Gregorian_calendar
-
+//
 func (du *DurationUtility) GetGregorianYearDuration() (DurationDto, error) {
 
 	rd := int64(du.TimeDuration)
@@ -1104,7 +1133,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 //
 // As a result. true values for StartDateTime, EndDateTime and
 // TimeDuration are stored in the DurationUtility data structure.
-
+//
 func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDto TimeDto) error {
 	du.Empty()
 	timeDto.ConvertToNegativeValues()
