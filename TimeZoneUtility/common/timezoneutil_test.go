@@ -428,6 +428,42 @@ func TestTimeZoneUtility_ConvertTz_03(t *testing.T) {
 
 }
 
+func TestTimeZoneUtility_ConvertTz_04(t *testing.T) {
+	pacificTime := "2017-04-29 17:54:30 -0700 PDT"
+	centralTime := "2017-04-29 19:54:30 -0500 CDT"
+	ianaCentralTz := "America/Chicago"
+	fmtstr := "2006-01-02 15:04:05 -0700 MST"
+
+	tPacific, err := time.Parse(fmtstr, pacificTime)
+
+	if err != nil {
+		t.Errorf("Error from time.Parse. pacificTime = %v. Error= %v", pacificTime, err.Error())
+	}
+
+	tzuCentral, err := TimeZoneUtility{}.ConvertTz(tPacific, ianaCentralTz)
+
+	tOutStr := tzuCentral.TimeOut.Format(fmtstr)
+
+	if centralTime != tOutStr {
+		t.Errorf("Error. Central Time zone conversion failed! Expected %v. Instead, got %v.", centralTime, tOutStr)
+	}
+
+	tzLocal, err := time.LoadLocation("Local")
+
+	if err != nil {
+		t.Errorf("Error received from time.LoadLocation(\"Local\") Error='%v'", err.Error())
+	}
+
+	expectedLocalTime :=  tPacific.In(tzLocal).Format(fmtstr)
+
+	actualLocalTime := tzuCentral.TimeLocal.Format(fmtstr)
+	
+	if expectedLocalTime != actualLocalTime {
+		t.Errorf("Error: Expected Local Time='%v'.  Actual Local Time='%v'", expectedLocalTime, actualLocalTime)
+	}
+
+}
+
 func TestTimeZoneUtility_Location_01(t *testing.T) {
 	utcTime := "2017-04-30 00:54:30 +0000 UTC"
 	fmtstr := "2006-01-02 15:04:05 -0700 MST"
