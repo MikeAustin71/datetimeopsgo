@@ -155,6 +155,7 @@ type DurationDto struct {
 	DisplayStr           string
 }
 
+
 // CalcTotalNanoSecs - Adds up all the time elements
 // of the current DurationDto struct and converts
 // the value to nanoseconds.
@@ -1008,6 +1009,95 @@ func (du DurationUtility) GetDurationFromMinutes(minutes int64) time.Duration {
 
 }
 
+// NewStartEndTimes - Returns a New DurationUtility based on two input
+// parameters, startDateTime and endDateTime.
+//
+// Usage:
+//
+// du, err := DurationUtility{}.NewStartEndTimes(startDateTime, endDateTime)
+//
+func (du DurationUtility) NewStartEndTimes(startDateTime time.Time, endDateTime time.Time) (DurationUtility, error) {
+
+	ePrefix := "DurationUtility.NewStartTimeDuration() "
+
+	du2 := DurationUtility{}
+
+	err := du2.SetStartEndTimes(startDateTime, endDateTime)
+
+	if err != nil {
+		return DurationUtility{}, fmt.Errorf(ePrefix + "Error returned from du2.SetStartEndTimes(startDateTime, endDateTime).\nError='%v'", err)
+	}
+
+	return du2, nil
+
+}
+
+// NewStartTimeDuration - Returns a New DurationUtility based on 'startDateTime'
+// and time.Duration input parameters.
+//
+// Usage:
+//
+// du, err := DurationUtility{}.NewStartTimeDuration(startDateTime, timeDto)
+//
+func (du DurationUtility) NewStartTimeDuration(startDateTime time.Time, duration time.Duration) (DurationUtility, error) {
+
+	ePrefix := "DurationUtility.NewStartTimeDuration() "
+
+	du2 := DurationUtility{}
+
+	err := du2.SetStartTimeDuration(startDateTime, duration)
+
+	if err != nil {
+		return DurationUtility{}, fmt.Errorf(ePrefix + "Error returned from du2.SetStartTimeDuration(startDateTime, duration).\nError='%v'", err)
+	}
+
+	return du2, nil
+}
+
+
+// NewStartTimeMinusTime - Returns a new DurationUtility based on two input parameters,
+// 'startDateTime' and 'timeDto'.
+//
+// Usage:
+//
+// du, err := DurationUtility{}.NewStartTimeMinusTime(startDateTime, timeDto)
+//
+func (du DurationUtility) NewStartTimeMinusTime(startDateTime time.Time, timeDto TimeDto) (DurationUtility, error){
+
+ePrefix := "DurationUtility.NewStartTimeMinusTime() "
+
+	du2 := DurationUtility{}
+
+	err := du2.SetStartTimeMinusTime(startDateTime, timeDto)
+
+	if err != nil {
+		return DurationUtility{}, fmt.Errorf(ePrefix + "Error returned from du2.SetStartTimeMinusTime(startDateTime, timeDto).\nError='%v'", err)
+	}
+
+	return du2, nil
+}
+
+// NewStartTimePlusTime - Returns a New DurationUtility based on 'startDateTime'
+// and DurationDto input parameters.
+//
+// Usage:
+// du, err := DurationUtility{}.NewStartTimePlusTime(startDateTime, timeDto)
+//
+func (du DurationUtility) NewStartTimePlusTime(startDateTime time.Time, timeDto TimeDto) (DurationUtility, error) {
+
+	ePrefix := "DurationUtility.NewStartTimePlusTime() "
+
+	du2 := DurationUtility{}
+
+	err := du2.SetStartTimePlusTime(startDateTime, timeDto)
+
+	if err != nil {
+		return DurationUtility{}, fmt.Errorf(ePrefix + "Error returned from du2.SetStartTimePlusTime(startDateTime, timeDto).\nError='%v'", err)
+	}
+
+	return du2, nil
+}
+
 // SetStartTimeDuration - Receives a starting date time and
 // a time duration. The method then calculates the ending
 // date time, duration and populates the DurationUtility
@@ -1133,6 +1223,8 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 //
 // As a result. true values for StartDateTime, EndDateTime and
 // TimeDuration are stored in the DurationUtility data structure.
+// In other words, the input 'startDateTime' becomes the EndDateTime and
+// 'startDateTime' is calculated.
 //
 func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDto TimeDto) error {
 	du.Empty()
