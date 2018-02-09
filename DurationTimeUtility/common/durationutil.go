@@ -133,25 +133,25 @@ type DurationDto struct {
 	EndDateTime          time.Time
 	TimeDuration         time.Duration
 	Years                int64
-	YearsNanosecs        int64
+	yearsNanosecs        int64
 	Months               int64
-	MonthsNanosecs       int64
+	monthsNanosecs       int64
 	Weeks                int64
-	WeeksNanosecs        int64
+	weeksNanosecs        int64
 	Days                 int64
-	DaysNanosecs         int64
+	daysNanosecs         int64
 	Hours                int64
-	HoursNanosecs        int64
+	hoursNanosecs        int64
 	Minutes              int64
-	MinutesNanosecs      int64
+	minutesNanosecs      int64
 	Seconds              int64
-	SecondsNanosecs      int64
+	secondsNanosecs      int64
 	Milliseconds         int64
-	MillisecondsNanosecs int64
+	millisecondsNanosecs int64
 	Microseconds         int64
-	MicrosecondsNanosecs int64
+	microsecondsNanosecs int64
 	Nanoseconds          int64
-	NanosecondsNanosecs  int64
+	nanosecondsNanosecs  int64
 	DisplayStr           string
 }
 
@@ -159,16 +159,16 @@ type DurationDto struct {
 // of the current DurationDto struct and converts
 // the value to nanoseconds.
 func (dDto *DurationDto) CalcTotalNanoSecs() int64 {
-	ns := dDto.YearsNanosecs
-	ns += dDto.MonthsNanosecs
-	ns += dDto.WeeksNanosecs
-	ns += dDto.DaysNanosecs
-	ns += dDto.HoursNanosecs
-	ns += dDto.MinutesNanosecs
-	ns += dDto.SecondsNanosecs
-	ns += dDto.MillisecondsNanosecs
-	ns += dDto.MicrosecondsNanosecs
-	ns += dDto.NanosecondsNanosecs
+	ns := dDto.yearsNanosecs
+	ns += dDto.monthsNanosecs
+	ns += dDto.weeksNanosecs
+	ns += dDto.daysNanosecs
+	ns += dDto.hoursNanosecs
+	ns += dDto.minutesNanosecs
+	ns += dDto.secondsNanosecs
+	ns += dDto.millisecondsNanosecs
+	ns += dDto.microsecondsNanosecs
+	ns += dDto.nanosecondsNanosecs
 
 	return ns
 }
@@ -199,25 +199,25 @@ func (dDto *DurationDto) Copy() DurationDto {
 	d.EndDateTime = dDto.EndDateTime
 	d.TimeDuration = dDto.TimeDuration
 	d.Years = dDto.Years
-	d.YearsNanosecs = dDto.YearsNanosecs
+	d.yearsNanosecs = dDto.yearsNanosecs
 	d.Months = dDto.Months
-	d.MonthsNanosecs = dDto.MonthsNanosecs
+	d.monthsNanosecs = dDto.monthsNanosecs
 	d.Weeks = dDto.Weeks
-	d.WeeksNanosecs = dDto.WeeksNanosecs
+	d.weeksNanosecs = dDto.weeksNanosecs
 	d.Days = dDto.Days
-	d.DaysNanosecs = dDto.DaysNanosecs
+	d.daysNanosecs = dDto.daysNanosecs
 	d.Hours = dDto.Hours
-	d.HoursNanosecs = dDto.HoursNanosecs
+	d.hoursNanosecs = dDto.hoursNanosecs
 	d.Minutes = dDto.Minutes
-	d.MinutesNanosecs = dDto.MinutesNanosecs
+	d.minutesNanosecs = dDto.minutesNanosecs
 	d.Seconds = dDto.Seconds
-	d.SecondsNanosecs = dDto.SecondsNanosecs
+	d.secondsNanosecs = dDto.secondsNanosecs
 	d.Milliseconds = dDto.Milliseconds
-	d.MillisecondsNanosecs = dDto.MillisecondsNanosecs
+	d.millisecondsNanosecs = dDto.millisecondsNanosecs
 	d.Microseconds = dDto.Microseconds
-	d.MicrosecondsNanosecs = dDto.MicrosecondsNanosecs
+	d.microsecondsNanosecs = dDto.microsecondsNanosecs
 	d.Nanoseconds = dDto.Nanoseconds
-	d.NanosecondsNanosecs = dDto.MicrosecondsNanosecs
+	d.nanosecondsNanosecs = dDto.microsecondsNanosecs
 	d.DisplayStr = dDto.DisplayStr
 
 	return d
@@ -231,25 +231,25 @@ func (dDto *DurationDto) Empty() {
 	dDto.EndDateTime = time.Time{}
 	dDto.TimeDuration = time.Duration(0)
 	dDto.Years = 0
-	dDto.YearsNanosecs = 0
+	dDto.yearsNanosecs = 0
 	dDto.Months = 0
-	dDto.MonthsNanosecs = 0
+	dDto.monthsNanosecs = 0
 	dDto.Weeks = 0
-	dDto.WeeksNanosecs = 0
+	dDto.weeksNanosecs = 0
 	dDto.Days = 0
-	dDto.DaysNanosecs = 0
+	dDto.daysNanosecs = 0
 	dDto.Hours = 0
-	dDto.HoursNanosecs = 0
+	dDto.hoursNanosecs = 0
 	dDto.Minutes = 0
-	dDto.MinutesNanosecs = 0
+	dDto.minutesNanosecs = 0
 	dDto.Seconds = 0
-	dDto.SecondsNanosecs = 0
+	dDto.secondsNanosecs = 0
 	dDto.Milliseconds = 0
-	dDto.MillisecondsNanosecs = 0
+	dDto.millisecondsNanosecs = 0
 	dDto.Microseconds = 0
-	dDto.MicrosecondsNanosecs = 0
+	dDto.microsecondsNanosecs = 0
 	dDto.Nanoseconds = 0
-	dDto.NanosecondsNanosecs = 0
+	dDto.nanosecondsNanosecs = 0
 	dDto.DisplayStr = ""
 }
 
@@ -259,25 +259,25 @@ func (dDto *DurationDto) Empty() {
 func (dDto *DurationDto) EmptyTimeValues() {
 
 	dDto.Years = 0
-	dDto.YearsNanosecs = 0
+	dDto.yearsNanosecs = 0
 	dDto.Months = 0
-	dDto.MonthsNanosecs = 0
+	dDto.monthsNanosecs = 0
 	dDto.Weeks = 0
-	dDto.WeeksNanosecs = 0
+	dDto.weeksNanosecs = 0
 	dDto.Days = 0
-	dDto.DaysNanosecs = 0
+	dDto.daysNanosecs = 0
 	dDto.Hours = 0
-	dDto.HoursNanosecs = 0
+	dDto.hoursNanosecs = 0
 	dDto.Minutes = 0
-	dDto.MinutesNanosecs = 0
+	dDto.minutesNanosecs = 0
 	dDto.Seconds = 0
-	dDto.SecondsNanosecs = 0
+	dDto.secondsNanosecs = 0
 	dDto.Milliseconds = 0
-	dDto.MillisecondsNanosecs = 0
+	dDto.millisecondsNanosecs = 0
 	dDto.Microseconds = 0
-	dDto.MicrosecondsNanosecs = 0
+	dDto.microsecondsNanosecs = 0
 	dDto.Nanoseconds = 0
-	dDto.NanosecondsNanosecs = 0
+	dDto.nanosecondsNanosecs = 0
 	dDto.DisplayStr = ""
 }
 
@@ -285,16 +285,16 @@ func (dDto *DurationDto) EmptyTimeValues() {
 // values in the current DurationDto struct to
 // zero.
 func (dDto *DurationDto) EmptyNanosecs() {
-	dDto.YearsNanosecs = 0
-	dDto.MonthsNanosecs = 0
-	dDto.WeeksNanosecs = 0
-	dDto.DaysNanosecs = 0
-	dDto.HoursNanosecs = 0
-	dDto.MinutesNanosecs = 0
-	dDto.SecondsNanosecs = 0
-	dDto.MillisecondsNanosecs = 0
-	dDto.MicrosecondsNanosecs = 0
-	dDto.NanosecondsNanosecs = 0
+	dDto.yearsNanosecs = 0
+	dDto.monthsNanosecs = 0
+	dDto.weeksNanosecs = 0
+	dDto.daysNanosecs = 0
+	dDto.hoursNanosecs = 0
+	dDto.minutesNanosecs = 0
+	dDto.secondsNanosecs = 0
+	dDto.millisecondsNanosecs = 0
+	dDto.microsecondsNanosecs = 0
+	dDto.nanosecondsNanosecs = 0
 	dDto.DisplayStr = ""
 }
 
@@ -306,25 +306,25 @@ func (dDto *DurationDto) Equal(dto2 DurationDto) bool {
 		dDto.EndDateTime != dto2.EndDateTime ||
 		dDto.TimeDuration != dto2.TimeDuration ||
 		dDto.Years != dto2.Years ||
-		dDto.YearsNanosecs != dto2.YearsNanosecs ||
+		dDto.yearsNanosecs != dto2.yearsNanosecs ||
 		dDto.Months != dto2.Months ||
-		dDto.MonthsNanosecs != dto2.MonthsNanosecs ||
+		dDto.monthsNanosecs != dto2.monthsNanosecs ||
 		dDto.Weeks != dto2.Weeks ||
-		dDto.WeeksNanosecs != dto2.WeeksNanosecs ||
+		dDto.weeksNanosecs != dto2.weeksNanosecs ||
 		dDto.Days != dto2.Days ||
-		dDto.DaysNanosecs != dto2.DaysNanosecs ||
+		dDto.daysNanosecs != dto2.daysNanosecs ||
 		dDto.Hours != dto2.Hours ||
-		dDto.HoursNanosecs != dto2.HoursNanosecs ||
+		dDto.hoursNanosecs != dto2.hoursNanosecs ||
 		dDto.Minutes != dto2.Minutes ||
-		dDto.MinutesNanosecs != dto2.MinutesNanosecs ||
+		dDto.minutesNanosecs != dto2.minutesNanosecs ||
 		dDto.Seconds != dto2.Seconds ||
-		dDto.SecondsNanosecs != dto2.SecondsNanosecs ||
+		dDto.secondsNanosecs != dto2.secondsNanosecs ||
 		dDto.Milliseconds != dto2.Milliseconds ||
-		dDto.MillisecondsNanosecs != dto2.MillisecondsNanosecs ||
+		dDto.millisecondsNanosecs != dto2.millisecondsNanosecs ||
 		dDto.Microseconds != dto2.Microseconds ||
-		dDto.MicrosecondsNanosecs != dto2.MicrosecondsNanosecs ||
+		dDto.microsecondsNanosecs != dto2.microsecondsNanosecs ||
 		dDto.Nanoseconds != dto2.Nanoseconds ||
-		dDto.NanosecondsNanosecs != dto2.NanosecondsNanosecs ||
+		dDto.nanosecondsNanosecs != dto2.nanosecondsNanosecs ||
 		dDto.DisplayStr != dto2.DisplayStr {
 
 		return false
@@ -923,7 +923,7 @@ func (du *DurationUtility) GetGregorianYearDuration() (DurationDto, error) {
 
 	if rd > GregorianYearNanoSeconds {
 		dDto.Years = rd / GregorianYearNanoSeconds
-		dDto.YearsNanosecs = dDto.Years * GregorianYearNanoSeconds
+		dDto.yearsNanosecs = dDto.Years * GregorianYearNanoSeconds
 	}
 
 	du.calcDaysFromDuration(&dDto)
@@ -1237,8 +1237,8 @@ func (du *DurationUtility) calcYearsFromDuration(dDto *DurationDto) {
 	if i > 0 {
 		yearDateTime = prevDateTime
 		dDto.Years = int64(i)
-		dDto.YearsNanosecs = int64(yearDateTime.Sub(dDto.StartDateTime))
-		rd -= dDto.YearsNanosecs
+		dDto.yearsNanosecs = int64(yearDateTime.Sub(dDto.StartDateTime))
+		rd -= dDto.yearsNanosecs
 	}
 
 	return
@@ -1248,10 +1248,10 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) {
 
 	rd := int64(dDto.TimeDuration)
 
-	rd -= dDto.YearsNanosecs
+	rd -= dDto.yearsNanosecs
 
 	i := 0
-	yearDateTime := dDto.StartDateTime.Add(time.Duration(dDto.YearsNanosecs))
+	yearDateTime := dDto.StartDateTime.Add(time.Duration(dDto.yearsNanosecs))
 	mthDateTime := yearDateTime
 	prevDateTime := mthDateTime
 
@@ -1266,7 +1266,7 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) {
 	if i > 0 {
 		mthDateTime = prevDateTime
 		dDto.Months = int64(i)
-		dDto.MonthsNanosecs = int64(mthDateTime.Sub(yearDateTime))
+		dDto.monthsNanosecs = int64(mthDateTime.Sub(yearDateTime))
 
 	}
 
@@ -1277,11 +1277,11 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) {
 func (du *DurationUtility) calcWeeksFromDuration(dDto *DurationDto) {
 	rd := int64(dDto.TimeDuration)
 
-	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs
+	rd -= dDto.yearsNanosecs + dDto.monthsNanosecs
 
 	if rd >= WeekNanoSeconds {
 		dDto.Weeks = rd / WeekNanoSeconds
-		dDto.WeeksNanosecs = dDto.Weeks * WeekNanoSeconds
+		dDto.weeksNanosecs = dDto.Weeks * WeekNanoSeconds
 	}
 
 	return
@@ -1291,12 +1291,12 @@ func (du *DurationUtility) calcDaysFromDuration(dDto *DurationDto) {
 
 	rd := int64(dDto.TimeDuration)
 
-	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
-		dDto.WeeksNanosecs
+	rd -= dDto.yearsNanosecs + dDto.monthsNanosecs +
+		dDto.weeksNanosecs
 
 	if rd >= DayNanoSeconds {
 		dDto.Days = rd / DayNanoSeconds
-		dDto.DaysNanosecs = DayNanoSeconds * dDto.Days
+		dDto.daysNanosecs = DayNanoSeconds * dDto.Days
 	}
 }
 
@@ -1304,25 +1304,25 @@ func (du *DurationUtility) calcHoursMinSecs(dDto *DurationDto) {
 
 	rd := int64(dDto.TimeDuration)
 
-	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
-		dDto.WeeksNanosecs + dDto.DaysNanosecs
+	rd -= dDto.yearsNanosecs + dDto.monthsNanosecs +
+		dDto.weeksNanosecs + dDto.daysNanosecs
 
 	if rd >= HourNanoSeconds {
 		dDto.Hours = rd / HourNanoSeconds
-		dDto.HoursNanosecs = HourNanoSeconds * dDto.Hours
-		rd -= dDto.HoursNanosecs
+		dDto.hoursNanosecs = HourNanoSeconds * dDto.Hours
+		rd -= dDto.hoursNanosecs
 	}
 
 	if rd >= MinuteNanoSeconds {
 		dDto.Minutes = rd / MinuteNanoSeconds
-		dDto.MinutesNanosecs = MinuteNanoSeconds * dDto.Minutes
-		rd -= dDto.MinutesNanosecs
+		dDto.minutesNanosecs = MinuteNanoSeconds * dDto.Minutes
+		rd -= dDto.minutesNanosecs
 	}
 
 	if rd >= SecondNanoseconds {
 		dDto.Seconds = rd / SecondNanoseconds
-		dDto.SecondsNanosecs = SecondNanoseconds * dDto.Seconds
-		rd -= dDto.SecondsNanosecs
+		dDto.secondsNanosecs = SecondNanoseconds * dDto.Seconds
+		rd -= dDto.secondsNanosecs
 	}
 
 }
@@ -1330,13 +1330,13 @@ func (du *DurationUtility) calcHoursMinSecs(dDto *DurationDto) {
 func (du *DurationUtility) calcMilliSeconds(dDto *DurationDto) {
 	rd := int64(dDto.TimeDuration)
 
-	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
-		dDto.WeeksNanosecs + dDto.DaysNanosecs + dDto.HoursNanosecs +
-		dDto.MinutesNanosecs + dDto.SecondsNanosecs
+	rd -= dDto.yearsNanosecs + dDto.monthsNanosecs +
+		dDto.weeksNanosecs + dDto.daysNanosecs + dDto.hoursNanosecs +
+		dDto.minutesNanosecs + dDto.secondsNanosecs
 
 	if rd >= MilliSecondNanoseconds {
 		dDto.Milliseconds = rd / MilliSecondNanoseconds
-		dDto.MillisecondsNanosecs = MilliSecondNanoseconds * dDto.Milliseconds
+		dDto.millisecondsNanosecs = MilliSecondNanoseconds * dDto.Milliseconds
 	}
 
 }
@@ -1344,14 +1344,14 @@ func (du *DurationUtility) calcMilliSeconds(dDto *DurationDto) {
 func (du *DurationUtility) calcMicroSeconds(dDto *DurationDto) {
 	rd := int64(dDto.TimeDuration)
 
-	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
-		dDto.WeeksNanosecs + dDto.DaysNanosecs + dDto.HoursNanosecs +
-		dDto.MinutesNanosecs + dDto.SecondsNanosecs +
-		dDto.MillisecondsNanosecs
+	rd -= dDto.yearsNanosecs + dDto.monthsNanosecs +
+		dDto.weeksNanosecs + dDto.daysNanosecs + dDto.hoursNanosecs +
+		dDto.minutesNanosecs + dDto.secondsNanosecs +
+		dDto.millisecondsNanosecs
 
 	if rd >= MicroSecondNanoseconds {
 		dDto.Microseconds = rd / MicroSecondNanoseconds
-		dDto.MicrosecondsNanosecs = MicroSecondNanoseconds * dDto.Microseconds
+		dDto.microsecondsNanosecs = MicroSecondNanoseconds * dDto.Microseconds
 	}
 
 }
@@ -1360,10 +1360,10 @@ func (du *DurationUtility) calcNanoseconds(dDto *DurationDto) {
 
 	rd := int64(dDto.TimeDuration)
 
-	rd -= dDto.YearsNanosecs + dDto.MonthsNanosecs +
-		dDto.WeeksNanosecs + dDto.DaysNanosecs + dDto.HoursNanosecs +
-		dDto.MinutesNanosecs + dDto.SecondsNanosecs +
-		dDto.MillisecondsNanosecs + dDto.MicrosecondsNanosecs
+	rd -= dDto.yearsNanosecs + dDto.monthsNanosecs +
+		dDto.weeksNanosecs + dDto.daysNanosecs + dDto.hoursNanosecs +
+		dDto.minutesNanosecs + dDto.secondsNanosecs +
+		dDto.millisecondsNanosecs + dDto.microsecondsNanosecs
 
 	dDto.Nanoseconds = rd
 
@@ -1373,44 +1373,44 @@ func (du *DurationUtility) calcFromYears(dDto *DurationDto) {
 
 	yearDateTime := dDto.StartDateTime.AddDate(int(dDto.Years), 0, 0)
 
-	dDto.YearsNanosecs = int64(yearDateTime.Sub(dDto.StartDateTime))
+	dDto.yearsNanosecs = int64(yearDateTime.Sub(dDto.StartDateTime))
 
 	return
 
 }
 
 func (du *DurationUtility) calcFromMonths(dDto *DurationDto) {
-	mthStartDateTime := dDto.StartDateTime.Add(time.Duration(dDto.YearsNanosecs))
+	mthStartDateTime := dDto.StartDateTime.Add(time.Duration(dDto.yearsNanosecs))
 	mthEndDateTime := mthStartDateTime.AddDate(0, int(dDto.Months), 0)
 
-	dDto.MonthsNanosecs = int64(mthEndDateTime.Sub(mthStartDateTime))
+	dDto.monthsNanosecs = int64(mthEndDateTime.Sub(mthStartDateTime))
 
 	return
 }
 
 func (du *DurationUtility) calcFromWeeks(dDto *DurationDto) {
 
-	dDto.WeeksNanosecs = dDto.Weeks * WeekNanoSeconds
+	dDto.weeksNanosecs = dDto.Weeks * WeekNanoSeconds
 }
 
 func (du *DurationUtility) calcFromDays(dDto *DurationDto) {
-	dDto.DaysNanosecs = dDto.Days * DayNanoSeconds
+	dDto.daysNanosecs = dDto.Days * DayNanoSeconds
 }
 
 func (du *DurationUtility) calcFromHoursMinSecs(dDto *DurationDto) {
-	dDto.HoursNanosecs = dDto.Hours * HourNanoSeconds
-	dDto.MinutesNanosecs = dDto.Minutes * MinuteNanoSeconds
-	dDto.SecondsNanosecs = dDto.Seconds * SecondNanoseconds
+	dDto.hoursNanosecs = dDto.Hours * HourNanoSeconds
+	dDto.minutesNanosecs = dDto.Minutes * MinuteNanoSeconds
+	dDto.secondsNanosecs = dDto.Seconds * SecondNanoseconds
 }
 
 func (du *DurationUtility) calcFromMilliSecs(dDto *DurationDto) {
-	dDto.MillisecondsNanosecs = dDto.Milliseconds * MilliSecondNanoseconds
+	dDto.millisecondsNanosecs = dDto.Milliseconds * MilliSecondNanoseconds
 }
 
 func (du *DurationUtility) calcFromMicroSecs(dDto *DurationDto) {
-	dDto.MicrosecondsNanosecs = dDto.Microseconds * MicroSecondNanoseconds
+	dDto.microsecondsNanosecs = dDto.Microseconds * MicroSecondNanoseconds
 }
 
 func (du *DurationUtility) calcFromNanoSecs(dDto *DurationDto) {
-	dDto.NanosecondsNanosecs = dDto.Nanoseconds
+	dDto.nanosecondsNanosecs = dDto.Nanoseconds
 }
