@@ -68,6 +68,7 @@ type TimeZoneUtility struct {
 	TimeOut     time.Time
 	TimeOutLoc  *time.Location
 	TimeUTC     time.Time
+	TimeLocal		time.Time
 }
 
 // ConvertTz - Convert Time from existing time zone to targetTZone.
@@ -94,7 +95,7 @@ func (tzu TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) (TimeZoneUt
 	}
 
 	if tIn.IsZero() {
-		return tzuOut, errors.New("TimeZoneUtility:ConvertTz() Error: Input parameter time, 'tIn' is zero and INVALID")
+		return tzuOut, errors.New(ePrefix + "Error: Input parameter time, 'tIn' is zero and INVALID")
 	}
 
 	tzOut, err := time.LoadLocation(targetTz)
@@ -109,6 +110,12 @@ func (tzu TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) (TimeZoneUt
 	tzuOut.SetTimeOut(tIn.In(tzOut))
 
 	tzuOut.SetUTCTime(tIn)
+
+	err = tzuOut.SetLocalTime(tIn)
+
+	if err != nil {
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.SetLocalTime(tIn). Error='%v'", err.Error())
+	}
 
 	return tzuOut, nil
 }
@@ -371,6 +378,21 @@ func (tzu *TimeZoneUtility) SetTimeOut(tOut time.Time) {
 func (tzu *TimeZoneUtility) SetUTCTime(t time.Time) {
 
 	tzu.TimeUTC = t.UTC()
+}
+
+// SetLocalTime - Assigns Local Time to field 'TimeLocal'
+func (tzu *TimeZoneUtility) SetLocalTime(t time.Time) error {
+	ePrefix := "TimeZoneUtility.SetLocalTime() "
+
+	tzLocal, err := time.LoadLocation("Local")
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(\"Local\") Error='%v'", err.Error())
+	}
+
+	tzu.TimeLocal = t.In(tzLocal)
+
+	return nil
 }
 
 // TimeWithoutTimeZone - Returns a Time String containing
