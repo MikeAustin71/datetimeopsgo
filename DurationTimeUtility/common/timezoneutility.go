@@ -574,7 +574,7 @@ func (tzu *TimeZoneUtility) Sub(tzu2 TimeZoneUtility) (time.Duration, error) {
 		return time.Duration(0), fmt.Errorf(ePrefix + "Error: Input Parameter 'tzu2' is INVALID! Error='%v'", err.Error())
 	}
 
-	return tzu.TimeUTC.Sub(tzu2.TimeUTC), nil
+	return tzu.TimeLocal.Sub(tzu2.TimeLocal), nil
 }
 
 // TimeWithoutTimeZone - Returns a Time String containing

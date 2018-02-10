@@ -248,6 +248,7 @@ func Tex010() {
 	*/
 }
 
+// ReclassifyTimeAsLocal
 func ReclassifyTimeAsLocal() {
 	tPacific := "2017-04-29 17:54:30 -0700 PDT"
 	fmtstr := "2006-01-02 15:04:05 -0700 MST"
@@ -268,6 +269,7 @@ func ReclassifyTimeAsLocal() {
 
 }
 
+// Tex011
 func Tex011() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
@@ -300,6 +302,7 @@ func Tex011() {
 
 }
 
+// Tex021
 func Tex021() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
@@ -347,6 +350,7 @@ func printOutTimeZoneFields(tz TimeZoneUtility) {
 
 }
 
+// ExampleDurationLocalUTCTime
 func ExampleDurationLocalUTCTime() {
 	t1UTCStr := "2017-07-02 22:00:18.423111300 +0000 UTC"
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
