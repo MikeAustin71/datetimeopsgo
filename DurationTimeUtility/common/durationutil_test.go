@@ -78,12 +78,12 @@ func TestDurationUtility_NewStartTimeDuration_01(t *testing.T) {
 
 	// dur.SetStartTimeDuration(t1, t12Dur)
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	if t12Dur != dur.TimeDuration {
@@ -121,12 +121,12 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error returned by DurationUtility{}.NewStartEndTimes(t1, t2). Error='%v'", err.Error())
 	}
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationUtility.StartDateTime of %v. Instead, got %v ", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error: Expected DurationUtility.StartTimeTzu of %v. Instead, got %v ", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationUtility.EndDateTime of %v. Instead, got %v ", t1OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error: Expected DurationUtility.EndTimeTzu of %v. Instead, got %v ", t1OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	tOutDur := t2.Sub(t1)
@@ -234,12 +234,12 @@ func TestDurationUtility_NewStartTimeMinusTime_01(t *testing.T) {
 		t.Errorf("Error returned by DurationUtility{}.NewStartTimeMinusTime(t2, timeDto). Error='%v'", err.Error())
 	}
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	if t12Dur != dur.TimeDuration {
@@ -278,12 +278,12 @@ func TestDurationUtility_NewStartTimePlusTime_01(t *testing.T) {
 		t.Errorf("Error returned by DurationUtility{}.NewStartTimePlusTime(t1, timeDto). Error='%v'", err.Error())
 	}
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	if t12Dur != dur.TimeDuration {
@@ -320,12 +320,12 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 
 	dur.SetStartEndTimes(t1, t2)
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationUtility.StartDateTime of %v. Instead, got %v ", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error: Expected DurationUtility.StartTimeTzu of %v. Instead, got %v ", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationUtility.EndDateTime of %v. Instead, got %v ", t1OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error: Expected DurationUtility.EndTimeTzu of %v. Instead, got %v ", t1OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	tOutDur := t2.Sub(t1)
@@ -506,12 +506,12 @@ func TestDurationUtility_SetStartTimePlusTime(t *testing.T) {
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, Days: 1, Hours: 3, Minutes: 4, Seconds: 2}
 	dur.SetStartTimePlusTime(t1, timeDto)
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	if t12Dur != dur.TimeDuration {
@@ -549,12 +549,12 @@ func TestDurationUtility_SetStartTimeMinusTime(t *testing.T) {
 
 	dur.SetStartTimeMinusTime(t2, timeDto)
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	if t12Dur != dur.TimeDuration {
@@ -590,12 +590,12 @@ func TestDurationUtility_SetStartTimeDuration(t *testing.T) {
 
 	dur.SetStartTimeDuration(t1, t12Dur)
 
-	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartDateTime.Format(fmtstr))
+	if t1OutStr != dur.StartTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndDateTime.Format(fmtstr))
+	if t2OutStr != dur.EndTimeTzu.TimeIn.Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.", t2OutStr, dur.EndTimeTzu.TimeIn.Format(fmtstr))
 	}
 
 	if t12Dur != dur.TimeDuration {

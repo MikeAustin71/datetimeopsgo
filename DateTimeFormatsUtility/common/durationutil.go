@@ -1060,12 +1060,12 @@ func (du *DurationUtility) SetStartEndTimes(startDateTime time.Time, endDateTime
 // SetStartTimePlusTime - Calculate duration values based on a Starting Date Time and
 // time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
 // in the 'times' parameter. The 'timeDto' parameter is added to
-// 'StartDateTime'.
+// 'StartTimeTzu'.
 //
 // Values in the 'timeDto' parameter are automatically converted to positive
-// numeric values before being added to 'StartDateTime'.
+// numeric values before being added to 'StartTimeTzu'.
 //
-// True values for StartDateTime, EndDateTime and TimeDuration are
+// True values for StartTimeTzu, EndTimeTzu and TimeDuration are
 // then stored in the DurationUtility data structure.
 func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto TimeDto) error {
 	du.Empty()
@@ -1096,13 +1096,13 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 // SetStartTimeMinusTime - Calculate duration values based on a Starting Date Time and
 // time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
 // in the 'timeDto' parameter. The time values in the 'timeDto' parameter are subtracted
-// from 'StartDateTime'.
+// from 'StartTimeTzu'.
 //
 // Time values in the 'timeDto' parameter are first converted to negative
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time.
 //
-// As a result. true values for StartDateTime, EndDateTime and
+// As a result. true values for StartTimeTzu, EndTimeTzu and
 // TimeDuration are stored in the DurationUtility data structure.
 
 func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDto TimeDto) error {
@@ -1137,10 +1137,10 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDt
 	return nil
 }
 
-// ValidateDurationBaseData - Validates DurationUtility.TimeDuration
-// DurationUtility.StartDateTime and DurationUtility.EndDateTime.
-// Note: if DurationUtility.StartDateTime and DurationUtility.EndDateTime
-// have zero values, DurationUtility.StartDateTime will be defaulted to
+// IsDurationBaseDataValid - Validates DurationUtility.TimeDuration
+// DurationUtility.StartTimeTzu and DurationUtility.EndTimeTzu.
+// Note: if DurationUtility.StartTimeTzu and DurationUtility.EndTimeTzu
+// have zero values, DurationUtility.StartTimeTzu will be defaulted to
 // time.Now().UTC()
 func (du *DurationUtility) ValidateDurationBaseData() error {
 
@@ -1149,7 +1149,7 @@ func (du *DurationUtility) ValidateDurationBaseData() error {
 	if du.StartDateTime.IsZero() && du.EndDateTime.IsZero() &&
 		rd == 0 {
 
-		return fmt.Errorf("DurationUtility.ValidateDurationBaseData() - ERROR: Time Duration, Start Time and End Time are ZERO!")
+		return fmt.Errorf("DurationUtility.IsDurationBaseDataValid() - ERROR: Time Duration, Start Time and End Time are ZERO!")
 	}
 
 	if du.StartDateTime.IsZero() && du.EndDateTime.IsZero() {
@@ -1157,7 +1157,7 @@ func (du *DurationUtility) ValidateDurationBaseData() error {
 	}
 
 	if rd == 0 && du.StartDateTime == du.EndDateTime {
-		return fmt.Errorf("DurationUtility.ValidateDurationBaseData() - ERROR: Time Duration is Zero, Start Time and End Time are EQUAL!")
+		return fmt.Errorf("DurationUtility.IsDurationBaseDataValid() - ERROR: Time Duration is Zero, Start Time and End Time are EQUAL!")
 	}
 
 	if rd < 0 && du.StartDateTime.IsZero() && !du.EndDateTime.IsZero() {

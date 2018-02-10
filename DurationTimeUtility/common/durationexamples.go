@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// ExampleSetStartEndTimes
 func ExampleSetStartEndTimes() {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"

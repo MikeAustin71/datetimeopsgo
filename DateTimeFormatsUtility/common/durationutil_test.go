@@ -22,11 +22,11 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 	dur.SetStartEndTimes(t1, t2)
 
 	if t1OutStr != dur.StartDateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationUtility.StartDateTime of %v. Instead, got %v ", t1OutStr, dur.StartDateTime.Format(fmtstr))
+		t.Errorf("Error: Expected DurationUtility.StartTimeTzu of %v. Instead, got %v ", t1OutStr, dur.StartDateTime.Format(fmtstr))
 	}
 
 	if t2OutStr != dur.EndDateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationUtility.EndDateTime of %v. Instead, got %v ", t1OutStr, dur.EndDateTime.Format(fmtstr))
+		t.Errorf("Error: Expected DurationUtility.EndTimeTzu of %v. Instead, got %v ", t1OutStr, dur.EndDateTime.Format(fmtstr))
 	}
 
 	tOutDur := t2.Sub(t1)
