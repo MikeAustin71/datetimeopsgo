@@ -15,6 +15,6 @@ import (
 
 func main() {
 
-	common.Example_NewStartTimeDuration_01()
+	common.ExampleNewstarttimeduration01()
 
 }

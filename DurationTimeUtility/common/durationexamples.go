@@ -83,7 +83,8 @@ func ExampleSetStartEndTimes() {
 
 }
 
-func Example_NewStartTimeDuration_01() {
+// Example_NewStartTimeDuration_01
+func ExampleNewstarttimeduration01() {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -124,7 +125,7 @@ func Example_NewStartTimeDuration_01() {
 	fmt.Println("Time  In Duration: ", t12Dur)
 	fmt.Println("Time UTC Duration: ", t12UTCDur)
 
-	/*
+
 	dDto, err := dur.GetYearMthDaysTime()
 
 	if err != nil {
@@ -137,7 +138,7 @@ func Example_NewStartTimeDuration_01() {
 	if expected != dDto.DisplayStr {
 		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
-	*/
+
 
 	tdatePlus := t1.AddDate(3,2,15)
 	tdatePlusDur := tdatePlus.Sub(t1)
@@ -152,8 +153,7 @@ func Example_NewStartTimeDuration_01() {
 	fmt.Println("Expected Output Date: ", t2OutStr)
 	fmt.Println("Computed Output Date: ", t3Output)
 
-	dDto, err := dur.GetYearMthDaysTime()
-
+	dDto, err = dur.GetYearMthDaysTime()
 
 	ans := dDto.YearsNanosecs
 
