@@ -376,11 +376,11 @@ func (tzu *TimeZoneUtility) IsValidTimeZone(tZone string) (isValidTz, isValidIan
 
 // MakeDateTz allows one to create a date time object (time.Time) by
 // passing in a DateTzDto structure. Within this structure, the time
-// zone is designated either by the IANA Time Zone (DateTzDto.IANATimeZone)
+// zone is designated either by the IANA Time Zone (DateTzDto.TimeZone)
 // or by the string "Local" which specifies the the time zone local to the
 // user computer.
 //
-// Note: If dtTzDto.IANATimeZone is an empty string, this method will default
+// Note: If dtTzDto.TimeZone is an empty string, this method will default
 // the time zone to "Local".
 func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
 

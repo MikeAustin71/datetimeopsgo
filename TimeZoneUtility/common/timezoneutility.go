@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"strings"
 )
 
 /*
@@ -60,14 +61,120 @@ const (
 // DateTzDto - `Used to store and transfer
 // date times.
 type DateTzDto struct {
-	Year int
-	Month int
-	Day int
-	Hour int
-	Minute int
-	Second int
-	Nanosecond int
-	IANATimeZone string
+	Year       			int
+	Month      			int
+	Day        			int
+	Hour       			int
+	Minute     			int
+	Second     			int
+	Nanosecond 			int
+	TimeZone   			string
+	TimeZoneOffset	int
+	DateTime 				time.Time
+	TimeLoc    			*time.Location
+	TimeLocName			string
+}
+
+// New - creates a new DateTzDto object and populates the data fields based on
+// input parameters.
+//
+// Input Parameters
+// ================
+//
+// year 						int			- year number
+// month						int			- month number 	1 - 12
+// day							int			- day number   	1 - 31
+// hour							int			- hour number  	0 - 24
+// min							int			- minute number	0 - 59
+// sec							int			- second number	0	-	59
+// nsec							int			- nanosecond number 0 - 999999999
+// timeZoneLocation	string	- time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//
+// Output
+// ======
+// This method returns a DateTzDto instance with populated data fields.
+//
+func (dtz DateTzDto) New(year, month, day, hour, min, sec, nsec int, timeZoneLocation string) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.New() "
+
+	dtz2 := DateTzDto{}
+
+	if year < 0 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter year number is INVALID. 'year' must be greater than or equal to Zero. year='%v'", year)
+	}
+
+	if month < 1 || month > 12  {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter month number is INVALID. Correct range is 1-12. month='%v'", month)
+	}
+
+
+	if day < 1 || day > 31  {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. day='%v'", day)
+	}
+
+
+	if hour < 0 || hour > 24 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter 'hour' number is INVALID. Correct range is 0-24. hour='%v'", hour)
+	}
+
+	if min < 0 || min > 59 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter minute number is INVALID. Correct range is 0 - 59. min='%v'", min)
+	}
+
+	if sec < 0 || sec > 59 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parmeter second number is INVALID. Correct range is 0 - 59. sec='%v'", sec)
+	}
+
+	maxNanoSecs := int(time.Second) - int(1)
+
+	if nsec < 0 || nsec > maxNanoSecs {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter nanoseconds exceeds maximum limit and is INVLIAD. Correct range is 0 - %v. nsec='%v'", maxNanoSecs, nsec)
+	}
+
+
+	if len(timeZoneLocation) == 0 {
+		return dtz2, errors.New(ePrefix + "Error: Input parameter 'timeZoneLocation' is an EMPTY STRING! 'timeZoneLocation' is required!")
+	}
+
+	if strings.ToLower(timeZoneLocation) == "local" {
+		timeZoneLocation = "Local"
+	}
+
+	loc, err := time.LoadLocation(timeZoneLocation)
+
+	if err != nil {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Invalid time zone location! timeZoneLocation='%v'", timeZoneLocation)
+	}
+
+	dtz2.Year 			= year
+	dtz2.Month			= month
+	dtz2.Day 				= day
+	dtz2.Hour 			= hour
+	dtz2.Minute			= min
+	dtz2.Second			= sec
+	dtz2.Nanosecond	= nsec
+	dtz2.TimeLoc 		= loc
+	dtz2.DateTime = time.Date(year, time.Month(month), day, hour, min, sec, nsec, loc)
+	dtz2.TimeZone, dtz2.TimeZoneOffset  = dtz2.DateTime.Zone()
+	dtz2.TimeLocName = dtz2.TimeLoc.String()
+
+	return dtz2, nil
 }
 
 // TimeZoneUtility - Time Zone Data and Methods
@@ -83,6 +190,20 @@ type TimeZoneUtility struct {
 
 // AddDate - Adds specified years, months and days values to the
 // current time values maintained by this TimeZoneUtility
+//
+// Input Parameters
+// ================
+// years		int		- Number of years to add to current TimeZoneUtility instance
+// months		int		- Number of months to add to current TimeZoneUtility instance
+// days			int		- Number of months to add to current TimeZoneUtility instance
+//
+// Returns
+// ======
+// If successful, this method adds input date values to the current TimeZoneUtility.
+//
+// error	- If errors are encountered, this method returns an error object. Otherwise,
+//					the error value is 'nil'.
+//
 func (tzu *TimeZoneUtility) AddDate(years, months, days int) error {
 
 	ePrefix := "TimeZoneUtility.AddDate() "
@@ -104,8 +225,67 @@ func (tzu *TimeZoneUtility) AddDate(years, months, days int) error {
 }
 
 
+// AddDateTime - Adds input time elements to the time
+// value of the current TimeZoneUtility instance.
+//
+// Input Parameters
+// ================
+// years				int		- Number of years added to current TimeZoneUtility
+// months				int		- Number of months added to current TimeZoneUtility
+// days					int		- Number of days added to current TimeZoneUtility
+// hours				int		- Number of hours added to current TimeZoneUtility
+// minutes			int		- Number of minutes added to current TimeZoneUtility
+// seconds			int		- Number of seconds added to current TimeZoneUtility
+// milliseconds	int		- Number of milliseconds added to current TimeZoneUtility
+// microseconds	int		- Number of microseconds added to current TimeZoneUtility
+// nanoseconds	int		- Number of nanoseconds added to current TimeZoneUtility
+//
+// Note: 	Input parameters may be either negative or positive. Negative
+// 				values will subtract time from the current TimeZoneUtility instance.
+//
+// Returns
+// =======
+//
+// This method returns an error instance if errors are encountered. There
+// are no other returns. If successful, the method updates
+// the values of the current TimeZoneUtility instance.
+//
+func (tzu *TimeZoneUtility) AddDateTime(years, months, days, hours, minutes,
+												seconds, milliseconds, microseconds, nanoseconds int) error {
+
+	ePrefix := "TimeZoneUtility.AddDateTime() "
+
+	err := tzu.IsTimeZoneUtilityValid()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "This TimeZoneUtility instance is INVALID! Error='%v'", err.Error())
+	}
+
+	err = tzu.AddDate(years, months, days)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tzu.AddDate(years, months, days). Error='%v'", err.Error())
+	}
+
+	err = tzu.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tzu.AddTime(...). Error='%v'", err.Error())
+	}
+
+	return nil
+}
+
 // AddDuration - Adds 'duration' to the time values maintained by the
-// current TimeZoneUtility
+// current TimeZoneUtility.
+//
+// Input Parameters
+// ================
+//
+// duration		time.Duration		- May be a positive or negative duration
+//															value which is added to the time value
+//															of the current TimeZoneUtility instance.
+//
 func (tzu *TimeZoneUtility) AddDuration(duration time.Duration) error {
 
 	ePrefix := "TimeZoneUtility.AddDuration() "
@@ -130,6 +310,62 @@ func (tzu *TimeZoneUtility) AddDuration(duration time.Duration) error {
 	return nil
 }
 
+// AddTime - Adds time elements to the time value of the current
+// TimeZoneUtility instance.
+//
+// Input Parameters:
+// =================
+//
+// hours				- hours to be added to current TimeZoneUtility
+// minutes			- minutes to be added to current TimeZoneUtility
+// seconds			- seconds to be added to current TimeZoneUtility
+// milliseconds	- milliseconds to be added to current TimeZoneUtility
+// microseconds	- microseconds to be added to current TimeZoneUtility
+// nanoseconds	- nanoseconds to be added to current TimeZoneUtility
+//
+// Note: 	Negative time values may be entered to subtract time from the
+// 				current TimeZoneUtility time values.
+//
+// Returns
+// =======
+//
+// If successful this method updates the time value fields of the current TimeZoneUtility instance.
+//
+// error - 	If errors are encountered, the returned 'error' object is populated. Otherwise, 'error'
+//					is set to 'nil'.
+//
+func (tzu *TimeZoneUtility) AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds int) error {
+
+	ePrefix := "TimeZoneUtility.AddTime() "
+
+	err := tzu.IsTimeZoneUtilityValid()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "This TimeZoneUtility instance is INVALID! Error='%v'", err.Error())
+	}
+
+	if hours < 0  {
+		return fmt.Errorf(ePrefix + "Error: Input parameter 'hours' number is INVALID. Correct range equal to or greater than Zero. hours='%v'", hours)
+	}
+
+
+	var totNanoSecs  int64
+
+	totNanoSecs = int64(time.Hour) * int64(hours)
+	totNanoSecs += int64(time.Minute) * int64(minutes)
+	totNanoSecs += int64(time.Second) * int64(seconds)
+	totNanoSecs += int64(time.Millisecond) * int64(milliseconds)
+	totNanoSecs += int64(time.Microsecond) * int64(microseconds)
+	totNanoSecs += int64(nanoseconds)
+
+	err = tzu.AddDuration(time.Duration(totNanoSecs))
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tzu.AddDuration(time.Duration(totNanoSecs)). Error='%v'", err.Error())
+	}
+
+	return nil
+}
 
 // ConvertTz - Convert Time from existing time zone to targetTZone.
 // The results are stored in the TimeZoneUtility data structure.
@@ -137,13 +373,29 @@ func (tzu *TimeZoneUtility) AddDuration(duration time.Duration) error {
 // for different time zones.
 //
 // Input Parameters:
-// tIn - time.Time initial time
-// targetTz - The IANA Time Zone or Time Zone 'Local' to which
-// input parameter 'tIn' will be converted.
-
+//
+// tIn 				time.Time 	- initial time values
+// targetTz 	string			- time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the
+// 																time zone	location used by the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//
 // Output Values are returned in the tzu (TimeZoneUtility)
 // data fields. tzu.TimeOut contains the correct time in the 'target' time
 // zone.
+//
 func (tzu TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) (TimeZoneUtility, error) {
 
 	ePrefix := "TimeZoneUtility.ConvertTz() "
@@ -376,11 +628,11 @@ func (tzu *TimeZoneUtility) IsValidTimeZone(tZone string) (isValidTz, isValidIan
 
 // MakeDateTz allows one to create a date time object (time.Time) by
 // passing in a DateTzDto structure. Within this structure, the time
-// zone is designated either by the IANA Time Zone (DateTzDto.IANATimeZone)
+// zone is designated either by the IANA Time Zone (DateTzDto.TimeZone)
 // or by the string "Local" which specifies the the time zone local to the
 // user computer.
 //
-// Note: If dtTzDto.IANATimeZone is an empty string, this method will default
+// Note: If dtTzDto.TimeZone is an empty string, this method will default
 // the time zone to "Local".
 func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
 
@@ -389,23 +641,23 @@ func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
 	tOut := time.Time{}
 
 
-	if dtTzDto.IANATimeZone == "" {
+	if dtTzDto.TimeZone == "" {
 
-		dtTzDto.IANATimeZone = "Local"
+		dtTzDto.TimeZone = "Local"
 
 	} else {
 
 
-		if isValid ,_,_ := tzu.IsValidTimeZone(dtTzDto.IANATimeZone); !isValid {
-			return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Invalid Time Zone Error. Tz = %v.", dtTzDto.IANATimeZone )
+		if isValid ,_,_ := tzu.IsValidTimeZone(dtTzDto.TimeZone); !isValid {
+			return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Invalid Time Zone Error. Tz = %v.", dtTzDto.TimeZone)
 
 		}
 	}
 
-	tzLoc, err = time.LoadLocation(dtTzDto.IANATimeZone)
+	tzLoc, err = time.LoadLocation(dtTzDto.TimeZone)
 
 	if err!= nil {
-		return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Error Loading Location! Invalid Time Zone Error. Tz = %v. Error: %v", dtTzDto.IANATimeZone, err.Error())
+		return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Error Loading Location! Invalid Time Zone Error. Tz = %v. Error: %v", dtTzDto.TimeZone, err.Error())
 	}
 
 	tOut = time.Date(dtTzDto.Year, time.Month(dtTzDto.Month), dtTzDto.Day, dtTzDto.Hour, dtTzDto.Minute, dtTzDto.Second, dtTzDto.Nanosecond, tzLoc)
@@ -472,6 +724,60 @@ func (tzu TimeZoneUtility) NewAddDate(tzuIn TimeZoneUtility, years int, months i
 	return tzuOut, nil
 }
 
+// NewAddDateTime - Receives a TimeZoneUtility input parameter, 'tzuIn'
+// and returns a new TimeZoneUtility instance equal to 'tzuIn' plus the
+// time value of the remaining time element input parameters.
+//
+// Input Parameters
+// ================
+// tzuIn				TimeZoneUtility - Base TimeZoneUtility object to
+//																which time elements will be added.
+// years				int		- Number of years added to 'tzuIn'
+// months				int		- Number of months added to 'tzuIn'
+// days					int		- Number of days added to 'tzuIn'
+// hours				int		- Number of hours added to 'tzuIn'
+// minutes			int		- Number of minutes added to 'tzuIn'
+// seconds			int		- Number of seconds added to 'tzuIn'
+// milliseconds	int		- Number of milliseconds added to 'tzuIn'
+// microseconds	int		- Number of microseconds added to 'tzuIn'
+// nanoseconds	int		- Number of nanoseconds added to 'tzuIn'
+//
+// Note: 	Input time element parameters may be either negative or positive.
+// 				Negative values will subtract time from the returned TimeZoneUtility instance.
+//
+// Returns
+// =======
+// TimeZoneUtility - 	If successful, this method returns a valid
+//									 	populated TimeZoneUtility instance which is equal
+//									 	to the time value of 'tzuIn' plus the other input
+//										parameter time elements.
+//
+//	error					 -  The method will return an 'error' object if errors
+//										are encountered.
+//
+func (tzu TimeZoneUtility) NewAddDateTime(tzuIn TimeZoneUtility, years, months, days, hours, minutes,
+seconds, milliseconds, microseconds, nanoseconds int) (TimeZoneUtility, error) {
+
+	ePrefix := "TimeZoneUtility.NewAddDateTime() "
+
+	err := tzuIn.IsTimeZoneUtilityValid()
+
+	if err != nil {
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzuIn' is INVALID! Error='%v'", err.Error())
+	}
+
+	tzuOut := tzuIn.CopyOut()
+
+	err = tzuOut.AddDateTime(years, months, days, hours, minutes,
+		seconds, milliseconds, microseconds, nanoseconds)
+
+	if err != nil {
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDateTime(...). Error='%v'", err.Error())
+	}
+
+	return tzuOut, nil
+}
+
 // NewAddDuration - receives two input parameters, a TimeZoneUtility 'tzuIn' and a
 // time 'duration'. 'tzuIn' is adjusted for the specified 'duration' and the resulting
 // new TimeZoneUtility is returned.
@@ -482,7 +788,7 @@ func (tzu TimeZoneUtility) NewAddDuration(tzuIn TimeZoneUtility, duration time.D
 	err := tzuIn.IsTimeZoneUtilityValid()
 
 	if err != nil {
-		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzIn' is INVALID! Error='%v'", err.Error())
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzuIn' is INVALID! Error='%v'", err.Error())
 	}
 
 	tzuOut := tzuIn.CopyOut()
@@ -491,6 +797,42 @@ func (tzu TimeZoneUtility) NewAddDuration(tzuIn TimeZoneUtility, duration time.D
 
 	if err != nil {
 		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDuration(duration). Error='%v'", err.Error())
+	}
+
+	return tzuOut, nil
+}
+
+// NewAddTime - returns a new TimeZoneUtility equivalent to the input TimeZoneUtility Plus time elements.
+//
+// Input Parameters:
+// =================
+//
+// tzuIn				- TimeZoneUtility
+// hours				- hours to be added to tzuIn
+// minutes			- minutes to be added to tzuIn
+// seconds			- seconds to be added to tzuIn
+// milliseconds	- milliseconds to be added to tzuIn
+// microseconds	- microseconds to be added to tzuIn
+// nanoseconds	- nanoseconds to be added to tzuIn
+//
+// Note: Negative time values may be used to subtract time from tzuIn.
+//
+func (tzu TimeZoneUtility) NewAddTime(tzuIn TimeZoneUtility, hours, minutes, seconds, milliseconds, microseconds, nanoseconds int) (TimeZoneUtility, error) {
+
+	ePrefix := "TimeZoneUtility.NewAddTime() "
+
+	err := tzuIn.IsTimeZoneUtilityValid()
+
+	if err != nil {
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzuIn' is INVALID! Error='%v'", err.Error())
+	}
+
+	tzuOut := tzuIn.CopyOut()
+
+	err = tzuOut.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
+
+	if err != nil {
+		return TimeZoneUtility{}, fmt.Errorf("Error returned by tzuOut.AddTime(...). Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil
