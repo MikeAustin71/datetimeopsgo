@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"testing"
 	"time"
 )
@@ -355,6 +354,73 @@ func TestTimeZoneUtility_IsValidTimeZone02(t *testing.T) {
 
 }
 
+func TestTimeZoneUtility_Location_01(t *testing.T) {
+	utcTime := "2017-04-30 00:54:30 +0000 UTC"
+	fmtstr := "2006-01-02 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+
+	tUtc, _ := time.Parse(fmtstr, utcTime)
+
+	tzu := TimeZoneUtility{}
+
+	tzuPacific, err := tzu.ConvertTz(tUtc, ianaPacificTz)
+
+	if err != nil {
+		t.Errorf("Error from TimeZoneUtility{}.ConvertTz. Utc Time = %v. Error= %v", utcTime, err.Error())
+	}
+
+	tzOutPacific := tzuPacific.TimeOutLoc.String()
+
+	if tzOutPacific != ianaPacificTz {
+		t.Errorf("Error: Expected tzOutPacific %v. Instead, got %v", ianaPacificTz, tzOutPacific)
+	}
+
+}
+
+func TestTimeZoneUtility_Location_02(t *testing.T) {
+
+	pacificTime := "2017-04-29 17:54:30 -0700 PDT"
+	fmtstr := "2006-01-02 15:04:05 -0700 MST"
+	tPacific, _ := time.Parse(fmtstr, pacificTime)
+
+	tzu := TimeZoneUtility{}
+
+	tzuLocal, err := tzu.ConvertTz(tPacific, "Local")
+
+	if err != nil {
+		t.Errorf("Error from TimeZoneUtility{}.ConvertTz. Pacific Time = %v. Error= %v", pacificTime, err.Error())
+	}
+
+	tzOutLocal := tzuLocal.TimeOutLoc.String()
+
+	if "Local" != tzOutLocal {
+		t.Errorf("Error: Expected tzOutLocal 'Local'. Instead, got %v", tzOutLocal)
+	}
+
+}
+
+func TestTimeZoneUtility_MakeDateTz(t *testing.T) {
+	tPacific := "2017-04-29 17:54:30 -0700 PDT"
+	fmtstr := "2006-01-02 15:04:05 -0700 MST"
+
+	dtTzDto := DateTzDto{Year: 2017, Month: 4, Day: 29, Hour: 17, Minute: 54, Second: 30, TimeZone: "America/Los_Angeles"}
+
+	tzu := TimeZoneUtility{}
+
+	tOut, err := tzu.MakeDateTz(dtTzDto)
+
+	if err != nil {
+		t.Errorf("Error returned from TimeZoneUtility.MakeDateTz(). Error: %v", err.Error())
+	}
+
+	tOutStr := tOut.Format(fmtstr)
+
+	if tPacific != tOutStr {
+		t.Errorf("Error - Expected output time string: %v. Instead, got %v.", tPacific, tOutStr)
+	}
+
+}
+
 func TestTimeZoneUtility_New_01(t *testing.T) {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
@@ -490,138 +556,99 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 	}
 }
 
-// expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-func TestTimeZoneUtility_ReclassifyTimeWithTzLocal(t *testing.T) {
-	/*
-			Example Method: ReclassifyTimeWithNewTz()
-		Input Time :  2017-04-29 17:54:30 -0700 PDT
-		Output Time:  2017-04-29 17:54:30 -0500 CDT
-	*/
+func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
+	// expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	tPacific := "2017-04-29 17:54:30 -0700 PDT"
-	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tz := TimeZoneUtility{}
-	tIn, err := time.Parse(fmtstr, tPacific)
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	tzu1, err := TimeZoneUtility{}.New(t1, TzUsEast)
+
 	if err != nil {
-		fmt.Printf("Error returned from time.Parse: %v", err.Error())
-		return
+		t.Errorf("Error returned by TimeZoneUtility{}.New(t1, TzUsEast). Error='%v'", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, "Local")
+	tzu2, err := TimeZoneUtility{}.NewAddDateTime(tzu1, 3,2, 15, 3, 4, 2,0, 0, 0)
 
-	tOutLoc := tOut.Location()
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneUtility{}.NewAddDateTime(tzu1, 3,2, 15, 3, 4, 2,0, 0, 0). Error='%v'", err.Error())
+	}
 
-	if tOutLoc.String() != "Local" {
-		t.Error("Expected tOutLocation == 'Local', instead go Location: ", tOutLoc.String())
+	tzu2TimeInStr := tzu2.TimeIn.Format(fmtstr)
+
+	if t2OutStr != tzu2TimeInStr {
+		t.Errorf("Error: Expected tzu2.TimeIn='%v'.  Instead, tzu2.TimeIn='%v'. ",t2OutStr, tzu2TimeInStr)
+	}
+
+	tzu2Dur, err := tzu2.Sub(tzu1)
+
+	if err != nil {
+		t.Errorf("Error returned by tzu2.Sub(tzu1)")
+	}
+
+	if t12Dur != tzu2Dur {
+		t.Errorf("Error expected tzu1-tzu2 Duration='%v'.  Instead, Duration='%v'",t12Dur, tzu2Dur)
 	}
 
 }
 
-func TestTimeZoneUtility_ReclassifyTimeWithNewTz(t *testing.T) {
+func TestTimeZoneUtility_NewAddTime_01(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	tPacific := "2017-04-29 17:54:30 -0700 PDT"
-	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tz := TimeZoneUtility{}
-	tIn, err := time.Parse(fmtstr, tPacific)
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	tzu1, err := TimeZoneUtility{}.New(t1, TzUsPacific)
 	if err != nil {
-		fmt.Printf("Error returned from time.Parse: %v", err.Error())
-		return
+		t.Errorf("Error returned by TimeZoneUtility{}.New(t1, TzUsPacific). Error='%v'", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TzUsHawaii)
+	tzu1OutStrTIn := tzu1.TimeIn.Format(fmtstr)
 
-	tOutLoc := tOut.Location()
-
-	if tOutLoc.String() != TzUsHawaii {
-		t.Error(fmt.Sprintf("Expected tOutLocation == '%v', instead go Location: ", TzUsHawaii), tOutLoc.String())
+	if t1OutStr != tzu1OutStrTIn {
+		t.Errorf("Error: Expected tzu1OutStrTIn='%v'.  Instead, tzu1OutStrTIn='%v'", t1OutStr, tzu1OutStrTIn )
 	}
 
-}
+	dNanSecs := int64(0)
 
-func TestTimeZoneUtility_ReclassifyTimeAsMountain(t *testing.T) {
+	dNanSecs = int64(time.Hour) * int64(3)
+	dNanSecs += int64(time.Minute) * int64(32)
+	dNanSecs += int64(time.Second) * int64(18)
+	dNanSecs += int64(time.Millisecond) * int64(122)
+	dNanSecs += int64(time.Microsecond) * int64(58)
+	dNanSecs += int64(615) // Nanoseconds
 
-	tPacific := "2017-04-29 17:54:30 -0700 PDT"
-	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tz := TimeZoneUtility{}
-	tIn, err := time.Parse(fmtstr, tPacific)
-	if err != nil {
-		fmt.Printf("Error returned from time.Parse: %v", err.Error())
-		return
+
+
+	t2 := t1.Add(time.Duration(dNanSecs))
+	t2OutStr := t2.Format(fmtstr)
+
+	tzu2, err := TimeZoneUtility{}.NewAddTime(tzu1, 3, 32, 18,122,58,615 )
+
+	tzu2OutStrTIn := tzu2.TimeIn.Format(fmtstr)
+
+	if t2OutStr != tzu2OutStrTIn {
+		t.Errorf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TzUsMountain)
-
-	tOutLoc := tOut.Location()
-
-	if tOutLoc.String() != TzUsMountain {
-		t.Error(fmt.Sprintf("Expected tOutLocation == '%v', instead go Location: ", TzUsHawaii), tOutLoc.String())
-	}
-
-}
-
-func TestTimeZoneUtility_MakeDateTz(t *testing.T) {
-	tPacific := "2017-04-29 17:54:30 -0700 PDT"
-	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-
-	dtTzDto := DateTzDto{Year: 2017, Month: 4, Day: 29, Hour: 17, Minute: 54, Second: 30, TimeZone: "America/Los_Angeles"}
-
-	tzu := TimeZoneUtility{}
-
-	tOut, err := tzu.MakeDateTz(dtTzDto)
+	actualDuration, err := tzu2.Sub(tzu1)
 
 	if err != nil {
-		t.Errorf("Error returned from TimeZoneUtility.MakeDateTz(). Error: %v", err.Error())
+		t.Errorf("Error returned by tzu2.Sub(tzu1). Error='%v'", err.Error())
 	}
 
-	tOutStr := tOut.Format(fmtstr)
+	expectedDuration := t2.Sub(t1)
 
-	if tPacific != tOutStr {
-		t.Errorf("Error - Expected output time string: %v. Instead, got %v.", tPacific, tOutStr)
+	if expectedDuration != actualDuration {
+		t.Errorf("Error: Expected Duration='%v'. Instead, Actual Duration='%v'", expectedDuration, actualDuration )
 	}
-
 }
 
-func TestTimeZoneUtility_Location_01(t *testing.T) {
-	utcTime := "2017-04-30 00:54:30 +0000 UTC"
-	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	ianaPacificTz := "America/Los_Angeles"
 
-	tUtc, _ := time.Parse(fmtstr, utcTime)
-
-	tzu := TimeZoneUtility{}
-
-	tzuPacific, err := tzu.ConvertTz(tUtc, ianaPacificTz)
-
-	if err != nil {
-		t.Errorf("Error from TimeZoneUtility{}.ConvertTz. Utc Time = %v. Error= %v", utcTime, err.Error())
-	}
-
-	tzOutPacific := tzuPacific.TimeOutLoc.String()
-
-	if tzOutPacific != ianaPacificTz {
-		t.Errorf("Error: Expected tzOutPacific %v. Instead, got %v", ianaPacificTz, tzOutPacific)
-	}
-
-}
-func TestTimeZoneUtility_Location_02(t *testing.T) {
-
-	pacificTime := "2017-04-29 17:54:30 -0700 PDT"
-	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tPacific, _ := time.Parse(fmtstr, pacificTime)
-
-	tzu := TimeZoneUtility{}
-
-	tzuLocal, err := tzu.ConvertTz(tPacific, "Local")
-
-	if err != nil {
-		t.Errorf("Error from TimeZoneUtility{}.ConvertTz. Pacific Time = %v. Error= %v", pacificTime, err.Error())
-	}
-
-	tzOutLocal := tzuLocal.TimeOutLoc.String()
-
-	if "Local" != tzOutLocal {
-		t.Errorf("Error: Expected tzOutLocal 'Local'. Instead, got %v", tzOutLocal)
-	}
-
-}

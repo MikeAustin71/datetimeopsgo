@@ -1089,7 +1089,7 @@ func (tzu TimeZoneUtility) NewTimeAddDate(tIn time.Time, tZoneOutLocation string
 
 // NewTimeAddDateTime - returns a new TimeZoneUtility. The TimeZoneUtility is initialized
 // with the 'tIn' time parameter. The 'TimeOut' data field will be set to the 'tIn'
-// value and the time zone location specified by the second parameter, 'tZoneLocation'.
+// value adjusted for the time zone location specified by the second parameter, 'tZoneLocation'.
 // The method will then add the remaining date-time element parameters to the new TimeZoneUtility
 // instance and return it to the calling function.
 //
@@ -1183,13 +1183,103 @@ func (tzu TimeZoneUtility) NewTimeAddDateTime(tIn time.Time, tZoneLocation strin
 	return tzuOut, nil
 }
 
+
+// NewTimeAddDuration - receives a 'tIn' time.Time parameter and a 'tZoneLocation' parameter
+// which are used to construct an initial TimeZoneUtility instance. The 'TimeOut'
+// data field of this initial TimeZoneUtility will contain the value of 'tIn'
+// converted to a different time zone specified by 'tZoneLocation'.
+//
+// The 'duration' parameter will be added to this initial TimeZoneUtility and
+// an updated TimeZoneUtility instance will be returned to the calling function.
+//
+// Input Parameters
+// ================
+// tIn				time.Time 	- Initial time value assigned to 'TimeIn' field
+//													of the new TimeZoneUtility.
+//
+// tZoneLocation string		- The first input time value, 'tIn' will have its time zone
+// 													changed to a new time zone location specified by this second
+// 													parameter, 'tZoneLocation'. This time zone location must be
+// 													designated as one of two values:
+//
+// 														(1) the string 'Local' - signals the designation of the
+// 																time zone	location used by the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//
+// duration			time.Duration	- an int64 duration value which is added to the date time
+//							value of the initial TimeZoneUtility created from 'tIn' and 'tZoneLocation'.
+//
+// Note: Negative duration values may be used to subtract time duration from the initial TimeZoneUtility
+// 			 date time values.
+//
+//	Returns
+//	=======
+//  There are two return values: 	(1) a TimeZoneUtility Type
+//																(2) an Error type
+//
+//  TimeZoneUtility - 	The duration input parameter is added to a TimeZoneUtility created from
+//											input parameters, 'tIn' and 'tZoneOutLocation'. The updated TimeZoneUtility
+//											instance is then returned to the calling function. A TimeZoneUtility structure
+//											is defined as follows:
+//
+//				type TimeZoneUtility struct {
+//									Description string					// Unused. Available for tagging and classification.
+//									TimeIn      time.Time				// Original input time value
+//									TimeInLoc   *time.Location  // Time Zone Location associated with TimeIn
+//									TimeOut     time.Time       // TimeOut - TimeIn value converted to TimeOut
+//																							// 		based on a specific Time Zone Location.
+//
+//									TimeOutLoc  *time.Location	// Time Zone Location associated with TimeOut
+//									TimeUTC     time.Time				// TimeUTC (Universal Coordinated Time) value
+// 																										equivalent to TimeIn
+//
+//									TimeLocal		time.Time				// Equivalent to TimeIn value converted to the 'Local'
+//																							// Time Zone Location. 'Local' is the Time Zone Location
+//																							// 	used by the host computer.
+//				}
+//
+//	error	-	If the method completes successfully, the returned error instance is
+//					set to nil. If errors are encountered, the returned error instance is populated
+//					with an error message.
+//
+func (tzu TimeZoneUtility) NewTimeAddDuration(tIn time.Time, tZoneLocation string, duration time.Duration) (TimeZoneUtility, error) {
+	ePrefix := "TimeZoneUtility.NewTimeAddDuration() "
+
+	tzuOut, err := tzu.ConvertTz(tIn, tZoneLocation)
+
+	if err != nil {
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error returne by tzu.ConvertTz(tIn, tZoneLocation). tIn='%v' tZoneLocation='%v'  Error='%v'", tIn, tZoneLocation, err.Error())
+	}
+
+	err = tzuOut.AddDuration(duration)
+
+	if err != nil {
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDuration(duration). duration='%v'  Error='%v'",duration, err.Error())
+	}
+
+	return tzuOut, nil
+}
+
 // NewTimeAddTime - receives a 'tIn' time.Time parameter and a 'tZoneLocation' parameter
 // which are used to construct an initial TimeZoneUtility instance. The 'TimeOut'
 // data field of this initial TimeZoneUtility will contain the value of 'tIn'
-// converted to a different time zone specified by 'tZoneUtility'.
+// converted to a different time zone specified by 'tZoneLocation'.
 //
 // The remaining time parameters will be added to this initial TimeZoneUtility and
-// it will be returned to the calling function.
+// the updated TimeZoneUtility will be returned to the calling function.
+//
 // Input Parameters
 // ================
 // tIn				time.Time 	- Initial time value assigned to 'TimeIn' field
@@ -1223,7 +1313,7 @@ func (tzu TimeZoneUtility) NewTimeAddDateTime(tIn time.Time, tZoneLocation strin
 // microseconds	int				- Number of microseconds to be added to initial TimeZoneUtility
 // nanoseconds	int				- Number of nanoseconds to be added to initial TimeZoneUtility
 //
-// Note: Negative time values may be used to subtract time from tzuIn.
+// Note: Negative time values may be used to subtract time from initial TimeZoneUtility.
 //
 //	Returns
 //	=======
@@ -1372,7 +1462,11 @@ func (tzu *TimeZoneUtility) SetLocalTime(t time.Time) error {
 }
 
 // Sub - Subtracts the input TimeZoneUtility from the current TimeZoneUtility
-// and returns the duration.
+// and returns the duration. Duration is calculated as:
+// 						tzu.TimeLocal.Sub(tzu2.TimeLocal)
+//
+// The TimeLocal field is used to compute duration for this method.
+//
 func (tzu *TimeZoneUtility) Sub(tzu2 TimeZoneUtility) (time.Duration, error) {
 
 	ePrefix := "TimeZoneUtility.Sub() "
