@@ -45,7 +45,7 @@ const (
 
 	// TzUsPacific - USA Pacific Time Zone
 	// IANA database identifier
-	TzUsPacific = "America/Los_Angeles"
+	TzUsPacific  = "America/Los_Angeles"
 
 	// TzUsHawaii - USA Hawaiian Time Zone
 	// IANA database identifier
@@ -58,21 +58,59 @@ const (
 	NeutralDateFmt = "2006-01-02 15:04:05.000000000"
 )
 
-// DateTzDto - `Used to store and transfer
-// date times.
+// DateTzDto - `Used to store and transfer date times.
+// The descriptors contained is this structure are intended
+// to define and identify a specific point in time.
+//
+// This Type is NOT used to define duration; that is, the
+// difference or time span between two point in time. For
+// these types of operations see:
+// DurationTimeUtility/common/durationutil.go
+//
+// DateTzDto defines a specific point in time using
+// a variety of descriptors including year, month, day
+// hour, minute, second, millisecond, microsecond and
+// and nanosecond. In addition this Type specifies a
+// time.Time value as well as time zone location and
+// time zone.
+//
+// If you are unfamiliar with the concept of a time
+// zone location, consider the field TimeLoc and
+// TimeLocName below:
+//
+// Time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//
 type DateTzDto struct {
-	Year       			int
-	Month      			int
-	Day        			int
-	Hour       			int
-	Minute     			int
-	Second     			int
-	Nanosecond 			int
-	TimeZone   			string
-	TimeZoneOffset	int
-	DateTime 				time.Time
-	TimeLoc    			*time.Location
-	TimeLocName			string
+	Year       			int							// Year Number
+	Month      			int							// Month Number
+	Day        			int							// Day Number
+	Hour       			int							// Hour Number
+	Minute     			int							// Minute Number
+	Second     			int							// Second Number
+	Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+	Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+	Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+	TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+	TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
+	TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
+	DateTime 				time.Time				// DateTime value for this DateTzDto Type
+	TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
+	TimeLocName			string					// Time Location Name. Example: "America/Chicago"
 }
 
 // New - creates a new DateTzDto object and populates the data fields based on
@@ -88,6 +126,7 @@ type DateTzDto struct {
 // min							int			- minute number	0 - 59
 // sec							int			- second number	0	-	59
 // nsec							int			- nanosecond number 0 - 999999999
+//
 // timeZoneLocation	string	- time zone location must be designated as one of two values.
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -108,6 +147,34 @@ type DateTzDto struct {
 // Output
 // ======
 // This method returns a DateTzDto instance with populated data fields.
+//
+// Returns
+// =======
+//
+//  There are two return values: 	(1) a DateTzDto Type
+//																(2) an Error type
+//
+//  DateTzDto - If successful the method returns a valid, fully populated
+//							DateTzDto type defined as follows:
+//
+//	type DateTzDto struct {
+//		Year       			int							// Year Number
+//		Month      			int							// Month Number
+//		Day        			int							// Day Number
+//		Hour       			int							// Hour Number
+//		Minute     			int							// Minute Number
+//		Second     			int							// Second Number
+//		Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//		Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
+//		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//		TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
+//		TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
+//		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
+//		TimeLocName			string					// Time Location Name. Example: "America/Chicago"
+//	}
 //
 func (dtz DateTzDto) New(year, month, day, hour, min, sec, nsec int, timeZoneLocation string) (DateTzDto, error) {
 
@@ -141,6 +208,7 @@ func (dtz DateTzDto) New(year, month, day, hour, min, sec, nsec int, timeZoneLoc
 		return dtz2, fmt.Errorf(ePrefix + "Error: Input parmeter second number is INVALID. Correct range is 0 - 59. sec='%v'", sec)
 	}
 
+
 	maxNanoSecs := int(time.Second) - int(1)
 
 	if nsec < 0 || nsec > maxNanoSecs {
@@ -168,13 +236,139 @@ func (dtz DateTzDto) New(year, month, day, hour, min, sec, nsec int, timeZoneLoc
 	dtz2.Hour 			= hour
 	dtz2.Minute			= min
 	dtz2.Second			= sec
-	dtz2.Nanosecond	= nsec
+	dtz2.TotalNanoSecs	= int64(nsec)
 	dtz2.TimeLoc 		= loc
 	dtz2.DateTime = time.Date(year, time.Month(month), day, hour, min, sec, nsec, loc)
 	dtz2.TimeZone, dtz2.TimeZoneOffset  = dtz2.DateTime.Zone()
 	dtz2.TimeLocName = dtz2.TimeLoc.String()
 
+	if dtz2.TotalNanoSecs == 0 {
+		return dtz2, nil
+	}
+
+	r := nsec
+
+	dtz2.Millisecond = r / int(time.Millisecond)
+
+	r -= dtz2.Millisecond * int(time.Millisecond)
+
+	if r == 0 {
+		return dtz2, nil
+	}
+
+	dtz2.Millisecond = r / int(time.Microsecond)
+
+	r -= dtz2.Microsecond * int(time.Microsecond)
+
+	dtz2.Nanosecond = r
+
 	return dtz2, nil
+}
+
+// NewDateTime
+func (dtz DateTzDto) NewDateTime(year, month, day, hour, minute, second,
+					millisecond, microsecond, nanosecond int, timeZoneLocation string) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.New() "
+
+	dtz2 := DateTzDto{}
+
+	if year < 0 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter year number is INVALID. 'year' must be greater than or equal to Zero. year='%v'", year)
+	}
+
+	if month < 1 || month > 12  {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter month number is INVALID. Correct range is 1-12. month='%v'", month)
+	}
+
+
+	if day < 1 || day > 31  {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. day='%v'", day)
+	}
+
+
+	if hour < 0 || hour > 24 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter 'hour' number is INVALID. Correct range is 0-24. hour='%v'", hour)
+	}
+
+	if minute < 0 || minute > 59 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter minute number is INVALID. Correct range is 0 - 59. min='%v'", minute)
+	}
+
+	if second < 0 || second > 59 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parmeter second number is INVALID. Correct range is 0 - 59. second='%v'", second)
+	}
+
+	if millisecond < 0 || millisecond > 999 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter millisecond is INVALID. Correct range is 0 - 999. millisecond='%v'", millisecond)
+	}
+
+	if microsecond < 0 || microsecond > 999 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter microsecond is INVALID. Correct range is 0 - 999,999. microsecond='%v'", microsecond)
+	}
+
+	if nanosecond < 0 || nanosecond > 999 {
+		return dtz2, fmt.Errorf(ePrefix + "Error: Input parameter nanosecond is INVALID. Correct range is 0 - 999. nanosecond='%v'", nanosecond)
+	}
+
+	return DateTzDto{}, nil
+
+}
+
+// CopyOut - returns a DateTzDto  instance
+// which represents a deep copy of the current
+// DateTzDto object.
+func (dtz *DateTzDto) CopyOut() DateTzDto {
+	dtz2 := DateTzDto{}
+
+	dtz2.Year 					= dtz.Year
+	dtz2.Month 					= dtz.Month
+	dtz2.Day						= dtz.Day
+	dtz2.Hour						= dtz.Hour
+	dtz2.Minute					= dtz.Minute
+	dtz2.Second					= dtz.Second
+	dtz2.Millisecond		= dtz.Millisecond
+	dtz2.Microsecond		= dtz.Microsecond
+	dtz2.Nanosecond			= dtz.Nanosecond
+	dtz2.TotalNanoSecs	= dtz.TotalNanoSecs
+
+	if !dtz.DateTime.IsZero() {
+		dtz2.DateTime = dtz.DateTime
+		dtz2.TimeZone, dtz2.TimeZoneOffset = dtz2.DateTime.Zone()
+		dtz2.TimeLoc = dtz2.DateTime.Location()
+		dtz2.TimeLocName = dtz2.TimeLoc.String()
+	} else {
+		dtz2.TimeZone				= ""
+		dtz2.TimeZoneOffset	= 0
+		dtz2.DateTime				= time.Time{}
+		dtz2.TimeLoc					= nil
+		dtz2.TimeLocName			= ""
+	}
+
+	return dtz2
+}
+
+// Empty - sets all values of the current DateTzDto
+// instance to their uninitialized or zero state.
+func (dtz *DateTzDto) Empty() {
+
+	dtz.Year 						= 0
+	dtz.Month 					= 0
+	dtz.Day							= 0
+	dtz.Hour						= 0
+	dtz.Minute					= 0
+	dtz.Second					= 0
+	dtz.Millisecond			= 0
+	dtz.Microsecond			= 0
+	dtz.Nanosecond			= 0
+	dtz.TotalNanoSecs		= 0
+	dtz.TimeZone				= ""
+	dtz.TimeZoneOffset	= 0
+	dtz.DateTime				= time.Time{}
+	dtz.TimeLoc					= nil
+	dtz.TimeLocName			= ""
+
+	return
 }
 
 // TimeZoneUtility - Time Zone Data and Methods

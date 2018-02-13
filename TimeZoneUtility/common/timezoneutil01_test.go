@@ -625,8 +625,6 @@ func TestTimeZoneUtility_NewAddTime_01(t *testing.T) {
 	dNanSecs += int64(time.Microsecond) * int64(58)
 	dNanSecs += int64(615) // Nanoseconds
 
-
-
 	t2 := t1.Add(time.Duration(dNanSecs))
 	t2OutStr := t2.Format(fmtstr)
 

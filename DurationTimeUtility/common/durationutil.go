@@ -70,11 +70,14 @@ import (
 */
 
 const (
+	// Note: A Nanosecond is equal to 1 one-billionth or
+	//       1/1,000,000,000 of a second.
+
 	// MicroSecondNanoseconds - Number of Nanoseconds in a Microsecond
 	// 	A MicroSecond is 1/1,000,000 or 1 one-millionth of a second
 	MicroSecondNanoseconds = int64(time.Microsecond)
 	// MilliSecondNanoseconds - Number of Nanoseconds in a MilliSecond
-	//	 A millisecond is 1/1,000 or one thousandth of a second
+	//	 A millisecond is 1/1,000 or 1 one-thousandth of a second
 	MilliSecondNanoseconds = int64(time.Millisecond)
 	// SecondNanoseconds - Number of Nanoseconds in a Second
 	SecondNanoseconds = int64(time.Second)
