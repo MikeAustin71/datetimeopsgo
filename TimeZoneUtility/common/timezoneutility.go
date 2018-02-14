@@ -463,7 +463,8 @@ func (dtz DateTzDto) NewDateTime(year, month, day, hour, minute, second,
 	return dtz2, nil
 
 }
-
+// allocateNanoseconds - allocates total Nanoseconds to milliseconds, microseconds
+// and nanoseconds.
 func (dtz *DateTzDto) allocateNanoseconds(totNanoseconds int64) {
 
 	if totNanoseconds == 0 {
