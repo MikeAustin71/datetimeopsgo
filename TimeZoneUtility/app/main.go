@@ -1,7 +1,7 @@
 package main
 
 import (
-	"MikeAustin71/datetimeopsgo/TimeZoneUtility/common"
+	// "MikeAustin71/datetimeopsgo/TimeZoneUtility/common"
 
 	"time"
 	"fmt"
@@ -18,14 +18,12 @@ import (
 
 func main() {
 
-	appStartTimeTzu, _ := common.TimeZoneUtility{}.ConvertTz(time.Now().UTC(), "Local")
+	millisecond := int64(time.Millisecond)
+	microsecond := int64(time.Microsecond)
+	fmt.Println("     nanoseconds in second: ", int64(time.Second))
+	fmt.Println("nanoseconds in millisecond: ", millisecond)
+	fmt.Println("nanoseconds in microsecond: ", microsecond)
 
-	dt := common.DateTimeUtility{}
-	dateTimeStamp := dt.GetDateTimeStr(appStartTimeTzu.TimeOut)
-	logFileNameExt :=  "BaseFileName" + "_" + dateTimeStamp + ".log"
-	fmt.Println(" File Name Composite: ", logFileNameExt)
-	fmt.Println("     Date Time Stamp: ", dateTimeStamp)
-	dateTimeStamp = dt.GetDateTimeNanoSecText(appStartTimeTzu.TimeOut)
-	fmt.Println("Full Date Time Stamp: ", dateTimeStamp)
+	fmt.Println()
 
 }
