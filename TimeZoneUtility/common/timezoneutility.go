@@ -315,7 +315,7 @@ func (dtz DateTzDto) NewDateTimeElements(year, month, day, hour, min, sec, nanos
 	dtz2.TimeZone, dtz2.TimeZoneOffset  = dtz2.DateTime.Zone()
 	dtz2.TimeLocName = dtz2.TimeLoc.String()
 
-	dtz.allocateNanoseconds(int64(nanosecond))
+	dtz2.allocateNanoseconds(int64(nanosecond))
 
 	return dtz2, nil
 }
@@ -444,13 +444,23 @@ func (dtz DateTzDto) NewDateTime(year, month, day, hour, minute, second,
 		return dtz2, fmt.Errorf("Error returned from time.LoadLocation(timeZoneLocation). 'timeZoneLocation' is INVALID. timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
 	}
 
+	dtz2.TimeLocName = dtz2.TimeLoc.String()
+
 	dtz2.TotalNanoSecs =  int64(millisecond) * int64(time.Millisecond)
+	dtz2.Millisecond = millisecond
 	dtz2.TotalNanoSecs += int64(microsecond) * int64(time.Microsecond)
+	dtz2.Microsecond = microsecond
 	dtz2.TotalNanoSecs += int64(nanosecond)
+	dtz2.Nanosecond = nanosecond
 
 	dtz2.DateTime = time.Date(year, time.Month(month),day, hour, minute, second, int(dtz2.TotalNanoSecs), dtz2.TimeLoc)
-
-	return DateTzDto{}, nil
+	dtz2.TimeZone, dtz2.TimeZoneOffset = dtz2.DateTime.Zone()
+	dtz2.Year = dtz2.DateTime.Year()
+	dtz2.Month = int(dtz2.DateTime.Month())
+	dtz2.Hour = dtz2.DateTime.Hour()
+	dtz2.Minute = dtz2.DateTime.Minute()
+	dtz2.Second = dtz2.DateTime.Second()
+	return dtz2, nil
 
 }
 
