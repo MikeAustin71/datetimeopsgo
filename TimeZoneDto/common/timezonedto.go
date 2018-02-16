@@ -195,14 +195,14 @@ const (
 
 
 const (
-	// TzNeutralDateFmt - Neutral Date Format without Time Zone
-	TzNeutralDateFmt = "2006-01-02 15:04:05.000000000"
+	// TzDtoNeutralDateFmt - Neutral Date Format without Time Zone
+	TzDtoNeutralDateFmt = "2006-01-02 15:04:05.000000000"
 
-	// TzMDYrFmtStr - Month Day Year Date Format String
-	TzMDYrFmtStr     = "01/02/2006 15:04:05.000000000 -0700 MST"
+	// TzDtoMDYrFmtStr - Month Day Year Date Format String
+	TzDtoMDYrFmtStr = "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	// TzYrMDayFmtStr - Year Month Day Date Format String
-	TzYrMDayFmtStr   = "2006-01-02 15:04:05.000000000 -0700 MST"
+	// TzDtoYrMDayFmtStr - Year Month Day Date Format String
+	TzDtoYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 )
 
 // TimeZoneDefDto - Time Zone Definition Dto
@@ -986,14 +986,14 @@ millisecond, microsecond, nanosecond int, timeZoneLocation string) error {
 // empty string, a default format string will
 // be used. The default format is:
 //
-// TzYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+// TzDtoYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz *DateTzDto) String() string {
 
 	fmtStr := dtz.DateTimeFmt
 
 	if len(fmtStr) == 0 {
-		fmtStr = TzYrMDayFmtStr
+		fmtStr = TzDtoYrMDayFmtStr
 	}
 
 	return dtz.DateTime.Format(fmtStr)
@@ -2326,7 +2326,7 @@ func (tzu *TimeZoneDto) ReclassifyTimeWithNewTz(tIn time.Time, tZoneLocation str
 		return time.Time{}, fmt.Errorf(ePrefix + "Error returned by time.Location('%v') - Error: %v", tZoneLocation, err.Error())
 	}
 
-	tOut, err := time.ParseInLocation(TzNeutralDateFmt, strTime, tzNew)
+	tOut, err := time.ParseInLocation(TzDtoNeutralDateFmt, strTime, tzNew)
 
 	if err != nil {
 		return tOut, fmt.Errorf(ePrefix + "Error returned by time.Parse - Error: %v", err.Error())
@@ -2397,5 +2397,5 @@ func (tzu *TimeZoneDto) Sub(tzu2 TimeZoneDto) (time.Duration, error) {
 // NO time zone. - When the returned string is converted to
 // time.Time - in defaults to a UTC time zone.
 func (tzu *TimeZoneDto) TimeWithoutTimeZone(t time.Time) string {
-	return t.Format(TzNeutralDateFmt)
+	return t.Format(TzDtoNeutralDateFmt)
 }
