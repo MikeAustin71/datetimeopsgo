@@ -12,7 +12,7 @@ The Date Time Utilities currently consist of four separate libraries:
 
 1. ../DateTimeUtility - A generalized utility for managing date time strings
 
-2. ../TimeZoneUtility - A utility for managing date times in various timezones
+2. ../TimeZoneDto - A utility for managing date times in various timezones
 
 3. ../DurationTimeUtility - A utility for computing durations and elapsed times.
 

@@ -43,10 +43,10 @@ func Tex002() {
 }
 
 // Tex003 - Test Example 0003 demonstrates use of
-// method TimeZoneUtility.ConvertTz()
+// method TimeZoneDto.ConvertTz()
 func Tex003() {
 
-	tzu := TimeZoneUtility{}
+	tzu := TimeZoneDto{}
 
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
@@ -170,7 +170,7 @@ func Tex008() {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu := TimeZoneUtility{}
+	tzu := TimeZoneDto{}
 	tzu.ConvertTz(tIn, ianaPacificTz)
 
 	fmt.Println("Original Time String: ", tstr)
@@ -194,7 +194,7 @@ func Tex008() {
 func Tex009() {
 	ianaPacificTz := "America/Los_Angeles"
 	tIn := time.Now()
-	tzu := TimeZoneUtility{}
+	tzu := TimeZoneDto{}
 	tzu.ConvertTz(tIn, ianaPacificTz)
 
 	fmt.Println("Original Time: ", tIn)
@@ -219,7 +219,7 @@ func Tex009() {
 func Tex010() {
 	ianaPacificTz := "America/Los_Angeles"
 	tIn := time.Now()
-	tzu := TimeZoneUtility{}
+	tzu := TimeZoneDto{}
 	tzu.ConvertTz(tIn, ianaPacificTz)
 
 	fmt.Println("Original Time: ", tIn)
@@ -252,7 +252,7 @@ func Tex010() {
 func ReclassifyTimeAsLocal() {
 	tPacific := "2017-04-29 17:54:30 -0700 PDT"
 	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tz := TimeZoneUtility{}
+	tz := TimeZoneDto{}
 	tIn, err := time.Parse(fmtstr, tPacific)
 	if err != nil {
 		fmt.Printf("Error returned from time.Parse: %v", err.Error())
@@ -273,19 +273,19 @@ func ReclassifyTimeAsLocal() {
 func Tex011() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
-	tz := TimeZoneUtility{}
+	tz := TimeZoneDto{}
 
 	tCDT, _ := time.Parse(fmtstr, tstr)
 
 	tzuOut, err := tz.ConvertTz(tCDT, TzUsEast)
 
 	if err != nil {
-		fmt.Println("TimeZoneUtility:ConverTz(tCDT,TzUsEast) returned Error: " + err.Error())
+		fmt.Println("TimeZoneDto:ConverTz(tCDT,TzUsEast) returned Error: " + err.Error())
 		return
 	}
 
 
-	tzuEast := TimeZoneUtility{}
+	tzuEast := TimeZoneDto{}
 	tzuEast.CopyToThis(tzuOut)
 	tzuEast.Description = "CDT to Eastern Time Zone Conversion"
 	printOutTimeZoneFields(tzuEast)
@@ -293,7 +293,7 @@ func Tex011() {
 	tzuLocal, err := tz.ConvertTz(tzuEast.TimeOut, "Local")
 
 	if err != nil {
-		fmt.Println("TimeZoneUtility:ConverTz(tzuEast.TimeOut,'Local') returned Error: " + err.Error())
+		fmt.Println("TimeZoneDto:ConverTz(tzuEast.TimeOut,'Local') returned Error: " + err.Error())
 		return
 	}
 
@@ -308,8 +308,8 @@ func Tex021() {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	//tz := TimeZoneUtility{}
-	tzu, _:= TimeZoneUtility{}.New(tIn, ianaPacificTz)
+	//tz := TimeZoneDto{}
+	tzu, _:= TimeZoneDto{}.New(tIn, ianaPacificTz)
 
 	fmt.Println("Original Time String: ", tstr)
 	fmt.Println("          tzu.TimeIn: ", tzu.TimeIn)
@@ -337,7 +337,7 @@ func Tex021() {
 }
 
 
-func printOutTimeZoneFields(tz TimeZoneUtility) {
+func printOutTimeZoneFields(tz TimeZoneDto) {
 
 	fmt.Println()
 	fmt.Println("*********************************")
@@ -359,7 +359,7 @@ func ExampleDurationLocalUTCTime() {
 
 	t1, _ := time.Parse(fmtstr, t1UTCStr)
 
-	tz := TimeZoneUtility{}
+	tz := TimeZoneDto{}
 
 	tzLocal, _ := tz.ConvertTz(t1, localTzStr)
 	t1OutStr := t1.Format(fmtstr)

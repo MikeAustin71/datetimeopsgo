@@ -70,7 +70,7 @@ type DateTzDto struct {
 	IANATimeZone string
 }
 
-// TimeZoneUtility - Time Zone Data and Methods
+// TimeZoneDto - Time Zone Data and Methods
 type TimeZoneUtility struct {
 	Description string
 	TimeIn      time.Time
@@ -82,10 +82,10 @@ type TimeZoneUtility struct {
 }
 
 // AddDate - Adds specified years, months and days values to the
-// current time values maintained by this TimeZoneUtility
+// current time values maintained by this TimeZoneDto
 func (tzu *TimeZoneUtility) AddDate(years, months, days int) error {
 
-	ePrefix := "TimeZoneUtility.AddDate() "
+	ePrefix := "TimeZoneDto.AddDate() "
 
 	err := tzu.IsTimeZoneUtilityValid()
 
@@ -105,10 +105,10 @@ func (tzu *TimeZoneUtility) AddDate(years, months, days int) error {
 
 
 // AddDuration - Adds 'duration' to the time values maintained by the
-// current TimeZoneUtility
+// current TimeZoneDto
 func (tzu *TimeZoneUtility) AddDuration(duration time.Duration) error {
 
-	ePrefix := "TimeZoneUtility.AddDuration() "
+	ePrefix := "TimeZoneDto.AddDuration() "
 
 	if duration == 0 {
 		return nil
@@ -117,7 +117,7 @@ func (tzu *TimeZoneUtility) AddDuration(duration time.Duration) error {
 	err := tzu.IsTimeZoneUtilityValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "This TimeZoneUtility instance is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "This TimeZoneDto instance is INVALID! Error='%v'", err.Error())
 	}
 
 	tzu.TimeIn = tzu.TimeIn.Add(duration)
@@ -132,7 +132,7 @@ func (tzu *TimeZoneUtility) AddDuration(duration time.Duration) error {
 
 
 // ConvertTz - Convert Time from existing time zone to targetTZone.
-// The results are stored in the TimeZoneUtility data structure.
+// The results are stored in the TimeZoneDto data structure.
 // The input time and output time are equivalent times adjusted
 // for different time zones.
 //
@@ -141,12 +141,12 @@ func (tzu *TimeZoneUtility) AddDuration(duration time.Duration) error {
 // targetTz - The IANA Time Zone or Time Zone 'Local' to which
 // input parameter 'tIn' will be converted.
 
-// Output Values are returned in the tzu (TimeZoneUtility)
+// Output Values are returned in the tzu (TimeZoneDto)
 // data fields. tzu.TimeOut contains the correct time in the 'target' time
 // zone.
 func (tzu TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) (TimeZoneUtility, error) {
 
-	ePrefix := "TimeZoneUtility.ConvertTz() "
+	ePrefix := "TimeZoneDto.ConvertTz() "
 
 	tzuOut := TimeZoneUtility{}
 
@@ -181,7 +181,7 @@ func (tzu TimeZoneUtility) ConvertTz(tIn time.Time, targetTz string) (TimeZoneUt
 }
 
 // CopyOut - Creates and returns a deep copy of the
-// current TimeZoneUtility instance.
+// current TimeZoneDto instance.
 func (tzu *TimeZoneUtility) CopyOut() TimeZoneUtility {
 	tzu2 := TimeZoneUtility{}
 	tzu2.Description = tzu.Description
@@ -195,8 +195,8 @@ func (tzu *TimeZoneUtility) CopyOut() TimeZoneUtility {
 	return tzu2
 }
 
-// CopyToThis - Copies another TimeZoneUtility
-// to the current TimeZoneUtility data fields.
+// CopyToThis - Copies another TimeZoneDto
+// to the current TimeZoneDto data fields.
 func (tzu *TimeZoneUtility) CopyToThis(tzu2 TimeZoneUtility) {
 	tzu.Empty()
 
@@ -210,7 +210,7 @@ func (tzu *TimeZoneUtility) CopyToThis(tzu2 TimeZoneUtility) {
 }
 
 // Equal - returns a boolean value indicating
-// whether two TimeZoneUtility data structures
+// whether two TimeZoneDto data structures
 // are equivalent.
 func (tzu *TimeZoneUtility) Equal(tzu2 TimeZoneUtility) bool {
 	if tzu.TimeIn != tzu2.TimeIn ||
@@ -227,7 +227,7 @@ func (tzu *TimeZoneUtility) Equal(tzu2 TimeZoneUtility) bool {
 }
 
 // Empty - Clears or returns this
-// TimeZoneUtility to an uninitialized
+// TimeZoneDto to an uninitialized
 // state.
 func (tzu *TimeZoneUtility) Empty() {
 	tzu.Description = ""
@@ -240,10 +240,10 @@ func (tzu *TimeZoneUtility) Empty() {
 }
 
 // GetLocationIn - Returns the time zone location for the
-// TimeInLoc data field which is part of the current TimeZoneUtility
+// TimeInLoc data field which is part of the current TimeZoneDto
 // structure.
 func (tzu *TimeZoneUtility) GetLocationIn() (string, error) {
-	ePrefix := "TimeZoneUtility.GetLocationIn() "
+	ePrefix := "TimeZoneDto.GetLocationIn() "
 
 	if tzu.TimeIn.IsZero() {
 		return "", errors.New(ePrefix + "Error: TimeIn is Zero and Uninitialized!")
@@ -253,11 +253,11 @@ func (tzu *TimeZoneUtility) GetLocationIn() (string, error) {
 }
 
 // Get LocationOut - - Returns the time zone location for the
-// TimeInLoc data field which is part of the current TimeZoneUtility
+// TimeInLoc data field which is part of the current TimeZoneDto
 // structure.
 func (tzu *TimeZoneUtility) GetLocationOut() (string, error) {
 
-	ePrefix := "TimeZoneUtility.GetLocationOut() "
+	ePrefix := "TimeZoneDto.GetLocationOut() "
 
 	if tzu.TimeOut.IsZero() {
 		return "", errors.New(ePrefix + "Error: TimeOut is Zero and Uninitialized!")
@@ -268,11 +268,11 @@ func (tzu *TimeZoneUtility) GetLocationOut() (string, error) {
 
 
 // GetZoneIn - Returns The Time Zone for the TimeIn
-// data field contained in the current TimeZoneUtility
+// data field contained in the current TimeZoneDto
 // structure.
 func (tzu *TimeZoneUtility) GetZoneIn() (string, error) {
 
-	ePrefix := "TimeZoneUtility.GetZoneIn() "
+	ePrefix := "TimeZoneDto.GetZoneIn() "
 
 	if tzu.TimeOut.IsZero() {
 		return "", errors.New(ePrefix + "Error: TimeOut is Zero and Uninitialized!")
@@ -285,11 +285,11 @@ func (tzu *TimeZoneUtility) GetZoneIn() (string, error) {
 }
 
 // GetZoneOut - Returns The Time Zone for the TimeOut
-// data field contained in the current TimeZoneUtility
+// data field contained in the current TimeZoneDto
 // structure.
 func (tzu *TimeZoneUtility) GetZoneOut() (string, error) {
 
-	ePrefix := "TimeZoneUtility.GetZoneOut() "
+	ePrefix := "TimeZoneDto.GetZoneOut() "
 
 	if tzu.TimeOut.IsZero() {
 		return "", errors.New(ePrefix + "Error: TimeOut is Zero and Uninitialized!")
@@ -301,11 +301,11 @@ func (tzu *TimeZoneUtility) GetZoneOut() (string, error) {
 
 }
 
-// IsTimeZoneUtilityValid - Analyzes the current TimeZoneUtility
+// IsTimeZoneUtilityValid - Analyzes the current TimeZoneDto
 // instance and returns an error if the instance is Invalid.
 func (tzu *TimeZoneUtility) IsTimeZoneUtilityValid() error {
 
-	ePrefix := "TimeZoneUtility.IsTimeZoneUtilityValid() "
+	ePrefix := "TimeZoneDto.IsTimeZoneUtilityValid() "
 
 	if tzu.TimeIn.IsZero() {
 		return errors.New(ePrefix + "Error: TimeIn is Zero!")
@@ -397,7 +397,7 @@ func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
 
 
 		if isValid ,_,_ := tzu.IsValidTimeZone(dtTzDto.IANATimeZone); !isValid {
-			return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Invalid Time Zone Error. Tz = %v.", dtTzDto.IANATimeZone )
+			return tOut, fmt.Errorf("TimeZoneDto.MakeDateTz() Invalid Time Zone Error. Tz = %v.", dtTzDto.IANATimeZone )
 
 		}
 	}
@@ -405,7 +405,7 @@ func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
 	tzLoc, err = time.LoadLocation(dtTzDto.IANATimeZone)
 
 	if err!= nil {
-		return tOut, fmt.Errorf("TimeZoneUtility.MakeDateTz() Error Loading Location! Invalid Time Zone Error. Tz = %v. Error: %v", dtTzDto.IANATimeZone, err.Error())
+		return tOut, fmt.Errorf("TimeZoneDto.MakeDateTz() Error Loading Location! Invalid Time Zone Error. Tz = %v. Error: %v", dtTzDto.IANATimeZone, err.Error())
 	}
 
 	tOut = time.Date(dtTzDto.Year, time.Month(dtTzDto.Month), dtTzDto.Day, dtTzDto.Hour, dtTzDto.Minute, dtTzDto.Second, dtTzDto.Nanosecond, tzLoc)
@@ -413,7 +413,7 @@ func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
 	return tOut, nil
 }
 
-// New - Initializes and returns a new TimeZoneUtility object.
+// New - Initializes and returns a new TimeZoneDto object.
 //
 // Input Parameters
 // ----------------
@@ -427,8 +427,8 @@ func (tzu *TimeZoneUtility) MakeDateTz(dtTzDto DateTzDto) (time.Time, error) {
 //													on IANA Time Zones.
 //
 // The two input parameters are used to populate and return
-// a TimeZoneUtility structure
-//				type TimeZoneUtility struct {
+// a TimeZoneDto structure
+//				type TimeZoneDto struct {
 //									Description string
 //									TimeIn      time.Time
 //									TimeInLoc   *time.Location
@@ -445,16 +445,16 @@ func (tzu TimeZoneUtility) New(tIn time.Time, timeZoneOut string) (TimeZoneUtili
 	return tzuOut.ConvertTz(tIn, timeZoneOut)
 }
 
-// NewAddDate - receives four parameters: a TimeZoneUtility 'tzuIn' and integer values for
+// NewAddDate - receives four parameters: a TimeZoneDto 'tzuIn' and integer values for
 // 'years', 'months' and 'days'.  The 'years', 'months' and 'days' values are added to the
-// 'tzuIn' date time values and returned as a new TimeZoneUtility instance.
+// 'tzuIn' date time values and returned as a new TimeZoneDto instance.
 func (tzu TimeZoneUtility) NewAddDate(tzuIn TimeZoneUtility, years int, months int, days int) (TimeZoneUtility, error) {
-	ePrefix := "TimeZoneUtility.NewAddDate()"
+	ePrefix := "TimeZoneDto.NewAddDate()"
 
 	err:= tzuIn.IsTimeZoneUtilityValid()
 
 	if err != nil {
-		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error: Input parameter tzuIn (TimeZoneUtility) is INVALID! Error='%v'", err.Error())
+		return TimeZoneUtility{}, fmt.Errorf(ePrefix + "Error: Input parameter tzuIn (TimeZoneDto) is INVALID! Error='%v'", err.Error())
 	}
 
 	tzuOut := tzuIn.CopyOut()
@@ -472,12 +472,12 @@ func (tzu TimeZoneUtility) NewAddDate(tzuIn TimeZoneUtility, years int, months i
 	return tzuOut, nil
 }
 
-// NewAddDuration - receives two input parameters, a TimeZoneUtility 'tzuIn' and a
+// NewAddDuration - receives two input parameters, a TimeZoneDto 'tzuIn' and a
 // time 'duration'. 'tzuIn' is adjusted for the specified 'duration' and the resulting
-// new TimeZoneUtility is returned.
+// new TimeZoneDto is returned.
 //
 func (tzu TimeZoneUtility) NewAddDuration(tzuIn TimeZoneUtility, duration time.Duration) (TimeZoneUtility, error) {
-	ePrefix := "TimeZoneUtility.NewAddDuration() "
+	ePrefix := "TimeZoneDto.NewAddDuration() "
 
 	err := tzuIn.IsTimeZoneUtilityValid()
 
@@ -505,19 +505,19 @@ func (tzu *TimeZoneUtility) ReclassifyTimeWithNewTz(tIn time.Time, tZone string)
 	isValidTz, _, _ := tzu.IsValidTimeZone(tZone)
 
 	if !isValidTz {
-		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() Error: Input Time Zone is INVALID!")
+		return time.Time{}, fmt.Errorf("TimeZoneDto:ReclassifyTimeWithNewTz() Error: Input Time Zone is INVALID!")
 	}
 
 	tzNew, err := time.LoadLocation(tZone)
 
 	if err != nil {
-		return time.Time{}, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() - Error from time.Location('%v') - Error: %v", tZone, err.Error())
+		return time.Time{}, fmt.Errorf("TimeZoneDto:ReclassifyTimeWithNewTz() - Error from time.Location('%v') - Error: %v", tZone, err.Error())
 	}
 
 	tOut, err := time.ParseInLocation(NeutralDateFmt, strTime, tzNew)
 
 	if err != nil {
-		return tOut, fmt.Errorf("TimeZoneUtility:ReclassifyTimeWithNewTz() - Error from time.Parse - Error: %v", err.Error())
+		return tOut, fmt.Errorf("TimeZoneDto:ReclassifyTimeWithNewTz() - Error from time.Parse - Error: %v", err.Error())
 	}
 
 	return tOut, nil
@@ -543,7 +543,7 @@ func (tzu *TimeZoneUtility) SetUTCTime(t time.Time) {
 
 // SetLocalTime - Assigns Local Time to field 'TimeLocal'
 func (tzu *TimeZoneUtility) SetLocalTime(t time.Time) error {
-	ePrefix := "TimeZoneUtility.SetLocalTime() "
+	ePrefix := "TimeZoneDto.SetLocalTime() "
 
 	tzLocal, err := time.LoadLocation("Local")
 
@@ -556,16 +556,16 @@ func (tzu *TimeZoneUtility) SetLocalTime(t time.Time) error {
 	return nil
 }
 
-// Sub - Subtracts the input TimeZoneUtility from the current TimeZoneUtility
+// Sub - Subtracts the input TimeZoneDto from the current TimeZoneDto
 // and returns the duration.
 func (tzu *TimeZoneUtility) Sub(tzu2 TimeZoneUtility) (time.Duration, error) {
 
-	ePrefix := "TimeZoneUtility.Sub() "
+	ePrefix := "TimeZoneDto.Sub() "
 
 	err := tzu.IsTimeZoneUtilityValid()
 
 	if err != nil {
-		return time.Duration(0), fmt.Errorf(ePrefix + "Error: Current TimeZoneUtility (tzu) is INVALID. Error='%v'", err.Error())
+		return time.Duration(0), fmt.Errorf(ePrefix + "Error: Current TimeZoneDto (tzu) is INVALID. Error='%v'", err.Error())
 	}
 
 	err = tzu2.IsTimeZoneUtilityValid()
