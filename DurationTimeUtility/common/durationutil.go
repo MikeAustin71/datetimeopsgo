@@ -156,8 +156,8 @@ func (tDto *TimeDto) ConvertToNegativeValues() {
 // DurationDto - This type holds duration
 // values as time components.
 type DurationDto struct {
-	StartTimeTzu         TimeZoneUtility
-	EndTimeTzu           TimeZoneUtility
+	StartTimeTzu         TimeZoneDto
+	EndTimeTzu           TimeZoneDto
 	TimeDuration         time.Duration
 	Years                int64
 	YearsNanosecs        int64
@@ -255,8 +255,8 @@ func (dDto *DurationDto) Copy() DurationDto {
 // of the current DurationDto struct to their
 // initial or 'zero' values.
 func (dDto *DurationDto) Empty() {
-	dDto.StartTimeTzu = TimeZoneUtility{}
-	dDto.EndTimeTzu = TimeZoneUtility{}
+	dDto.StartTimeTzu = TimeZoneDto{}
+	dDto.EndTimeTzu = TimeZoneDto{}
 	dDto.TimeDuration = time.Duration(0)
 	dDto.Years = 0
 	dDto.YearsNanosecs = 0
@@ -364,8 +364,8 @@ func (dDto *DurationDto) Equal(dto2 DurationDto) bool {
 // DurationUtility - holds elements of
 // time duration
 type DurationUtility struct {
-	StartTimeTzu TimeZoneUtility
-	EndTimeTzu   TimeZoneUtility
+	StartTimeTzu TimeZoneDto
+	EndTimeTzu   TimeZoneDto
 	TimeDuration time.Duration
 }
 
@@ -413,8 +413,8 @@ func (du *DurationUtility) Equal(duIn DurationUtility) bool {
 // zero values.
 func (du *DurationUtility) Empty() {
 	du.TimeDuration = time.Duration(0)
-	du.StartTimeTzu = TimeZoneUtility{}
-	du.EndTimeTzu = TimeZoneUtility{}
+	du.StartTimeTzu = TimeZoneDto{}
+	du.EndTimeTzu = TimeZoneDto{}
 }
 
 // GetYearMthDaysTimeAbbrv - Abbreviated formatting of Years, Months,
@@ -1055,13 +1055,13 @@ func (du *DurationUtility) GetDurationFromStartEndTimes(startDateTime time.Time,
 		return time.Duration(0), errors.New(ePrefix + "ERROR - endDateTime is ZERO!")
 	}
 
-	startDateTimeTzu, err := TimeZoneUtility{}.New(startDateTime, "Local")
+	startDateTimeTzu, err := TimeZoneDto{}.New(startDateTime, "Local")
 
 	if err != nil {
 		return time.Duration(0), fmt.Errorf(ePrefix + "Error returned from TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
 	}
 
-	endDateTimeTzu, err := TimeZoneUtility{}.New(endDateTime, "Local")
+	endDateTimeTzu, err := TimeZoneDto{}.New(endDateTime, "Local")
 
 	if err!= nil {
 		return time.Duration(0), fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(endDateTime, \"Local\"). Error='%v'", err.Error())
@@ -1206,7 +1206,7 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time, duratio
 	du.Empty()
 
 	if x < 0 {
-		eTimeTzu, err := TimeZoneUtility{}.New(startDateTime,"Local")
+		eTimeTzu, err := TimeZoneDto{}.New(startDateTime,"Local")
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime,\"Local\"). startDateTime='%v'\nError='%v'", startDateTime, err.Error())
@@ -1214,7 +1214,7 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time, duratio
 
 		du.EndTimeTzu = eTimeTzu.CopyOut()
 
-		du.StartTimeTzu, err = TimeZoneUtility{}.NewAddDuration(eTimeTzu, duration)
+		du.StartTimeTzu, err = TimeZoneDto{}.NewAddDuration(eTimeTzu, duration)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(eTimeTzu, duration). Error='%v'", err.Error())
@@ -1230,13 +1230,13 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time, duratio
 
 		var err error
 
-		du.StartTimeTzu, err = TimeZoneUtility{}.New(startDateTime,"Local")
+		du.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime,"Local")
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned from TimeZoneDto{}.New(startDateTime,\"Local\") Error='%v'", err.Error())
 		}
 
-		du.EndTimeTzu, err = TimeZoneUtility{}.NewAddDuration(du.StartTimeTzu, duration)
+		du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, duration)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned from TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, duration). Error='%v'", err.Error())
@@ -1272,13 +1272,13 @@ func (du *DurationUtility) SetStartEndTimes(startDateTime time.Time, endDateTime
 
 	du.Empty()
 
-	sTime, err := TimeZoneUtility{}.New(startDateTime, "Local")
+	sTime, err := TimeZoneDto{}.New(startDateTime, "Local")
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
 	}
 
-	eTime, err := TimeZoneUtility{}.New(endDateTime, "Local")
+	eTime, err := TimeZoneDto{}.New(endDateTime, "Local")
 
 	if eTime.TimeUTC.Before(sTime.TimeUTC) {
 		s2 := sTime.CopyOut()
@@ -1332,7 +1332,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 	var err error
 	dur := DurationDto{}
 
-	dur.StartTimeTzu, err = TimeZoneUtility{}.New(startDateTime, "Local")
+	dur.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime, "Local")
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
@@ -1361,7 +1361,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 	du.StartTimeTzu = dur.StartTimeTzu.CopyOut()
 	du.TimeDuration = time.Duration(dur.CalcTotalNanoSecs())
 
-	du.EndTimeTzu, err = TimeZoneUtility{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration)
+	du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration). Error='%v'", err.Error())
@@ -1404,7 +1404,7 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDt
 	dur := DurationDto{}
 	var err error
 
-	dur.StartTimeTzu, err = TimeZoneUtility{}.New(startDateTime, "Local")
+	dur.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime, "Local")
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
@@ -1436,7 +1436,7 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDt
 	tDur := time.Duration(ns)
 
 
-	sTime, err := TimeZoneUtility{}.NewAddDuration(dur.StartTimeTzu, tDur)
+	sTime, err := TimeZoneDto{}.NewAddDuration(dur.StartTimeTzu, tDur)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dur.StartTimeTzu, tDur). Error='%v'", err.Error())
@@ -1468,13 +1468,13 @@ func (du *DurationUtility) IsDurationBaseDataValid() error {
 
 	rd := int64(du.TimeDuration)
 
-	err := du.StartTimeTzu.IsTimeZoneUtilityValid()
+	err := du.StartTimeTzu.IsTimeZoneDtoValid()
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error. StartTimeTzu is INVALID! Error='%v'", err.Error())
 	}
 
-	err = du.EndTimeTzu.IsTimeZoneUtilityValid()
+	err = du.EndTimeTzu.IsTimeZoneDtoValid()
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error. EndTimeTzu is INVALID! Error='%v'", err.Error())
@@ -1511,7 +1511,7 @@ func (du *DurationUtility) calcYearsFromDuration(dDto *DurationDto) error {
 
 		i++
 
-		yearDateTimeTzu, err = TimeZoneUtility{}.NewAddDate(dDto.StartTimeTzu,i,0,0)
+		yearDateTimeTzu, err = TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu,i,0,0)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu,i,0,0). Error='%v'", err.Error())
@@ -1525,7 +1525,7 @@ func (du *DurationUtility) calcYearsFromDuration(dDto *DurationDto) error {
 
 		dDto.Years = int64(i)
 
-		yearDateTimeTzu, err = TimeZoneUtility{}.NewAddDate(dDto.StartTimeTzu, i, 0, 0)
+		yearDateTimeTzu, err = TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu, i, 0, 0)
 
 		duration, err := yearDateTimeTzu.Sub(dDto.StartTimeTzu)
 
@@ -1549,7 +1549,7 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) error {
 
 	i := 0
 
-	yearDateTimeTzu, err := TimeZoneUtility{}.NewAddDuration(dDto.StartTimeTzu,time.Duration(dDto.YearsNanosecs))
+	yearDateTimeTzu, err := TimeZoneDto{}.NewAddDuration(dDto.StartTimeTzu,time.Duration(dDto.YearsNanosecs))
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dDto.StartTimeTzu,time.Duration(dDto.YearsNanosecs)). Error='%v'", err.Error())
@@ -1561,7 +1561,7 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) error {
 
 		i++
 
-		mthDateTimeTzu, err = TimeZoneUtility{}.NewAddDate(yearDateTimeTzu, 0, i, 0)
+		mthDateTimeTzu, err = TimeZoneDto{}.NewAddDate(yearDateTimeTzu, 0, i, 0)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(yearDateTimeTzu, 0, i, 0). i='%v'  Error='%v'", i, err.Error())
@@ -1575,7 +1575,7 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) error {
 
 		dDto.Months = int64(i)
 
-		mthDateTimeTzu, err = TimeZoneUtility{}.NewAddDate(yearDateTimeTzu, 0, int(dDto.Months), 0)
+		mthDateTimeTzu, err = TimeZoneDto{}.NewAddDate(yearDateTimeTzu, 0, int(dDto.Months), 0)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu, int(dDto.Years), int(dDto.Months), 0). Error='%v'", err.Error())
@@ -1694,7 +1694,7 @@ func (du *DurationUtility) calcFromYears(dDto *DurationDto) error {
 	ePrefix := "DurationUtility.calcFromYears() "
 
 
-	yearDateTimeTzu, err := TimeZoneUtility{}.NewAddDate(dDto.StartTimeTzu, int(dDto.Years), 0, 0 )
+	yearDateTimeTzu, err := TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu, int(dDto.Years), 0, 0 )
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu, int(dDto.Years), 0, 0 ). Error='%v'", err.Error())
@@ -1716,14 +1716,14 @@ func (du *DurationUtility) calcFromMonths(dDto *DurationDto) error {
 
 	ePrefix := "DurationUtility.calcFromMonths() "
 
-	mthStartDateTimeTzu, err := TimeZoneUtility{}.NewAddDuration(dDto.StartTimeTzu,
+	mthStartDateTimeTzu, err := TimeZoneDto{}.NewAddDuration(dDto.StartTimeTzu,
 															time.Duration(dDto.YearsNanosecs))
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dDto.StartTimeTzu,	time.Duration(dDto.YearsNanosecs)). Error='%v'", err.Error())
 	}
 
-	mthEndDateTimeTzu, err := TimeZoneUtility{}.NewAddDate (mthStartDateTimeTzu,0, int(dDto.Months), 0)
+	mthEndDateTimeTzu, err := TimeZoneDto{}.NewAddDate (mthStartDateTimeTzu,0, int(dDto.Months), 0)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate (mthStartDateTimeTzu,0, int(dDto.Months), 0). dDto.Months='%v'  Error='%v'", dDto.Months, err.Error())
