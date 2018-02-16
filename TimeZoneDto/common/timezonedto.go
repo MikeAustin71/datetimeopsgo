@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 	"strings"
+
 )
 
 /*
@@ -30,7 +31,141 @@ import (
 // the IANA Time Zone Database is properly configured
 // on your system. Note: IANA Time Zone Data base is
 // equivalent to 'tz database'.
+//
+// Reference: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 const (
+
+	TzIanaAfricaCairo = "Africa/Cairo"
+	TzIanaAfricaJohannesburg = "Africa/Johannesburg"
+	TzIanaAfricaTripoli = "Africa/Tripoli"
+	TzIanaAfricaTunis = "Africa/Tunis"
+	TzIanaAmericaJamaica = "America/Jamaica"
+	TzIanaAmericaMatamoros = "America/Matamoros"
+	TzIanaAmericaMexicoCity = "America/Mexico_City"
+	TzIanaAmericaPuertoRico = "America/Puerto_Rico"
+	TzIanaAmericaTijuana = "America/Tijuana"
+	TzIanaAmericaBuenosAires = "America/Argentina/Buenos_Aires"
+	TzIanaAmericaBogota = "America/Bogota"
+	TzIanaAmericaCancum = "America/Cancun"
+	TzIanaAmericaCaracas = "America/Caracas"
+	TzIanaAmericaCostaRica = "America/Costa_Rica"
+	TzIanaAmericaElSalvador = "America/El_Salvador"
+	TzIanaAmericaGooseBay = "America/Goose_Bay"
+	TzIanaAmericaPortOfSpain ="America/Port_of_Spain" // Grenada
+	TzIanaAmericaGuatemala = "America/Guatemala"
+	TzIanaAmericaGuayaquil = "America/Guayaquil" // Ecuador
+	TzIanaAmericaGuyana = "America/Guyana"
+	TzIanaAmericaHalifax = "America/Halifax"
+	TzIanaAmericaHavana = "America/Havana"
+	TzIanaAmericaLaPaz = "America/La_Paz"
+	TzIanaAmericaLima = "America/Lima"
+	TzIanaAmericaManaus = "America/Manaus"  // Amazonas East
+	TzIanaAmericaMartinique = "America/Martinique"
+	TzIanaAmericaMazatlan = "America/Mazatlan" // Baja California
+	TzIanaAmericaMotevideo = "America/Montevideo" //Uruguay
+	TzIanaAmericaNassau = "America/Nassau" // Bahamas
+	TzIanaAmericaPanama = "America/Panama"
+	TzIanaAmericaRecife = "America/Recife"
+	TzIanaAmericaSantiago = "America/Santiago"
+	TzIanaAmericaSantoDomingo = "America/Santo_Domingo"
+	TzIanaAmericaSaoPaulo = "America/Sao_Paulo"
+	TzIanaAmericaStJohns = "America/St_Johns" // Newfoundland Labrador
+	TzIanaAmericaStThomas = "America/St_Thomas"
+	TzIanaAmericaThule = "America/Thule"
+	TzIanaAmericaToronto = "America/Toronto" // Eastern - ON, QC (most areas)
+	TzIanaAmericaVancouver = "America/Vancouver" // Pacific - BC (most areas)
+	TzIanaAmericaWinnipeg = "America/Winnipeg" // Central - ON (west); Manitoba
+	TzIanaAmericaWhitehorse = "America/Whitehorse" // Pacific - Yukon (south)
+	TzIanaAntarcticaMcMurdo = "Antarctica/McMurdo"
+	TzIanaAntarcticaSoutPole = "Pacific/Auckland"
+	TzIanaAsiaBankok = "Asia/Bangkok"
+	TzIanaAsiaBaghdad = "Asia/Baghdad"
+	TzIanaAsiaBahrain = "Asia/Bahrain"
+	TzIanaAsiaBaku = "Asia/Baku"
+	TzIanaAsia = "Asia/Brunei"
+	TzIanaAsiaBeirut = "Asia/Beirut"
+	TzIanaAsiaDamasucs = "Asia/Damascus"
+	TzIanaAsiaDubai = "Asia/Dubai"
+	TzIanaAsiaHoChiMinh = "Asia/Ho_Chi_Minh"			// Saigon Vietnam
+	TzIanaAsiaHongKong = "Asia/Hong_Kong"
+	TzIanaAsiaIndia = "Asia/Kolkata"						// Formerly Calcutta  - India Time
+	TzIanaAsiaJakarta = "Asia/Jakarta"
+	TzIanaAsiaJerusalem = "Asia/Jerusalem"
+	TzIanaAsiaKabul = "Asia/Kabul"
+	TzIanaAsiaKarachi = "Asia/Karachi"
+	TzIanaAsiaKualaLumpur = "Asia/Kuala_Lumpur"
+	TzIanaAsiaKuwait = "Asia/Kuwait"
+	TzIanaAsiaManila = "Asia/Manila"
+	TzIanaAsiaPhnomPenh = "Asia/Phnom_Penh"
+	TzIanaAsiaPyongyang = "Asia/Pyongyang"
+	TzIanaAsiaQatar = "Asia/Qatar"
+	TzIanaAsiaRangoon = "Asia/Yangon" 							// Rangoon
+	TzIanaAsiaRiyadh = "Asia/Riyadh"
+	TzIanaAsiaSeoul = "Asia/Seoul"
+	TzIanaAsiaShanghai = "Asia/Shanghai"						// Beijing time
+	TzIanaAsiaSigapore = "Asia/Singapore"
+	TzIanaAsiaTaipei = "Asia/Taipei"
+	TzIanaAsiaTehran = "Asia/Tehran"
+	TzIanaAsiaTokyo = "Asia/Tokyo"
+	TzIanaAtlanticAzores = "Atlantic/Azores"
+	TzIanaAtlanticBermuda = "Atlantic/Bermuda"
+	TzIanaAtlanticCanary = "Atlantic/Canary"
+	TzIanaAtlanticCapeVerde = "Atlantic/Cape_Verde"
+	TzIanaAtlanticReykjavik = "Atlantic/Reykjavik"
+	TzIanaAtlanticStanley = "Atlantic/Stanley"
+	TzIanaAustraliaDarwin = "Australia/Darwin"
+	TzIanaAustraliaMelbourne = "Australia/Melbourne"
+	TzIanaAustraliaSydney = "Australia/Sydney"
+	TzIanaAustraliaPerth = "Australia/Perth"
+	TzIanaEuropeAmsterdam = "Europe/Amsterdam"
+	TzIanaEuropeAthens = "Europe/Athens"
+	TzIanaEuropeBelgrade = "Europe/Belgrade"
+	TzIanaEuropeBerlin = "Europe/Berlin"
+	TzIanaEuropeBrussels = "Europe/Brussels"
+	TzIanaEuropeBucharest = "Europe/Bucharest"
+	TzIanaEuropeBudapest = "Europe/Budapest"
+	TzIanaEuropeCopenhagen = "Europe/Copenhagen"
+	TzIanaEuropeDublin = "Europe/Dublin"
+	TzIanaEuropeGibraltar = "Europe/Gibraltar"
+	TzIanaEuropeHelsinki = "Europe/Helsinki"
+	TzIanaEuropeIstanbul = "Europe/Istanbul"
+	TzIanaEuropeKiev = "Europe/Kiev"
+	TzIanaEuropeLisbon = "Europe/Lisbon"
+	TzIanaEuropeLondon = "Europe/London"
+	TzIanaEuropeLuxembourg = "Europe/Luxembourg"
+	TzIanaEuropeMadrid = "Europe/Madrid"
+	TzIanaEuropeMalta = "Europe/Malta"
+	TzIanaEuropeMinsk = "Europe/Minsk"
+	TzIanaEuropeMonaco = "Europe/Monaco"
+	TzIanaEuropeMoscow = "Europe/Moscow"
+	TzIanaEuropeOslo = "Europe/Oslo"
+	TzIanaEuropeParis = "Europe/Paris"
+	TzIanaEuropePrague = "Europe/Prague"
+	TzIanaEuropeRiga = "Europe/Riga"
+	TzIanaEuropeRome = "Europe/Rome"
+	TzIanaEuropeSofia = "Europe/Sofia"
+	TzIanaEuropeStockholm = "Europe/Stockholm"
+	TzIanaEuropeVienna = "Europe/Vienna"
+	TzIanaEuropeVilnius = "Europe/Vilnius"
+	TzIanaEuropeWarsaw = "Europe/Warsaw"
+	TzIanaEuropeZurich ="Europe/Zurich"
+	TzIanaPacificAuckland = "Pacific/Auckland"
+	TzIanaPacificFiji = "Pacific/Fiji"
+	TzIanaPacificGuam = "Pacific/Guam"
+	TzIanaPacificHonolulu = "Pacific/Honolulu"
+	TzIanaPacificPortMoresby = "Pacific/Port_Moresby"
+	TzIanaPacificTahiti = "Pacific/Tahiti"
+
+	// TzUsAlaska - USA Alaska
+	TzUsAlaskaAnchorage =  "America/Anchorage"
+	TzUsAlaskaJuneau = "America/Juneau"
+	TzUsAlaskaNome = "America/Nome"
+	TzUsAlaskaYakutat = "America/Yakutat"
+	TzUsAleutianIslands = "America/Adak"
+
+	// TzIanaArizona
+	TzIanaArizona = "America/Phoenix"
+
 	// TzUsEast - USA Eastern Time Zone
 	// IANA database identifier
 	TzUsEast = "America/New_York"
@@ -53,12 +188,149 @@ const (
 
 	// tzUTC - UTC Time Zone IANA database
 	// identifier
-	TzUTC = "Zulu"
+	TzIanaUTC = "Zulu"
 
-	NeutralDateFmt = "2006-01-02 15:04:05.000000000"
+
 )
 
-// DateTzDto - `Used to store and transfer date times.
+
+const (
+	// TzNeutralDateFmt - Neutral Date Format without Time Zone
+	TzNeutralDateFmt = "2006-01-02 15:04:05.000000000"
+
+	// TzMDYrFmtStr - Month Day Year Date Format String
+	TzMDYrFmtStr     = "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	// TzYrMDayFmtStr - Year Month Day Date Format String
+	TzYrMDayFmtStr   = "2006-01-02 15:04:05.000000000 -0700 MST"
+)
+
+// TimeZoneDefDto - Time Zone Definition Dto
+// Contains detailed parameters describing a specific
+// Time Zone and Time Zone Location
+type TimeZoneDefDto struct {
+	ZoneName						string
+	ZoneOffsetSeconds		int			// Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
+	ZoneSign						int 		// -1 == West of UTC  +1 == East of UTC
+	OffsetHours					int			// Hours offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetMinutes				int			// Minutes offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetSeconds				int			// Seconds offset from UTC. Always a positive number, refer to ZoneSign
+	ZoneOffset					string	// A text string representing the time zone. Example "-0500 CDT"
+	Location						*time.Location	// Pointer to a Time Zone Location
+	LocationName				string					// Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+}
+
+// New - Creates and returns a new TimeZoneDefDto instance based on
+// a 'dateTime (time.Time) input parameter.
+//
+// Input Parameter
+// ===============
+//
+//	dateTime 	time.Time	- A date time value which will be used to construct the
+//													elements of a Time Zone Definition Dto instance.
+//
+// Returns
+// =======
+//
+// This method will return two Types:
+//			(1) A Time Zone Definition Dto
+//			(2) An 'error' type
+//
+// (1) If successful, this method will return a valid, populated TimeZoneDefDto instance.
+//		 A TimeZoneDefDto is defined as follows:
+//			type TimeZoneDefDto struct {
+//				ZoneName						string
+//				ZoneOffsetSeconds		int			// Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
+//				ZoneSign						int 		// -1 == West of UTC  +1 == East of UTC
+//				OffsetHours					int			// Hours offset from UTC. Always a positive number, refer to ZoneSign
+//				OffsetMinutes				int			// Minutes offset from UTC. Always a positive number, refer to ZoneSign
+//				OffsetSeconds				int			// Seconds offset from UTC. Always a positive number, refer to ZoneSign
+//				ZoneOffset					string	// A text string representing the time zone. Example "-0500 CDT"
+//				Location						*time.Location	// Pointer to a Time Zone Location
+//				LocationName				string					// Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+//			}
+//
+//
+// (2) 	If successful, this method will set the returned error instance to 'nil.
+//			If errors are encountered a valid error message will be returned in the
+//			error instance.
+//
+func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
+
+	ePrefix := "TimeZoneDefDto.New() "
+
+	if dateTime.IsZero() {
+		return TimeZoneDefDto{}, errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+	}
+
+	tzDef2 := TimeZoneDefDto{}
+
+	tzDef2.ZoneName, tzDef2.ZoneOffsetSeconds = dateTime.Zone()
+
+	tzDef2.allocateZoneOffsetSeconds(tzDef2.ZoneOffsetSeconds)
+
+	tzDef2.Location = dateTime.Location()
+
+	tzDef2.LocationName = dateTime.Location().String()
+
+	tzDef2.setZoneString()
+
+	return tzDef2, nil
+}
+
+func (tzdef *TimeZoneDefDto) setZoneString() {
+
+	tzdef.ZoneOffset = ""
+
+	if tzdef.ZoneSign < 0 {
+		tzdef.ZoneOffset += "-"
+	}
+
+	tzdef.ZoneOffset += fmt.Sprintf("%02%02%",tzdef.OffsetHours,tzdef.OffsetMinutes)
+
+	if tzdef.OffsetSeconds > 0 {
+		tzdef.ZoneOffset += fmt.Sprintf("%02%", tzdef.OffsetSeconds)
+	}
+
+	tzdef.ZoneOffset += " " + tzdef.ZoneName
+
+	return
+}
+
+func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds int) {
+
+	if signedZoneOffsetSeconds < 0 {
+		tzdef.ZoneSign = -1
+	} else {
+		tzdef.ZoneSign = 1
+	}
+
+	tzdef.ZoneOffsetSeconds = signedZoneOffsetSeconds
+
+	signedZoneOffsetSeconds *= tzdef.ZoneSign
+
+	tzdef.OffsetHours = 0
+	tzdef.OffsetMinutes = 0
+	tzdef.OffsetSeconds = 0
+
+	if signedZoneOffsetSeconds == 0 {
+		return
+	}
+
+	tzdef.OffsetHours = signedZoneOffsetSeconds / 3600 // compute hours
+	signedZoneOffsetSeconds -= tzdef.OffsetHours * 3600
+
+	tzdef.OffsetMinutes = signedZoneOffsetSeconds / 60 // compute minutes
+	signedZoneOffsetSeconds -= tzdef.OffsetMinutes * 60
+
+	tzdef.OffsetSeconds = signedZoneOffsetSeconds
+
+	return
+}
+
+// DateTzDto - Type
+// ================
+// Used to store and transfer date times.
 // The descriptors contained is this structure are intended
 // to define and identify a specific point in time.
 //
@@ -109,6 +381,7 @@ type DateTzDto struct {
 	TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
 	TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 	DateTime 				time.Time				// DateTime value for this DateTzDto Type
+	DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 	TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
 	TimeLocName			string					// Time Location Name. Example: "America/Chicago"
 }
@@ -145,6 +418,7 @@ type DateTzDto struct {
 //		TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
 //		TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 //		TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
 //		TimeLocName			string					// Time Location Name. Example: "America/Chicago"
 //	}
@@ -232,6 +506,7 @@ func (dtz DateTzDto) New(dateTime time.Time)(DateTzDto, error) {
 //		TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
 //		TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 //		TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
 //		TimeLocName			string					// Time Location Name. Example: "America/Chicago"
 //	}
@@ -319,6 +594,7 @@ func (dtz DateTzDto) NewDateTimeElements(year, month, day, hour, minute, second,
 //		TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
 //		TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 //		TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
 //		TimeLocName			string					// Time Location Name. Example: "America/Chicago"
 //	}
@@ -352,40 +628,6 @@ func (dtz DateTzDto) NewDateTime(year, month, day, hour, minute, second,
 
 	return dtz2, nil
 }
-
-// allocateNanoseconds - allocates total Nanoseconds to milliseconds, microseconds
-// and nanoseconds.
-func (dtz *DateTzDto) allocateNanoseconds(totNanoseconds int64) {
-
-	if totNanoseconds == 0 {
-		dtz.TotalNanoSecs = 0
-		dtz.Millisecond = 0
-		dtz.Microsecond = 0
-		dtz.Nanosecond = 0
-		return
-	}
-
-	r := int(totNanoseconds)
-
-	dtz.Millisecond = r / int(time.Millisecond)
-
-	r -= dtz.Millisecond * int(time.Millisecond)
-
-	if r == 0 {
-		return
-	}
-
-	dtz.Microsecond = r / int(time.Microsecond)
-
-	r -= dtz.Microsecond * int(time.Microsecond)
-
-	dtz.Nanosecond = r
-
-	dtz.TotalNanoSecs = totNanoseconds
-
-	return
-}
-
 
 // CopyOut - returns a DateTzDto  instance
 // which represents a deep copy of the current
@@ -441,6 +683,15 @@ func (dtz *DateTzDto) Empty() {
 	dtz.TimeLocName			= ""
 
 	return
+}
+
+// SetDateTimeFmt - Sets the DateTzDto data field 'DateTimeFmt'.
+// This string is used to format the DateTzDto DateTime field
+// when DateTzDto.String() is called.
+func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
+
+	dtz.DateTimeFmt = dateTimeFmtStr
+
 }
 
 // SetFromTime - Sets the values of the current DateTzDto fields
@@ -729,6 +980,57 @@ millisecond, microsecond, nanosecond int, timeZoneLocation string) error {
 	return nil
 }
 
+// String - This method returns the DateTzDto
+// DateTime field value formatted as a string.
+// If the DateTzDto field DateTimeFmt is an
+// empty string, a default format string will
+// be used. The default format is:
+//
+// TzYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (dtz *DateTzDto) String() string {
+
+	fmtStr := dtz.DateTimeFmt
+
+	if len(fmtStr) == 0 {
+		fmtStr = TzYrMDayFmtStr
+	}
+
+	return dtz.DateTime.Format(fmtStr)
+}
+
+// allocateNanoseconds - allocates total Nanoseconds to milliseconds, microseconds
+// and nanoseconds.
+func (dtz *DateTzDto) allocateNanoseconds(totNanoseconds int64) {
+
+	if totNanoseconds == 0 {
+		dtz.TotalNanoSecs = 0
+		dtz.Millisecond = 0
+		dtz.Microsecond = 0
+		dtz.Nanosecond = 0
+		return
+	}
+
+	r := int(totNanoseconds)
+
+	dtz.Millisecond = r / int(time.Millisecond)
+
+	r -= dtz.Millisecond * int(time.Millisecond)
+
+	if r == 0 {
+		return
+	}
+
+	dtz.Microsecond = r / int(time.Microsecond)
+
+	r -= dtz.Microsecond * int(time.Microsecond)
+
+	dtz.Nanosecond = r
+
+	dtz.TotalNanoSecs = totNanoseconds
+
+	return
+}
 
 
 
@@ -2024,7 +2326,7 @@ func (tzu *TimeZoneDto) ReclassifyTimeWithNewTz(tIn time.Time, tZoneLocation str
 		return time.Time{}, fmt.Errorf(ePrefix + "Error returned by time.Location('%v') - Error: %v", tZoneLocation, err.Error())
 	}
 
-	tOut, err := time.ParseInLocation(NeutralDateFmt, strTime, tzNew)
+	tOut, err := time.ParseInLocation(TzNeutralDateFmt, strTime, tzNew)
 
 	if err != nil {
 		return tOut, fmt.Errorf(ePrefix + "Error returned by time.Parse - Error: %v", err.Error())
@@ -2095,5 +2397,5 @@ func (tzu *TimeZoneDto) Sub(tzu2 TimeZoneDto) (time.Duration, error) {
 // NO time zone. - When the returned string is converted to
 // time.Time - in defaults to a UTC time zone.
 func (tzu *TimeZoneDto) TimeWithoutTimeZone(t time.Time) string {
-	return t.Format(NeutralDateFmt)
+	return t.Format(TzNeutralDateFmt)
 }

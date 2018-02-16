@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 	"strings"
+
 )
 
 /*
@@ -30,7 +31,141 @@ import (
 // the IANA Time Zone Database is properly configured
 // on your system. Note: IANA Time Zone Data base is
 // equivalent to 'tz database'.
+//
+// Reference: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 const (
+
+	TzIanaAfricaCairo = "Africa/Cairo"
+	TzIanaAfricaJohannesburg = "Africa/Johannesburg"
+	TzIanaAfricaTripoli = "Africa/Tripoli"
+	TzIanaAfricaTunis = "Africa/Tunis"
+	TzIanaAmericaJamaica = "America/Jamaica"
+	TzIanaAmericaMatamoros = "America/Matamoros"
+	TzIanaAmericaMexicoCity = "America/Mexico_City"
+	TzIanaAmericaPuertoRico = "America/Puerto_Rico"
+	TzIanaAmericaTijuana = "America/Tijuana"
+	TzIanaAmericaBuenosAires = "America/Argentina/Buenos_Aires"
+	TzIanaAmericaBogota = "America/Bogota"
+	TzIanaAmericaCancum = "America/Cancun"
+	TzIanaAmericaCaracas = "America/Caracas"
+	TzIanaAmericaCostaRica = "America/Costa_Rica"
+	TzIanaAmericaElSalvador = "America/El_Salvador"
+	TzIanaAmericaGooseBay = "America/Goose_Bay"
+	TzIanaAmericaPortOfSpain ="America/Port_of_Spain" // Grenada
+	TzIanaAmericaGuatemala = "America/Guatemala"
+	TzIanaAmericaGuayaquil = "America/Guayaquil" // Ecuador
+	TzIanaAmericaGuyana = "America/Guyana"
+	TzIanaAmericaHalifax = "America/Halifax"
+	TzIanaAmericaHavana = "America/Havana"
+	TzIanaAmericaLaPaz = "America/La_Paz"
+	TzIanaAmericaLima = "America/Lima"
+	TzIanaAmericaManaus = "America/Manaus"  // Amazonas East
+	TzIanaAmericaMartinique = "America/Martinique"
+	TzIanaAmericaMazatlan = "America/Mazatlan" // Baja California
+	TzIanaAmericaMotevideo = "America/Montevideo" //Uruguay
+	TzIanaAmericaNassau = "America/Nassau" // Bahamas
+	TzIanaAmericaPanama = "America/Panama"
+	TzIanaAmericaRecife = "America/Recife"
+	TzIanaAmericaSantiago = "America/Santiago"
+	TzIanaAmericaSantoDomingo = "America/Santo_Domingo"
+	TzIanaAmericaSaoPaulo = "America/Sao_Paulo"
+	TzIanaAmericaStJohns = "America/St_Johns" // Newfoundland Labrador
+	TzIanaAmericaStThomas = "America/St_Thomas"
+	TzIanaAmericaThule = "America/Thule"
+	TzIanaAmericaToronto = "America/Toronto" // Eastern - ON, QC (most areas)
+	TzIanaAmericaVancouver = "America/Vancouver" // Pacific - BC (most areas)
+	TzIanaAmericaWinnipeg = "America/Winnipeg" // Central - ON (west); Manitoba
+	TzIanaAmericaWhitehorse = "America/Whitehorse" // Pacific - Yukon (south)
+	TzIanaAntarcticaMcMurdo = "Antarctica/McMurdo"
+	TzIanaAntarcticaSoutPole = "Pacific/Auckland"
+	TzIanaAsiaBankok = "Asia/Bangkok"
+	TzIanaAsiaBaghdad = "Asia/Baghdad"
+	TzIanaAsiaBahrain = "Asia/Bahrain"
+	TzIanaAsiaBaku = "Asia/Baku"
+	TzIanaAsia = "Asia/Brunei"
+	TzIanaAsiaBeirut = "Asia/Beirut"
+	TzIanaAsiaDamasucs = "Asia/Damascus"
+	TzIanaAsiaDubai = "Asia/Dubai"
+	TzIanaAsiaHoChiMinh = "Asia/Ho_Chi_Minh"			// Saigon Vietnam
+	TzIanaAsiaHongKong = "Asia/Hong_Kong"
+	TzIanaAsiaIndia = "Asia/Kolkata"						// Formerly Calcutta  - India Time
+	TzIanaAsiaJakarta = "Asia/Jakarta"
+	TzIanaAsiaJerusalem = "Asia/Jerusalem"
+	TzIanaAsiaKabul = "Asia/Kabul"
+	TzIanaAsiaKarachi = "Asia/Karachi"
+	TzIanaAsiaKualaLumpur = "Asia/Kuala_Lumpur"
+	TzIanaAsiaKuwait = "Asia/Kuwait"
+	TzIanaAsiaManila = "Asia/Manila"
+	TzIanaAsiaPhnomPenh = "Asia/Phnom_Penh"
+	TzIanaAsiaPyongyang = "Asia/Pyongyang"
+	TzIanaAsiaQatar = "Asia/Qatar"
+	TzIanaAsiaRangoon = "Asia/Yangon" 							// Rangoon
+	TzIanaAsiaRiyadh = "Asia/Riyadh"
+	TzIanaAsiaSeoul = "Asia/Seoul"
+	TzIanaAsiaShanghai = "Asia/Shanghai"						// Beijing time
+	TzIanaAsiaSigapore = "Asia/Singapore"
+	TzIanaAsiaTaipei = "Asia/Taipei"
+	TzIanaAsiaTehran = "Asia/Tehran"
+	TzIanaAsiaTokyo = "Asia/Tokyo"
+	TzIanaAtlanticAzores = "Atlantic/Azores"
+	TzIanaAtlanticBermuda = "Atlantic/Bermuda"
+	TzIanaAtlanticCanary = "Atlantic/Canary"
+	TzIanaAtlanticCapeVerde = "Atlantic/Cape_Verde"
+	TzIanaAtlanticReykjavik = "Atlantic/Reykjavik"
+	TzIanaAtlanticStanley = "Atlantic/Stanley"
+	TzIanaAustraliaDarwin = "Australia/Darwin"
+	TzIanaAustraliaMelbourne = "Australia/Melbourne"
+	TzIanaAustraliaSydney = "Australia/Sydney"
+	TzIanaAustraliaPerth = "Australia/Perth"
+	TzIanaEuropeAmsterdam = "Europe/Amsterdam"
+	TzIanaEuropeAthens = "Europe/Athens"
+	TzIanaEuropeBelgrade = "Europe/Belgrade"
+	TzIanaEuropeBerlin = "Europe/Berlin"
+	TzIanaEuropeBrussels = "Europe/Brussels"
+	TzIanaEuropeBucharest = "Europe/Bucharest"
+	TzIanaEuropeBudapest = "Europe/Budapest"
+	TzIanaEuropeCopenhagen = "Europe/Copenhagen"
+	TzIanaEuropeDublin = "Europe/Dublin"
+	TzIanaEuropeGibraltar = "Europe/Gibraltar"
+	TzIanaEuropeHelsinki = "Europe/Helsinki"
+	TzIanaEuropeIstanbul = "Europe/Istanbul"
+	TzIanaEuropeKiev = "Europe/Kiev"
+	TzIanaEuropeLisbon = "Europe/Lisbon"
+	TzIanaEuropeLondon = "Europe/London"
+	TzIanaEuropeLuxembourg = "Europe/Luxembourg"
+	TzIanaEuropeMadrid = "Europe/Madrid"
+	TzIanaEuropeMalta = "Europe/Malta"
+	TzIanaEuropeMinsk = "Europe/Minsk"
+	TzIanaEuropeMonaco = "Europe/Monaco"
+	TzIanaEuropeMoscow = "Europe/Moscow"
+	TzIanaEuropeOslo = "Europe/Oslo"
+	TzIanaEuropeParis = "Europe/Paris"
+	TzIanaEuropePrague = "Europe/Prague"
+	TzIanaEuropeRiga = "Europe/Riga"
+	TzIanaEuropeRome = "Europe/Rome"
+	TzIanaEuropeSofia = "Europe/Sofia"
+	TzIanaEuropeStockholm = "Europe/Stockholm"
+	TzIanaEuropeVienna = "Europe/Vienna"
+	TzIanaEuropeVilnius = "Europe/Vilnius"
+	TzIanaEuropeWarsaw = "Europe/Warsaw"
+	TzIanaEuropeZurich ="Europe/Zurich"
+	TzIanaPacificAuckland = "Pacific/Auckland"
+	TzIanaPacificFiji = "Pacific/Fiji"
+	TzIanaPacificGuam = "Pacific/Guam"
+	TzIanaPacificHonolulu = "Pacific/Honolulu"
+	TzIanaPacificPortMoresby = "Pacific/Port_Moresby"
+	TzIanaPacificTahiti = "Pacific/Tahiti"
+
+	// TzUsAlaska - USA Alaska
+	TzUsAlaskaAnchorage =  "America/Anchorage"
+	TzUsAlaskaJuneau = "America/Juneau"
+	TzUsAlaskaNome = "America/Nome"
+	TzUsAlaskaYakutat = "America/Yakutat"
+	TzUsAleutianIslands = "America/Adak"
+
+	// TzIanaArizona
+	TzIanaArizona = "America/Phoenix"
+
 	// TzUsEast - USA Eastern Time Zone
 	// IANA database identifier
 	TzUsEast = "America/New_York"
@@ -53,12 +188,104 @@ const (
 
 	// tzUTC - UTC Time Zone IANA database
 	// identifier
-	TzUTC = "Zulu"
+	TzIanaUTC = "Zulu"
 
 	NeutralDateFmt = "2006-01-02 15:04:05.000000000"
 )
 
-// DateTzDto - `Used to store and transfer date times.
+// TimeZoneDefDto - Time Zone Definition Dto
+// Contains detailed parameters describing a specific
+// Time Zone and Time Zone Location
+type TimeZoneDefDto struct {
+	ZoneName						string
+	ZoneOffsetSeconds		int			// Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
+	ZoneSign						int 		// -1 == West of UTC  +1 == East of UTC
+	OffsetHours					int			// Hours offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetMinutes				int			// Minutes offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetSeconds				int			// Seconds offset from UTC. Alwqys a positive number, refer to ZoneSign
+	ZoneOffset					string
+	Location						*time.Location
+	LocationName				string
+}
+
+// New - Creates and returns a new TimeZoneDefDto instance based on
+// a 'dateTime (time.Time) input parameter.
+func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
+
+	ePrefix := "TimeZoneDefDto.New() "
+
+	if dateTime.IsZero() {
+		return TimeZoneDefDto{}, errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+	}
+
+	tzDef2 := TimeZoneDefDto{}
+
+	tzDef2.ZoneName, tzDef2.ZoneOffsetSeconds = dateTime.Zone()
+
+	tzDef2.allocateZoneOffsetSeconds(tzDef2.ZoneOffsetSeconds)
+
+	tzDef2.Location = dateTime.Location()
+
+	tzDef2.LocationName = dateTime.Location().String()
+
+	tzDef2.setZoneString()
+
+	return tzDef2, nil
+}
+
+func (tzdef *TimeZoneDefDto) setZoneString() {
+
+	tzdef.ZoneOffset = ""
+
+	if tzdef.ZoneSign < 0 {
+		tzdef.ZoneOffset += "-"
+	}
+
+	tzdef.ZoneOffset += fmt.Sprintf("%02%02%",tzdef.OffsetHours,tzdef.OffsetMinutes)
+
+	if tzdef.OffsetSeconds > 0 {
+		tzdef.ZoneOffset += fmt.Sprintf("%02%", tzdef.OffsetSeconds)
+	}
+
+	tzdef.ZoneOffset += " " + tzdef.ZoneName
+
+	return
+}
+
+func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds int) {
+
+	if signedZoneOffsetSeconds < 0 {
+		tzdef.ZoneSign = -1
+	} else {
+		tzdef.ZoneSign = 1
+	}
+
+	tzdef.ZoneOffsetSeconds = signedZoneOffsetSeconds
+
+	signedZoneOffsetSeconds *= tzdef.ZoneSign
+
+	tzdef.OffsetHours = 0
+	tzdef.OffsetMinutes = 0
+	tzdef.OffsetSeconds = 0
+
+	if signedZoneOffsetSeconds == 0 {
+		return
+	}
+
+	tzdef.OffsetHours = signedZoneOffsetSeconds / 3600 // compute hours
+	signedZoneOffsetSeconds -= tzdef.OffsetHours * 3600
+
+	tzdef.OffsetMinutes = signedZoneOffsetSeconds / 60 // compute minutes
+	signedZoneOffsetSeconds -= tzdef.OffsetMinutes * 60
+
+	tzdef.OffsetSeconds = signedZoneOffsetSeconds
+
+	return
+}
+
+// DateTzDto - Type
+// ================
+// Used to store and transfer date times.
 // The descriptors contained is this structure are intended
 // to define and identify a specific point in time.
 //

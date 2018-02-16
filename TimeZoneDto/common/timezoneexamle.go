@@ -24,7 +24,7 @@ func Tex002() {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	locCDT, _ := time.LoadLocation(TzUsCentral)
 	eastEDT, err := time.LoadLocation(TzUsEast)
-	tzUTC, err := time.LoadLocation(TzUTC)
+	tzUTC, err := time.LoadLocation(TzIanaUTC)
 	if err != nil {
 		panic(err)
 	}
