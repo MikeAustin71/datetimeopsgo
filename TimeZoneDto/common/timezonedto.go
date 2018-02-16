@@ -156,39 +156,42 @@ const (
 	TzIanaPacificPortMoresby = "Pacific/Port_Moresby"
 	TzIanaPacificTahiti = "Pacific/Tahiti"
 
-	// TzUsAlaska - USA Alaska
-	TzUsAlaskaAnchorage =  "America/Anchorage"
-	TzUsAlaskaJuneau = "America/Juneau"
-	TzUsAlaskaNome = "America/Nome"
-	TzUsAlaskaYakutat = "America/Yakutat"
-	TzUsAleutianIslands = "America/Adak"
+	// TzIanaUsAlaska - USA Alaska
+	TzIanaUsAlaskaAnchorage =  "America/Anchorage"
+	TzIanaUsAlaskaJuneau = "America/Juneau"
+	TzIanaUsAlaskaNome = "America/Nome"
+	TzIanaUsAlaskaYakutat = "America/Yakutat"
+	TzIanaUsAleutianIslands = "America/Adak"
 
-	// TzIanaArizona
-	TzIanaArizona = "America/Phoenix"
+	// TzIanaUsArizona
+	TzIanaUsArizona = "America/Phoenix"
 
-	// TzUsEast - USA Eastern Time Zone
+	// TzIanaUsEast - USA Eastern Time Zone
 	// IANA database identifier
-	TzUsEast = "America/New_York"
+	TzIanaUsEast = "America/New_York"
 
-	// TzUsCentral - USA Central Time Zone
+	// TzIanaUsCentral - USA Central Time Zone
 	// IANA database identifier
-	TzUsCentral = "America/Chicago"
+	TzIanaUsCentral = "America/Chicago"
 
-	// TzUsMountain - USA Mountain Time Zone
+	// TzIanaUsMountain - USA Mountain Time Zone
 	// IANA database identifier
-	TzUsMountain = "America/Denver"
+	TzIanaUsMountain = "America/Denver"
 
-	// TzUsPacific - USA Pacific Time Zone
+	// TzIanaUsPacific - USA Pacific Time Zone
 	// IANA database identifier
-	TzUsPacific  = "America/Los_Angeles"
+	TzIanaUsPacific  = "America/Los_Angeles"
 
-	// TzUsHawaii - USA Hawaiian Time Zone
+	// TzIanaUsHawaii - USA Hawaiian Time Zone
 	// IANA database identifier
-	TzUsHawaii = "Pacific/Honolulu"
+	TzIanaUsHawaii = "Pacific/Honolulu"
 
-	// tzUTC - UTC Time Zone IANA database
+	// TzIanaZulu - UTC Time Zone IANA database
 	// identifier
-	TzIanaUTC = "Zulu"
+	TzIanaZulu = "Etc/UCT"
+
+	// TzIanaUTC
+	TzIanaUTC = "Etc/UCT"
 
 
 )

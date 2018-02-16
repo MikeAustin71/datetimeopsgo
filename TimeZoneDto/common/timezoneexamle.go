@@ -22,9 +22,9 @@ func Tex002() {
 
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
-	locCDT, _ := time.LoadLocation(TzUsCentral)
-	eastEDT, err := time.LoadLocation(TzUsEast)
-	tzUTC, err := time.LoadLocation(TzIanaUTC)
+	locCDT, _ := time.LoadLocation(TzIanaUsCentral)
+	eastEDT, err := time.LoadLocation(TzIanaUsEast)
+	tzUTC, err := time.LoadLocation(TzIanaZulu)
 	if err != nil {
 		panic(err)
 	}
@@ -51,7 +51,7 @@ func Tex003() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	tCDT, _ := time.Parse(fmtstr, tstr)
-	tzu.ConvertTz(tCDT, TzUsPacific)
+	tzu.ConvertTz(tCDT, TzIanaUsPacific)
 
 	fmt.Println("Original Input Time: ", tCDT)
 	fmt.Println("tzu.TimeIn: ", tzu.TimeIn)
@@ -277,7 +277,7 @@ func Tex011() {
 
 	tCDT, _ := time.Parse(fmtstr, tstr)
 
-	tzuOut, err := tz.ConvertTz(tCDT, TzUsEast)
+	tzuOut, err := tz.ConvertTz(tCDT, TzIanaUsEast)
 
 	if err != nil {
 		fmt.Println("TimeZoneDto:ConverTz(tCDT,TzUsEast) returned Error: " + err.Error())

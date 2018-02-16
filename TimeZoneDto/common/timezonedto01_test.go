@@ -426,7 +426,7 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TzUsPacific )
+	tzu1, err := TimeZoneDto{}.New(t1, TzIanaUsPacific )
 
 	if err != nil {
 		t.Errorf("Error returned from TimeZoneDto{}.New(t1, TzUsPacific ). Error='%v'",err.Error())
@@ -481,14 +481,14 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 
 	actualTimeOutLoc := tzu1.TimeOutLoc.String()
 
-	if TzUsPacific != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.",TzUsPacific, actualTimeOutLoc)
+	if TzIanaUsPacific != actualTimeOutLoc {
+		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.",TzIanaUsPacific, actualTimeOutLoc)
 	}
 
 	actualTimeOutLoc = tzu2.TimeOutLoc.String()
 
-	if TzUsPacific != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.",TzUsPacific, actualTimeOutLoc)
+	if TzIanaUsPacific != actualTimeOutLoc {
+		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.",TzIanaUsPacific, actualTimeOutLoc)
 	}
 
 }
@@ -499,7 +499,7 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TzUsPacific)
+	tzu1, err := TimeZoneDto{}.New(t1, TzIanaUsPacific)
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific). Error='%v'", err.Error())
 	}
@@ -547,7 +547,7 @@ func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	tzu1, err := TimeZoneDto{}.New(t1, TzUsEast)
+	tzu1, err := TimeZoneDto{}.New(t1, TzIanaUsEast)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast). Error='%v'", err.Error())
@@ -583,7 +583,7 @@ func TestTimeZoneUtility_NewAddTime_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TzUsPacific)
+	tzu1, err := TimeZoneDto{}.New(t1, TzIanaUsPacific)
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific). Error='%v'", err.Error())
 	}
