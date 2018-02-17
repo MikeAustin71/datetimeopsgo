@@ -19,25 +19,40 @@ import (
 
 func main() {
 
-	t1str := "02/15/2014 19:54:30.038175584 -0600 CST"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	t1, _ := time.Parse(fmtstr, t1str)
+	//neutralFmtStr := "2006-01-02 15:04:05.000000000"
+	hongKongLoc, _ := time.LoadLocation(common.TzIanaAsiaHongKong)
+	beijingLoc, _ :=time.LoadLocation(common.TzIanaAsiaShanghai)
+	usPacificLoc, _ :=time.LoadLocation(common.TzIanaUsPacific)
 
-	t1OutStr := t1.Format(fmtstr)
+	tHongKong := time.Date(2014, 2, 15, 19, 54, 30, 38175584, hongKongLoc)
+	tBeijing := time.Date(2014, 2, 15, 19, 54, 30, 38175584, beijingLoc)
+	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 
-
-	dtz2, err := common.DateTzDto{}.New(t1)
+	tzDef, err := common.TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
-		fmt.Printf("Error returned by DateTzDto{}.New(t1). Error='%v'", err.Error())
+		fmt.Printf("Error returned by TimeZoneDefDto{}.New(tUsPacific). Error='%v'", err.Error())
 		return
 	}
 
 
-	fmt.Println("       dtz2 DateTime: ", dtz2.DateTime.Format(fmtstr))
-	fmt.Println("t1 Date Time Out Str: ", t1OutStr)
+	fmt.Println(" tHongKong: ", tHongKong.Format(fmtstr))
+	fmt.Println("  tBeijing: ", tBeijing.Format(fmtstr))
+	fmt.Println("----------------------------------------")
+	fmt.Println("       tUsPacific: ", tUsPacific.Format(fmtstr))
+	fmt.Println("         ZoneName: ", tzDef.ZoneName)
+	fmt.Println("       ZoneOffset: ",tzDef.ZoneOffset)
+	fmt.Println("ZoneOffsetSeconds:", tzDef.ZoneOffsetSeconds)
+	fmt.Println("         ZoneSign: ",tzDef.ZoneSign)
+	fmt.Println("      OffsetHours: ", tzDef.OffsetHours)
+	fmt.Println("    OffsetMinutes: ", tzDef.OffsetMinutes)
+	fmt.Println("    OffsetSeconds: ", tzDef.OffsetSeconds)
+	fmt.Println("  Location String: ", tzDef.Location.String())
+	fmt.Println("    Location Name: ", tzDef.LocationName)
 
-	fmt.Println()
+
+
 
 }

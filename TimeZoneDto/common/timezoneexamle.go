@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+
 // Tex001 - Test Example 1
 func Tex001() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
@@ -301,6 +302,42 @@ func Tex011() {
 	printOutTimeZoneFields(tzuLocal)
 
 }
+
+// TzExampleParseIn0012 - Gives example of two methods for setting
+// time in a specific time zone.
+func TzExampleParseIn0012() {
+	t1str := "02/15/2014 19:54:30.038175584 -0600 CST"
+	t2str := "2014-02-15 19:54:30.038175584"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	neutralFmtStr := "2006-01-02 15:04:05.000000000"
+	pacificLoc, err := time.LoadLocation(TzIanaUsPacific)
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(common.TzIanaUsPacific). Error='%v'", err.Error())
+		return
+	}
+
+	tCentral, _ := time.Parse(fmtstr, t1str)
+
+	tPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, pacificLoc)
+
+	// "01/02/2006 15:04:05.000000000"
+	// "02/15/2014 19:54:30.038175584"
+	tPacific2, err := time.ParseInLocation(neutralFmtStr, t2str , pacificLoc)
+
+	if err!= nil {
+		fmt.Printf("Error returned from time.ParseInLocation(\"01/02/2006 15:04:05.000000000\", \"02/15/2014 19:54:30.038175584\", pacificLoc). Error='%v'", err.Error())
+		return
+
+	}
+
+	fmt.Println(" tCentral: ", tCentral.Format(fmtstr))
+	fmt.Println(" tPacific: ", tPacific.Format(fmtstr))
+	fmt.Println("tPacific2: ", tPacific2.Format(fmtstr))
+	fmt.Println()
+
+}
+
 
 // Tex021
 func Tex021() {

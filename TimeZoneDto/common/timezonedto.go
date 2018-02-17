@@ -107,6 +107,7 @@ const (
 	TzIanaAsiaTaipei = "Asia/Taipei"
 	TzIanaAsiaTehran = "Asia/Tehran"
 	TzIanaAsiaTokyo = "Asia/Tokyo"
+	TzIanaAsiaVladivostok = "Asia/Vladivostok"
 	TzIanaAtlanticAzores = "Atlantic/Azores"
 	TzIanaAtlanticBermuda = "Atlantic/Bermuda"
 	TzIanaAtlanticCanary = "Atlantic/Canary"
@@ -289,7 +290,7 @@ func (tzdef *TimeZoneDefDto) setZoneString() {
 		tzdef.ZoneOffset += "-"
 	}
 
-	tzdef.ZoneOffset += fmt.Sprintf("%02%02%",tzdef.OffsetHours,tzdef.OffsetMinutes)
+	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d",tzdef.OffsetHours,tzdef.OffsetMinutes)
 
 	if tzdef.OffsetSeconds > 0 {
 		tzdef.ZoneOffset += fmt.Sprintf("%02%", tzdef.OffsetSeconds)
