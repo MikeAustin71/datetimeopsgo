@@ -222,6 +222,7 @@ type TimeZoneDefDto struct {
 	ZoneOffset					string	// A text string representing the time zone. Example "-0500 CDT"
 	Location						*time.Location	// Pointer to a Time Zone Location
 	LocationName				string					// Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+	Description					string	// Unused - Available for classification, labeling or description by user.
 }
 
 // New - Creates and returns a new TimeZoneDefDto instance based on
@@ -252,6 +253,7 @@ type TimeZoneDefDto struct {
 //				ZoneOffset					string	// A text string representing the time zone. Example "-0500 CDT"
 //				Location						*time.Location	// Pointer to a Time Zone Location
 //				LocationName				string					// Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+//				Description					string	// Unused - Available for classification, labeling or description by user.
 //			}
 //
 //
@@ -278,6 +280,8 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 	tzDef2.LocationName = dateTime.Location().String()
 
 	tzDef2.setZoneString()
+
+	tzDef2.Description = ""
 
 	return tzDef2, nil
 }
@@ -330,6 +334,62 @@ func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds i
 	tzdef.OffsetSeconds = signedZoneOffsetSeconds
 
 	return
+}
+
+// Empty - Resets all field values for the current TimeZoneDefDto
+// instance to their uninitialized or 'zero' states.
+func (tzdef *TimeZoneDefDto) Empty() {
+	tzdef.ZoneName						= ""
+	tzdef.ZoneOffsetSeconds		= 0
+	tzdef.ZoneSign						= 0
+	tzdef.OffsetHours					= 0
+	tzdef.OffsetMinutes				= 0
+	tzdef.OffsetSeconds				= 0
+	tzdef.ZoneOffset					= ""
+	tzdef.Location						= nil
+	tzdef.LocationName				= ""
+	tzdef.Description					= ""
+
+}
+
+func(tzdef *TimeZoneDefDto) Equal(tzdef2 *TimeZoneDefDto) bool {
+
+	if tzdef.ZoneName == tzdef2.ZoneName &&
+			tzdef.ZoneOffsetSeconds == tzdef2.ZoneOffsetSeconds &&
+			tzdef.ZoneSign == tzdef2.ZoneSign &&
+			tzdef.OffsetHours == tzdef2.OffsetHours &&
+			tzdef.OffsetMinutes == tzdef2.OffsetMinutes &&
+			tzdef.OffsetSeconds == tzdef2.OffsetSeconds &&
+			tzdef.ZoneOffset == tzdef2.ZoneOffset &&
+			tzdef.Location.String() == tzdef2.Location.String() &&
+			tzdef.LocationName == tzdef2.LocationName &&
+			tzdef.Description == tzdef2.Description {
+				return true
+	}
+
+
+	return false
+}
+
+// CopyOut - creates and returns a deep copy of the current
+// TimeZoneDefDto instance.
+func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
+
+	tzdef2 := TimeZoneDefDto{}
+
+	tzdef2.ZoneName						= tzdef.ZoneName
+	tzdef2.ZoneOffsetSeconds	= tzdef.ZoneOffsetSeconds
+	tzdef2.ZoneSign						= tzdef.ZoneSign
+	tzdef2.OffsetHours				= tzdef.OffsetHours
+	tzdef2.OffsetMinutes			= tzdef.OffsetMinutes
+	tzdef2.OffsetSeconds			= tzdef.OffsetSeconds
+	tzdef2.ZoneOffset					= tzdef.ZoneOffset
+	tzdef2.Location	  				= tzdef.Location
+	tzdef2.LocationName				= tzdef.LocationName
+	tzdef2.Description				= tzdef.Description
+
+	return tzdef2
+
 }
 
 // DateTzDto - Type
