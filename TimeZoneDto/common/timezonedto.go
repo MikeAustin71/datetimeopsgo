@@ -271,17 +271,14 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 
 	tzDef2 := TimeZoneDefDto{}
 
-	tzDef2.ZoneName, tzDef2.ZoneOffsetSeconds = dateTime.Zone()
+	err := tzDef2.SetFromDateTime(dateTime)
 
-	tzDef2.allocateZoneOffsetSeconds(tzDef2.ZoneOffsetSeconds)
-
-	tzDef2.Location = dateTime.Location()
-
-	tzDef2.LocationName = dateTime.Location().String()
-
-	tzDef2.setZoneString()
-
-	tzDef2.Description = ""
+	if err!=nil {
+		return TimeZoneDefDto{}, fmt.Errorf(ePrefix +
+			"Error returned by tzDef2.SetFromDateTime(dateTime). " +
+			"dateTime='%v'  Error='%v'",
+				dateTime.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
 
 	return tzDef2, nil
 }
@@ -392,6 +389,34 @@ func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
 
 	return tzdef2
 
+}
+
+// SetFromDateTime - Re-initializes the values of the current
+// TimeZoneDefDto instance based on input parameter, 'dateTime'.
+func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
+	ePrefix := "TimeZoneDefDto.SetFromDateTime() "
+
+	if dateTime.IsZero() {
+		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+	}
+
+	tzdef.Empty()
+
+	tzdef.ZoneName, tzdef.ZoneOffsetSeconds = dateTime.Zone()
+
+	tzdef.allocateZoneOffsetSeconds(tzdef.ZoneOffsetSeconds)
+
+	tzdef.Location = dateTime.Location()
+
+	tzdef.LocationName = dateTime.Location().String()
+
+	tzdef.setZoneString()
+
+	tzdef.Description = ""
+
+
+
+	return nil
 }
 
 // DateTzDto - Type
