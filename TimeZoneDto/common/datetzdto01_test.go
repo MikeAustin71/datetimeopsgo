@@ -33,8 +33,8 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 		t.Errorf("Error: Expected dTzDto.TimeZone='%v'. Instead, dTzDto.TimeZone.ZoneName='%v'",t1ExpectedZone, dTzDto.TimeZone.ZoneName)
 	}
 
-	if t1ExpectedZoneOffset != dTzDto.TimeZone.OffsetSeconds {
-		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZone.OffsetSeconds='%v'", t1ExpectedZoneOffset, dTzDto.TimeZone.OffsetSeconds)
+	if t1ExpectedZoneOffset != dTzDto.TimeZone.ZoneOffsetSeconds {
+		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZone.OffsetSeconds='%v'", t1ExpectedZoneOffset, dTzDto.TimeZone.ZoneOffsetSeconds)
 	}
 
 	if t1ExpectedLocationName != dTzDto.TimeZone.LocationName {
