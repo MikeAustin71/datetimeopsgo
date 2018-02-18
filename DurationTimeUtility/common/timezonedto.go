@@ -1234,7 +1234,7 @@ func (tzu *TimeZoneDto) CopyOut() TimeZoneDto {
 	return tzu2
 }
 
-// CopyToThis - Copies another TimeZoneDto
+// CopyIn - Copies another TimeZoneDto
 // to the current TimeZoneDto data fields.
 func (tzu *TimeZoneDto) CopyToThis(tzu2 TimeZoneDto) {
 	tzu.Empty()

@@ -174,7 +174,7 @@ func (fh FileHelper) CleanPathStr(pathStr string) string {
 	return fp.Clean(pathStr)
 }
 
-// CopyToThis - Copies a second FileHelper data structure
+// CopyIn - Copies a second FileHelper data structure
 // to the current FileHelper data structure
 func (fh *FileHelper) CopyToThis(fh2 FileHelper) {
 

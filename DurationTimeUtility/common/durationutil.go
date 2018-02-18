@@ -369,7 +369,7 @@ type DurationUtility struct {
 	TimeDuration time.Duration
 }
 
-// CopyToThis - Receives and incoming DurationUtility data
+// CopyIn - Receives and incoming DurationUtility data
 // structure and copies the values to the current DurationUtility
 // data structure.
 func (du *DurationUtility) CopyToThis(duIn DurationUtility) {

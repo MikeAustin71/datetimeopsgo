@@ -225,6 +225,169 @@ type TimeZoneDefDto struct {
 	Description					string	// Unused - Available for classification, labeling or description by user.
 }
 
+// CopyIn - Copies an incoming TimeZoneDefDto into the
+// data fields of the current TimeZoneDefDto instance.
+func (tzdef *TimeZoneDefDto) CopyIn(tzdef2 *TimeZoneDefDto) {
+
+	tzdef.Empty()
+
+	tzdef.ZoneName					= tzdef2.ZoneName
+	tzdef.ZoneOffsetSeconds	= tzdef2.ZoneOffsetSeconds
+	tzdef.ZoneSign					= tzdef2.ZoneSign
+	tzdef.OffsetHours				= tzdef2.OffsetHours
+	tzdef.OffsetMinutes			= tzdef2.OffsetMinutes
+	tzdef.OffsetSeconds			= tzdef2.OffsetSeconds
+	tzdef.ZoneOffset				= tzdef2.ZoneOffset
+	tzdef.Location	 				= tzdef2.Location
+	tzdef.LocationName			= tzdef2.LocationName
+	tzdef.Description				= tzdef2.Description
+
+}
+
+// CopyOut - creates and returns a deep copy of the current
+// TimeZoneDefDto instance.
+func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
+
+	tzdef2 := TimeZoneDefDto{}
+
+	tzdef2.ZoneName						= tzdef.ZoneName
+	tzdef2.ZoneOffsetSeconds	= tzdef.ZoneOffsetSeconds
+	tzdef2.ZoneSign						= tzdef.ZoneSign
+	tzdef2.OffsetHours				= tzdef.OffsetHours
+	tzdef2.OffsetMinutes			= tzdef.OffsetMinutes
+	tzdef2.OffsetSeconds			= tzdef.OffsetSeconds
+	tzdef2.ZoneOffset					= tzdef.ZoneOffset
+	tzdef2.Location	  				= tzdef.Location
+	tzdef2.LocationName				= tzdef.LocationName
+	tzdef2.Description				= tzdef.Description
+
+	return tzdef2
+
+}
+
+
+// Empty - Resets all field values for the current TimeZoneDefDto
+// instance to their uninitialized or 'zero' states.
+func (tzdef *TimeZoneDefDto) Empty() {
+	tzdef.ZoneName						= ""
+	tzdef.ZoneOffsetSeconds		= 0
+	tzdef.ZoneSign						= 0
+	tzdef.OffsetHours					= 0
+	tzdef.OffsetMinutes				= 0
+	tzdef.OffsetSeconds				= 0
+	tzdef.ZoneOffset					= ""
+	tzdef.Location						= nil
+	tzdef.LocationName				= ""
+	tzdef.Description					= ""
+
+}
+
+// Equal - Determines if two TimeZoneDefDto are equivalent in
+// value. Returns 'true' of two TimeZoneDefDto's are equal
+func(tzdef *TimeZoneDefDto) Equal(tzdef2 *TimeZoneDefDto) bool {
+
+	if tzdef.ZoneName == tzdef2.ZoneName &&
+			tzdef.ZoneOffsetSeconds == tzdef2.ZoneOffsetSeconds &&
+			tzdef.ZoneSign == tzdef2.ZoneSign &&
+			tzdef.OffsetHours == tzdef2.OffsetHours &&
+			tzdef.OffsetMinutes == tzdef2.OffsetMinutes &&
+			tzdef.OffsetSeconds == tzdef2.OffsetSeconds &&
+			tzdef.ZoneOffset == tzdef2.ZoneOffset &&
+			tzdef.Location.String() == tzdef2.Location.String() &&
+			tzdef.LocationName == tzdef2.LocationName &&
+			tzdef.Description == tzdef2.Description {
+				return true
+	}
+
+
+	return false
+}
+
+// IsEmpty - Determines whether the current TimeZoneDefDto
+// instance is Empty.
+//
+// If the TimeZoneDefDto instance is NOT populated, the method
+// returns 'true'. Otherwise, it returns 'false'.
+//
+func (tzdef *TimeZoneDefDto) IsEmpty() bool {
+
+	if tzdef.ZoneName 					!= "" ||
+		 	tzdef.ZoneOffsetSeconds != 0 	||
+			tzdef.ZoneSign 					!= 0 	||
+			tzdef.OffsetHours 			!= 0 	||
+			tzdef.OffsetMinutes 		!= 0 	||
+			tzdef.OffsetSeconds 		!= 0	||
+			tzdef.ZoneOffset				!= "" ||
+			tzdef.LocationName			!= "" {
+				return false
+	}
+
+	return true
+}
+
+// IsValid - Analyzes the current TimeZoneDefDto instance
+// to determine validity.
+//
+// This method returns 'true' if the TimeZoneDefDto is
+// valid.  Otherwise, it returns 'false'.
+//
+func (tzdef *TimeZoneDefDto) IsValid() bool {
+
+	if tzdef.IsEmpty() {
+		return false
+	}
+
+	if strings.TrimLeft(strings.TrimRight(tzdef.LocationName," "), " ")  == "" {
+		return false
+	}
+
+	if tzdef.Location.String() != tzdef.LocationName {
+		return false
+	}
+
+	loc, err := time.LoadLocation(tzdef.LocationName)
+
+	if err != nil {
+		return false
+	}
+
+	if loc != tzdef.Location {
+		return false
+	}
+
+	return true
+}
+
+// IsValidFromDateTime - Uses a time.Time input parameter, 'dateTime' to
+// analyze the current TimeZoneDefDto instance. If the zone and location
+// details of 'dateTime' are not perfectly matched to the current TimeZoneDefDto
+// instance, the instance is considered INVALID, and this method returns 'false'.
+//
+// Otherwise, if all zone and location details are perfectly matched, this
+// method returns 'true', signaling that the TimeZoneDateDefDto instance
+// is VALID.
+//
+func (tzdef *TimeZoneDefDto) IsValidFromDateTime(dateTime time.Time) bool {
+
+	if tzdef.IsEmpty() {
+		return false
+	}
+
+	tzdef2, err := TimeZoneDefDto{}.New(dateTime)
+
+	if err != nil {
+		return false
+	}
+
+	tzdef2.Description = tzdef.Description
+
+	if !tzdef.Equal(&tzdef2) {
+		return false
+	}
+
+	return true
+}
+
 // New - Creates and returns a new TimeZoneDefDto instance based on
 // a 'dateTime (time.Time) input parameter.
 //
@@ -277,31 +440,43 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 		return TimeZoneDefDto{}, fmt.Errorf(ePrefix +
 			"Error returned by tzDef2.SetFromDateTime(dateTime). " +
 			"dateTime='%v'  Error='%v'",
-				dateTime.Format(TzDtoYrMDayFmtStr), err.Error())
+			dateTime.Format(TzDtoYrMDayFmtStr), err.Error())
 	}
 
 	return tzDef2, nil
 }
 
-func (tzdef *TimeZoneDefDto) setZoneString() {
+// SetFromDateTime - Re-initializes the values of the current
+// TimeZoneDefDto instance based on input parameter, 'dateTime'.
+func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
+	ePrefix := "TimeZoneDefDto.SetFromDateTime() "
 
-	tzdef.ZoneOffset = ""
-
-	if tzdef.ZoneSign < 0 {
-		tzdef.ZoneOffset += "-"
+	if dateTime.IsZero() {
+		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
 	}
 
-	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d",tzdef.OffsetHours,tzdef.OffsetMinutes)
+	tzdef.Empty()
 
-	if tzdef.OffsetSeconds > 0 {
-		tzdef.ZoneOffset += fmt.Sprintf("%02%", tzdef.OffsetSeconds)
-	}
+	tzdef.ZoneName, tzdef.ZoneOffsetSeconds = dateTime.Zone()
 
-	tzdef.ZoneOffset += " " + tzdef.ZoneName
+	tzdef.allocateZoneOffsetSeconds(tzdef.ZoneOffsetSeconds)
 
-	return
+	tzdef.Location = dateTime.Location()
+
+	tzdef.LocationName = dateTime.Location().String()
+
+	tzdef.setZoneString()
+
+	tzdef.Description = ""
+
+
+
+	return nil
 }
 
+
+// allocateZoneOffsetSeconds - allocates a signed value of total offset seconds from
+// UTC to the associated fields in the current TimeZoneDefDto instance.
 func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds int) {
 
 	if signedZoneOffsetSeconds < 0 {
@@ -333,91 +508,28 @@ func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds i
 	return
 }
 
-// Empty - Resets all field values for the current TimeZoneDefDto
-// instance to their uninitialized or 'zero' states.
-func (tzdef *TimeZoneDefDto) Empty() {
-	tzdef.ZoneName						= ""
-	tzdef.ZoneOffsetSeconds		= 0
-	tzdef.ZoneSign						= 0
-	tzdef.OffsetHours					= 0
-	tzdef.OffsetMinutes				= 0
-	tzdef.OffsetSeconds				= 0
-	tzdef.ZoneOffset					= ""
-	tzdef.Location						= nil
-	tzdef.LocationName				= ""
-	tzdef.Description					= ""
+// setZoneString - assembles and assigns the composite zone
+// offset and zone name abbreviation in the TimeZoneDefDto.ZoneOffset
+// field. Example: "-0500 CST"
+func (tzdef *TimeZoneDefDto) setZoneString() {
 
-}
+	tzdef.ZoneOffset = ""
 
-// Equal - Determines if two TimeZoneDefDto are equivalent in
-// value. Returns 'true' of two TimeZoneDefDto's are equal
-func(tzdef *TimeZoneDefDto) Equal(tzdef2 *TimeZoneDefDto) bool {
-
-	if tzdef.ZoneName == tzdef2.ZoneName &&
-			tzdef.ZoneOffsetSeconds == tzdef2.ZoneOffsetSeconds &&
-			tzdef.ZoneSign == tzdef2.ZoneSign &&
-			tzdef.OffsetHours == tzdef2.OffsetHours &&
-			tzdef.OffsetMinutes == tzdef2.OffsetMinutes &&
-			tzdef.OffsetSeconds == tzdef2.OffsetSeconds &&
-			tzdef.ZoneOffset == tzdef2.ZoneOffset &&
-			tzdef.Location.String() == tzdef2.Location.String() &&
-			tzdef.LocationName == tzdef2.LocationName &&
-			tzdef.Description == tzdef2.Description {
-				return true
+	if tzdef.ZoneSign < 0 {
+		tzdef.ZoneOffset += "-"
 	}
 
+	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d",tzdef.OffsetHours,tzdef.OffsetMinutes)
 
-	return false
-}
-
-// CopyOut - creates and returns a deep copy of the current
-// TimeZoneDefDto instance.
-func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
-
-	tzdef2 := TimeZoneDefDto{}
-
-	tzdef2.ZoneName						= tzdef.ZoneName
-	tzdef2.ZoneOffsetSeconds	= tzdef.ZoneOffsetSeconds
-	tzdef2.ZoneSign						= tzdef.ZoneSign
-	tzdef2.OffsetHours				= tzdef.OffsetHours
-	tzdef2.OffsetMinutes			= tzdef.OffsetMinutes
-	tzdef2.OffsetSeconds			= tzdef.OffsetSeconds
-	tzdef2.ZoneOffset					= tzdef.ZoneOffset
-	tzdef2.Location	  				= tzdef.Location
-	tzdef2.LocationName				= tzdef.LocationName
-	tzdef2.Description				= tzdef.Description
-
-	return tzdef2
-
-}
-
-// SetFromDateTime - Re-initializes the values of the current
-// TimeZoneDefDto instance based on input parameter, 'dateTime'.
-func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
-	ePrefix := "TimeZoneDefDto.SetFromDateTime() "
-
-	if dateTime.IsZero() {
-		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+	if tzdef.OffsetSeconds > 0 {
+		tzdef.ZoneOffset += fmt.Sprintf("%02%", tzdef.OffsetSeconds)
 	}
 
-	tzdef.Empty()
+	tzdef.ZoneOffset += " " + tzdef.ZoneName
 
-	tzdef.ZoneName, tzdef.ZoneOffsetSeconds = dateTime.Zone()
-
-	tzdef.allocateZoneOffsetSeconds(tzdef.ZoneOffsetSeconds)
-
-	tzdef.Location = dateTime.Location()
-
-	tzdef.LocationName = dateTime.Location().String()
-
-	tzdef.setZoneString()
-
-	tzdef.Description = ""
-
-
-
-	return nil
+	return
 }
+
 
 // DateTzDto - Type
 // ================
@@ -1122,17 +1234,18 @@ func (dtz *DateTzDto) allocateNanoseconds(totNanoseconds int64) {
 // TimeZoneDto - Time Zone Data and Methods
 // ============================================
 type TimeZoneDto struct {
-	Description string					// Unused - available for tagging, classification or
-															//		labeling.
-	TimeIn      time.Time				// Original input time value
-	TimeInLoc   *time.Location	// Time Zone Location Pointer associated with 'TimeIn'
-	TimeOut     time.Time				// TimeOut - 'tIn' value converted to TimeOut
-	TimeOutLoc  *time.Location  // Time Zone Location pointer associated with TimeOut
-	TimeUTC     time.Time				// TimeUTC (Universal Coordinated Time aka 'Zulu') value
-															// 		equivalent to TimeIn
-	TimeLocal		time.Time				// Equivalent to TimeIn value converted to the 'Local'
-															// 		Time Zone Location. 'Local' is the Time Zone Location
-															// 		used by the host computer.
+	Description 	string					// Unused - available for tagging, classification or
+																//		labeling.
+	TimeIn      	time.Time				// Original input time value
+	TimeInZone  	TimeZoneDefDto	// Time Zone Definition Dto associated with 'TimeIn'
+	TimeOut     	time.Time				// TimeOut - 'TimeIn' value converted to TimeOut
+	TimeOutZone 	TimeZoneDefDto  // Time Zone Definition Dto associated with TimeOut
+	TimeUTC     	time.Time				// TimeUTC (Universal Coordinated Time aka 'Zulu') value
+																// 		equivalent to TimeIn
+	TimeUTCZone		TimeZoneDefDto	// Time Zone Definition Dto associated with Time UTC
+	TimeLocal			time.Time				// TimeIn value converted to the 'Local' Time Zone Location.
+																// 		'Local' is the Time Zone Location	used by the host computer.
+	TimeLocalZone	TimeZoneDefDto	// Time Zone Definition Dto associated with 'TimeLocal'
 }
 
 // AddDate - Adds specified years, months and days values to the
@@ -1162,11 +1275,16 @@ func (tzu *TimeZoneDto) AddDate(years, months, days int) error {
 	}
 
 	tzu.TimeIn = tzu.TimeIn.AddDate(years, months, days)
+
+	tzu.TimeInZone, err = TimeZoneDefDto{}.New(tzu.TimeIn)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(tzu.TimeIn). tzu.TimeIn")
+	}
+
 	tzu.TimeOut = tzu.TimeOut.AddDate(years, months, days)
 	tzu.TimeUTC = tzu.TimeUTC.AddDate(years, months, days)
 	tzu.TimeLocal = tzu.TimeLocal.AddDate(years, months, days)
-	tzu.TimeInLoc = tzu.TimeIn.Location()
-	tzu.TimeOutLoc = tzu.TimeOut.Location()
 
 	return nil
 }
@@ -1248,11 +1366,35 @@ func (tzu *TimeZoneDto) AddDuration(duration time.Duration) error {
 	}
 
 	tzu.TimeIn = tzu.TimeIn.Add(duration)
-	tzu.TimeInLoc = tzu.TimeIn.Location()
+	
+	tzu.TimeInZone, err = TimeZoneDefDto{}.New(tzu.TimeIn)
+	
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeZoneDefDto{}.New(tzu.TimeIn). tzu.TimeIn='%v'  Error='%v'", tzu.TimeIn.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+	
 	tzu.TimeOut = tzu.TimeOut.Add(duration)
-	tzu.TimeOutLoc = tzu.TimeOut.Location()
+	tzu.TimeOutZone, err = TimeZoneDefDto{}.New(tzu.TimeOut)
+	
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeZoneDefDto{}.New(tzu.TimeOut). tzu.TimeOut='%v'  Error='%v'", tzu.TimeOut.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+	
+	
 	tzu.TimeUTC = tzu.TimeUTC.Add(duration)
+	tzu.TimeUTCZone, err = TimeZoneDefDto{}.New(tzu.TimeUTC)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeZoneDefDto{}.New(tzu.TimeUTC). tzu.TimeUTC='%v'  Error='%v'", tzu.TimeUTC.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+	
+	
 	tzu.TimeLocal = tzu.TimeLocal.Add(duration)
+	tzu.TimeLocalZone, err = TimeZoneDefDto{}.New(tzu.TimeLocal)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeZoneDefDto{}.New(tzu.TimeLocal). tzu.TimeLocal='%v'  Error='%v'", tzu.TimeLocal.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
 
 	return nil
 }
@@ -1364,13 +1506,13 @@ func (tzu TimeZoneDto) ConvertTz(tIn time.Time, targetTz string) (TimeZoneDto, e
 	}
 
 
-	tzuOut.SetTimeIn(tIn)
+	tzuOut.setTimeIn(tIn)
 
-	tzuOut.SetTimeOut(tIn.In(tzOut))
+	tzuOut.setTimeOut(tIn.In(tzOut))
 
-	tzuOut.SetUTCTime(tIn)
+	tzuOut.setUTCTime(tIn)
 
-	err = tzuOut.SetLocalTime(tIn)
+	err = tzuOut.setLocalTime(tIn)
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.SetLocalTime(tIn). Error='%v'", err.Error())
@@ -1383,45 +1525,54 @@ func (tzu TimeZoneDto) ConvertTz(tIn time.Time, targetTz string) (TimeZoneDto, e
 // current TimeZoneDto instance.
 func (tzu *TimeZoneDto) CopyOut() TimeZoneDto {
 	tzu2 := TimeZoneDto{}
-	tzu2.Description = tzu.Description
-	tzu2.TimeIn = tzu.TimeIn
-	tzu2.TimeInLoc = tzu.TimeInLoc
-	tzu2.TimeOut = tzu.TimeOut
-	tzu2.TimeOutLoc = tzu.TimeOutLoc
-	tzu2.TimeUTC = tzu.TimeUTC
-	tzu2.TimeLocal = tzu.TimeLocal
+	tzu2.Description 		= tzu.Description
+	tzu2.TimeIn 				= tzu.TimeIn
+	tzu2.TimeInZone 		= tzu.TimeInZone.CopyOut()
+	tzu2.TimeOut 				= tzu.TimeOut
+	tzu2.TimeOutZone 		= tzu.TimeOutZone.CopyOut()
+	tzu2.TimeUTC 				= tzu.TimeUTC
+	tzu2.TimeUTCZone 		= tzu.TimeUTCZone.CopyOut()
+	tzu2.TimeLocal 			= tzu.TimeLocal
+	tzu2.TimeLocalZone 	= tzu.TimeLocalZone.CopyOut()
 
 	return tzu2
 }
 
-// CopyToThis - Copies another TimeZoneDto
+// CopyIn - Copies another TimeZoneDto
 // to the current TimeZoneDto data fields.
-func (tzu *TimeZoneDto) CopyToThis(tzu2 TimeZoneDto) {
-	tzu.Empty()
+func (tzu *TimeZoneDto) CopyIn(tzu2 TimeZoneDto) {
+	
+tzu.Empty()
 
-	tzu.Description = tzu2.Description
-	tzu.TimeIn = tzu2.TimeIn
-	tzu.TimeInLoc = tzu2.TimeInLoc
-	tzu.TimeOut = tzu2.TimeOut
-	tzu.TimeOutLoc = tzu2.TimeOutLoc
-	tzu.TimeUTC = tzu2.TimeUTC
-	tzu.TimeLocal = tzu2.TimeLocal
+	tzu.Description 		= tzu2.Description
+	tzu.TimeIn 					= tzu2.TimeIn
+	tzu.TimeInZone 			= tzu2.TimeInZone.CopyOut()
+	tzu.TimeOut 				= tzu2.TimeOut
+	tzu.TimeOutZone 		= tzu2.TimeOutZone.CopyOut()
+	tzu.TimeUTC 				= tzu2.TimeUTC
+	tzu.TimeUTCZone 		= tzu2.TimeUTCZone.CopyOut()
+	tzu.TimeLocal 			= tzu2.TimeLocal
+	tzu.TimeLocalZone 	= tzu2.TimeLocalZone.CopyOut()
+	
 }
 
 // Equal - returns a boolean value indicating
 // whether two TimeZoneDto data structures
 // are equivalent.
 func (tzu *TimeZoneDto) Equal(tzu2 TimeZoneDto) bool {
-	if tzu.TimeIn != tzu2.TimeIn ||
-		tzu.TimeInLoc != tzu2.TimeInLoc ||
-		tzu.TimeOut != tzu2.TimeOut ||
-		tzu.TimeOutLoc != tzu2.TimeOutLoc ||
-		tzu.TimeUTC != tzu2.TimeUTC  ||
-		tzu.TimeLocal != tzu2.TimeLocal	 {
+	
+	if !tzu.TimeIn.Equal(tzu2.TimeIn) 					||
+		!tzu.TimeInZone.Equal(&tzu2.TimeInZone) 	||
+		!tzu.TimeOut.Equal(tzu2.TimeOut) 					||
+		!tzu.TimeOutZone.Equal(&tzu2.TimeOutZone) 		||
+		!tzu.TimeUTC.Equal(tzu2.TimeUTC)  				||
+		!tzu.TimeUTCZone.Equal(&tzu2.TimeUTCZone) ||
+		!tzu.TimeLocal.Equal(tzu2.TimeLocal)		 	||
+		!tzu.TimeLocalZone.Equal(&tzu2.TimeLocalZone)	{
 
 		return false
 	}
-
+	
 	return true
 }
 
@@ -1429,41 +1580,17 @@ func (tzu *TimeZoneDto) Equal(tzu2 TimeZoneDto) bool {
 // TimeZoneDto to an uninitialized
 // state.
 func (tzu *TimeZoneDto) Empty() {
-	tzu.Description = ""
-	tzu.TimeIn = time.Time{}
-	tzu.TimeInLoc = nil
-	tzu.TimeOut = time.Time{}
-	tzu.TimeOutLoc = nil
-	tzu.TimeUTC = time.Time{}
-	tzu.TimeLocal = time.Time{}
+	tzu.Description 	= ""
+	tzu.TimeIn 				= time.Time{}
+	tzu.TimeInZone 		= TimeZoneDefDto{}
+	tzu.TimeOut 			= time.Time{}
+	tzu.TimeOutZone 	= TimeZoneDefDto{}
+	tzu.TimeUTC 			= time.Time{}
+	tzu.TimeUTCZone 	= TimeZoneDefDto{}
+	tzu.TimeLocal 		= time.Time{}
+	tzu.TimeLocalZone = TimeZoneDefDto{}
 }
 
-// GetLocationIn - Returns the time zone location for the
-// TimeInLoc data field which is part of the current TimeZoneDto
-// structure.
-func (tzu *TimeZoneDto) GetLocationIn() (string, error) {
-	ePrefix := "TimeZoneDto.GetLocationIn() "
-
-	if tzu.TimeIn.IsZero() {
-		return "", errors.New(ePrefix + "Error: TimeIn is Zero and Uninitialized!")
-	}
-
-	return tzu.TimeInLoc.String(), nil
-}
-
-// Get LocationOut - - Returns the time zone location for the
-// TimeInLoc data field which is part of the current TimeZoneDto
-// structure.
-func (tzu *TimeZoneDto) GetLocationOut() (string, error) {
-
-	ePrefix := "TimeZoneDto.GetLocationOut() "
-
-	if tzu.TimeOut.IsZero() {
-		return "", errors.New(ePrefix + "Error: TimeOut is Zero and Uninitialized!")
-	}
-
-	return tzu.TimeOutLoc.String(), nil
-}
 
 // GetTimeInDto - returns a DateTzDto instance representing the value
 // of the TimeIn data field for the current TimeZoneDto.
@@ -1549,41 +1676,6 @@ func (tzu *TimeZoneDto) GetTimeUtcDto() (DateTzDto, error) {
 	return dtzDto, nil
 }
 
-
-// GetZoneIn - Returns The Time Zone for the TimeIn
-// data field contained in the current TimeZoneDto
-// structure.
-func (tzu *TimeZoneDto) GetZoneIn() (string, error) {
-
-	ePrefix := "TimeZoneDto.GetZoneIn() "
-
-	if tzu.TimeOut.IsZero() {
-		return "", errors.New(ePrefix + "Error: TimeOut is Zero and Uninitialized!")
-	}
-
-	tzZone, _ := tzu.TimeIn.Zone()
-
-	return tzZone, nil
-
-}
-
-// GetZoneOut - Returns The Time Zone for the TimeOut
-// data field contained in the current TimeZoneDto
-// structure.
-func (tzu *TimeZoneDto) GetZoneOut() (string, error) {
-
-	ePrefix := "TimeZoneDto.GetZoneOut() "
-
-	if tzu.TimeOut.IsZero() {
-		return "", errors.New(ePrefix + "Error: TimeOut is Zero and Uninitialized!")
-	}
-
-	tzZone, _ := tzu.TimeOut.Zone()
-
-	return tzZone, nil
-
-}
-
 // IsTimeZoneDtoValid - Analyzes the current TimeZoneDto
 // instance and returns an error if the instance is Invalid.
 func (tzu *TimeZoneDto) IsTimeZoneDtoValid() error {
@@ -1594,28 +1686,35 @@ func (tzu *TimeZoneDto) IsTimeZoneDtoValid() error {
 		return errors.New(ePrefix + "Error: TimeIn is Zero!")
 	}
 
+	if !tzu.TimeInZone.IsValidFromDateTime(tzu.TimeIn) {
+		return errors.New(ePrefix + "Error: TimeIn Zone Definition is INVALID!")
+	}
+
 	if tzu.TimeOut.IsZero() {
 		return errors.New(ePrefix + "Error: TimeOut is Zero!")
+	}
+
+	if !tzu.TimeOutZone.IsValidFromDateTime(tzu.TimeOut) {
+		return errors.New(ePrefix + "Error: TimeOut Zone Definition is INVALID!")
 	}
 
 	if tzu.TimeUTC.IsZero() {
 		return errors.New(ePrefix + "Error: TimeUTC is Zero!")
 	}
 
+	if !tzu.TimeUTCZone.IsValidFromDateTime(tzu.TimeUTC) {
+		return errors.New(ePrefix + "Error: TimeUTC Zone Definition is INVALID!")
+	}
+
 	if tzu.TimeLocal.IsZero() {
 		return errors.New(ePrefix + "Error: TimeLocal is Zero!")
 	}
 
-	if tzu.TimeInLoc == nil {
-		tzu.TimeInLoc = tzu.TimeIn.Location()
-	}
-
-	if tzu.TimeOutLoc == nil {
-		tzu.TimeOutLoc = tzu.TimeOut.Location()
+	if !tzu.TimeLocalZone.IsValidFromDateTime(tzu.TimeLocal) {
+		return errors.New(ePrefix + "Error: TimeLocal Zone Definition is INVALID!")
 	}
 
 	return nil
-
 }
 
 // IsValidTimeZone - Tests a Time Zone string and returns three boolean values
@@ -2420,26 +2519,65 @@ func (tzu *TimeZoneDto) ReclassifyTimeWithNewTz(tIn time.Time, tZoneLocation str
 	return tOut, nil
 }
 
-// SetTimeIn - Assigns value to field 'TimeIn'
-func (tzu *TimeZoneDto) SetTimeIn(tIn time.Time) {
+// setTimeIn - Assigns time and zone values to field 'TimeIn'
+func (tzu *TimeZoneDto) setTimeIn(tIn time.Time) error {
+
+	ePrefix := "TimeZoneDto.SetTimeIn() "
+
 	tzu.TimeIn = tIn
-	tzu.TimeInLoc = tIn.Location()
+
+	var err error
+
+	tzu.TimeInZone, err = TimeZoneDefDto{}.New(tIn)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error retrned by TimeZoneDefDto{}.New(tIn). tIn='%v'  Error='%v'", tIn.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
+	return nil
 }
 
-// SetTimeOut - Assigns value to field 'TimeOut'
-func (tzu *TimeZoneDto) SetTimeOut(tOut time.Time) {
+// setTimeOut - Assigns time and zone values to field 'TimeOut'
+func (tzu *TimeZoneDto) setTimeOut(tOut time.Time) error {
+
+	ePrefix := "TimeZoneDto.setTimeOut()"
+
+	var err error
+
 	tzu.TimeOut = tOut
-	tzu.TimeOutLoc = tOut.Location()
+
+	tzu.TimeOutZone, err  = TimeZoneDefDto{}.New(tOut)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error retrned by TimeZoneDefDto{}.New(tOut). tOut='%v'  Error='%v'", tOut.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
+	return nil
+
 }
 
-// SetUTCTime - Assigns UTC Time to field 'TimeUTC'
-func (tzu *TimeZoneDto) SetUTCTime(t time.Time) {
+// setUTCTime - Assigns UTC Time and zone values to fields 'TimeUTC' and 'TimeUTCZone'
+func (tzu *TimeZoneDto) setUTCTime(t time.Time) error {
+
+	ePrefix := "TimeZoneDto.setTimeOut()"
+
+	var err error
 
 	tzu.TimeUTC = t.UTC()
+
+	tzu.TimeOutZone, err  = TimeZoneDefDto{}.New(tzu.TimeUTC)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error retrned by TimeZoneDefDto{}.New(tzu.TimeUTC). tzu.TimeUTC='%v'  Error='%v'", tzu.TimeUTC.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
+	return nil
+
+
 }
 
-// SetLocalTime - Assigns Local Time to field 'TimeLocal'
-func (tzu *TimeZoneDto) SetLocalTime(t time.Time) error {
+// setLocalTime - Assigns Local Time to field 'TimeLocal'
+func (tzu *TimeZoneDto) setLocalTime(t time.Time) error {
 	ePrefix := "TimeZoneDto.SetLocalTime() "
 
 	tzLocal, err := time.LoadLocation("Local")
@@ -2449,6 +2587,11 @@ func (tzu *TimeZoneDto) SetLocalTime(t time.Time) error {
 	}
 
 	tzu.TimeLocal = t.In(tzLocal)
+	tzu.TimeLocalZone, err  = TimeZoneDefDto{}.New(tzu.TimeLocal)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error retrned by TimeZoneDefDto{}.New(tzu.TimeLocal). tzu.TimeLocal='%v'  Error='%v'", tzu.TimeLocal.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
 
 	return nil
 }
