@@ -61,7 +61,7 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 	exTOutLoc := "America/Los_Angeles"
 
 	if exTOutLoc != tzuPacific.TimeOutZone.LocationName {
-		t.Errorf("Expected tzu.TimeOutLoc %v, got %v", exTOutLoc, tzuPacific.TimeOutZone.LocationName)
+		t.Errorf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'", exTOutLoc, tzuPacific.TimeOutZone.LocationName, tzuPacific.TimeOut.Format(TzDtoYrMDayFmtStr))
 	}
 
 	pacificUtcOut := tzuPacific.TimeUTC.Format(fmtstr)

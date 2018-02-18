@@ -2546,10 +2546,10 @@ func (tzu *TimeZoneDto) setTimeOut(tOut time.Time) error {
 
 	tzu.TimeOut = tOut
 
-	tzu.TimeOutZone, err  = TimeZoneDefDto{}.New(tOut)
+	tzu.TimeOutZone, err  = TimeZoneDefDto{}.New(tzu.TimeOut)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error retrned by TimeZoneDefDto{}.New(tOut). tOut='%v'  Error='%v'", tOut.Format(TzDtoYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix + "Error retrned by TimeZoneDefDto{}.New(tzu.TimeOut). tzu.TimeOut='%v'  Error='%v'", tOut.Format(TzDtoYrMDayFmtStr), err.Error())
 	}
 
 	return nil
@@ -2565,14 +2565,13 @@ func (tzu *TimeZoneDto) setUTCTime(t time.Time) error {
 
 	tzu.TimeUTC = t.UTC()
 
-	tzu.TimeOutZone, err  = TimeZoneDefDto{}.New(tzu.TimeUTC)
+	tzu.TimeUTCZone, err  = TimeZoneDefDto{}.New(tzu.TimeUTC)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error retrned by TimeZoneDefDto{}.New(tzu.TimeUTC). tzu.TimeUTC='%v'  Error='%v'", tzu.TimeUTC.Format(TzDtoYrMDayFmtStr), err.Error())
 	}
 
 	return nil
-
 
 }
 
