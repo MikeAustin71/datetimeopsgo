@@ -352,6 +352,8 @@ func (tzdef *TimeZoneDefDto) Empty() {
 
 }
 
+// Equal - Determines if two TimeZoneDefDto are equivalent in
+// value. Returns 'true' of two TimeZoneDefDto's are equal
 func(tzdef *TimeZoneDefDto) Equal(tzdef2 *TimeZoneDefDto) bool {
 
 	if tzdef.ZoneName == tzdef2.ZoneName &&
@@ -442,12 +444,10 @@ type DateTzDto struct {
 	Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
 	Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
 	TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-	TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
-	TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 	DateTime 				time.Time				// DateTime value for this DateTzDto Type
 	DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-	TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
-	TimeLocName			string					// Time Location Name. Example: "America/Chicago"
+	TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+																	// 		associated with this date time.
 }
 
 // New - returns a new DateTzDto instance based on a time.Time ('dateTime')
@@ -479,12 +479,10 @@ type DateTzDto struct {
 //		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
 //																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
 //		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//		TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
-//		TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
 //		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//		TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
-//		TimeLocName			string					// Time Location Name. Example: "America/Chicago"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
 //	}
 //
 // error - 		If successful the returned error Type is set equal to 'nil'. If errors are
@@ -567,12 +565,10 @@ func (dtz DateTzDto) New(dateTime time.Time)(DateTzDto, error) {
 //		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
 //																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
 //		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//		TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
-//		TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
 //		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//		TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
-//		TimeLocName			string					// Time Location Name. Example: "America/Chicago"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
 //	}
 //
 // error - 		If successful the returned error Type is set equal to 'nil'. If errors are
@@ -655,12 +651,10 @@ func (dtz DateTzDto) NewDateTimeElements(year, month, day, hour, minute, second,
 //		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
 //																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
 //		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//		TimeZone   			string					// Time Zone associated with this Date Time. Example: "CDT" (abbreviation for Central Daylight Time)
-//		TimeZoneOffset	int							// TimeZoneOffset associated with this Date Time
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
 //		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//		TimeLoc    			*time.Location	// Time Location pointer associated with this DateTime value
-//		TimeLocName			string					// Time Location Name. Example: "America/Chicago"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
 //	}
 //
 //
@@ -712,15 +706,10 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 
 	if !dtz.DateTime.IsZero() {
 		dtz2.DateTime = dtz.DateTime
-		dtz2.TimeZone, dtz2.TimeZoneOffset = dtz2.DateTime.Zone()
-		dtz2.TimeLoc = dtz2.DateTime.Location()
-		dtz2.TimeLocName = dtz2.TimeLoc.String()
+		dtz2.TimeZone = dtz.TimeZone.CopyOut()
 	} else {
-		dtz2.TimeZone				= ""
-		dtz2.TimeZoneOffset	= 0
+		dtz2.TimeZone				= TimeZoneDefDto{}
 		dtz2.DateTime				= time.Time{}
-		dtz2.TimeLoc					= nil
-		dtz2.TimeLocName			= ""
 	}
 
 	return dtz2
@@ -740,11 +729,8 @@ func (dtz *DateTzDto) Empty() {
 	dtz.Microsecond			= 0
 	dtz.Nanosecond			= 0
 	dtz.TotalNanoSecs		= 0
-	dtz.TimeZone				= ""
-	dtz.TimeZoneOffset	= 0
+	dtz.TimeZone				= TimeZoneDefDto{}
 	dtz.DateTime				= time.Time{}
-	dtz.TimeLoc					= nil
-	dtz.TimeLocName			= ""
 
 	return
 }
@@ -790,9 +776,13 @@ ePrefix := "DateTzDto.SetFromTime() "
 	dtz.Second = dateTime.Second()
 	dtz.allocateNanoseconds(int64(dateTime.Nanosecond()))
 	dtz.DateTime = dateTime
-	dtz.TimeLoc = dateTime.Location()
-	dtz.TimeLocName = dtz.TimeLoc.String()
-	dtz.TimeZone, dtz.TimeZoneOffset = dateTime.Zone()
+
+	var err error
+	dtz.TimeZone, err = TimeZoneDefDto{}.New(dateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeZoneDefDto{}.New(dateTime). dateTime='%v'  Error='%v'", dateTime.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
 
 	return nil
 }
@@ -904,10 +894,13 @@ func (dtz *DateTzDto) SetFromDateTimeElements(year, month, day, hour, minute, se
 	dtz.Hour 				= hour
 	dtz.Minute			= minute
 	dtz.Second			= second
-	dtz.TimeLoc 		= loc
-	dtz.DateTime = time.Date(year, time.Month(month), day, hour, minute, second, nanosecond, loc)
-	dtz.TimeZone, dtz.TimeZoneOffset  = dtz.DateTime.Zone()
-	dtz.TimeLocName = dtz.TimeLoc.String()
+	dtz.DateTime 		= time.Date(year, time.Month(month), day, hour, minute, second, nanosecond, loc)
+
+	dtz.TimeZone, err = TimeZoneDefDto{}.New(dtz.DateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeZoneDefDto{}.New(dtz.DateTime). dtz.DateTime='%v'  Error='%v'", dtz.DateTime.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
 
 	dtz.allocateNanoseconds(int64(nanosecond))
 
@@ -1018,23 +1011,26 @@ millisecond, microsecond, nanosecond int, timeZoneLocation string) error {
 
 	dtz.Empty()
 
-	dtz.TimeLoc, err = time.LoadLocation(timeZoneLocation)
-
-	if err != nil {
-		return fmt.Errorf("Error returned from time.LoadLocation(timeZoneLocation). 'timeZoneLocation' is INVALID. timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
-	}
-
-	dtz.TimeLocName = dtz.TimeLoc.String()
-
 	dtz.TotalNanoSecs =  int64(millisecond) * int64(time.Millisecond)
 	dtz.Millisecond = millisecond
 	dtz.TotalNanoSecs += int64(microsecond) * int64(time.Microsecond)
 	dtz.Microsecond = microsecond
 	dtz.TotalNanoSecs += int64(nanosecond)
 	dtz.Nanosecond = nanosecond
+	loc, err := time.LoadLocation(timeZoneLocation)
 
-	dtz.DateTime = time.Date(year, time.Month(month),day, hour, minute, second, int(dtz.TotalNanoSecs), dtz.TimeLoc)
-	dtz.TimeZone, dtz.TimeZoneOffset = dtz.DateTime.Zone()
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
+	}
+
+	dtz.DateTime = time.Date(year, time.Month(month),day, hour, minute, second, int(dtz.TotalNanoSecs), loc)
+
+	dtz.TimeZone, err = TimeZoneDefDto{}.New(dtz.DateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(dtz.DateTime). dtz.DateTime='%v'  Error=%v", dtz.DateTime.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
 	dtz.Year = dtz.DateTime.Year()
 	dtz.Month = int(dtz.DateTime.Month())
 	dtz.Hour = dtz.DateTime.Hour()

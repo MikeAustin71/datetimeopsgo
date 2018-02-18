@@ -29,16 +29,16 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'",t1OutStr, actualTimeStr)
 	}
 
-	if t1ExpectedZone != dTzDto.TimeZone {
-		t.Errorf("Error: Expected dTzDto.TimeZone='%v'. Instead, dTzDto.TimeZone='%v'",t1ExpectedZone, dTzDto.TimeZone)
+	if t1ExpectedZone != dTzDto.TimeZone.ZoneName {
+		t.Errorf("Error: Expected dTzDto.TimeZone='%v'. Instead, dTzDto.TimeZone.ZoneName='%v'",t1ExpectedZone, dTzDto.TimeZone.ZoneName)
 	}
 
-	if t1ExpectedZoneOffset != dTzDto.TimeZoneOffset {
-		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZoneOffset='%v'", t1ExpectedZoneOffset, dTzDto.TimeZoneOffset)
+	if t1ExpectedZoneOffset != dTzDto.TimeZone.OffsetSeconds {
+		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZone.OffsetSeconds='%v'", t1ExpectedZoneOffset, dTzDto.TimeZone.OffsetSeconds)
 	}
 
-	if t1ExpectedLocationName != dTzDto.TimeLocName {
-		t.Errorf("Error: Expected dTzDto.TimeLocName='%v'.  Instead, dTzDto.TimeLocName='%v'", t1ExpectedLocationName, dTzDto.TimeLocName)
+	if t1ExpectedLocationName != dTzDto.TimeZone.LocationName {
+		t.Errorf("Error: Expected dTzDto.TimeLocName='%v'.  Instead, dTzDto.TimeZone.LocationName='%v'", t1ExpectedLocationName, dTzDto.TimeZone.LocationName)
 	}
 
 	if t1.Year() != dTzDto.Year {
@@ -124,16 +124,16 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'",t1OutStr, actualTimeStr)
 	}
 
-	if t1ExpectedZone != dTzDto.TimeZone {
-		t.Errorf("Error: Expected dTzDto.TimeZone='%v'. Instead, dTzDto.TimeZone='%v'",t1ExpectedZone, dTzDto.TimeZone)
+	if t1ExpectedZone != dTzDto.TimeZone.ZoneName {
+		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneName='%v'. Instead, dTzDto.TimeZone.ZoneName='%v'",t1ExpectedZone, dTzDto.TimeZone.ZoneName)
 	}
 
-	if t1ExpectedZoneOffset != dTzDto.TimeZoneOffset {
-		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZoneOffset='%v'", t1ExpectedZoneOffset, dTzDto.TimeZoneOffset)
+	if t1ExpectedZoneOffset != dTzDto.TimeZone.ZoneOffsetSeconds {
+		t.Errorf("Error: Expected dTzDto.TimeZoneOffset.ZoneOffsetSeconds='%v'.  Instead, dTzDto.TimeZoneOffset.ZoneOffsetSeconds='%v'", t1ExpectedZoneOffset, dTzDto.TimeZone.ZoneOffsetSeconds)
 	}
 
-	if t1ExpectedLocationName != dTzDto.TimeLocName {
-		t.Errorf("Error: Expected dTzDto.TimeLocName='%v'.  Instead, dTzDto.TimeLocName='%v'", t1ExpectedLocationName, dTzDto.TimeLocName)
+	if t1ExpectedLocationName != dTzDto.TimeZone.LocationName {
+		t.Errorf("Error: Expected dTzDto.TimeZone.LocationName='%v'.  Instead, dTzDto.TimeZone.LocationName='%v'", t1ExpectedLocationName, dTzDto.TimeZone.LocationName)
 	}
 
 	if t1.Year() != dTzDto.Year {
@@ -204,16 +204,16 @@ func TestDateTzDto_New_01(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'",t1OutStr, actualTimeStr)
 	}
 
-	if t1ExpectedZone != dTzDto.TimeZone {
-		t.Errorf("Error: Expected dTzDto.TimeZone='%v'. Instead, dTzDto.TimeZone='%v'",t1ExpectedZone, dTzDto.TimeZone)
+	if t1ExpectedZone != dTzDto.TimeZone.ZoneName {
+		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneName='%v'. Instead, dTzDto.TimeZone.ZoneName='%v'",t1ExpectedZone, dTzDto.TimeZone.ZoneName)
 	}
 
-	if t1ExpectedZoneOffset != dTzDto.TimeZoneOffset {
-		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZoneOffset='%v'", t1ExpectedZoneOffset, dTzDto.TimeZoneOffset)
+	if t1ExpectedZoneOffset != dTzDto.TimeZone.ZoneOffsetSeconds {
+		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneOffsetSeconds='%v'.  Instead, dTzDto.TimeZone.ZoneOffsetSeconds='%v'", t1ExpectedZoneOffset, dTzDto.TimeZone.ZoneOffsetSeconds)
 	}
 
-	if t1ExpectedLocationName != dTzDto.TimeLocName {
-		t.Errorf("Error: Expected dTzDto.TimeLocName='%v'.  Instead, dTzDto.TimeLocName='%v'", t1ExpectedLocationName, dTzDto.TimeLocName)
+	if t1ExpectedLocationName != dTzDto.TimeZone.LocationName {
+		t.Errorf("Error: Expected dTzDto.TimeZone.LocationName='%v'.  Instead, dTzDto.TimeZone.LocationName='%v'", t1ExpectedLocationName, dTzDto.TimeZone.LocationName)
 	}
 
 	if t1.Year() != dTzDto.Year {
@@ -280,16 +280,16 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'",t1OutStr, actualTimeStr)
 	}
 
-	if t1ExpectedZone != dTzDto.TimeZone {
-		t.Errorf("Error: Expected dTzDto.TimeZone='%v'. Instead, dTzDto.TimeZone='%v'",t1ExpectedZone, dTzDto.TimeZone)
+	if t1ExpectedZone != dTzDto.TimeZone.ZoneName {
+		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneName='%v'. Instead, dTzDto.TimeZone.ZoneName='%v'",t1ExpectedZone, dTzDto.TimeZone.ZoneName)
 	}
 
-	if t1ExpectedZoneOffset != dTzDto.TimeZoneOffset {
-		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZoneOffset='%v'", t1ExpectedZoneOffset, dTzDto.TimeZoneOffset)
+	if t1ExpectedZoneOffset != dTzDto.TimeZone.ZoneOffsetSeconds {
+		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneOffsetSeconds='%v'.  Instead, dTzDto.TimeZone.ZoneOffsetSeconds='%v'", t1ExpectedZoneOffset, dTzDto.TimeZone.ZoneOffsetSeconds)
 	}
 
-	if t1ExpectedLocationName != dTzDto.TimeLocName {
-		t.Errorf("Error: Expected dTzDto.TimeLocName='%v'.  Instead, dTzDto.TimeLocName='%v'", t1ExpectedLocationName, dTzDto.TimeLocName)
+	if t1ExpectedLocationName != dTzDto.TimeZone.LocationName {
+		t.Errorf("Error: Expected dTzDto.TimeZone.LocationName='%v'.  Instead, dTzDto.TimeZone.LocationName='%v'", t1ExpectedLocationName, dTzDto.TimeZone.LocationName)
 	}
 
 	if t1.Year() != dTzDto.Year {
@@ -357,16 +357,16 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'",t1OutStr, actualTimeStr)
 	}
 
-	if t1ExpectedZone != dTzDto.TimeZone {
+	if t1ExpectedZone != dTzDto.TimeZone.ZoneName {
 		t.Errorf("Error: Expected dTzDto.TimeZone='%v'. Instead, dTzDto.TimeZone='%v'",t1ExpectedZone, dTzDto.TimeZone)
 	}
 
-	if t1ExpectedZoneOffset != dTzDto.TimeZoneOffset {
-		t.Errorf("Error: Expected dTzDto.TimeZoneOffset='%v'.  Instead, dTzDto.TimeZoneOffset='%v'", t1ExpectedZoneOffset, dTzDto.TimeZoneOffset)
+	if t1ExpectedZoneOffset != dTzDto.TimeZone.ZoneOffsetSeconds {
+		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneOffsetSeconds='%v'.  Instead, dTzDto.TimeZone.ZoneOffsetSeconds='%v'", t1ExpectedZoneOffset, dTzDto.TimeZone.ZoneOffsetSeconds)
 	}
 
-	if t1ExpectedLocationName != dTzDto.TimeLocName {
-		t.Errorf("Error: Expected dTzDto.TimeLocName='%v'.  Instead, dTzDto.TimeLocName='%v'", t1ExpectedLocationName, dTzDto.TimeLocName)
+	if t1ExpectedLocationName != dTzDto.TimeZone.LocationName {
+		t.Errorf("Error: Expected dTzDto.TimeZone.LocationName='%v'.  Instead, dTzDto.TimeZone.LocationName='%v'", t1ExpectedLocationName, dTzDto.TimeZone.LocationName)
 	}
 
 	if t1.Year() != dTzDto.Year {
