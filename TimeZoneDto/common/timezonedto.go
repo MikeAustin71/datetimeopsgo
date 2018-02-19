@@ -1279,12 +1279,32 @@ func (tzu *TimeZoneDto) AddDate(years, months, days int) error {
 	tzu.TimeInZone, err = TimeZoneDefDto{}.New(tzu.TimeIn)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(tzu.TimeIn). tzu.TimeIn")
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(tzu.TimeIn). tzu.TimeIn='%v  Error='%v'", tzu.TimeIn.Format(TzDtoYrMDayFmtStr), err.Error())
 	}
 
 	tzu.TimeOut = tzu.TimeOut.AddDate(years, months, days)
+	tzu.TimeOutZone, err = TimeZoneDefDto{}.New(tzu.TimeOut)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(tzu.TimeOut). tzu.TimeOut='%v  Error='%v'", tzu.TimeOut.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
 	tzu.TimeUTC = tzu.TimeUTC.AddDate(years, months, days)
+
+	tzu.TimeUTCZone, err = TimeZoneDefDto{}.New(tzu.TimeUTC)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(tzu.TimeUTC). tzu.TimeUTC='%v  Error='%v'", tzu.TimeUTC.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
 	tzu.TimeLocal = tzu.TimeLocal.AddDate(years, months, days)
+
+	tzu.TimeLocalZone, err = TimeZoneDefDto{}.New(tzu.TimeLocal)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(tzu.TimeLocal). tzu.TimeLocal='%v  Error='%v'", tzu.TimeLocal.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
 
 	return nil
 }

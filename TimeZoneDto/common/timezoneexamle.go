@@ -426,6 +426,126 @@ func Tex021() {
 	*/
 }
 
+// TestExample022
+func TestExample022() {
+	pacificTime := "2017-04-29 17:54:30 -0700 PDT"
+	mountainTime := "2017-04-29 18:54:30 -0600 MDT"
+	centralTime := "2017-04-29 19:54:30 -0500 CDT"
+	fmtstr := "2006-01-02 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	ianaCentralTz := "America/Chicago"
+	ianaMountainTz := "America/Denver"
+	tPacificIn, err := time.Parse(fmtstr, pacificTime)
+
+	if err != nil {
+		fmt.Printf("Received error from time parse tPacificIn: %v\n", err.Error())
+		return
+	}
+
+	tzu := TimeZoneDto{}
+	tzuCentral, err := tzu.ConvertTz(tPacificIn, ianaCentralTz)
+
+	if err != nil {
+		fmt.Printf("Error from TimeZoneDto.ConvertTz(). Error: %v\n", err.Error())
+		return
+	}
+
+	centralTOut := tzuCentral.TimeOut.Format(fmtstr)
+
+	if centralTime != centralTOut {
+		fmt.Printf("Expected tzuCentral.TimeOut %v, got %v\n", centralTime, centralTOut)
+		return
+	}
+
+	tzuMountain, err := tzu.ConvertTz(tzuCentral.TimeOut, ianaMountainTz)
+
+	if err != nil {
+		fmt.Printf("Error from  tzuMountain TimeZoneDto.ConvertTz(). Error: %v\n", err.Error())
+		return
+	}
+
+	mountainTOut := tzuMountain.TimeOut.Format(fmtstr)
+
+	if mountainTime != mountainTOut {
+		fmt.Printf("Expected tzuMountain.TimeOut %v, got %v\n", mountainTime, mountainTOut)
+		return
+	}
+
+	tzuPacific, err := tzu.ConvertTz(tzuMountain.TimeOut, ianaPacificTz)
+
+	if err != nil {
+		fmt.Printf("Error from  tzuMountain TimeZoneDto.ConvertTz(). Error: %v\n", err.Error())
+		return
+	}
+
+	pacificTOut := tzuPacific.TimeOut.Format(fmtstr)
+
+	if pacificTime != pacificTOut {
+
+		fmt.Printf("Expected tzuPacific.TimeOut %v, got %v\n", pacificTime, pacificTOut)
+		return
+	}
+
+	exTOutLoc := "America/Los_Angeles"
+
+	if exTOutLoc != tzuPacific.TimeOutZone.LocationName {
+		fmt.Printf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'\n", exTOutLoc, tzuPacific.TimeOutZone.LocationName, tzuPacific.TimeOut.Format(TzDtoYrMDayFmtStr))
+		return
+	}
+
+	fmt.Println("Successful Completion!")
+}
+
+// TestExampleNewAddDate023
+func TestExampleNewAddDate023() {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	tzu1, err := TimeZoneDto{}.New(t1, TzIanaUsPacific)
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific). Error='%v'", err.Error())
+		return
+	}
+
+	tzu1OutStrTIn := tzu1.TimeIn.Format(fmtstr)
+
+	if t1OutStr != tzu1OutStrTIn {
+		fmt.Printf("Error: Expected tzu1OutStrTIn='%v'.  Instead, tzu1OutStrTIn='%v'", t1OutStr, tzu1OutStrTIn )
+		return
+	}
+
+	t2 := t1.AddDate(3,2, 15)
+	t2OutStr := t2.Format(fmtstr)
+
+	tzu2, err := TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15)
+
+	tzu2OutStrTIn := tzu2.TimeIn.Format(fmtstr)
+
+	if t2OutStr != tzu2OutStrTIn {
+		fmt.Printf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
+		return
+	}
+
+	actualDuration, err := tzu2.Sub(tzu1)
+
+	if err != nil {
+		fmt.Printf("Error returned by tzu2.Sub(tzu1). Error='%v'", err.Error())
+		return
+	}
+
+	expectedDuration := t2.Sub(t1)
+
+	if expectedDuration != actualDuration {
+		fmt.Printf("Error: Expected Duration='%v'. Instead, Actual Duration='%v'", expectedDuration, actualDuration )
+		return
+	}
+
+	fmt.Println("Successful Completion")
+}
+
+
 // PrintOutTimeZoneDefDtoFields
 func PrintOutTimeZoneDefDtoFields(tzDef TimeZoneDefDto) {
 
