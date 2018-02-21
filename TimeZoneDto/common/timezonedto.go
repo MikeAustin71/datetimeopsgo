@@ -1627,7 +1627,7 @@ millisecond, microsecond, nanosecond int, timeZoneLocation, dateTimeFmtStr strin
 
 	dtz.Empty()
 
-	dtz.DateTime = time.Date(year, time.Month(month),day, hour, minute, second, int(dtz.TotalNanoSecs), loc)
+	dtz.DateTime = time.Date(year, time.Month(month),day, hour, minute, second, int(totNanoSecs), loc)
 
 	dtz.TimeZone, err = TimeZoneDefDto{}.New(dtz.DateTime)
 

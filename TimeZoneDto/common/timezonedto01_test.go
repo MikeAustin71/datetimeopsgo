@@ -395,12 +395,12 @@ func TestTimeZoneUtility_New_01(t *testing.T) {
 	tIn, _ := time.Parse(fmtstr, tstr)
 	//tz := TimeZoneDto{}
 	tzu, _:= TimeZoneDto{}.New(tIn, ianaPacificTz, TzDtoYrMDayFmtStr)
-	expectedTimeIn := "2017-04-29 19:54:30 -0500 CDT"
+	expectedTimeIn := "2017-04-29 19:54:30.000000000 -0500 CDT"
 	if expectedTimeIn != tzu.TimeIn.String() {
 		t.Errorf("Expected Time In='%v'. Instead, Time In='%v'", expectedTimeIn, tzu.TimeIn.String() )
 	}
 
-	expectedTimeOut := "2017-04-29 17:54:30 -0700 PDT"
+	expectedTimeOut := "2017-04-29 17:54:30.000000000 -0700 PDT"
 
 	if expectedTimeOut != tzu.TimeOut.String() {
 		t.Errorf("Expected Time Out='%v'. Instead, Time Out='%v'", expectedTimeOut, tzu.TimeOut.String())
