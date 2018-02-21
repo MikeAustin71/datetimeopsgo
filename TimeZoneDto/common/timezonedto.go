@@ -708,7 +708,7 @@ func (dtz *DateTzDto) AddDateToThis(years, months, days int, dateTimeFormatStr s
 		return fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDt, dtz.DateTimeFmt). newDt='%v'  Error='%v'", newDt.Format(TzDtoYrMDayFmtStr), err.Error())
 	}
 
-	dtz.CopyIn(&dtz2)
+	dtz.CopyIn(dtz2)
 
 	return nil
 
@@ -806,12 +806,149 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 		return fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt). newDateTime='%v'  Error='%v'", newDateTime.Format(TzDtoYrMDayFmtStr), err.Error())
 	}
 
-	dtz.CopyIn(&dtz2)
+	dtz.CopyIn(dtz2)
 
 	return nil
 }
 
+// AddTime - Adds time components to the date time value of the current
+// DateTzDto instance. The resulting updated date time value is returned
+// to the calling function in the form of a new DateTzDto instance.
+//
+// Input Parameters
+// ================
+//
+// hours				int	- Number of hours to add.
+// minutes			int	- Number of minutes to add.
+// seconds			int - Number of seconds to add.
+// milliseconds	int	- Number of milliseconds to add.
+// microseconds	int	- Number of microseconds to add.
+// nanoseconds	int - Number of nanoseconds to add.
+//
+// Returns
+// =======
+// There are two returns	(1) A DateTzDto instance containing the
+//															updated time values.
+//
+//												(2) An 'error' type.
+//
+// (1)  DateTzDto - If successful the method returns a valid, fully populated
+//										DateTzDto type defined as follows:
+//
+//			type DateTzDto struct {
+//				Description			string					// Unused, available for classification, labeling or description
+//				Year       			int							// Year Number
+//				Month      			int							// Month Number
+//				Day        			int							// Day Number
+//				Hour       			int							// Hour Number
+//				Minute     			int							// Minute Number
+//				Second     			int							// Second Number
+//				Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//				Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//				Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//																				// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
+//				TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//				DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//				DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//				TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
+//			}
+//
+// (2) error 			- 	If successful the returned error Type is set equal to 'nil'. If errors are
+//											encountered this error Type will encapsulate an error message.
+//
+func (dtz *DateTzDto) AddTime(hours, minutes, seconds, milliseconds, microseconds,
+												nanoseconds int ) (DateTzDto, error) {
+	ePrefix := "DateTzDto.AddTime() "
 
+	if hours == 0 &&
+			minutes == 0 &&
+			seconds == 0 &&
+			milliseconds == 0 &&
+			microseconds == 0 &&
+			nanoseconds == 0  {
+				return DateTzDto{},
+						errors.New(ePrefix +
+								"Error: all time component input parameters are ZERO!")
+	}
+
+	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	newDateTime := dtz.DateTime.Add(time.Duration(totNanoSecs))
+
+	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt) " +
+				"newDateTime='%v'  Error='%v'", newDateTime.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
+	return dtz2, nil
+}
+
+// AddTimeToThis - Adds time components (hours, minutes, seconds etc.)
+// to the current value of this DateTzDto instance.
+//
+// Input Parameters
+// ================
+//
+// hours				int	- Number of hours to add.
+// minutes			int	- Number of minutes to add.
+// seconds			int - Number of seconds to add.
+// milliseconds	int	- Number of milliseconds to add.
+// microseconds	int	- Number of microseconds to add.
+// nanoseconds	int - Number of nanoseconds to add.
+//
+// Returns
+// =======
+// There is only one return; an 'error' type.
+//
+//
+// (1) error 			- 	If successful the returned error Type is set equal to 'nil'.
+// 											If errors are encountered this error Type will encapsulate
+// 											an error message.
+//
+func (dtz *DateTzDto) AddTimeToThis(hours, minutes, seconds, milliseconds,
+													microseconds,	nanoseconds int ) error {
+
+	ePrefix := "DateTzDto.AddTimeToThis() "
+
+	if hours == 0 &&
+		minutes == 0 &&
+		seconds == 0 &&
+		milliseconds == 0 &&
+		microseconds == 0 &&
+		nanoseconds == 0  {
+		return errors.New(ePrefix +
+						"Error: all time component input parameters are ZERO!")
+	}
+
+	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	newDateTime := dtz.DateTime.Add(time.Duration(totNanoSecs))
+
+	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt) " +
+							"newDateTime='%v'  Error='%v'", newDateTime.Format(TzDtoYrMDayFmtStr), err.Error())
+	}
+
+	dtz.CopyIn(dtz2)
+
+	return nil
+}
 
 // CopyIn - Receives an incoming DateTzDto and
 // copies those data fields to the current DateTzDto
@@ -853,7 +990,7 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //
 // None
 //
-func (dtz *DateTzDto) CopyIn(dtz2 *DateTzDto) {
+func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	dtz.Empty()
 
 	dtz.Description 		= dtz2.Description
@@ -933,7 +1070,7 @@ func (dtz *DateTzDto) Empty() {
 
 // Equal - Returns true if input DateTzDto is equal 
 // in all respects to the current DateTzDto instance.
-func (dtz *DateTzDto) Equal(dtz2 *DateTzDto) bool {
+func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 	
 	if 	dtz.Description != dtz2.Description			||
 			dtz.Year != dtz2.Year 									||
@@ -1016,7 +1153,7 @@ func (dtz *DateTzDto) IsValid() error {
 		return fmt.Errorf(ePrefix + "Error creating check DateTzDto - Error='%v'", err.Error())
 	}
 	
-	if !dtz.Equal(&dtz2) {
+	if !dtz.Equal(dtz2) {
 		return errors.New(ePrefix + "Error: Current DateTzDto is NOT EQUAL to Check DateTzDto!")
 	}
 	
@@ -1942,9 +2079,6 @@ func (tzu *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microseco
 		return fmt.Errorf(ePrefix + "This TimeZoneDto instance is INVALID! Error='%v'", err.Error())
 	}
 
-	if hours < 0  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'hours' number is INVALID. Correct range equal to or greater than Zero. hours='%v'", hours)
-	}
 
 
 	var totNanoSecs  int64
@@ -2089,10 +2223,10 @@ func (tzu *TimeZoneDto) CopyIn(tzu2 TimeZoneDto) {
 // are equivalent.
 func (tzu *TimeZoneDto) Equal(tzu2 TimeZoneDto) bool {
 	
-	if !tzu.TimeIn.Equal(&tzu2.TimeIn) 					||
-		!tzu.TimeOut.Equal(&tzu2.TimeOut) 				||
-		!tzu.TimeUTC.Equal(&tzu2.TimeUTC)  				||
-		!tzu.TimeLocal.Equal(&tzu2.TimeLocal)		 	||
+	if !tzu.TimeIn.Equal(tzu2.TimeIn) 					||
+		!tzu.TimeOut.Equal(tzu2.TimeOut) 				||
+		!tzu.TimeUTC.Equal(tzu2.TimeUTC)  				||
+		!tzu.TimeLocal.Equal(tzu2.TimeLocal)		 	||
 		tzu.Description != tzu2.Description				||
 		tzu.DateTimeFmt != tzu2.DateTimeFmt				{
 
