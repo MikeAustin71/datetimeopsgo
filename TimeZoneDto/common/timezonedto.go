@@ -2699,7 +2699,7 @@ func (tzdto TimeZoneDto) NewAddDate(tzuIn TimeZoneDto, years, months, days int,
 //
 // Input Parameters
 // ================
-// tzuIn				TimeZoneDto - Base TimeZoneDto object to
+// tzdtoIn			TimeZoneDto - Base TimeZoneDto object to
 //																which time elements will be added.
 // years				int		- Number of years added to 'tzuIn'
 // months				int		- Number of months added to 'tzuIn'
@@ -2754,21 +2754,21 @@ func (tzdto TimeZoneDto) NewAddDate(tzuIn TimeZoneDto, years, months, days int,
 //	error					 -  The method will return an 'error' object if errors
 //										are encountered.
 //
-func (tzdto TimeZoneDto) NewAddDateTime(tzuIn TimeZoneDto, years, months, days, hours, minutes,
+func (tzdto TimeZoneDto) NewAddDateTime(tzdtoIn TimeZoneDto, years, months, days, hours, minutes,
 				seconds, milliseconds, microseconds, nanoseconds int,
 					dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewAddDateTime() "
 
-	err := tzuIn.IsTimeZoneDtoValid()
+	err := tzdtoIn.IsTimeZoneDtoValid()
 
 	if err != nil {
 		return TimeZoneDto{},
-			fmt.Errorf(ePrefix + "Error: Input Parameter 'tzuIn' is INVALID! Error='%v'",
+			fmt.Errorf(ePrefix + "Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'",
 										err.Error())
 	}
 
-	tzuOut := tzuIn.CopyOut()
+	tzuOut := tzdtoIn.CopyOut()
 
 	tzuOut.SetDateTimeFormatStr(dateTimeFmtStr)
 
@@ -2790,7 +2790,7 @@ func (tzdto TimeZoneDto) NewAddDateTime(tzuIn TimeZoneDto, years, months, days, 
 // Input Parameters
 // ================
 //
-// tzuIn	TimeZoneDto - The second parameter, 'duration', will be added
+// tzdtoIn	TimeZoneDto 	- The second parameter, 'duration', will be added
 //													to this TimeZoneDto.
 //
 // duration	time.Duration	- This duration value will be added to the
@@ -2840,18 +2840,18 @@ func (tzdto TimeZoneDto) NewAddDateTime(tzuIn TimeZoneDto, years, months, days, 
 //					set to nil. If errors are encountered, the returned error object is populated
 //					with an error message.
 //
-func (tzdto TimeZoneDto) NewAddDuration(tzuIn TimeZoneDto, duration time.Duration,
+func (tzdto TimeZoneDto) NewAddDuration(tzdtoIn TimeZoneDto, duration time.Duration,
 														dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewAddDuration() "
 
-	err := tzuIn.IsTimeZoneDtoValid()
+	err := tzdtoIn.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzuIn' is INVALID! Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
 	}
 
-	tzuOut := tzuIn.CopyOut()
+	tzuOut := tzdtoIn.CopyOut()
 
 	tzuOut.SetDateTimeFormatStr(dateTimeFmtStr)
 
@@ -2869,8 +2869,8 @@ func (tzdto TimeZoneDto) NewAddDuration(tzuIn TimeZoneDto, duration time.Duratio
 // Input Parameters:
 // =================
 //
-// tzuIn TimeZoneDto - 	The base TimeZoneDto to which
-//													time values will be added.
+// tzdtoIn TimeZoneDto 		- The base TimeZoneDto to which
+//														time values will be added.
 // hours				int				- Number of hours to be added to tzuIn
 // minutes			int 			- Number of minutes to be added to tzuIn
 // seconds			int 			- Number of seconds to be added to tzuIn
@@ -2919,18 +2919,18 @@ func (tzdto TimeZoneDto) NewAddDuration(tzuIn TimeZoneDto, duration time.Duratio
 //					set to nil. If errors are encountered, the returned error object is populated
 //					with an error message.
 //
-func (tzdto TimeZoneDto) NewAddTime(tzuIn TimeZoneDto, hours, minutes, seconds, milliseconds, microseconds,
+func (tzdto TimeZoneDto) NewAddTime(tzdtoIn TimeZoneDto, hours, minutes, seconds, milliseconds, microseconds,
 														nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewAddTime() "
 
-	err := tzuIn.IsTimeZoneDtoValid()
+	err := tzdtoIn.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzuIn' is INVALID! Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
 	}
 
-	tzuOut := tzuIn.CopyOut()
+	tzuOut := tzdtoIn.CopyOut()
 
 	tzuOut.SetDateTimeFormatStr(dateTimeFmtStr)
 
