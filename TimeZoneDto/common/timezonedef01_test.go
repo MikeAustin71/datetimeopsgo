@@ -190,7 +190,7 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 		t.Errorf("Error: Expected tzDef.Description='%v'. Instead, tzDef.Description='%v'",descStr, tzDef.Description)
 	}
 
-	if !tzDef0.Equal(&tzDef) {
+	if !tzDef0.Equal(tzDef) {
 		t.Error("Error: Expected tzDef0 to be EQUAL to tzDef. IT WAS NOT!")
 	}
 
@@ -259,7 +259,7 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 
 	tzDef0.Location = nil
 
-	if tzDef0.Equal(&tzDef) {
+	if tzDef0.Equal(tzDef) {
 		t.Error("Error: Expected tzDef0 to be NOT EQUAL to tzDef. IT WAS EQUAL!")
 	}
 

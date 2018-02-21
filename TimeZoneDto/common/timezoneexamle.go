@@ -522,7 +522,7 @@ func TestExampleNewAddDate023() {
 	t2 := t1.AddDate(3,2, 15)
 	t2OutStr := t2.Format(fmtstr)
 
-	tzu2, err := TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15)
+	tzu2, err := TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)
 
 	tzu2OutStrTIn := tzu2.TimeIn.DateTime.Format(fmtstr)
 
