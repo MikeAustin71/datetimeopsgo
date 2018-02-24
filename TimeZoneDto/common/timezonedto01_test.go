@@ -444,25 +444,25 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 		t.Errorf("Error: Expected after duration tzu2TimeIn='%v'.  Instead, tzu2TimeIn='%v'",t2OutStr, tzu2OutStr)
 	}
 
-	actualDur := tzu2.TimeIn.Sub(&tzu1.TimeIn)
+	actualDur := tzu2.TimeIn.Sub(tzu1.TimeIn)
 
 	if t12Dur != actualDur {
 		t.Errorf("Error: Expected tzu2.TimeIn.Sub(tzu1.TimeIn)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
 	}
 
-	actualDur = tzu2.TimeOut.Sub(&tzu1.TimeOut)
+	actualDur = tzu2.TimeOut.Sub(tzu1.TimeOut)
 
 	if t12Dur != actualDur {
 		t.Errorf("Error: Expected tzu2.TimeOut.Sub(tzu1.TimeOut)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
 	}
 
-	actualDur = tzu2.TimeUTC.Sub(&tzu1.TimeUTC)
+	actualDur = tzu2.TimeUTC.Sub(tzu1.TimeUTC)
 
 	if t12Dur != actualDur {
 		t.Errorf("Error: Expected tzu2.TimeUTC.Sub(tzu1.TimeUTC)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
 	}
 
-	actualDur = tzu2.TimeLocal.Sub(&tzu1.TimeLocal)
+	actualDur = tzu2.TimeLocal.Sub(tzu1.TimeLocal)
 
 	if t12Dur != actualDur {
 		t.Errorf("Error: Expected tzu2.TimeLocal.Sub(tzu1.TimeLocal)='%v'.  Instead, duration='%v'", t12Dur, actualDur)

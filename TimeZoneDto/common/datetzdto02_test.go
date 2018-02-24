@@ -336,3 +336,35 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 
 }
 
+
+func TestDateTzDto_Sub_01(t *testing.T) {
+	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	t2str := "2018-02-15 20:54:30.038175584 -0600 CST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	expectedDuration := t2.Sub(t1)
+
+	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned from DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
+	}
+
+	dTz2, err := DateTzDto{}.New(t2, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned from DateTzDto{}.New(t2, fmtstr). Error='%v'", err.Error())
+	}
+
+	actualDuration := dTz2.Sub(dTz1)
+
+	if expectedDuration != actualDuration {
+		t.Errorf("Error: expected duration='%v'.  Instead, duration='%v' ",expectedDuration, actualDuration)
+	}
+
+
+}

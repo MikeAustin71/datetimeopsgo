@@ -289,10 +289,68 @@ func TestDateTzDto_AddDateTime(t *testing.T) {
 
 	dTz2, err := dTz1.AddDateTime(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, fmtstr)
 
+	if err != nil {
+		t.Errorf("Error returned by dTz1.AddDateTime(years, months, days, hours, minutes, ...) Error='%v'.", err.Error() )
+	}
+
 	expectedOutputStr = t3.Format(fmtstr)
 
 	if expectedOutputStr != dTz2.String() {
 		t.Errorf("Error: Expected updated dTz2.String()='%v'. Instead, dTz2.String()='%v'.",expectedOutputStr, dTz2.String())
+	}
+
+}
+
+func TestDateTzDto_AddDateTimeToThis_01(t *testing.T) {
+
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	t1str := "2014-02-18 19:21:30.000000000 -0600 CST"
+
+	years := 5
+	months := 6
+	days := 18
+	hours := 50
+	minutes := 24
+	seconds := 38
+	milliseconds := 600
+	microseconds := 1500
+	nanoseconds := 68473
+
+	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v' ", err.Error())
+	}
+
+	expectedOutputStr := t1.Format(fmtstr)
+
+	if expectedOutputStr != dTz1.String() {
+		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.",expectedOutputStr, dTz1.String())
+	}
+
+	t2 := t1.AddDate(years, months, days)
+
+	t3 := t2.Add(time.Duration(totNanoSecs))
+
+	err = dTz1.AddDateTimeToThis(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by dTz1.AddDateTimeToThis(years, months, days, hours, minutes, seconds, ...). Error='%v'", err.Error())
+	}
+
+	expectedOutputStr = t3.Format(fmtstr)
+
+	if expectedOutputStr != dTz1.String() {
+		t.Errorf("Error: Expected updated dTz1.String()='%v'. Instead, dTz1.String()='%v'.",expectedOutputStr, dTz1.String())
 	}
 
 }

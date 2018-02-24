@@ -1973,7 +1973,7 @@ func (dtz *DateTzDto) String() string {
 // Sub - Subtracts the DateTime value of the incoming DateTzDto
 // from the DateTime value of the current DateTzDto and returns
 // the duration.
-func (dtz *DateTzDto) Sub(dtz2 *DateTzDto) time.Duration {
+func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 
 	return dtz.DateTime.Sub(dtz2.DateTime)
 
@@ -3692,7 +3692,7 @@ func (tzdto *TimeZoneDto) Sub(tzu2 TimeZoneDto) (time.Duration, error) {
 		return time.Duration(0), fmt.Errorf(ePrefix + "Error: Input Parameter 'tzu2' is INVALID! Error='%v'", err.Error())
 	}
 
-	return tzdto.TimeLocal.Sub(&tzu2.TimeLocal), nil
+	return tzdto.TimeLocal.Sub(tzu2.TimeLocal), nil
 }
 
 // TimeWithoutTimeZone - Returns a Time String containing
