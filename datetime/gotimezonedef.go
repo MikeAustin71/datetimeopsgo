@@ -81,24 +81,87 @@ func (tzdef *TimeZoneDefDto) Empty() {
 }
 
 // Equal - Determines if two TimeZoneDefDto are equivalent in
-// value. Returns 'true' of two TimeZoneDefDto's are equal
+// value. Returns 'true' of two TimeZoneDefDto's are equal in
+// all respects.
 func(tzdef *TimeZoneDefDto) Equal(tzdef2 TimeZoneDefDto) bool {
 
-	if tzdef.ZoneName == tzdef2.ZoneName &&
+	if tzdef.ZoneName 				== tzdef2.ZoneName 					&&
 		tzdef.ZoneOffsetSeconds == tzdef2.ZoneOffsetSeconds &&
-		tzdef.ZoneSign == tzdef2.ZoneSign &&
-		tzdef.OffsetHours == tzdef2.OffsetHours &&
-		tzdef.OffsetMinutes == tzdef2.OffsetMinutes &&
-		tzdef.OffsetSeconds == tzdef2.OffsetSeconds &&
-		tzdef.ZoneOffset == tzdef2.ZoneOffset &&
+		tzdef.ZoneSign 					== tzdef2.ZoneSign 					&&
+		tzdef.OffsetHours 			== tzdef2.OffsetHours 			&&
+		tzdef.OffsetMinutes 		== tzdef2.OffsetMinutes 		&&
+		tzdef.OffsetSeconds 		== tzdef2.OffsetSeconds 		&&
+		tzdef.ZoneOffset 				== tzdef2.ZoneOffset 				&&
 		tzdef.Location.String() == tzdef2.Location.String() &&
-		tzdef.LocationName == tzdef2.LocationName &&
-		tzdef.Description == tzdef2.Description {
+		tzdef.LocationName 			== tzdef2.LocationName 			&&
+		tzdef.Description 			== tzdef2.Description {
 		return true
 	}
 
 
 	return false
+}
+
+// EqualOffsetSeconds - Compares Zone Offset Seconds for two TimeZoneDefDto's and
+// returns 'true' if they are equal.
+//
+// ZoneOffsetSeconds is a signed number of seconds offset from UTC:
+// 		+ == East of UTC
+// 		- == West of UTC
+func (tzdef *TimeZoneDefDto) EqualOffsetSeconds(tzdef2 TimeZoneDefDto) bool {
+
+	if tzdef.ZoneOffsetSeconds == tzdef2.ZoneOffsetSeconds {
+		return true
+	}
+
+	return false
+
+}
+
+// EqualZones - Compares ZoneOffsets for two TimeZoneDefDto's and
+// returns 'true' if they are equal.
+//
+// Zone Offset is a text string representing the time zone.
+// Example "-0500 CDT"
+//
+func (tzdef *TimeZoneDefDto) EqualZones(tzdef2 TimeZoneDefDto) bool {
+
+	if tzdef.ZoneOffset == tzdef2.ZoneOffset {
+		return true
+	}
+
+	return false
+
+}
+
+// EqualLocations - Compares the Time Zone Locations for two TimeZoneDefDto's
+// and returns 'true' if they are equal.
+//
+// Time Zone Location Name Examples:
+// 		"Local"
+// 		"America/Chicago"
+// 		"America/New_York"
+//
+func (tzdef *TimeZoneDefDto) EqualLocations(tzdef2 TimeZoneDefDto) bool {
+
+	if tzdef.LocationName == tzdef2.LocationName {
+		return true
+	}
+
+	return false
+
+}
+
+// EqualZoneLocation - Compares two TimeZoneDefDto's and returns
+// 'true' if both the TimeZoneLocations and Time Zones match.
+func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
+
+	if tzdef.EqualLocations(tzdef2) && tzdef.EqualZoneLocation(tzdef2) {
+		return true
+	}
+
+	return false
+
 }
 
 // IsEmpty - Determines whether the current TimeZoneDefDto
