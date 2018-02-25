@@ -1234,7 +1234,7 @@ func (du *DurationUtility) SetStartEndTimes(startDateTime time.Time, endDateTime
 //
 // True values for StartTimeTzu, EndTimeTzu and TimeDuration are
 // then stored in the DurationUtility data structure.
-func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto TimeDto) error {
+func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, plusTimeDto TimeDto) error {
 
 	ePrefix := "DurationUtility.SetStartTimePlusTime() "
 
@@ -1244,7 +1244,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 
 	du.Empty()
 
-	timeDto.ConvertToAbsoluteValues()
+	plusTimeDto.ConvertToAbsoluteValues()
 
 	var err error
 	dur := DurationDto{}
@@ -1255,7 +1255,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
 	}
 
-	dur.InitializeTime(timeDto)
+	dur.InitializeTime(plusTimeDto)
 
 	err = du.calcFromYears(&dur)
 
@@ -1307,7 +1307,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, timeDto
 // In other words, the input 'startDateTime' becomes the EndTimeTzu and
 // 'startDateTime' is calculated.
 //
-func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDto TimeDto) error {
+func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, minusTimeDto TimeDto) error {
 
 	ePrefix := "DurationUtility.SetStartTimeMinusTime() "
 
@@ -1316,7 +1316,7 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDt
 	}
 
 	du.Empty()
-	timeDto.ConvertToNegativeValues()
+	minusTimeDto.ConvertToNegativeValues()
 
 	dur := DurationDto{}
 	var err error
@@ -1327,7 +1327,7 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time, timeDt
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
 	}
 
-	dur.InitializeTime(timeDto)
+	dur.InitializeTime(minusTimeDto)
 
 	err =	du.calcFromYears(&dur)
 
