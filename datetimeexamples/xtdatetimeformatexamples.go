@@ -87,7 +87,7 @@ func WriteFormatStatsToFile() {
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 	fmt.Println()
 
-	outputDto, err := dtf.WriteFormatStatsToFile("../formats/fmtStats.txt")
+	outputDto, err := dtf.WriteFormatStatsToFile("./formats/fmtStats.txt")
 
 	if err != nil {
 		fmt.Println("*** ERROR ***")
@@ -272,7 +272,7 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 
 	dtf := dt.FormatDateTimeUtility{}
 
-	drDto, err := dtf.LoadAllFormatsFromFileIntoMemory("../format-files/datetimeformats.txt")
+	drDto, err := dtf.LoadAllFormatsFromFileIntoMemory("./format-files/datetimeformats.txt")
 
 	if err != nil {
 		panic(err)
