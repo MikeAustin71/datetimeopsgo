@@ -548,6 +548,31 @@ func TestExampleNewAddDate023() {
 	fmt.Println("Successful Completion")
 }
 
+// PrintOut DateTzDto Fields
+func PrintOutDateTzDtoFields(dtz DateTzDto) {
+	fmt.Println("----------------------------------")
+	fmt.Println("           DateTzDto")
+	fmt.Println("        Date Time Info")
+	fmt.Println("----------------------------------")
+	fmt.Println("  Description: ", dtz.Description)
+	fmt.Println("         Year: ", dtz.Year)
+	fmt.Println("        Month: ", dtz.Month)
+	fmt.Println("          Day: ", dtz.Day)
+	fmt.Println("         Hour: ", dtz.Hour)
+	fmt.Println("       Minute: ", dtz.Minute)
+	fmt.Println("       Second: ", dtz.Second)
+	fmt.Println("  Millisecond: ", dtz.Millisecond)
+	fmt.Println("  Microsecond: ", dtz.Microsecond)
+	fmt.Println("   Nanosecond: ", dtz.Nanosecond)
+	fmt.Println("TotalNanoSecs: ", dtz.Nanosecond)
+	fmt.Println("     DateTime: ", dtz.DateTime.Format(dtz.DateTimeFmt))
+	fmt.Println("  DateTimeFmt: ", dtz.DateTimeFmt)
+	fmt.Println("----------------------------------")
+	fmt.Println("         Time Zone Info")
+	fmt.Println("----------------------------------")
+	PrintOutTimeZoneDefDtoFields(dtz.TimeZone)
+
+}
 
 // PrintOutTimeZoneDefDtoFields
 func PrintOutTimeZoneDefDtoFields(tzDef TimeZoneDefDto) {
