@@ -1084,6 +1084,24 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 	return dtz2, nil
 }
 
+// NewTimeDto
+func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeFormatStr string) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.NewTimeDto() "
+
+	dtz2 := DateTzDto{}
+
+	err := dtz2.SetFromTimeDto(tDto, timeZoneLocation)
+
+	if err != nil {
+		return DateTzDto{}, fmt.Errorf(ePrefix + "Error returned by dtz2.SetFromTimeDto(tDto, timeZoneLocation). Error='%v'", err.Error())
+	}
+
+	dtz2.SetDateTimeFmt(dateTimeFormatStr)
+
+	return dtz2, nil
+}
+
 
 // SetDateTimeFmt - Sets the DateTzDto data field 'DateTimeFmt'.
 // This string is used to format the DateTzDto DateTime field
@@ -1423,6 +1441,99 @@ millisecond, microsecond, nanosecond int, timeZoneLocation, dateTimeFmtStr strin
 	}
 
 	dtz.DateTimeFmt = dateTimeFmtStr
+
+	return nil
+}
+
+// SetFromTimeDto - Receives data from a TimeDto input parameter
+// and sets all data fields of the current DateTzDto instance
+// accordingly. When the method completes, the values of the
+// current DateTzDto will equal the values of the input parameter
+// TimeDto instance.
+func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) error {
+
+	ePrefix := "DateTzDto.SetFromTimeDto() "
+
+	if tDto.Years==0 &&
+			tDto.Months==0 &&
+			tDto.Weeks==0 &&
+			tDto.Days == 0 &&
+			tDto.Hours ==0 &&
+			tDto.Minutes == 0 &&
+			tDto.Seconds == 0 &&
+			tDto.Milliseconds == 0 &&
+		  tDto.Microseconds == 0 &&
+		  tDto.Nanoseconds == 0 {
+
+		return fmt.Errorf(ePrefix + "Error: All input parameter date time elements equal ZERO!")
+	}
+
+	if tDto.Years < 0 {
+		return fmt.Errorf(ePrefix + "Error: Input parameter year number is INVALID. 'year' must be greater than or equal to Zero. tDto.Years='%v'", tDto.Years)
+	}
+
+	if tDto.Months < 1 || tDto.Months > 12  {
+		return fmt.Errorf(ePrefix + "Error: Input parameter month number is INVALID. Correct range is 1-12. tDto.Months='%v'", tDto.Months)
+	}
+
+
+	if tDto.Days < 1 || tDto.Days > 31  {
+		return fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. tDto.Days='%v'", tDto.Days)
+	}
+
+
+	if tDto.Hours < 0 || tDto.Hours > 24 {
+		return fmt.Errorf(ePrefix + "Error: Input parameter 'hour' number is INVALID. Correct range is 0-24. tDto.Hours='%v'", tDto.Hours)
+	}
+
+	if tDto.Minutes < 0 || tDto.Minutes > 59 {
+		return fmt.Errorf(ePrefix + "Error: Input parameter minute number is INVALID. Correct range is 0 - 59. tDto.Minutes='%v'", tDto.Minutes)
+	}
+
+	if tDto.Seconds < 0 || tDto.Seconds > 59 {
+		return fmt.Errorf(ePrefix + "Error: Input parmeter second number is INVALID. Correct range is 0 - 59. tDto.Seconds='%v'", tDto.Seconds)
+	}
+
+	if strings.ToLower(timeZoneLocation) == "local" {
+		timeZoneLocation = "Local"
+	}
+
+	loc, err := time.LoadLocation(timeZoneLocation)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v' ", timeZoneLocation, err.Error())
+	}
+
+	days := tDto.Days
+
+	if tDto.Weeks > 0 {
+		days += tDto.Weeks * 7
+	}
+
+	totNanoSecs := int64(time.Millisecond) * tDto.Milliseconds
+
+	totNanoSecs += int64(time.Microsecond) * tDto.Microseconds
+
+	totNanoSecs += tDto.Nanoseconds
+
+	dateTime := time.Date(int(tDto.Years), time.Month(int(tDto.Months)), int(days), int(tDto.Hours), int(tDto.Minutes), int(tDto.Seconds), int(totNanoSecs), loc)
+
+	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(dateTime). dateTime='%v' Error='%v'", dateTime, err.Error())
+	}
+
+	dtz.Empty()
+	dtz.DateTime 		= dateTime
+	dtz.TimeZone 		= timeZoneDef.CopyOut()
+	dtz.Year 				= dtz.DateTime.Year()
+	dtz.Month				= int(dtz.DateTime.Month())
+	dtz.Day 				= dtz.DateTime.Day()
+	dtz.Hour 				= dtz.DateTime.Hour()
+	dtz.Minute			= dtz.DateTime.Minute()
+	dtz.Second			= dtz.DateTime.Second()
+	dtz.allocateNanoseconds(totNanoSecs)
 
 	return nil
 }
