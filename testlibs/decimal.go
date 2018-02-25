@@ -1,4 +1,4 @@
-package common
+package testlibs
 
 import (
 	"errors"

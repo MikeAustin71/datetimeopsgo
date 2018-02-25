@@ -1,4 +1,4 @@
-package common
+package datetime
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestDateTimeFormatUtility_ParseDateTimeStrings(t *testing.T) {
-	dtf := DateTimeFormatUtility{}
+	dtf := FormatDateTimeUtility{}
 
 	dtf.CreateAllFormatsInMemory()
 

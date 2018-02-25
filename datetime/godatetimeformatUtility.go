@@ -1,4 +1,4 @@
-package common
+package datetime
 
 import (
 	"errors"
@@ -14,12 +14,13 @@ import (
 )
 
 /*
-	datetimeformatUtility.go is part of the date time operations library. The source code repository
+	godatetimeformatUtility.go is part of the date time operations library. The source code repository
  	for this file is located at:
 					https://github.com/MikeAustin71/datetimeopsgo.git
 */
 
-type DateTimeWriteFormatsToFileDto struct {
+// WriteDateTimeFormatsToFileDto
+type WriteDateTimeFormatsToFileDto struct {
 	OutputPathFileName             string
 	NumberOfFormatsGenerated       int
 	NumberOfFormatMapKeysGenerated int
@@ -28,7 +29,8 @@ type DateTimeWriteFormatsToFileDto struct {
 	ElapsedTimeForFileWriteOps     string
 }
 
-type DateTimeReadFormatsFromFileDto struct {
+// ReadDateTimeFormatsFromFileDto
+type ReadDateTimeFormatsFromFileDto struct {
 	PathFileName                   string
 	NumberOfFormatsGenerated       int
 	NumberOfFormatMapKeysGenerated int
@@ -37,12 +39,14 @@ type DateTimeReadFormatsFromFileDto struct {
 	ElapsedTimeForFileReadOps      string
 }
 
-type DateTimeFormatRecord struct {
+// FormatDateTimeRecord
+type FormatDateTimeRecord struct {
 	FmtLength int
 	FormatStr string
 }
 
-type DateTimeFormatGenerator struct {
+// FormatDateTimeGenerator
+type FormatDateTimeGenerator struct {
 	DayOfWeek            string
 	DayOfWeekSeparator   string
 	MthDay               string
@@ -57,11 +61,13 @@ type DateTimeFormatGenerator struct {
 	Year                 string
 }
 
+// SearchStrings
 type SearchStrings struct {
 	PreTrimSearchStrs [][][]string
 	TimeFmtRegEx      [][][]string
 }
 
+// ParseDateTimeDto
 type ParseDateTimeDto struct {
 	IsSuccessful              bool
 	FormattedDateTimeStringIn string
@@ -72,7 +78,8 @@ type ParseDateTimeDto struct {
 	err                       error
 }
 
-type DateTimeFormatUtility struct {
+// FormatDateTimeUtility
+type FormatDateTimeUtility struct {
 	OriginalDateTimeStringIn  string
 	FormattedDateTimeStringIn string
 	FormatMap                 map[int]map[string]int
@@ -89,13 +96,13 @@ type DateTimeFormatUtility struct {
 // CreateAllFormatsInMemory - Currently this method generates
 // approximately 1.5-million permutations of Date Time Formats
 // and stores them in memory as a series of "maps of maps" using
-// the field: DateTimeFormatUtility.FormatMap. This process currently
+// the field: FormatDateTimeUtility.FormatMap. This process currently
 // takes about 1.5-seconds on my machine.
 //
 // 54-map keys are currently generated and used to access the format
 // strings. Access is keyed on length of the date time string one is
 // attempting to parse.
-func (dtf *DateTimeFormatUtility) CreateAllFormatsInMemory() (err error) {
+func (dtf *FormatDateTimeUtility) CreateAllFormatsInMemory() (err error) {
 
 	dtf.FormatMap = make(map[int]map[string]int)
 	dtf.NumOfFormatsGenerated = 0
@@ -110,15 +117,15 @@ func (dtf *DateTimeFormatUtility) CreateAllFormatsInMemory() (err error) {
 }
 
 // LoadAllFormatsFromFileIntoMemory - Loads all date time formats from a specified
-// text file into memory. The formats are stored in DateTimeFormatUtility.FormatMap.
+// text file into memory. The formats are stored in FormatDateTimeUtility.FormatMap.
 // This is an alternative means of reading all available date time formats into
 // memory so that they may be used to parse time strings. This method assumes that
 // the text file containing the format strings was originally created by method
-// DateTimeFormatUtility.WriteAllFormatsInMemoryToFile() which employs a specific
+// FormatDateTimeUtility.WriteAllFormatsInMemoryToFile() which employs a specific
 // fixed length format which can then be read back into memory.
-func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName string) (DateTimeReadFormatsFromFileDto, error) {
+func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName string) (ReadDateTimeFormatsFromFileDto, error) {
 
-	frDto := DateTimeReadFormatsFromFileDto{}
+	frDto := ReadDateTimeFormatsFromFileDto{}
 	frDto.PathFileName = pathFileName
 	frDto.FileReadStartTime = time.Now()
 	dtf.FormatMap = make(map[int]map[string]int)
@@ -221,7 +228,7 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 
 			fmtStr := string(fmtField)
 
-			// Populate DateTimeFormatUtility.FormatMap
+			// Populate FormatDateTimeUtility.FormatMap
 			if dtf.FormatMap[lFmt] == nil {
 				dtf.FormatMap[lFmt] = make(map[string]int)
 				frDto.NumberOfFormatMapKeysGenerated++
@@ -245,13 +252,13 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	err = du.SetStartEndTimes(frDto.FileReadStartTime, frDto.FileReadEndTime)
 
 	if err != nil {
-		return DateTimeReadFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimes() - %v", err.Error())
+		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimes() - %v", err.Error())
 	}
 
 	yrMthDaysTime, err := du.GetYearMthDaysTime()
 
 	if err != nil {
-		return DateTimeReadFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error GetYearMthDaysTime() - %v", err.Error())
+		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error GetYearMthDaysTime() - %v", err.Error())
 	}
 
 	frDto.ElapsedTimeForFileReadOps = yrMthDaysTime.DisplayStr
@@ -260,16 +267,16 @@ func (dtf *DateTimeFormatUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 }
 
 // WriteAllFormatsInMemoryToFile - Writes all Format Data contained in
-// DateTimeFormatUtility.FormatMap field to a specified output file in
+// FormatDateTimeUtility.FormatMap field to a specified output file in
 // text format. Currently, about 1.4-million formats are generated and
 // written to the output file.
 //
 // IMPORTANT! - Before you call this method, the Format Maps must
-// first be created in memory. Call DateTimeFormatUtility.CreateAllFormatsInMemory()
+// first be created in memory. Call FormatDateTimeUtility.CreateAllFormatsInMemory()
 // first, before calling this method.
-func (dtf *DateTimeFormatUtility) WriteAllFormatsInMemoryToFile(outputPathFileName string) (DateTimeWriteFormatsToFileDto, error) {
+func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileName string) (WriteDateTimeFormatsToFileDto, error) {
 
-	fwDto := DateTimeWriteFormatsToFileDto{}
+	fwDto := WriteDateTimeFormatsToFileDto{}
 
 	fwDto.FileWriteStartTime = time.Now()
 	lFmts := len(dtf.FormatMap)
@@ -302,7 +309,7 @@ func (dtf *DateTimeFormatUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 			_, err := outF.WriteString(fmt.Sprintf("%07d %s\n", k, keyFmt))
 
 			if err != nil {
-				return DateTimeWriteFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error writing Format data to output file %v. Error: %v", outputPathFileName, err.Error())
+				return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error writing Format data to output file %v. Error: %v", outputPathFileName, err.Error())
 			}
 		}
 	}
@@ -316,7 +323,7 @@ func (dtf *DateTimeFormatUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 	err = du.SetStartEndTimes(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime)
 
 	if err != nil {
-		return DateTimeWriteFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error Setting Start End Times for Duration Calculation Error: %v", err.Error())
+		return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error Setting Start End Times for Duration Calculation Error: %v", err.Error())
 	}
 
 	fwDto.OutputPathFileName = outputPathFileName
@@ -324,7 +331,7 @@ func (dtf *DateTimeFormatUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 	etFileWrite, err := du.GetYearMthDaysTime()
 
 	if err != nil {
-		return DateTimeWriteFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error du.GetYearMthDaysTime() - %v", err.Error())
+		return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error du.GetYearMthDaysTime() - %v", err.Error())
 	}
 
 	fwDto.ElapsedTimeForFileWriteOps = etFileWrite.DisplayStr
@@ -337,10 +344,10 @@ func (dtf *DateTimeFormatUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 // The data output to the text file describes the size of the
 // slices contained in dtf.FormatMap.
 // IMPORTANT! - Before you call this method, the Format Maps must
-// first be created in memory. Call DateTimeFormatUtility.CreateAllFormatsInMemory()
+// first be created in memory. Call FormatDateTimeUtility.CreateAllFormatsInMemory()
 // first, before calling this method.
-func (dtf *DateTimeFormatUtility) WriteFormatStatsToFile(outputPathFileName string) (DateTimeWriteFormatsToFileDto, error) {
-	outputDto := DateTimeWriteFormatsToFileDto{}
+func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName string) (WriteDateTimeFormatsToFileDto, error) {
+	outputDto := WriteDateTimeFormatsToFileDto{}
 	outputDto.OutputPathFileName = outputPathFileName
 	outputDto.FileWriteStartTime = time.Now()
 
@@ -410,7 +417,9 @@ func (dtf *DateTimeFormatUtility) WriteFormatStatsToFile(outputPathFileName stri
 	return outputDto, nil
 }
 
-func (dtf *DateTimeFormatUtility) Empty() {
+// Empty - Sets all data fields in current FormatDateTimeUtility
+// to their uninitialized or 'Empty' state.
+func (dtf *FormatDateTimeUtility) Empty() {
 	dtf.OriginalDateTimeStringIn = ""
 	dtf.FormattedDateTimeStringIn = ""
 	dtf.DateTimeOut = time.Time{}
@@ -429,7 +438,7 @@ func (dtf *DateTimeFormatUtility) Empty() {
 // the time string to a valid time.Time value, this method will run the date time
 // string against 1.4-million possible date time string formats in an effort to
 // successfully convert the date time string into a valid time.Time value.
-func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probableFormat string) (time.Time, error) {
+func (dtf *FormatDateTimeUtility) ParseDateTimeString(dateTimeStr string, probableFormat string) (time.Time, error) {
 
 	if dateTimeStr == "" {
 		return time.Time{}, errors.New("Empty Time String!")
@@ -471,7 +480,7 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 		dtf.CreateAllFormatsInMemory()
 
 		if len(dtf.FormatMap) == 0 {
-			return time.Time{}, errors.New("Format Map is EMPTY! Load Formats into DateTimeFormatUtility.FormatMap first!")
+			return time.Time{}, errors.New("Format Map is EMPTY! Load Formats into FormatDateTimeUtility.FormatMap first!")
 		}
 
 	}
@@ -542,7 +551,7 @@ func (dtf *DateTimeFormatUtility) ParseDateTimeString(dateTimeStr string, probab
 	return time.Time{}, errors.New("Failed to locate correct time format!")
 }
 
-func (dtf *DateTimeFormatUtility) doParseRun(lenTests []int, ftimeStr string) bool {
+func (dtf *FormatDateTimeUtility) doParseRun(lenTests []int, ftimeStr string) bool {
 
 	lenLenTests := len(lenTests)
 	msg := make(chan ParseDateTimeDto)
@@ -584,7 +593,7 @@ func (dtf *DateTimeFormatUtility) doParseRun(lenTests []int, ftimeStr string) bo
 	return isSuccessfulParse
 }
 
-func (dtf *DateTimeFormatUtility) parseFormatMap(
+func (dtf *FormatDateTimeUtility) parseFormatMap(
 	msg chan<- ParseDateTimeDto, done *uint64, timeStr string, idx int, fmtMap map[string]int) {
 
 	var doneTest uint64
@@ -624,7 +633,7 @@ func (dtf *DateTimeFormatUtility) parseFormatMap(
 
 }
 
-func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
+func (dtf *FormatDateTimeUtility) assembleDayMthYears() error {
 
 	dtf.FormatMap = make(map[int]map[string]int)
 
@@ -654,7 +663,7 @@ func (dtf *DateTimeFormatUtility) assembleDayMthYears() error {
 	return nil
 }
 
-func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
+func (dtf *FormatDateTimeUtility) assembleMthDayYearFmts() error {
 
 	dayOfWeek, _ := dtf.getDayOfWeekElements()
 
@@ -683,7 +692,7 @@ func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 							for _, offFmt := range offsetFmts {
 								for _, stdSep := range tzSeparators {
 									for _, tzF := range timeZoneFmts {
-										fmtGen := DateTimeFormatGenerator{
+										fmtGen := FormatDateTimeGenerator{
 											DayOfWeek:          dowk,
 											DayOfWeekSeparator: dowkSep,
 											MthDayYear:         mmddyyyy,
@@ -712,7 +721,7 @@ func (dtf *DateTimeFormatUtility) assembleMthDayYearFmts() error {
 	return nil
 }
 
-func (dtf *DateTimeFormatUtility) assembleMthDayTimeOffsetTzYearFmts() error {
+func (dtf *FormatDateTimeUtility) assembleMthDayTimeOffsetTzYearFmts() error {
 
 	dayOfWeek, _ := dtf.getDayOfWeekElements()
 
@@ -745,7 +754,7 @@ func (dtf *DateTimeFormatUtility) assembleMthDayTimeOffsetTzYearFmts() error {
 									for _, tzF := range timeZoneFmts {
 										for _, yearEle := range yearElements {
 
-											fmtGen := DateTimeFormatGenerator{
+											fmtGen := FormatDateTimeGenerator{
 												DayOfWeek:            dowk,
 												DayOfWeekSeparator:   dowkSep,
 												MthDayYear:           mthDay,
@@ -777,7 +786,7 @@ func (dtf *DateTimeFormatUtility) assembleMthDayTimeOffsetTzYearFmts() error {
 	return nil
 }
 
-func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen DateTimeFormatGenerator) {
+func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen FormatDateTimeGenerator) {
 
 	fmtStr := ""
 	fmtStr2 := ""
@@ -853,7 +862,7 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Date
 
 }
 
-func (dtf *DateTimeFormatUtility) assemblePreDefinedFormats() {
+func (dtf *FormatDateTimeUtility) assemblePreDefinedFormats() {
 
 	preDefFmts := dtf.getPredefinedFormats()
 
@@ -865,7 +874,7 @@ func (dtf *DateTimeFormatUtility) assemblePreDefinedFormats() {
 
 }
 
-func (dtf *DateTimeFormatUtility) assembleEdgeCaseFormats() {
+func (dtf *FormatDateTimeUtility) assembleEdgeCaseFormats() {
 	edgeCases := dtf.getEdgeCases()
 
 	for _, ecf := range edgeCases {
@@ -873,7 +882,7 @@ func (dtf *DateTimeFormatUtility) assembleEdgeCaseFormats() {
 	}
 }
 
-func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen DateTimeFormatGenerator) {
+func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen FormatDateTimeGenerator) {
 
 	fmtStr := ""
 	fmtStr2 := ""
@@ -946,7 +955,7 @@ func (dtf *DateTimeFormatUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen Date
 	return
 }
 
-func (dtf *DateTimeFormatUtility) assignFormatStrToMap(fmtStr string) {
+func (dtf *FormatDateTimeUtility) assignFormatStrToMap(fmtStr string) {
 
 	l := len(fmtStr)
 
@@ -966,7 +975,7 @@ func (dtf *DateTimeFormatUtility) assignFormatStrToMap(fmtStr string) {
 	dtf.NumOfFormatsGenerated++
 }
 
-func (dtf *DateTimeFormatUtility) getDayOfWeekElements() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getDayOfWeekElements() ([]string, error) {
 	dayOfWeek := make([]string, 0, 10)
 
 	dayOfWeek = append(dayOfWeek, "")
@@ -976,7 +985,7 @@ func (dtf *DateTimeFormatUtility) getDayOfWeekElements() ([]string, error) {
 	return dayOfWeek, nil
 }
 
-func (dtf *DateTimeFormatUtility) getDayOfWeekSeparator() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getDayOfWeekSeparator() ([]string, error) {
 	dayOfWeekSeparator := make([]string, 0, 1024)
 
 	dayOfWeekSeparator = append(dayOfWeekSeparator, " ")
@@ -987,7 +996,7 @@ func (dtf *DateTimeFormatUtility) getDayOfWeekSeparator() ([]string, error) {
 	return dayOfWeekSeparator, nil
 }
 
-func (dtf *DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getMonthDayYearElements() ([]string, error) {
 	mthDayYr := make([]string, 0, 1024)
 
 	mthDayYr = append(mthDayYr, "2006-1-2")
@@ -1037,7 +1046,7 @@ func (dtf *DateTimeFormatUtility) getMonthDayYearElements() ([]string, error) {
 	return mthDayYr, nil
 }
 
-func (dtf *DateTimeFormatUtility) getMonthDayElements() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getMonthDayElements() ([]string, error) {
 	mthDayElements := make([]string, 0, 124)
 
 	mthDayElements = append(mthDayElements, "Jan 2")
@@ -1063,7 +1072,7 @@ func (dtf *DateTimeFormatUtility) getMonthDayElements() ([]string, error) {
 	return mthDayElements, nil
 }
 
-func (dtf *DateTimeFormatUtility) getYears() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getYears() ([]string, error) {
 	yearElements := make([]string, 0, 10)
 
 	yearElements = append(yearElements, "2006")
@@ -1073,7 +1082,7 @@ func (dtf *DateTimeFormatUtility) getYears() ([]string, error) {
 	return yearElements, nil
 }
 
-func (dtf *DateTimeFormatUtility) getAfterMthDaySeparators() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getAfterMthDaySeparators() ([]string, error) {
 	mthDayAfterSeparators := make([]string, 0, 10)
 
 	mthDayAfterSeparators = append(mthDayAfterSeparators, " ")
@@ -1086,7 +1095,7 @@ func (dtf *DateTimeFormatUtility) getAfterMthDaySeparators() ([]string, error) {
 
 }
 
-func (dtf *DateTimeFormatUtility) getStandardSeparators() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getStandardSeparators() ([]string, error) {
 	standardSeparators := make([]string, 0, 10)
 
 	standardSeparators = append(standardSeparators, " ")
@@ -1095,7 +1104,7 @@ func (dtf *DateTimeFormatUtility) getStandardSeparators() ([]string, error) {
 	return standardSeparators, nil
 }
 
-func (dtf *DateTimeFormatUtility) getDateTimeSeparators() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getDateTimeSeparators() ([]string, error) {
 	dtTimeSeparators := make([]string, 0, 10)
 
 	dtTimeSeparators = append(dtTimeSeparators, " ")
@@ -1106,7 +1115,7 @@ func (dtf *DateTimeFormatUtility) getDateTimeSeparators() ([]string, error) {
 	return dtTimeSeparators, nil
 }
 
-func (dtf *DateTimeFormatUtility) getTimeElements() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getTimeElements() ([]string, error) {
 	timeElements := make([]string, 0, 512)
 
 	timeElements = append(timeElements, "15:04:05")
@@ -1126,7 +1135,7 @@ func (dtf *DateTimeFormatUtility) getTimeElements() ([]string, error) {
 	return timeElements, nil
 }
 
-func (dtf *DateTimeFormatUtility) getTimeOffsets() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getTimeOffsets() ([]string, error) {
 	timeOffsetElements := make([]string, 0, 20)
 
 	timeOffsetElements = append(timeOffsetElements, "-0700")
@@ -1140,7 +1149,7 @@ func (dtf *DateTimeFormatUtility) getTimeOffsets() ([]string, error) {
 	return timeOffsetElements, nil
 }
 
-func (dtf *DateTimeFormatUtility) getTimeOffsetSeparators() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getTimeOffsetSeparators() ([]string, error) {
 	timeOffsetSeparators := make([]string, 0, 20)
 
 	timeOffsetSeparators = append(timeOffsetSeparators, " ")
@@ -1150,7 +1159,7 @@ func (dtf *DateTimeFormatUtility) getTimeOffsetSeparators() ([]string, error) {
 	return timeOffsetSeparators, nil
 }
 
-func (dtf *DateTimeFormatUtility) getTimeZoneElements() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getTimeZoneElements() ([]string, error) {
 	tzElements := make([]string, 0, 20)
 
 	tzElements = append(tzElements, "MST")
@@ -1159,7 +1168,7 @@ func (dtf *DateTimeFormatUtility) getTimeZoneElements() ([]string, error) {
 	return tzElements, nil
 }
 
-func (dtf *DateTimeFormatUtility) getTimeZoneSeparators() ([]string, error) {
+func (dtf *FormatDateTimeUtility) getTimeZoneSeparators() ([]string, error) {
 	tzElements := make([]string, 0, 20)
 
 	tzElements = append(tzElements, " ")
@@ -1169,7 +1178,7 @@ func (dtf *DateTimeFormatUtility) getTimeZoneSeparators() ([]string, error) {
 	return tzElements, nil
 }
 
-func (dtf *DateTimeFormatUtility) getPredefinedFormats() []string {
+func (dtf *FormatDateTimeUtility) getPredefinedFormats() []string {
 
 	preDefinedFormats := make([]string, 0, 20)
 
@@ -1192,7 +1201,7 @@ func (dtf *DateTimeFormatUtility) getPredefinedFormats() []string {
 	return preDefinedFormats
 }
 
-func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
+func (dtf *FormatDateTimeUtility) getEdgeCases() []string {
 	// FmtDateTimeEverything = "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	edgeCases := make([]string, 0, 20)
 
@@ -1228,7 +1237,7 @@ func (dtf *DateTimeFormatUtility) getEdgeCases() []string {
 	return edgeCases
 }
 
-func (dtf *DateTimeFormatUtility) getPreTrimSearchStrings() [][][]string {
+func (dtf *FormatDateTimeUtility) getPreTrimSearchStrings() [][][]string {
 	d := make([][][]string, 0)
 	d = append(d, [][]string{{",", " ", "-1"}})
 	d = append(d, [][]string{{"/", " ", "-1"}})
@@ -1249,7 +1258,7 @@ func (dtf *DateTimeFormatUtility) getPreTrimSearchStrings() [][][]string {
 	return d
 }
 
-func (dtf *DateTimeFormatUtility) getTimeFmtRegEx() [][][]string {
+func (dtf *FormatDateTimeUtility) getTimeFmtRegEx() [][][]string {
 	d := make([][][]string, 0)
 	d = append(d, [][]string{{"\\d\\d:\\d\\d:\\d\\d", "%02d:%02d:%02d"}}) // 2:2:2
 	d = append(d, [][]string{{"\\d\\d:\\d:\\d\\d", "%02d:%02d:%02d"}})    // 2:1:2
@@ -1289,7 +1298,7 @@ func (dtf *DateTimeFormatUtility) getTimeFmtRegEx() [][][]string {
 	return d
 }
 
-func (dtf *DateTimeFormatUtility) reformatSingleTimeString(targetStr string, regExes [][][]string) string {
+func (dtf *FormatDateTimeUtility) reformatSingleTimeString(targetStr string, regExes [][][]string) string {
 
 	max := len(regExes)
 
@@ -1334,7 +1343,7 @@ func (dtf *DateTimeFormatUtility) reformatSingleTimeString(targetStr string, reg
 	return targetStr
 }
 
-func (dtf *DateTimeFormatUtility) replaceMultipleStrSequence(targetStr string, replaceMap [][][]string) string {
+func (dtf *FormatDateTimeUtility) replaceMultipleStrSequence(targetStr string, replaceMap [][][]string) string {
 
 	max := len(replaceMap)
 
@@ -1354,7 +1363,7 @@ func (dtf *DateTimeFormatUtility) replaceMultipleStrSequence(targetStr string, r
 	return targetStr
 }
 
-func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
+func (dtf *FormatDateTimeUtility) replaceAMPM(targetStr string) string {
 	d := make([][][]string, 0)
 
 	d = append(d, [][]string{{"\\d{1}\\s{0,4}(?i)a[.]*\\s{0,4}(?i)m[.]*", " am "}})
@@ -1388,7 +1397,7 @@ func (dtf *DateTimeFormatUtility) replaceAMPM(targetStr string) string {
 	return targetStr
 }
 
-func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) string {
+func (dtf *FormatDateTimeUtility) replaceDateSuffixStThRd(targetStr string) string {
 	// \d{1}\s{0,4}(?i)t\s{0,4}(?i)h
 	d := make([][][]string, 0)
 
@@ -1429,7 +1438,7 @@ func (dtf *DateTimeFormatUtility) replaceDateSuffixStThRd(targetStr string) stri
 // 1. Trims Right and Left for all instances of 'trimChar'
 // 2. Within the interior of a string, multiple instances
 // 		of 'trimChar' are reduce to a single instance.
-func (dtf *DateTimeFormatUtility) trimEndMultiple(targetStr string, trimChar rune) (rStr string, err error) {
+func (dtf *FormatDateTimeUtility) trimEndMultiple(targetStr string, trimChar rune) (rStr string, err error) {
 
 	if targetStr == "" {
 		err = errors.New("trimEndMultiple() - Empty targetStr")

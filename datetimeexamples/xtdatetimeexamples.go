@@ -1,13 +1,15 @@
-package datetime
+package datetimeexamples
+
 
 import (
+	 dt "../datetime"
 	"fmt"
 	"time"
 )
 
 // ExampleTimeStampEverything
 func ExampleTimeStampEverything(){
-	du := DateTimeUtility{}
+	du := dt.DateTimeUtility{}
 
 	fmt.Println("------------------------")
 	fmt.Println("  Testing Time Stamps")
@@ -44,14 +46,14 @@ func GetEverythingFormat() {
 	tstr := "04/29/2017 19:54:30.123456489 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
-	str := dt.GetDateTimeEverything(testTime)
+	dateT := dt.DateTimeUtility{}
+	str := dateT.GetDateTimeEverything(testTime)
 	fmt.Println("Everything Format: ", str)
 	// Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
 
-	testTime2, _ := time.Parse(FmtDateTimeTzSec, tstr)
+	testTime2, _ := time.Parse(dt.FmtDateTimeTzNano, tstr)
 
-	str2 := dt.GetDateTimeEverything(testTime2)
+	str2 := dateT.GetDateTimeEverything(testTime2)
 
 	fmt.Println("Time Zone Second Format: ", str2)
 
@@ -61,15 +63,15 @@ func GetEverythingFormat() {
 func GetCurrentTimeAsString() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 
-	dt := DateTimeUtility{}
-	t, err := time.Parse(FmtDateTimeTzNano, tstr)
+	dateT	:= dt.DateTimeUtility{}
+	t, err := time.Parse(dt.FmtDateTimeTzNano, tstr)
 
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	result := dt.GetDateTimeStr(t)
+	result := dateT.GetDateTimeStr(t)
 
 	fmt.Println(tstr, "=", t)
 	fmt.Println("result=", result)

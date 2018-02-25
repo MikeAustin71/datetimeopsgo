@@ -2,6 +2,7 @@ package main
 
 import (
 	dt "../datetime"
+	ex "../datetimeexamples"
 	"time"
 	"fmt"
 )
@@ -24,5 +25,5 @@ func main() {
 
 	fmt.Println("expectedOutDate: ", expectedOutDate)
 	fmt.Println("  dtz1.DateTime: ", dtz1)
-	dt.PrintOutDateTzDtoFields(dtz1)
+	ex.PrintOutDateTzDtoFields(dtz1)
 }

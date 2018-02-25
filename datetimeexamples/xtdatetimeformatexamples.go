@@ -1,8 +1,10 @@
-package common
+package datetimeexamples
 
 import (
+	dt "../datetime"
 	"errors"
 	"fmt"
+	"../testlibs"
 	"time"
 )
 
@@ -14,9 +16,9 @@ import (
 func WriteAllFormatsToFile() {
 	startTime := time.Now()
 
-	du := DurationUtility{}
+	du := dt.DurationUtility{}
 
-	dtf := DateTimeFormatUtility{}
+	dtf := dt.FormatDateTimeUtility{}
 
 	dtf.CreateAllFormatsInMemory()
 
@@ -32,7 +34,7 @@ func WriteAllFormatsToFile() {
 		panic(errors.New("CreateAllFormatsInMemory Completed, but no formats were created! FormatMap length == 0"))
 	}
 
-	outputFile := "../format-files/datetimeformats.txt"
+	outputFile := "./format-files/datetimeformats.txt"
 
 	writeDto, err := dtf.WriteAllFormatsInMemoryToFile(outputFile)
 
@@ -45,11 +47,11 @@ func WriteAllFormatsToFile() {
 	du.SetStartEndTimes(endTimeGetFormats, endTime)
 	etFileWrite, _ := du.GetYearMthDaysTime()
 
-	d2 := DurationUtility{}
+	d2 := dt.DurationUtility{}
 
 	d2.SetStartEndTimes(startTime, endTime)
 	et, _ := d2.GetYearMthDaysTime()
-	nu := NumStrUtility{}
+	nu := testlibs.NumStrUtility{}
 	fmt.Println("Formats File Write Operation Completed to file: ", outputFile)
 	fmt.Println("Number Date Time formats Generated: ", nu.DLimInt(writeDto.NumberOfFormatsGenerated, ','))
 	fmt.Println("Number of Map Keys Generated: ", nu.DLimInt(writeDto.NumberOfFormatMapKeysGenerated, ','))
@@ -65,17 +67,17 @@ func WriteAllFormatsToFile() {
 // slices contained in dtf.FormatMap
 func WriteFormatStatsToFile() {
 
-	dtf := DateTimeFormatUtility{}
+	dtf := dt.FormatDateTimeUtility{}
 
 	startTime := time.Now()
 
 	dtf.CreateAllFormatsInMemory()
 
 	endTimeCreateFormats := time.Now()
-	du := DurationUtility{}
+	du := dt.DurationUtility{}
 	du.SetStartEndTimes(startTime, endTimeCreateFormats)
 	etFmtOpts, _ := du.GetYearMthDaysTime()
-	nu := NumStrUtility{}
+	nu := testlibs.NumStrUtility{}
 
 	fmt.Println("                 Format Map Creation Stats                          ")
 	fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -104,22 +106,23 @@ func WriteFormatStatsToFile() {
 	fmt.Println()
 }
 
+// HammerSampleDateTimes
 func HammerSampleDateTimes() {
 	startTime := time.Now()
 
-	dtf := DateTimeFormatUtility{}
+	dtf := dt.FormatDateTimeUtility{}
 
 	dtf.CreateAllFormatsInMemory()
 
 	endTimeGetFormats := time.Now()
-	du := DurationUtility{}
+	du := dt.DurationUtility{}
 
 	du.SetStartEndTimes(startTime, endTimeGetFormats)
 	etFmtOpts, _ := du.GetYearMthDaysTime()
 	fmt.Println("********************************************************")
 	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DisplayStr)
 
-	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
+	lFmts := testlibs.NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
 	fmt.Println("     Number of Formats Generated: ", lFmts)
 	fmt.Println("    Number of Map Keys Generated: ", len(dtf.FormatMap))
 	fmt.Println("********************************************************")
@@ -152,12 +155,13 @@ func HammerSampleDateTimes() {
 
 }
 
+// TestParseSampleDateTimes
 func TestParseSampleDateTimes() {
 	startTime := time.Now()
 
-	du := DurationUtility{}
+	du := dt.DurationUtility{}
 
-	dtf := DateTimeFormatUtility{}
+	dtf := dt.FormatDateTimeUtility{}
 
 	dtf.CreateAllFormatsInMemory()
 
@@ -168,7 +172,7 @@ func TestParseSampleDateTimes() {
 	fmt.Println("********************************************************")
 	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DisplayStr)
 
-	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
+	lFmts := testlibs.NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
 	fmt.Println("     Number of Formats Generated: ", lFmts)
 	fmt.Println("    Number of Map Keys Generated: ", len(dtf.FormatMap))
 	fmt.Println("********************************************************")
@@ -184,7 +188,7 @@ func TestParseSampleDateTimes() {
 
 // TestParseDateTime - For running this parse method, be sure that formats
 // are loaded in memory in field DurationUtility.FormatMap.
-func TestParseDateTime(dtf DateTimeFormatUtility, dateTimeStr string, probableDateTimeFormat string) {
+func TestParseDateTime(dtf dt.FormatDateTimeUtility, dateTimeStr string, probableDateTimeFormat string) {
 
 	startTimeParse := time.Now()
 
@@ -192,7 +196,7 @@ func TestParseDateTime(dtf DateTimeFormatUtility, dateTimeStr string, probableDa
 
 	endTimeParse := time.Now()
 	fmt.Println()
-	du := DurationUtility{}
+	du := dt.DurationUtility{}
 	du.SetStartEndTimes(startTimeParse, endTimeParse)
 	etFmtOpts, _ := du.GetYearMthDaysTime()
 	fmt.Println("Elapsed Time For Time Parse: ", etFmtOpts.DisplayStr)
@@ -212,13 +216,14 @@ func TestParseDateTime(dtf DateTimeFormatUtility, dateTimeStr string, probableDa
 
 }
 
+// TestParseDateTimeCreateFormatsInMemory
 func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTimeFormat string) {
 
 	startTime := time.Now()
 
-	du := DurationUtility{}
+	du := dt.DurationUtility{}
 
-	dtf := DateTimeFormatUtility{}
+	dtf := dt.FormatDateTimeUtility{}
 
 	dtf.CreateAllFormatsInMemory()
 
@@ -228,7 +233,7 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	etFmtOpts, _ := du.GetYearMthDaysTime()
 	fmt.Println("Elapsed Time For Format Creation: ", etFmtOpts.DisplayStr)
 
-	lFmts := NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
+	lFmts := testlibs.NumStrUtility{}.DLimInt(dtf.NumOfFormatsGenerated, ',')
 	fmt.Println("Number of Formats Generated: ", lFmts)
 	fmt.Println()
 
@@ -258,13 +263,14 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	printSuccessfulTimeParseResults(dtf)
 }
 
+// TestParseDateTimeFromFile
 func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string) {
 
 	startTime := time.Now()
 
-	du := DurationUtility{}
+	du := dt.DurationUtility{}
 
-	dtf := DateTimeFormatUtility{}
+	dtf := dt.FormatDateTimeUtility{}
 
 	drDto, err := dtf.LoadAllFormatsFromFileIntoMemory("../format-files/datetimeformats.txt")
 
@@ -274,7 +280,7 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 
 	fmt.Println("Elapsed Time For File Read and Format Creation: ", drDto.ElapsedTimeForFileReadOps)
 
-	nu := NumStrUtility{}
+	nu := testlibs.NumStrUtility{}
 
 	fmt.Println("Number of Formats Generated: ", nu.DLimInt(drDto.NumberOfFormatsGenerated, ','))
 	fmt.Println("   Number of Keys Generated: ", nu.DLimInt(drDto.NumberOfFormatMapKeysGenerated, ','))
@@ -307,16 +313,17 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 
 }
 
+// TestLoadandWriteFileAllFormats
 func TestLoadandWriteFileAllFormats() {
-	dtf := DateTimeFormatUtility{}
-	fmtFile := "D:/go/work/src/MikeAustin71/datetimeopsgo/DateTimeFormatsUtility/format-files/TestRead.txt"
+	dtf := dt.FormatDateTimeUtility{}
+	fmtFile := "./format-files/TestRead.txt"
 	dtoR, err := dtf.LoadAllFormatsFromFileIntoMemory(fmtFile)
 
 	if err != nil {
 		panic(err)
 	}
 
-	nu := NumStrUtility{}
+	nu := testlibs.NumStrUtility{}
 	dtFmt := "2006-01-02 15:04:05.000000000"
 	fmt.Println("Results of LoadAllFormatsFromFileIntoMemory")
 	fmt.Println("-------------------------------------------")
@@ -327,7 +334,7 @@ func TestLoadandWriteFileAllFormats() {
 	fmt.Println("Number of Map Keys: ", nu.DLimInt(dtoR.NumberOfFormatMapKeysGenerated, ','))
 	fmt.Println(" Number of Formats: ", nu.DLimInt(dtoR.NumberOfFormatsGenerated, ','))
 
-	outputFile := "D:/go/work/src/MikeAustin71/datetimeopsgo/DateTimeFormatsUtility/format-files/TestOutput.txt"
+	outputFile := "./format-files/TestOutput.txt"
 	dtoW, err := dtf.WriteAllFormatsInMemoryToFile(outputFile)
 
 	if err != nil {
@@ -344,6 +351,7 @@ func TestLoadandWriteFileAllFormats() {
 
 }
 
+// TestSingleDigitFormats
 func TestSingleDigitFormats() {
 
 	dateTimes := getDateTimeSamples()
@@ -488,7 +496,7 @@ func getDateTimeSamples() []string {
 
 }
 
-func printSuccessfulTimeParseResults(dtf DateTimeFormatUtility) {
+func printSuccessfulTimeParseResults(dtf dt.FormatDateTimeUtility) {
 
 	FmtDateTimeEverything := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	fmt.Println()
@@ -514,8 +522,8 @@ func printSuccessfulTimeParseResults(dtf DateTimeFormatUtility) {
 	fmt.Println()
 }
 
-func printTimeParseErrorResults(dtf DateTimeFormatUtility, err error) {
-	nu := NumStrUtility{}
+func printTimeParseErrorResults(dtf dt.FormatDateTimeUtility, err error) {
+	nu := testlibs.NumStrUtility{}
 	fmt.Println("Time Parse Failed - Error: ", err.Error())
 	fmt.Println()
 	fmt.Println("        Original Date Time String: ", dtf.OriginalDateTimeStringIn)
