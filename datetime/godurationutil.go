@@ -20,15 +20,10 @@ import (
 
 	Dependencies
 	============
-	The Duration Utilities Library is dependent on source file, 'timezoneutility.go'
-	which is located in this same repository:
 
-		https://github.com/MikeAustin71/datetimeopsgo.git
+	'gotimezonedto.go'
 
-	The source file 'timezoneutility.go' is located in the 'datetimeopsgo'
-	subdirectory:
 
-			datetimeopsgo\TimeZoneDto
 
 
 	Overview and Usage

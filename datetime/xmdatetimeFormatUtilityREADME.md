@@ -14,7 +14,7 @@ under 35-milliseconds.
 
 The utility methods are found in the file:
   
-    DateTimeFormatsUtility/common/datetimeformatUtility.go 
+    datetimeopsgo/datetime/godatetimeformatutility.go 
     
 The two most useful methods are CreateAllFormatsInMemory() and 
 ParseDateTimeString().
