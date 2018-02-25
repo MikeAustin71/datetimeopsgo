@@ -1,6 +1,7 @@
-package datetime
+package datetimeexamples
 
 import (
+	dt "../datetime"
 	"time"
 	"fmt"
 )
@@ -16,7 +17,7 @@ func ExampleSetStartEndTimes() {
 
 	t2, _ := time.Parse(fmtstr, t2str)
 
-	dur := DurationUtility{}
+	dur := dt.DurationUtility{}
 
 	dur.SetStartEndTimes(t1, t2)
 
@@ -98,7 +99,7 @@ func ExampleNewstarttimeduration01() {
 	t12Dur := t2.Sub(t1)
 	t12UTCDur := t2Utc.Sub(t1Utc)
 
-	dur, err := DurationUtility{}.NewStartTimeDuration(t1, t12Dur)
+	dur, err := dt.DurationUtility{}.NewStartTimeDuration(t1, t12Dur)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationUtility{}.NewStartTimeDuration(t1, t12Dur). Error='%v'\n", err.Error())
@@ -144,9 +145,9 @@ func ExampleNewstarttimeduration01() {
 	tdatePlusDur := tdatePlus.Sub(t1)
 	ns := int64(0)
 
-	ns += 3 * HourNanoSeconds
-	ns += 4 * MinuteNanoSeconds
-	ns += 2 * SecondNanoseconds
+	ns += 3 * dt.HourNanoSeconds
+	ns += 4 * dt.MinuteNanoSeconds
+	ns += 2 * dt.SecondNanoseconds
 
 	t3 := tdatePlus.Add(time.Duration(ns))
 	t3Output := t3.Format(fmtstr)
@@ -171,6 +172,6 @@ func ExampleNewstarttimeduration01() {
 	t3MonthsDur := t3YearsMonths.Sub(t3Years)
 	fmt.Println("  Actual Counted Month NanoSeconds: ", dDto.MonthsNanosecs)
 	fmt.Println("        Computed Month NanoSeconds: ", int64(t3MonthsDur))
-	fmt.Println("           Info 1-Hour NanoSeconds: ", HourNanoSeconds)
+	fmt.Println("           Info 1-Hour NanoSeconds: ", dt.HourNanoSeconds)
 }
 
