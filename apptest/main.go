@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	//t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	//t1str := "2018-02-25 00:14:00.038175584 -0600 CST"
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
 	//t1, _ := time.Parse(fmtstr, t1str)
@@ -23,7 +23,10 @@ func main() {
 		fmt.Printf("Error Returned by dt.DateTzDto{}.New(t1, fmtstr). Error='%v'\n", err.Error())
 	}
 
+	tzDto, err := dt.TimeZoneDto{}.NewDateTz(dtz1, dt.TzIanaAsiaVladivostok, fmtstr)
+
 	fmt.Println("expectedOutDate: ", expectedOutDate)
 	fmt.Println("  dtz1.DateTime: ", dtz1)
-	ex.PrintOutDateTzDtoFields(dtz1)
+	fmt.Println("======================================================")
+	ex.PrintOutTimeZoneFields(tzDto)
 }

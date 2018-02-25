@@ -1163,6 +1163,8 @@ func (dtf *FormatDateTimeUtility) getTimeZoneElements() ([]string, error) {
 	tzElements := make([]string, 0, 20)
 
 	tzElements = append(tzElements, "MST")
+	tzElements = append(tzElements, "-07")
+	tzElements = append(tzElements, "-0700")
 	tzElements = append(tzElements, "")
 
 	return tzElements, nil
@@ -1204,6 +1206,11 @@ func (dtf *FormatDateTimeUtility) getPredefinedFormats() []string {
 func (dtf *FormatDateTimeUtility) getEdgeCases() []string {
 	// FmtDateTimeEverything = "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
 	edgeCases := make([]string, 0, 20)
+
+	edgeCases = append(edgeCases, "2006-01-02 15:04:05.000000000 -0700 -07")
+	edgeCases = append(edgeCases, "01/02/2006 15:04:05.000000000 -0700 -07")
+	edgeCases = append(edgeCases, "01-02-2006 15:04:05.000000000 -0700 -07")
+	edgeCases = append(edgeCases, "01.02.2006 15:04:05.000000000 -0700 -07")
 
 	edgeCases = append(edgeCases, "Monday January 2 15:04:05 -0700 MST 2006")
 

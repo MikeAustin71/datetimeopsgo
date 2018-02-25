@@ -578,7 +578,7 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 
 // PrintOutTimeZoneDefDtoFields
 func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefDto) {
-
+	fmt.Println("-----------------------------------------------")
 	fmt.Println("           ZoneName: ", tzDef.ZoneName)
 	fmt.Println("         ZoneOffset: ",tzDef.ZoneOffset)
 	fmt.Println("  ZoneOffsetSeconds:", tzDef.ZoneOffsetSeconds)
@@ -588,6 +588,7 @@ func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefDto) {
 	fmt.Println("      OffsetSeconds: ", tzDef.OffsetSeconds)
 	fmt.Println("    Location String: ", tzDef.Location.String())
 	fmt.Println("      Location Name: ", tzDef.LocationName)
+	fmt.Println("-----------------------------------------------")
 }
 
 // PrintOutTimeZoneFields
@@ -596,12 +597,22 @@ func PrintOutTimeZoneFields(tz dt.TimeZoneDto) {
 	fmt.Println()
 	fmt.Println("*********************************")
 	fmt.Println("     Description: ", tz.Description)
-	fmt.Println("          TimeIn: ", tz.TimeIn)
-	fmt.Println(" TimeIn Location: ", tz.TimeIn.TimeZone.LocationName)
-	fmt.Println("         TimeOut: ", tz.TimeOut)
-	fmt.Println("TimeOut Location: ", tz.TimeOut.TimeZone.LocationName)
-	fmt.Println("       Time UTC : ", tz.TimeUTC)
-	fmt.Println("       TimeLocal: ", tz.TimeLocal)
+	fmt.Println("          TimeIn: ", tz.TimeIn.String())
+	fmt.Println("      TimeIn Time Zone")
+	PrintOutTimeZoneDefDtoFields(tz.TimeIn.TimeZone)
+	fmt.Println()
+	fmt.Println("         TimeOut: ", tz.TimeOut.String())
+	fmt.Println("      TimeOut Time Zone")
+	PrintOutTimeZoneDefDtoFields(tz.TimeOut.TimeZone)
+	fmt.Println()
+	fmt.Println("       Time UTC : ", tz.TimeUTC.String())
+	fmt.Println("      TimeUTC Time Zone")
+	PrintOutTimeZoneDefDtoFields(tz.TimeUTC.TimeZone)
+	fmt.Println()
+	fmt.Println("       TimeLocal: ", tz.TimeLocal.String())
+	fmt.Println("      TimeLocal Time Zone")
+	PrintOutTimeZoneDefDtoFields(tz.TimeLocal.TimeZone)
+	fmt.Println()
 
 }
 
