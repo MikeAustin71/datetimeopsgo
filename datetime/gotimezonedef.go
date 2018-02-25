@@ -383,7 +383,7 @@ func (tzdef *TimeZoneDefDto) setZoneString() {
 	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d",tzdef.OffsetHours,tzdef.OffsetMinutes)
 
 	if tzdef.OffsetSeconds > 0 {
-		tzdef.ZoneOffset += fmt.Sprintf("%02%", tzdef.OffsetSeconds)
+		tzdef.ZoneOffset += fmt.Sprintf("%02d", tzdef.OffsetSeconds)
 	}
 
 	tzdef.ZoneOffset += " " + tzdef.ZoneName

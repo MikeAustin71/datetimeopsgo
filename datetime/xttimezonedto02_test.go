@@ -14,7 +14,7 @@ func TestTimeZoneUtility_NewTimeAddDate_01(t *testing.T) {
 	t2 := t1.AddDate(3,2, 15)
 	t2OutStr := t2.Format(fmtstr)
 
-	tzu2, err := TimeZoneDto{}.NewTimeAddDate(t1,TzIanaUsPacific , 3, 2, 15, fmtstr)
+	tzu2, err := TimeZoneDto{}.NewTimeAddDate(t1, TzIanaUsPacific , 3, 2, 15, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewTimeAddDate(t1,TzUsPacific , 3, 2, 15). Error='%v'", err.Error())
@@ -88,7 +88,7 @@ func TestTimeZoneUtility_NewTimeAddDateTime_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	tzu2, err := TimeZoneDto{}.NewTimeAddDateTime(t1,TzIanaUsEast, 3,2, 15, 3, 4, 2,0, 0, 0, fmtstr)
+	tzu2, err := TimeZoneDto{}.NewTimeAddDateTime(t1, TzIanaUsEast, 3,2, 15, 3, 4, 2,0, 0, 0, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewAddDateTime(tzu1, 3,2, 15, 3, 4, 2,0, 0, 0). Error='%v'", err.Error())
