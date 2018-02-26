@@ -1451,6 +1451,41 @@ millisecond, microsecond, nanosecond int, timeZoneLocation, dateTimeFmtStr strin
 // accordingly. When the method completes, the values of the
 // current DateTzDto will equal the values of the input parameter
 // TimeDto instance.
+//
+// Input Parameters
+// ================
+// tDto		TimeDto						- A populated TimeDto instance
+//
+//														type TimeDto struct {
+//															Years        int64
+//															Months       int64
+//															Weeks        int64
+//															Days         int64
+//															Hours        int64
+//															Minutes      int64
+//															Seconds      int64
+//															Milliseconds int64
+//															Microseconds int64
+//															Nanoseconds  int64
+//														}
+//
+// timeZoneLocation	string	- time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//
 func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) error {
 
 	ePrefix := "DateTzDto.SetFromTimeDto() "

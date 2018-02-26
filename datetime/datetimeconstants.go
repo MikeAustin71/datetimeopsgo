@@ -54,18 +54,35 @@ const (
 	// Note: A Nanosecond is equal to 1 one-billionth or
 	//       1/1,000,000,000 of a second.
 
-	// MicroSecondNanoseconds - Number of Nanoseconds in a Microsecond
-	// 	A MicroSecond is 1/1,000,000 or 1 one-millionth of a second
-	MicroSecondNanoseconds = int64(time.Microsecond)
+	// MilliSecondsPerSecond - Number of Milliseconds in a Second
+	MilliSecondsPerSecond = int64(1000)
+
+	// MicroSecondsPerMilliSecond - The Number of Microseconds in
+	// a Millisecond.
+	MicroSecondsPerMilliSecond = int64(1000)
+
+	// NanoSecondsPerMicroSecond - The number of nanoseconds in
+	// a microsecond.
+	NanoSecondsPerMicroSecond = int64(1000)
+
+
 	// MilliSecondNanoseconds - Number of Nanoseconds in a MilliSecond
 	//	 A millisecond is 1/1,000 or 1 one-thousandth of a second
 	MilliSecondNanoseconds = int64(time.Millisecond)
+
+	// MicroSecondNanoseconds - Number of Nanoseconds in a Microsecond
+	// 	A MicroSecond is 1/1,000,000 or 1 one-millionth of a second
+	MicroSecondNanoseconds = int64(time.Microsecond)
+
 	// SecondNanoseconds - Number of Nanoseconds in a Second
 	SecondNanoseconds = int64(time.Second)
+
 	// MinuteNanoSeconds - Number of Nanoseconds in a minute
 	MinuteNanoSeconds = int64(time.Minute)
+
 	// HourNanoSeconds - Number of Nanoseconds in an hour
 	HourNanoSeconds = int64(time.Hour)
+
 	// DayNanoSeconds - Number of Nanoseconds in a 24-hour day
 	DayNanoSeconds = int64(24) * HourNanoSeconds
 
