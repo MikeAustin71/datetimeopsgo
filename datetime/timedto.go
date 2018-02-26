@@ -506,6 +506,10 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 	
 }
 
+// allocateWeeksAndDays - This method receives a total number of
+// days and allocates those days to Weeks and Days. The result
+// is stored in the Weeks and Days data fields of the current
+// TimeDto instance.
 func (tDto *TimeDto) allocateWeeksAndDays(totalDays int64) error {
 	ePrefix := "TimeDto.allocateWeeksAndDays() "
 	tDto.Weeks = 0
@@ -529,6 +533,11 @@ func (tDto *TimeDto) allocateWeeksAndDays(totalDays int64) error {
 	return nil
 }
 
+
+// allocateSeconds - Receives totalSeconds and proceeds to
+// allocate Hours, Minutes and Seconds. The result is stored
+// the Hours, Minutes and Seconds data fields of the current
+// TimeDto instance.
 func (tDto *TimeDto) allocateSeconds(totalSeconds int64) error {
 
 	ePrefix := "TimeDto.allocateSeconds() "
