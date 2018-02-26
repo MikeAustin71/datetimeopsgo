@@ -22,8 +22,8 @@ import (
 	Dependencies
 	============
 
-		godatetzdto.go
-		gotimezonedef.go
+		datetzdto.go
+		timezonedef.go
 
 
  */

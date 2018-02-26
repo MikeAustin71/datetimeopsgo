@@ -5,7 +5,7 @@ import (
 )
 
 /*
-godatetimeutility.go is part of the date time operations library. The source code repository
+datetimeutility.go is part of the date time operations library. The source code repository
  	for this file is located at:
 
 					https://github.com/MikeAustin71/datetimeopsgo.git

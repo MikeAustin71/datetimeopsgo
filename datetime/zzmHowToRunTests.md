@@ -5,3 +5,7 @@
 
 ## Resources
 http://codesamplez.com/development/golang-unit-testing
+
+#### testify package
+https://github.com/stretchr/testify
+

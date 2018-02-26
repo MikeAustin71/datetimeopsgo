@@ -16,7 +16,7 @@ import (
 // This Type is NOT used to define duration; that is, the
 // difference or time span between two point in time. For
 // these types of operations see:
-// DurationTimeUtility/common/godurationutil.go
+// DurationTimeUtility/common/durationutil.go
 //
 // DateTzDto defines a specific point in time using
 // a variety of descriptors including year, month, day

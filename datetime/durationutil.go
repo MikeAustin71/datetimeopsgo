@@ -13,7 +13,7 @@ import (
 
 		https://github.com/MikeAustin71/datetimeopsgo.git
 
-	You will find this source file, 'godurationutil.go' in the subdirectory:
+	You will find this source file, 'durationutil.go' in the subdirectory:
 
 			datetimeopsgo\DurationTimeUtility
 

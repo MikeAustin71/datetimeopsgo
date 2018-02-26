@@ -18,6 +18,6 @@ The Date Time Utilities currently consist of four separate libraries:
 
 4. ../DateTimeFormatsUtility - This utility is designed to receive date time strings
  and convert them into time values. There are a number of dependencies associated
- with source file, 'datetimeformatUtility.go'. See source file comments.
+ with source file, 'formatdatetimeutility.go'. See source file comments.
   
 
