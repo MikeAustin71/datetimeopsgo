@@ -583,7 +583,7 @@ func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int64) error {
 		return fmt.Errorf(ePrefix + "Error: Milliseconds is INVALID. Milliseconds='%v'", tDto.Milliseconds)
 	}
 
-	if totalNanoSeconds >= int64(time.Millisecond) {
+	if totalNanoSeconds >= int64(time.Microsecond) {
 		tDto.Microseconds = totalNanoSeconds / int64(time.Microsecond)
 		totalNanoSeconds -= tDto.Microseconds * int64(time.Microsecond)
 	}
@@ -592,11 +592,10 @@ func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int64) error {
 		return fmt.Errorf(ePrefix + "Error: Microseconds is INVALID. Microseconds='%v'", tDto.Microseconds)
 	}
 
-
 	tDto.Nanoseconds = totalNanoSeconds
 
 	if tDto.Nanoseconds > NanoSecondsPerMicroSecond - 1 {
-		return fmt.Errorf(ePrefix + "Error: Nanoseconds is INVALID. Nanoseconds='%v'", tDto.Nanoseconds)
+		return fmt.Errorf(ePrefix + "Error: Nanoseconds is INVALID. Nanoseconds= %v", tDto.Nanoseconds)
 	}
 
 	return nil

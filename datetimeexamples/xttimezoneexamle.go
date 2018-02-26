@@ -616,6 +616,25 @@ func PrintOutTimeZoneFields(tz dt.TimeZoneDto) {
 
 }
 
+// PrintOutTimeDtoFields
+func PrintOutTimeDtoFields(tDto dt.TimeDto) {
+	fmt.Println("========================================")
+	fmt.Println("          TimeDto Printout")
+	fmt.Println("========================================")
+	fmt.Println("       Years: ", tDto.Years)
+	fmt.Println("      Months: ", tDto.Months)
+	fmt.Println("       Weeks: ", tDto.Weeks)
+	fmt.Println("        Days: ", tDto.Days)
+	fmt.Println("       Hours: ", tDto.Hours)
+	fmt.Println("     Minutes: ", tDto.Minutes)
+	fmt.Println("     Seconds: ", tDto.Seconds)
+	fmt.Println("Milliseconds: ", tDto.Milliseconds)
+	fmt.Println("Microseconds: ", tDto.Microseconds)
+	fmt.Println(" Nanoseconds: ", tDto.Nanoseconds)
+	fmt.Println("========================================")
+
+}
+
 // ExampleDurationLocalUTCTime
 func ExampleDurationLocalUTCTime() {
 	t1UTCStr := "2017-07-02 22:00:18.423111300 +0000 UTC"

@@ -9,24 +9,24 @@ import (
 
 func main() {
 
-	//t1str := "2018-02-25 00:14:00.038175584 -0600 CST"
-	//fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
-	fmtstr := "Monday January 2, 2006 15:04:05.000000000 -0700 MST"
-	//t1, _ := time.Parse(fmtstr, t1str)
-	t1 := time.Now().Local()
+	t0str := "2017-04-30 22:58:32.515539300 -0500 CDT"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	expectedOutDate := t1.Format(fmtstr)
-
-	dtz1, err := dt.DateTzDto{}.New(t1, fmtstr)
+	t0, err := time.Parse(fmtstr, t0str)
 
 	if err != nil {
-		fmt.Printf("Error Returned by dt.DateTzDto{}.New(t1, fmtstr). Error='%v'\n", err.Error())
+		fmt.Printf("Error retruned from time.Parse(fmtstr, t0str). t0str='%v'  Error='%v'\n", t0str, err.Error())
+		return
 	}
 
-	tzDto, err := dt.TimeZoneDto{}.NewDateTz(dtz1, dt.TzIanaAsiaVladivostok, fmtstr)
+	tDto, err := dt.TimeDto{}.New(2017, 04, 0, 30, 22, 58,32,0,0, 515539300)
 
-	fmt.Println("expectedOutDate: ", expectedOutDate)
-	fmt.Println("  dtz1.DateTime: ", dtz1.String())
-	fmt.Println("======================================================")
-	ex.PrintOutTimeZoneFields(tzDto)
+	if err != nil {
+		fmt.Printf("Error returned from TimeDto{}.New(...)  Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println("Original t0str: ", t0str)
+	fmt.Println("Original t0: ", t0.Format(fmtstr))
+	ex.PrintOutTimeDtoFields(tDto)
 }
