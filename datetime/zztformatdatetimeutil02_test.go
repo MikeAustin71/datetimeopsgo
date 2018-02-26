@@ -63,7 +63,7 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString02() {
 
 	actualStr := t1.Format(fmtstr)
 
-	assert.Equal(suite.T(), t1Str, actualStr,"Acutal Output NOT EQUAL To Expected!")
+	assert.Equal(suite.T(), t1Str, actualStr,"Actual Output NOT EQUAL To Expected!")
 
 	assert.True(suite.T(), t1.Equal(t1Expected),"t1 NOT EQUAL to t1Expected")
 
@@ -92,6 +92,27 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString03() {
 	assert.True(suite.T(), t1.Equal(t1Expected),"t1 NOT EQUAL to t1Expected")
 }
 
+func (suite *dtfmtTestSuite) TestParseDateTimeString04() {
+// Testing Iana Vladivostok Time Zone Conversions
+fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+dtz, err := DateTzDto{}.NewDateTimeElements(2018,02,25,16,28,52,515539300,TzIanaAsiaVladivostok, fmtstr)
+
+assert.Nil(suite.T(), err, "Error from DateTzDto{}.NewDateTimeElements")
+
+// expectedStr := dtz.String() == "2018-02-25 16:28:52.515539300 +1000 +10"
+
+expectedStr := "2018-02-25 16:28:52.515539300 +1000 +1000"
+
+t1, err := suite.DtFmt.ParseDateTimeString(expectedStr, "")
+
+assert.True(suite.T(), t1.Equal(dtz.DateTime),"t1 NOT EQUAL to dtz.DateTime")
+
+actualStr := t1.Format(fmtstr)
+
+assert.Equal(suite.T(), expectedStr , actualStr,"Actual DateTime Output NOT EQUAL To Expected!")
+
+}
 
 func TestDtfmtTestSuite(t *testing.T) {
 	tests := new(dtfmtTestSuite)
