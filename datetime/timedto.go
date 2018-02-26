@@ -295,7 +295,8 @@ func (tDto *TimeDto) GetTotalNanoSecs() int64 {
 	return totNanoSecs
 }
 
-
+// IsValid - Returns an error if the current tDto instance is invalid.
+// Otherwise, if successful, this method returns 'nil'.
 func (tDto *TimeDto) IsValid() error {
 
 	ePrefix := "TimeDto.IsValid() "
