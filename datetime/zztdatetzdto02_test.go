@@ -253,6 +253,35 @@ func TestDateTzDto_New_01(t *testing.T) {
 
 }
 
+func TestDateTzDto_NewTimeDto_01(t *testing.T) {
+
+	t0str := "2017-04-30 22:58:32.515539300 -0500 CDT"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	t0, err := time.Parse(fmtstr, t0str)
+
+	if err != nil {
+		t.Errorf("Error retruned from time.Parse(fmtstr, t0str). t0str='%v'  Error='%v'", t0str, err.Error())
+	}
+
+	tDto, err := TimeDto{}.New(2017, 04, 0, 30, 22, 58,32,0,0, 515539300)
+
+	if err != nil {
+		t.Errorf("Error returned from TimeDto{}.New(...)  Error='%v'", err.Error())
+	}
+
+	dTzDto, err := DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, fmtstr)
+
+	if !dTzDto.DateTime.Equal(t0) {
+		t.Errorf("Error returned from DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, fmtstr). Error='%v'", err.Error())
+	}
+
+	if t0str != dTzDto.String() {
+		t.Errorf("Error on formats: Expected date time string='%v'. Instead, date time string='%v'", t0str, dTzDto.String())
+	}
+
+}
+
 func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 	t0str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	t1str := "02/15/2014 19:54:30.038175584 -0600 CST"

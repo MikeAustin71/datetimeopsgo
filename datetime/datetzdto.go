@@ -1084,7 +1084,8 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 	return dtz2, nil
 }
 
-// NewTimeDto
+// NewTimeDto - Receives input parameters type TimeDto, 'timeZoneLocation' and 'dateTimeFormatStr'.
+// These parameters are used to construct and return a new DateTzDto instance.
 func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeFormatStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.NewTimeDto() "
@@ -1468,9 +1469,6 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 		return fmt.Errorf(ePrefix + "Error: All input parameter date time elements equal ZERO!")
 	}
 
-	if tDto.Years < 0 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter year number is INVALID. 'year' must be greater than or equal to Zero. tDto.Years='%v'", tDto.Years)
-	}
 
 	if tDto.Months < 1 || tDto.Months > 12  {
 		return fmt.Errorf(ePrefix + "Error: Input parameter month number is INVALID. Correct range is 1-12. tDto.Months='%v'", tDto.Months)
@@ -1504,19 +1502,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v' ", timeZoneLocation, err.Error())
 	}
 
-	days := tDto.Days
-
-	if tDto.Weeks > 0 {
-		days += tDto.Weeks * 7
-	}
-
-	totNanoSecs := int64(time.Millisecond) * tDto.Milliseconds
-
-	totNanoSecs += int64(time.Microsecond) * tDto.Microseconds
-
-	totNanoSecs += tDto.Nanoseconds
-
-	dateTime := time.Date(int(tDto.Years), time.Month(int(tDto.Months)), int(days), int(tDto.Hours), int(tDto.Minutes), int(tDto.Seconds), int(totNanoSecs), loc)
+	dateTime := time.Date(int(tDto.Years), time.Month(int(tDto.Months)), int(tDto.GetTotalDaysFromWeeksAndDays()), int(tDto.Hours), int(tDto.Minutes), int(tDto.Seconds), int(tDto.GetTotalNanoSecs()), loc)
 
 	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
 
@@ -1533,7 +1519,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	dtz.Hour 				= dtz.DateTime.Hour()
 	dtz.Minute			= dtz.DateTime.Minute()
 	dtz.Second			= dtz.DateTime.Second()
-	dtz.allocateNanoseconds(totNanoSecs)
+	dtz.allocateNanoseconds(tDto.GetTotalNanoSecs())
 
 	return nil
 }
