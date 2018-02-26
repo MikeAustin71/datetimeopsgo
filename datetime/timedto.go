@@ -151,15 +151,15 @@ func (tDto *TimeDto) Empty() {
 // false.
 func (tDto *TimeDto) Equal(tDto2 TimeDto) bool {
 
-	if tDto.Years		!=  tDto2.Years 						||
-		tDto.Months			!=  tDto2.Months					||
-		tDto.Weeks			!=  tDto2.Weeks						||
-		tDto.Days 			!=  tDto2.Days						||
-		tDto.Hours			!=  tDto2.Hours						||
-		tDto.Minutes 		!=  tDto2.Minutes					||
-		tDto.Seconds    	!=  tDto2.Seconds				||
-		tDto.Milliseconds !=  tDto2.Milliseconds 	||
-		tDto.Microseconds !=  tDto2.Microseconds	||
+	if tDto.Years				!=  tDto2.Years 					||
+		tDto.Months				!=  tDto2.Months					||
+		tDto.Weeks				!=  tDto2.Weeks						||
+		tDto.Days 				!=  tDto2.Days						||
+		tDto.Hours				!=  tDto2.Hours						||
+		tDto.Minutes 			!=  tDto2.Minutes					||
+		tDto.Seconds    	!=  tDto2.Seconds					||
+		tDto.Milliseconds !=  tDto2.Milliseconds 		||
+		tDto.Microseconds !=  tDto2.Microseconds		||
 		tDto.Nanoseconds  !=  tDto2.Nanoseconds {
 
 		return false
@@ -167,6 +167,50 @@ func (tDto *TimeDto) Equal(tDto2 TimeDto) bool {
 
 	return true
 }
+
+// GetTimeWithDaysNotWeeks - returns the current TimeDto
+// converted to a TimeDto which adds weeks x 7 to existing days
+// and returns a zero value for weeks.
+func (tDto *TimeDto) GetTimeWithDaysNotWeeks() TimeDto {
+
+	t2Dto := tDto.CopyOut()
+	t2Dto.Weeks = 0
+	t2Dto.Days = tDto.GetTotalDaysFromWeeksAndDays()
+
+	return t2Dto
+
+}
+
+// GetTimeWithNoMilliOrMicroSecs - Returns the current TimeDto
+// with milliseconds and microseconds set to zero and the
+// equivalent time added to tDto.Nanoseconds.
+func (tDto *TimeDto) GetTimeWithNoMilliOrMicroSecs() TimeDto {
+
+	t2Dto := tDto.CopyOut()
+	t2Dto.Milliseconds = 0
+	t2Dto.Microseconds = 0
+	t2Dto.Nanoseconds = tDto.GetTotalNanoSecs()
+
+	return t2Dto
+}
+
+// GetTimeWithNoWeeksMilliOrMircoSecs - Returns the current TimeDto
+// with no Weeks, Milliseconds or Microseconds. Weeks are converted
+// to days and added to tDto.Days.  Milliseconds and Microseconds
+// are converted to nanoseconds and added to tDto.NanoSeconds
+func (tDto *TimeDto) GetTimeWithNoWeeksMilliOrMircoSecs() TimeDto {
+
+	t2Dto := tDto.CopyOut()
+
+	t2Dto.Weeks = 0
+	t2Dto.Days = tDto.GetTotalDaysFromWeeksAndDays()
+	t2Dto.Milliseconds = 0
+	t2Dto.Microseconds = 0
+	t2Dto.Nanoseconds = tDto.GetTotalNanoSecs()
+
+	return t2Dto
+}
+
 
 // GetTotalDaysFromWeeksAndDays - Computes total number
 // of days from tDto.Weeks plus tDto.Days

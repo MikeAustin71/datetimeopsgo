@@ -1502,7 +1502,9 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v' ", timeZoneLocation, err.Error())
 	}
 
-	dateTime := time.Date(int(tDto.Years), time.Month(int(tDto.Months)), int(tDto.GetTotalDaysFromWeeksAndDays()), int(tDto.Hours), int(tDto.Minutes), int(tDto.Seconds), int(tDto.GetTotalNanoSecs()), loc)
+	t2Dto := tDto.GetTimeWithNoWeeksMilliOrMircoSecs()
+
+	dateTime := time.Date(int(t2Dto.Years), time.Month(int(t2Dto.Months)), int(t2Dto.Days), int(t2Dto.Hours), int(t2Dto.Minutes), int(tDto.Seconds), int(t2Dto.Nanoseconds), loc)
 
 	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
 
