@@ -798,7 +798,6 @@ func (dtz *DateTzDto) IsValid() error {
 	return nil
 }
 
-
 // New - returns a new DateTzDto instance based on a time.Time ('dateTime')
 // input parameter.
 //
@@ -1490,41 +1489,17 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 
 	ePrefix := "DateTzDto.SetFromTimeDto() "
 
-	if tDto.Years==0 &&
-			tDto.Months==0 &&
-			tDto.Weeks==0 &&
-			tDto.WeekDays == 0 &&
-			tDto.Hours ==0 &&
-			tDto.Minutes == 0 &&
-			tDto.Seconds == 0 &&
-			tDto.Milliseconds == 0 &&
-		  tDto.Microseconds == 0 &&
-		  tDto.Nanoseconds == 0 {
+	if tDto.IsZero() {
 
 		return fmt.Errorf(ePrefix + "Error: All input parameter date time elements equal ZERO!")
 	}
 
+	t2Dto := tDto.CopyOut()
+	
+	t2Dto.ConvertToAbsoluteValues()
 
-	if tDto.Months < 1 || tDto.Months > 12  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter month number is INVALID. Correct range is 1-12. tDto.Months='%v'", tDto.Months)
-	}
-
-
-	if tDto.WeekDays < 1 || tDto.WeekDays > 31  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. tDto.WeekDays='%v'", tDto.WeekDays)
-	}
-
-
-	if tDto.Hours < 0 || tDto.Hours > 24 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'hour' number is INVALID. Correct range is 0-24. tDto.Hours='%v'", tDto.Hours)
-	}
-
-	if tDto.Minutes < 0 || tDto.Minutes > 59 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter minute number is INVALID. Correct range is 0 - 59. tDto.Minutes='%v'", tDto.Minutes)
-	}
-
-	if tDto.Seconds < 0 || tDto.Seconds > 59 {
-		return fmt.Errorf(ePrefix + "Error: Input parmeter second number is INVALID. Correct range is 0 - 59. tDto.Seconds='%v'", tDto.Seconds)
+	if err := t2Dto.IsValid(); err != nil {
+		return fmt.Errorf(ePrefix + "Error: Input Parameter tDto (TimeDto) is INVALID. Error='%v'", err.Error())
 	}
 
 	if strings.ToLower(timeZoneLocation) == "local" {
@@ -1537,7 +1512,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v' ", timeZoneLocation, err.Error())
 	}
 
-	dateTime := time.Date(int(tDto.Years), time.Month(int(tDto.Months)), int(tDto.DateDays), int(tDto.Hours), int(tDto.Minutes), int(tDto.Seconds), int(tDto.TotNanoseconds), loc)
+	dateTime := time.Date(int(t2Dto.Years), time.Month(int(t2Dto.Months)), int(t2Dto.DateDays), int(t2Dto.Hours), int(t2Dto.Minutes), int(t2Dto.Seconds), int(t2Dto.TotNanoseconds), loc)
 
 	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
 

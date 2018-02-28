@@ -35,8 +35,8 @@ func (tDto *TimeDto) CopyOut() TimeDto {
 	tDto2.Years 					=  tDto.Years
 	tDto2.Months       		=  tDto.Months
 	tDto2.Weeks        		=  tDto.Weeks
-	tDto2.WeekDays =  tDto.WeekDays
-	tDto2.DateDays =  tDto.DateDays
+	tDto2.WeekDays 				=  tDto.WeekDays
+	tDto2.DateDays 				=  tDto.DateDays
 	tDto2.Hours        		=  tDto.Hours
 	tDto2.Minutes      		=  tDto.Minutes
 	tDto2.Seconds      		=  tDto.Seconds
@@ -59,8 +59,8 @@ func (tDto *TimeDto) CopyIn(tDto2 TimeDto) {
 	tDto.Years 					=  tDto2.Years
 	tDto.Months       	=  tDto2.Months
 	tDto.Weeks        	=  tDto2.Weeks
-	tDto.WeekDays =  tDto2.WeekDays
-	tDto.DateDays =  tDto2.DateDays
+	tDto.WeekDays 			=  tDto2.WeekDays
+	tDto.DateDays				 =  tDto2.DateDays
 	tDto.Hours        	=  tDto2.Hours
 	tDto.Minutes      	=  tDto2.Minutes
 	tDto.Seconds      	=  tDto2.Seconds
@@ -138,8 +138,8 @@ func (tDto *TimeDto) ConvertToNegativeValues() {
 	tDto.Years 					*= -1
 	tDto.Months 				*= -1
 	tDto.Weeks 					*= -1
-	tDto.WeekDays *= -1
-	tDto.DateDays *= -1
+	tDto.WeekDays 			*= -1
+	tDto.DateDays 			*= -1
 	tDto.Hours 					*= -1
 	tDto.Minutes 				*= -1
 	tDto.Seconds 				*= -1
@@ -155,8 +155,8 @@ func (tDto *TimeDto) Empty() {
 	tDto.Years 					= 0
 	tDto.Months 				= 0
 	tDto.Weeks 					= 0
-	tDto.WeekDays = 0
-	tDto.DateDays = 0
+	tDto.WeekDays 			= 0
+	tDto.DateDays 			= 0
 	tDto.Hours 					= 0
 	tDto.Minutes 				= 0
 	tDto.Seconds 				= 0
@@ -175,8 +175,8 @@ func (tDto *TimeDto) Equal(tDto2 TimeDto) bool {
 	if tDto.Years					!=  tDto2.Years 					||
 		tDto.Months					!=  tDto2.Months					||
 		tDto.Weeks					!=  tDto2.Weeks						||
-		tDto.WeekDays !=  tDto2.WeekDays ||
-		tDto.DateDays !=  tDto2.DateDays ||
+		tDto.WeekDays 			!=  tDto2.WeekDays 				||
+		tDto.DateDays 			!=  tDto2.DateDays 				||
 		tDto.Hours					!=  tDto2.Hours						||
 		tDto.Minutes 				!=  tDto2.Minutes					||
 		tDto.Seconds    		!=  tDto2.Seconds					||
@@ -263,7 +263,7 @@ func (tDto *TimeDto) IsValid() error {
 
 	}
 
-	if tDto.WeekDays > 31 {
+	if tDto.WeekDays > 6 {
 		return fmt.Errorf(ePrefix + "Error: WeekDays value is INVALID! tDto.WeekDays='%v'", tDto.WeekDays)
 	}
 
@@ -300,6 +300,30 @@ func (tDto *TimeDto) IsValid() error {
 	}
 
 	return nil
+}
+
+
+// IsZero - Returns 'true' if all data fields in the current
+// TimeDto instance are equal to zero or their uninitialized
+// values.
+func (tDto *TimeDto) IsZero() bool {
+
+	if tDto.Years 					== 0 &&
+			tDto.Months					== 0 &&
+			tDto.Weeks					== 0 &&
+			tDto.WeekDays				== 0 &&
+			tDto.DateDays				== 0 &&
+			tDto.Hours					== 0 &&
+			tDto.Minutes				== 0 &&
+			tDto.Seconds				== 0 &&
+			tDto.Milliseconds		== 0 &&
+			tDto.Microseconds		== 0 &&
+			tDto.Nanoseconds		== 0 &&
+			tDto.TotNanoseconds	== 0 {
+				return true
+	}
+
+	return false
 }
 
 // New - Returns a new TimeDto instance based on time element
