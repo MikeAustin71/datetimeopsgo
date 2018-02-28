@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"time"
+	"fmt"
 )
 
 
@@ -105,7 +106,7 @@ t1, err := suite.DtFmt.ParseDateTimeString(expectedStr, "")
 
 assert.Nil(suite.T(), err, "Error from suite.DtFmt.ParseDateTimeString(expectedStr, \"\")")
 
-/*
+
 dtz, err := DateTzDto{}.NewDateTimeElements(2018,02,25,16,28,52,515539300,TzIanaAsiaVladivostok, fmtstr)
 
 assert.Nil(suite.T(), err, "Error from DateTzDto{}.NewDateTimeElements")
@@ -117,7 +118,7 @@ assert.Nil(suite.T(), err, "Error from TimeZoneDto{}.New(t1, TzIanaAsiaVladivost
 
 s := fmt.Sprintf("t2.TimeOut.DateTime NOT EQUAL to dtz.DateTime. t2.TimeOut.DateTime='%v'  dtz.DateTime='%v'", t2.TimeOut.DateTime.Format(fmtstr), dtz.DateTime.Format(fmtstr))
 assert.True(suite.T(), t2.TimeOut.DateTime.Equal(dtz.DateTime),s)
-*/
+
 
 actualStr := t1.Format(fmtstr)
 
