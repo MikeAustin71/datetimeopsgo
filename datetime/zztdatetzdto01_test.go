@@ -433,40 +433,44 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 		t.Errorf("Error: Expected dTzDto.TimeZone.LocationName='%v'.  Instead, dTzDto.TimeZone.LocationName='%v'", t1ExpectedLocationName, dTzDto.TimeZone.LocationName)
 	}
 
-	if t1.Year() != dTzDto.Year {
-		t.Errorf("Expected Year='%v'.  Instead Year='%v'",t1.Year(), dTzDto.Year)
+	if t1.Year() != int(dTzDto.Time.Years) {
+		t.Errorf("Expected Year='%v'.  Instead Year='%v'",t1.Year(), dTzDto.Time.Years)
 	}
 
-	if int(t1.Month()) != dTzDto.Month {
-		t.Errorf("Expected Month Number='%v'.  Instead Month Number='%v'",int(t1.Month()), dTzDto.Month)
+	if int(t1.Month()) != int(dTzDto.Time.Months) {
+		t.Errorf("Expected Month Number='%v'.  Instead Month Number='%v'",int(t1.Month()), dTzDto.Time.Months)
 	}
 
-	if t1.Hour() != dTzDto.Hour {
-		t.Errorf("Expected Hour Number='%v'.  Instead Hour Number='%v'",t1.Hour(), dTzDto.Hour)
+	if t1.Day() != int(dTzDto.Time.DateDays) {
+		t.Errorf("Expected Date Day Number='%v'.  Instead Date Day Number='%v'",t1.Day(), dTzDto.Time.DateDays)
 	}
 
-	if t1.Minute() != dTzDto.Minute {
-		t.Errorf("Expected Minute Number='%v'.  Instead Minute Number='%v'",t1.Minute(), dTzDto.Minute)
+	if t1.Hour() != int(dTzDto.Time.Hours) {
+		t.Errorf("Expected Hour Number='%v'.  Instead Hour Number='%v'",t1.Hour(), dTzDto.Time.Hours)
 	}
 
-	if t1.Second() != dTzDto.Second {
-		t.Errorf("Expected Second Number='%v'.  Instead Second Number='%v'",t1.Second(), dTzDto.Second)
+	if t1.Minute() != int(dTzDto.Time.Minutes) {
+		t.Errorf("Expected Minute Number='%v'.  Instead Minute Number='%v'",t1.Minute(), dTzDto.Time.Minutes)
 	}
 
-	if 38 != dTzDto.Millisecond {
-		t.Errorf("Expected Millisecond='38'.  Instead, Millisecond='%v'",  dTzDto.Millisecond )
+	if t1.Second() != int(dTzDto.Time.Seconds) {
+		t.Errorf("Expected Second Number='%v'.  Instead Second Number='%v'",t1.Second(), dTzDto.Time.Seconds)
 	}
 
-	if 175 != dTzDto.Microsecond {
-		t.Errorf("Expected Microsecond='175'.  Instead, Microsecond='%v'", dTzDto.Microsecond)
+	if 38 != int(dTzDto.Time.Milliseconds) {
+		t.Errorf("Expected Millisecond='38'.  Instead, Millisecond='%v'",  dTzDto.Time.Milliseconds )
 	}
 
-	if 584 != dTzDto.Nanosecond {
-		t.Errorf("Expected Nanosecond='584'.  Instead Nanosecond='%v' ", dTzDto.Nanosecond)
+	if 175 != dTzDto.Time.Microseconds {
+		t.Errorf("Expected Microsecond='175'.  Instead, Microsecond='%v'", dTzDto.Time.Microseconds)
 	}
 
-	if 38175584 != int(dTzDto.TotalNanoSecs) {
-		t.Errorf("Expected Total Nanosecond Number='38175584'.  Instead Total Nanosecond Number='%v'",int(dTzDto.TotalNanoSecs))
+	if 584 != dTzDto.Time.Nanoseconds {
+		t.Errorf("Expected Nanosecond='584'.  Instead Nanosecond='%v' ", dTzDto.Time.Nanoseconds)
+	}
+
+	if 38175584 != dTzDto.Time.TotNanoseconds {
+		t.Errorf("Expected Total Nanoseconds Number='38175584'.  Instead Total Nanoseconds Number='%v'", dTzDto.Time.TotNanoseconds)
 	}
 
 }

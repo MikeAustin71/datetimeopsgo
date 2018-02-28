@@ -224,6 +224,10 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 		return time.Time{}, fmt.Errorf("Error returned by this tDto.IsValid(). Error='%v'", err.Error())
 	}
 
+	if len(timeZoneLocation) == 0 {
+		return time.Time{}, errors.New(ePrefix + "Error: Input parameter 'timeZoneLocation' is EMPTY!")
+	}
+
 	if strings.ToLower(timeZoneLocation) == "local" {
 		timeZoneLocation = "Local"
 	}

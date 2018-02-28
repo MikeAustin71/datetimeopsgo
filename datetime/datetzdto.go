@@ -48,16 +48,7 @@ import (
 //
 type DateTzDto struct {
 	Description			string					// Unused, available for classification, labeling or description
-	Year       			int							// Year Number
-	Month      			int							// Month Number
-	Day        			int							// Day Number
-	Hour       			int							// Hour Number
-	Minute     			int							// Minute Number
-	Second     			int							// Second Number
-	Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-	Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-	Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-	TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+	Time						TimeDto					// Associated Time Components
 	DateTime 				time.Time				// DateTime value for this DateTzDto Type
 	DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 	TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
@@ -632,16 +623,7 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	dtz.Empty()
 
 	dtz.Description 		= dtz2.Description
-	dtz.Year 					  = dtz2.Year
-	dtz.Month 					= dtz2.Month
-	dtz.Day							= dtz2.Day
-	dtz.Hour						= dtz2.Hour
-	dtz.Minute					= dtz2.Minute
-	dtz.Second					= dtz2.Second
-	dtz.Millisecond			= dtz2.Millisecond
-	dtz.Microsecond			= dtz2.Microsecond
-	dtz.Nanosecond			= dtz2.Nanosecond
-	dtz.TotalNanoSecs		= dtz2.TotalNanoSecs
+	dtz.Time 					  = dtz2.Time.CopyOut()
 	dtz.DateTimeFmt			= dtz2.DateTimeFmt
 
 	if !dtz2.DateTime.IsZero() {
@@ -661,16 +643,7 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 	dtz2 := DateTzDto{}
 
 	dtz2.Description 		= dtz.Description
-	dtz2.Year 					= dtz.Year
-	dtz2.Month 					= dtz.Month
-	dtz2.Day						= dtz.Day
-	dtz2.Hour						= dtz.Hour
-	dtz2.Minute					= dtz.Minute
-	dtz2.Second					= dtz.Second
-	dtz2.Millisecond		= dtz.Millisecond
-	dtz2.Microsecond		= dtz.Microsecond
-	dtz2.Nanosecond			= dtz.Nanosecond
-	dtz2.TotalNanoSecs	= dtz.TotalNanoSecs
+	dtz2.Time 					= dtz.Time.CopyOut()
 	dtz2.DateTimeFmt		= dtz.DateTimeFmt
 
 	if !dtz.DateTime.IsZero() {
@@ -689,16 +662,7 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 func (dtz *DateTzDto) Empty() {
 
 	dtz.Description		 	= ""
-	dtz.Year 						= 0
-	dtz.Month 					= 0
-	dtz.Day							= 0
-	dtz.Hour						= 0
-	dtz.Minute					= 0
-	dtz.Second					= 0
-	dtz.Millisecond			= 0
-	dtz.Microsecond			= 0
-	dtz.Nanosecond			= 0
-	dtz.TotalNanoSecs		= 0
+	dtz.Time.Empty()
 	dtz.TimeZone				= TimeZoneDefDto{}
 	dtz.DateTime				= time.Time{}
 	dtz.DateTimeFmt			= ""
@@ -710,17 +674,8 @@ func (dtz *DateTzDto) Empty() {
 // in all respects to the current DateTzDto instance.
 func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 
-	if 	dtz.Description != dtz2.Description			||
-		dtz.Year != dtz2.Year 									||
-		dtz.Month != dtz2.Month									||
-		dtz.Day != dtz2.Day											||
-		dtz.Hour!= dtz2.Hour										||
-		dtz.Minute != dtz2.Minute								||
-		dtz.Second != dtz2.Second								||
-		dtz.Millisecond != dtz2.Millisecond 		||
-		dtz.Microsecond != dtz2.Microsecond 		||
-		dtz.Nanosecond != dtz2.Nanosecond				||
-		dtz.TotalNanoSecs != dtz2.TotalNanoSecs ||
+	if 	dtz.Description != dtz2.Description		||
+		!dtz.Time.Equal(dtz2.Time) 		 					||
 		!dtz.DateTime.Equal(dtz2.DateTime)			||
 		dtz.DateTimeFmt != dtz2.DateTimeFmt 		||
 		!dtz.TimeZone.Equal(dtz2.TimeZone)	{
@@ -739,18 +694,10 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 // this method returns false!
 func (dtz *DateTzDto) IsEmpty () bool {
 
-	if dtz.Description == "" 	&&
-		dtz.Year == 0 					&&
-		dtz.Month==0 						&&
-		dtz.Day==0 							&&
-		dtz.Hour == 0 					&&
-		dtz.Minute ==0 					&&
-		dtz.Second == 0 				&&
-		dtz.Millisecond == 0 		&&
-		dtz.Microsecond == 0 		&&
-		dtz.Nanosecond == 0 		&&
-		dtz.DateTime.IsZero() 	&&
-		dtz.DateTimeFmt == "" 	&&
+	if dtz.Description 			== "" 	&&
+		dtz.Time.IsZero() 						&&
+		dtz.DateTime.IsZero() 				&&
+		dtz.DateTimeFmt 			== "" 	&&
 		dtz.TimeZone.IsEmpty() {
 
 		return true
@@ -779,6 +726,10 @@ func (dtz *DateTzDto) IsValid() error {
 
 	if dtz.TimeZone.IsEmpty() {
 		return errors.New(ePrefix + "Error: dtz.TimeZone is EMPTY!")
+	}
+
+	if err := dtz.Time.IsValid(); err != nil {
+		return fmt.Errorf(ePrefix + "Error: dtz.Time is INVALID. Error='%v'", err.Error())
 	}
 
 	if !dtz.TimeZone.IsValidFromDateTime(dtz.DateTime) {
@@ -827,17 +778,7 @@ func (dtz *DateTzDto) IsValid() error {
 //
 //	type DateTzDto struct {
 //		Description			string					// Unused, available for classification, labeling or description
-//		Year       			int							// Year Number
-//		Month      			int							// Month Number
-//		Day        			int							// Day Number
-//		Hour       			int							// Hour Number
-//		Minute     			int							// Minute Number
-//		Second     			int							// Second Number
-//		Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//		Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
-//		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//		Time       			TimeDto					// Time Components
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
 //		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 //		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
@@ -935,17 +876,7 @@ func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string)(DateTzDto, e
 //							DateTzDto type defined as follows:
 //
 //	type DateTzDto struct {
-//		Year       			int							// Year Number
-//		Month      			int							// Month Number
-//		Day        			int							// Day Number
-//		Hour       			int							// Hour Number
-//		Minute     			int							// Minute Number
-//		Second     			int							// Second Number
-//		Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//		Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
-//		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//		Time      			TimeDto					// Time Components
 //		DateTime 				time.Time				// DateTime value for this DateTzDto Type
 //		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 //		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
@@ -1035,7 +966,7 @@ func (dtz DateTzDto) NewDateTimeElements(year, month, day, hour, minute, second,
 //							DateTzDto type defined as follows:
 //
 //	type DateTzDto struct {
-//		Year       			int							// Year Number
+//		Time       			TimeDto					// Year Number
 //		Month      			int							// Month Number
 //		Day        			int							// Day Number
 //		Hour       			int							// Hour Number
@@ -1146,13 +1077,14 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 
 	dtz.Empty()
 
-	dtz.Year  = dateTime.Year()
-	dtz.Month = int(dateTime.Month())
-	dtz.Day = dateTime.Day()
-	dtz.Hour = dateTime.Hour()
-	dtz.Minute = dateTime.Minute()
-	dtz.Second = dateTime.Second()
-	dtz.allocateNanoseconds(int64(dateTime.Nanosecond()))
+	var err error
+
+	dtz.Time, err  = TimeDto{}.NewFromDateTime(dateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeDto{}.NewFromDateTime(dateTime). Error='%v'", err.Error())
+	}
+
 	dtz.DateTime = dateTime
 
 	if len(dateTimeFmtStr) == 0 {
@@ -1161,7 +1093,7 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 
 	dtz.DateTimeFmt = dateTimeFmtStr
 
-	var err error
+
 	dtz.TimeZone, err = TimeZoneDefDto{}.New(dateTime)
 
 	if err != nil {
@@ -1227,76 +1159,31 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (error) {
 	ePrefix := "DateTzDto.SetFromDateTimeElements() "
 
 
-	if year < 0 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter year number is INVALID. 'year' must be greater than or equal to Zero. year='%v'", year)
-	}
-
-	if month < 1 || month > 12  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter month number is INVALID. Correct range is 1-12. month='%v'", month)
-	}
-
-
-	if day < 1 || day > 31  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. day='%v'", day)
-	}
-
-
-	if hour < 0 || hour > 24 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'hour' number is INVALID. Correct range is 0-24. hour='%v'", hour)
-	}
-
-	if minute < 0 || minute > 59 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter minute number is INVALID. Correct range is 0 - 59. minute='%v'", minute)
-	}
-
-	if second < 0 || second > 59 {
-		return fmt.Errorf(ePrefix + "Error: Input parmeter second number is INVALID. Correct range is 0 - 59. second='%v'", second)
-	}
-
-
-	maxNanoSecs := int(time.Second) - int(1)
-
-	if nanosecond < 0 || nanosecond > maxNanoSecs {
-		return fmt.Errorf(ePrefix + "Error: Input parameter nanoseconds exceeds maximum limit and is INVLIAD. Correct range is 0 - %v. nanosecond='%v'", maxNanoSecs, nanosecond)
-	}
-
-	if year==0 && month==0 && day == 0 && hour ==0 &&
-		minute == 0 && second == 0 && nanosecond == 0 {
-
-		return fmt.Errorf(ePrefix + "Error: All input parameter date time elements equal ZERO!")
-	}
-
 	if len(timeZoneLocation) == 0 {
 		return errors.New(ePrefix + "Error: Input parameter 'timeZoneLocation' is an EMPTY STRING! 'timeZoneLocation' is required!")
 	}
 
-	if strings.ToLower(timeZoneLocation) == "local" {
-		timeZoneLocation = "Local"
-	}
-
-	loc, err := time.LoadLocation(timeZoneLocation)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error: Invalid time zone location! timeZoneLocation='%v'", timeZoneLocation)
-	}
-
 	dtz.Empty()
 
-	dtz.DateTime 		= time.Date(year, time.Month(month), day, hour, minute, second, nanosecond, loc)
+	var err error
+
+	dtz.Time, err = TimeDto{}.New(year, month, 0, day, hour, minute, second, 0, 0, nanosecond)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from TimeDto{}.New(year, month, ...). Error='%v'", err.Error())
+	}
+
+	dtz.DateTime, err	= dtz.Time.GetDateTime(timeZoneLocation)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by dtz.Time.GetDateTime(timeZoneLocation). timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
+	}
 
 	dtz.TimeZone, err = TimeZoneDefDto{}.New(dtz.DateTime)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned from TimeZoneDefDto{}.New(dtz.DateTime). dtz.DateTime='%v'  Error='%v'", dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
-
-	dtz.Year 				= dtz.DateTime.Year()
-	dtz.Month				= int(dtz.DateTime.Month())
-	dtz.Day 				= dtz.DateTime.Day()
-	dtz.Hour 				= dtz.DateTime.Hour()
-	dtz.Minute			= dtz.DateTime.Minute()
-	dtz.Second			= dtz.DateTime.Second()
-	dtz.allocateNanoseconds(int64(nanosecond))
 
 	if len(dateTimeFmtStr) == 0 {
 		dateTimeFmtStr = FmtDateTimeYrMDayFmtStr
@@ -1371,70 +1258,27 @@ millisecond, microsecond, nanosecond int, timeZoneLocation, dateTimeFmtStr strin
 
 	var err error
 
-	if year == 0 && month == 0 && day == 0 && hour == 0 && minute == 0 && second == 0 &&
-		millisecond == 0 && microsecond == 0 && nanosecond == 0 {
-		return errors.New(ePrefix + "Error: All time element input parameters are zero!")
-	}
-
-	if year < 0 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter year number is INVALID. 'year' must be greater than or equal to Zero. year='%v'", year)
-	}
-
-	if month < 1 || month > 12  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter month number is INVALID. Correct range is 1-12. month='%v'", month)
-	}
-
-	if day < 1 || day > 31  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. day='%v'", day)
-	}
-
-	if hour < 0 || hour > 24 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'hour' number is INVALID. Correct range is 0-24. hour='%v'", hour)
-	}
-
-	if minute < 0 || minute > 59 {
-		return fmt.Errorf(ePrefix + "Error: Input parameter minute number is INVALID. Correct range is 0 - 59. min='%v'", minute)
-	}
-
-	if second < 0 || second > 59 {
-		return fmt.Errorf(ePrefix + "Error: Input parmeter second number is INVALID. Correct range is 0 - 59. second='%v'", second)
-	}
-
-	if len(timeZoneLocation) == 0 {
-		return errors.New(ePrefix + "Error: Input parameter 'timeZoneLocation' is a ZERO length string!")
-	}
-
-	if strings.ToLower(timeZoneLocation) == "local" {
-		timeZoneLocation = "Local"
-	}
-
-	loc, err := time.LoadLocation(timeZoneLocation)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
-	}
-
-	totNanoSecs := int64(millisecond) * int64(time.Millisecond)
-	totNanoSecs += int64(microsecond) * int64(time.Microsecond)
-	totNanoSecs += int64(nanosecond)
 
 	dtz.Empty()
 
-	dtz.DateTime = time.Date(year, time.Month(month),day, hour, minute, second, int(totNanoSecs), loc)
+	dtz.Time, err = TimeDto{}.New(year, month,0, day, hour, minute,
+															second, millisecond, microsecond, nanosecond)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by TimeDto{}.New(year, month,...).  Error='%v'", err.Error())
+	}
+
+	dtz.DateTime, err = dtz.Time.GetDateTime(timeZoneLocation)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by dtz.Time.GetDateTime(timeZoneLocation). Error='%v'", err.Error())
+	}
 
 	dtz.TimeZone, err = TimeZoneDefDto{}.New(dtz.DateTime)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDefDto{}.New(dtz.DateTime). dtz.DateTime='%v'  Error=%v", dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
-
-	dtz.Year = dtz.DateTime.Year()
-	dtz.Month = int(dtz.DateTime.Month())
-	dtz.Hour = dtz.DateTime.Hour()
-	dtz.Minute = dtz.DateTime.Minute()
-	dtz.Second = dtz.DateTime.Second()
-
-	dtz.allocateNanoseconds(totNanoSecs)
 
 	if len(dateTimeFmtStr) == 0 {
 		dateTimeFmtStr = FmtDateTimeYrMDayFmtStr
@@ -1456,16 +1300,18 @@ millisecond, microsecond, nanosecond int, timeZoneLocation, dateTimeFmtStr strin
 // tDto		TimeDto						- A populated TimeDto instance
 //
 //														type TimeDto struct {
-//															Years        int64
-//															Months       int64
-//															Weeks        int64
-//															WeekDays         int64
-//															Hours        int64
-//															Minutes      int64
-//															Seconds      int64
-//															Milliseconds int64
-//															Microseconds int64
-//															Nanoseconds  int64
+//															Years        		int64
+//															Months       		int64
+//															Weeks        		int64
+//															WeekDays     		int64
+//															DateDays		 		int64
+//															Hours        		int64
+//															Minutes      		int64
+//															Seconds      		int64
+//															Milliseconds 		int64
+//															Microseconds 		int64
+//															Nanoseconds  		int64
+//															TotNanoseconds	int64
 //														}
 //
 // timeZoneLocation	string	- time zone location must be designated as one of two values.
@@ -1523,13 +1369,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	dtz.Empty()
 	dtz.DateTime 		= dateTime
 	dtz.TimeZone 		= timeZoneDef.CopyOut()
-	dtz.Year 				= dtz.DateTime.Year()
-	dtz.Month				= int(dtz.DateTime.Month())
-	dtz.Day 				= dtz.DateTime.Day()
-	dtz.Hour 				= dtz.DateTime.Hour()
-	dtz.Minute			= dtz.DateTime.Minute()
-	dtz.Second			= dtz.DateTime.Second()
-	dtz.allocateNanoseconds(tDto.TotNanoseconds)
+	dtz.Time				= tDto.CopyOut()
 
 	return nil
 }
@@ -1567,38 +1407,5 @@ func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 // a time.Duration.
 func (dtz *DateTzDto) SubDateTime(t2 time.Time) time.Duration {
 	return dtz.DateTime.Sub(t2)
-}
-
-// allocateNanoseconds - allocates total Nanoseconds to milliseconds, microseconds
-// and nanoseconds.
-func (dtz *DateTzDto) allocateNanoseconds(totNanoseconds int64) {
-
-	if totNanoseconds == 0 {
-		dtz.TotalNanoSecs = 0
-		dtz.Millisecond = 0
-		dtz.Microsecond = 0
-		dtz.Nanosecond = 0
-		return
-	}
-
-	r := int(totNanoseconds)
-
-	dtz.Millisecond = r / int(time.Millisecond)
-
-	r -= dtz.Millisecond * int(time.Millisecond)
-
-	if r == 0 {
-		return
-	}
-
-	dtz.Microsecond = r / int(time.Microsecond)
-
-	r -= dtz.Microsecond * int(time.Microsecond)
-
-	dtz.Nanosecond = r
-
-	dtz.TotalNanoSecs = totNanoseconds
-
-	return
 }
 
