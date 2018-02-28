@@ -245,7 +245,7 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 		int(tDto.DateDays),
 		int(tDto.Hours),
 		int(tDto.Minutes),
-		int(tDto.Minutes),
+		int(tDto.Seconds),
 		int(tDto.TotNanoseconds),
 		loc )
 

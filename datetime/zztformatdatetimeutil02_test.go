@@ -96,9 +96,6 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString04() {
 // Testing Iana Vladivostok Time Zone Conversions
 fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-dtz, err := DateTzDto{}.NewDateTimeElements(2018,02,25,16,28,52,515539300,TzIanaAsiaVladivostok, fmtstr)
-
-assert.Nil(suite.T(), err, "Error from DateTzDto{}.NewDateTimeElements")
 
 // expectedStr := dtz.String() == "2018-02-25 16:28:52.515539300 +1000 +10"
 
@@ -106,7 +103,21 @@ expectedStr := "2018-02-25 16:28:52.515539300 +1000 +1000"
 
 t1, err := suite.DtFmt.ParseDateTimeString(expectedStr, "")
 
-assert.True(suite.T(), t1.Equal(dtz.DateTime),"t1 NOT EQUAL to dtz.DateTime")
+assert.Nil(suite.T(), err, "Error from suite.DtFmt.ParseDateTimeString(expectedStr, \"\")")
+
+/*
+dtz, err := DateTzDto{}.NewDateTimeElements(2018,02,25,16,28,52,515539300,TzIanaAsiaVladivostok, fmtstr)
+
+assert.Nil(suite.T(), err, "Error from DateTzDto{}.NewDateTimeElements")
+
+t2, err := TimeZoneDto{}.New(t1, TzIanaAsiaVladivostok, fmtstr)
+
+assert.Nil(suite.T(), err, "Error from TimeZoneDto{}.New(t1, TzIanaAsiaVladivostok, fmtstr)")
+
+
+s := fmt.Sprintf("t2.TimeOut.DateTime NOT EQUAL to dtz.DateTime. t2.TimeOut.DateTime='%v'  dtz.DateTime='%v'", t2.TimeOut.DateTime.Format(fmtstr), dtz.DateTime.Format(fmtstr))
+assert.True(suite.T(), t2.TimeOut.DateTime.Equal(dtz.DateTime),s)
+*/
 
 actualStr := t1.Format(fmtstr)
 

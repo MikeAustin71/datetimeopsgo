@@ -5,28 +5,43 @@ import (
 	ex "../datetimeexamples"
 	"time"
 	"fmt"
+
 )
 
 func main() {
 
-	t0str := "2017-04-30 22:58:32.515539300 -0500 CDT"
+	loc, _ := time.LoadLocation(dt.TzIanaUsCentral)
+	t1 := time.Date(2014, time.Month(2), 15, 19, 54, 30, 158712300, loc)
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	t0, err := time.Parse(fmtstr, t0str)
+	tDto, err := dt.TimeDto{}.New(2014, 2, 0, 15, 19, 54, 30, 0, 0, 158712300)
 
 	if err != nil {
-		fmt.Printf("Error retruned from time.Parse(fmtstr, t0str). t0str='%v'  Error='%v'\n", t0str, err.Error())
-		return
+		fmt.Printf("Error returned by dt.TimeDto{}.New(year, month, ...). Error=%v \n", err.Error())
 	}
 
-	tDto, err := dt.TimeDto{}.New(2017, 04, 0, 30, 22, 58,32,0,0, 515539300)
+	t2, err := tDto.GetDateTime(dt.TzIanaUsCentral)
+
+	fmt.Println("t1: ", t1.Format(fmtstr))
+	fmt.Println("t2: ", t2.Format(fmtstr))
+
+}
+
+func mainTest001() {
+	t1str := "02/15/2014 19:54:30.158712300 -0600 CST"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t1OutStr := t1.Format(fmtstr)
+
+	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2014, 2,15,19,54,30,158712300, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned from TimeDto{}.New(...)  Error='%v'\n", err.Error())
-		return
+		fmt.Printf("Error returned by DateTzDto{}.NewDateTimeElements(2014, 2,15,19,54,30,158712300, TzUsCentral). Error='%v'\n", err.Error())
 	}
 
-	fmt.Println("Original t0str: ", t0str)
-	fmt.Println("Original t0: ", t0.Format(fmtstr))
-	ex.PrintOutTimeDtoFields(tDto)
+	fmt.Println("t1OutStr: ", t1OutStr)
+	ex.PrintOutDateTzDtoFields(dTzDto)
+
 }
