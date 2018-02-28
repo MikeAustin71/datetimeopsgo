@@ -120,7 +120,7 @@ func (dDto *DurationDto) InitializeTime(tDto TimeDto) {
 	dDto.Years = tDto.Years
 	dDto.Months = tDto.Months
 	dDto.Weeks = tDto.Weeks
-	dDto.Days = tDto.Days
+	dDto.Days = tDto.WeekDays
 	dDto.Hours = tDto.Hours
 	dDto.Minutes = tDto.Minutes
 	dDto.Seconds = tDto.Seconds
@@ -330,10 +330,10 @@ func (du *DurationUtility) Empty() {
 }
 
 // GetYearMthDaysTimeAbbrv - Abbreviated formatting of Years, Months,
-// Days, Hours, Minutes, Seconds, Milliseconds, Microseconds and
+// WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
 // Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
 // Microseconds and Nanoseconds.
-// Abbreviated Years Mths Days Time Duration - Example Return:
+// Abbreviated Years Mths WeekDays Time Duration - Example Return:
 // 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 func (du *DurationUtility) GetYearMthDaysTimeAbbrv() (DurationDto, error) {
 
@@ -388,7 +388,7 @@ func (du *DurationUtility) GetYearMthDaysTimeAbbrv() (DurationDto, error) {
 	}
 
 	if dDto.Days > 0 {
-		daysElement = fmt.Sprintf("%v-Days ", dDto.Days)
+		daysElement = fmt.Sprintf("%v-WeekDays ", dDto.Days)
 	}
 
 	str := fmt.Sprintf("%v-Hours ", dDto.Hours)
@@ -413,8 +413,8 @@ func (du *DurationUtility) GetYearMthDaysTimeAbbrv() (DurationDto, error) {
 // time elements by Years, Months, days, hours, minutes,
 // seconds, milliseconds, microseconds and nanoseconds.
 // Example DisplayStr:
-// Years Mths Days Time Duration - Example Return:
-// 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// Years Mths WeekDays Time Duration - Example Return:
+// 12-Years 3-Months 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 func (du *DurationUtility) GetYearMthDaysTime() (DurationDto, error) {
 
 	ePrefix := "DurationUtility.GetYearMthDaysTime() "
@@ -456,7 +456,7 @@ func (du *DurationUtility) GetYearMthDaysTime() (DurationDto, error) {
 
 	str += fmt.Sprintf("%v-Months ", dDto.Months)
 
-	str += fmt.Sprintf("%v-Days ", dDto.Days)
+	str += fmt.Sprintf("%v-WeekDays ", dDto.Days)
 
 	str += fmt.Sprintf("%v-Hours ", dDto.Hours)
 
@@ -476,10 +476,10 @@ func (du *DurationUtility) GetYearMthDaysTime() (DurationDto, error) {
 }
 
 // GetYearsMthsWeeksTimeAbbrv - Abbreviated formatting of Years, Months,
-// Weeks, Days, Hours, Minutes, Seconds, Milliseconds, Microseconds,
+// Weeks, WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds,
 // Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
 // Microseconds, Nanoseconds are displayed. Example return when Years,
-// Months, Weeks and Days are zero:
+// Months, Weeks and WeekDays are zero:
 // 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 func (du *DurationUtility) GetYearsMthsWeeksTimeAbbrv() (DurationDto, error) {
 
@@ -540,7 +540,7 @@ func (du *DurationUtility) GetYearsMthsWeeksTimeAbbrv() (DurationDto, error) {
 	}
 
 	if dDto.Days > 0 {
-		daysElement = fmt.Sprintf("%v-Days ", dDto.Days)
+		daysElement = fmt.Sprintf("%v-WeekDays ", dDto.Days)
 	}
 
 	hoursElement := fmt.Sprintf("%v-Hours ", dDto.Hours)
@@ -566,7 +566,7 @@ func (du *DurationUtility) GetYearsMthsWeeksTimeAbbrv() (DurationDto, error) {
 }
 
 // GetYearsMthsWeeksTime - Example Return:
-// 12-Years 3-Months 2-Weeks 1-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// 12-Years 3-Months 2-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 func (du *DurationUtility) GetYearsMthsWeeksTime() (DurationDto, error) {
 
 	ePrefix := "DurationUtility.GetYearsMthsWeeksTime() "
@@ -613,7 +613,7 @@ func (du *DurationUtility) GetYearsMthsWeeksTime() (DurationDto, error) {
 
 	weeksElement := fmt.Sprintf("%v-Weeks ", dDto.Weeks)
 
-	daysElement := fmt.Sprintf("%v-Days ", dDto.Days)
+	daysElement := fmt.Sprintf("%v-WeekDays ", dDto.Days)
 
 	hoursElement := fmt.Sprintf("%v-Hours ", dDto.Hours)
 
@@ -638,7 +638,7 @@ func (du *DurationUtility) GetYearsMthsWeeksTime() (DurationDto, error) {
 }
 
 // GetWeeksDaysTime - Example DisplayStr
-// 126-Weeks 1-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// 126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 func (du *DurationUtility) GetWeeksDaysTime() (DurationDto, error) {
 	rd := int64(du.TimeDuration)
 
@@ -667,7 +667,7 @@ func (du *DurationUtility) GetWeeksDaysTime() (DurationDto, error) {
 
 	str += fmt.Sprintf("%v-Weeks ", dDto.Weeks)
 
-	str += fmt.Sprintf("%v-Days ", dDto.Days)
+	str += fmt.Sprintf("%v-WeekDays ", dDto.Days)
 
 	str += fmt.Sprintf("%v-Hours ", dDto.Hours)
 
@@ -690,7 +690,7 @@ func (du *DurationUtility) GetWeeksDaysTime() (DurationDto, error) {
 // GetDaysTime - Returns duration formatted as
 // days, hours, minutes, seconds, milliseconds, microseconds,
 // and nanoseconds.
-// Example: 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// Example: 97-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 func (du *DurationUtility) GetDaysTime() (DurationDto, error) {
 	rd := int64(du.TimeDuration)
 
@@ -715,7 +715,7 @@ func (du *DurationUtility) GetDaysTime() (DurationDto, error) {
 
 	str := ""
 
-	str += fmt.Sprintf("%v-Days ", dDto.Days)
+	str += fmt.Sprintf("%v-WeekDays ", dDto.Days)
 
 	str += fmt.Sprintf("%v-Hours ", dDto.Hours)
 
@@ -779,7 +779,7 @@ func (du *DurationUtility) GetHoursTime() (DurationDto, error) {
 
 // GetYrMthWkDayHrMinSecNanosecs - Returns duration formatted
 // as Year, Month, Day, Hour, Second and Nanoseconds.
-// Example: 3-Years 2-Months 3-Weeks 2-Days 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
+// Example: 3-Years 2-Months 3-Weeks 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
 func (du *DurationUtility) GetYrMthWkDayHrMinSecNanosecs() (DurationDto, error) {
 
 	ePrefix := "DurationUtility.GetYrMthWkDayHrMinSecNanosecs() "
@@ -823,7 +823,7 @@ func (du *DurationUtility) GetYrMthWkDayHrMinSecNanosecs() (DurationDto, error) 
 
 	str += fmt.Sprintf("%v-Weeks ", dDto.Weeks)
 
-	str += fmt.Sprintf("%v-Days ", dDto.Days)
+	str += fmt.Sprintf("%v-WeekDays ", dDto.Days)
 
 	str += fmt.Sprintf("%v-Hours ", dDto.Hours)
 
@@ -890,7 +890,7 @@ func (du *DurationUtility) GetDefaultDuration() (DurationDto, error) {
 }
 
 // GetGregorianYearDuration - Returns a string showing the
-// breakdown of duration by Gregorian Years, Days, Hours, Minutes,
+// breakdown of duration by Gregorian Years, WeekDays, Hours, Minutes,
 // Seconds, Milliseconds, Microseconds and Nanoseconds. Unlike
 // other calculations which use a Standard 365-day year consisting
 // of 24-hour days, a Gregorian Year consists of 365 days, 5-hours,
@@ -931,7 +931,7 @@ func (du *DurationUtility) GetGregorianYearDuration() (DurationDto, error) {
 
 	str := fmt.Sprintf("%v-Gregorian Years ", dDto.Years)
 
-	str += fmt.Sprintf("%v-Days ", dDto.Days)
+	str += fmt.Sprintf("%v-WeekDays ", dDto.Days)
 
 	str += fmt.Sprintf("%v-Hours ", dDto.Hours)
 

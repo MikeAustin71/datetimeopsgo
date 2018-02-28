@@ -1460,7 +1460,7 @@ millisecond, microsecond, nanosecond int, timeZoneLocation, dateTimeFmtStr strin
 //															Years        int64
 //															Months       int64
 //															Weeks        int64
-//															Days         int64
+//															WeekDays         int64
 //															Hours        int64
 //															Minutes      int64
 //															Seconds      int64
@@ -1493,7 +1493,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	if tDto.Years==0 &&
 			tDto.Months==0 &&
 			tDto.Weeks==0 &&
-			tDto.Days == 0 &&
+			tDto.WeekDays == 0 &&
 			tDto.Hours ==0 &&
 			tDto.Minutes == 0 &&
 			tDto.Seconds == 0 &&
@@ -1510,8 +1510,8 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	}
 
 
-	if tDto.Days < 1 || tDto.Days > 31  {
-		return fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. tDto.Days='%v'", tDto.Days)
+	if tDto.WeekDays < 1 || tDto.WeekDays > 31  {
+		return fmt.Errorf(ePrefix + "Error: Input parameter 'day' number is INVALID. Correct range is 1-31. tDto.WeekDays='%v'", tDto.WeekDays)
 	}
 
 
@@ -1537,9 +1537,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v' ", timeZoneLocation, err.Error())
 	}
 
-	t2Dto := tDto.GetTimeWithNoWeeksMilliOrMircoSecs()
-
-	dateTime := time.Date(int(t2Dto.Years), time.Month(int(t2Dto.Months)), int(t2Dto.Days), int(t2Dto.Hours), int(t2Dto.Minutes), int(tDto.Seconds), int(t2Dto.Nanoseconds), loc)
+	dateTime := time.Date(int(tDto.Years), time.Month(int(tDto.Months)), int(tDto.DateDays), int(tDto.Hours), int(tDto.Minutes), int(tDto.Seconds), int(tDto.TotNanoseconds), loc)
 
 	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
 
@@ -1556,7 +1554,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	dtz.Hour 				= dtz.DateTime.Hour()
 	dtz.Minute			= dtz.DateTime.Minute()
 	dtz.Second			= dtz.DateTime.Second()
-	dtz.allocateNanoseconds(tDto.GetTotalNanoSecs())
+	dtz.allocateNanoseconds(tDto.TotNanoseconds)
 
 	return nil
 }

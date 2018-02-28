@@ -96,7 +96,7 @@ func TestDurationUtility_NewStartTimeDuration_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -141,7 +141,7 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -152,7 +152,7 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearsMthsWeeksTime. Error: %v", err.Error())
 	}
 
-	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -174,10 +174,10 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetDaysTime. Error: %v", err.Error())
 	}
 
-	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
-		t.Errorf("Error - Expected Days Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+		t.Errorf("Error - Expected WeekDays Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
 	dDto, err = dur.GetHoursTime()
@@ -196,7 +196,7 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYrMthWkDayHrMinSecNanosecs. Error: %v", err.Error())
 	}
 
-	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds"
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthWkDayHourSecNanosec Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -207,10 +207,10 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetWeeksDaysTime. Error: %v", err.Error())
 	}
 
-	expected = "167-Weeks 1-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
-		t.Errorf("Error - Expected Weeks Days Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+		t.Errorf("Error - Expected Weeks WeekDays Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 }
 
@@ -226,7 +226,7 @@ func TestDurationUtility_NewStartTimeMinusTime_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 
-	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, Days: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
 	dur, err := DurationUtility{}.NewStartTimeMinusTime(t2, timeDto)
 
@@ -252,7 +252,7 @@ func TestDurationUtility_NewStartTimeMinusTime_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -271,7 +271,7 @@ func TestDurationUtility_NewStartTimePlusTime_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 
-	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, Days: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 	dur, err := DurationUtility{}.NewStartTimePlusTime(t1, timeDto)
 
 	if err != nil {
@@ -296,7 +296,7 @@ func TestDurationUtility_NewStartTimePlusTime_01(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -340,7 +340,7 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -351,7 +351,7 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearsMthsWeeksTime. Error: %v", err.Error())
 	}
 
-	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -373,10 +373,10 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetDaysTime. Error: %v", err.Error())
 	}
 
-	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
-		t.Errorf("Error - Expected Days Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+		t.Errorf("Error - Expected WeekDays Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
 	dDto, err = dur.GetHoursTime()
@@ -395,7 +395,7 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYrMthWkDayHrMinSecNanosecs. Error: %v", err.Error())
 	}
 
-	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds"
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthWkDayHourSecNanosec Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -406,10 +406,10 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetWeeksDaysTime. Error: %v", err.Error())
 	}
 
-	expected = "167-Weeks 1-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
-		t.Errorf("Error - Expected Weeks Days Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
+		t.Errorf("Error - Expected Weeks WeekDays Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
 	}
 
 }
@@ -434,7 +434,7 @@ func TestDurationUtility_SetStartEndTimes_02(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYrMthWkDayHrMinSecNanosecs. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 864197532-Nanoseconds"
+	expected := "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 864197532-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthWkDayHourSecNanosec Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -460,7 +460,7 @@ func TestDurationUtility_SetStartEndTimes_03(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearsMthsWeeksTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 864-Milliseconds 197-Microseconds 532-Nanoseconds"
+	expected := "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 864-Milliseconds 197-Microseconds 532-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -503,7 +503,7 @@ func TestDurationUtility_SetStartTimePlusTime(t *testing.T) {
 
 	dur := DurationUtility{}
 
-	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, Days: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 	dur.SetStartTimePlusTime(t1, timeDto)
 
 	if t1OutStr != dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr) {
@@ -524,7 +524,7 @@ func TestDurationUtility_SetStartTimePlusTime(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -545,7 +545,7 @@ func TestDurationUtility_SetStartTimeMinusTime(t *testing.T) {
 
 	dur := DurationUtility{}
 
-	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, Days: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
 	dur.SetStartTimeMinusTime(t2, timeDto)
 
@@ -567,7 +567,7 @@ func TestDurationUtility_SetStartTimeMinusTime(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
@@ -608,7 +608,7 @@ func TestDurationUtility_SetStartTimeDuration(t *testing.T) {
 		t.Errorf("Error from DurationUtility.GetYearMthDaysTime. Error: %v", err.Error())
 	}
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)

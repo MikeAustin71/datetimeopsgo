@@ -27,7 +27,7 @@ func ExampleSetStartEndTimes() {
 		panic(err)
 	}
 
-	expected := "3-Years 2-months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	fmt.Println("        Expected: ", expected)
 	fmt.Println(" YrsMthsDaysTime: ", dDto.DisplayStr)
@@ -43,13 +43,13 @@ func ExampleSetStartEndTimes() {
 
 	fmt.Println()
 
-	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 	dDto, err = dur.GetDaysTime()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("     Expected Days: ", expected)
-	fmt.Println("     Days Duration: ", dDto.DisplayStr)
+	fmt.Println("     Expected WeekDays: ", expected)
+	fmt.Println("     WeekDays Duration: ", dDto.DisplayStr)
 
 	fmt.Println()
 	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
@@ -61,7 +61,7 @@ func ExampleSetStartEndTimes() {
 	fmt.Println("    Hours Duration: ", dDto.DisplayStr)
 
 	fmt.Println()
-	expected = "3-Years 2-Months 2-Weeks 1-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 	dDto, err = dur.GetYrMthWkDayHrMinSecNanosecs()
 	if err != nil {
 		panic(err)
@@ -72,15 +72,15 @@ func ExampleSetStartEndTimes() {
 
 	fmt.Println()
 
-	expected = "167-Weeks 1-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 	dDto, err = dur.GetWeeksDaysTime()
 
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Expected Weeks Days Time: ", expected)
-	fmt.Println("     Weeks Days Duration: ", dDto.DisplayStr)
+	fmt.Println("Expected Weeks WeekDays Time: ", expected)
+	fmt.Println("     Weeks WeekDays Duration: ", dDto.DisplayStr)
 
 }
 
@@ -134,7 +134,7 @@ func ExampleNewstarttimeduration01() {
 	}
 
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != dDto.DisplayStr {
 		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
