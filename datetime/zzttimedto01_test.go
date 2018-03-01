@@ -3,6 +3,7 @@ package datetime
 import (
 	"testing"
 
+	"time"
 )
 
 func TestTimeDto_CopyOut_01(t *testing.T) {
@@ -543,6 +544,98 @@ func TestTimeDto_Equal_02(t *testing.T) {
 	}
 }
 
+func TestTimeDto_GetDateTime_01(t *testing.T) {
+
+	year := 2017
+	month := 4
+	week := 4
+	weekDay := 2
+	dateDay := 30
+	hour := 22
+	minute := 58
+	second := 32
+	millisecond := 0
+	microsecond := 0
+	totNanoSecs := 515539300
+
+	tDto, err := TimeDto{}.New(year, month, 0, dateDay, hour, minute,second,millisecond,microsecond,totNanoSecs)
+
+	millisecond = 515
+	microsecond = 539
+	nanosecond := 300
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
+	}
+
+	t1, err := tDto.GetDateTime(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.GetDateTime(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	loc, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). " +
+							"TzIanaUsCentral='%v'  Error='%v'", TzIanaUsCentral, err.Error())
+	}
+
+	t2 := time.Date(year, time.Month(month), dateDay, hour, minute, second, totNanoSecs, loc )
+
+	if year != tDto.Years {
+		t.Errorf("Error: Expected Years='%v'.  Instead, Years='%v'", year, tDto.Years)
+	}
+
+	if month != tDto.Months {
+		t.Errorf("Error: Expected Months='%v'.  Instead, Months='%v'", month, tDto.Months)
+	}
+
+	if week != tDto.Weeks {
+		t.Errorf("Error: Expected Weeks='%v'.  Instead, Weeks='%v'", week, tDto.Weeks)
+	}
+
+	if weekDay != tDto.WeekDays {
+		t.Errorf("Error: Expected WeekDays='%v'.  Instead, WeekDays='%v'", weekDay, tDto.WeekDays)
+	}
+
+	if dateDay != tDto.DateDays {
+		t.Errorf("Error: Expected Date Days='%v'.  Instead, Date Days='%v'", dateDay, tDto.DateDays)
+	}
+
+	if hour != tDto.Hours {
+		t.Errorf("Error: Expected Hours='%v'.  Instead, Hours='%v'", hour, tDto.Hours)
+	}
+
+	if minute != tDto.Minutes {
+		t.Errorf("Error: Expected Minutes='%v'.  Instead, Minutes='%v'", minute, tDto.Minutes)
+	}
+
+	if second != tDto.Seconds {
+		t.Errorf("Error: Expected Seconds='%v'.  Instead, Seconds='%v'", second, tDto.Seconds)
+	}
+
+	if millisecond != tDto.Milliseconds {
+		t.Errorf("Error: Expected Milliseconds='%v'.  Instead, Milliseconds='%v'", millisecond, tDto.Milliseconds)
+	}
+
+	if microsecond != tDto.Microseconds {
+		t.Errorf("Error: Expected Microseconds='%v'.  Instead, Microseconds='%v'", microsecond, tDto.Microseconds)
+	}
+
+	if nanosecond != tDto.Nanoseconds {
+		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", nanosecond, tDto.Nanoseconds)
+	}
+
+	if totNanoSecs != tDto.TotNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", totNanoSecs, tDto.TotNanoseconds)
+	}
+
+	if !t1.Equal(t2) {
+		t.Errorf("Error: expected t1 to EQUAL t2. They are NOT Equal! t1='%v'   t2='%v'", t1.Format(TzIanaUsCentral), t2.Format(TzIanaUsCentral))
+	}
+
+}
 
 func TestTimeDto_New_01(t *testing.T) {
 	/*
@@ -617,6 +710,24 @@ Total Nanoseconds:  515539300
 
 	if 515539300 != tDto.TotNanoseconds {
 		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	}
+
+}
+
+func TestTimeDto_New_02(t *testing.T) {
+
+	tDto, err := TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0 )
+
+	if err != nil {
+		t.Errorf("Error returned from TimeDto{}.New() Weeks=-8. Error='%v'", err.Error())
+	}
+
+	if -8 != tDto.Weeks {
+		t.Errorf("Error: Expected tDto.Weeks= -8. Instead, tDto.Weeks='%v'", tDto.Weeks)
+	}
+
+	if -56 != tDto.DateDays {
+		t.Errorf("Error: Expected tDto.DateDays= -56. Instead, tDto.DateDays='%v'", tDto.DateDays)
 	}
 
 }

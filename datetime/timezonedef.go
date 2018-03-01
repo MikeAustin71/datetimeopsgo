@@ -186,7 +186,7 @@ func (tzdef *TimeZoneDefDto) IsEmpty() bool {
 	return true
 }
 
-// IsValid - Analyzes the current TimeZoneDefDto instance
+// IsValidDateTime - Analyzes the current TimeZoneDefDto instance
 // to determine validity.
 //
 // This method returns 'true' if the TimeZoneDefDto is

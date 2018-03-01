@@ -318,7 +318,7 @@ func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 	}
 
 	if tzu.TimeIn.TimeZone.IsValid() {
-		t.Error("Expected tzu.TimeInZone.IsValid()=='false'.  Instead, the result was 'true'!")
+		t.Error("Expected tzu.TimeInZone.IsValidDateTime()=='false'.  Instead, the result was 'true'!")
 	}
 
 }

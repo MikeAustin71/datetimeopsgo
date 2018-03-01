@@ -695,7 +695,7 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 func (dtz *DateTzDto) IsEmpty () bool {
 
 	if dtz.Description 			== "" 	&&
-		dtz.Time.IsZero() 						&&
+		dtz.Time.IsEmpty() 						&&
 		dtz.DateTime.IsZero() 				&&
 		dtz.DateTimeFmt 			== "" 	&&
 		dtz.TimeZone.IsEmpty() {
@@ -707,14 +707,14 @@ func (dtz *DateTzDto) IsEmpty () bool {
 	return false
 }
 
-// IsValid - Analyzes the current DateTzDto instance and returns
+// IsValidDateTime - Analyzes the current DateTzDto instance and returns
 // an error if it is found to be INVALID.
 //
 // If the current DateTzDto instance is VALID, this method returns
 // nil.
 func (dtz *DateTzDto) IsValid() error {
 
-	ePrefix := "DateTzDto.IsValid() "
+	ePrefix := "DateTzDto.IsValidDateTime() "
 
 	if dtz.IsEmpty() {
 		return errors.New(ePrefix+"Error: This DateTzDto instance is EMPTY!")
@@ -728,7 +728,7 @@ func (dtz *DateTzDto) IsValid() error {
 		return errors.New(ePrefix + "Error: dtz.TimeZone is EMPTY!")
 	}
 
-	if err := dtz.Time.IsValid(); err != nil {
+	if err := dtz.Time.IsValidDateTime(); err != nil {
 		return fmt.Errorf(ePrefix + "Error: dtz.Time is INVALID. Error='%v'", err.Error())
 	}
 
@@ -1335,7 +1335,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 
 	ePrefix := "DateTzDto.SetFromTimeDto() "
 
-	if tDto.IsZero() {
+	if tDto.IsEmpty() {
 
 		return fmt.Errorf(ePrefix + "Error: All input parameter date time elements equal ZERO!")
 	}
@@ -1344,7 +1344,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	
 	t2Dto.ConvertToAbsoluteValues()
 
-	if err := t2Dto.IsValid(); err != nil {
+	if err := t2Dto.IsValidDateTime(); err != nil {
 		return fmt.Errorf(ePrefix + "Error: Input Parameter tDto (TimeDto) is INVALID. Error='%v'", err.Error())
 	}
 

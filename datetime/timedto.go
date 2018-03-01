@@ -25,6 +25,16 @@ type TimeDto struct {
 													// 	plus remaining Nanoseconds
 }
 
+/*
+func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto, timeZoneLocation string) error {
+
+	if err := tDto.IsValidDateTime(); err!=nil  {
+
+	}
+
+}
+*/
+
 // CopyOut - Creates a new TimeDto instance
 // which precisely duplicates the current TimeDto
 // instance, and returns it to the calling function.
@@ -218,10 +228,11 @@ func (tDto *TimeDto) Equal(tDto2 TimeDto) bool {
 func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 	ePrefix := "TimeDto.GetDateTime() "
 
-	err := tDto.IsValid()
+	err := tDto.IsValidDateTime()
 
 	if err != nil {
-		return time.Time{}, fmt.Errorf("Error returned by this tDto.IsValid(). Error='%v'", err.Error())
+		return time.Time{}, fmt.Errorf("This TimeDto is NOT a valid DateTime. " +
+			"Error returned by this tDto.IsValidDateTime(). Error='%v'", err.Error())
 	}
 
 	if len(timeZoneLocation) == 0 {
@@ -252,19 +263,43 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 	return dTime, nil
 }
 
-// IsValid - Returns an error if the current tDto instance is invalid.
+
+
+// IsEmpty - Returns 'true' if all data fields in the current
+// TimeDto instance are equal to zero or equal to their
+// uninitialized values.
+func (tDto *TimeDto) IsEmpty() bool {
+
+	if tDto.Years 				== 0 &&
+		tDto.Months					== 0 &&
+		tDto.Weeks					== 0 &&
+		tDto.WeekDays				== 0 &&
+		tDto.DateDays				== 0 &&
+		tDto.Hours					== 0 &&
+		tDto.Minutes				== 0 &&
+		tDto.Seconds				== 0 &&
+		tDto.Milliseconds		== 0 &&
+		tDto.Microseconds		== 0 &&
+		tDto.Nanoseconds		== 0 &&
+		tDto.TotNanoseconds	== 0 {
+		return true
+	}
+
+	return false
+}
+
+// IsValidDateTime - Returns an error if the current tDto instance is invalid.
 // Otherwise, if successful, this method returns 'nil'.
-func (tDto *TimeDto) IsValid() error {
+func (tDto *TimeDto) IsValidDateTime() error {
 
-	ePrefix := "TimeDto.IsValid() "
+	ePrefix := "TimeDto.IsValidDateTime() "
 
-	if tDto.Months > 31 {
+	if tDto.Months > 12 {
 		return fmt.Errorf(ePrefix + "Error: Months value is INVALID! tDto.Months='%v'", tDto.Months)
 	}
 
 	if tDto.Weeks > 4 {
 		return fmt.Errorf(ePrefix + "Error: Weeks value is INVALID! tDto.Weeks='%v'", tDto.Weeks)
-
 	}
 
 	if tDto.WeekDays > 6 {
@@ -306,30 +341,6 @@ func (tDto *TimeDto) IsValid() error {
 	return nil
 }
 
-
-// IsZero - Returns 'true' if all data fields in the current
-// TimeDto instance are equal to zero or their uninitialized
-// values.
-func (tDto *TimeDto) IsZero() bool {
-
-	if tDto.Years 					== 0 &&
-			tDto.Months					== 0 &&
-			tDto.Weeks					== 0 &&
-			tDto.WeekDays				== 0 &&
-			tDto.DateDays				== 0 &&
-			tDto.Hours					== 0 &&
-			tDto.Minutes				== 0 &&
-			tDto.Seconds				== 0 &&
-			tDto.Milliseconds		== 0 &&
-			tDto.Microseconds		== 0 &&
-			tDto.Nanoseconds		== 0 &&
-			tDto.TotNanoseconds	== 0 {
-				return true
-	}
-
-	return false
-}
-
 // New - Returns a new TimeDto instance based on time element
 // input parameters.
 //
@@ -349,11 +360,6 @@ func (tDto TimeDto) New(years, months, weeks, days, hours, minutes,
 		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned by t2Dto.SetTimeElements(...)  Error='%v'", err.Error())
 	}
 
-	err = t2Dto.IsValid()
-
-	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned by t2Dto.IsValid()! Error='%v'", err.Error())
-	}
 
 	return t2Dto, nil
 }
@@ -376,10 +382,10 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned from t2Dto.SetFromDateTime(dateTime). Error='%v'", err.Error())
 	}
 
-	err = t2Dto.IsValid()
+	err = t2Dto.IsValidDateTime()
 
 	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned by t2Dto.IsValid()! Error='%v'", err.Error())
+		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned by t2Dto.IsValidDateTime()! Error='%v'", err.Error())
 	}
 
 	return t2Dto, nil
@@ -460,11 +466,6 @@ nanoseconds int)  error {
 		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateTotalNanoseconds(totalNanoSecs). Error='%v'", err.Error())
 	}
 
-	err = tDto.IsValid()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by t2Dto.IsValid()! Error='%v'", err.Error())
-	}
 
 	return nil
 }
@@ -500,10 +501,10 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 			"Error='%v'", err.Error())
 	}
 
-	err = tDto.IsValid()
+	err = tDto.IsValidDateTime()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.IsValid()! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by tDto.IsValidDateTime()! Error='%v'", err.Error())
 	}
 
 	return nil
@@ -544,8 +545,8 @@ func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 			"Error='%v'", err.Error())
 	}
 
-	if err := tDto.IsValid(); err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.IsValid()! Error='%v'", err.Error())
+	if err := tDto.IsValidDateTime(); err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDto.IsValidDateTime()! Error='%v'", err.Error())
 	}
 
 	return nil
@@ -556,7 +557,14 @@ func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 // is stored in the Weeks and WeekDays data fields of the current
 // TimeDto instance.
 func (tDto *TimeDto) allocateWeeksAndDays(totalDays int) error {
-	ePrefix := "TimeDto.allocateWeeksAndDays() "
+
+	sign := 1
+
+	if totalDays < 0 {
+		sign = -1
+		totalDays *= -1
+	}
+
 	tDto.Weeks 		= 0
 	tDto.WeekDays = 0
 	tDto.DateDays = totalDays
@@ -566,15 +574,14 @@ func (tDto *TimeDto) allocateWeeksAndDays(totalDays int) error {
 		totalDays -= tDto.Weeks * 7
 	}
 
-	if tDto.Weeks > 4 {
-		return fmt.Errorf(ePrefix + "Error: The number of weeks is INVALID. weeks='%v'", tDto.Weeks)
-	}
-
 	tDto.WeekDays = totalDays
 
-	if tDto.WeekDays > 31 {
-		return fmt.Errorf(ePrefix + "Error: The number of days is INVALID. days='%v'", tDto.WeekDays)
+	if sign == -1 {
+		tDto.Weeks 		*= sign
+		tDto.WeekDays *= sign
+		tDto.DateDays *= sign
 	}
+
 
 	return nil
 }
@@ -586,7 +593,12 @@ func (tDto *TimeDto) allocateWeeksAndDays(totalDays int) error {
 // TimeDto instance.
 func (tDto *TimeDto) allocateSeconds(totalSeconds int) error {
 
-	ePrefix := "TimeDto.allocateSeconds() "
+	sign := 1
+
+	if totalSeconds < 0 {
+		sign = -1
+		totalSeconds *= -1
+	}
 
 	tDto.Hours = 0
 	tDto.Minutes = 0
@@ -597,25 +609,23 @@ func (tDto *TimeDto) allocateSeconds(totalSeconds int) error {
 		totalSeconds -= tDto.Hours * 3600
 	}
 
-	if tDto.Hours > 24 {
-		return fmt.Errorf(ePrefix + "Error: The number of Hours is INVALID. Hours='%v'", tDto.Hours)
-	}
-
 
 	if totalSeconds >= 60 {
 		tDto.Minutes = totalSeconds / 60
 		totalSeconds -= tDto.Minutes * 60
 	}
 
-	if tDto.Minutes > 59 {
-		return fmt.Errorf(ePrefix + "Error: The number of Minutes is INVALID. Minutes='%v'", tDto.Minutes)
-	}
 
 	tDto.Seconds = totalSeconds
 
-	if tDto.Seconds > 59 {
-		return fmt.Errorf(ePrefix + "Error: The number of Seconds is INVALID. Secondes='%v'", tDto.Seconds)
+	if sign == -1 {
+
+		tDto.Hours 		*= sign
+		tDto.Minutes 	*= sign
+		tDto.Seconds 	*= sign
+
 	}
+
 
 	return nil
 }
@@ -624,7 +634,13 @@ func (tDto *TimeDto) allocateSeconds(totalSeconds int) error {
 // TimeDto instance data fields: milliseconds, microseconds and
 // nanoseconds.
 func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int) error {
-	ePrefix := "TimeDto.allocateTotalNanoseconds() "
+
+	sign := 1
+
+	if totalNanoSeconds < 0 {
+		sign = -1
+		totalNanoSeconds *= -1
+	}
 
 	tDto.Milliseconds = 0
 	tDto.Microseconds = 0
@@ -636,24 +652,23 @@ func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int) error {
 		totalNanoSeconds -= tDto.Milliseconds * int(time.Millisecond)
 	}
 
-	if tDto.Milliseconds > int(MilliSecondsPerSecond - 1) {
-		return fmt.Errorf(ePrefix + "Error: Milliseconds is INVALID. Milliseconds='%v'", tDto.Milliseconds)
-	}
 
 	if totalNanoSeconds >= int(time.Microsecond) {
 		tDto.Microseconds = totalNanoSeconds / int(time.Microsecond)
 		totalNanoSeconds -= tDto.Microseconds * int(time.Microsecond)
 	}
 
-	if tDto.Microseconds > int(MicroSecondsPerMilliSecond - 1) {
-		return fmt.Errorf(ePrefix + "Error: Microseconds is INVALID. Microseconds='%v'", tDto.Microseconds)
-	}
-
 	tDto.Nanoseconds = totalNanoSeconds
 
-	if tDto.Nanoseconds > int(NanoSecondsPerMicroSecond - 1) {
-		return fmt.Errorf(ePrefix + "Error: Nanoseconds is INVALID. Nanoseconds= %v", tDto.Nanoseconds)
+	if sign == -1 {
+
+		tDto.Milliseconds 		*= sign
+		tDto.Microseconds 		*= sign
+		tDto.Nanoseconds 			*= sign
+		tDto.TotNanoseconds 	*= sign
+
 	}
+
 
 	return nil
 }

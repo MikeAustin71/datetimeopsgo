@@ -362,7 +362,7 @@ func (ns *NumStrUtility) ParseNumString(str string) (NumStrDto, error) {
 		nDto.NumStrOut += "." + string(nDto.AbsFracRunes)
 	}
 
-	nDto.IsValid = true
+	nDto.IsValidDateTime = true
 
 	return nDto, nil
 	*/
