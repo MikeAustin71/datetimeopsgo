@@ -81,7 +81,7 @@ Total Nanoseconds:  515539300
 	}
 
 }
-/*
+
 func TestTimeDto_NewF1romDateTime_01(t *testing.T) {
 
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
@@ -95,5 +95,14 @@ func TestTimeDto_NewF1romDateTime_01(t *testing.T) {
 
 	tDto, err := TimeDto{}.NewFromDateTime(dTzDto.DateTime)
 
+	dt2, err := tDto.GetDateTime(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.GetDateTime(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	if !dt2.Equal(dTzDto.DateTime) {
+		t.Error("Error: Expected dt2 datetime to EQUAL dTzDto.DateTime. It did NOT!")
+	}
+
 }
-*/
