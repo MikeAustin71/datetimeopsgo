@@ -385,6 +385,22 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 	return t2Dto, nil
 }
 
+// NewFromDateTzDto - Creates and returns a new TimeDto instance based on
+// a DateTzDto input parameter.
+func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
+	ePrefix := "TimeDto.NewFromDateTzDto() "
+
+	tDto2 := TimeDto{}
+
+	err := tDto2.SetFromDateTzDto(dTzDto)
+
+	if err != nil {
+		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned by tDto2.SetFromDateTzDto(dTzDto). Error='%v'", err.Error())
+	}
+
+	return tDto2, nil
+}
+
 // SetTimeElements - Sets the value of date fields for the current TimeDto instance
 // based on time element input paramters.
 //
@@ -438,7 +454,6 @@ nanoseconds int)  error {
 		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateSeconds(totalSeconds). Error='%v'", err.Error())
 	}
 
-
 	err = tDto.allocateTotalNanoseconds(totalNanoSecs)
 
 	if err != nil {
@@ -470,7 +485,7 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 	err := tDto.allocateWeeksAndDays(dateTime.Day())
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error= '%v'", err.Error())
+		return fmt.Errorf(ePrefix + "tDto.allocateWeeksAndDays(dTzDto.DateTime.Day()). Error= '%v'", err.Error())
 	}
 
 	tDto.Hours = dateTime.Hour()
@@ -493,6 +508,47 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 
 	return nil
 	
+}
+
+// SetFromDateTzDto - Sets the data field values of the current TimeDto
+// instance based on a DateTzDto input parameter.
+func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
+
+	ePrefix := "TimeDto.SetFromDateTzDto() "
+
+	if dTzDto.IsEmpty() {
+		return errors.New(ePrefix + "Error: Input parameter 'dTzDto' (DateTzDto) is EMPTY!")
+	}
+
+	if err:= dTzDto.IsValid(); err!=nil {
+		return fmt.Errorf(ePrefix + "Error: Input parameter 'dTzDto' (DateTzDto) is INVALID! Error='%v'", err.Error())
+	}
+
+	tDto.Empty()
+
+	tDto.Years = dTzDto.DateTime.Year()
+	tDto.Months = int(dTzDto.DateTime.Month())
+	err := tDto.allocateWeeksAndDays(dTzDto.DateTime.Day())
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "tDto.allocateWeeksAndDays(dTzDto.DateTime.Day()). Error= '%v'", err.Error())
+	}
+
+	tDto.Hours = dTzDto.DateTime.Hour()
+	tDto.Minutes = dTzDto.DateTime.Minute()
+	tDto.Seconds = dTzDto.DateTime.Second()
+
+	if err := tDto.allocateTotalNanoseconds(dTzDto.DateTime.Nanosecond()); err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by tDto.allocateTotalNanoseconds(int64(dateTime.Nanosecond())). " +
+			"Error='%v'", err.Error())
+	}
+
+	if err := tDto.IsValid(); err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDto.IsValid()! Error='%v'", err.Error())
+	}
+
+	return nil
 }
 
 // allocateWeeksAndDays - This method receives a total number of
