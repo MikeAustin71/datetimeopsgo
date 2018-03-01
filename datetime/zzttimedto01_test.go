@@ -106,3 +106,24 @@ func TestTimeDto_NewF1romDateTime_01(t *testing.T) {
 	}
 
 }
+
+func TestTimeDto_NewFromDateTzDto_01(t *testing.T) {
+
+	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
+	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
+
+	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32,515539300, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). Error='%v'", err.Error())
+	}
+
+	tDto, err := TimeDto{}.NewFromDateTzDto(dTzDto)
+
+	t2, err := tDto.GetDateTime(TzIanaUsCentral)
+
+	if !dTzDto.DateTime.Equal(t2) {
+		t.Error("Error: Expected t2 to EQUAL dTzDto. It did NOT!")
+	}
+
+}
