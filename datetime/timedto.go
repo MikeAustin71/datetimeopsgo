@@ -10,18 +10,18 @@ import (
 // TimeDto - used for transmitting
 // time elements.
 type TimeDto struct {
-	Years          int64 // Number of Years
-	Months         int64 // Number of Months
-	Weeks          int64 // Number of Weeks
-	WeekDays       int64 // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-	DateDays       int64 // Total Number of Days. Weeks x 7 plus WeekDays
-	Hours          int64 // Number of Hours.
-	Minutes        int64 // Number of Minutes
-	Seconds        int64 // Number of Seconds
-	Milliseconds   int64 // Number of Milliseconds
-	Microseconds   int64 // Number of Microseconds
-	Nanoseconds    int64 // Remaining Nanoseconds after Milliseconds & Microseconds
-	TotNanoseconds int64 // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+	Years          int // Number of Years
+	Months         int // Number of Months
+	Weeks          int // Number of Weeks
+	WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+	DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+	Hours          int // Number of Hours.
+	Minutes        int // Number of Minutes
+	Seconds        int // Number of Seconds
+	Milliseconds   int // Number of Milliseconds
+	Microseconds   int // Number of Microseconds
+	Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+	TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 													// 	plus remaining Nanoseconds
 }
 
@@ -287,19 +287,19 @@ func (tDto *TimeDto) IsValid() error {
 		return fmt.Errorf(ePrefix + "Error: Seconds value is INVALID! tDto.Seconds='%v'", tDto.Seconds)
 	}
 
-	if tDto.Milliseconds > MilliSecondsPerSecond - 1 {
+	if tDto.Milliseconds > int(MilliSecondsPerSecond - 1) {
 		return fmt.Errorf(ePrefix + "Error: Milliseconds value is INVALID! tDto.Milliseconds='%v'", tDto.Milliseconds)
 	}
 
-	if tDto.Microseconds > MicroSecondsPerMilliSecond - 1 {
+	if tDto.Microseconds > int(MicroSecondsPerMilliSecond - 1) {
 		return fmt.Errorf(ePrefix + "Error: Microseconds value is INVALID! tDto.Microseconds='%v'", tDto.Microseconds)
 	}
 
-	if tDto.Nanoseconds > NanoSecondsPerMicroSecond - 1 {
+	if tDto.Nanoseconds > int(NanoSecondsPerMicroSecond - 1) {
 		return fmt.Errorf(ePrefix + "Error: Nanoseconds value is INVALID! tDto.Nanoseconds='%v'", tDto.Nanoseconds)
 	}
 
-	if tDto.TotNanoseconds > SecondNanoseconds - 1 {
+	if tDto.TotNanoseconds > int(SecondNanoseconds - 1) {
 		return fmt.Errorf(ePrefix + "Error: Total Nanoseconds value is INVALID! tDto.TotNanoseconds='%v'", tDto.TotNanoseconds)
 	}
 
@@ -412,20 +412,20 @@ nanoseconds int)  error {
 		return fmt.Errorf(ePrefix + "Error: Input parameter 'months' is INVALID! months='%v'", months)
 	}
 
-	weeksAndDays := int64((weeks * 7) + days)
+	weeksAndDays := (weeks * 7) + days
 
-	totalNanoSecs := int64(milliseconds) * int64(time.Millisecond)
-	totalNanoSecs += int64(microseconds) * int64(time.Microsecond)
-	totalNanoSecs += int64(nanoseconds)
+	totalNanoSecs := milliseconds * int(time.Millisecond)
+	totalNanoSecs += microseconds * int(time.Microsecond)
+	totalNanoSecs += nanoseconds
 
-	totalSeconds := int64(hours) * int64(3600)
-	totalSeconds += int64(minutes) * int64(60)
-	totalSeconds += int64(seconds)
+	totalSeconds := hours * 3600
+	totalSeconds += minutes * 60
+	totalSeconds += seconds
 
 	tDto.Empty()
 
-	tDto.Years = int64(years)
-	tDto.Months = int64(months)
+	tDto.Years = years
+	tDto.Months = months
 	err := tDto.allocateWeeksAndDays(weeksAndDays)
 
 	if err != nil {
@@ -465,19 +465,19 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 
 	tDto.Empty()
 	
-	tDto.Years = int64(dateTime.Year())
-	tDto.Months = int64(dateTime.Month())
-	err := tDto.allocateWeeksAndDays(int64(dateTime.Day()))
+	tDto.Years = dateTime.Year()
+	tDto.Months = int(dateTime.Month())
+	err := tDto.allocateWeeksAndDays(dateTime.Day())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error= '%v'", err.Error())
 	}
 
-	tDto.Hours = int64(dateTime.Hour())
-	tDto.Minutes = int64(dateTime.Minute())
-	tDto.Seconds = int64(dateTime.Second())
+	tDto.Hours = dateTime.Hour()
+	tDto.Minutes = dateTime.Minute()
+	tDto.Seconds = dateTime.Second()
 
-	err = tDto.allocateTotalNanoseconds(int64(dateTime.Nanosecond()))
+	err = tDto.allocateTotalNanoseconds(dateTime.Nanosecond())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix +
@@ -499,7 +499,7 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 // days and allocates those days to Weeks and WeekDays. The result
 // is stored in the Weeks and WeekDays data fields of the current
 // TimeDto instance.
-func (tDto *TimeDto) allocateWeeksAndDays(totalDays int64) error {
+func (tDto *TimeDto) allocateWeeksAndDays(totalDays int) error {
 	ePrefix := "TimeDto.allocateWeeksAndDays() "
 	tDto.Weeks 		= 0
 	tDto.WeekDays = 0
@@ -528,7 +528,7 @@ func (tDto *TimeDto) allocateWeeksAndDays(totalDays int64) error {
 // allocate Hours, Minutes and Seconds. The result is stored
 // the Hours, Minutes and Seconds data fields of the current
 // TimeDto instance.
-func (tDto *TimeDto) allocateSeconds(totalSeconds int64) error {
+func (tDto *TimeDto) allocateSeconds(totalSeconds int) error {
 
 	ePrefix := "TimeDto.allocateSeconds() "
 
@@ -567,7 +567,7 @@ func (tDto *TimeDto) allocateSeconds(totalSeconds int64) error {
 // allocateTotalNanoseconds - Allocates total nanoseconds to current
 // TimeDto instance data fields: milliseconds, microseconds and
 // nanoseconds.
-func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int64) error {
+func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int) error {
 	ePrefix := "TimeDto.allocateTotalNanoseconds() "
 
 	tDto.Milliseconds = 0
@@ -575,27 +575,27 @@ func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int64) error {
 	tDto.Nanoseconds = 0
 	tDto.TotNanoseconds = totalNanoSeconds
 
-	if totalNanoSeconds >= int64(time.Millisecond) {
-		tDto.Milliseconds = totalNanoSeconds / int64(time.Millisecond)
-		totalNanoSeconds -= tDto.Milliseconds * int64(time.Millisecond)
+	if totalNanoSeconds >= int(time.Millisecond) {
+		tDto.Milliseconds = totalNanoSeconds / int(time.Millisecond)
+		totalNanoSeconds -= tDto.Milliseconds * int(time.Millisecond)
 	}
 
-	if tDto.Milliseconds > MilliSecondsPerSecond - 1 {
+	if tDto.Milliseconds > int(MilliSecondsPerSecond - 1) {
 		return fmt.Errorf(ePrefix + "Error: Milliseconds is INVALID. Milliseconds='%v'", tDto.Milliseconds)
 	}
 
-	if totalNanoSeconds >= int64(time.Microsecond) {
-		tDto.Microseconds = totalNanoSeconds / int64(time.Microsecond)
-		totalNanoSeconds -= tDto.Microseconds * int64(time.Microsecond)
+	if totalNanoSeconds >= int(time.Microsecond) {
+		tDto.Microseconds = totalNanoSeconds / int(time.Microsecond)
+		totalNanoSeconds -= tDto.Microseconds * int(time.Microsecond)
 	}
 
-	if tDto.Microseconds > MicroSecondsPerMilliSecond - 1 {
+	if tDto.Microseconds > int(MicroSecondsPerMilliSecond - 1) {
 		return fmt.Errorf(ePrefix + "Error: Microseconds is INVALID. Microseconds='%v'", tDto.Microseconds)
 	}
 
 	tDto.Nanoseconds = totalNanoSeconds
 
-	if tDto.Nanoseconds > NanoSecondsPerMicroSecond - 1 {
+	if tDto.Nanoseconds > int(NanoSecondsPerMicroSecond - 1) {
 		return fmt.Errorf(ePrefix + "Error: Nanoseconds is INVALID. Nanoseconds= %v", tDto.Nanoseconds)
 	}
 

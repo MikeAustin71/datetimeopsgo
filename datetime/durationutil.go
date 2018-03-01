@@ -117,16 +117,16 @@ func (dDto *DurationDto) CalcTotalNanoSecs() int64 {
 // from input parameter type TimeDto.
 func (dDto *DurationDto) InitializeTime(tDto TimeDto) {
 	dDto.EmptyTimeValues()
-	dDto.Years = tDto.Years
-	dDto.Months = tDto.Months
-	dDto.Weeks = tDto.Weeks
-	dDto.Days = tDto.WeekDays
-	dDto.Hours = tDto.Hours
-	dDto.Minutes = tDto.Minutes
-	dDto.Seconds = tDto.Seconds
-	dDto.Milliseconds = tDto.Milliseconds
-	dDto.Microseconds = tDto.Microseconds
-	dDto.Nanoseconds = tDto.Nanoseconds
+	dDto.Years = int64(tDto.Years)
+	dDto.Months = int64(tDto.Months)
+	dDto.Weeks = int64(tDto.Weeks)
+	dDto.Days = int64(tDto.WeekDays)
+	dDto.Hours = int64(tDto.Hours)
+	dDto.Minutes = int64(tDto.Minutes)
+	dDto.Seconds = int64(tDto.Seconds)
+	dDto.Milliseconds = int64(tDto.Milliseconds)
+	dDto.Microseconds = int64(tDto.Microseconds)
+	dDto.Nanoseconds = int64(tDto.Nanoseconds)
 }
 
 // Copy - Makes a deep copy of the current
