@@ -82,7 +82,7 @@ Total Nanoseconds:  515539300
 
 }
 /*
-func TestTimeDto_NewFromDateTime_01(t *testing.T) {
+func TestTimeDto_NewF1romDateTime_01(t *testing.T) {
 
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
