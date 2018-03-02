@@ -844,17 +844,10 @@ func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string)(DateTzDto, e
 //																	"America/Denver"
 //																	"America/Los_Angeles"
 //																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
 //
-// dateTimeFmtStr string		- A date time format string which will be used
-//															to format and display 'dateTime'. Example:
-//															"2006-01-02 15:04:05.000000000 -0700 MST"
-//
-//														If 'dateTimeFmtStr' is submitted as an
-//															'empty string', a default date time format
-//															string will be applied. The default date time
-//															format string is:
-//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -1016,6 +1009,56 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 
 // NewTimeDto - Receives input parameters type TimeDto, 'timeZoneLocation' and 'dateTimeFormatStr'.
 // These parameters are used to construct and return a new DateTzDto instance.
+//
+//	Input Parameters
+//	================
+//
+//	tDto						TimeDto	- Time values used to construct the DateTzDto instance
+//			type TimeDto struct {
+//				Years          int // Number of Years
+//				Months         int // Number of Months
+//				Weeks          int // Number of Weeks
+//				WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//				DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//				Hours          int // Number of Hours.
+//				Minutes        int // Number of Minutes
+//				Seconds        int // Number of Seconds
+//				Milliseconds   int // Number of Milliseconds
+//				Microseconds   int // Number of Microseconds
+//				Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//				TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//													 // 	plus remaining Nanoseconds
+//			}
+//
+//
+// timeZoneLocation	string	- time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
 func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeFormatStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.NewTimeDto() "
@@ -1136,6 +1179,10 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 //																	"America/Denver"
 //																	"America/Los_Angeles"
 //																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -1158,11 +1205,6 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (error) {
 
 	ePrefix := "DateTzDto.SetFromDateTimeElements() "
 
-
-	if len(timeZoneLocation) == 0 {
-		return errors.New(ePrefix + "Error: Input parameter 'timeZoneLocation' is an EMPTY STRING! 'timeZoneLocation' is required!")
-	}
-
 	dtz.Empty()
 
 	var err error
@@ -1173,7 +1215,9 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (error) {
 		return fmt.Errorf(ePrefix + "Error returned from TimeDto{}.New(year, month, ...). Error='%v'", err.Error())
 	}
 
-	dtz.DateTime, err	= dtz.Time.GetDateTime(timeZoneLocation)
+	dtzLoc := dtz.preProcessTimeZoneLocation(timeZoneLocation)
+
+	dtz.DateTime, err	= dtz.Time.GetDateTime(dtzLoc)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by dtz.Time.GetDateTime(timeZoneLocation). timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
@@ -1407,5 +1451,19 @@ func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 // a time.Duration.
 func (dtz *DateTzDto) SubDateTime(t2 time.Time) time.Duration {
 	return dtz.DateTime.Sub(t2)
+}
+
+
+func (dtz *DateTzDto) preProcessTimeZoneLocation(timeZoneLocation string) string {
+
+	if len(timeZoneLocation) == 0 {
+		return TzIanaUTC
+	}
+
+	if strings.ToLower(timeZoneLocation) == "local" {
+		return "Local"
+	}
+
+	return timeZoneLocation
 }
 

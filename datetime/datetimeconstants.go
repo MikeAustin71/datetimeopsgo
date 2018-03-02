@@ -272,7 +272,10 @@ const (
 	// identifier
 	TzIanaZulu = "Etc/UCT"
 
-	// TzIanaUTC
+	// TzIanaGMT - Alias for UTC
+	TzIanaGMT	= "Etc/UCT"
+
+	// TzIanaUTC - Alias for UTC
 	TzIanaUTC = "Etc/UCT"
 
 

@@ -534,7 +534,6 @@ func TestTimeDto_Equal_02(t *testing.T) {
 		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
 	}
 
-
 	t2Dto := tDto.CopyOut()
 
 	tDto.Nanoseconds = 301
