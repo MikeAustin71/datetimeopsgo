@@ -10,7 +10,21 @@ import (
 
 func main() {
 
-	mainTest003()
+	loc, _ := time.LoadLocation(dt.TzIanaUsCentral)
+	t1 := time.Date(2014, time.Month(2), 15, 19, 54, 30, 158712300, loc)
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	tDto, err := dt.TimeDto{}.New(2014, 2, 0, 15, 19, 54, 30, 0, 0, 158712300)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeDto{}.New(year, month, ...). Error=%v \n", err.Error())
+	}
+
+	t2, err := tDto.GetDateTime(dt.TzIanaUsCentral)
+
+	fmt.Println("t1: ", t1.Format(fmtstr))
+	fmt.Println("t2: ", t2.Format(fmtstr))
+
 
 }
 

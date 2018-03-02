@@ -249,7 +249,7 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	frDto.FileReadEndTime = time.Now()
 	frDto.NumberOfFormatMapKeysGenerated = len(dtf.FormatMap)
 	du := DurationUtility{}
-	err = du.SetStartEndTimes(frDto.FileReadStartTime, frDto.FileReadEndTime)
+	err = du.SetStartEndTimes(frDto.FileReadStartTime, frDto.FileReadEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimes() - %v", err.Error())
@@ -320,7 +320,7 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 
 	du := DurationUtility{}
 
-	err = du.SetStartEndTimes(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime)
+	err = du.SetStartEndTimes(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error Setting Start End Times for Duration Calculation Error: %v", err.Error())
@@ -398,7 +398,7 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName stri
 
 	outputDto.FileWriteEndTime = time.Now()
 	du := DurationUtility{}
-	err = du.SetStartEndTimes(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime)
+	err = du.SetStartEndTimes(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		return outputDto, fmt.Errorf("Error Calculating Duration with SetStartEndTimes() Error: %v", err.Error())

@@ -16,7 +16,7 @@ func TestDurationUtility_GetYearMthDaysTimeAbbrv(t *testing.T) {
 
 	du := DurationUtility{}
 
-	du.SetStartEndTimes(t2, t1)
+	du.SetStartEndTimes(t2, t1, TzIanaUsCentral,FmtDateTimeYrMDayFmtStr)
 
 	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
 
@@ -43,7 +43,7 @@ func TestDurationUtility_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 	du := DurationUtility{}
 
-	du.SetStartEndTimes(t2, t1)
+	du.SetStartEndTimes(t2, t1, TzIanaUsCentral,FmtDateTimeYrMDayFmtStr)
 
 	expected := "0-Hours 1-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
 
@@ -115,7 +115,7 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
 
-	dur, err := DurationUtility{}.NewStartEndTimes(t1, t2)
+	dur, err := DurationUtility{}.NewStartEndTimes(t1, t2, TzIanaUsCentral,FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationUtility{}.NewStartEndTimes(t1, t2). Error='%v'", err.Error())
@@ -318,7 +318,7 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 
 	dur := DurationUtility{}
 
-	dur.SetStartEndTimes(t1, t2)
+	dur.SetStartEndTimes(t1, t2, TzIanaUsCentral,FmtDateTimeYrMDayFmtStr)
 
 	if t1OutStr != dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr) {
 		t.Errorf("Error: Expected DurationUtility.StartTimeTzu of %v. Instead, got %v ", t1OutStr, dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr))
@@ -426,7 +426,7 @@ func TestDurationUtility_SetStartEndTimes_02(t *testing.T) {
 
 	dur := DurationUtility{}
 
-	dur.SetStartEndTimes(t1, t2)
+	dur.SetStartEndTimes(t1, t2, TzIanaUsCentral,FmtDateTimeYrMDayFmtStr)
 
 	dDto, err := dur.GetYrMthWkDayHrMinSecNanosecs()
 
@@ -453,7 +453,7 @@ func TestDurationUtility_SetStartEndTimes_03(t *testing.T) {
 
 	dur := DurationUtility{}
 
-	dur.SetStartEndTimes(t2, t1)
+	dur.SetStartEndTimes(t2, t1, TzIanaUsCentral,FmtDateTimeYrMDayFmtStr)
 
 	dDto, err := dur.GetYearsMthsWeeksTime()
 	if err != nil {
@@ -476,7 +476,7 @@ func TestDurationUtility_SetStartEndTimes_04(t *testing.T) {
 
 	dur := DurationUtility{}
 
-	dur.SetStartEndTimes(t1, t1)
+	dur.SetStartEndTimes(t1, t1, TzIanaUsCentral,FmtDateTimeYrMDayFmtStr)
 
 	dDto, err := dur.GetYearsMthsWeeksTime()
 	if err != nil {
