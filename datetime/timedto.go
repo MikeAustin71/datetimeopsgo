@@ -7,8 +7,16 @@ import (
 	"strings"
 )
 
-// TimeDto - used for transmitting
-// time elements.
+// TimeDto - used for transmitting time elements.
+// TimeDto data fields are designed to store one of two
+// time components:
+//		(1)	A specific point in time (date time).
+//									or
+//		(2) Incremental time which is useful in adding or subtracting
+//					time values. Note that this structure does not track
+//					time location or time zone. For a fully supported date time
+//					structure, review the DateTzDto located in source file 'datetzdto.go'
+//
 type TimeDto struct {
 	Years          int // Number of Years
 	Months         int // Number of Months
