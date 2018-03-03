@@ -809,7 +809,7 @@ func (du DurationUtility) GetDurationFromMinutes(minutes int64) time.Duration {
 	return time.Duration(minutes) * time.Minute
 
 }
-// TODO - Add preprocess methods for Time Zone Location and Date Time Format string
+
 // NewStartEndTimes - Returns a New DurationUtility based on two input
 // parameters, startDateTime and endDateTime.
 //
@@ -1146,12 +1146,16 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time,
 		return errors.New(ePrefix + "Error - Start Time is Zero!")
 	}
 
+	tzLoc := du.preProcessTimeZoneLocation(timeZoneLocation)
+	dtFormat := du.preProcessDateFormatStr(dateTimeFmtStr)
+
+
 	x := int64(duration)
 
 	du.Empty()
 
 	if x < 0 {
-		eTimeTzu, err := TimeZoneDto{}.New(startDateTime,timeZoneLocation, dateTimeFmtStr)
+		eTimeTzu, err := TimeZoneDto{}.New(startDateTime,tzLoc, dtFormat)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime,\"Local\"). startDateTime='%v'\nError='%v'", startDateTime, err.Error())
@@ -1159,7 +1163,7 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time,
 
 		du.EndTimeTzu = eTimeTzu.CopyOut()
 
-		du.StartTimeTzu, err = TimeZoneDto{}.NewAddDuration(eTimeTzu, duration, FmtDateTimeYrMDayFmtStr)
+		du.StartTimeTzu, err = TimeZoneDto{}.NewAddDuration(eTimeTzu, duration, dtFormat)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(eTimeTzu, duration). Error='%v'", err.Error())
@@ -1175,13 +1179,13 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time,
 
 		var err error
 
-		du.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime,timeZoneLocation, dateTimeFmtStr)
+		du.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime,tzLoc, dtFormat)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned from TimeZoneDto{}.New(startDateTime,\"Local\") Error='%v'", err.Error())
 		}
 
-		du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, duration, dateTimeFmtStr)
+		du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, duration, dtFormat)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix + "Error returned from TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, duration). Error='%v'", err.Error())
@@ -1318,6 +1322,9 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time,
 		return errors.New(ePrefix + "Error: Input parameter 'startDateTime' is ZERO VALUE")
 	}
 
+	tzLoc := du.preProcessTimeZoneLocation(timeZoneLocation)
+	dtFormat := du.preProcessDateFormatStr(dateTimeFmtStr)
+
 	du.Empty()
 
 	minusTimeDto.ConvertToNegativeValues()
@@ -1325,7 +1332,7 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time,
 	dur := DurationDto{}
 	var err error
 
-	dur.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime, timeZoneLocation, dateTimeFmtStr)
+	dur.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
@@ -1357,7 +1364,7 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time,
 	tDur := time.Duration(ns)
 
 
-	sTime, err := TimeZoneDto{}.NewAddDuration(dur.StartTimeTzu, tDur, dateTimeFmtStr)
+	sTime, err := TimeZoneDto{}.NewAddDuration(dur.StartTimeTzu, tDur, dtFormat)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dur.StartTimeTzu, tDur). Error='%v'", err.Error())
@@ -1443,6 +1450,9 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, plusTim
 		return errors.New(ePrefix + "Error: Input parameter 'startDateTime' is ZERO VALUE!")
 	}
 
+	tzLoc := du.preProcessTimeZoneLocation(timeZoneLocation)
+	dtFormat := du.preProcessDateFormatStr(dateTimeFmtStr)
+
 	du.Empty()
 
 	plusTimeDto.ConvertToAbsoluteValues()
@@ -1450,7 +1460,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, plusTim
 	var err error
 	dur := DurationDto{}
 
-	dur.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime, timeZoneLocation, dateTimeFmtStr)
+	dur.StartTimeTzu, err = TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, \"Local\"). Error='%v'", err.Error())
@@ -1479,7 +1489,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, plusTim
 	du.StartTimeTzu = dur.StartTimeTzu.CopyOut()
 	du.TimeDuration = time.Duration(dur.CalcTotalNanoSecs())
 
-	du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration, dateTimeFmtStr)
+	du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration, dtFormat)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration). Error='%v'", err.Error())
