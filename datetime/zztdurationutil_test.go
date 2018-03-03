@@ -70,7 +70,7 @@ func TestDurationUtility_NewStartTimeDuration_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur, err := DurationUtility{}.NewStartTimeDuration(t1, t12Dur)
+	dur, err := DurationUtility{}.NewStartTimeDuration(t1, t12Dur, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationUtility{}.NewStartTimeDuration(t1, t12Dur). Error='%v'", err.Error())
@@ -228,7 +228,7 @@ func TestDurationUtility_NewStartTimeMinusTime_01(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur, err := DurationUtility{}.NewStartTimeMinusTime(t2, timeDto)
+	dur, err := DurationUtility{}.NewStartTimeMinusTime(t2, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationUtility{}.NewStartTimeMinusTime(t2, timeDto). Error='%v'", err.Error())
@@ -272,7 +272,7 @@ func TestDurationUtility_NewStartTimePlusTime_01(t *testing.T) {
 
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur, err := DurationUtility{}.NewStartTimePlusTime(t1, timeDto)
+	dur, err := DurationUtility{}.NewStartTimePlusTime(t1, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationUtility{}.NewStartTimePlusTime(t1, timeDto). Error='%v'", err.Error())
@@ -504,7 +504,7 @@ func TestDurationUtility_SetStartTimePlusTime(t *testing.T) {
 	dur := DurationUtility{}
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur.SetStartTimePlusTime(t1, timeDto)
+	dur.SetStartTimePlusTime(t1, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if t1OutStr != dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr))
@@ -547,7 +547,7 @@ func TestDurationUtility_SetStartTimeMinusTime(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur.SetStartTimeMinusTime(t2, timeDto)
+	dur.SetStartTimeMinusTime(t2, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if t1OutStr != dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr))
@@ -588,7 +588,7 @@ func TestDurationUtility_SetStartTimeDuration(t *testing.T) {
 
 	dur := DurationUtility{}
 
-	dur.SetStartTimeDuration(t1, t12Dur)
+	dur.SetStartTimeDuration(t1, t12Dur, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if t1OutStr != dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.", t1OutStr, dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr))
