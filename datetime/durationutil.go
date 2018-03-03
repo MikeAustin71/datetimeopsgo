@@ -1031,6 +1031,21 @@ ePrefix := "DurationUtility.NewStartTimeMinusTime() "
 //
 // plusTimeDto		  TimeDto - Provides time values which will be subtracted from
 //														'startDateTime' in order to calculate duration.
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			// 	plus remaining Nanoseconds
+//									}
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -1188,7 +1203,7 @@ func (du *DurationUtility) SetStartTimeDuration(startDateTime time.Time,
 		du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, duration, dtFormat)
 
 		if err != nil {
-			return fmt.Errorf(ePrefix + "Error returned from TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, duration). Error='%v'", err.Error())
+			return fmt.Errorf(ePrefix + "Error returned from TimeZoneDto{}.NewAddDuration(du.StartTimeDateTz, duration). Error='%v'", err.Error())
 		}
 
 		du.TimeDuration = duration
@@ -1302,15 +1317,15 @@ func (du *DurationUtility) SetStartEndTimes(startDateTime,
 // SetStartTimeMinusTime - Calculate duration values based on a Starting Date Time and
 // time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
 // in the 'timeDto' parameter. The time values in the 'timeDto' parameter are subtracted
-// from 'StartTimeTzu'.
+// from 'StartTimeDateTz'.
 //
 // Time values in the 'timeDto' parameter are first converted to negative
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time.
 //
-// As a result. true values for StartTimeTzu, EndTimeTzu and
+// As a result. true values for StartTimeDateTz, EndTimeDateTz and
 // TimeDuration are stored in the DurationUtility data structure.
-// In other words, the input 'startDateTime' becomes the EndTimeTzu and
+// In other words, the input 'startDateTime' becomes the EndTimeDateTz and
 // 'startDateTime' is calculated.
 //
 func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time,
@@ -1367,7 +1382,7 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time,
 	sTime, err := TimeZoneDto{}.NewAddDuration(dur.StartTimeTzu, tDur, dtFormat)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dur.StartTimeTzu, tDur). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dur.StartTimeDateTz, tDur). Error='%v'", err.Error())
 	}
 
 	du.StartTimeTzu = sTime.CopyOut()
@@ -1389,12 +1404,12 @@ func (du *DurationUtility) SetStartTimeMinusTime(startDateTime time.Time,
 // SetStartTimePlusTime - Calculate duration values based on a Starting Date Time and
 // time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
 // in the 'times' parameter. The 'timeDto' parameter is added to
-// 'StartTimeTzu'.
+// 'StartTimeDateTz'.
 //
 // Values in the 'timeDto' parameter are automatically converted to positive
-// numeric values before being added to 'StartTimeTzu'.
+// numeric values before being added to 'StartTimeDateTz'.
 //
-// True values for StartTimeTzu, EndTimeTzu and TimeDuration are
+// True values for StartTimeDateTz, EndTimeDateTz and TimeDuration are
 // then stored in the DurationUtility data structure.
 //
 // Input Parameters:
@@ -1492,7 +1507,7 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, plusTim
 	du.EndTimeTzu, err = TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration, dtFormat)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(du.StartTimeTzu, du.TimeDuration). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(du.StartTimeDateTz, du.TimeDuration). Error='%v'", err.Error())
 	}
 
 	err = du.IsDurationBaseDataValid()
@@ -1505,9 +1520,9 @@ func (du *DurationUtility) SetStartTimePlusTime(startDateTime time.Time, plusTim
 }
 
 // IsDurationBaseDataValid - Validates DurationUtility.TimeDuration
-// DurationUtility.StartTimeTzu and DurationUtility.EndTimeTzu.
-// Note: if DurationUtility.StartTimeTzu and DurationUtility.EndTimeTzu
-// have zero values, DurationUtility.StartTimeTzu will be defaulted to
+// DurationUtility.StartTimeDateTz and DurationUtility.EndTimeDateTz.
+// Note: if DurationUtility.StartTimeDateTz and DurationUtility.EndTimeDateTz
+// have zero values, DurationUtility.StartTimeDateTz will be defaulted to
 // time.Now().UTC()
 func (du *DurationUtility) IsDurationBaseDataValid() error {
 
@@ -1518,13 +1533,13 @@ func (du *DurationUtility) IsDurationBaseDataValid() error {
 	err := du.StartTimeTzu.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error. StartTimeTzu is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error. StartTimeDateTz is INVALID! Error='%v'", err.Error())
 	}
 
 	err = du.EndTimeTzu.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error. EndTimeTzu is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error. EndTimeDateTz is INVALID! Error='%v'", err.Error())
 	}
 
 	if rd < 0 {
@@ -1561,7 +1576,7 @@ func (du *DurationUtility) calcYearsFromDuration(dDto *DurationDto) error {
 		yearDateTimeTzu, err = TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu,i,0,0, FmtDateTimeYrMDayFmtStr)
 
 		if err != nil {
-			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu,i,0,0). Error='%v'", err.Error())
+			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeDateTz,i,0,0). Error='%v'", err.Error())
 		}
 
 	}
@@ -1595,7 +1610,7 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) error {
 	yearDateTimeTzu, err := TimeZoneDto{}.NewAddDuration(dDto.StartTimeTzu,time.Duration(dDto.YearsNanosecs),FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dDto.StartTimeTzu,time.Duration(dDto.YearsNanosecs)). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dDto.StartTimeDateTz,time.Duration(dDto.YearsNanosecs)). Error='%v'", err.Error())
 	}
 
 	mthDateTimeTzu := yearDateTimeTzu.CopyOut()
@@ -1621,7 +1636,7 @@ func (du *DurationUtility) calcMonthsFromDuration(dDto *DurationDto) error {
 		mthDateTimeTzu, err = TimeZoneDto{}.NewAddDate(yearDateTimeTzu, 0, int(dDto.Months), 0, FmtDateTimeYrMDayFmtStr)
 
 		if err != nil {
-			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu, int(dDto.Years), int(dDto.Months), 0). Error='%v'", err.Error())
+			return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeDateTz, int(dDto.Years), int(dDto.Months), 0). Error='%v'", err.Error())
 		}
 
 		duration, err := mthDateTimeTzu.Sub(yearDateTimeTzu)
@@ -1740,13 +1755,13 @@ func (du *DurationUtility) calcFromYears(dDto *DurationDto) error {
 	yearDateTimeTzu, err := TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu, int(dDto.Years), 0, 0, FmtDateTimeYrMDayFmtStr )
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeTzu, int(dDto.Years), 0, 0 ). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDate(dDto.StartTimeDateTz, int(dDto.Years), 0, 0 ). Error='%v'", err.Error())
 	}
 
 	duration, err := yearDateTimeTzu.Sub(dDto.StartTimeTzu)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by yearDateTimeTzu.Sub(dDto.StartTimeTzu). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by yearDateTimeTzu.Sub(dDto.StartTimeDateTz). Error='%v'", err.Error())
 	}
 
 	dDto.YearsNanosecs = int64(duration)
@@ -1763,7 +1778,7 @@ func (du *DurationUtility) calcFromMonths(dDto *DurationDto) error {
 															time.Duration(dDto.YearsNanosecs), FmtDateTimeYrMDayFmtStr)
 	
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dDto.StartTimeTzu,	time.Duration(dDto.YearsNanosecs)). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.NewAddDuration(dDto.StartTimeDateTz,	time.Duration(dDto.YearsNanosecs)). Error='%v'", err.Error())
 	}
 
 	mthEndDateTimeTzu, err := TimeZoneDto{}.NewAddDate (mthStartDateTimeTzu,0, int(dDto.Months), 0, FmtDateTimeYrMDayFmtStr)
