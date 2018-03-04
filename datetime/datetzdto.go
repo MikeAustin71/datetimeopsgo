@@ -749,6 +749,109 @@ func (dtz *DateTzDto) IsValid() error {
 	return nil
 }
 
+// MinusTimeDto - Creates and returns a new DateTzDto by subtracting a TimeDto
+// from the value of the current DateTzDto Instance. 
+//
+// Input Parameters
+// ================
+//
+// minusTimeDto	TimeDto 	- A TimeDto instance consisting of time components 
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be subtracted from the date time value
+//													of the current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) MinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
+	
+	ePrefix := "DateTzDto.MinusTimeDto() "
+	
+	minusTimeDto.ConvertToNegativeValues()
+	
+	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
+															minusTimeDto.Months, 
+																minusTimeDto.DateDays)
+	
+	dt2 := dt1.Add(time.Duration(minusTimeDto.GetTotalTimeNanoseconds()))
+	
+	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
+	
+	if err != nil {
+		return DateTzDto{},
+		fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " + 
+			" Error='%v'", err.Error())
+	}
+	
+	return dtz2, nil	
+}
+
+// MinusTimeDtoToThis - Modifies the current DateTzDto instance by subtracting a TimeDto
+// from the value of the current DateTzDto Instance. 
+//
+// Input Parameters
+// ================
+//
+// minusTimeDto	TimeDto 	- A TimeDto instance consisting of time components 
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be subtracted from the date time value
+//													of the current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) MinusTimeDtoToThis(minusTimeDto TimeDto) error {
+	
+	ePrefix := "DateTzDto.MinusTimeDto() "
+
+	minusTimeDto.ConvertToNegativeValues()
+	
+	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
+															minusTimeDto.Months, 
+																minusTimeDto.DateDays)
+	
+	dt2 := dt1.Add(time.Duration(minusTimeDto.GetTotalTimeNanoseconds()))
+	
+	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
+	
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " + 
+			" Error='%v'", err.Error())
+	}
+	
+	dtz.CopyIn(dtz2)
+	
+	return nil	
+}
+
 // New - returns a new DateTzDto instance based on a time.Time ('dateTime')
 // input parameter.
 //
@@ -1074,6 +1177,110 @@ func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeF
 	dtz2.SetDateTimeFmt(dateTimeFormatStr)
 
 	return dtz2, nil
+}
+
+
+// PlusTimeDto - Creates and returns a new DateTzDto by adding a TimeDto
+// to the value of the current DateTzDto Instance.
+//
+// Input Parameters
+// ================
+//
+// plusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be added to the date time value of the
+//													current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) PlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.PlusTimeDto() "
+
+	plusTimeDto.ConvertToAbsoluteValues()
+
+	dt1 := dtz.DateTime.AddDate(plusTimeDto.Years,
+		plusTimeDto.Months,
+		plusTimeDto.DateDays)
+
+	dt2 := dt1.Add(time.Duration(plusTimeDto.GetTotalTimeNanoseconds()))
+
+	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
+				" Error='%v'", err.Error())
+	}
+
+	return dtz2, nil
+}
+
+// PlusTimeDtoToThis - Modifies the current DateTzDto instance by adding a TimeDto
+// to the value of the current DateTzDto Instance.
+//
+// Input Parameters
+// ================
+//
+// plusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be added to the date time value of the
+//													current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) PlusTimeDtoToThis(plusTimeDto TimeDto) error {
+
+	ePrefix := "DateTzDto.PlusTimeDto() "
+
+	plusTimeDto.ConvertToAbsoluteValues()
+
+	dt1 := dtz.DateTime.AddDate(plusTimeDto.Years,
+		plusTimeDto.Months,
+		plusTimeDto.DateDays)
+
+	dt2 := dt1.Add(time.Duration(plusTimeDto.GetTotalTimeNanoseconds()))
+
+	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
+			" Error='%v'", err.Error())
+	}
+
+	dtz.CopyIn(dtz2)
+
+	return nil
 }
 
 

@@ -1031,6 +1031,7 @@ ePrefix := "DurationUtility.NewStartTimeMinusTime() "
 //
 // plusTimeDto		  TimeDto - Provides time values which will be subtracted from
 //														'startDateTime' in order to calculate duration.
+//
 //									type TimeDto struct {
 //										Years          int // Number of Years
 //										Months         int // Number of Months

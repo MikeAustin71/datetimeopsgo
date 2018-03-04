@@ -335,7 +335,27 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 	return dTime, nil
 }
 
+// GetTotalTimeNanoseconds - Computes the total nanoseconds
+// associated with Hours, Minutes, Seconds, Milliseconds, Microseconds
+// and Nanoseconds contained in the current TimeDto instance. This
+// is useful for the time.Add(duration) function.
+//
+func (tDto *TimeDto) GetTotalTimeNanoseconds() int64 {
 
+	tot := int64(time.Hour) * int64(tDto.Hours)
+
+	tot += int64(time.Minute) * int64(tDto.Minutes)
+
+	tot += int64(time.Second) * int64(tDto.Seconds)
+
+	tot += int64(time.Millisecond) * int64(tDto.Milliseconds)
+
+	tot += int64(time.Microsecond) * int64(tDto.Microseconds)
+
+	tot += int64(tDto.Nanoseconds)
+
+	return tot
+}
 
 // IsEmpty - Returns 'true' if all data fields in the current
 // TimeDto instance are equal to zero or equal to their
