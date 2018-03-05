@@ -57,7 +57,7 @@ const (
 	// to zero. 
 	TDurCalcTypeCUMHOURS
 
-	// TDurCalcTypeCUMMINTUES - Cumulative Minutes calculations. Years, months, weeks, days
+	// TDurCalcTypeCUMMINUTES - Cumulative Minutes calculations. Years, months, weeks, days
 	// and hours are ignored. Years, months weeks, days, hours and minutes are consolidated
 	// and counted as cumulative Minutes.
 	//
@@ -65,7 +65,7 @@ const (
 	// broken down by cumulative minutes plus seconds, milliseconds, microseconds
 	// and nanoseconds.  Data Fields for years, months, weeks, days and hours are always set
 	// to zero.
-	TDurCalcTypeCUMMINTUES
+	TDurCalcTypeCUMMINUTES
 
 	// TDurCalcTypeGregorianYrs - Allocates Years, Months, Weeks, WeekDays, Date Days, Hours
 	// Minutes, Seconds, Milliseconds, Microseconds, Nanoseconds. However, the Years allocation
@@ -343,7 +343,7 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 	
 }
 
-// GetYearMthDaysTimeAbbrv - Abbreviated formatting of Years, Months,
+// GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
 // Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
 // Microseconds and Nanoseconds.
@@ -352,7 +352,7 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 //
 // 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
-func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrv() string {
+func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -388,7 +388,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrv() string {
 
 }
 
-// GetYearMthDaysTime - Calculates Duration and breakdowns
+// GetYearMthDaysTimeStr - Calculates Duration and breakdowns
 // time elements by Years, Months, Date Days, hours, minutes,
 // seconds, milliseconds, microseconds and nanoseconds.
 //
@@ -402,7 +402,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrv() string {
 // If Years, Months and Days have a zero value, only the time components will be displayed. 
 // Example:
 //		13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (tDur *TimeDurationDto) GetYearMthDaysTime() string {
+func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -438,7 +438,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTime() string {
 	return str
 }
 
-// GetYearsMthsWeeksTimeAbbrv - Abbreviated formatting of Years, Months,
+// GetYearsMthsWeeksTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // Weeks, WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds,
 // Nanoseconds. 
 // 
@@ -448,7 +448,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTime() string {
 //
 // 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
-func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrv() string {
+func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -487,7 +487,7 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrv() string {
 	return str
 }
 
-// GetYearsMthsWeeksTime - Example Return:
+// GetYearsMthsWeeksTimeStr - Example Return:
 // 12-Years 3-Months 2-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 // At a minimum only Weeks, WeekDays, Hours, Minutes, Seconds,
@@ -497,7 +497,7 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrv() string {
 //
 // 3-Weeks 2-WeekDays 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
-func (tDur *TimeDurationDto) GetYearsMthsWeeksTime() string {
+func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 			return "0-Nanoseconds"
@@ -532,9 +532,9 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTime() string {
 	return str
 }
 
-// GetWeeksDaysTime - Example DisplayStr
+// GetWeeksDaysTimeStr - Example DisplayStr
 // 126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (tDur *TimeDurationDto) GetWeeksDaysTime() string {
+func (tDur *TimeDurationDto) GetWeeksDaysTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -565,7 +565,7 @@ func (tDur *TimeDurationDto) GetWeeksDaysTime() string {
 	return str
 }
 
-// GetDaysTime - Returns duration formatted as
+// GetDaysTimeStr - Returns duration formatted as
 // days, hours, minutes, seconds, milliseconds, microseconds,
 // and nanoseconds. Years, months and weeks are always excluded and 
 // included in cumulative 'days'.
@@ -574,7 +574,7 @@ func (tDur *TimeDurationDto) GetWeeksDaysTime() string {
 // 
 // 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
-func (tDur *TimeDurationDto) GetDaysTime() string {
+func (tDur *TimeDurationDto) GetDaysTimeStr() string {
 	
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -604,10 +604,10 @@ func (tDur *TimeDurationDto) GetDaysTime() string {
 	return str
 }
 
-// GetHoursTime - Returns duration formatted as hours,
+// GetHoursTimeStr - Returns duration formatted as hours,
 // minutes, seconds, milliseconds, microseconds, nanoseconds.
 // Example: 152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (tDur *TimeDurationDto) GetHoursTime() string {
+func (tDur *TimeDurationDto) GetHoursTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -634,10 +634,10 @@ func (tDur *TimeDurationDto) GetHoursTime() string {
 	return str
 }
 
-// GetYrMthWkDayHrMinSecNanosecs - Returns duration formatted
+// GetYrMthWkDayHrMinSecNanosecsStr - Returns duration formatted
 // as Year, Month, Day, Hour, Second and Nanoseconds.
 // Example: 3-Years 2-Months 3-Weeks 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
-func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecs() string {
+func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -664,10 +664,42 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecs() string {
 	return str
 }
 
-// GetNanosecondsDuration - Returns duration formatted as
-// Nonoseconds. DisplayStr shows Nanoseconds expressed as a
+// GetCumMinutesStr - Returns duration formatted as cumulative
+// minutes.
+//
+// Example:
+//	"527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
+//
+func (tDur *TimeDurationDto) GetCumMinutesStr() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMINUTES)
+
+	str := ""
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str
+
+}
+
+// GetNanosecondsDurationStr - Returns duration formatted as
+// Nanoseconds. DisplayStr shows Nanoseconds expressed as a
 // 64-bit integer value.
-func (tDur *TimeDurationDto) GetNanosecondsDuration() string {
+func (tDur *TimeDurationDto) GetNanosecondsDurationStr() string {
 	
 	str := fmt.Sprintf("%v-Nanoseconds", int64(tDur.TimeDuration))
 
@@ -675,11 +707,11 @@ func (tDur *TimeDurationDto) GetNanosecondsDuration() string {
 
 }
 
-// GetDefaultDuration returns duration formatted
+// GetDefaultDurationStr - Returns duration formatted
 // as nanoseconds. The DisplayStr shows the default
 // string value for duration.
 // Example: 61h26m46.864197832s
-func (tDur *TimeDurationDto) GetDefaultDuration() string {
+func (tDur *TimeDurationDto) GetDefaultDurationStr() string {
 
 	return fmt.Sprintf("%v", tDur.TimeDuration)
 }
@@ -1748,6 +1780,9 @@ func (tDur *TimeDurationDto) calcTimeDurationAllocations(calcType TDurCalcType) 
 	case TDurCalcTypeCUMHOURS :
 		return tDur.calcTypeCUMHours()
 
+	case TDurCalcTypeCUMMINUTES:
+		return tDur.calcTypeCUMMINUTES()
+
 	case TDurCalcTypeGregorianYrs :
 		return tDur.calcTypeGregorianYears()
 
@@ -1954,8 +1989,8 @@ func (tDur *TimeDurationDto) calcTypeCUMDays() error {
 	return nil
 }
 
-// calcTypeCUMHours - Calculates Cumulative Hours. Years, months, weeks, week days and
-// date days and hours are consolidated in included in cumulative hours. Values for years,
+// calcTypeCUMHours - Calculates Cumulative Hours. Years, months, weeks, week days,
+// date days and hours are consolidated and included in cumulative hours. Values for years,
 // months, weeks, week days and date days are ignored and set to zero. Time duration is
 // allocated over cumulative hours plus minutes, seconds, milliseconds, microseconds and
 // nanoseconds.
@@ -1966,6 +2001,10 @@ func (tDur *TimeDurationDto) calcTypeCUMHours() error {
 	tDur.EmptyTimeFields()
 
 	tDur.CalcType = TDurCalcTypeCUMHOURS
+
+	if tDur.TimeDuration == 0 {
+		return nil
+	}
 
 	err := tDur.calcHoursMinSecs()
 
@@ -1987,6 +2026,62 @@ func (tDur *TimeDurationDto) calcTypeCUMHours() error {
 
 	return nil
 }
+
+// calcTypeCUMMINUTES - Calculates Cumulative Minutes. Years, months, weeks, week days,
+// date days, hours and minutes are consolidated and included in cumulative minutes.
+// Values for years, months, weeks, week days, date days and hours are ignored and set
+// to zero. Time duration is allocated over cumulative minutes plus seconds, milliseconds,
+// microseconds and nanoseconds.
+func (tDur *TimeDurationDto) calcTypeCUMMINUTES() error {
+
+	ePrefix := "TimeDurationDto.calcTypeCUMHours() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeCUMMINUTES
+
+	if tDur.TimeDuration == 0 {
+		return nil
+	}
+
+	rd := int64(tDur.TimeDuration)
+
+	if rd >= MinuteNanoSeconds {
+		tDur.Minutes = rd / MinuteNanoSeconds
+		tDur.MinutesNanosecs = tDur.Minutes * MinuteNanoSeconds
+		rd -= tDur.MinutesNanosecs
+	}
+
+	if rd >= SecondNanoseconds {
+		tDur.Seconds = rd / SecondNanoseconds
+		tDur.SecondsNanosecs = tDur.Seconds * SecondNanoseconds
+		rd -= tDur.SecondsNanosecs
+	}
+
+	if rd >= MilliSecondNanoseconds {
+		tDur.Milliseconds = rd / MilliSecondNanoseconds
+		tDur.MillisecondsNanosecs = tDur.Milliseconds * MilliSecondNanoseconds
+		rd -= tDur.MillisecondsNanosecs
+	}
+
+	if rd >= MicroSecondNanoseconds {
+		tDur.Microseconds = rd / MicroSecondNanoseconds
+		tDur.MillisecondsNanosecs = tDur.Microseconds * MicroSecondNanoseconds
+		rd -= tDur.MicrosecondsNanosecs
+	}
+
+	tDur.Nanoseconds = rd
+
+	err := tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	return nil
+
+}
+
 
 // calcTypeGregorianYears - Allocates Years using the number of nanoseconds in a
 // standard or average GregorianYear
@@ -2256,8 +2351,13 @@ func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
 	}
 
-	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs +
-					tDur.DateDaysNanosecs
+	if tDur.DateDays > 0 {
+		rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs +
+			tDur.DateDaysNanosecs
+	} else {
+		rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs +
+			tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
+	}
 
 	tDur.Hours 						= 0
 	tDur.HoursNanosecs 		= 0
@@ -2313,8 +2413,16 @@ func (tDur *TimeDurationDto) calcNanoseconds() error {
 		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
 	}
 
-	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs +
-					tDur.DateDaysNanosecs + tDur.HoursNanosecs +
+
+	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs
+
+	if tDur.DateDaysNanosecs > 0 {
+		rd -= tDur.DateDaysNanosecs
+	} else {
+		rd -= tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
+	}
+
+	rd -= tDur.HoursNanosecs +
 					tDur.MinutesNanosecs + tDur.SecondsNanosecs
 					
 	tDur.Milliseconds 					= 0
@@ -2326,7 +2434,7 @@ func (tDur *TimeDurationDto) calcNanoseconds() error {
 	if rd >= MilliSecondNanoseconds {
 		tDur.Milliseconds = rd / MilliSecondNanoseconds
 		tDur.MillisecondsNanosecs = MilliSecondNanoseconds * tDur.Milliseconds
-		rd -= tDur.MicrosecondsNanosecs
+		rd -= tDur.MillisecondsNanosecs
 	}
 
 	if rd >= MicroSecondNanoseconds {
@@ -2365,13 +2473,19 @@ func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
 		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
 	}
 	
-	tDur.DateDaysNanosecs = 0
+	tDur.TotDateNanoseconds = 0
 	tDur.TotTimeNanoseconds = 0
 	tDur.TotSubSecNanoseconds = 0
 
-	tDur.DateDaysNanosecs = tDur.YearsNanosecs
-	tDur.DateDaysNanosecs += tDur.MonthsNanosecs
-	tDur.TotDateNanoseconds += tDur.DateDaysNanosecs
+	tDur.TotDateNanoseconds = tDur.YearsNanosecs
+	tDur.TotDateNanoseconds += tDur.MonthsNanosecs
+
+	if tDur.DateDaysNanosecs == 0  {
+		tDur.TotDateNanoseconds += tDur.WeeksNanosecs
+		tDur.TotDateNanoseconds += tDur.WeekDaysNanosecs
+	} else {
+		tDur.TotDateNanoseconds += tDur.DateDaysNanosecs
+	}
 
 	tDur.TotSubSecNanoseconds = tDur.MillisecondsNanosecs
 	tDur.TotSubSecNanoseconds += tDur.MicrosecondsNanosecs

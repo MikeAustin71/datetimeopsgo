@@ -72,7 +72,7 @@ func TestTDurCalcTypeString_005(t *testing.T) {
 
 func TestTDurCalcTypeString_006(t *testing.T) {
 
-	r := TDurCalcTypeCUMMINTUES
+	r := TDurCalcTypeCUMMINUTES
 	expectedStr := "CumMinutesCalc"
 
 	s := r.String()
@@ -182,12 +182,12 @@ func TestTDurCalcTypeValue_006(t *testing.T) {
 
 	var i int
 
-	r = TDurCalcTypeCUMMINTUES
+	r = TDurCalcTypeCUMMINUTES
 
 	i = int(r)
 
 	if i != 5 {
-		t.Errorf("Expected 'TDurCalcTypeCUMMINTUES' value = 5. Instead, got %v", i)
+		t.Errorf("Expected 'TDurCalcTypeCUMMINUTES' value = 5. Instead, got %v", i)
 	}
 
 }
