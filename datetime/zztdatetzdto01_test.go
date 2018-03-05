@@ -469,8 +469,8 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 		t.Errorf("Expected Nanosecond='584'.  Instead Nanosecond='%v' ", dTzDto.Time.Nanoseconds)
 	}
 
-	if 38175584 != dTzDto.Time.TotNanoseconds {
-		t.Errorf("Expected Total Nanoseconds Number='38175584'.  Instead Total Nanoseconds Number='%v'", dTzDto.Time.TotNanoseconds)
+	if 38175584 != dTzDto.Time.TotSubSecNanoseconds {
+		t.Errorf("Expected Total Nanoseconds Number='38175584'.  Instead Total Nanoseconds Number='%v'", dTzDto.Time.TotSubSecNanoseconds)
 	}
 
 }

@@ -634,7 +634,7 @@ func PrintOutTimeDtoFields(tDto dt.TimeDto) {
 	fmt.Println("     Milliseconds: ", tDto.Milliseconds)
 	fmt.Println("     Microseconds: ", tDto.Microseconds)
 	fmt.Println("      Nanoseconds: ", tDto.Nanoseconds)
-	fmt.Println("Total Nanoseconds: ", tDto.TotNanoseconds)
+	fmt.Println("Total Nanoseconds: ", tDto.TotSubSecNanoseconds)
 	fmt.Println("========================================")
 
 }

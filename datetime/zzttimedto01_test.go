@@ -60,8 +60,8 @@ func TestTimeDto_CopyOut_01(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 300, tDto.Nanoseconds)
 	}
 
-	if 515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	if 515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
 
@@ -127,8 +127,8 @@ func TestTimeDto_CopyIn_01(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 300, tDto.Nanoseconds)
 	}
 
-	if 515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	if 515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
 }
@@ -187,8 +187,8 @@ func TestTimeDto_ConvertToNegativeValues(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", -300, tDto.Nanoseconds)
 	}
 
-	if -515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", -515539300, tDto.TotNanoseconds)
+	if -515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", -515539300, tDto.TotSubSecNanoseconds)
 	}
 
 }
@@ -246,8 +246,8 @@ func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", -300, tDto.Nanoseconds)
 	}
 
-	if -515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", -515539300, tDto.TotNanoseconds)
+	if -515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", -515539300, tDto.TotSubSecNanoseconds)
 	}
 
 	tDto.ConvertToAbsoluteValues()
@@ -296,8 +296,8 @@ func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 300, tDto.Nanoseconds)
 	}
 
-	if 515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	if 515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
 }
@@ -354,8 +354,8 @@ func TestTimeDto_Empty(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 300, tDto.Nanoseconds)
 	}
 
-	if 515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	if 515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
 
@@ -409,8 +409,8 @@ func TestTimeDto_Empty(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 0, tDto.Nanoseconds)
 	}
 
-	if 0 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 0, tDto.TotNanoseconds)
+	if 0 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 0, tDto.TotSubSecNanoseconds)
 	}
 
 }
@@ -467,8 +467,8 @@ func TestTimeDto_Equal_01(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 300, tDto.Nanoseconds)
 	}
 
-	if 515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	if 515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
 	t2Dto := tDto.CopyOut()
@@ -530,8 +530,8 @@ func TestTimeDto_Equal_02(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 300, tDto.Nanoseconds)
 	}
 
-	if 515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	if 515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
 	t2Dto := tDto.CopyOut()
@@ -626,8 +626,8 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", nanosecond, tDto.Nanoseconds)
 	}
 
-	if totNanoSecs != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", totNanoSecs, tDto.TotNanoseconds)
+	if totNanoSecs != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", totNanoSecs, tDto.TotSubSecNanoseconds)
 	}
 
 	if !t1.Equal(t2) {
@@ -707,8 +707,8 @@ Total Nanoseconds:  515539300
 		t.Errorf("Error: Expected Nanoseconds='%v'.  Instead, Nanoseconds='%v'", 300, tDto.Nanoseconds)
 	}
 
-	if 515539300 != tDto.TotNanoseconds {
-		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotNanoseconds)
+	if 515539300 != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
 }

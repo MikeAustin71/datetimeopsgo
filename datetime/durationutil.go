@@ -1044,7 +1044,7 @@ ePrefix := "DurationUtility.NewStartTimeMinusTime() "
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			// 	plus remaining Nanoseconds
 //									}
 //

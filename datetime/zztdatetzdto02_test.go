@@ -59,8 +59,8 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 		t.Errorf("Expected Second Number='%v'.  Instead Second Number='%v'",t1.Second(), dTzDto.Time.Seconds)
 	}
 
-	if t1.Nanosecond() != int(dTzDto.Time.TotNanoseconds) {
-		t.Errorf("Expected Total Nanosecond Number='%v'.  Instead Total Nanosecond Number='%v'",t1.Nanosecond(), int(dTzDto.Time.TotNanoseconds))
+	if t1.Nanosecond() != int(dTzDto.Time.TotSubSecNanoseconds) {
+		t.Errorf("Expected Total Nanosecond Number='%v'.  Instead Total Nanosecond Number='%v'",t1.Nanosecond(), int(dTzDto.Time.TotSubSecNanoseconds))
 	}
 
 	r := t1.Nanosecond()
@@ -172,8 +172,8 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 
 	r += 584
 
-	if r != int(dTzDto.Time.TotNanoseconds) {
-		t.Errorf("Expected Total Nanosecond Number='%v'.  Instead Total Nanosecond Number='%v'",r, int(dTzDto.Time.TotNanoseconds))
+	if r != int(dTzDto.Time.TotSubSecNanoseconds) {
+		t.Errorf("Expected Total Nanosecond Number='%v'.  Instead Total Nanosecond Number='%v'",r, int(dTzDto.Time.TotSubSecNanoseconds))
 	}
 
 }
@@ -246,8 +246,8 @@ func TestDateTzDto_New_01(t *testing.T) {
 		t.Errorf("Expected Nanosecond='584'.  Instead Nanosecond='%v' ", dTzDto.Time.Nanoseconds)
 	}
 
-	if 38175584 != int(dTzDto.Time.TotNanoseconds) {
-		t.Errorf("Expected Total Nanosecond Number='38175584'.  Instead Total Nanosecond Number='%v'",int(dTzDto.Time.TotNanoseconds))
+	if 38175584 != int(dTzDto.Time.TotSubSecNanoseconds) {
+		t.Errorf("Expected Total Nanosecond Number='38175584'.  Instead Total Nanosecond Number='%v'",int(dTzDto.Time.TotSubSecNanoseconds))
 	}
 
 }
@@ -358,8 +358,8 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 
 	r += 584
 
-	if r != int(dTzDto.Time.TotNanoseconds) {
-		t.Errorf("Expected Total Nanosecond Number='%v'.  Instead Total Nanosecond Number='%v'",r, int(dTzDto.Time.TotNanoseconds))
+	if r != int(dTzDto.Time.TotSubSecNanoseconds) {
+		t.Errorf("Expected Total Nanosecond Number='%v'.  Instead Total Nanosecond Number='%v'",r, int(dTzDto.Time.TotSubSecNanoseconds))
 	}
 
 }

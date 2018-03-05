@@ -18,19 +18,21 @@ import (
 //					structure, review the DateTzDto located in source file 'datetzdto.go'
 //
 type TimeDto struct {
-	Years          int // Number of Years
-	Months         int // Number of Months
-	Weeks          int // Number of Weeks
-	WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-	DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-	Hours          int // Number of Hours.
-	Minutes        int // Number of Minutes
-	Seconds        int // Number of Seconds
-	Milliseconds   int // Number of Milliseconds
-	Microseconds   int // Number of Microseconds
-	Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-	TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-													// 	plus remaining Nanoseconds
+	Years          				int		//	Number of Years
+	Months         				int 	//	Number of Months
+	Weeks               	int		//	Number of Weeks
+	WeekDays            	int		//	Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+	DateDays            	int		//	Total Number of Days. Weeks x 7 plus WeekDays
+	Hours               	int		//	Number of Hours.
+	Minutes             	int		//	Number of Minutes
+	Seconds             	int		//	Number of Seconds
+	Milliseconds        	int		//	Number of Milliseconds
+	Microseconds        	int		//	Number of Microseconds
+	Nanoseconds         	int		//	Remaining Nanoseconds after Milliseconds & Microseconds
+	TotSubSecNanoseconds	int		//	Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+															// 		plus remaining Nanoseconds
+	TotTimeNanoseconds		int64	//	Total Number of equivalent Nanoseconds for Hours + Minutes
+															//			+ Seconds + Milliseconds + Nanoseconds
 }
 
 // AddTimeDto - Adds time to the current TimeDto. The amount of time added
@@ -121,44 +123,46 @@ func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto, timeZoneLocation string) error {
 // instance, and returns it to the calling function.
 func (tDto *TimeDto) CopyOut() TimeDto {
 
-	tDto2 := TimeDto{}
+	t2Dto := TimeDto{}
 
-	tDto2.Years 					=  tDto.Years
-	tDto2.Months       		=  tDto.Months
-	tDto2.Weeks        		=  tDto.Weeks
-	tDto2.WeekDays 				=  tDto.WeekDays
-	tDto2.DateDays 				=  tDto.DateDays
-	tDto2.Hours        		=  tDto.Hours
-	tDto2.Minutes      		=  tDto.Minutes
-	tDto2.Seconds      		=  tDto.Seconds
-	tDto2.Milliseconds 		=  tDto.Milliseconds
-	tDto2.Microseconds 		=  tDto.Microseconds
-	tDto2.Nanoseconds  		=  tDto.Nanoseconds
-	tDto2.TotNanoseconds 	= tDto.TotNanoseconds
+	t2Dto.Years 								=  tDto.Years
+	t2Dto.Months       					=  tDto.Months
+	t2Dto.Weeks        					=  tDto.Weeks
+	t2Dto.WeekDays 							=  tDto.WeekDays
+	t2Dto.DateDays 							=  tDto.DateDays
+	t2Dto.Hours        					=  tDto.Hours
+	t2Dto.Minutes      					=  tDto.Minutes
+	t2Dto.Seconds      					=  tDto.Seconds
+	t2Dto.Milliseconds 					=  tDto.Milliseconds
+	t2Dto.Microseconds 					=  tDto.Microseconds
+	t2Dto.Nanoseconds  					=  tDto.Nanoseconds
+	t2Dto.TotSubSecNanoseconds 	= tDto.TotSubSecNanoseconds
+	t2Dto.TotTimeNanoseconds 		= tDto.TotTimeNanoseconds
 
-	return tDto2
+	return t2Dto
 }
 
 // CopyIn - Receives a TimeDto input parameter, 'tDto2'
 // and proceeds to copy all 'tDto2' data fields into
 // the current TimeDto data fields. When this method
 // completes, 'tDto' will be equivalent to 'tDto2'.
-func (tDto *TimeDto) CopyIn(tDto2 TimeDto) {
+func (tDto *TimeDto) CopyIn(t2Dto TimeDto) {
 
 	tDto.Empty()
 
-	tDto.Years 					=  tDto2.Years
-	tDto.Months       	=  tDto2.Months
-	tDto.Weeks        	=  tDto2.Weeks
-	tDto.WeekDays 			=  tDto2.WeekDays
-	tDto.DateDays				=  tDto2.DateDays
-	tDto.Hours        	=  tDto2.Hours
-	tDto.Minutes      	=  tDto2.Minutes
-	tDto.Seconds      	=  tDto2.Seconds
-	tDto.Milliseconds 	=  tDto2.Milliseconds
-	tDto.Microseconds 	=  tDto2.Microseconds
-	tDto.Nanoseconds  	=  tDto2.Nanoseconds
-	tDto.TotNanoseconds	=  tDto2.TotNanoseconds
+	tDto.Years 								=  t2Dto.Years
+	tDto.Months       				=  t2Dto.Months
+	tDto.Weeks        				=  t2Dto.Weeks
+	tDto.WeekDays 						=  t2Dto.WeekDays
+	tDto.DateDays							=  t2Dto.DateDays
+	tDto.Hours        				=  t2Dto.Hours
+	tDto.Minutes      				=  t2Dto.Minutes
+	tDto.Seconds      				=  t2Dto.Seconds
+	tDto.Milliseconds 				=  t2Dto.Milliseconds
+	tDto.Microseconds 				=  t2Dto.Microseconds
+	tDto.Nanoseconds  				=  t2Dto.Nanoseconds
+	tDto.TotSubSecNanoseconds =  t2Dto.TotSubSecNanoseconds
+	tDto.TotTimeNanoseconds 	= 	t2Dto.TotTimeNanoseconds
 
 
 }
@@ -216,8 +220,12 @@ func (tDto *TimeDto) ConvertToAbsoluteValues() {
 		tDto.Nanoseconds *= -1
 	}
 
-	if tDto.TotNanoseconds < 0 {
-		tDto.TotNanoseconds *= -1
+	if tDto.TotSubSecNanoseconds < 0 {
+		tDto.TotSubSecNanoseconds *= -1
+	}
+
+	if tDto.TotTimeNanoseconds < 0 {
+		tDto.TotTimeNanoseconds *= -1
 	}
 
 }
@@ -237,7 +245,8 @@ func (tDto *TimeDto) ConvertToNegativeValues() {
 	tDto.Milliseconds 	*= -1
 	tDto.Microseconds 	*= -1
 	tDto.Nanoseconds 		*= -1
-	tDto.TotNanoseconds	*= -1
+	tDto.TotSubSecNanoseconds *= -1
+	tDto.TotTimeNanoseconds 	*= -1
 }
 
 // Empty - returns all TimeDto data fields to their
@@ -254,27 +263,29 @@ func (tDto *TimeDto) Empty() {
 	tDto.Milliseconds 	= 0
 	tDto.Microseconds 	= 0
 	tDto.Nanoseconds 		= 0
-	tDto.TotNanoseconds = 0
+	tDto.TotSubSecNanoseconds = 0
+	tDto.TotTimeNanoseconds = 0
 }
 
 // Equal - Compares the data fields of input parameter TimeDto, 'tDto2',
 // to the data fields of the current TimeDto, 'tDto'. If all data fields
 // are equal, this method returns 'true'. Otherwise, the method returns
 // false.
-func (tDto *TimeDto) Equal(tDto2 TimeDto) bool {
+func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 
-	if tDto.Years					!=  tDto2.Years 					||
-		tDto.Months					!=  tDto2.Months					||
-		tDto.Weeks					!=  tDto2.Weeks						||
-		tDto.WeekDays 			!=  tDto2.WeekDays 				||
-		tDto.DateDays 			!=  tDto2.DateDays 				||
-		tDto.Hours					!=  tDto2.Hours						||
-		tDto.Minutes 				!=  tDto2.Minutes					||
-		tDto.Seconds    		!=  tDto2.Seconds					||
-		tDto.Milliseconds 	!=  tDto2.Milliseconds 		||
-		tDto.Microseconds 	!=  tDto2.Microseconds		||
-		tDto.Nanoseconds  	!=  tDto2.Nanoseconds 		||
-		tDto.TotNanoseconds	!=	tDto2.TotNanoseconds	{
+	if tDto.Years								!=  t2Dto.Years 								||
+		tDto.Months								!=  t2Dto.Months								||
+		tDto.Weeks								!=  t2Dto.Weeks									||
+		tDto.WeekDays 						!=  t2Dto.WeekDays 							||
+		tDto.DateDays 						!=  t2Dto.DateDays 							||
+		tDto.Hours								!=  t2Dto.Hours									||
+		tDto.Minutes 							!=  t2Dto.Minutes								||
+		tDto.Seconds    					!=  t2Dto.Seconds								||
+		tDto.Milliseconds 				!=  t2Dto.Milliseconds 					||
+		tDto.Microseconds 				!=  t2Dto.Microseconds					||
+		tDto.Nanoseconds  				!=  t2Dto.Nanoseconds 					||
+		tDto.TotSubSecNanoseconds !=	t2Dto.TotSubSecNanoseconds	||
+		tDto.TotTimeNanoseconds 	!= t2Dto.TotTimeNanoseconds			{
 
 		return false
 	}
@@ -329,32 +340,10 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 		int(tDto.Hours),
 		int(tDto.Minutes),
 		int(tDto.Seconds),
-		int(tDto.TotNanoseconds),
+		int(tDto.TotSubSecNanoseconds),
 		loc )
 
 	return dTime, nil
-}
-
-// GetTotalTimeNanoseconds - Computes the total nanoseconds
-// associated with Hours, Minutes, Seconds, Milliseconds, Microseconds
-// and Nanoseconds contained in the current TimeDto instance. This
-// is useful for the time.Add(duration) function.
-//
-func (tDto *TimeDto) GetTotalTimeNanoseconds() int64 {
-
-	tot := int64(time.Hour) * int64(tDto.Hours)
-
-	tot += int64(time.Minute) * int64(tDto.Minutes)
-
-	tot += int64(time.Second) * int64(tDto.Seconds)
-
-	tot += int64(time.Millisecond) * int64(tDto.Milliseconds)
-
-	tot += int64(time.Microsecond) * int64(tDto.Microseconds)
-
-	tot += int64(tDto.Nanoseconds)
-
-	return tot
 }
 
 // IsEmpty - Returns 'true' if all data fields in the current
@@ -362,18 +351,19 @@ func (tDto *TimeDto) GetTotalTimeNanoseconds() int64 {
 // uninitialized values.
 func (tDto *TimeDto) IsEmpty() bool {
 
-	if tDto.Years 				== 0 &&
-		tDto.Months					== 0 &&
-		tDto.Weeks					== 0 &&
-		tDto.WeekDays				== 0 &&
-		tDto.DateDays				== 0 &&
-		tDto.Hours					== 0 &&
-		tDto.Minutes				== 0 &&
-		tDto.Seconds				== 0 &&
-		tDto.Milliseconds		== 0 &&
-		tDto.Microseconds		== 0 &&
-		tDto.Nanoseconds		== 0 &&
-		tDto.TotNanoseconds	== 0 {
+	if tDto.Years 							== 0 &&
+		tDto.Months								== 0 &&
+		tDto.Weeks								== 0 &&
+		tDto.WeekDays							== 0 &&
+		tDto.DateDays							== 0 &&
+		tDto.Hours								== 0 &&
+		tDto.Minutes							== 0 &&
+		tDto.Seconds							== 0 &&
+		tDto.Milliseconds					== 0 &&
+		tDto.Microseconds					== 0 &&
+		tDto.Nanoseconds					== 0 &&
+		tDto.TotSubSecNanoseconds == 0 &&
+		tDto.TotTimeNanoseconds 	== 0	{
 		return true
 	}
 
@@ -426,8 +416,12 @@ func (tDto *TimeDto) IsValidDateTime() error {
 		return fmt.Errorf(ePrefix + "Error: Nanoseconds value is INVALID! tDto.Nanoseconds='%v'", tDto.Nanoseconds)
 	}
 
-	if tDto.TotNanoseconds < 0 ||  tDto.TotNanoseconds > int(SecondNanoseconds - 1) {
-		return fmt.Errorf(ePrefix + "Error: Total Nanoseconds value is INVALID! tDto.TotNanoseconds='%v'", tDto.TotNanoseconds)
+	if tDto.TotSubSecNanoseconds < 0 ||  tDto.TotSubSecNanoseconds > int(SecondNanoseconds - 1) {
+		return fmt.Errorf(ePrefix + "Error: Total Nanoseconds value is INVALID! tDto.TotSubSecNanoseconds='%v'", tDto.TotSubSecNanoseconds)
+	}
+
+	if tDto.TotTimeNanoseconds < 0 {
+		return fmt.Errorf(ePrefix + "Error: Total Time Nanoseconds value is INVALID! tDto.TotTimeNanoseconds='%v'", tDto.TotTimeNanoseconds)
 	}
 
 	return nil
@@ -807,6 +801,12 @@ func (tDto *TimeDto) allocateSeconds(totalSeconds int) error {
 // allocateTotalNanoseconds - Allocates total nanoseconds to current
 // TimeDto instance data fields: milliseconds, microseconds and
 // nanoseconds.
+//
+// In addition, this method calculates TimeDto.TotTimeNanoseconds which
+// is the sum of hours, minutes, seconds, milliseconds, microseconds and
+// nanoseconds. Before calling this method, TimeDto Hours, Minutes and
+// Seconds must be properly initialized.
+//
 func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int) error {
 
 	sign := 1
@@ -819,7 +819,8 @@ func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int) error {
 	tDto.Milliseconds = 0
 	tDto.Microseconds = 0
 	tDto.Nanoseconds = 0
-	tDto.TotNanoseconds = totalNanoSeconds
+	tDto.TotSubSecNanoseconds = totalNanoSeconds
+	tDto.TotTimeNanoseconds = int64(totalNanoSeconds)
 
 	if totalNanoSeconds >= int(time.Millisecond) {
 		tDto.Milliseconds = totalNanoSeconds / int(time.Millisecond)
@@ -834,13 +835,18 @@ func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int) error {
 
 	tDto.Nanoseconds = totalNanoSeconds
 
+	// calculate total time nanoseconds
+	tDto.TotTimeNanoseconds += int64(time.Hour) * int64(tDto.Hours)
+	tDto.TotTimeNanoseconds += int64(time.Minute) * int64(tDto.Minutes)
+	tDto.TotTimeNanoseconds += int64(time.Second) * int64(tDto.Seconds)
+
 	if sign == -1 {
 
-		tDto.Milliseconds 		*= sign
-		tDto.Microseconds 		*= sign
-		tDto.Nanoseconds 			*= sign
-		tDto.TotNanoseconds 	*= sign
-
+		tDto.Milliseconds 				*= sign
+		tDto.Microseconds 				*= sign
+		tDto.Nanoseconds 					*= sign
+		tDto.TotSubSecNanoseconds *= sign
+		tDto.TotTimeNanoseconds		*= int64(sign)
 	}
 
 

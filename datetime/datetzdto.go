@@ -773,7 +773,7 @@ func (dtz *DateTzDto) IsValid() error {
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			 // 	plus remaining Nanoseconds
 //									}
 //
@@ -787,7 +787,7 @@ func (dtz *DateTzDto) MinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 															minusTimeDto.Months, 
 																minusTimeDto.DateDays)
 	
-	dt2 := dt1.Add(time.Duration(minusTimeDto.GetTotalTimeNanoseconds()))
+	dt2 := dt1.Add(time.Duration(minusTimeDto.TotTimeNanoseconds))
 	
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 	
@@ -824,7 +824,7 @@ func (dtz *DateTzDto) MinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			 // 	plus remaining Nanoseconds
 //									}
 //
@@ -838,7 +838,7 @@ func (dtz *DateTzDto) MinusTimeDtoToThis(minusTimeDto TimeDto) error {
 															minusTimeDto.Months, 
 																minusTimeDto.DateDays)
 	
-	dt2 := dt1.Add(time.Duration(minusTimeDto.GetTotalTimeNanoseconds()))
+	dt2 := dt1.Add(time.Duration(minusTimeDto.TotTimeNanoseconds))
 	
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 	
@@ -1129,7 +1129,7 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 //				Milliseconds   int // Number of Milliseconds
 //				Microseconds   int // Number of Microseconds
 //				Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//				TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//				TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //													 // 	plus remaining Nanoseconds
 //			}
 //
@@ -1204,7 +1204,7 @@ func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeF
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			 // 	plus remaining Nanoseconds
 //									}
 //
@@ -1218,7 +1218,7 @@ func (dtz *DateTzDto) PlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 		plusTimeDto.Months,
 		plusTimeDto.DateDays)
 
-	dt2 := dt1.Add(time.Duration(plusTimeDto.GetTotalTimeNanoseconds()))
+	dt2 := dt1.Add(time.Duration(plusTimeDto.TotTimeNanoseconds))
 
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 
@@ -1255,7 +1255,7 @@ func (dtz *DateTzDto) PlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			 // 	plus remaining Nanoseconds
 //									}
 //
@@ -1269,7 +1269,7 @@ func (dtz *DateTzDto) PlusTimeDtoToThis(plusTimeDto TimeDto) error {
 		plusTimeDto.Months,
 		plusTimeDto.DateDays)
 
-	dt2 := dt1.Add(time.Duration(plusTimeDto.GetTotalTimeNanoseconds()))
+	dt2 := dt1.Add(time.Duration(plusTimeDto.TotTimeNanoseconds))
 
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 
@@ -1562,7 +1562,7 @@ millisecond, microsecond, nanosecond int, timeZoneLocation, dateTimeFmtStr strin
 //															Milliseconds 		int64
 //															Microseconds 		int64
 //															Nanoseconds  		int64
-//															TotNanoseconds	int64
+//															TotSubSecNanoseconds	int64
 //														}
 //
 // timeZoneLocation	string	- time zone location must be designated as one of two values.
@@ -1609,7 +1609,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v' ", timeZoneLocation, err.Error())
 	}
 
-	dateTime := time.Date(int(t2Dto.Years), time.Month(int(t2Dto.Months)), int(t2Dto.DateDays), int(t2Dto.Hours), int(t2Dto.Minutes), int(t2Dto.Seconds), int(t2Dto.TotNanoseconds), loc)
+	dateTime := time.Date(int(t2Dto.Years), time.Month(int(t2Dto.Months)), int(t2Dto.DateDays), int(t2Dto.Hours), int(t2Dto.Minutes), int(t2Dto.Seconds), int(t2Dto.TotSubSecNanoseconds), loc)
 
 	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
 

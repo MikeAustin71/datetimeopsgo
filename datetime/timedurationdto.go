@@ -7,34 +7,37 @@ import (
 	"strings"
 )
 
-// TimeDurationDto -
+// TimeDurationDto - Is designed to work with incremental time or duration.
+
 type TimeDurationDto struct {
-	StartTimeDateTz      DateTzDto
-	EndTimeDateTz        DateTzDto
-	TimeDuration         time.Duration
-	Years                int64
-	YearsNanosecs        int64
-	Months               int64
-	MonthsNanosecs       int64
-	Weeks                int64
-	WeeksNanosecs        int64
-	WeekDays             int64
-	WeekDaysNanosecs     int64
-	DateDays             int64
-	DateDaysNanosecs     int64
-	Hours                int64
-	HoursNanosecs        int64
-	Minutes              int64
-	MinutesNanosecs      int64
-	Seconds              int64
-	SecondsNanosecs      int64
-	Milliseconds         int64
-	MillisecondsNanosecs int64
-	Microseconds         int64
-	MicrosecondsNanosecs int64
-	Nanoseconds          int64
-	NanosecondsNanosecs  int64
-	TotSubSecNanoseconds int64
+	StartTimeDateTz				DateTzDto			// Starting Date Time with Time Zone info
+	EndTimeDateTz        	DateTzDto			// Ending Date Time with Time Zone info
+	TimeDuration         	time.Duration	// Elapsed time or duration between starting and ending date time
+	Years                	int64					// Number of Years
+	YearsNanosecs        	int64					// Number of Years in Nanoseconds
+	Months               	int64					// Number of Months
+	MonthsNanosecs       	int64					// Number of Months in Nanoseconds
+	Weeks                	int64					// Number of Weeks: Date Days / 7
+	WeeksNanosecs        	int64					// Number of Weeks in Nanoseconds
+	WeekDays             	int64					// WeekDays = DateDays - (Weeks * 7)
+	WeekDaysNanosecs     	int64					// Equivalent WeekDays in NanoSeconds
+	DateDays             	int64					// Day Number in Month (1-31)
+	DateDaysNanosecs     	int64					// DateDays in equivalent nanoseconds
+	Hours                	int64					// Number of Hours 
+	HoursNanosecs        	int64					// Number of Hours in Nanoseconds
+	Minutes              	int64					// Number of Minutes
+	MinutesNanosecs      	int64					// Number of Minutes in Nanoseconds
+	Seconds              	int64					// Number of Seconds
+	SecondsNanosecs      	int64					// Number of Seconds in Nanoseconds
+	Milliseconds         	int64					// Number of Milliseconds
+	MillisecondsNanosecs 	int64					// Number of Milliseconds in Nanoseconds
+	Microseconds         	int64					// Number of Microseconds
+	MicrosecondsNanosecs 	int64					// Number of Microseconds in Nanoseconds
+	Nanoseconds          	int64					// Number of Nanoseconds (Remainder after Milliseconds & Microseconds) 
+	TotSubSecNanoseconds 	int64					// Equivalent Nanoseconds for Milliseconds + Microseconds + Nanoseconds
+	TotDateNanoseconds		int64					// Equal to Years + Months + DateDays in equivalent nanoseconds.
+	TotTimeNanoseconds		int64					// Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
+																			// 		in equivalent nanoseconds
 
 }
 
@@ -73,7 +76,8 @@ func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
 	tDur.MicrosecondsNanosecs 	= t2Dur.MicrosecondsNanosecs
 	tDur.Nanoseconds						= t2Dur.MillisecondsNanosecs
 	tDur.TotSubSecNanoseconds 	= t2Dur.TotSubSecNanoseconds
-
+	tDur.TotDateNanoseconds			= t2Dur.TotDateNanoseconds
+	tDur.TotTimeNanoseconds			= t2Dur.TotTimeNanoseconds
 }
 
 // CopyOut - Returns a deep copy of the current 
@@ -107,6 +111,8 @@ func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 	t2Dur.MicrosecondsNanosecs 	= tDur.MicrosecondsNanosecs
 	t2Dur.Nanoseconds						= tDur.MillisecondsNanosecs
 	t2Dur.TotSubSecNanoseconds 	= tDur.TotSubSecNanoseconds
+	t2Dur.TotDateNanoseconds		= tDur.TotDateNanoseconds
+	t2Dur.TotTimeNanoseconds		= tDur.TotTimeNanoseconds
 	
 	return t2Dur
 }
@@ -139,8 +145,147 @@ func (tDur *TimeDurationDto) Empty() {
 	tDur.MicrosecondsNanosecs = 0
 	tDur.Nanoseconds					= 0
 	tDur.TotSubSecNanoseconds = 0
+	tDur.TotDateNanoseconds		= 0
+	tDur.TotTimeNanoseconds		= 0
 }
 
+
+// Equal - Compares two TimeDurationDto instances to determine
+// if they are equivalent.
+func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
+	
+	if	!tDur.StartTimeDateTz.Equal(t2Dur.StartTimeDateTz)				||
+		 	!tDur.EndTimeDateTz.Equal(t2Dur.EndTimeDateTz)						||
+			tDur.TimeDuration 				!= 	t2Dur.TimeDuration					||
+			tDur.Years								!= 	t2Dur.Years									||
+			tDur.YearsNanosecs    		!= 	t2Dur.YearsNanosecs					||
+			tDur.Months           		!= 	t2Dur.Months 								||
+			tDur.MonthsNanosecs   		!= 	t2Dur.MonthsNanosecs				||
+			tDur.Weeks            		!= 	t2Dur.Weeks									||
+			tDur.WeeksNanosecs    		!= 	t2Dur.WeeksNanosecs					||
+			tDur.WeekDays							!= 	t2Dur.WeekDays							||
+			tDur.WeekDaysNanosecs			!= 	t2Dur.WeekDaysNanosecs			||
+			tDur.DateDays							!= 	t2Dur.DateDays							||
+			tDur.DateDaysNanosecs 		!= 	t2Dur.DateDaysNanosecs			||
+			tDur.Hours								!= 	t2Dur.Hours									||
+			tDur.HoursNanosecs				!= 	t2Dur.HoursNanosecs					||
+			tDur.Minutes							!=	t2Dur.Minutes								||
+			tDur.MinutesNanosecs			!= 	t2Dur.MinutesNanosecs				||
+			tDur.Seconds							!= 	t2Dur.Seconds								||
+			tDur.SecondsNanosecs			!= 	t2Dur.SecondsNanosecs				||
+			tDur.Milliseconds					!= 	t2Dur.Milliseconds					||
+			tDur.MillisecondsNanosecs	!=	t2Dur.MillisecondsNanosecs	||
+			tDur.Microseconds					!= 	t2Dur.Microseconds					||
+			tDur.MicrosecondsNanosecs != 	t2Dur.MicrosecondsNanosecs	||
+			tDur.Nanoseconds					!= t2Dur.MillisecondsNanosecs		||
+			tDur.TotSubSecNanoseconds != t2Dur.TotSubSecNanoseconds		||
+			tDur.TotDateNanoseconds		!= t2Dur.TotDateNanoseconds			||
+			tDur.TotTimeNanoseconds		!= t2Dur.TotTimeNanoseconds			{
+				
+				return false
+	}
+	
+	return true
+	
+}
+
+// IsEmpty() - Returns 'true' if the current TimeDurationDto
+// instance is uninitialized and consists entirely of zero values.
+func (tDur *TimeDurationDto) IsEmpty() bool {
+
+
+	if	tDur.StartTimeDateTz.IsEmpty()				&&
+		  tDur.EndTimeDateTz.IsEmpty()					&&
+			tDur.TimeDuration 						== 0 		&&
+			tDur.Years										== 0 		&&
+			tDur.YearsNanosecs   					== 0 		&&
+			tDur.Months          					== 0 	 	&&
+			tDur.MonthsNanosecs 			 		== 0 		&&
+			tDur.Weeks 			          		== 0 		&&
+			tDur.WeeksNanosecs		    		== 0 		&&
+			tDur.WeekDays									== 0 		&&
+			tDur.WeekDaysNanosecs					== 0 		&&
+			tDur.DateDays									== 0		&&
+			tDur.DateDaysNanosecs 				== 0		&&
+			tDur.Hours										== 0		&&
+			tDur.HoursNanosecs						== 0		&&
+			tDur.Minutes									== 0		&&
+			tDur.MinutesNanosecs					== 0		&&
+			tDur.Seconds									== 0		&&
+			tDur.SecondsNanosecs					== 0		&&
+			tDur.Milliseconds							== 0		&&
+			tDur.MillisecondsNanosecs			== 0		&&
+			tDur.Microseconds							== 0		&&
+			tDur.MicrosecondsNanosecs 		== 0		&&
+			tDur.Nanoseconds							== 0		&&
+			tDur.TotSubSecNanoseconds 		== 0		&&
+			tDur.TotDateNanoseconds				== 0		&&
+			tDur.TotTimeNanoseconds				== 0			{
+
+		return true
+	}
+
+	return false
+	
+}
+
+// New - Creates and returns a new TimeDurationDto based on starting
+// and ending date times.  Because, time zone location is crucial to
+// completely accurate duration calculations, the time zone of the
+// starting date time, 'startDateTime' is applied to parameter,
+// 'endDateTime' before making the duration calculation.
+//
+//	Input Parameters:
+//  =================
+//
+// startDateTime	time.Time	- Starting date time
+//
+// endDateTime		time.Time - Ending date time
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.New(startTime, endTime, FmtDateTimeYrMDayFmtStr)
+//
+//		Note: FmtDateTimeYrMDayFmtStr' is a constant available in datetimeconstants.go
+//
+func (tDur TimeDurationDto) New(startDateTime, endDateTime time.Time,
+							dateTimeFmtStr string) (TimeDurationDto, error) {
+
+  ePrefix := "TimeDurationDto.New() "
+
+  if startDateTime.IsZero() && endDateTime.IsZero() {
+  	return TimeDurationDto{},
+  	errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
+  		"input parameters are ZERO!")
+	}
+
+	tzStartLocation := startDateTime.Location().String()
+
+	t2Dur := TimeDurationDto{}
+
+	err := t2Dur.SetStartEndTimesTz(startDateTime, endDateTime, tzStartLocation, dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartEndTimesTz(startDateTime, " +
+			"endDateTime, tzStartLocation, dateTimeFmtStr). "+
+			"tzStartLocation='%v'  Error='%v'",
+				tzStartLocation, err.Error())
+	}
+
+	return t2Dur, nil
+}
 
 // NewStartEndTimesTz - Creates and returns a new TimeDurationDto populated with 
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters.
@@ -204,11 +349,17 @@ func (tDur *TimeDurationDto) Empty() {
 func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.Time,
 																timeZoneLocation, dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	ePrefix := "TimeDurationDto.NewStartEndTimesTz() "																	
+	ePrefix := "TimeDurationDto.NewStartEndTimesTz() "
+
+	if startDateTime.IsZero() && endDateTime.IsZero() {
+		return TimeDurationDto{},
+			errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
+				"input parameters are ZERO!")
+	}
+
+	t2Dur := TimeDurationDto{}
 	
-	tDurDto := TimeDurationDto{}
-	
-	err := tDurDto.SetStartEndTimesTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartEndTimesTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " + 
@@ -216,7 +367,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 			"Error='%v'", err.Error())
 	}
 															
-	return tDurDto, nil
+	return t2Dur, nil
 }
 
 // NewStartTimeDurationTz - Creates and returns a new TimeDurationDto based on input parameters
@@ -291,6 +442,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
 
+	if startDateTime.IsZero() && duration==0 {
+		return TimeDurationDto{},
+			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
+				"input parameters are ZERO!")
+	}
+
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartTimeDurationTz(startDateTime, duration, timeZoneLocation, dateTimeFmtStr)
@@ -334,7 +491,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			// 	plus remaining Nanoseconds
 //									}
 //
@@ -386,7 +543,13 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 								plusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string)	(TimeDurationDto, error) {
 									
 	ePrefix := "TimeDurationDto.NewStartTimePlusTimeDto() "
-	
+
+	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
+		return TimeDurationDto{},
+			errors.New(ePrefix + "Error: Both 'startDateTime' and 'plusTimeDto' " +
+				"input parameters are ZERO/EMPTY!")
+	}
+
 	t2Dur := TimeDurationDto{}
 	
 	err := t2Dur.SetStartTimePlusTimeDto(startDateTime, plusTimeDto, timeZoneLocation, dateTimeFmtStr)
@@ -428,7 +591,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			// 	plus remaining Nanoseconds
 //									}
 //
@@ -480,7 +643,13 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 								minusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string)	(TimeDurationDto, error) {
 									
 	ePrefix := "TimeDurationDto.NewEndTimeMinusTimeDto() "
-	
+
+	if endDateTime.IsZero() && minusTimeDto.IsEmpty() {
+		return TimeDurationDto{},
+			errors.New(ePrefix + "Error: Both 'endDateTime' and 'minusTimeDto' " +
+				"input parameters are ZERO/EMPTY!")
+	}
+
 	t2Dur := TimeDurationDto{}
 	
 	err := t2Dur.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto, timeZoneLocation, dateTimeFmtStr)
@@ -521,7 +690,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			// 	plus remaining Nanoseconds
 //									}
 //
@@ -565,6 +734,11 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 	minusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetEndTimeMinusTimeDto() "
+
+	if endDateTime.IsZero() && minusTimeDto.IsEmpty() {
+		return 	errors.New(ePrefix + "Error: Both 'endDateTime' and 'minusTimeDto' " +
+				"input parameters are ZERO/EMPTY!")
+	}
 
 	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
@@ -650,7 +824,12 @@ func (tDur *TimeDurationDto) SetStartEndTimesTz(startDateTime,
 endDateTime time.Time, timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartEndTimes() "
-	
+
+	if startDateTime.IsZero() && endDateTime.IsZero() {
+		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
+			"input parameters are ZERO!")
+	}
+
 	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
 
@@ -753,7 +932,12 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTz(startDateTime time.Time,
 	duration time.Duration, timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartTimeDurationTz() "
-	
+
+	if startDateTime.IsZero() && duration==0 {
+		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
+			"input parameters are ZERO!")
+	}
+
 	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
 
@@ -839,7 +1023,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTz(startDateTime time.Time,
 //										Milliseconds   int // Number of Milliseconds
 //										Microseconds   int // Number of Microseconds
 //										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			// 	plus remaining Nanoseconds
 //									}
 //
@@ -883,6 +1067,11 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(startDateTime time.Time,
 	plusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string) error {
 	
 	ePrefix := "TimeDurationDto.SetStartTimePlusTimeDto() "
+
+	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
+		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'plusTimeDto' " +
+			"input parameters are ZERO/EMPTY!")
+	}
 
 	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
@@ -944,10 +1133,16 @@ ePrefix := "TimeDurationDto) calcTimeDurationComponents() "
 		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
 	}
 	
-	err = tDur.calcAllNanoseconds()
+	err = tDur.calcNanoseconds()
 	
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcAllNanoseconds(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+	
+	err = tDur.calcSummaryTimeElements()
+	
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 	
 	return nil
@@ -955,8 +1150,10 @@ ePrefix := "TimeDurationDto) calcTimeDurationComponents() "
 
 // calcYearsFromDuration - Calculates number of years duration and nanoseconds
 // represented by years duration using input parameters 'tDur.StartTimeDateTz' and
-// 'tDur.EndTimeDateTz'.  Note: If the Time Zone Locations of 'tDur.StartTimeDateTz'
-// and 'tDur.EndTimeDateTz' do NOT match, an error will be returned.
+// 'tDur.EndTimeDateTz'.  
+//
+// NOTE:	Before calling this method, ensure that tDur.StartTimeDateTz,
+//				tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
 //
 func (tDur *TimeDurationDto) calcYearsFromDuration() error {
 
@@ -1017,8 +1214,15 @@ func (tDur *TimeDurationDto) calcYearsFromDuration() error {
 
 // calcMonthsFromDuration - calculates the months duration
 // using the start and end dates, 'tDur.StartTimeDateTz' and
-// 'tDur.EndTimeDateTz.DateTime'. Note: Method TimeDurationDto.calcYearsFromDuration()
-// must be called BEFORE calling this method.
+// 'tDur.EndTimeDateTz.DateTime'.
+//
+// NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//						tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+// 
+//				(2) Before calling this method, ensure that the following method is called
+//						first:
+//										TimeDurationDto.calcYearsFromDuration
+//
 func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 
 	ePrefix := "TimeDurationDto.calcMonthsFromDuration() "
@@ -1078,11 +1282,18 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 }
 
 // calcDateDaysWeeksFromDuration - Calculates the Days associated
-// with the duration for this TimeDurationDto. Note method TimeDurationDto.calcMonthsFromDuration()
-// MUST BE called before this method.
+// with the duration for this TimeDurationDto. 
 //
 // Calculates 'tDur.DateDays', 'tDur.DateDaysNanosecs', 'tDur.Weeks', 'tDur.WeeksNanosecs', 
 // 'tDur.WeekDays' and 'tDur.WeekDaysNanosecs'.
+//
+// NOTE:	(1) Before calling this method, ensure that TimeDurationDto.StartTimeDateTz,
+//						TimeDurationDto.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+// 
+//				(2) Before calling this method, ensure that the following methods are called
+//						first, in sequence:
+//							TimeDurationDto.calcYearsFromDuration
+//							TimeDurationDto.calcMonthsFromDuration
 //
 func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 
@@ -1145,8 +1356,17 @@ func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 // Seconds of duration using startTime, tDur.StartTimeDateTz, 
 // and endTime, tDur.EndTimeDateTz.DateTime.
 //
-// NOTE: 	Method TimeDurationDto.calcDateDaysFromDuration()
-//				MUST BE CALLED BEFORE this method.
+//
+// NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//						TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
+// 						are properly initialized.
+// 
+//				(2) Before calling this method, ensure that the following methods are called
+//						first, in sequence:
+//							TimeDurationDto.calcYearsFromDuration
+//							TimeDurationDto.calcMonthsFromDuration
+//							TimeDurationDto.calcDateDaysWeeksFromDuration
+//
 func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 	
 	ePrefix := "TimeDurationDto.calcHoursMinSecs() "
@@ -1202,16 +1422,24 @@ func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 }
 
 
-// calcAllNanoseconds - Calculates 'tDur.Milliseconds', 'tDur.MillisecondsNanosecs', 
-// 'tDur.Microseconds', 'tDur.MicrosecondsNanosecs', 'tDur.Nanoseconds' and 
-// 'tDur.TotSubSecNanoseconds'.
+// calcNanoseconds - Calculates 'tDur.Milliseconds', 'tDur.MillisecondsNanosecs', 
+// 'tDur.Microseconds', 'tDur.MicrosecondsNanosecs',  and 'tDur.Nanoseconds'.
 //
-// NOTE: 	Method TimeDurationDto.calcHoursMinSecs() MUST BE CALLED BEFORE calling
-// 				this method.
 //
-func (tDur *TimeDurationDto) calcAllNanoseconds() error {
+// NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//						TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
+// 						are properly initialized.
+// 
+//				(2) Before calling this method, ensure that the following methods are called
+//						first, in sequence:
+//							TimeDurationDto.calcYearsFromDuration
+//							TimeDurationDto.calcMonthsFromDuration
+//							TimeDurationDto.calcDateDaysWeeksFromDuration
+//							TimeDurationDto.calcHoursMinSecs
+// 
+func (tDur *TimeDurationDto) calcNanoseconds() error {
 
-	ePrefix := "TimeDurationDto.calcAllNanoseconds() "
+	ePrefix := "TimeDurationDto.calcNanoseconds() "
 
 	startTime := tDur.StartTimeDateTz.DateTime
 	endTime := tDur.EndTimeDateTz.DateTime
@@ -1241,7 +1469,6 @@ func (tDur *TimeDurationDto) calcAllNanoseconds() error {
 	tDur.Microseconds						= 0
 	tDur.MicrosecondsNanosecs		= 0
 	tDur.Nanoseconds 						= 0
-	tDur.TotSubSecNanoseconds		= rd
 	
 	if rd >= MilliSecondNanoseconds {
 		tDur.Milliseconds = rd / MilliSecondNanoseconds
@@ -1258,6 +1485,66 @@ func (tDur *TimeDurationDto) calcAllNanoseconds() error {
 	tDur.Nanoseconds = rd
 	
 	return nil					
+}
+
+// calcSummaryTimeElements - Calculates totals for Date, Time and 
+// sub-second nanoseconds. 
+//
+// NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//						TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
+// 						are properly initialized.
+// 
+//				(2) Before calling this method, ensure that the following methods are called
+//						first, in sequence:
+//							TimeDurationDto.calcYearsFromDuration
+//							TimeDurationDto.calcMonthsFromDuration
+//							TimeDurationDto.calcDateDaysWeeksFromDuration
+//							TimeDurationDto.calcHoursMinSecs
+//							TimeDurationDto.calcNanoseconds
+//
+func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
+	
+	ePrefix := "TimeDurationDto.calcSummaryTimeElements() "
+
+	startTime := tDur.StartTimeDateTz.DateTime
+	endTime := tDur.EndTimeDateTz.DateTime
+
+	if endTime.Before(startTime) {
+		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")
+	}
+
+	if startTime.Location().String() != endTime.Location().String() {
+		return fmt.Errorf(ePrefix + "Error: 'startTime' and 'endTime' Time Zone Location do NOT match! " +
+			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
+			startTime.Location().String(), endTime.Location().String())
+	}
+
+	rd := int64(tDur.TimeDuration)
+
+	if rd == 0 {
+		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
+	}
+	
+	tDur.DateDaysNanosecs = 0
+	tDur.TotTimeNanoseconds = 0
+	tDur.TotSubSecNanoseconds = 0
+
+	tDur.DateDaysNanosecs = tDur.YearsNanosecs
+	tDur.DateDaysNanosecs += tDur.MonthsNanosecs
+	tDur.TotDateNanoseconds += tDur.DateDaysNanosecs
+
+	tDur.TotSubSecNanoseconds = tDur.MillisecondsNanosecs
+	tDur.TotSubSecNanoseconds += tDur.MicrosecondsNanosecs
+	tDur.TotSubSecNanoseconds += tDur.Nanoseconds
+	
+
+	tDur.TotTimeNanoseconds = tDur.HoursNanosecs
+	tDur.TotTimeNanoseconds += tDur.MinutesNanosecs
+	tDur.TotTimeNanoseconds += tDur.SecondsNanosecs
+	tDur.TotTimeNanoseconds += tDur.TotSubSecNanoseconds
+	
+	
+	return nil
 }
 
 
