@@ -7,12 +7,91 @@ import (
 	"strings"
 )
 
-// TimeDurationDto - Is designed to work with incremental time or duration.
 
+// TDurCalcType - Time Duration Calculation Type. 
+// Specifies how time duration is allocated by 
+// Years, Months, Weeks, Days, Hours, Seconds, 
+// Milliseconds, Microseconds and Nanoseconds.
+type TDurCalcType int
+
+// String - Returns a string equivalent to the 
+// integer value of TDurCalcType
+func (tDurCalcType TDurCalcType) String() string {
+	
+	return TDurCalcTypeLabels[tDurCalcType]
+}
+
+const (
+	
+	// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation. All data 
+	// fields in the TimeDto are populated in the duration allocation
+	TDurCalcTypeSTDYEARMTH	TDurCalcType = iota
+
+	// TDurCalcTypeCUMMONTHS - Cumulative Months Calculation. Years are ignored.
+	// Years and Months are consolidated and counted as cumulative months. Years
+	// duration is not provided. The entire duration is broken down by cumulative
+	// months plus weeks, week days, date days, hours, minutes, seconds, milliseconds,
+	// microseconds and nanoseconds. The Data Fields for for Years is set to zero.
+	TDurCalcTypeCUMMONTHS
+
+	// TDurCalcTypeCUMWEEKS - Cumulative Weeks calculation. Years and months are ignored.
+	// Years, months, weeks are consolidated and counted as cumulative weeks. Years and
+	// months duration is not provided. The entire duration is broken down by cumulative 
+	// weeks, plus week days, hours, minutes, seconds, milliseconds, microseconds and
+	// nanoseconds. Data Fields for Years and Months are always set to zero.
+	TDurCalcTypeCUMWEEKS
+	
+	// TDurCalcTypeCUMDAYS - Cumulative Days calculation. Years, months and weeks are 
+	// ignored. Years, months, weeks and days are consolidated and counted as cumulative
+	// days. Years, months and weeks duration is not calculated. The entire duration is 
+	// broken down by cumulative days plus hours, minutes, seconds, milliseconds,
+	// microseconds and nanoseconds. Data Fields for years, months, weeks, and weekdays
+	// are always set to zero.
+	TDurCalcTypeCUMDAYS
+	
+	// TDurCalcTypeCUMHOURS - Cumulative Hours calculations. Years, months, weeks, and days
+	// are ignored. Years, months weeks, days and hours are consolidated as cumulative hours.
+	// Years, months, weeks and days duration is not calculated. The entire duration is 
+	// broken down by cumulative hours plus minutes, seconds, milliseconds, microseconds
+	// and nanoseconds.  Data Fields for years, months, weeks, and days are always set
+	// to zero. 
+	TDurCalcTypeCUMHOURS
+
+	// TDurCalcTypeCUMMINTUES - Cumulative Minutes calculations. Years, months, weeks, days
+	// and hours are ignored. Years, months weeks, days, hours and minutes are consolidated
+	// and counted as cumulative Minutes.
+	//
+	// Years, months, weeks, days and hours duration is not calculated. The entire duration is
+	// broken down by cumulative minutes plus seconds, milliseconds, microseconds
+	// and nanoseconds.  Data Fields for years, months, weeks, days and hours are always set
+	// to zero.
+	TDurCalcTypeCUMMINTUES
+
+	// TDurCalcTypeGregorianYrs - Allocates Years, Months, Weeks, WeekDays, Date Days, Hours
+	// Minutes, Seconds, Milliseconds, Microseconds, Nanoseconds. However, the Years allocation
+	// is performed using standard Gregorian Years. 
+	//			Sources:
+	//					https://en.wikipedia.org/wiki/Year
+	//					Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+	//
+	// The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
+	// 49 minutes and 12 seconds. GregorianYearNanoSeconds = 31,556,952,000,000,000 nanoseconds
+	//
+	TDurCalcTypeGregorianYrs
+	
+)
+
+// TDurCalcTypeLabels - Text Names associated with TDurCalcType types.
+var TDurCalcTypeLabels = [...]string{"StdYearMthCalc","CumMonthsCalc","CumWeeksCalc", "CumDaysCalc",
+																			"CumHoursCalc", "CumMinutesCalc", "GregorianYrsCalc"}
+
+// TimeDurationDto - Is designed to work with incremental time or duration.
 type TimeDurationDto struct {
 	StartTimeDateTz				DateTzDto			// Starting Date Time with Time Zone info
 	EndTimeDateTz        	DateTzDto			// Ending Date Time with Time Zone info
 	TimeDuration         	time.Duration	// Elapsed time or duration between starting and ending date time
+	CalcType              TDurCalcType  // The calculation Type. This controls the allocation of time 
+																			// 		duration over years, months, weeks, days and hours.
 	Years                	int64					// Number of Years
 	YearsNanosecs        	int64					// Number of Years in Nanoseconds
 	Months               	int64					// Number of Months
@@ -54,6 +133,7 @@ func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
 	tDur.StartTimeDateTz 				= t2Dur.StartTimeDateTz.CopyOut()
 	tDur.EndTimeDateTz 					=	t2Dur.EndTimeDateTz.CopyOut()
 	tDur.TimeDuration     			= t2Dur.TimeDuration
+	tDur.CalcType								= t2Dur.CalcType
 	tDur.Years									= t2Dur.Years
 	tDur.YearsNanosecs    			= t2Dur.YearsNanosecs
 	tDur.Months           			= t2Dur.Months
@@ -89,6 +169,7 @@ func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 	t2Dur.StartTimeDateTz 			= tDur.StartTimeDateTz.CopyOut()
 	t2Dur.EndTimeDateTz 				=	tDur.EndTimeDateTz.CopyOut()
 	t2Dur.TimeDuration     			= tDur.TimeDuration
+	t2Dur.CalcType							= tDur.CalcType
 	t2Dur.Years									= tDur.Years
 	t2Dur.YearsNanosecs    			= tDur.YearsNanosecs
 	t2Dur.Months           			= tDur.Months
@@ -123,6 +204,7 @@ func (tDur *TimeDurationDto) Empty() {
 	tDur.StartTimeDateTz 			= DateTzDto{}
 	tDur.EndTimeDateTz 				=	DateTzDto{}
 	tDur.TimeDuration     		= time.Duration(0)
+	tDur.CalcType							= TDurCalcTypeSTDYEARMTH
 	tDur.Years								= 0
 	tDur.YearsNanosecs    		= 0
 	tDur.Months           		= 0
@@ -149,6 +231,36 @@ func (tDur *TimeDurationDto) Empty() {
 	tDur.TotTimeNanoseconds		= 0
 }
 
+// EmptyTimeFields - Sets all of the data fields
+// associated with time duration allocation to zero.
+func (tDur *TimeDurationDto) EmptyTimeFields() {
+
+	tDur.Years								= 0
+	tDur.YearsNanosecs    		= 0
+	tDur.Months           		= 0
+	tDur.MonthsNanosecs   		= 0
+	tDur.Weeks            		= 0
+	tDur.WeeksNanosecs    		= 0
+	tDur.WeekDays							= 0
+	tDur.WeekDaysNanosecs			= 0
+	tDur.DateDays							= 0
+	tDur.DateDaysNanosecs			= 0
+	tDur.Hours								= 0
+	tDur.HoursNanosecs				= 0
+	tDur.Minutes							= 0
+	tDur.MinutesNanosecs			= 0
+	tDur.Seconds							= 0
+	tDur.SecondsNanosecs			= 0
+	tDur.Milliseconds					= 0
+	tDur.MillisecondsNanosecs	= 0
+	tDur.Microseconds					= 0
+	tDur.MicrosecondsNanosecs = 0
+	tDur.Nanoseconds					= 0
+	tDur.TotSubSecNanoseconds = 0
+	tDur.TotDateNanoseconds		= 0
+	tDur.TotTimeNanoseconds		= 0
+
+}
 
 // Equal - Compares two TimeDurationDto instances to determine
 // if they are equivalent.
@@ -157,6 +269,7 @@ func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
 	if	!tDur.StartTimeDateTz.Equal(t2Dur.StartTimeDateTz)				||
 		 	!tDur.EndTimeDateTz.Equal(t2Dur.EndTimeDateTz)						||
 			tDur.TimeDuration 				!= 	t2Dur.TimeDuration					||
+			tDur.CalcType							!=	t2Dur.CalcType							||
 			tDur.Years								!= 	t2Dur.Years									||
 			tDur.YearsNanosecs    		!= 	t2Dur.YearsNanosecs					||
 			tDur.Months           		!= 	t2Dur.Months 								||
@@ -222,6 +335,7 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 			tDur.TotDateNanoseconds				== 0		&&
 			tDur.TotTimeNanoseconds				== 0			{
 
+		tDur.CalcType = TDurCalcTypeSTDYEARMTH	
 		return true
 	}
 
@@ -229,11 +343,400 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 	
 }
 
+// GetYearMthDaysTimeAbbrv - Abbreviated formatting of Years, Months,
+// DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
+// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+//
+// Abbreviated Years Mths DateDays Time Duration - Example Return:
+//
+// 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrv() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	str := ""
+
+	if tDur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", tDur.Years)
+	}
+
+	if tDur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", tDur.Months)
+	}
+
+	if tDur.DateDays > 0 || str != "" {
+		str +=  fmt.Sprintf("%v-Days ", tDur.DateDays)
+	}
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+
+}
+
+// GetYearMthDaysTime - Calculates Duration and breakdowns
+// time elements by Years, Months, Date Days, hours, minutes,
+// seconds, milliseconds, microseconds and nanoseconds.
+//
+// Example DisplayStr
+// ==================
+//
+// Years Months DateDays Time Duration - Example Return:
+//
+// 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+// If Years, Months and Days have a zero value, only the time components will be displayed. 
+// Example:
+//		13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (tDur *TimeDurationDto) GetYearMthDaysTime() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	str := ""
+	
+	if tDur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", tDur.Years)	
+	}
+	
+	if tDur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", tDur.Months)	
+	}
+
+	if tDur.DateDays > 0 || str!= "" {
+		str += fmt.Sprintf("%v-Days ", tDur.DateDays)
+	}
+
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+}
+
+// GetYearsMthsWeeksTimeAbbrv - Abbreviated formatting of Years, Months,
+// Weeks, WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds,
+// Nanoseconds. 
+// 
+// At a minimum only Hours, Minutes, Seconds, Milliseconds, Microseconds
+// Nanoseconds are displayed. Example return when Years, Months, Weeks
+// and WeekDays are zero:
+//
+// 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrv() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	str := ""
+	
+	if tDur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", tDur.Years)
+	}
+
+	if tDur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", tDur.Months)
+	}
+
+	if tDur.Weeks > 0 || str != "" {
+		str += fmt.Sprintf("%v-Weeks ", tDur.Weeks)
+	}
+
+	if tDur.WeekDays > 0 || str != "" {
+		str += fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
+	}
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+}
+
+// GetYearsMthsWeeksTime - Example Return:
+// 12-Years 3-Months 2-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+// At a minimum only Weeks, WeekDays, Hours, Minutes, Seconds,
+// Milliseconds, Microseconds and Nanoseconds are displayed.
+// 
+// Example return when Years, and Months are zero:
+//
+// 3-Weeks 2-WeekDays 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+func (tDur *TimeDurationDto) GetYearsMthsWeeksTime() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+			return "0-Nanoseconds"
+	}	
+
+	str := ""
+	
+	if tDur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", tDur.Years)	
+	}
+	
+	if tDur.Months > 0 || str != "" {
+		str+= fmt.Sprintf("%v-Months ", tDur.Months)
+	}
+
+	str+= fmt.Sprintf("%v-Weeks ", tDur.Weeks)	
+	
+	str+= fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
+
+	str+= fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str+= fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str+= fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str+= fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str+= fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str+= fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+}
+
+// GetWeeksDaysTime - Example DisplayStr
+// 126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (tDur *TimeDurationDto) GetWeeksDaysTime() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+	
+	t2Dur := tDur.CopyOut()
+	
+	t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
+	
+	str := ""
+
+	str += fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)
+
+	str += fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
+
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str
+}
+
+// GetDaysTime - Returns duration formatted as
+// days, hours, minutes, seconds, milliseconds, microseconds,
+// and nanoseconds. Years, months and weeks are always excluded and 
+// included in cumulative 'days'.
+//
+// Example: 
+// 
+// 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+func (tDur *TimeDurationDto) GetDaysTime() string {
+	
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	t2Dur := tDur.CopyOut()
+	
+	t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMDAYS)
+	
+	str := ""
+
+	str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+
+	return str
+}
+
+// GetHoursTime - Returns duration formatted as hours,
+// minutes, seconds, milliseconds, microseconds, nanoseconds.
+// Example: 152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (tDur *TimeDurationDto) GetHoursTime() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMHOURS)
+
+	str := ""
+
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str
+}
+
+// GetYrMthWkDayHrMinSecNanosecs - Returns duration formatted
+// as Year, Month, Day, Hour, Second and Nanoseconds.
+// Example: 3-Years 2-Months 3-Weeks 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
+func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecs() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+	
+	str := ""
+
+	str += fmt.Sprintf("%v-Years ", tDur.Years)
+
+	str += fmt.Sprintf("%v-Months ", tDur.Months)
+
+	str += fmt.Sprintf("%v-Weeks ", tDur.Weeks)
+
+	str += fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.TotSubSecNanoseconds)
+
+	return str
+}
+
+// GetNanosecondsDuration - Returns duration formatted as
+// Nonoseconds. DisplayStr shows Nanoseconds expressed as a
+// 64-bit integer value.
+func (tDur *TimeDurationDto) GetNanosecondsDuration() string {
+	
+	str := fmt.Sprintf("%v-Nanoseconds", int64(tDur.TimeDuration))
+
+	return str
+
+}
+
+// GetDefaultDuration returns duration formatted
+// as nanoseconds. The DisplayStr shows the default
+// string value for duration.
+// Example: 61h26m46.864197832s
+func (tDur *TimeDurationDto) GetDefaultDuration() string {
+
+	return fmt.Sprintf("%v", tDur.TimeDuration)
+}
+
+// GetGregorianYearDuration - Returns a string showing the
+// breakdown of duration by Gregorian Years, WeekDays, Hours, Minutes,
+// Seconds, Milliseconds, Microseconds and Nanoseconds. Unlike
+// other calculations which use a Standard 365-day year consisting
+// of 24-hour days, a Gregorian Year consists of 365 days, 5-hours,
+// 59-minutes and 12 Seconds. For the Gregorian calendar the
+// average length of the calendar year (the mean year) across
+// the complete leap cycle of 400 Years is 365.2425 days.
+// Sources:
+// https://en.wikipedia.org/wiki/Year
+// Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+//
+func (tDur *TimeDurationDto) GetGregorianYearDuration() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeGregorianYrs)
+	
+	
+	str := fmt.Sprintf("%v-Gregorian Years ", t2Dur.Years)
+
+	str += fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
+
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str
+}
+
+
 // New - Creates and returns a new TimeDurationDto based on starting
 // and ending date times.  Because, time zone location is crucial to
 // completely accurate duration calculations, the time zone of the
 // starting date time, 'startDateTime' is applied to parameter,
 // 'endDateTime' before making the duration calculation.
+//
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// 				This means that duration is allocated over years, months, weeks, weekdays, date days,
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+// 				See Type 'TDurCalcType' for details.
 //
 //	Input Parameters:
 //  =================
@@ -274,7 +777,7 @@ func (tDur TimeDurationDto) New(startDateTime, endDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartEndTimesTz(startDateTime, endDateTime, tzStartLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartEndTimesTz(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, tzStartLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
@@ -292,6 +795,10 @@ func (tDur TimeDurationDto) New(startDateTime, endDateTime time.Time,
 // The user is required to specify a common Time Zone Location four use in converting
 // date times to a common frame of reference to subsequent time duration calculations.
 //
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// 				This means that duration is allocated over years, months, weeks, weekdays, date days,
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+// 				See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
 // =================
@@ -359,7 +866,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetStartEndTimesTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartEndTimesTz(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, timeZoneLocation, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " + 
@@ -378,6 +885,11 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 // If 'duration' is a negative value 'startDateTime' is converted to
 // ending date time and the	actual starting date time is computed by
 // subtracting duration.
+//
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// 				This means that duration is allocated over years, months, weeks, weekdays, date days,
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+// 				See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
 // =================
@@ -450,7 +962,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationTz(startDateTime, duration, timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimeDurationTz(startDateTime, duration, TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
@@ -467,6 +979,11 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //
 // The time components of the TimeDto are added to the starting date time to compute
 // the ending date time and the duration.
+//
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// 				This means that duration is allocated over years, months, weeks, weekdays, date days,
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+// 				See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
 // =================
@@ -552,7 +1069,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetStartTimePlusTimeDto(startDateTime, plusTimeDto, timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimePlusTimeDto(startDateTime, plusTimeDto, TDurCalcTypeSTDYEARMTH, timeZoneLocation, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{},
@@ -568,6 +1085,11 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 //
 // Starting date time is computed by subtracting the value of the TimeDto from
 // the ending date time input parameter, 'endDateTime'.
+//
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// 				This means that duration is allocated over years, months, weeks, weekdays, date days,
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+// 				See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
 // =================
@@ -652,7 +1174,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto, timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto, TDurCalcTypeSTDYEARMTH,timeZoneLocation, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{},
@@ -660,6 +1182,39 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 	}
 	
 	return t2Dur, nil
+}
+
+
+// ReCalcTimeDurationAllocation - Re-calculates and allocates time duration for the current
+// TimeDurationDto instance over the various time components (years, months, weeks, weekdays,
+// datedays, hour, minutes, seconds, milliseconds, microseconds and nanoseconds) depending
+// on the value of the 'TDurCalcType' input parameter.
+//
+// Input Parameter
+// ===============
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
+//																	 week day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
+//
+//
+func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(calcType TDurCalcType) error {
+	
+	return tDur.calcTimeDurationAllocations(calcType)
+	
 }
 
 // SetEndTimeMinusTimeDto - Sets start date time, end date time and duration
@@ -693,6 +1248,24 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 //										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //																			// 	plus remaining Nanoseconds
 //									}
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
+//																	 week day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
+//
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -731,7 +1304,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
-	minusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string) error {
+	minusTimeDto TimeDto, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetEndTimeMinusTimeDto() "
 
@@ -758,11 +1331,11 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 
 	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
 
-	err = tDur.calcTimeDurationComponents()
+	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 
 	if err != nil {
 		tDur.Empty()
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTimeDurationComponents(). " +
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
 			"Error='%v'", err.Error())
 	}
 
@@ -781,6 +1354,23 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 // startDateTime	time.Time	- Starting time
 //
 // endDateTime		time.Time - Ending time
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
+//																	 week day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -821,7 +1411,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartEndTimesTz(startDateTime,
-endDateTime time.Time, timeZoneLocation, dateTimeFmtStr string) error {
+endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartEndTimes() "
 
@@ -859,10 +1449,10 @@ endDateTime time.Time, timeZoneLocation, dateTimeFmtStr string) error {
 	tDur.EndTimeDateTz	= eTime.TimeOut.CopyOut()
 	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
 
-	err = tDur.calcTimeDurationComponents()
+	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 	
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTimeDurationComponents(). " +
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
 				"Error='%v'", err.Error())
 	}
 	
@@ -888,6 +1478,23 @@ endDateTime time.Time, timeZoneLocation, dateTimeFmtStr string) error {
 //														'startDateTime' is converted to ending date time and
 //														actual starting date time is computed by subtracting
 //														duration.
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
+//																	 week day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -929,7 +1536,7 @@ endDateTime time.Time, timeZoneLocation, dateTimeFmtStr string) error {
 //
 //
 func (tDur *TimeDurationDto) SetStartTimeDurationTz(startDateTime time.Time,
-	duration time.Duration, timeZoneLocation, dateTimeFmtStr string) error {
+	duration time.Duration, tDurCalcType TDurCalcType , timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartTimeDurationTz() "
 
@@ -983,11 +1590,11 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTz(startDateTime time.Time,
 
 	}
 
-	err = tDur.calcTimeDurationComponents()
+	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 
 	if err != nil {
 		tDur.Empty()
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTimeDurationComponents(). " +
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
 			"Error='%v'", err.Error())
 	}
 
@@ -1027,6 +1634,24 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTz(startDateTime time.Time,
 //																			// 	plus remaining Nanoseconds
 //									}
 //
+// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
+//																	 week day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
+//
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -1064,7 +1689,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTz(startDateTime time.Time,
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(startDateTime time.Time,
-	plusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string) error {
+	plusTimeDto TimeDto, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
 	
 	ePrefix := "TimeDurationDto.SetStartTimePlusTimeDto() "
 
@@ -1091,23 +1716,61 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(startDateTime time.Time,
 	
 	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
 
-	err = tDur.calcTimeDurationComponents()
+	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 
 	if err != nil {
 		tDur.Empty()
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTimeDurationComponents(). " +
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
 			"Error='%v'", err.Error())
 	}
 
 	return nil		
 }
+
+func (tDur *TimeDurationDto) calcTimeDurationAllocations(calcType TDurCalcType) error {
+
+	ePrefix := "TimeDurationDto.calcTimeDurationAllocations() "
+
+	switch calcType {
+
+	case TDurCalcTypeSTDYEARMTH :
+		return tDur.calcTypeSTDYEARMTH()
+
+	case TDurCalcTypeCUMMONTHS :
+		return tDur.calcTypeCUMMONTHS()
+
+	case TDurCalcTypeCUMWEEKS :
+		return tDur.calcTypeCUMWEEKS()
+
+	case TDurCalcTypeCUMDAYS :
+		return tDur.calcTypeCUMDays()
+
+	case TDurCalcTypeCUMHOURS :
+		return tDur.calcTypeCUMHours()
+
+	case TDurCalcTypeGregorianYrs :
+		return tDur.calcTypeGregorianYears()
+
+	default:
+		return fmt.Errorf(ePrefix + "Error: Invalid TDurCalcType. calcType='%v'", calcType.String())
+	}
+
+	return nil
+}
+
+// calcTypeSTDYEARMTH - Performs Duration calculations for
+// TDurCalcType == TDurCalcTypeSTDYEARMTH
+//
+// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation.
+// All data fields in the TimeDto are populated in the duration
+// allocation.
+func (tDur *TimeDurationDto) calcTypeSTDYEARMTH() error {
 	
-// calcTimeDurationComponents - Is a summary routine which calls all
-// of the subsidiary methods necessary to compute the duration time
-// components (i.e. years, months, days, hours, minutes etc.).
-func (tDur *TimeDurationDto) calcTimeDurationComponents() error {
+	ePrefix := "TimeDurationDto.calcTypeSTDYEARMTH() "
+
+	tDur.EmptyTimeFields()
 	
-ePrefix := "TimeDurationDto) calcTimeDurationComponents() "
+	tDur.CalcType = TDurCalcTypeSTDYEARMTH
 	
 	err := tDur.calcYearsFromDuration()
 	
@@ -1145,6 +1808,236 @@ ePrefix := "TimeDurationDto) calcTimeDurationComponents() "
 		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 	
+	return nil
+}
+
+// Data Fields for Years is always set to Zero. Years
+// and months are consolidated and counted as cumulative
+// months.
+func (tDur *TimeDurationDto) calcTypeCUMMONTHS() error {
+
+	ePrefix := "TimeDurationDto.calcTypeCUMWEEK() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeCUMMONTHS
+	
+	err := tDur.calcMonthsFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcDateDaysWeeksFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	return nil
+
+}
+
+// calcTypeCUMWEEKS - Data Fields for Years and Months are always set to zero.
+// Years and Months are consolidated and counted as equivalent Weeks.
+func (tDur *TimeDurationDto) calcTypeCUMWEEKS() error {
+
+	ePrefix := "TimeDurationDto.calcTypeCUMWEEKS() "
+
+	tDur.EmptyTimeFields()
+	
+	tDur.CalcType = TDurCalcTypeCUMWEEKS
+
+	rd := int64(tDur.TimeDuration)
+
+	if rd >= WeekNanoSeconds {
+
+		tDur.Weeks = rd / WeekNanoSeconds
+		tDur.WeeksNanosecs = tDur.Weeks * WeekNanoSeconds
+		rd -= tDur.WeeksNanosecs
+
+	}
+
+	if rd >= DayNanoSeconds {
+		tDur.WeekDays = rd / DayNanoSeconds
+		tDur.WeekDaysNanosecs = tDur.WeekDays * DayNanoSeconds
+		rd -= tDur.WeekDaysNanosecs
+	}
+
+	tDur.DateDays = tDur.Weeks * int64(7)
+	tDur.DateDays += tDur.WeekDays
+	tDur.DateDaysNanosecs = tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
+
+	err := tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	// For Cumulative Weeks calculation and presentations, set Date Days to zero
+	tDur.DateDays = 0
+	tDur.DateDaysNanosecs = 0
+
+	return nil
+}
+
+// calcTypeCUMDays - Calculates Cumulative Days. Years, months and weeks are consolidated
+// and counted as cumulative days. The Data Fields for years, months, weeks and week days
+// are set to zero.  All cumulative days are allocated to the data field, 'DateDays'.
+func (tDur *TimeDurationDto) calcTypeCUMDays() error {
+
+	ePrefix := "TimeDurationDto.calcTypeCUMDays() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeCUMDAYS
+	
+	rd := int64(tDur.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
+
+	if rd >= DayNanoSeconds {
+		tDur.DateDays = rd / DayNanoSeconds
+		tDur.DateDaysNanosecs = tDur.DateDays * DayNanoSeconds
+	}
+
+	err := tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	return nil
+}
+
+// calcTypeCUMHours - Calculates Cumulative Hours. Years, months, weeks, week days and
+// date days and hours are consolidated in included in cumulative hours. Values for years,
+// months, weeks, week days and date days are ignored and set to zero. Time duration is
+// allocated over cumulative hours plus minutes, seconds, milliseconds, microseconds and
+// nanoseconds.
+func (tDur *TimeDurationDto) calcTypeCUMHours() error {
+
+	ePrefix := "TimeDurationDto.calcTypeCUMHours() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeCUMHOURS
+
+	err := tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	return nil
+}
+
+// calcTypeGregorianYears - Allocates Years using the number of nanoseconds in a
+// standard or average GregorianYear
+func (tDur *TimeDurationDto) calcTypeGregorianYears() error {
+	ePrefix := "TimeDurationDto.calcTypeGregorianYears() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeGregorianYrs
+	
+rd := int64(tDur.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
+
+	if rd >= GregorianYearNanoSeconds {
+		tDur.Years = rd / GregorianYearNanoSeconds
+		tDur.YearsNanosecs = tDur.Years * GregorianYearNanoSeconds
+	}
+
+	err := tDur.calcMonthsFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcDateDaysWeeksFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
 	return nil
 }
 
@@ -1246,7 +2139,6 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
 	}
 
-
 	rd -= tDur.YearsNanosecs
 
 	i := 0
@@ -1271,7 +2163,7 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 
 		mthDateTime = yearDateTime.AddDate( 0, i, 0)
 
-		tDur.MinutesNanosecs = int64(mthDateTime.Sub(yearDateTime))
+		tDur.MonthsNanosecs = int64(mthDateTime.Sub(yearDateTime))
 
 	} else {
 		tDur.Months = 0
@@ -1298,19 +2190,6 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 
 	ePrefix := "TimeDurationDto.calcDateDaysFromDuration() "
-
-	startTime := tDur.StartTimeDateTz.DateTime
-	endTime := tDur.EndTimeDateTz.DateTime
-
-	if endTime.Before(startTime) {
-		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")
-	}
-
-	if startTime.Location().String() != endTime.Location().String() {
-		return fmt.Errorf(ePrefix + "Error: 'startTime' and 'endTime' Time Zone Location do NOT match! " +
-			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
-			startTime.Location().String(), endTime.Location().String())
-	}
 
 	rd := int64(tDur.TimeDuration)
 
@@ -1371,19 +2250,6 @@ func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 	
 	ePrefix := "TimeDurationDto.calcHoursMinSecs() "
 
-	startTime := tDur.StartTimeDateTz.DateTime
-	endTime := tDur.EndTimeDateTz.DateTime
-
-	if endTime.Before(startTime) {
-		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")
-	}
-
-	if startTime.Location().String() != endTime.Location().String() {
-		return fmt.Errorf(ePrefix + "Error: 'startTime' and 'endTime' Time Zone Location do NOT match! " +
-			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
-			startTime.Location().String(), endTime.Location().String())
-	}
-
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
@@ -1441,19 +2307,6 @@ func (tDur *TimeDurationDto) calcNanoseconds() error {
 
 	ePrefix := "TimeDurationDto.calcNanoseconds() "
 
-	startTime := tDur.StartTimeDateTz.DateTime
-	endTime := tDur.EndTimeDateTz.DateTime
-
-	if endTime.Before(startTime) {
-		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")
-	}
-
-	if startTime.Location().String() != endTime.Location().String() {
-		return fmt.Errorf(ePrefix + "Error: 'startTime' and 'endTime' Time Zone Location do NOT match! " +
-			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
-			startTime.Location().String(), endTime.Location().String())
-	}
-
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
@@ -1506,19 +2359,6 @@ func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
 	
 	ePrefix := "TimeDurationDto.calcSummaryTimeElements() "
 
-	startTime := tDur.StartTimeDateTz.DateTime
-	endTime := tDur.EndTimeDateTz.DateTime
-
-	if endTime.Before(startTime) {
-		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")
-	}
-
-	if startTime.Location().String() != endTime.Location().String() {
-		return fmt.Errorf(ePrefix + "Error: 'startTime' and 'endTime' Time Zone Location do NOT match! " +
-			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
-			startTime.Location().String(), endTime.Location().String())
-	}
-
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
@@ -1542,8 +2382,7 @@ func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
 	tDur.TotTimeNanoseconds += tDur.MinutesNanosecs
 	tDur.TotTimeNanoseconds += tDur.SecondsNanosecs
 	tDur.TotTimeNanoseconds += tDur.TotSubSecNanoseconds
-	
-	
+
 	return nil
 }
 
