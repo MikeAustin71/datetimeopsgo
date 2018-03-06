@@ -19,7 +19,7 @@ func ExampleSetStartEndTimes() {
 
 	dur := dt.DurationUtility{}
 
-	dur.SetStartEndTimes(t1, t2)
+	dur.SetStartEndTimes(t1, t2, dt.TzIanaUsCentral, fmtstr)
 
 	dDto, err := dur.GetYearMthDaysTime()
 
@@ -99,7 +99,7 @@ func ExampleNewstarttimeduration01() {
 	t12Dur := t2.Sub(t1)
 	t12UTCDur := t2Utc.Sub(t1Utc)
 
-	dur, err := dt.DurationUtility{}.NewStartTimeDuration(t1, t12Dur)
+	dur, err := dt.DurationUtility{}.NewStartTimeDuration(t1, t12Dur,dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationUtility{}.NewStartTimeDuration(t1, t12Dur). Error='%v'\n", err.Error())

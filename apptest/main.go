@@ -10,6 +10,7 @@ import (
 
 func main() {
 
+
 	loc, _ := time.LoadLocation(dt.TzIanaUsCentral)
 	t1 := time.Date(2014, time.Month(2), 15, 19, 54, 30, 158712300, loc)
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
