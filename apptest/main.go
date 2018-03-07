@@ -5,27 +5,69 @@ import (
 	ex "../datetimeexamples"
 	"time"
 	"fmt"
-
 )
 
 func main() {
 
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
-	loc, _ := time.LoadLocation(dt.TzIanaUsCentral)
-	t1 := time.Date(2014, time.Month(2), 15, 19, 54, 30, 158712300, loc)
-	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
-
-	tDto, err := dt.TimeDto{}.New(2014, 2, 0, 15, 19, 54, 30, 0, 0, 158712300)
+	t2USCentral := time.Date(2014, time.Month(2),15,19,54,30,987654321,locUSCentral)
+	t3USCentral := time.Date(2017, time.Month(4),30,22,58,32,628149653,locUSCentral)
+	tDur, err := dt.TimeDurationDto{}.New(t2USCentral, t3USCentral, fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDto{}.New(year, month, ...). Error=%v \n", err.Error())
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
 	}
 
-	t2, err := tDto.GetDateTime(dt.TzIanaUsCentral)
+	fmt.Println("Results:")
+	fmt.Println(tDur.GetYearMthDaysTimeStr())
 
-	fmt.Println("t1: ", t1.Format(fmtstr))
-	fmt.Println("t2: ", t2.Format(fmtstr))
+tx1 := t2USCentral.AddDate(3, 2, 15)
+dur := int64(3) * int64(time.Hour)
+dur += int64(4) * int64(time.Minute)
+dur += int64(1) * int64(time.Second)
+dur += int64(640) * int64(time.Millisecond)
+dur += int64(495) * int64(time.Microsecond)
+dur += int64(332)
 
+expectedEndDate := tx1.Add(time.Duration(dur))
+
+fmt.Println("Caclulated End Date: ", t3USCentral.Format(fmtStr))
+fmt.Println("  Expected End Date: ", expectedEndDate.Format(fmtStr))
+fmt.Println("Time Duration Dto")
+ex.PrintTimeDurationDto(tDur)
+
+// Results:
+	// 3-Years 2-Months 15-Days 3-Hours 4-Minutes 1-Seconds
+	// 640-Milliseconds 495-Microseconds 332-Nanoseconds
+
+}
+
+func mainTest005() {
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
+	locUSPacific, _ := time.LoadLocation(dt.TzIanaUsPacific)
+	locParis, _ := time.LoadLocation(dt.TzIanaEuropeParis)
+	locCairo, _ := time.LoadLocation(dt.TzIanaAfricaCairo)
+	locMoscow, _ := time.LoadLocation(dt.TzIanaEuropeMoscow)
+	locTokyo, _ :=	time.LoadLocation(dt.TzIanaAsiaTokyo)
+
+	t1USCentral := time.Date(1948, time.Month(9),7,4,32,16,8185431,locUSCentral)
+	t1USPacific := t1USCentral.In(locUSPacific)
+	t1EuropeParis := t1USPacific.In(locParis)
+	t1AfricaCairo := t1EuropeParis.In(locCairo)
+	t1EuropeMoscow := t1AfricaCairo.In(locMoscow)
+	t1AsiaTokyo := t1EuropeMoscow.In(locTokyo)
+	t1bUSCentral := t1AsiaTokyo.In(locUSCentral)
+
+	fmt.Println("t1USCentral: ", t1USCentral.Format(fmtStr))
+	fmt.Println("t1USPacific: ", t1USPacific.Format(fmtStr))
+	fmt.Println("t1EuropeParis: ", t1EuropeParis.Format(fmtStr))
+	fmt.Println("t1AfricaCairo: ", t1AfricaCairo.Format(fmtStr))
+	fmt.Println("t1EuropeMoscow: ", t1EuropeMoscow.Format(fmtStr))
+	fmt.Println("t1AsiaTokyo: ", t1AsiaTokyo.Format(fmtStr))
+	fmt.Println("t1bUSCentral: ", t1bUSCentral.Format(fmtStr))
 
 }
 

@@ -19,7 +19,7 @@ r := TDurCalcTypeSTDYEARMTH
 
 func TestTDurCalcTypeString_002(t *testing.T) {
 
-	r := TDurCalcTypeCUMWEEKS
+	r := TDurCalcTypeCUMMONTHS
 	expectedStr := "CumMonthsCalc"
 
 	s := r.String()
