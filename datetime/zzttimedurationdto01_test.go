@@ -299,7 +299,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTzCalc_01(
 	// In this test, t2 is submitted as a Tokyo Time Zone and t3 is submitted as a Cairo
 	// Time Zone. However, a standard timezone of US Central is specified. Also,
 	// The calculation type is specified as "Standard".
-	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTzCalc(suite.t2AsiaTokyo, suite.t3AfricaCairo, TDurCalcTypeSTDYEARMTH, TzIanaUsCentral,suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTzCalc(suite.t2AsiaTokyo, suite.t3AfricaCairo, TzIanaUsCentral, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
 
 	assert.Nil(suite.T(),err,"Error:")
 
@@ -344,6 +344,116 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTzCalc_01(
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
 }
 
+
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesCalc_01() {
+
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesCalc(suite.t2USCentral, suite.t3USCentral, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error:")
+
+	expectedTimeDur := suite.t3USCentral.Sub(suite.t2USCentral)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration NOT EQUAL To Actual Time Duration!")
+
+	expectedTimeDur = time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	tx1 := suite.t2USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays) )
+
+	dur := t1Dur.Hours * int64(time.Hour)
+	dur += t1Dur.Minutes * int64(time.Minute)
+	dur += t1Dur.Seconds * int64(time.Second)
+	dur += t1Dur.Milliseconds * int64(time.Millisecond)
+	dur += t1Dur.Microseconds * int64(time.Microsecond)
+	dur += t1Dur.Nanoseconds
+
+	expectedEndDate := tx1.Add(time.Duration(dur))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+
+	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+
+	assert.True(suite.T(), "StdYearMthCalc" == t1Dur.CalcType.String(),"Error: CalcType String NOT EQUAL to Std Calc!")
+
+	expectedDateNanosecs := int64(tx1.Sub(suite.t2USCentral))
+
+	assert.Equal(suite.T(), expectedDateNanosecs, t1Dur.TotDateNanoseconds ,"Expected Date Nanoseconds DOES NOT EQUAL t1Dur.TotDateNanoseconds!")
+
+	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
+
+	calculatedTimeDur := time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, calculatedTimeDur,"Subtracted Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	dur = t1Dur.YearsNanosecs + t1Dur.MonthsNanosecs + t1Dur.DateDaysNanosecs +
+		t1Dur.HoursNanosecs + t1Dur.MinutesNanosecs + t1Dur.SecondsNanosecs +
+		t1Dur.MillisecondsNanosecs + t1Dur.MicrosecondsNanosecs +
+		t1Dur.Nanoseconds
+
+	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
+
+}
+
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDto_01() {
+
+	dTzStart, err := DateTzDto{}.New(suite.t2USCentral, suite.fmtStr)
+	assert.Nil(suite.T(),err,"Error DateTzDto{}.New(suite.t2AsiaTokyo): ")
+
+	dTzEnd, err := DateTzDto{}.New(suite.t3AfricaCairo, suite.fmtStr)
+	assert.Nil(suite.T(),err,"Error DateTzDto{}.New(suite.t2AsiaTokyo): ")
+
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateDto(dTzStart, dTzEnd, suite.fmtStr)
+
+	expectedTimeDur := suite.t3USCentral.Sub(suite.t2USCentral)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration NOT EQUAL To Actual Time Duration!")
+
+	expectedTimeDur = time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	tx1 := suite.t2USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays) )
+
+	dur := t1Dur.Hours * int64(time.Hour)
+	dur += t1Dur.Minutes * int64(time.Minute)
+	dur += t1Dur.Seconds * int64(time.Second)
+	dur += t1Dur.Milliseconds * int64(time.Millisecond)
+	dur += t1Dur.Microseconds * int64(time.Microsecond)
+	dur += t1Dur.Nanoseconds
+
+	expectedEndDate := tx1.Add(time.Duration(dur))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+
+	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+
+	assert.True(suite.T(), "StdYearMthCalc" == t1Dur.CalcType.String(),"Error: CalcType String NOT EQUAL to Std Calc!")
+
+	expectedDateNanosecs := int64(tx1.Sub(suite.t2USCentral))
+
+	assert.Equal(suite.T(), expectedDateNanosecs, t1Dur.TotDateNanoseconds ,"Expected Date Nanoseconds DOES NOT EQUAL t1Dur.TotDateNanoseconds!")
+
+	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
+
+	calculatedTimeDur := time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, calculatedTimeDur,"Subtracted Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	dur = t1Dur.YearsNanosecs + t1Dur.MonthsNanosecs + t1Dur.DateDaysNanosecs +
+		t1Dur.HoursNanosecs + t1Dur.MinutesNanosecs + t1Dur.SecondsNanosecs +
+		t1Dur.MillisecondsNanosecs + t1Dur.MicrosecondsNanosecs +
+		t1Dur.Nanoseconds
+
+	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
+
+
+}
+
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzCalc_01() {
 
 	// In this test, t2 is submitted as a Tokyo Time Zone and t3 is submitted as a Cairo
@@ -355,7 +465,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzC
 
 	dTzEnd, err := DateTzDto{}.New(suite.t3AfricaCairo, suite.fmtStr)
 
-	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateDtoTzCalc(dTzStart, dTzEnd, TDurCalcTypeSTDYEARMTH, TzIanaUsCentral,suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateDtoTzCalc(dTzStart, dTzEnd, TzIanaUsCentral, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
 
 	assert.Nil(suite.T(),err,"Error:")
 
@@ -398,6 +508,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzC
 							t1Dur.Nanoseconds
 
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
+
 }
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_01() {
@@ -468,7 +579,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTzCalc
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationTzCalc(suite.t1USCentral, actualTimeDuration, TDurCalcTypeSTDYEARMTH, TzIanaUsCentral, suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationTzCalc(suite.t1USCentral, actualTimeDuration, TzIanaUsCentral, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
 
 	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
 

@@ -917,6 +917,112 @@ func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string)(DateTzDto, e
 	return dtz2, nil
 }
 
+// NewTz - returns a new DateTzDto instance based on a time.Time input parameter ('dateTime').
+// The caller is required to provide a Time Zone Location. Input parameter 'dateTime' will be
+// converted to this Time Zone before storing the converted 'dateTime' in the newly created
+// DateTzDto instance.
+//
+// Input Parameter
+// ===============
+//
+// dateTime   		time.Time - A date time value
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location to which
+//														input parameter, 'dateTime' will be converted before
+//														being stored and stored in the final DateTzDto instance
+//														returned by the this method.
+//
+// 														Time zone location must be designated as one of two values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+//
+//  There are two return values: 	(1) a DateTzDto Type
+//																(2) an Error type
+//
+//  DateTzDto - If successful the method returns a valid, fully populated
+//							DateTzDto type defined as follows:
+//
+//	type DateTzDto struct {
+//		Description			string					// Unused, available for classification, labeling or description
+//		Time       			TimeDto					// Time Components
+//		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
+//	}
+//
+// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
+//						encountered this error Type will encapsulate an error message.
+//
+// Usage
+// =====
+//
+// Example:
+//			fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+//			dtzDto, err := DateTzDto{}.New(dateTime, fmtString)
+//
+func (dtz DateTzDto) NewTz(dateTime time.Time, timeZoneLocation, dateTimeFmtStr string)(DateTzDto, error) {
+
+	ePrefix := "DateTzDto.New() "
+
+	if dateTime.IsZero() {
+		return DateTzDto{}, errors.New(ePrefix + "Error: Input parameter dateTime is Zero value!")
+	}
+
+	tzl := dtz.preProcessTimeZoneLocation(timeZoneLocation)
+
+	loc, err := time.LoadLocation(tzl)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned by loc, err := time.LoadLocation(tzl). " +
+											"tzl='%v'  Error='%v'", tzl, err.Error())
+	}
+
+	dt2 := dateTime.In(loc)
+
+	dtz2 := DateTzDto{}
+
+	err = dtz2.SetFromTime(dt2, dateTimeFmtStr)
+
+	if err != nil {
+		return DateTzDto{}, fmt.Errorf(ePrefix + "Error returned from dtz2.SetFromTime(dateTime). dateTime='%v'  Error='%v'", dateTime, err.Error())
+	}
+
+	return dtz2, nil
+}
+
 // NewDateTimeElements - creates a new DateTzDto object and populates the data fields based on
 // input parameters.
 //

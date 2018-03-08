@@ -281,6 +281,35 @@ func TestDateTzDto_NewTimeDto_01(t *testing.T) {
 
 }
 
+func TestDateTzDto_NewTz_01(t *testing.T) {
+
+	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	locTokyo, err := time.LoadLocation(TzIanaAsiaTokyo)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+	}
+
+	t4USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279,locUSCentral)
+
+	t4AsiaTokyo := t4USCentral.In(locTokyo)
+
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	dTz, err := DateTzDto{}.NewTz(t4AsiaTokyo, TzIanaUsCentral, fmtstr)
+
+	if !t4USCentral.Equal(dTz.DateTime) {
+		t.Errorf("Error: Expected DateTime='%v'. Instead DateTime='%v'",
+										t4USCentral.Format(fmtstr), dTz.DateTime.Format(fmtstr))
+	}
+
+}
+
 func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 	t0str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	t1str := "02/15/2014 19:54:30.038175584 -0600 CST"
