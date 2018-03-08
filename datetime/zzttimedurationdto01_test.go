@@ -598,6 +598,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_01() 
 
 	assert.True(suite.T(), int64(duration) == t1Dur.TotDateNanoseconds ,"Error: Calculated Date Duration NOT EQUAL to t1Dur.TotDateNanoseconds!")
 
+	assert.True(suite.T(), actualTimeDuration == t1Dur.TimeDuration ,"Error: Actual Duration DOES NOT EQUAL t1Dur.TimeDuration!")
+
 }
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01() {
@@ -630,6 +632,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01(
 
 	assert.True(suite.T(), int64(duration) == t1Dur.TotDateNanoseconds ,"Error: Calculated Date Duration NOT EQUAL to t1Dur.TotDateNanoseconds!")
 
+	assert.True(suite.T(), actualTimeDuration == t1Dur.TimeDuration ,"Error: Actual Duration DOES NOT EQUAL t1Dur.TimeDuration!")
+
 }
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTzCalc_01() {
@@ -661,6 +665,42 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTzCalc
 	duration := tx1.Sub(suite.t1USCentral)
 
 	assert.True(suite.T(), int64(duration) == t1Dur.TotDateNanoseconds ,"Error: Calculated Date Duration NOT EQUAL to t1Dur.TotDateNanoseconds!")
+
+	assert.True(suite.T(), actualTimeDuration == t1Dur.TimeDuration ,"Error: Actual Duration DOES NOT EQUAL t1Dur.TimeDuration!")
+
+}
+
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationCalc_01() {
+
+	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
+
+	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationCalc(suite.t1USCentral, actualTimeDuration, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
+
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr) )
+	assert.True(suite.T(),t1Dur.EndTimeDateTz.DateTime.Equal(suite.t4USCentral),s)
+
+	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
+
+	dur := t1Dur.Hours * int64(time.Hour)
+	dur += t1Dur.Minutes * int64(time.Minute)
+	dur += t1Dur.Seconds * int64(time.Second)
+	dur += t1Dur.Milliseconds * int64(time.Millisecond)
+	dur += t1Dur.Microseconds * int64(time.Microsecond)
+	dur += t1Dur.Nanoseconds
+
+	tx2 := tx1.Add(time.Duration(dur))
+
+	assert.True(suite.T(),tx2.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+
+	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds ,"Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
+
+	duration := tx1.Sub(suite.t1USCentral)
+
+	assert.True(suite.T(), int64(duration) == t1Dur.TotDateNanoseconds ,"Error: Calculated Date Duration NOT EQUAL to t1Dur.TotDateNanoseconds!")
+
+	assert.True(suite.T(), actualTimeDuration == t1Dur.TimeDuration ,"Error: Actual Duration DOES NOT EQUAL t1Dur.TimeDuration!")
 
 }
 

@@ -926,7 +926,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 //
 // endDateTime		time.Time - Ending time
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
@@ -1037,7 +1037,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 //														 (3)	If 'timeZoneLocation' is submitted as an empty string,
 //																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
@@ -1185,7 +1185,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 //
 // endDateTime		DateTzDto - Ending date time
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
@@ -1298,7 +1298,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 //														 (3)	If 'timeZoneLocation' is submitted as an empty string,
 //																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
@@ -1576,7 +1576,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //														 (3)	If 'timeZoneLocation' is submitted as an empty string,
 //																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
@@ -1607,10 +1607,14 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationTz(startTime, duration, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationTzCalc(startTime, duration,
+// 										TzIanaUsCentral, TDurCalcTypeSTDYEARMTH, FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+//		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
+//						standard year month day time duration allocation.
+//
+// 					'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+// 						datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationTzCalc(startDateTime time.Time,
 					duration time.Duration, timeZoneLocation string, tDurCalcType TDurCalcType,
@@ -1626,7 +1630,99 @@ func (tDur TimeDurationDto) NewStartTimeDurationTzCalc(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, tDurCalcType , timeZoneLocation, dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+	}
+
+	return t2Dur, nil
+}
+
+// NewStartTimeDurationCalc - Creates and returns a new TimeDurationDto based on input
+// parameters, 'startDateTime', time duration, 'timeZoneLocation' and calculation type.
+//
+// The duration value is added to 'startDateTime' in order to compute the ending date time.
+//
+// If 'duration' is a negative value, 'startDateTime' is converted to ending date time and
+// the	actual starting date time is computed by subtracting duration.
+//
+// The time zone location applied to both 'startDateTime' and ending date time is derived
+// from input parameter, 'startDateTime'.
+//
+// The allocation of time duration to data fields, Years, Months, Weeks, WeekDays, DateDays,
+// Hours, Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds is controlled by the
+// input parameter calculation type, 'tDurCalcType'. See 'TDurCalcType' for details.
+//
+// Input Parameters:
+// =================
+//
+// startDateTime	time.Time	- Starting date time for the duration calculation
+//
+// duration		time.Duration - Amount of time to be added to or subtracted from
+//														'startDateTime'. Note: If duration is a negative value
+//														'startDateTime' is converted to ending date time and
+//														actual starting date time is computed by subtracting
+//														duration.
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
+//														time duration:
+//
+//			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																		day time calculation.
+//
+//			TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
+//
+//			TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
+//
+//			TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
+//
+//			TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
+//
+//			TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																 		Used for very large duration values.
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationCalc(startTime, duration,
+// 						TDurCalcTypeSTDYEARMTH, FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
+//						standard year month day time duration allocation.
+//
+// 					'FmtDateTimeYrMDayFmtStr' is a constants defined in the source
+// 						file, datetimeconstants.go.
+///
+func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
+					duration time.Duration, tDurCalcType TDurCalcType,
+							dateTimeFmtStr string) (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto.NewStartTimeDurationCalc() "
+
+	if startDateTime.IsZero() && duration==0 {
+		return TimeDurationDto{},
+			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
+				"input parameters are ZERO!")
+	}
+
+	timeZoneLocation := startDateTime.Location().String()
+
+	t2Dur := TimeDurationDto{}
+
+	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, tDurCalcType , timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
@@ -1856,7 +1952,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 // Input Parameter
 // ===============
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month
@@ -1912,7 +2008,7 @@ func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(calcType TDurCalcType)
 //																			// 	plus remaining Nanoseconds
 //									}
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month
@@ -2018,7 +2114,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 //
 // endDateTime		time.Time - Ending time
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month
@@ -2142,7 +2238,7 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 //														actual starting date time is computed by subtracting
 //														duration.
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month
@@ -2297,7 +2393,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTzCalc(startDateTime time.Time,
 //																			// 	plus remaining Nanoseconds
 //									}
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation time to be used in allocating
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
 //					TDurCalcTypeSTDYEARMTH - Default - standard year, month
