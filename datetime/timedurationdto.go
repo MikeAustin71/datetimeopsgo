@@ -1732,6 +1732,73 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 	return t2Dur, nil
 }
 
+// NewStartTimeDurationDateDto - Creates and returns a new TimeDurationDto based on input
+// parameters 'startDateTime' and time duration. 'startDateTime' is of type DateTzDto.
+//
+// The time duration value is added to 'startDateTime' in order to compute the ending date time.
+// If 'duration' is a negative value, 'startDateTime' is converted to ending date time. The
+// actual starting date time is computed by subtracting duration from ending date time.
+//
+// Time Zone location is derived from 'startDateTime'.
+//
+// Note: 	This method applies the standard Time Duration allocation calculation type,
+// 				'TDurCalcTypeSTDYEARMTH'. This means that duration is allocated over years,
+// 				months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
+// 				microseconds and nanoseconds.	See Type 'TDurCalcType' for details.
+//
+// Input Parameters:
+// =================
+//
+// startDateTime	DateTzDto	- Starting date time for the duration calculation
+//
+// duration		time.Duration - Amount of time to be added to or subtracted from
+//														'startDateTime'. Note: If duration is a negative value
+//														'startDateTime' is converted to ending date time and
+//														actual starting date time is computed by subtracting
+//														duration.
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDto(startTime, duration, FmtDateTimeYrMDayFmtStr)
+//
+//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, datetimeconstants.go
+//
+func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
+	duration time.Duration,	dateTimeFmtStr string) (TimeDurationDto, error) {
+	ePrefix := "TimeDurationDto.NewStartTimeDuration() "
+
+	if startDateTime.DateTime.IsZero() && duration==0 {
+		return TimeDurationDto{},
+			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
+				"input parameters are ZERO!")
+	}
+
+	timeZoneLocation := startDateTime.TimeZone.LocationName
+
+	t2Dur := TimeDurationDto{}
+
+	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime.DateTime, duration,
+											TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+	}
+
+	return t2Dur, nil
+}
+
 // NewStartTimePlusTimeDto - Creates and returns a new TimeDurationDto setting 
 // the start date time, end date time and duration based on a starting date time
 // and the time components contained in a TimeDto.
