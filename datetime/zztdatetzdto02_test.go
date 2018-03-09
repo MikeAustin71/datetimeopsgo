@@ -393,6 +393,45 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 
 }
 
+func TestDateTzDto_SetNewTimeZone(t *testing.T) {
+
+	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	locTokyo, err := time.LoadLocation(TzIanaAsiaTokyo)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+	}
+
+	t4USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279,locUSCentral)
+
+	t4AsiaTokyo := t4USCentral.In(locTokyo)
+
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	dTz1, err := DateTzDto{}.New(t4USCentral, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.New(t4USCentral, fmtstr) Error='%v", err.Error())
+	}
+
+	dTz1.SetNewTimeZone(TzIanaAsiaTokyo)
+
+	if !t4AsiaTokyo.Equal(dTz1.DateTime) {
+		t.Errorf("Error: Expected converted dTz1 date time = '%v'.  Instead, dTz1 date time='%v'",
+			t4AsiaTokyo.Format(FmtDateTimeYrMDayFmtStr), dTz1.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+	}
+
+	if TzIanaAsiaTokyo != dTz1.TimeZone.LocationName {
+		t.Errorf("Error: Expected dTz1 Time Zone Location Name ='%v'. "+
+			"Instead, Time Zone Location Name='%v'",TzIanaAsiaTokyo, dTz1.TimeZone.LocationName)
+	}
+
+}
 
 func TestDateTzDto_Sub_01(t *testing.T) {
 	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"

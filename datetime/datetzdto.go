@@ -1399,6 +1399,70 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 
 }
 
+// SetNewTimeZone - Changes the time zone information for the current
+// DateTzDto Date Time.  If the value of input parameter 'newTimeZoneLocation'
+// is different from the existing Time Zone Location, all values in the
+// current DateTzDto data fields will be replaced with the new date time and
+// time zone information.
+//
+// Input Parameters
+// ================
+//
+// newTimeZoneLocation	string	- Designates the standard Time Zone location used
+//																to compute date time. The existing DateTzDto Date
+//																Time will be converted to an equivalent time in
+//																this 'newTimeZoneLocation'.
+//
+// 														Time zone location must be designated as one of two values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
+
+	ePrefix := "DateTzDto.SetNewTimeZone() "
+	tzl := dtz.preProcessTimeZoneLocation(newTimeZoneLocation)
+
+	loc, err := time.LoadLocation(tzl)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(tzl). " +
+				"tzl='%v' newTimeZoneLocation='%v' Error='%v'",
+					tzl, newTimeZoneLocation, err.Error())
+	}
+
+	newDateTime := dtz.DateTime.In(loc)
+	newFmtStr := dtz.DateTimeFmt
+
+	err = dtz.SetFromTime(newDateTime, newFmtStr)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by SetFromTime(newDateTime, newFmtStr). " +
+			"newDateTime='%v' Error='%v'",
+				newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	return nil
+}
+
 // SetFromTime - Sets the values of the current DateTzDto fields
 // based on an input parameter 'dateTime' (time.time).
 //
