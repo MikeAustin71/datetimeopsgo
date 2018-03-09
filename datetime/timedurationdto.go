@@ -896,9 +896,21 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 				"input parameters are ZERO!")
 	}
 
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+			timeZoneLocation, tzLoc, err.Error())
+	}
+
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, timeZoneLocation, dateTimeFmtStr)
+	err = t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " + 
@@ -1088,9 +1100,21 @@ func (tDur TimeDurationDto) NewStartEndTimesTzCalc(startDateTime,
 				"input parameters are ZERO!")
 	}
 
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+				timeZoneLocation, tzLoc, err.Error())
+	}
+
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, tDurCalcType, timeZoneLocation, dateTimeFmtStr)
+	err = t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, tDurCalcType, tzLoc, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
@@ -1154,11 +1178,15 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartEndTimesTzCalc(startDateTime.DateTime, endDateTime.DateTime, TDurCalcTypeSTDYEARMTH, timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartEndTimesDateDtoTzCalc(startDateTime,
+															endDateTime,
+																TDurCalcTypeSTDYEARMTH,
+																	timeZoneLocation,
+																		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesDateDtoTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
@@ -1240,12 +1268,15 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 
 	timeZoneLocation := startDateTime.TimeZone.LocationName
 
-	err := t2Dur.SetStartEndTimesTzCalc(startDateTime.DateTime, endDateTime.DateTime, tDurCalcType,
-									timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartEndTimesDateDtoTzCalc(startDateTime,
+														endDateTime,
+															tDurCalcType,
+																timeZoneLocation,
+																		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesDateDtoTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
@@ -1349,18 +1380,33 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoTzCalc(startDateTime,
 				"input parameters are ZERO!")
 	}
 
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+				timeZoneLocation, tzLoc, err.Error())
+	}
+
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartEndTimesTzCalc(startDateTime.DateTime, endDateTime.DateTime, tDurCalcType, timeZoneLocation, dateTimeFmtStr)
+	err = t2Dur.SetStartEndTimesDateDtoTzCalc(startDateTime,
+																	endDateTime,
+																		tDurCalcType,
+																			tzLoc,
+																				dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesDateDtoTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
-
 }
 
 // NewStartTimeDuration - Creates and returns a new TimeDurationDto based on input parameters
@@ -1513,9 +1559,21 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 				"input parameters are ZERO!")
 	}
 
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+				timeZoneLocation, tzLoc, err.Error())
+	}
+
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
+	err = t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, TDurCalcTypeSTDYEARMTH , tzLoc, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
@@ -1629,13 +1687,31 @@ func (tDur TimeDurationDto) NewStartTimeDurationTzCalc(startDateTime time.Time,
 				"input parameters are ZERO!")
 	}
 
-	t2Dur := TimeDurationDto{}
+	tlz := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 
-	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, tDurCalcType , timeZoneLocation, dateTimeFmtStr)
+	_, err := time.LoadLocation(tlz)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix +
+				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+				"'timeZoneLocation'='%v'  processed tzl= '%v' Error='%v'",
+				timeZoneLocation, tlz, err.Error())
+	}
+
+	t2Dur := TimeDurationDto{}
+
+	err = t2Dur.SetStartTimeDurationTzCalc(startDateTime,
+																	duration,
+																		tDurCalcType,
+																			timeZoneLocation,
+																				dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+		fmt.Errorf(ePrefix +
+			"Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'",
+				err.Error())
 	}
 
 	return t2Dur, nil
@@ -1790,8 +1866,11 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime.DateTime, duration,
-											TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimeDurationDateDtoTzCalc(startDateTime,
+												duration,
+													TDurCalcTypeSTDYEARMTH,
+														timeZoneLocation,
+															dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
@@ -1888,18 +1967,32 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 				"input parameters are ZERO!")
 	}
 
-	t2Dur := TimeDurationDto{}
+	tlz := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 
-	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime.DateTime, duration,
-									TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
+	_, err := time.LoadLocation(tlz)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix +
+				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+				"'timeZoneLocation'='%v'  processed tzl= '%v' Error='%v'",
+				timeZoneLocation, tlz, err.Error())
+	}
+
+	t2Dur := TimeDurationDto{}
+
+	err = t2Dur.SetStartTimeDurationDateDtoTzCalc(startDateTime,
+																	duration,
+																		TDurCalcTypeSTDYEARMTH,
+																			timeZoneLocation,
+																					dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationDateDtoTzCalc(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
-
 }
 
 // NewStartTimePlusTimeDto - Creates and returns a new TimeDurationDto setting 
@@ -1996,9 +2089,25 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 				"input parameters are ZERO/EMPTY!")
 	}
 
+	tlz := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tlz)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+				"'timeZoneLocation'='%v'  processed tzl= '%v' Error='%v'",
+				timeZoneLocation, tlz, err.Error())
+	}
+
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetStartTimePlusTimeDto(startDateTime, plusTimeDto, TDurCalcTypeSTDYEARMTH, timeZoneLocation, dateTimeFmtStr)
+	err = t2Dur.SetStartTimePlusTimeDto(startDateTime,
+												plusTimeDto,
+													TDurCalcTypeSTDYEARMTH,
+														timeZoneLocation,
+															dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{},
@@ -2242,8 +2351,18 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 				"input parameters are ZERO/EMPTY!")
 	}
 
-	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return 	fmt.Errorf(ePrefix +
+				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+				timeZoneLocation, tzLoc, err.Error())
+	}
+
 
 	eDateTime, err := TimeZoneDto{}.New(endDateTime, tzLoc, dtFormat)
 
@@ -2353,6 +2472,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoTzCalc(startDateTime,
 
 										ePrefix := "TimeDurationDto.SetStartEndTimesDateDtoTzCalc() "
 
+
 		err := tDur.SetStartEndTimesTzCalc(startDateTime.DateTime, endDateTime.DateTime,
 								tDurCalcType, timeZoneLocation, dateTimeFmtStr)
 
@@ -2445,8 +2565,17 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 			"input parameters are ZERO!")
 	}
 
-	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+			timeZoneLocation, tzLoc, err.Error())
+	}
 
 	sTime, err := TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
@@ -2561,7 +2690,8 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 //
 //
 func (tDur *TimeDurationDto) SetStartTimeDurationTzCalc(startDateTime time.Time,
-	duration time.Duration, tDurCalcType TDurCalcType , timeZoneLocation, dateTimeFmtStr string) error {
+															duration time.Duration, tDurCalcType TDurCalcType,
+																	timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartTimeDurationTzCalc() "
 
@@ -2570,8 +2700,17 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTzCalc(startDateTime time.Time,
 			"input parameters are ZERO!")
 	}
 
-	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+			timeZoneLocation, tzLoc, err.Error())
+	}
 
 	xTime, err := TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
@@ -2621,6 +2760,115 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTzCalc(startDateTime time.Time,
 		tDur.Empty()
 		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
 			"Error='%v'", err.Error())
+	}
+
+	return nil
+}
+
+// SetStartTimeDurationDateDtoTzCalc - Sets start time, end time and
+// duration for the current TimeDurationDto instance.
+//
+// The input parameter, 'startDateTime', is of type DateTzDto. It is
+// converted to the specified 'timeZoneLocation' and the duration value
+// is added to in order to compute the ending date time.
+//
+// If 'duration' is a negative value 'startDateTime' is converted to
+// ending date time and the	actual starting date time is computed by
+// subtracting duration.
+//
+// Input Parameters:
+// =================
+//
+// startDateTime	DateTzDto	- Provides starting date time for the duration calculation
+//
+// duration		time.Duration - Amount of time to be added to or subtracted from
+//														'startDateTime'. Note: If duration is a negative value
+//														'startDateTime' is converted to ending date time and
+//														actual starting date time is computed by subtracting
+//														duration.
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
+//																	 week day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end time duration
+// 														calculations.
+//
+// 														Time zone location must be designated as one of two values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoTzCalc(startDateTime DateTzDto,
+	duration time.Duration, tDurCalcType TDurCalcType,
+	timeZoneLocation, dateTimeFmtStr string) error {
+
+	ePrefix := "TimeDurationDto.SetStartTimeDurationDateDtoTzCalc() "
+
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+			timeZoneLocation, tzLoc, err.Error())
+	}
+
+
+	err = tDur.SetStartTimeDurationTzCalc(startDateTime.DateTime,
+																				duration,
+																					tDurCalcType,
+																						timeZoneLocation,
+																							dateTimeFmtStr)
+
+	if err != nil {
+		fmt.Errorf(ePrefix + "Error returned by SetStartTimeDurationTzCalc: Error='%v'", err.Error())
 	}
 
 	return nil
@@ -2723,8 +2971,18 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(startDateTime time.Time,
 			"input parameters are ZERO/EMPTY!")
 	}
 
-	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
+	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err := time.LoadLocation(tzLoc)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+			timeZoneLocation, tzLoc, err.Error())
+	}
+
 
 	sDateTime, err := TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
