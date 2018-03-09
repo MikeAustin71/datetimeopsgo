@@ -686,6 +686,25 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 	return true
 }
 
+// GetTimeDto - Converts the current DateTzDto instance
+// date time information into an instance of TimeDto
+// and returns that TimeDto to the caller.
+func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
+
+	ePrefix := "DateTzDto.GetTimeDto() "
+
+	tDto, err := TimeDto{}.NewFromDateTime(dtz.DateTime)
+
+	if err != nil {
+		return TimeDto{}, fmt.Errorf(ePrefix +
+			"Error returned by TimeDto{}.NewFromDateTime(dtz.DateTime) " +
+			"dtz.DateTime ='%v'  Error='%v'",
+				dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	return tDto, nil
+}
+
 // IsEmpty - Analyzes the current DateTzDto instance to determine
 // if the instance is in an 'EMPTY' or uninitialized state.
 //

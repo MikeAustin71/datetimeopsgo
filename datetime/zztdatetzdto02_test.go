@@ -393,7 +393,7 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 
 }
 
-func TestDateTzDto_SetNewTimeZone(t *testing.T) {
+func TestDateTzDto_SetNewTimeZone_01(t *testing.T) {
 
 	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
 

@@ -474,3 +474,86 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 	}
 
 }
+
+func TestDateTzDto_GetTimeDto_01(t *testing.T) {
+
+	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	year := 2018
+	month := 3
+	day := 6
+	hour := 20
+	minute := 2
+	second := 18
+	nSecs := 792489279
+
+	t4USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	dTz1, err := DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)
+	
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)")
+	}
+	
+	tDto, err := dTz1.GetTimeDto()
+	
+	if err != nil {
+		t.Errorf("Error returned by dTz1.GetTimeDto(). Error=%v'", err.Error())
+	}
+
+	if year != tDto.Years {
+		t.Errorf("Error: Expected Years='%v'. Instead, Years='%v'",year, tDto.Years)
+	}
+
+	if month != tDto.Months {
+		t.Errorf("Error: Expected Months='%v'. Instead, Months='%v'",month, tDto.Months)
+	}
+
+	if day != tDto.DateDays {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",day, tDto.DateDays)
+	}
+
+	if hour != tDto.Hours {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",hour, tDto.Hours)
+	}
+
+	if minute != tDto.Minutes {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",minute, tDto.Minutes)
+	}
+
+	if second != tDto.Seconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",second, tDto.Seconds)
+	}
+
+	if 792 != tDto.Milliseconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",792, tDto.Milliseconds)
+	}
+	
+	if 489 != tDto.Microseconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",489, tDto.Microseconds)
+	}
+	
+	if 279 != tDto.Nanoseconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",279, tDto.Nanoseconds)
+	}
+	
+	if nSecs != tDto.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected tDto.TotSubSecNanoseconds='%v'. "+
+			"Instead, tDto.TotSubSecNanoseconds='%v'", nSecs, tDto.TotSubSecNanoseconds)
+	}
+
+	totTime := int64(hour) * int64(time.Hour)
+	totTime += int64(minute) * int64(time.Minute)
+	totTime += int64(second) * int64(time.Second)
+	totTime += int64(nSecs)
+
+	if totTime != tDto.TotTimeNanoseconds {
+		t.Errorf("Error: Expected tDto.TotTimeNanoseconds='%v'. "+
+			"Instead, tDto.TotTimeNanoseconds='%v'", totTime, tDto.TotTimeNanoseconds)
+	}
+
+}
