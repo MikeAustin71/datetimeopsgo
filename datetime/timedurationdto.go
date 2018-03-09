@@ -2239,6 +2239,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 // The time components of the TimeDto are added to the starting date time to compute
 // the ending date time and the duration.
 //
+// For the purposes of this time duration calculation, the Time Zone Location is
+// extracted from the input parameter, 'startDateTime'.
+//
 // Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
 // 				This means that duration is allocated over years, months, weeks, weekdays, date days,
 //				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
@@ -2271,31 +2274,6 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 //																			// 	plus remaining Nanoseconds
 //									}
 //
-// timeZoneLocation	string	- Designates the standard Time Zone location by which
-//														time duration will be compared. This ensures that
-//														'oranges are compared to oranges and apples are compared
-//														to apples' with respect to start time and end time comparisons.
-//
-// 														Time zone location must be designated as one of two values.
-// 														(1) the string 'Local' - signals the designation of the local time zone
-//																location for the host computer.
-//
-//														(2) IANA Time Zone Location -
-// 																See https://golang.org/pkg/time/#LoadLocation
-// 																and https://www.iana.org/time-zones to ensure that
-// 																the IANA Time Zone Database is properly configured
-// 																on your system. Note: IANA Time Zone Data base is
-// 																equivalent to 'tz database'.
-//																Examples:
-//																	"America/New_York"
-//																	"America/Chicago"
-//																	"America/Denver"
-//																	"America/Los_Angeles"
-//																	"Pacific/Honolulu"
-//																	"Etc/UTC" = ZULU, GMT or UTC - Default
-//
-//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
-//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -2310,13 +2288,14 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDto(startTime, plusTimeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDto(startTime,
+// 																			plusTimeDto,
+// 																				FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+//		Note: 'FmtDateTimeYrMDayFmtStr' are constants available in datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
-								plusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string)	(TimeDurationDto, error) {
+								plusTimeDto TimeDto, dateTimeFmtStr string)	(TimeDurationDto, error) {
 									
 	ePrefix := "TimeDurationDto.NewStartTimePlusTimeDto() "
 
@@ -2326,25 +2305,15 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 				"input parameters are ZERO/EMPTY!")
 	}
 
-	tlz := tDur.preProcessTimeZoneLocation(timeZoneLocation)
-
-	_, err := time.LoadLocation(tlz)
-
-	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
-				"'timeZoneLocation'='%v'  processed tzl= '%v' Error='%v'",
-				timeZoneLocation, tlz, err.Error())
-	}
+	timeZoneLocation := startDateTime.Location().String()
 
 	t2Dur := TimeDurationDto{}
 	
-	err = t2Dur.SetStartTimePlusTimeDto(startDateTime,
+	err := t2Dur.SetStartTimePlusTimeDto(startDateTime,
 												plusTimeDto,
 													TDurCalcTypeSTDYEARMTH,
 														timeZoneLocation,
-															dateTimeFmtStr)
+																dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{},

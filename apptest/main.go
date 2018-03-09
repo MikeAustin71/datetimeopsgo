@@ -12,9 +12,11 @@ func main() {
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
 	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
-	t2USCentral := time.Date(2014, time.Month(2),15,19,54,30,987654321,locUSCentral)
-	t3USCentral := time.Date(2017, time.Month(4),30,22,58,32,628149653,locUSCentral)
-	tDur, err := dt.TimeDurationDto{}.New(t2USCentral, t3USCentral, fmtStr)
+	t1USCentral := time.Date(1948, time.Month(9),7,4,32,16,8185431, locUSCentral)
+
+	t2USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279, locUSCentral)
+
+	tDur, err := dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
@@ -23,20 +25,8 @@ func main() {
 	fmt.Println("Results:")
 	fmt.Println(tDur.GetYearMthDaysTimeStr())
 
-tx1 := t2USCentral.AddDate(3, 2, 15)
-dur := int64(3) * int64(time.Hour)
-dur += int64(4) * int64(time.Minute)
-dur += int64(1) * int64(time.Second)
-dur += int64(640) * int64(time.Millisecond)
-dur += int64(495) * int64(time.Microsecond)
-dur += int64(332)
-
-expectedEndDate := tx1.Add(time.Duration(dur))
-
-fmt.Println("Caclulated End Date: ", t3USCentral.Format(fmtStr))
-fmt.Println("  Expected End Date: ", expectedEndDate.Format(fmtStr))
-fmt.Println("Time Duration Dto")
-ex.PrintTimeDurationDto(tDur)
+	fmt.Println("Time Duration Dto")
+	ex.PrintTimeDurationDto(tDur)
 
 // Results:
 	// 3-Years 2-Months 15-Days 3-Hours 4-Minutes 1-Seconds

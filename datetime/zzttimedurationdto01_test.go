@@ -859,6 +859,31 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 	assert.True(suite.T(), actualTimeDuration == t1Dur.TimeDuration ,"Error: Actual Duration DOES NOT EQUAL t1Dur.TimeDuration!")
 }
 
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimePlusTimeDto_01() {
+
+	year := 69
+	month := 5
+	day := 27
+	hour:= 15
+	minute := 30
+	second := 2
+	millisecond := 784
+	microsecond := 303
+	nanosecond := 848
+
+	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute, second,
+																millisecond, microsecond, nanosecond)
+
+	assert.Nil(suite.T(),err,"Error TimeDto{}.New(year, month, ...):")
+
+	tDur, err := TimeDurationDto{}.NewStartTimePlusTimeDto(suite.t1USCentral, tDto, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):")
+
+	assert.True(suite.T(),suite.t4USCentral.Equal(tDur.EndTimeDateTz.DateTime),"Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.EndTimeDateTz!")
+
+}
+
 func TestTimeDuroTestSuite(t *testing.T) {
 	tests := new(timedurdtoTestSuite)
 	suite.Run(t, tests)
