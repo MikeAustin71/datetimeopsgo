@@ -450,6 +450,28 @@ func (tDto TimeDto) New(years, months, weeks, days, hours, minutes,
 	return t2Dto, nil
 }
 
+// NewTimeElements - Creates and returns a new TimeDto using basic
+// time components as input parameters
+func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
+																			seconds, nanoseconds int) (TimeDto, error) {
+
+
+	ePrefix := "TimeDto.NewTimeElements(...) "
+
+	t2Dto := TimeDto{}
+
+	err := t2Dto.SetTimeElements(years, months, 0, days, hours, minutes,
+																	seconds, 0, 0,	nanoseconds)
+
+	if err != nil {
+		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned by t2Dto.SetTimeElements(...)  Error='%v'", err.Error())
+	}
+
+
+	return t2Dto, nil
+
+}
+
 // NewAddTimeDtos - Creates a new TimeDto which adds the values of the two TimeDto's
 // passed as input parameters.
 //
