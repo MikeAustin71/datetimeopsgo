@@ -147,7 +147,7 @@ func (tzdto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 
 	if err != nil {
 		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeIn.AddDate(years, months, days, hours, minutes, seconds, " +
+			"Error returned by tzdto.TimeIn.AddDateTime(years, months, days, hours, minutes, seconds, " +
 				"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). " +
 				"Error='%v'", err.Error())
 	}
@@ -157,7 +157,7 @@ func (tzdto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 
 	if err != nil {
 		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeOut.AddDate(years, months, days, hours, minutes, seconds, " +
+			"Error returned by tzdto.TimeOut.AddDateTime(years, months, days, hours, minutes, seconds, " +
 			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). " +
 			"Error='%v'", err.Error())
 	}
@@ -167,7 +167,7 @@ func (tzdto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 
 	if err != nil {
 		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeUTC.AddDate(years, months, days, hours, minutes, seconds, " +
+			"Error returned by tzdto.TimeUTC.AddDateTime(years, months, days, hours, minutes, seconds, " +
 			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). " +
 			"Error='%v'", err.Error())
 	}
