@@ -244,6 +244,32 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_02() {
 
 }
 
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartAutoEndTz_01() {
+
+	t1Dur, err := TimeDurationDto{}.NewStartAutoEndTz(suite.t1AsiaTokyo, TzIanaUsCentral, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error NewStartAutoEndTz() :")
+
+	assert.Equal(suite.T(), TzIanaUsCentral, t1Dur.StartTimeDateTz.TimeZone.LocationName,"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+
+	assert.Equal(suite.T(), TzIanaUsCentral, t1Dur.EndTimeDateTz.TimeZone.LocationName,"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+
+	assert.True(suite.T(), suite.t1USCentral.Equal(t1Dur.StartTimeDateTz.DateTime),"Error: Expected Starting Date Time NOT EQUAL to t1Dur.StartTimeDateTz!")
+
+	cLoc, _ := time.LoadLocation(TzIanaUsCentral)
+
+	checkTime := time.Now().In(cLoc)
+
+	checkDur := checkTime.Sub(t1Dur.EndTimeDateTz.DateTime)
+
+	testMax := time.Duration(int64(2) * int64(time.Second))
+
+	s:= fmt.Sprintf("Error: checkDur > testMax Nanoseconds!. checkDur='%v'  testMax='%v'", checkDur, testMax)
+	assert.True(suite.T(), testMax > checkDur,s )
+
+
+}
+
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTz_01() {
 
 	// In this test, t2 is submitted as a Tokyo Time Zone and t3 is submitted as a Cairo
@@ -907,6 +933,44 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeMinusTimeDto_0
 	assert.Nil(suite.T(),err,"Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):")
 
 	assert.True(suite.T(),suite.t4USCentral.Equal(tDur.EndTimeDateTz.DateTime),"Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.EndTimeDateTz!")
+
+}
+
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01() {
+
+	tDur, err := TimeDurationDto{}.New(suite.t1AsiaTokyo, suite.t2AsiaTokyo, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error TimeDurationDto{}.New(...):")
+
+	err = tDur.ReCalcEndDateTimeToNow()
+
+	assert.Nil(suite.T(),err,"Error TimeDurationDto{}.ReCalcEndDateTimeToNow():")
+
+	s:= fmt.Sprintf("Expected StartDateTime Time Zone='%v'. " +
+												"Instead StartDateTime TimeZone='%v'",
+												TzIanaAsiaTokyo, tDur.StartTimeDateTz.TimeZone.LocationName)
+
+	assert.Equal(suite.T(), TzIanaAsiaTokyo, tDur.StartTimeDateTz.TimeZone.LocationName, s)
+
+	s = fmt.Sprintf("Expected EndDateTime Time Zone='%v'. " +
+		"Instead EndDateTime TimeZone='%v'",
+		TzIanaAsiaTokyo, tDur.EndTimeDateTz.TimeZone.LocationName)
+
+	assert.Equal(suite.T(), TzIanaAsiaTokyo, tDur.EndTimeDateTz.TimeZone.LocationName, s)
+
+	assert.True(suite.T(),suite.t1AsiaTokyo.Equal(tDur.StartTimeDateTz.DateTime),
+		"Error: Expected StartDateTime (suite.t1AsiaTokyo) NOT EQUAL to t1Dur.StartTimeDateTz!")
+
+	testMax := time.Duration(int64(2) * int64(time.Second))
+
+	tokyoNow := time.Now().In(suite.t1AsiaTokyo.Location())
+
+  actualDur := tokyoNow.Sub(tDur.EndTimeDateTz.DateTime)
+
+  s = fmt.Sprintf("Error: Expected actual duration since Now to be less than '%v'. " +
+  				"Instead, actual duration ='%v'.", testMax, actualDur)
+
+	assert.True(suite.T(),actualDur < testMax, s)
 
 }
 
