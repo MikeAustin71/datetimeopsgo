@@ -121,12 +121,15 @@ func (dtz *DateTzDto) AddDate(years, months, days int, dateTimeFormatStr string)
 		return DateTzDto{}, fmt.Errorf(ePrefix + "The current DateTzDto is INVALID! dtz.DateTime='%v'", dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	newDt := dtz.DateTime.AddDate(years, months, days)
+	newDt1 := dtz.DateTime.AddDate(years, months, 0)
 
-	dtz2, err := DateTzDto{}.New(newDt, dtz.DateTimeFmt)
+	dur := DayNanoSeconds * int64(days)
+	newDt2 := newDt1.Add(time.Duration(dur))
+
+	dtz2, err := DateTzDto{}.New(newDt2, dtz.DateTimeFmt)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDt, dtz.DateTimeFmt). newDt='%v'  Error='%v'", newDt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return DateTzDto{}, fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDt2, dtz.DateTimeFmt). newDt='%v'  Error='%v'", newDt2.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 
@@ -166,12 +169,14 @@ func (dtz *DateTzDto) AddDateToThis(years, months, days int) error {
 		return fmt.Errorf(ePrefix + "The current DateTzDto is INVALID! dtz.DateTime='%v'", dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	newDt := dtz.DateTime.AddDate(years, months, days)
+	newDt1 := dtz.DateTime.AddDate(years, months, 0)
+	dur := int64(days) * DayNanoSeconds
+	newDt2 := newDt1.Add(time.Duration(dur))
 
-	dtz2, err := DateTzDto{}.New(newDt, dtz.DateTimeFmt)
+	dtz2, err := DateTzDto{}.New(newDt2, dtz.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDt, dtz.DateTimeFmt). newDt='%v'  Error='%v'", newDt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDt2, dtz.DateTimeFmt). newDt='%v'  Error='%v'", newDt2.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	dtz.CopyIn(dtz2)
@@ -501,9 +506,10 @@ milliseconds, microseconds, nanoseconds int,
 
 	ePrefix := "DateTzDto.AddDateTime() "
 
-	newDate := dtz.DateTime.AddDate(years, months, days)
+	newDate := dtz.DateTime.AddDate(years, months, 0)
 
-	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs := int64(days) * DayNanoSeconds
+	totNanoSecs += int64(hours) * int64(time.Hour)
 	totNanoSecs += int64(minutes) * int64(time.Minute)
 	totNanoSecs += int64(seconds) * int64(time.Second)
 	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
@@ -553,11 +559,13 @@ milliseconds, microseconds, nanoseconds int,
 func (dtz *DateTzDto) AddDateTimeToThis(years, months, days, hours, minutes, seconds,
 milliseconds, microseconds, nanoseconds int,
 	dateTimeFormatStr string) error {
+
 	ePrefix := "DateTzDto.AddDateTime() "
 
-	newDate := dtz.DateTime.AddDate(years, months, days)
+	newDate := dtz.DateTime.AddDate(years, months, 0)
 
-	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs := int64(days) * DayNanoSeconds
+	totNanoSecs += int64(hours) * int64(time.Hour)
 	totNanoSecs += int64(minutes) * int64(time.Minute)
 	totNanoSecs += int64(seconds) * int64(time.Second)
 	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
@@ -804,9 +812,11 @@ func (dtz *DateTzDto) MinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 	
 	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
 															minusTimeDto.Months, 
-																minusTimeDto.DateDays)
-	
-	dt2 := dt1.Add(time.Duration(minusTimeDto.TotTimeNanoseconds))
+																0)
+
+	totNanosecs := int64(minusTimeDto.DateDays) * DayNanoSeconds
+	totNanosecs += minusTimeDto.TotTimeNanoseconds
+	dt2 := dt1.Add(time.Duration(totNanosecs))
 	
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 	
@@ -852,13 +862,16 @@ func (dtz *DateTzDto) MinusTimeDtoToThis(minusTimeDto TimeDto) error {
 	ePrefix := "DateTzDto.MinusTimeDto() "
 
 	minusTimeDto.ConvertToNegativeValues()
-	
+
 	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
-															minusTimeDto.Months, 
-																minusTimeDto.DateDays)
-	
-	dt2 := dt1.Add(time.Duration(minusTimeDto.TotTimeNanoseconds))
-	
+																minusTimeDto.Months,
+																0)
+
+	totNanosecs := int64(minusTimeDto.DateDays) * DayNanoSeconds
+	totNanosecs += minusTimeDto.TotTimeNanoseconds
+	dt2 := dt1.Add(time.Duration(totNanosecs))
+
+
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 	
 	if err != nil {
@@ -1340,10 +1353,13 @@ func (dtz *DateTzDto) PlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 	plusTimeDto.ConvertToAbsoluteValues()
 
 	dt1 := dtz.DateTime.AddDate(plusTimeDto.Years,
-		plusTimeDto.Months,
-		plusTimeDto.DateDays)
+												plusTimeDto.Months,
+												0)
 
-	dt2 := dt1.Add(time.Duration(plusTimeDto.TotTimeNanoseconds))
+	incrementalDur := int64(plusTimeDto.DateDays) * DayNanoSeconds
+	incrementalDur += plusTimeDto.TotTimeNanoseconds
+
+	dt2 := dt1.Add(time.Duration(incrementalDur))
 
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 
@@ -1391,10 +1407,13 @@ func (dtz *DateTzDto) PlusTimeDtoToThis(plusTimeDto TimeDto) error {
 	plusTimeDto.ConvertToAbsoluteValues()
 
 	dt1 := dtz.DateTime.AddDate(plusTimeDto.Years,
-		plusTimeDto.Months,
-		plusTimeDto.DateDays)
+																plusTimeDto.Months,
+																0)
 
-	dt2 := dt1.Add(time.Duration(plusTimeDto.TotTimeNanoseconds))
+	incrementalDur := int64(plusTimeDto.DateDays) * DayNanoSeconds
+	incrementalDur += plusTimeDto.TotTimeNanoseconds
+
+	dt2 := dt1.Add(time.Duration(incrementalDur))
 
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 
