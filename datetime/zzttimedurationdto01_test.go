@@ -1152,6 +1152,430 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 
 }
 
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_02() {
+
+	// In this test, t4 is submitted as a Tokyo Time Zone and t5 is submitted as a Cairo
+	// Time Zone. However, a standard timezone of US Central is specified. Note,
+	// The calculation type is specified as Cumulative Months.
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, TzIanaUsCentral, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error NewStartEndTimesTz :")
+
+	err = t1Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
+
+	assert.Nil(suite.T(),err,"Error ReCalcTimeDurationAllocation:")
+
+	expectedTimeDur := suite.t5USCentral.Sub(suite.t4USCentral)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration NOT EQUAL To Actual Time Duration!")
+
+	expectedTimeDur = time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	tx1 := suite.t4USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays) )
+
+	dur := t1Dur.Hours * int64(time.Hour)
+	dur += t1Dur.Minutes * int64(time.Minute)
+	dur += t1Dur.Seconds * int64(time.Second)
+	dur += t1Dur.Milliseconds * int64(time.Millisecond)
+	dur += t1Dur.Microseconds * int64(time.Microsecond)
+	dur += t1Dur.Nanoseconds
+
+	expectedEndDate := tx1.Add(time.Duration(dur))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+
+	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+
+	assert.True(suite.T(), "CumMonthsCalc" == t1Dur.CalcType.String(),"Error: CalcType String NOT EQUAL to Std Calc!")
+
+	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
+
+	calculatedTimeDur := time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, calculatedTimeDur,"Subtracted Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	dur = t1Dur.YearsNanosecs + t1Dur.MonthsNanosecs + t1Dur.DateDaysNanosecs +
+		t1Dur.HoursNanosecs + t1Dur.MinutesNanosecs + t1Dur.SecondsNanosecs +
+		t1Dur.MillisecondsNanosecs + t1Dur.MicrosecondsNanosecs +
+		t1Dur.Nanoseconds
+
+	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
+
+	expectedOutStr := "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
+	actualOutStr := t1Dur.GetCumMonthsDaysTimeStr()
+
+	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
+	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
+
+	expectedTime := int64(3)
+	actualTime := t1Dur.Months
+	s = fmt.Sprintf("Expected Cumulative Months='%v'. Instead Cumulative Months='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+
+	expectedTime = int64(3)
+	actualTime = t1Dur.Weeks
+
+	s = fmt.Sprintf("Expected Weeks='%v'. Instead Weeks='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(6)
+	actualTime = t1Dur.WeekDays
+
+	s = fmt.Sprintf("Expected WeekDays='%v'. Instead WeekDays='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+
+	expectedTime = int64(27)
+	actualTime = t1Dur.DateDays
+
+	s = fmt.Sprintf("Expected Days='%v'. Instead Days='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(19)
+	actualTime = t1Dur.Hours
+
+	s = fmt.Sprintf("Expected Hours='%v'. Instead Hours='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(6)
+	actualTime = t1Dur.Minutes
+
+	s = fmt.Sprintf("Expected Minutes='%v'. Instead Minutes='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(46)
+	actualTime = t1Dur.Seconds
+
+	s = fmt.Sprintf("Expected Seconds='%v'. Instead Seconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(666)
+	actualTime = t1Dur.Milliseconds
+
+	s = fmt.Sprintf("Expected Milliseconds='%v'. Instead Milliseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(132)
+	actualTime = t1Dur.Microseconds
+
+	s = fmt.Sprintf("Expected Microseconds='%v'. Instead Microseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(70)
+	actualTime = t1Dur.Nanoseconds
+
+	s = fmt.Sprintf("Expected Nanoseconds='%v'. Instead Nanoseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(10346806666132070)
+	actualTime = int64(t1Dur.TimeDuration)
+
+	s = fmt.Sprintf("Expected Time Duration='%v'. Instead Time Duration='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+}
+
+
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
+
+	// In this test, t4 is submitted as a Tokyo Time Zone and t5 is submitted as a Cairo
+	// Time Zone. However, a standard timezone of US Central is specified. Note,
+	// the calculation type is specified as Cumulative Months.
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTzCalc(suite.t4AsiaTokyo, suite.t5AfricaCairo, TzIanaUsCentral, TDurCalcTypeCUMWEEKS, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error:")
+
+	expectedTimeDur := suite.t5USCentral.Sub(suite.t4USCentral)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration NOT EQUAL To Actual Time Duration!")
+
+	expectedTimeDur = time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	tx1 := suite.t4USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays) )
+
+	dur := t1Dur.Hours * int64(time.Hour)
+	dur += t1Dur.Minutes * int64(time.Minute)
+	dur += t1Dur.Seconds * int64(time.Second)
+	dur += t1Dur.Milliseconds * int64(time.Millisecond)
+	dur += t1Dur.Microseconds * int64(time.Microsecond)
+	dur += t1Dur.Nanoseconds
+
+	expectedEndDate := tx1.Add(time.Duration(dur))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+
+	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+
+	assert.True(suite.T(), "CumWeeksCalc" == t1Dur.CalcType.String(),"Error: CalcType String NOT EQUAL to Std Calc!")
+
+	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
+
+	calculatedTimeDur := time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, calculatedTimeDur,"Subtracted Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	dur = t1Dur.YearsNanosecs + t1Dur.MonthsNanosecs + t1Dur.DateDaysNanosecs +
+		t1Dur.HoursNanosecs + t1Dur.MinutesNanosecs + t1Dur.SecondsNanosecs +
+		t1Dur.MillisecondsNanosecs + t1Dur.MicrosecondsNanosecs +
+		t1Dur.Nanoseconds
+
+	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
+
+	expectedOutStr := "17-Weeks 0-WeekDays 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
+	actualOutStr := t1Dur.GetCumMonthsDaysTimeStr()
+
+	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
+	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
+
+	expectedTime := int64(0)
+	actualTime := t1Dur.Months
+	s = fmt.Sprintf("Expected Months='%v'. Instead Months='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+
+	expectedTime = int64(17)
+	actualTime = t1Dur.Weeks
+
+	s = fmt.Sprintf("Expected Cumulative Weeks='%v'. Instead Cumulative Weeks='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(6)
+	actualTime = t1Dur.WeekDays
+
+	s = fmt.Sprintf("Expected WeekDays='%v'. Instead WeekDays='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+
+	expectedTime = int64(0)
+	actualTime = t1Dur.DateDays
+
+	s = fmt.Sprintf("Expected Days='%v'. Instead Days='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(18)
+	actualTime = t1Dur.Hours
+
+	s = fmt.Sprintf("Expected Hours='%v'. Instead Hours='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(6)
+	actualTime = t1Dur.Minutes
+
+	s = fmt.Sprintf("Expected Minutes='%v'. Instead Minutes='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(46)
+	actualTime = t1Dur.Seconds
+
+	s = fmt.Sprintf("Expected Seconds='%v'. Instead Seconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(666)
+	actualTime = t1Dur.Milliseconds
+
+	s = fmt.Sprintf("Expected Milliseconds='%v'. Instead Milliseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(132)
+	actualTime = t1Dur.Microseconds
+
+	s = fmt.Sprintf("Expected Microseconds='%v'. Instead Microseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(70)
+	actualTime = t1Dur.Nanoseconds
+
+	s = fmt.Sprintf("Expected Nanoseconds='%v'. Instead Nanoseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(10346806666132070)
+	actualTime = int64(t1Dur.TimeDuration)
+
+	s = fmt.Sprintf("Expected Time Duration='%v'. Instead Time Duration='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	/*
+	$ go run main.go
+	Results Cumulative Weeks:
+	17-Weeks 0-WeekDays 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds
+	Time Duration Dto
+			 StartTimeDateTz:  2018-03-06 20:02:18.792489279 -0600 CST
+				 EndTimeDateTz:  2018-07-04 15:09:05.458621349 -0500 CDT
+					TimeDuration:  10346806666132070
+							CalcType:  CumWeeksCalc
+								 Years:  0
+				 YearsNanosecs:  0
+								Months:  0
+				MonthsNanosecs:  0
+								 Weeks:  17
+				 WeeksNanosecs:  10281600000000000
+							WeekDays:  0
+			WeekDaysNanosecs:  0
+							DateDays:  0
+			DateDaysNanosecs:  0
+								 Hours:  18
+				 HoursNanosecs:  64800000000000
+							 Minutes:  6
+			 MinutesNanosecs:  360000000000
+							 Seconds:  46
+			 SecondsNanosecs:  46000000000
+					Milliseconds:  666
+	MillisecondsNanosecs:  666000000
+					Microseconds:  132
+	MicrosecondsNanosecs:  132000
+					 Nanoseconds:  70
+	-----------------------------------------------------
+	TotSubSecNanoseconds:  666132070
+		TotDateNanoseconds:  10281600000000000
+		TotTimeNanoseconds:  65206666132070
+	-----------------------------------------------------
+	Check Total:
+		 Date + Time Nanoseconds:  10346806666132070
+	Total Duration Nanoseconds:  10346806666132070
+	-----------------------------------------------------
+	 */
+
+}
+
+
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_02() {
+
+	// In this test, t4 is submitted as a Tokyo Time Zone and t5 is submitted as a Cairo
+	// Time Zone. However, a standard timezone of US Central is specified. Note,
+	// the calculation type is specified as Cumulative Months.
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, TzIanaUsCentral, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error NewStartEndTimesTz:")
+
+	err = t1Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
+
+	assert.Nil(suite.T(),err,"Error ReCalcTimeDurationAllocation:")
+
+	expectedTimeDur := suite.t5USCentral.Sub(suite.t4USCentral)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration NOT EQUAL To Actual Time Duration!")
+
+	expectedTimeDur = time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration,"Expected Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	tx1 := suite.t4USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays) )
+
+	dur := t1Dur.Hours * int64(time.Hour)
+	dur += t1Dur.Minutes * int64(time.Minute)
+	dur += t1Dur.Seconds * int64(time.Second)
+	dur += t1Dur.Milliseconds * int64(time.Millisecond)
+	dur += t1Dur.Microseconds * int64(time.Microsecond)
+	dur += t1Dur.Nanoseconds
+
+	expectedEndDate := tx1.Add(time.Duration(dur))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+
+	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
+
+	assert.True(suite.T(),expectedEndDate.Equal(t1Dur.EndTimeDateTz.DateTime),"Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+
+	assert.True(suite.T(), "CumWeeksCalc" == t1Dur.CalcType.String(),"Error: CalcType String NOT EQUAL to Std Calc!")
+
+	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
+
+	calculatedTimeDur := time.Duration(t1Dur.TotDateNanoseconds + t1Dur.TotTimeNanoseconds)
+
+	assert.Equal(suite.T(), expectedTimeDur, calculatedTimeDur,"Subtracted Time Duration DID NOT EQUAL Date + Time Duration !")
+
+	dur = t1Dur.YearsNanosecs + t1Dur.MonthsNanosecs + t1Dur.DateDaysNanosecs +
+		t1Dur.HoursNanosecs + t1Dur.MinutesNanosecs + t1Dur.SecondsNanosecs +
+		t1Dur.MillisecondsNanosecs + t1Dur.MicrosecondsNanosecs +
+		t1Dur.Nanoseconds
+
+	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
+
+	expectedOutStr := "17-Weeks 0-WeekDays 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
+	actualOutStr := t1Dur.GetCumMonthsDaysTimeStr()
+
+	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
+	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
+
+	expectedTime := int64(0)
+	actualTime := t1Dur.Months
+	s = fmt.Sprintf("Expected Months='%v'. Instead Months='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+
+	expectedTime = int64(17)
+	actualTime = t1Dur.Weeks
+
+	s = fmt.Sprintf("Expected Cumulative Weeks='%v'. Instead Cumulative Weeks='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(6)
+	actualTime = t1Dur.WeekDays
+
+	s = fmt.Sprintf("Expected WeekDays='%v'. Instead WeekDays='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+
+	expectedTime = int64(0)
+	actualTime = t1Dur.DateDays
+
+	s = fmt.Sprintf("Expected Days='%v'. Instead Days='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(18)
+	actualTime = t1Dur.Hours
+
+	s = fmt.Sprintf("Expected Hours='%v'. Instead Hours='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(6)
+	actualTime = t1Dur.Minutes
+
+	s = fmt.Sprintf("Expected Minutes='%v'. Instead Minutes='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(46)
+	actualTime = t1Dur.Seconds
+
+	s = fmt.Sprintf("Expected Seconds='%v'. Instead Seconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(666)
+	actualTime = t1Dur.Milliseconds
+
+	s = fmt.Sprintf("Expected Milliseconds='%v'. Instead Milliseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(132)
+	actualTime = t1Dur.Microseconds
+
+	s = fmt.Sprintf("Expected Microseconds='%v'. Instead Microseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(70)
+	actualTime = t1Dur.Nanoseconds
+
+	s = fmt.Sprintf("Expected Nanoseconds='%v'. Instead Nanoseconds='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+	expectedTime = int64(10346806666132070)
+	actualTime = int64(t1Dur.TimeDuration)
+
+	s = fmt.Sprintf("Expected Time Duration='%v'. Instead Time Duration='%v'",expectedTime, actualTime)
+	assert.Equal(suite.T(), expectedTime, actualTime,s )
+
+}
+
+
 
 func TestTimeDuroTestSuite(t *testing.T) {
 	tests := new(timedurdtoTestSuite)

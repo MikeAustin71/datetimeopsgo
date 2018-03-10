@@ -13,25 +13,27 @@ func main() {
 	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
 	t1USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279, locUSCentral)
+	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
 
-	t2USCentral := time.Date(2018, time.Month(7),04,15,9,5,458621349, locUSCentral)
+	 t2USCentral := time.Date(2018, time.Month(7),04,15,9,5,458621349, locUSCentral)
+	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
 
 
-	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesTzCalc (t1USCentral, t2USCentral, dt.TzIanaUsCentral , dt.TDurCalcTypeCUMMONTHS, fmtStr)
+	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesTzCalc (t1USCentral, t2USCentral,
+									dt.TzIanaUsCentral,	dt.TDurCalcTypeCUMWEEKS, fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
 	}
 
-	fmt.Println("Results Cumulative Months:")
-	fmt.Println(tDur.GetCumMonthsDaysTimeStr())
+	fmt.Println("Results Cumulative Weeks:")
+	//fmt.Println(tDur.GetCumDaysTimeStr())
+	fmt.Println(tDur.GetCumWeeksDaysTimeStr())
 
 	fmt.Println("Time Duration Dto")
 	ex.PrintTimeDurationDto(tDur)
 
-// Results:
-	// 3-Years 2-Months 15-Days 3-Hours 4-Minutes 1-Seconds
-	// 640-Milliseconds 495-Microseconds 332-Nanoseconds
+
 
 }
 
