@@ -21,17 +21,91 @@ func (tDurCalcType TDurCalcType) String() string {
 	return TDurCalcTypeLabels[tDurCalcType]
 }
 
+// These Calculation types, 'TDurCalcType', are associated with the struct
+// 'TimeDurationDto'. They are used to control the calculation of time
+// duration and the allocation of time duration across subsidiary time
+// components.
 const (
 	
-	// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation. All data 
-	// fields in the TimeDto are populated in the duration allocation
+// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation. All data
+// fields in the TimeDto are populated in the duration allocation.
+//
+// For the 'TDurCalcTypeYEARMTH' calculation type, the following fields are
+// populated:
+//
+//	type TimeDurationDto struct {
+//			StartTimeDateTz							populated
+//			EndTimeDateTz               populated
+//			TimeDuration                populated
+//			CalcType                    = TDurCalcTypeYEARMTH
+//			Years                       populated
+//			YearsNanosecs               populated
+//			Months                      populated
+//			MonthsNanosecs              populated
+//			Weeks                       populated
+//			WeeksNanosecs               populated
+//			WeekDays                    populated
+//			WeekDaysNanosecs            populated
+//			DateDays                    populated
+//			DateDaysNanosecs            populated
+//			Hours                       populated
+//			HoursNanosecs               populated
+//			Minutes                     populated
+//			MinutesNanosecs             populated
+//			Seconds                     populated
+//			SecondsNanosecs             populated
+//			Milliseconds                populated
+//			MillisecondsNanosecs        populated
+//			Microseconds                populated
+//			MicrosecondsNanosecs        populated
+//			Nanoseconds                 populated
+//			TotSubSecNanoseconds        populated
+//			TotDateNanoseconds          populated
+//			TotTimeNanoseconds          populated
+//	}
+//
 	TDurCalcTypeSTDYEARMTH	TDurCalcType = iota
 
-	// TDurCalcTypeCUMMONTHS - Cumulative Months Calculation. Years are ignored.
-	// Years and Months are consolidated and counted as cumulative months. Years
-	// duration is not provided. The entire duration is broken down by cumulative
-	// months plus weeks, week days, date days, hours, minutes, seconds, milliseconds,
-	// microseconds and nanoseconds. The Data Fields for for Years is set to zero.
+// TDurCalcTypeCUMMONTHS - Cumulative Months Calculation. Years are ignored.
+// Years and Months are consolidated and counted as cumulative months. Years
+// duration is not provided. The entire duration is broken down by cumulative
+// months plus weeks, week days, date days, hours, minutes, seconds, milliseconds,
+// microseconds and nanoseconds. The Data Fields for for Years is set to zero.
+//
+// For the 'TDurCalcTypeCUMMONTHS' calculation type, the following fields are
+// populated:
+//
+//	type TimeDurationDto struct {
+//			StartTimeDateTz							populated
+//			EndTimeDateTz               populated
+//			TimeDuration                populated
+//			CalcType                    = TDurCalcTypeCUMMONTHS
+//			Years                       NOT-populated
+//			YearsNanosecs               NOT-populated
+//			Months                      populated
+//			MonthsNanosecs              populated
+//			Weeks                       populated
+//			WeeksNanosecs               populated
+//			WeekDays                    populated
+//			WeekDaysNanosecs            populated
+//			DateDays                    populated
+//			DateDaysNanosecs            populated
+//			Hours                       populated
+//			HoursNanosecs               populated
+//			Minutes                     populated
+//			MinutesNanosecs             populated
+//			Seconds                     populated
+//			SecondsNanosecs             populated
+//			Milliseconds                populated
+//			MillisecondsNanosecs        populated
+//			Microseconds                populated
+//			MicrosecondsNanosecs        populated
+//			Nanoseconds                 populated
+//			TotSubSecNanoseconds        populated
+//			TotDateNanoseconds          populated
+//			TotTimeNanoseconds          populated
+//	}
+//
 	TDurCalcTypeCUMMONTHS
 
 	// TDurCalcTypeCUMWEEKS - Cumulative Weeks calculation. Years and months are ignored.
@@ -39,6 +113,41 @@ const (
 	// months duration is not provided. The entire duration is broken down by cumulative 
 	// weeks, plus week days, hours, minutes, seconds, milliseconds, microseconds and
 	// nanoseconds. Data Fields for Years and Months are always set to zero.
+	//
+	// For the 'TDurCalcTypeCUMWEEKS' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeCUMWEEKS
+	//			Years                       NOT-populated
+	//			YearsNanosecs               NOT-populated
+	//			Months                      NOT-populated
+	//			MonthsNanosecs              NOT-populated
+	//			Weeks                       populated
+	//			WeeksNanosecs               populated
+	//			WeekDays                    populated
+	//			WeekDaysNanosecs            populated
+	//			DateDays                    NOT-populated
+	//			DateDaysNanosecs            NOT-populated
+	//			Hours                       populated
+	//			HoursNanosecs               populated
+	//			Minutes                     populated
+	//			MinutesNanosecs             populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
+	//
 	TDurCalcTypeCUMWEEKS
 	
 	// TDurCalcTypeCUMDAYS - Cumulative Days calculation. Years, months and weeks are 
@@ -47,6 +156,41 @@ const (
 	// broken down by cumulative days plus hours, minutes, seconds, milliseconds,
 	// microseconds and nanoseconds. Data Fields for years, months, weeks, and weekdays
 	// are always set to zero.
+	//
+	// For the 'TDurCalcTypeCUMDAYS' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeCUMDAYS
+	//			Years                       NOT-populated
+	//			YearsNanosecs               NOT-populated
+	//			Months                      NOT-populated
+	//			MonthsNanosecs              NOT-populated
+	//			Weeks                       NOT-populated
+	//			WeeksNanosecs               NOT-populated
+	//			WeekDays                    NOT-populated
+	//			WeekDaysNanosecs            NOT-populated
+	//			DateDays                    populated
+	//			DateDaysNanosecs            populated
+	//			Hours                       populated
+	//			HoursNanosecs               populated
+	//			Minutes                     populated
+	//			MinutesNanosecs             populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
+	//
 	TDurCalcTypeCUMDAYS
 	
 	// TDurCalcTypeCUMHOURS - Cumulative Hours calculations. Years, months, weeks, and days
@@ -55,6 +199,41 @@ const (
 	// broken down by cumulative hours plus minutes, seconds, milliseconds, microseconds
 	// and nanoseconds.  Data Fields for years, months, weeks, and days are always set
 	// to zero. 
+	//
+	// For the 'TDurCalcTypeCUMHOURS' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeCUMHOURS
+	//			Years                       NOT-populated
+	//			YearsNanosecs               NOT-populated
+	//			Months                      NOT-populated
+	//			MonthsNanosecs              NOT-populated
+	//			Weeks                       NOT-populated
+	//			WeeksNanosecs               NOT-populated
+	//			WeekDays                    NOT-populated
+	//			WeekDaysNanosecs            NOT-populated
+	//			DateDays                    NOT-populated
+	//			DateDaysNanosecs            NOT-populated
+	//			Hours                       populated
+	//			HoursNanosecs               populated
+	//			Minutes                     populated
+	//			MinutesNanosecs             populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
+	//
 	TDurCalcTypeCUMHOURS
 
 	// TDurCalcTypeCUMMINUTES - Cumulative Minutes calculations. Years, months, weeks, days
@@ -65,6 +244,41 @@ const (
 	// broken down by cumulative minutes plus seconds, milliseconds, microseconds
 	// and nanoseconds.  Data Fields for years, months, weeks, days and hours are always set
 	// to zero.
+	//
+	// For the 'TDurCalcTypeCUMHOURS' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeCUMMINUTES
+	//			Years                       NOT-populated
+	//			YearsNanosecs               NOT-populated
+	//			Months                      NOT-populated
+	//			MonthsNanosecs              NOT-populated
+	//			Weeks                       NOT-populated
+	//			WeeksNanosecs               NOT-populated
+	//			WeekDays                    NOT-populated
+	//			WeekDaysNanosecs            NOT-populated
+	//			DateDays                    NOT-populated
+	//			DateDaysNanosecs            NOT-populated
+	//			Hours                       NOT-populated
+	//			HoursNanosecs               NOT-populated
+	//			Minutes                     populated
+	//			MinutesNanosecs             populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
+	//
 	TDurCalcTypeCUMMINUTES
 
 	// TDurCalcTypeGregorianYrs - Allocates Years, Months, Weeks, WeekDays, Date Days, Hours
@@ -76,6 +290,41 @@ const (
 	//
 	// The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
 	// 49 minutes and 12 seconds. GregorianYearNanoSeconds = 31,556,952,000,000,000 nanoseconds
+	//
+	//
+	// For the 'TDurCalcTypeGregorianYrs' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeGregorianYrs
+	//			Years                       populated
+	//			YearsNanosecs               populated
+	//			Months                      populated
+	//			MonthsNanosecs              populated
+	//			Weeks                       populated
+	//			WeeksNanosecs               populated
+	//			WeekDays                    populated
+	//			WeekDaysNanosecs            populated
+	//			DateDays                    populated
+	//			DateDaysNanosecs            populated
+	//			Hours                       populated
+	//			HoursNanosecs               populated
+	//			Minutes                     populated
+	//			MinutesNanosecs             populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
 	//
 	TDurCalcTypeGregorianYrs
 	
@@ -532,9 +781,44 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 	return str
 }
 
-// GetWeeksDaysTimeStr - Example DisplayStr
+// GetCumMonthsDaysTimeStr - Returns Cumulative Months Display
+// showing Months, Days, Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
+
+	str := ""
+
+	str += fmt.Sprintf("%v-Months ", t2Dur.Months)
+
+	str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str
+
+}
+
+// GetCumWeeksDaysTimeStr - Example DisplayStr
 // 126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (tDur *TimeDurationDto) GetWeeksDaysTimeStr() string {
+func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -565,7 +849,7 @@ func (tDur *TimeDurationDto) GetWeeksDaysTimeStr() string {
 	return str
 }
 
-// GetDaysTimeStr - Returns duration formatted as
+// GetCumDaysTimeStr - Returns duration formatted as
 // days, hours, minutes, seconds, milliseconds, microseconds,
 // and nanoseconds. Years, months and weeks are always excluded and 
 // included in cumulative 'days'.
@@ -574,7 +858,7 @@ func (tDur *TimeDurationDto) GetWeeksDaysTimeStr() string {
 // 
 // 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
-func (tDur *TimeDurationDto) GetDaysTimeStr() string {
+func (tDur *TimeDurationDto) GetCumDaysTimeStr() string {
 	
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
@@ -604,10 +888,10 @@ func (tDur *TimeDurationDto) GetDaysTimeStr() string {
 	return str
 }
 
-// GetHoursTimeStr - Returns duration formatted as hours,
+// GetCumHoursTimeStr - Returns duration formatted as hours,
 // minutes, seconds, milliseconds, microseconds, nanoseconds.
 // Example: 152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (tDur *TimeDurationDto) GetHoursTimeStr() string {
+func (tDur *TimeDurationDto) GetCumHoursTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"

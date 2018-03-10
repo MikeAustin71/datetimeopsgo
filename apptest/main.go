@@ -12,18 +12,19 @@ func main() {
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
 	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
-	t1USCentral := time.Date(1948, time.Month(9),7,4,32,16,8185431, locUSCentral)
+	t1USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279, locUSCentral)
 
-	t2USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279, locUSCentral)
+	t2USCentral := time.Date(2018, time.Month(7),04,15,9,5,458621349, locUSCentral)
 
-	tDur, err := dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr)
+
+	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesTzCalc (t1USCentral, t2USCentral, dt.TzIanaUsCentral , dt.TDurCalcTypeCUMMONTHS, fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
 	}
 
-	fmt.Println("Results:")
-	fmt.Println(tDur.GetYearMthDaysTimeStr())
+	fmt.Println("Results Cumulative Months:")
+	fmt.Println(tDur.GetCumMonthsDaysTimeStr())
 
 	fmt.Println("Time Duration Dto")
 	ex.PrintTimeDurationDto(tDur)
