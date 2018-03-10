@@ -2361,32 +2361,6 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 //																			// 	plus remaining Nanoseconds
 //									}
 //
-// timeZoneLocation	string	- Designates the standard Time Zone location by which
-//														time duration will be compared. This ensures that
-//														'oranges are compared to oranges and apples are compared
-//														to apples' with respect to start time and end time comparisons.
-//
-// 														Time zone location must be designated as one of two values.
-// 														(1) the string 'Local' - signals the designation of the local time zone
-//																location for the host computer.
-//
-//														(2) IANA Time Zone Location -
-// 																See https://golang.org/pkg/time/#LoadLocation
-// 																and https://www.iana.org/time-zones to ensure that
-// 																the IANA Time Zone Database is properly configured
-// 																on your system. Note: IANA Time Zone Data base is
-// 																equivalent to 'tz database'.
-//																Examples:
-//																	"America/New_York"
-//																	"America/Chicago"
-//																	"America/Denver"
-//																	"America/Los_Angeles"
-//																	"Pacific/Honolulu"
-//																	"Etc/UTC" = ZULU, GMT or UTC - Default
-//
-//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
-//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
-//
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
 //															"2006-01-02 15:04:05.000000000 -0700 MST"
@@ -2400,13 +2374,13 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewEndTimeMinusTimeDto(endTime, minusTimeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.NewEndTimeMinusTimeDto(endTime, minusTimeDto, FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in source file,
+// 							datetimeconstants.go.
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
-								minusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string)	(TimeDurationDto, error) {
+								minusTimeDto TimeDto, dateTimeFmtStr string)	(TimeDurationDto, error) {
 									
 	ePrefix := "TimeDurationDto.NewEndTimeMinusTimeDto() "
 
@@ -2416,9 +2390,12 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 				"input parameters are ZERO/EMPTY!")
 	}
 
+	timeZoneLocation := endDateTime.Location().String()
+
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto, TDurCalcTypeSTDYEARMTH,timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto,
+										TDurCalcTypeSTDYEARMTH,timeZoneLocation, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{},
