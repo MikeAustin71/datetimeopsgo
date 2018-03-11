@@ -38,61 +38,46 @@ type TimeDto struct {
 // AddTimeDto - Adds time to the current TimeDto. The amount of time added
 // is provided by the input parameter 't2Dto' of type TimeDto.
 //
+// Date time math uses timezone UTC.
+//
 //	Input Parameters
 //	================
 //
 //	t2Dto						TimeDto	- The amount of time to be added to the current TimeDto
 //															data fields.
 //
-// timeZoneLocation	string	- time zone location must be designated as one of two values.
 //
-// 														(1) the string 'Local' - signals the designation of the local time zone
-//																location for the host computer.
-//
-//														(2)	IANA Time Zone Location -
-// 																See https://golang.org/pkg/time/#LoadLocation
-// 																and https://www.iana.org/time-zones to ensure that
-// 																the IANA Time Zone Database is properly configured
-// 																on your system. Note: IANA Time Zone Data base is
-// 																equivalent to 'tz database'. A list of IANA time zones
-//																is found here:
-// 																	https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-//
-//																Examples:
-//																	"America/New_York"
-//																	"America/Chicago"
-//																	"America/Denver"
-//																	"America/Los_Angeles"
-//																	"Pacific/Honolulu"
-//																	"Etc/UTC" = ZULU, GMT or UTC - Default
-//
-//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
-//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
-//
-func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto, timeZoneLocation string) error {
+func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto) error {
 
 	ePrefix := "TimeDto.AddTimeDto() "
 
-	tzLoc := tDto.preProcessTimeZoneLocation(timeZoneLocation)
-
-	loc, err := time.LoadLocation(tzLoc)
+	loc, err := time.LoadLocation(TzIanaUTC)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). TzIanaUTC='%v'  Error='%v'", TzIanaUTC, err.Error())
 	}
 
-	years 	:= 	tDto.Years 		+ t2Dto.Years
-	months 	:= 	tDto.Months 	+ t2Dto.Months
-	days 		:=	tDto.DateDays	+	t2Dto.DateDays
-	hours   :=	tDto.Hours    + t2Dto.Hours
-	minutes :=	tDto.Minutes  + t2Dto.Minutes
-	seconds := 	tDto.Seconds  + t2Dto.Seconds
+	dTime := time.Date(tDto.Years,
+		time.Month(tDto.Months),
+		tDto.DateDays,
+		tDto.Hours,
+		tDto.Minutes,
+		tDto.Seconds,
+		tDto.TotSubSecNanoseconds,
+		loc )
 
-	nanoseconds := tDto.Milliseconds + t2Dto.Milliseconds * int(time.Millisecond)
-	nanoseconds += tDto.Microseconds + t2Dto.Microseconds * int(time.Microsecond)
-	nanoseconds += tDto.Nanoseconds + t2Dto.Nanoseconds
+	d2Time := dTime.AddDate(t2Dto.Years, t2Dto.Months, 0)
 
-	dateTime := time.Date(years, time.Month(months), days, hours, minutes, seconds, nanoseconds, loc)
+	dur := int64(t2Dto.DateDays) * DayNanoSeconds
+	dur += int64(t2Dto.Hours) * HourNanoSeconds
+	dur += int64(t2Dto.Minutes) * MinuteNanoSeconds
+	dur += int64(t2Dto.Seconds) * SecondNanoseconds
+	dur += int64(t2Dto.Milliseconds) * MilliSecondNanoseconds
+	dur += int64(t2Dto.Microseconds) * MicroSecondNanoseconds
+	dur += int64(t2Dto.Nanoseconds)
+
+	dateTime := d2Time.Add(time.Duration(dur))
+
 
 	tDto.Empty()
 	tDto.Years = dateTime.Year()
@@ -334,13 +319,13 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 			"timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
 	}
 
-	dTime := time.Date(int(tDto.Years),
-		time.Month(int(tDto.Months)),
-		int(tDto.DateDays),
-		int(tDto.Hours),
-		int(tDto.Minutes),
-		int(tDto.Seconds),
-		int(tDto.TotSubSecNanoseconds),
+	dTime := time.Date(tDto.Years,
+		time.Month(tDto.Months),
+		tDto.DateDays,
+		tDto.Hours,
+		tDto.Minutes,
+		tDto.Seconds,
+		tDto.TotSubSecNanoseconds,
 		loc )
 
 	return dTime, nil
@@ -473,7 +458,7 @@ func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
 }
 
 // NewAddTimeDtos - Creates a new TimeDto which adds the values of the two TimeDto's
-// passed as input parameters.
+// passed as input parameters. Date time math is performed using time zone 'UTC'.
 //
 //	Input Parameters
 //	================
@@ -484,37 +469,13 @@ func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
 //	t2Dto						TimeDto	- The value of this TimeDto will be added to the first
 //															input parameter to create and return a summary TimeDto.
 //
-// timeZoneLocation	string	- time zone location must be designated as one of two values.
 //
-// 														(1) the string 'Local' - signals the designation of the local time zone
-//																location for the host computer.
-//
-//														(2) IANA Time Zone Location -
-// 																See https://golang.org/pkg/time/#LoadLocation
-// 																and https://www.iana.org/time-zones to ensure that
-// 																the IANA Time Zone Database is properly configured
-// 																on your system. Note: IANA Time Zone Data base is
-// 																equivalent to 'tz database'. A list of IANA time zones
-//																is found here:
-// 																	https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-//
-//																Examples:
-//																	"America/New_York"
-//																	"America/Chicago"
-//																	"America/Denver"
-//																	"America/Los_Angeles"
-//																	"Pacific/Honolulu"
-//																	"Etc/UTC" = ZULU, GMT or UTC
-//
-//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
-//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
-//
-func (tDto TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto, timeZoneLocation string) (TimeDto, error) {
+func (tDto TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto) (TimeDto, error) {
 	ePrefix := "TimeDto.NewAddTimeDtos(...) "
 
 	tOutDto := t1Dto.CopyOut()
 
-	err := tOutDto.AddTimeDto(t2Dto, timeZoneLocation)
+	err := tOutDto.AddTimeDto(t2Dto)
 
 	if err != nil {
 		return TimeDto{}, fmt.Errorf(ePrefix + "Error returned by tOutDto.AddTimeDto(t2Dto, timeZoneLocation). Error='%v'", err.Error())
@@ -566,12 +527,198 @@ func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 	return tDto2, nil
 }
 
+// NormalizeTimeElements - Surveys the time elements of the current 
+// TimeDto and normalizes time values. Example: Minutes > 59, Seconds > 59
+// Hours > 23, Minures > 59, Seconds > 59 etc.
+func (tDto *TimeDto) NormalizeTimeElements() error {
+
+	ePrefix := "TimeDto.NormalizeTimeElements() "
+
+	carry := 0
+
+	sign := 1
+
+	if tDto.Nanoseconds < 0 {
+		sign = -1
+		tDto.Nanoseconds *= sign
+	}
+
+	if tDto.Nanoseconds > 999 {
+		carry = tDto.Nanoseconds / 1000
+		tDto.Nanoseconds = tDto.Nanoseconds - (carry * 1000)
+	}
+
+	tDto.Nanoseconds *= sign
+
+	sign = 1
+
+	if tDto.Microseconds < 0 {
+		sign = -1
+		tDto.Microseconds *= sign
+	}
+
+	tDto.Microseconds += carry
+	carry = 0
+
+	if tDto.Microseconds > 999 {
+		carry = tDto.Microseconds / 1000
+		tDto.Microseconds = tDto.Microseconds - (carry * 1000)
+	}
+
+	tDto.Microseconds *= sign
+
+	sign = 1
+
+	if tDto.Milliseconds < 0 {
+		sign = -1
+		tDto.Milliseconds *= sign
+	}
+
+	tDto.Milliseconds += carry
+	carry = 0
+
+	if tDto.Milliseconds > 999 {
+		carry = tDto.Milliseconds / 1000
+		tDto.Milliseconds = tDto.Milliseconds - (carry * 1000)
+	}
+
+	tDto.Milliseconds *= sign
+
+
+	sign = 1
+
+	if tDto.Seconds < 0 {
+		sign = -1
+		tDto.Seconds *= sign
+	}
+
+	tDto.Seconds += carry
+	carry = 0
+
+	if tDto.Seconds > 59 {
+		carry = tDto.Seconds / 60
+		tDto.Seconds = tDto.Seconds - (carry * 60)
+	}
+
+	tDto.Seconds *= sign
+
+	sign = 1
+
+	if tDto.Minutes < 0 {
+		sign = -1
+		tDto.Minutes *= sign
+	}
+
+	tDto.Minutes += carry
+	carry = 0
+
+	if tDto.Minutes > 59 {
+		carry = tDto.Minutes / 60
+		tDto.Minutes = tDto.Minutes - (carry * 60)
+	}
+
+	tDto.Minutes *= sign
+
+	sign = 1
+
+	if tDto.Hours < 0 {
+		sign = -1
+		tDto.Hours *= sign
+	}
+
+	tDto.Hours += carry
+	carry = 0
+
+	if tDto.Hours > 23 {
+		carry = tDto.Hours / 24
+		tDto.Hours = tDto.Hours - (carry * 24)
+	}
+
+	tDto.Hours *= sign
+
+	if tDto.DateDays == 0 {
+		tDto.DateDays = (tDto.Weeks * 7 ) + tDto.WeekDays
+	}
+
+	sign = 1
+
+	if tDto.DateDays < 0 {
+		sign = -1
+		tDto.DateDays *= sign
+	}
+
+	tDto.DateDays += carry
+
+	tDto.DateDays *= sign
+
+	sign = 1
+
+	if tDto.Months < 0 {
+		sign = -1
+		tDto.Months *= sign
+	}
+
+	if tDto.Months > 12 {
+		carry = tDto.Months / 12
+		tDto.Months = tDto.Months - (carry * 12)
+	}
+	
+	tDto.Months *= sign
+	
+	sign = 1
+
+	if tDto.Years < 0 {
+		sign = -1
+		tDto.Years *= sign
+	}
+
+	tDto.Years += carry
+
+	tDto.Years *= sign
+
+
+	totSubNanoSecs :=  tDto.Nanoseconds
+	totSubNanoSecs +=  int(int64(tDto.Microseconds) * MicroSecondNanoseconds)
+	totSubNanoSecs +=  int(int64(tDto.Milliseconds) * MilliSecondNanoseconds)
+
+	err := tDto.allocateTotalNanoseconds(totSubNanoSecs)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateTotalNanoseconds(totSubNanoSecs) " +
+			"totSubNanoSecs='%v' Error='%v",
+			totSubNanoSecs, err.Error())
+	}
+
+	totSeconds := tDto.Hours * 3600
+	totSeconds += tDto.Minutes * 60
+	totSeconds += tDto.Seconds
+
+	err = tDto.allocateSeconds(totSeconds)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateSeconds(totSeconds) " +
+			"totSeconds='%v' Error='%v",
+			totSeconds, err.Error())
+	}
+
+	err = tDto.allocateWeeksAndDays(tDto.DateDays)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateWeeksAndDays(tDto.DateDays) " +
+			"tDto.DateDays='%v' Error='%v",
+			tDto.DateDays, err.Error())
+	}
+
+	return nil
+}
+
 // SetTimeElements - Sets the value of date fields for the current TimeDto instance
 // based on time element input parameters.
 //
 func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
 seconds, milliseconds, microseconds,
 nanoseconds int)  error {
+
 
 	ePrefix := "TimeDto.SetTimeElements(...) "
 
@@ -589,36 +736,35 @@ nanoseconds int)  error {
 		return fmt.Errorf(ePrefix + "Error: All input parameters (years, months, weeks, days etc.) are ZERO Value!")
 	}
 
-	t2Dto := TimeDto{}
+	t1Dto := TimeDto{}
 
-	t2Dto.Years = years
-	t2Dto.Months = months
+	t1Dto.Years = years
+	t1Dto.Months = months
+	t1Dto.DateDays = (weeks * 7 ) + days
 
-	totalDays := (weeks * 7) + days
-	err := t2Dto.allocateWeeksAndDays(totalDays)
+	err := t1Dto.allocateWeeksAndDays(t1Dto.DateDays)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned from t2Dto.allocateWeeksAndDays(days). days='%v'  Error='%v'", days, err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by err := t1Dto.allocateWeeksAndDays(t1Dto.DateDays)")
 	}
 
-	totSeconds := hours * 3600
-	totSeconds += minutes * 60
-	totSeconds += seconds
+	t1Dto.Hours = hours
+	t1Dto.Minutes = minutes
+	t1Dto.Seconds = seconds
+	t1Dto.Milliseconds = milliseconds
+	t1Dto.Microseconds = microseconds
+	t1Dto.Nanoseconds = nanoseconds
 
-	err = t2Dto.allocateSeconds(totSeconds)
+	t1Dto.NormalizeTimeElements()
 
-	totNanoSecs := milliseconds * int(time.Millisecond)
-	totNanoSecs += microseconds * int(time.Microsecond)
-	totNanoSecs += nanoseconds
 
-	err = t2Dto.allocateTotalNanoseconds(totNanoSecs)
 
-	if err:=t2Dto.IsValidDateTime(); err !=nil {
+	if err:=t1Dto.IsValidDateTime(); err !=nil {
 		// This is an incremental TimeDto. Some
 		// values may be negative.
 
 		tDto.Empty()
-		tDto.CopyIn(t2Dto)
+		tDto.CopyIn(t1Dto)
 		return nil
 
 	}
@@ -629,7 +775,8 @@ nanoseconds int)  error {
 		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
 	}
 
-	dateTime := time.Date(years, time.Month(months), days, hours, minutes, seconds, totNanoSecs, loc)
+	dateTime := time.Date(t1Dto.Years, time.Month(t1Dto.Months), t1Dto.DateDays,
+						t1Dto.Hours, t1Dto.Minutes, t1Dto.Seconds, t1Dto.TotSubSecNanoseconds, loc)
 
 	tDto.Empty()
 	tDto.Years = dateTime.Year()

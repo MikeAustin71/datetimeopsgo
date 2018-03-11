@@ -6,6 +6,24 @@ import (
 	"time"
 )
 
+/*
+func TestTimeDto_AddTimeDto(t *testing.T) {
+
+	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
+	}
+
+
+	t2Dto, err := TimeDto{}.New(0, 14, 0, 0, 0, 0,0,0,0,0)
+
+	err = t0Dto.AddTimeDto(t2Dto, TzIanaUsCentral)
+
+
+}
+*/
+
 func TestTimeDto_CopyOut_01(t *testing.T) {
 
 	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
