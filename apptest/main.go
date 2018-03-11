@@ -9,6 +9,12 @@ import (
 
 func main() {
 
+	mainTest008()
+
+}
+
+func mainTest009() {
+
 	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
 
 	if err != nil {
@@ -47,7 +53,7 @@ func mainTest008() {
 	t1USCentral := time.Date(2018, time.Month(3),10,18,0,0,0, locUSCentral)
 	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
 
-	t2AddDate := t1USCentral.AddDate(0, 0, 1)
+	//t2AddDate := t1USCentral.AddDate(0, 0, 1)
 
 	hoursDur := int64(24) * dt.HourNanoSeconds
 
@@ -63,7 +69,7 @@ func mainTest008() {
 	fmt.Println("            Start Date Time: ", t1USCentral.Format(dt.FmtDateTimeYrMDayFmtStr))
 	fmt.Println("      -- Duration = 24-Hours --")
 	fmt.Println("       Actual End Date Time: ", t1Dur.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
-	fmt.Println("             Add Date 1 Day: ", t2AddDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+	//fmt.Println("             Add Date 1 Day: ", t2AddDate.Format(dt.FmtDateTimeYrMDayFmtStr))
 
 }
 
