@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// ExampleTimeStampEverything
-func ExampleTimeStampEverything(){
+// ExamplesDateTimeTimeStampEverything
+func ExamplesDateTimeTimeStampEverything(){
 	du := dt.DateTimeUtility{}
 
 	fmt.Println("------------------------")
@@ -18,9 +18,9 @@ func ExampleTimeStampEverything(){
 	fmt.Println("Time Stamp AbbrvNano Sec Fmt: ", du.GetTimeStampYMDAbbrvDowNano())
 }
 
-// GetCurrentTimeAsInts - Breaks down time
+// ExampleDateTimeGetCurrentTimeAsInts - Breaks down time
 // to constituent elements as integers.
-func GetCurrentTimeAsInts() {
+func ExampleDateTimeGetCurrentTimeAsInts() {
 	// Get current time
 	t := time.Now().Local()
 	var i int64
@@ -40,9 +40,34 @@ func GetCurrentTimeAsInts() {
 	fmt.Println("The integer nanosecond is", i)
 }
 
-// GetEverythingFormat - provides a sample of the
+// PrintDateTime
+func PrintDateTime(dt time.Time, fmtStr string) {
+
+	var i int64
+	fmt.Println("----------------------------------")
+	fmt.Println("           Date Time")
+	fmt.Println("----------------------------------")
+	fmt.Println("Date Time: ", dt.Format(fmtStr))
+	i = int64(dt.Month())
+	fmt.Println("The integer month is: ", i)
+	i = int64(dt.Day())
+	fmt.Println("The integer day is:", i)
+	i = int64(dt.Year())
+	fmt.Println("The integer year is:", i)
+	i = int64(dt.Hour())
+	fmt.Println("The integer hour is:", i)
+	i = int64(dt.Minute())
+	fmt.Println("The integer minute is:", i)
+	i = int64(dt.Second())
+	fmt.Println("The integer second is:", i)
+	i = int64(dt.Nanosecond())
+	fmt.Println("The integer nanosecond is", i)
+
+}
+
+// ExamplesDateTimeGetEverythingFormat - provides a sample of the
 // 'GetEverything Date Time Format!
-func GetEverythingFormat() {
+func ExamplesDateTimeGetEverythingFormat() {
 	tstr := "04/29/2017 19:54:30.123456489 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	testTime, _ := time.Parse(fmtstr, tstr)
@@ -59,8 +84,8 @@ func GetEverythingFormat() {
 
 }
 
-// GetCurrentTimeAsString - Get current time in the form of a string
-func GetCurrentTimeAsString() {
+// ExamplesDateTimeGetCurrentTimeAsString - Get current time in the form of a string
+func ExamplesDateTimeGetCurrentTimeAsString() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 
 	dateT	:= dt.DateTimeUtility{}
