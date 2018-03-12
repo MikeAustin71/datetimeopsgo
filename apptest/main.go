@@ -9,7 +9,41 @@ import (
 
 func main() {
 
-	mainTest005()
+	mainTest006()
+
+}
+
+func mainTest006() {
+
+	locUTC, _ := time.LoadLocation(dt.TzIanaUTC)
+
+	fmt.Println()
+	fmt.Println("2018-00")
+	fmt.Println()
+
+	tDateTime := time.Date(2018, 0, 0 ,0 ,0 ,0 ,0, locUTC)
+
+	ex.PrintDateTime(tDateTime, dt.FmtDateTimeYrMDayFmtStr)
+
+
+	fmt.Println()
+	fmt.Println("2018-01")
+	fmt.Println()
+
+	t2 := time.Date(2018, 1, 0 ,0 ,0 ,0 ,0, locUTC)
+
+	ex.PrintDateTime(t2, dt.FmtDateTimeYrMDayFmtStr)
+
+
+	fmt.Println()
+	fmt.Println("Add 1 Day")
+	fmt.Println()
+
+	dur := int64(24) * dt.HourNanoSeconds
+
+	t3 := t2.Add(time.Duration(dur))
+
+	ex.PrintDateTime(t3, dt.FmtDateTimeYrMDayFmtStr)
 
 }
 
