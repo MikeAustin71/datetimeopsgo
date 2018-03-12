@@ -9,7 +9,132 @@ import (
 
 func main() {
 
-	mainTest012()
+	mainTest016()
+
+}
+
+func mainTest016() {
+
+	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println("====================================")
+	fmt.Println("         Original TimeDto")
+	fmt.Println("====================================")
+	ex.PrintOutTimeDtoFields(t0Dto)
+
+
+	t2Dto, err := dt.TimeDto{}.New(0, 14, 0, 0, 0, 0,0,0,0,0)
+
+	err = t0Dto.AddTimeDto(t2Dto)
+
+	if err != nil {
+		fmt.Printf("Error returned by t0Dto.AddTimeDto(t2Dto). Error='%v'", err.Error())
+		return
+	}
+
+	fmt.Println("Added Months= ", 14)
+
+	fmt.Println("====================================")
+	fmt.Println("         Final TimeDto")
+	fmt.Println("====================================")
+	ex.PrintOutTimeDtoFields(t0Dto)
+
+}
+
+func mainTest015() {
+
+	tDto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+
+	if err != nil {
+		fmt.Printf("Error: dt.TimeDto{}.New() Error='%v'", err.Error())
+	}
+
+	fmt.Println("--------- TimeDto --------")
+	ex.PrintOutTimeDtoFields(tDto)
+
+
+}
+
+func mainTest014() {
+
+	locUTC, _ := time.LoadLocation(dt.TzIanaUTC)
+
+	realT0 := time.Time{}.In(locUTC).AddDate(-1, 0, 0)
+
+
+	fmt.Println("realT0: ", realT0.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	tDto := dt.TimeDto{}
+	tDto.Years = 0
+	tDto.Months = 0
+	tDto.Weeks = -56
+
+	fmt.Println("====================================")
+	fmt.Println("         Original TimeDto")
+	fmt.Println("====================================")
+	ex.PrintOutTimeDtoFields(tDto)
+
+	tDto.NormalizeTimeElements()
+
+	fmt.Println("------------------------------------")
+	fmt.Println("        Normalized TimeDto")
+	fmt.Println("------------------------------------")
+	ex.PrintOutTimeDtoFields(tDto)
+
+
+	startDate, _ := tDto.GetDateTime(dt.TzIanaUTC)
+
+	fmt.Println("Calculated Start Date: ", startDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+
+
+	/*
+====================================
+         Original TimeDto
+====================================
+========================================
+          TimeDto Printout
+========================================
+                   Years:  0
+                  Months:  0
+                   Weeks:  -8
+                WeekDays:  0
+                DateDays:  0
+                   Hours:  0
+                 Minutes:  0
+                 Seconds:  0
+            Milliseconds:  0
+            Microseconds:  0
+             Nanoseconds:  0
+Total SubSec Nanoseconds:  0
+  Total Time Nanoseconds:  0
+========================================
+------------------------------------
+        Normalized TimeDto
+------------------------------------
+========================================
+          TimeDto Printout
+========================================
+                   Years:  -1
+                  Months:  11
+                   Weeks:  4
+                WeekDays:  2
+                DateDays:  30
+                   Hours:  0
+                 Minutes:  0
+                 Seconds:  0
+            Milliseconds:  0
+            Microseconds:  0
+             Nanoseconds:  0
+Total SubSec Nanoseconds:  0
+  Total Time Nanoseconds:  0
+========================================
+	 */
 
 }
 
