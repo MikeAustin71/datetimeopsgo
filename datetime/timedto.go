@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+
+
 // TimeDto - used for transmitting time elements.
 // TimeDto data fields are designed to store one of two
 // time components:
@@ -536,162 +538,65 @@ func (tDto *TimeDto) NormalizeTimeElements() error {
 
 	carry := 0
 
-	sign := 1
+	signs := timeDtoSigns{}.new()
 
-	if tDto.Nanoseconds < 0 {
-		sign = -1
-		tDto.Nanoseconds *= sign
-	}
+	signs.captureTimeDtoSigns(tDto)
 
-	if tDto.Nanoseconds > 999 {
-		carry = tDto.Nanoseconds / 1000
-		tDto.Nanoseconds = tDto.Nanoseconds - (carry * 1000)
-	}
+	years := tDto.Years
 
-	tDto.Nanoseconds *= sign
-
-	sign = 1
-
-	if tDto.Microseconds < 0 {
-		sign = -1
-		tDto.Microseconds *= sign
-	}
-
-	tDto.Microseconds += carry
-	carry = 0
-
-	if tDto.Microseconds > 999 {
-		carry = tDto.Microseconds / 1000
-		tDto.Microseconds = tDto.Microseconds - (carry * 1000)
-	}
-
-	tDto.Microseconds *= sign
-
-	sign = 1
-
-	if tDto.Milliseconds < 0 {
-		sign = -1
-		tDto.Milliseconds *= sign
-	}
-
-	tDto.Milliseconds += carry
-	carry = 0
-
-	if tDto.Milliseconds > 999 {
-		carry = tDto.Milliseconds / 1000
-		tDto.Milliseconds = tDto.Milliseconds - (carry * 1000)
-	}
-
-	tDto.Milliseconds *= sign
-
-
-	sign = 1
-
-	if tDto.Seconds < 0 {
-		sign = -1
-		tDto.Seconds *= sign
-	}
-
-	tDto.Seconds += carry
-	carry = 0
-
-	if tDto.Seconds > 59 {
-		carry = tDto.Seconds / 60
-		tDto.Seconds = tDto.Seconds - (carry * 60)
-	}
-
-	tDto.Seconds *= sign
-
-	sign = 1
-
-	if tDto.Minutes < 0 {
-		sign = -1
-		tDto.Minutes *= sign
-	}
-
-	tDto.Minutes += carry
-	carry = 0
-
-	if tDto.Minutes > 59 {
-		carry = tDto.Minutes / 60
-		tDto.Minutes = tDto.Minutes - (carry * 60)
-	}
-
-	tDto.Minutes *= sign
-
-	sign = 1
-
-	if tDto.Hours < 0 {
-		sign = -1
-		tDto.Hours *= sign
-	}
-
-	tDto.Hours += carry
-	carry = 0
-
-	if tDto.Hours > 23 {
-		carry = tDto.Hours / 24
-		tDto.Hours = tDto.Hours - (carry * 24)
-	}
-
-	tDto.Hours *= sign
-
-	if tDto.DateDays == 0 {
-		tDto.DateDays = (tDto.Weeks * 7 ) + tDto.WeekDays
-	}
-
-	sign = 1
-
-	if tDto.DateDays < 0 {
-		sign = -1
-		tDto.DateDays *= sign
-	}
-
-	tDto.DateDays += carry
-
-	tDto.DateDays *= sign
-
-	sign = 1
+	months := tDto.Months
 
 	if tDto.Months < 0 {
-		sign = -1
-		tDto.Months *= sign
+
+		months *= -1
+
 	}
 
-	if tDto.Months > 12 {
-		carry = tDto.Months / 12
-		tDto.Months = tDto.Months - (carry * 12)
-	}
-	
-	tDto.Months *= sign
-	
-	sign = 1
+	carry = months / 12
+	months = months - (carry * 12)
 
-	if tDto.Years < 0 {
-		sign = -1
-		tDto.Years *= sign
-	}
+	carry *= signs.signMonths
 
-	tDto.Years += carry
+	years += carry
 
-	tDto.Years *= sign
+	carry = 0
 
-
-	totSubNanoSecs :=  tDto.Nanoseconds
-	totSubNanoSecs +=  int(int64(tDto.Microseconds) * MicroSecondNanoseconds)
-	totSubNanoSecs +=  int(int64(tDto.Milliseconds) * MilliSecondNanoseconds)
-
-	err := tDto.allocateTotalNanoseconds(totSubNanoSecs)
+	locUTC, err := time.LoadLocation(TzIanaUTC)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateTotalNanoseconds(totSubNanoSecs) " +
-			"totSubNanoSecs='%v' Error='%v",
-			totSubNanoSecs, err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(TzIanaUTC) " +
+			"TzIanaUTC='%v'  Error='%v'",
+				TzIanaUTC, err.Error())
 	}
 
-	totSeconds := tDto.Hours * 3600
-	totSeconds += tDto.Minutes * 60
-	totSeconds += tDto.Seconds
+	dt1 := time.Date(years, time.Month(months), 0, 0 ,0, 0 ,0 , locUTC )
+
+	dur := int64(tDto.DateDays) * DayNanoSeconds
+	dur += int64(tDto.Hours) * HourNanoSeconds
+	dur += int64(tDto.Minutes) * MinuteNanoSeconds
+	dur += int64(tDto.Seconds) * SecondNanoseconds
+	dur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
+	dur += int64(tDto.Microseconds) * MicroSecondNanoseconds
+	dur += int64(tDto.Nanoseconds)
+
+	dt2 := dt1.Add(time.Duration(dur))
+
+	tDto.Empty()
+	tDto.Years = dt2.Year()
+	tDto.Months = int(dt2.Month())
+
+	err = tDto.allocateWeeksAndDays(dt2.Day())
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateWeeksAndDays(dt2.Day()) " +
+			"tDto.DateDays='%v' Error='%v",
+			tDto.DateDays, err.Error())
+	}
+
+
+	totSeconds := dt2.Hour() * 3600
+	totSeconds += dt2.Minute() * 60
+	totSeconds += dt2.Second()
 
 	err = tDto.allocateSeconds(totSeconds)
 
@@ -701,13 +606,16 @@ func (tDto *TimeDto) NormalizeTimeElements() error {
 			totSeconds, err.Error())
 	}
 
-	err = tDto.allocateWeeksAndDays(tDto.DateDays)
+	totSubNanoSecs :=  dt2.Nanosecond()
+
+	err = tDto.allocateTotalNanoseconds(totSubNanoSecs)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateWeeksAndDays(tDto.DateDays) " +
-			"tDto.DateDays='%v' Error='%v",
-			tDto.DateDays, err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateTotalNanoseconds(totSubNanoSecs) " +
+			"totSubNanoSecs='%v' Error='%v",
+			totSubNanoSecs, err.Error())
 	}
+
 
 	return nil
 }
@@ -1035,3 +943,149 @@ func (tDto *TimeDto) preProcessTimeZoneLocation(timeZoneLocation string) string 
 	return timeZoneLocation
 }
 
+
+// timeDtoSigns - Helper structure used to
+// track the sign of TimeDto Time elements
+type timeDtoSigns struct {
+	signYears          				int
+	signMonths         				int
+	signWeeks               	int
+	signWeekDays            	int
+	signDateDays            	int
+	signHours               	int
+	signMinutes             	int
+	signSeconds             	int
+	signMilliseconds        	int
+	signMicroseconds        	int
+	signNanoseconds         	int
+	signTotSubSecNanoseconds	int
+	signTotTimeNanoseconds		int
+}
+
+// New - creates and returns a new timeDtoSigns
+// instance where all the sign values are set
+// to +1.
+func (tSigns timeDtoSigns) new() timeDtoSigns {
+
+	tSgn := timeDtoSigns{}
+
+	tSgn.setSignsToOne()
+
+	return tSgn
+}
+
+func (tSigns *timeDtoSigns) applySignsToTimeDto( tDto *TimeDto) {
+
+		tDto.Years *= tSigns.signYears
+		tDto.Months *= tSigns.signMonths
+		tDto.Weeks *= tSigns.signWeeks
+		tDto.WeekDays *= tSigns.signWeekDays
+		tDto.DateDays *= tSigns.signDateDays
+		tDto.Hours *= tSigns.signHours
+		tDto.Minutes *= tSigns.signMinutes
+		tDto.Seconds *= tSigns.signSeconds
+		tDto.Milliseconds *= tSigns.signMilliseconds
+		tDto.Microseconds *= tSigns.signMicroseconds
+		tDto.Nanoseconds *= tSigns.signNanoseconds
+		tDto.TotSubSecNanoseconds *= tSigns.signTotSubSecNanoseconds
+		tDto.TotTimeNanoseconds *= int64(tSigns.signTotTimeNanoseconds)
+
+}
+
+
+func (tSigns *timeDtoSigns) captureTimeDtoSigns(tDto *TimeDto) {
+
+	tSigns.setSignsToOne()
+
+	if tDto.Years < 0 {
+		tSigns.signYears = -1
+	}
+
+
+	if tDto.Months < 0 {
+		tSigns.signMonths = -1
+	}
+
+	if tDto.Weeks < 0 {
+		tSigns.signWeeks = -1
+	}
+
+	if tDto.WeekDays < 0 {
+		tSigns.signWeekDays = -1
+	}
+
+	if tDto.DateDays < 0 {
+		tSigns.signDateDays = -1
+	}
+
+	if tDto.Hours < 0 {
+		tSigns.signHours = -1
+	}
+
+	if tDto.Minutes < 0 {
+		tSigns.signMinutes = -1
+	}
+
+	if tDto.Seconds < 0 {
+		tSigns.signSeconds = -1
+	}
+
+	if tDto.Milliseconds < 0 {
+		tSigns.signMilliseconds = -1
+	}
+
+	if tDto.Microseconds < 0 {
+		tSigns.signMicroseconds = -1
+	}
+
+	if tDto.Nanoseconds < 0 {
+		tSigns.signNanoseconds = -1
+	}
+
+
+	if tDto.TotSubSecNanoseconds < 0 {
+		tSigns.signTotSubSecNanoseconds = -1
+	}
+
+
+	if tDto.TotTimeNanoseconds < 0 {
+		tSigns.signTotTimeNanoseconds = -1
+	}
+
+}
+
+func (tSigns *timeDtoSigns) setSignsToOne() {
+
+	tSigns.signYears 								= 1
+	tSigns.signMonths 							= 1
+	tSigns.signWeeks 								= 1
+	tSigns.signWeekDays 						= 1
+	tSigns.signDateDays 						= 1
+	tSigns.signHours 								= 1
+	tSigns.signMinutes 							= 1
+	tSigns.signSeconds 							= 1
+	tSigns.signMilliseconds 				= 1
+	tSigns.signMicroseconds 				= 1
+	tSigns.signNanoseconds 					= 1
+	tSigns.signTotSubSecNanoseconds = 1
+	tSigns.signTotTimeNanoseconds 	= 1
+
+}
+
+func (tSigns *timeDtoSigns) setSignsToMinusOne() {
+
+	tSigns.signYears 								= -1
+	tSigns.signMonths 							= -1
+	tSigns.signWeeks 								= -1
+	tSigns.signWeekDays 						= -1
+	tSigns.signDateDays 						= -1
+	tSigns.signHours 								= -1
+	tSigns.signMinutes 							= -1
+	tSigns.signSeconds 							= -1
+	tSigns.signMilliseconds 				= -1
+	tSigns.signMicroseconds 				= -1
+	tSigns.signNanoseconds 					= -1
+	tSigns.signTotSubSecNanoseconds = -1
+	tSigns.signTotTimeNanoseconds 	= -1
+
+}

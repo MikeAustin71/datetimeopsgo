@@ -9,7 +9,122 @@ import (
 
 func main() {
 
-	mainTest008()
+	mainTest012()
+
+}
+
+func mainTest012() {
+
+	year := 69
+	month := 5
+	day := 27
+	hour:= 15
+	minute := 30
+	second := 2
+	millisecond := 784
+	microsecond := 303
+	nanosecond := 848
+
+	
+	
+	tDto := dt.TimeDto{}
+	tDto.Years = year
+	tDto.Months = month
+	tDto.DateDays = day
+	tDto.Hours = hour
+	tDto.Minutes = minute
+	tDto.Seconds = second
+	tDto.Milliseconds = millisecond
+	tDto.Microseconds = microsecond
+	tDto.Nanoseconds = nanosecond
+	
+	fmt.Println("====================================")
+	fmt.Println("         Original TimeDto")
+	fmt.Println("====================================")
+	ex.PrintOutTimeDtoFields(tDto)
+	
+	tDto.NormalizeTimeElements()
+
+	fmt.Println("------------------------------------")
+	fmt.Println("        Normalized TimeDto")
+	fmt.Println("------------------------------------")
+	ex.PrintOutTimeDtoFields(tDto)
+	
+	
+}
+
+func mainTest011() {
+	year := 69
+	month := 5
+	day := 27
+	hour:= 15
+	minute := 30
+	second := 2
+	millisecond := 784
+	microsecond := 303
+	nanosecond := 848
+
+	tDto, err := dt.TimeDto{}.New(year, month, 0, day, hour, minute, second,
+		millisecond, microsecond, nanosecond)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeDto{}.New(). Error='%v' \n", err.Error())
+		return
+	}
+
+	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
+	
+	t1USCentral := time.Date(1948, time.Month(9),7,4,32,16,8185431, locUSCentral)
+	tDur, err := dt.TimeDurationDto{}.NewStartTimePlusTimeDto(t1USCentral, tDto, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeDurationDto{}.NewStartTimePlusTimeDto(). " +
+			"t1USCentral='%v'  Error:='%v'\n",
+				t1USCentral.Format(dt.FmtDateTimeYrMDayFmtStr), err.Error())
+		return
+	}
+
+	t4USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279,locUSCentral)
+
+	if !t4USCentral.Equal(tDur.EndTimeDateTz.DateTime) {
+		fmt.Printf("Error: expected EndDateTime='%v'. Instead, EndDateTime='%v'  \n" +
+			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr), tDur.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+		return
+	}
+
+}
+
+func mainTest010() {
+
+	t1Dto := dt.TimeDto{}
+
+	t1Dto.Years = -1
+	t1Dto.Months = 15
+	t1Dto.DateDays = 0
+	t1Dto.Hours = 0
+	t1Dto.Minutes = 0
+	t1Dto.Seconds = 0
+	t1Dto.Milliseconds = 0
+	t1Dto.Microseconds = 0
+	t1Dto.Nanoseconds = 0
+
+	fmt.Println("=================================================")
+	fmt.Println("            Original TimeDto")
+	fmt.Println("=================================================")
+	ex.PrintOutTimeDtoFields(t1Dto)
+
+	err := t1Dto.NormalizeTimeElements()
+
+	if err != nil {
+		fmt.Printf("Error returned by t1Dto.NormalizeTimeElements(). Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println()
+	fmt.Println("-------------------------------------------------")
+	fmt.Println("             Normalized TimeDto")
+	fmt.Println("-------------------------------------------------")
+	ex.PrintOutTimeDtoFields(t1Dto)
 
 }
 
