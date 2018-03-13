@@ -22,6 +22,17 @@ func mainTest007() {
 	fmt.Println("===============================")
 	fmt.Println("int (time.Month(0))= ", mthTest)
 
+	/* Result = Sending zero to time.Month(0) yields a
+			a zero value. NOT GOOD! Best to use '1' in
+			place of zero month number.
+
+				===============================
+							 Month Zero Test
+				===============================
+				int (time.Month(0))=  0
+
+	 */
+
 }
 
 func mainTest006() {
@@ -35,7 +46,20 @@ func mainTest006() {
 	tDateTime := time.Date(2018, 0, 0 ,0 ,0 ,0 ,0, locUTC)
 
 	ex.PrintDateTime(tDateTime, dt.FmtDateTimeYrMDayFmtStr)
-
+	/*		Result - Don't Use a Zero Month
+					2018-00
+					----------------------------------
+										 Date Time
+					----------------------------------
+					Date Time:  2017-11-30 00:00:00.000000000 +0000 UCT
+					The integer month is:  11
+					The integer day is: 30
+					The integer year is: 2017
+					The integer hour is: 0
+					The integer minute is: 0
+					The integer second is: 0
+					The integer nanosecond is 0
+	*/
 
 	fmt.Println()
 	fmt.Println("2018-01")
@@ -44,7 +68,22 @@ func mainTest006() {
 	t2 := time.Date(2018, 1, 0 ,0 ,0 ,0 ,0, locUTC)
 
 	ex.PrintDateTime(t2, dt.FmtDateTimeYrMDayFmtStr)
+	/* Result - Best Approach - Use 1 as month number instead of zero month number.
+			Also - Use Zero Days. Convert days to duration and add the duration.
+			2018-01
 
+			----------------------------------
+								 Date Time
+			----------------------------------
+			Date Time:  2017-12-31 00:00:00.000000000 +0000 UCT
+			The integer month is:  12
+			The integer day is: 31
+			The integer year is: 2017
+			The integer hour is: 0
+			The integer minute is: 0
+			The integer second is: 0
+			The integer nanosecond is 0
+	*/
 
 	fmt.Println()
 	fmt.Println("Add 1 Day")
@@ -55,6 +94,22 @@ func mainTest006() {
 	t3 := t2.Add(time.Duration(dur))
 
 	ex.PrintDateTime(t3, dt.FmtDateTimeYrMDayFmtStr)
+	/*
+			Add 1 Day to	2017-12-31 00:00:00.000000000 +0000 UCT
+			Gives desired result
+
+			----------------------------------
+								 Date Time
+			----------------------------------
+			Date Time:  2018-01-01 00:00:00.000000000 +0000 UCT
+			The integer month is:  1
+			The integer day is: 1
+			The integer year is: 2018
+			The integer hour is: 0
+			The integer minute is: 0
+			The integer second is: 0
+			The integer nanosecond is 0
+	 */
 
 }
 

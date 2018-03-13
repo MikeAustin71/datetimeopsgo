@@ -53,55 +53,6 @@ type TimeDto struct {
 func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto) error {
 
 	ePrefix := "TimeDto.AddTimeDto() "
-/*
-	loc, err := time.LoadLocation(TzIanaUTC)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(timeZoneLocation). TzIanaUTC='%v'  Error='%v'", TzIanaUTC, err.Error())
-	}
-
-	dTime := time.Date(tDto.Years,
-		time.Month(tDto.Months),
-		tDto.DateDays,
-		tDto.Hours,
-		tDto.Minutes,
-		tDto.Seconds,
-		tDto.TotSubSecNanoseconds,
-		loc )
-
-	d2Time := dTime.AddDate(t2Dto.Years, t2Dto.Months, 0)
-
-	dur := int64(t2Dto.DateDays) * DayNanoSeconds
-	dur += int64(t2Dto.Hours) * HourNanoSeconds
-	dur += int64(t2Dto.Minutes) * MinuteNanoSeconds
-	dur += int64(t2Dto.Seconds) * SecondNanoseconds
-	dur += int64(t2Dto.Milliseconds) * MilliSecondNanoseconds
-	dur += int64(t2Dto.Microseconds) * MicroSecondNanoseconds
-	dur += int64(t2Dto.Nanoseconds)
-
-	dateTime := d2Time.Add(time.Duration(dur))
-
-
-	tDto.Empty()
-	tDto.Years = dateTime.Year()
-	tDto.Months = int(dateTime.Month())
-
-	err = tDto.allocateWeeksAndDays(dateTime.Day())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateWeeksAndDays(dateTime.Day()). Error='%v'", err.Error())
-	}
-
-	tDto.Hours = dateTime.Hour()
-	tDto.Minutes = dateTime.Minute()
-	tDto.Seconds = dateTime.Second()
-
-	err = tDto.allocateTotalNanoseconds(dateTime.Nanosecond())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateTotalNanoseconds(dateTime.Nanosecond()). Error='%v'", err.Error())
-	}
-*/
 
 	years := tDto.Years + t2Dto.Years
 	months := tDto.Months + t2Dto.Months
@@ -661,195 +612,10 @@ func (tDto *TimeDto) NormalizeTimeElements() error {
 	return nil
 }
 
-/*
-// NormalizeTimeElements - Surveys the time elements of the current 
-// TimeDto and normalizes time values.
-//
-// Since a TimeDto identifies a specific point in time, all TimeDto
-// time values are normalized relative to Time Zero UTC:
-//			"0001-01-01 00:00:00.000000000 +0000 UCT"
-//
-// This is the beginning date for the Common Era as well as the value
-// Time Zero in 'golang'
-//
-// If you enter a TimeDto with "Weeks = -8" and all other time elements
-// are set to zero, this method would normalize the TimeDto as follows:
-//
-//                    Years:  0
-//            	      Months:  11
-//          	         Weeks:  0
-//        	        WeekDays:  6
-//      	          DateDays:  6
-//              	     Hours:  0
-//            	     Minutes:  0
-//          	       Seconds:  0
-//        	    Milliseconds:  0
-//      	      Microseconds:  0
-//    	         Nanoseconds:  0
-//	Total SubSec Nanoseconds:  0
-//  	Total Time Nanoseconds:  0
-//  This equates to a date of : 0000-11-06 00:00:00.000000000 +0000 UCT
-//
-// If you were to add 8-weeks to "0000-11-06 00:00:00.000000000 +0000 UCT" you
-// would generate the Time Zero reference date of "0001-01-01 00:00:00.000000000 +0000 UCT"
-//
-// All TimeDto time identifiers are relative to Time Zero:
-// 				0001-01-01 00:00:00.000000000 +0000 UCT
-//
-func (tDto *TimeDto) NormalizeTimeElements() error {
 
-	ePrefix := "TimeDto.NormalizeTimeElements() "
-
-
-	locUTC, err := time.LoadLocation(TzIanaUTC)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(TzIanaUTC) " +
-			"TzIanaUTC='%v'  Error='%v'",
-				TzIanaUTC, err.Error())
-	}
-
-	years := tDto.Years
-	months := tDto.Months
-
-	sign := 1
-
-	if months < 0 {
-		sign = -1
-		months *= sign
-	}
-
-	carry := months / 12
-
-	months = months - (carry * 12)
-
-	months *= sign
-
-	carry *= sign
-
-	years += carry
-
-	// Time Zero:  0001-01-01 00:00:00.000000000 +0000 UCT
-	// Time Zero:  0000-01-01 00:00:00.000000000 +0000 UCT
-	dt0 := time.Time{}.In(locUTC).AddDate(-1, 0, 0)
-
-	dt1 := dt0.AddDate(years, months, 0)
-
-	var dur int64
-
-	if tDto.DateDays > 0 {
-		dur += int64(tDto.DateDays) * DayNanoSeconds
-	} else {
-		dur = int64(tDto.Weeks) * WeekNanoSeconds
-		dur += int64(tDto.WeekDays) * DayNanoSeconds
-	}
-
-	dur += int64(tDto.Hours) * HourNanoSeconds
-	dur += int64(tDto.Minutes) * MinuteNanoSeconds
-	dur += int64(tDto.Seconds) * SecondNanoseconds
-	dur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	dur += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	dur += int64(tDto.Nanoseconds)
-
-	dt2 := dt1.Add(time.Duration(dur))
-
-	tDto.Empty()
-	tDto.Years = dt2.Year()
-	tDto.Months = int(dt2.Month())
-
-	err = tDto.allocateWeeksAndDays(dt2.Day())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateWeeksAndDays(dt2.Day()) " +
-			"tDto.DateDays='%v' Error='%v",
-			tDto.DateDays, err.Error())
-	}
-
-
-	totSeconds := dt2.Hour() * 3600
-	totSeconds += dt2.Minute() * 60
-	totSeconds += dt2.Second()
-
-	err = tDto.allocateSeconds(totSeconds)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateSeconds(totSeconds) " +
-			"totSeconds='%v' Error='%v",
-			totSeconds, err.Error())
-	}
-
-	totSubNanoSecs :=  dt2.Nanosecond()
-
-	err = tDto.allocateTotalNanoseconds(totSubNanoSecs)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.allocateTotalNanoseconds(totSubNanoSecs) " +
-			"totSubNanoSecs='%v' Error='%v",
-			totSubNanoSecs, err.Error())
-	}
-
-
-	return nil
-}
-*/
-
-// SetTimeElements - Sets the value of date fields for the current TimeDto instance
-// based on time element input parameters.
-//
-func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
-seconds, milliseconds, microseconds,
-nanoseconds int)  error {
-
-
-	ePrefix := "TimeDto.SetTimeElements(...) "
-
-	if years 				== 0 &&
-		months 				== 0 &&
-		weeks 				== 0 &&
-		days 					== 0 &&
-		hours 				== 0 &&
-		minutes 			== 0 &&
-		seconds 			== 0 &&
-		milliseconds 	== 0 &&
-		microseconds 	== 0 &&
-		nanoseconds 	== 0 {
-
-		return fmt.Errorf(ePrefix + "Error: All input parameters (years, months, weeks, days etc.) are ZERO Value!")
-	}
-
-	t1Dto := TimeDto{}
-
-	t1Dto.Years = years
-	t1Dto.Months = months
-	t1Dto.DateDays = (weeks * 7 ) + days
-
-	t1Dto.Hours = hours
-	t1Dto.Minutes = minutes
-	t1Dto.Seconds = seconds
-	t1Dto.Milliseconds = milliseconds
-	t1Dto.Microseconds = microseconds
-	t1Dto.Nanoseconds = nanoseconds
-
-	err := t1Dto.NormalizeTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by err := t1Dto.NormalizeTimeElements() " +
-			"Error='%v'", err.Error()	)
-	}
-
-	_, err = t1Dto.NormalizeDays()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by err := t1Dto.NormalizeDays() " +
-		 "Error='%v'", err.Error()	)
-	}
-
-	tDto.CopyIn(t1Dto)
-
-	return nil
-}
-
-// NormalizeDays - Attempts to normalize days. For example
+// NormalizeDays - Attempts to normalize days. This handles cases
+// where the number of days is greater than the number of days
+// in a month.
 func (tDto *TimeDto) NormalizeDays() (bool, error) {
 	ePrefix := "TimeDto.NormalizeDays() "
 
@@ -889,7 +655,7 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 		dateDays = weekDays
 	} else if weekDays != 0 && dateDays!= 0 &&
 		weekDays != dateDays {
-			dateDays += weekDays
+		dateDays += weekDays
 	}
 
 	dur := int64(dateDays) * DayNanoSeconds
@@ -948,6 +714,61 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 }
 
 
+// SetTimeElements - Sets the value of date fields for the current TimeDto instance
+// based on time element input parameters.
+//
+func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
+seconds, milliseconds, microseconds,
+nanoseconds int)  error {
+
+
+	ePrefix := "TimeDto.SetTimeElements(...) "
+
+	if years 				== 0 &&
+		months 				== 0 &&
+		weeks 				== 0 &&
+		days 					== 0 &&
+		hours 				== 0 &&
+		minutes 			== 0 &&
+		seconds 			== 0 &&
+		milliseconds 	== 0 &&
+		microseconds 	== 0 &&
+		nanoseconds 	== 0 {
+
+		return fmt.Errorf(ePrefix + "Error: All input parameters (years, months, weeks, days etc.) are ZERO Value!")
+	}
+
+	t1Dto := TimeDto{}
+
+	t1Dto.Years = years
+	t1Dto.Months = months
+	t1Dto.DateDays = (weeks * 7 ) + days
+
+	t1Dto.Hours = hours
+	t1Dto.Minutes = minutes
+	t1Dto.Seconds = seconds
+	t1Dto.Milliseconds = milliseconds
+	t1Dto.Microseconds = microseconds
+	t1Dto.Nanoseconds = nanoseconds
+
+	err := t1Dto.NormalizeTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by err := t1Dto.NormalizeTimeElements() " +
+			"Error='%v'", err.Error()	)
+	}
+
+	_, err = t1Dto.NormalizeDays()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by err := t1Dto.NormalizeDays() " +
+		 "Error='%v'", err.Error()	)
+	}
+
+	tDto.CopyIn(t1Dto)
+
+	return nil
+}
 
 // SetFromDateTime - Sets the current TimeDto instance to new
 // data field values based on input parameter 'dateTime' (time.Time)
@@ -1208,6 +1029,32 @@ func (tSigns timeDtoSigns) new() timeDtoSigns {
 	return tSgn
 }
 
+// areAnySignsNegative - returns a boolean value signaling
+// whether any of the sign values are negative
+func (tSigns *timeDtoSigns) areAnySignsNegative() bool {
+
+	if tSigns.signYears 								< 0 ||          				
+			tSigns.signMonths 							< 0 ||         				
+			tSigns.signWeeks 								< 0 ||               	
+			tSigns.signWeekDays 						< 0 ||            	
+			tSigns.signDateDays 						< 0 ||            	
+			tSigns.signHours 								< 0 ||               	
+			tSigns.signMinutes 							< 0 ||             	
+			tSigns.signSeconds 							< 0 ||             	
+			tSigns.signMilliseconds 				< 0 ||        	
+			tSigns.signMicroseconds 				< 0 ||        	
+			tSigns.signNanoseconds 					< 0 ||         	
+			tSigns.signTotSubSecNanoseconds	< 0 ||	
+			tSigns.signTotTimeNanoseconds 	< 0 {
+				
+				return true
+	}		
+
+	return false
+}
+
+// applySignsToTimeDto - Receives a pointer to t TimeDto and
+// applies stored sign values to the TimeDto data fields.
 func (tSigns *timeDtoSigns) applySignsToTimeDto( tDto *TimeDto) {
 
 		tDto.Years *= tSigns.signYears
