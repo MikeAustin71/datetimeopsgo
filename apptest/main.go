@@ -9,7 +9,18 @@ import (
 
 func main() {
 
-	mainTest006()
+	mainTest007()
+
+}
+
+func mainTest007() {
+
+	mthTest := int (time.Month(0))
+
+	fmt.Println("===============================")
+	fmt.Println("       Month Zero Test")
+	fmt.Println("===============================")
+	fmt.Println("int (time.Month(0))= ", mthTest)
 
 }
 
