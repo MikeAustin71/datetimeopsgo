@@ -846,67 +846,6 @@ nanoseconds int)  error {
 
 	tDto.CopyIn(t1Dto)
 
-/*
-	if t1Dto.Years == 0 && t1Dto.Months == 0  {
-		// This is an incremental TimeDto. Some
-		// values may be negative.
-
-		tDto.Empty()
-		tDto.CopyIn(t1Dto)
-		return nil
-
-	}
-
-	loc, err := time.LoadLocation(TzIanaUTC)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
-	}
-
-	dateTime := time.Date(t1Dto.Years, time.Month(t1Dto.Months), t1Dto.DateDays,
-						t1Dto.Hours, t1Dto.Minutes, t1Dto.Seconds, t1Dto.TotSubSecNanoseconds, loc)
-
-	tDto.Empty()
-	tDto.Years = dateTime.Year()
-	tDto.Months = int(dateTime.Month())
-
-	err = tDto.allocateWeeksAndDays(dateTime.Day())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix 	+
-				"Error returned by tDto.allocateWeeksAndDays(dateTime.Day()). " +
-				"Error='%v'", err.Error())
-	}
-
-	totSeconds :=  	dateTime.Hour() * 3600
-	totSeconds +=  	dateTime.Minute() * 60
-	totSeconds += 	dateTime.Second()
-
-	err = tDto.allocateSeconds(totSeconds)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix 	+
-			"Error returned by tDto.allocateSeconds(totSeconds). " +
-			"Error='%v'", err.Error())
-	}
-
-
-	err = tDto.allocateTotalNanoseconds(dateTime.Nanosecond())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tDto.allocateTotalNanoseconds(dateTime.Nanosecond()). " +
-				"Error='%v'", err.Error())
-	}
-
-	err = tDto.IsValidDateTime()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDto.IsValidDateTime()! Error='%v'", err.Error())
-	}
-
-*/
-
 	return nil
 }
 
