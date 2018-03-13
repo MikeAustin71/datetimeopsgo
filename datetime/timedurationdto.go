@@ -650,6 +650,32 @@ func (tDur *TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration
 
 }
 
+// GetDaysTimeStr - Returns duration formatted as
+// days, hours, minutes, seconds, milliseconds, microseconds,
+// and nanoseconds.
+// Example: 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (tDur *TimeDurationDto) GetDaysTimeStr() string {
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+
+	str := fmt.Sprintf("%v-Days ", tDur.DateDays)
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+}
 
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
@@ -976,6 +1002,130 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() string {
 
 	return str
 }
+
+// GetYearMthDaysTimeAbbrv - Abbreviated formatting of Years, Months,
+// Days, Hours, Minutes, Seconds, Milliseconds, Microseconds and
+// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+// Abbreviated Years Mths Days Time Duration - Example Return:
+// 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrv() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	str := ""
+
+	if tDur.Years > 0 {
+		str = fmt.Sprintf("%v-Years ", tDur.Years)
+	}
+
+	if tDur.Months > 0  || str != "" {
+		str += fmt.Sprintf("%v-Months ", tDur.Months)
+	}
+
+	if tDur.DateDays > 0 || str != "" {
+		str += fmt.Sprintf("%v-Days ", tDur.DateDays)
+	}
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+
+}
+
+
+// GetYearMthDaysTime - Calculates Duration and breakdowns
+// time elements by Years, Months, days, hours, minutes,
+// seconds, milliseconds, microseconds and nanoseconds.
+// Example DisplayStr:
+// Years Mths Days Time Duration - Example Return:
+// 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (tDur *TimeDurationDto) GetYearMthDaysTime() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	str := fmt.Sprintf("%v-Years ", tDur.Years)
+
+	str += fmt.Sprintf("%v-Months ", tDur.Months)
+
+	str += fmt.Sprintf("%v-Days ", tDur.DateDays)
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+}
+
+// GetYearsMthsWeeksTimeAbbrv - Abbreviated formatting of Years, Months,
+// Weeks, Days, Hours, Minutes, Seconds, Milliseconds, Microseconds,
+// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds, Nanoseconds are displayed. Example return when Years,
+// Months, Weeks and Days are zero:
+// 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrv() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	str := ""
+
+
+	if tDur.Years > 0 {
+		str = fmt.Sprintf("%v-Years ", tDur.Years)
+	}
+
+	if tDur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", tDur.Months)
+	}
+
+	if tDur.Weeks > 0  || str != "" {
+		str += fmt.Sprintf("%v-Weeks ", tDur.Weeks)
+	}
+
+	if tDur.WeekDays > 0  || str != "" {
+		str += fmt.Sprintf("%v-Days ", tDur.WeekDays)
+	}
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+
+	return str
+
+}
+
 
 // GetYrMthWkDayHrMinSecNanosecsStr - Returns duration formatted
 // as Year, Month, Day, Hour, Second and Nanoseconds.

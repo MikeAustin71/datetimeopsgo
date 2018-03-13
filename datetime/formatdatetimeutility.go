@@ -255,13 +255,7 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimes() - %v", err.Error())
 	}
 
-	yrMthDaysTime, err := du.BaseTime.GetYearMthDaysTime()
-
-	if err != nil {
-		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error GetYearMthDaysTime() - %v", err.Error())
-	}
-
-	frDto.ElapsedTimeForFileReadOps = yrMthDaysTime.DisplayStr
+	frDto.ElapsedTimeForFileReadOps = du.BaseTime.GetYearMthDaysTime()
 
 	return frDto, nil
 }
@@ -328,13 +322,7 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 
 	fwDto.OutputPathFileName = outputPathFileName
 
-	etFileWrite, err := du.GetYearMthDaysTime()
-
-	if err != nil {
-		return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error du.GetYearMthDaysTime() - %v", err.Error())
-	}
-
-	fwDto.ElapsedTimeForFileWriteOps = etFileWrite.DisplayStr
+	fwDto.ElapsedTimeForFileWriteOps = du.BaseTime.GetYearMthDaysTime()
 
 	return fwDto, nil
 }
@@ -404,13 +392,7 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName stri
 		return outputDto, fmt.Errorf("Error Calculating Duration with SetStartEndTimes() Error: %v", err.Error())
 	}
 
-	etFileWrite, err := du.GetYearMthDaysTime()
-
-	if err != nil {
-		return outputDto, fmt.Errorf("Error Returning Duration with GetYearMthDaysTime() Error: %v", err.Error())
-	}
-
-	outputDto.ElapsedTimeForFileWriteOps = etFileWrite.DisplayStr
+	outputDto.ElapsedTimeForFileWriteOps = du.BaseTime.GetYearMthDaysTime()
 	outputDto.NumberOfFormatsGenerated = numOfFormats
 	outputDto.NumberOfFormatMapKeysGenerated = numOfKeys
 
