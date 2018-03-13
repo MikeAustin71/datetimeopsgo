@@ -280,6 +280,9 @@ const (
 	// TzIanaUTC - Alias for UTC
 	TzIanaUTC = "Etc/UCT"
 
+	// TzGoLocal - Golang Local Time Zone
+	// configured on host computer
+	TzGoLocal = "Local"
 
 )
 

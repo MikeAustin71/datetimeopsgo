@@ -592,6 +592,65 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 	
 }
 
+// IsValid - Returns an error value signaling whether
+// the current TimeDurationDto data fields are valid.
+func (tDur *TimeDurationDto) IsValid() error {
+	ePrefix := "TimeDurationDto.IsValid() "
+
+	if tDur.StartTimeDateTz.DateTime.IsZero() &&
+				tDur.EndTimeDateTz.DateTime.IsZero() {
+
+		return fmt.Errorf(ePrefix + "Error: Both Start and End Times are Zero!")
+
+	}
+
+
+	if tDur.EndTimeDateTz.DateTime.Before(tDur.StartTimeDateTz.DateTime) {
+		return fmt.Errorf(ePrefix + "Error: End Time is Before Start Time! " )
+	}
+
+
+
+	return nil
+}
+
+// GetDurationFromTime - Calculates and returns a cumulative duration based on
+// input parameters consisting of time elements.
+func (tDur *TimeDurationDto) GetDurationFromTime(hours, minutes, seconds, milliseconds,
+										microseconds, nanoseconds int) time.Duration {
+
+	dur := int64(hours) * int64(time.Hour)
+	dur += int64(minutes) * int64(time.Minute)
+	dur += int64(seconds) * int64(time.Second)
+	dur += int64(milliseconds) * int64(time.Millisecond)
+	dur += int64(microseconds) * int64(time.Microsecond)
+	dur += int64(nanoseconds)
+
+	return time.Duration(dur)
+
+}
+
+// GetDurationFromMinutes - returns a time Duration value
+// based on the number of minutes passed to this method.
+// No changes are made to or stored in the existing
+// DurationTriad data structures.
+func (tDur *TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration {
+
+	return time.Duration(minutes) * time.Minute
+
+}
+
+// GetDurationFromSeconds - returns a time Duration value
+// based on the number of seconds passed to this method.
+// No changes are made to or stored in the existing
+// DurationTriad data structures.
+func (tDur *TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration {
+
+	return time.Duration(seconds) * time.Second
+
+}
+
+
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
 // Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,

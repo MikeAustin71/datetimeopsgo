@@ -17,7 +17,7 @@ func ExampleSetStartEndTimes() {
 
 	t2, _ := time.Parse(fmtstr, t2str)
 
-	dur := dt.DurationUtility{}
+	dur := dt.DurationTriad{}
 
 	dur.SetStartEndTimes(t1, t2, dt.TzIanaUsCentral, fmtstr)
 
@@ -99,16 +99,16 @@ func ExampleNewstarttimeduration01() {
 	t12Dur := t2.Sub(t1)
 	t12UTCDur := t2Utc.Sub(t1Utc)
 
-	dur, err := dt.DurationUtility{}.NewStartTimeDuration(t1, t12Dur,dt.TzIanaUsCentral, fmtstr)
+	dur, err := dt.DurationTriad{}.NewStartTimeDuration(t1, t12Dur,dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DurationUtility{}.NewStartTimeDuration(t1, t12Dur). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by DurationTriad{}.NewStartTimeDuration(t1, t12Dur). Error='%v'\n", err.Error())
 	}
 
 	// dur.SetStartTimeDuration(t1, t12Dur)
 
-	if t1OutStr != dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr) {
-		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n", t1OutStr, dur.StartTimeTzu.TimeIn.DateTime.Format(fmtstr))
+	if t1OutStr != dur.BaseTime.TimeIn.DateTime.Format(fmtstr) {
+		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n", t1OutStr, dur.BaseTime.TimeIn.DateTime.Format(fmtstr))
 	}
 
 	if t2OutStr != dur.EndTimeTzu.TimeIn.DateTime.Format(fmtstr) {
@@ -130,7 +130,7 @@ func ExampleNewstarttimeduration01() {
 	dDto, err := dur.GetYearMthDaysTime()
 
 	if err != nil {
-		fmt.Printf("Error from DurationUtility.GetYearMthDaysTime. Error: %v\n", err.Error())
+		fmt.Printf("Error from DurationTriad.GetYearMthDaysTime. Error: %v\n", err.Error())
 	}
 
 
