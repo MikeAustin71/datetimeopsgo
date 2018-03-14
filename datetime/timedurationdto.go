@@ -1045,40 +1045,6 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrv() string {
 
 }
 
-
-// GetYearMthDaysTime - Calculates Duration and breakdowns
-// time elements by Years, Months, days, hours, minutes,
-// seconds, milliseconds, microseconds and nanoseconds.
-// Example DisplayStr:
-// Years Mths Days Time Duration - Example Return:
-// 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (tDur *TimeDurationDto) GetYearMthDaysTime() string {
-
-	if int64(tDur.TimeDuration) == 0 {
-		return "0-Nanoseconds"
-	}
-
-	str := fmt.Sprintf("%v-Years ", tDur.Years)
-
-	str += fmt.Sprintf("%v-Months ", tDur.Months)
-
-	str += fmt.Sprintf("%v-Days ", tDur.DateDays)
-
-	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
-
-	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
-
-	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
-
-	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
-
-	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
-
-	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
-
-	return str
-}
-
 // GetYearsMthsWeeksTimeAbbrv - Abbreviated formatting of Years, Months,
 // Weeks, Days, Hours, Minutes, Seconds, Milliseconds, Microseconds,
 // Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,

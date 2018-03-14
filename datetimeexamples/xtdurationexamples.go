@@ -21,66 +21,51 @@ func ExampleSetStartEndTimes() {
 
 	dur.SetStartEndTimes(t1, t2, dt.TzIanaUsCentral, fmtstr)
 
-	dDto, err := dur.GetYearMthDaysTime()
-
-	if err != nil {
-		panic(err)
-	}
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
 	expected := "3-Years 2-months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	fmt.Println("        Expected: ", expected)
-	fmt.Println(" YrsMthsDaysTime: ", dDto.DisplayStr)
+	fmt.Println(" YrsMthsDaysTime: ", outStr)
 
 	expected = "28082h4m2s"
 	fmt.Println()
-	dDto, err = dur.GetDefaultDuration()
-	if err != nil {
-		panic(err)
-	}
+	outStr = dur.BaseTime.GetDefaultDurationStr()
+
 	fmt.Println("Expected Default: ", expected)
-	fmt.Println("Default Duration: ", dDto.DisplayStr)
+	fmt.Println("Default Duration: ", outStr)
 
 	fmt.Println()
 
 	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetDaysTime()
-	if err != nil {
-		panic(err)
-	}
+
+	outStr = dur.BaseTime.GetDaysTimeStr()
+
 	fmt.Println("     Expected WeekDays: ", expected)
-	fmt.Println("     WeekDays Duration: ", dDto.DisplayStr)
+	fmt.Println("     WeekDays Duration: ", outStr)
 
 	fmt.Println()
 	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetHoursTime()
-	if err != nil {
-		panic(err)
-	}
+	outStr = dur.BaseTime.GetCumHoursTimeStr()
+
 	fmt.Println("    Expected Hours: ", expected)
-	fmt.Println("    Hours Duration: ", dDto.DisplayStr)
+	fmt.Println("    Hours Duration: ", outStr)
 
 	fmt.Println()
 	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetYrMthWkDayHrMinSecNanosecs()
-	if err != nil {
-		panic(err)
-	}
+
+	outStr = dur.BaseTime.GetYrMthWkDayHrMinSecNanosecsStr()
 
 	fmt.Println("Expected YrMthWeekDayTime : ", expected)
-	fmt.Println("          YrMthWeekDayTime: ", dDto.DisplayStr)
+	fmt.Println("          YrMthWeekDayTime: ", outStr)
 
 	fmt.Println()
 
 	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	dDto, err = dur.GetWeeksDaysTime()
-
-	if err != nil {
-		panic(err)
-	}
+	outStr = dur.BaseTime.GetCumWeeksDaysTimeStr()
 
 	fmt.Println("Expected Weeks WeekDays Time: ", expected)
-	fmt.Println("     Weeks WeekDays Duration: ", dDto.DisplayStr)
+	fmt.Println("     Weeks WeekDays Duration: ", outStr)
 
 }
 
@@ -107,16 +92,18 @@ func ExampleNewstarttimeduration01() {
 
 	// dur.SetStartTimeDuration(t1, t12Dur)
 
-	if t1OutStr != dur.BaseTime.TimeIn.DateTime.Format(fmtstr) {
-		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n", t1OutStr, dur.BaseTime.TimeIn.DateTime.Format(fmtstr))
+	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
+		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n", t1OutStr,
+				dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr))
 	}
 
-	if t2OutStr != dur.EndTimeTzu.TimeIn.DateTime.Format(fmtstr) {
-		fmt.Printf("Error- Expected End Time %v. Instead, got %v.\n", t2OutStr, dur.EndTimeTzu.TimeIn.DateTime.Format(fmtstr))
+	if t2OutStr != dur.BaseTime.EndTimeDateTz.DateTime.Format(fmtstr) {
+		fmt.Printf("Error- Expected End Time %v. Instead, got %v.\n",
+			t2OutStr, dur.BaseTime.EndTimeDateTz.DateTime.Format(fmtstr))
 	}
 
-	if t12Dur != dur.TimeDuration {
-		fmt.Printf("Error- Expected Time Duration %v. Instead, got %v\n", t12Dur, dur.TimeDuration)
+	if t12Dur != dur.BaseTime.TimeDuration {
+		fmt.Printf("Error- Expected Time Duration %v. Instead, got %v\n", t12Dur, dur.BaseTime.TimeDuration)
 	}
 
 	if t12Dur != t12UTCDur {
@@ -127,17 +114,13 @@ func ExampleNewstarttimeduration01() {
 	fmt.Println("Time UTC Duration: ", t12UTCDur)
 
 
-	dDto, err := dur.GetYearMthDaysTime()
-
-	if err != nil {
-		fmt.Printf("Error from DurationTriad.GetYearMthDaysTime. Error: %v\n", err.Error())
-	}
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
 
 	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	if expected != dDto.DisplayStr {
-		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, dDto.DisplayStr)
+	if expected != outStr {
+		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
 	}
 
 
@@ -154,23 +137,23 @@ func ExampleNewstarttimeduration01() {
 	fmt.Println("Expected Output Date: ", t2OutStr)
 	fmt.Println("Computed Output Date: ", t3Output)
 
-	dDto, err = dur.GetYearMthDaysTime()
+	outStr = dur.BaseTime.GetYearMthDaysTimeStr()
 
-	ans := dDto.YearsNanosecs
+	ans := dur.BaseTime.YearsNanosecs
 
 	fmt.Println("  Actual Counted Year NanoSeconds: ", ans)
 	t3Years := t1.AddDate(3,0,0)
 	t3YearsDur := t3Years.Sub(t1)
 	fmt.Println("        Computed Year NanoSeconds: ", int64(t3YearsDur))
-	ans += dDto.MonthsNanosecs
-	ans += dDto.DaysNanosecs
+	ans += dur.BaseTime.MonthsNanosecs
+	ans += dur.BaseTime.DateDaysNanosecs
 	fmt.Println()
 	fmt.Println("Actual Counted YearMonthDay Nanoseconds: ", ans)
 	fmt.Println("      Computed YearMonthDay NanoSeconds: ", int64(tdatePlusDur))
 	fmt.Println("---------------------------------------------")
 	t3YearsMonths := t3Years.AddDate(0,2, 0)
 	t3MonthsDur := t3YearsMonths.Sub(t3Years)
-	fmt.Println("  Actual Counted Month NanoSeconds: ", dDto.MonthsNanosecs)
+	fmt.Println("  Actual Counted Month NanoSeconds: ", dur.BaseTime.MonthsNanosecs)
 	fmt.Println("        Computed Month NanoSeconds: ", int64(t3MonthsDur))
 	fmt.Println("           Info 1-Hour NanoSeconds: ", dt.HourNanoSeconds)
 }

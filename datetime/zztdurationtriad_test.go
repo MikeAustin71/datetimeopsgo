@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestDurationUtility_GetYearMthDaysTimeAbbrv(t *testing.T) {
+func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"
 	t2str := "04/30/2017 22:58:33.123456789 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -28,7 +28,7 @@ func TestDurationUtility_GetYearMthDaysTimeAbbrv(t *testing.T) {
 	}
 }
 
-func TestDurationUtility_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
+func TestDurationTriad_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"
 	t2str := "04/30/2017 22:59:33.123456789 -0500 CDT"
@@ -52,7 +52,7 @@ func TestDurationUtility_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 }
 
-func TestDurationUtility_NewStartTimeDuration_01(t *testing.T) {
+func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -95,7 +95,7 @@ func TestDurationUtility_NewStartTimeDuration_01(t *testing.T) {
 
 }
 
-func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
+func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -188,7 +188,7 @@ func TestDurationUtility_NewStartEndTimes_01(t *testing.T) {
 	}
 }
 
-func TestDurationUtility_NewStartTimeMinusTime_01(t *testing.T) {
+func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -234,7 +234,7 @@ func TestDurationUtility_NewStartTimeMinusTime_01(t *testing.T) {
 
 }
 
-func TestDurationUtility_NewStartTimePlusTime_01(t *testing.T) {
+func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -278,7 +278,7 @@ func TestDurationUtility_NewStartTimePlusTime_01(t *testing.T) {
 
 }
 
-func TestDurationUtility_SetStartEndTimes(t *testing.T) {
+func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
@@ -374,7 +374,7 @@ func TestDurationUtility_SetStartEndTimes(t *testing.T) {
 
 }
 
-func TestDurationUtility_SetStartEndTimes_02(t *testing.T) {
+func TestDurationTriad_SetStartEndTimes_02(t *testing.T) {
 
 	t1str := "02/15/2014 19:54:30.123456789 -0600 CST"
 	t2str := "04/30/2017 22:58:32.987654321 -0500 CDT"
@@ -399,7 +399,7 @@ func TestDurationUtility_SetStartEndTimes_02(t *testing.T) {
 
 }
 
-func TestDurationUtility_SetStartEndTimes_03(t *testing.T) {
+func TestDurationTriad_SetStartEndTimes_03(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.123456789 -0600 CST"
 	t2str := "04/30/2017 22:58:32.987654321 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -422,7 +422,7 @@ func TestDurationUtility_SetStartEndTimes_03(t *testing.T) {
 
 }
 
-func TestDurationUtility_SetStartEndTimes_04(t *testing.T) {
+func TestDurationTriad_SetStartEndTimes_04(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.123456789 -0600 CST"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
@@ -443,7 +443,7 @@ func TestDurationUtility_SetStartEndTimes_04(t *testing.T) {
 
 }
 
-func TestDurationUtility_SetStartTimePlusTime(t *testing.T) {
+func TestDurationTriad_SetStartTimePlusTime(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -483,7 +483,7 @@ func TestDurationUtility_SetStartTimePlusTime(t *testing.T) {
 
 }
 
-func TestDurationUtility_SetStartTimeMinusTime(t *testing.T) {
+func TestDurationTriad_SetStartTimeMinusTime(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -526,7 +526,7 @@ func TestDurationUtility_SetStartTimeMinusTime(t *testing.T) {
 
 }
 
-func TestDurationUtility_SetStartTimeDuration(t *testing.T) {
+func TestDurationTriad_SetStartTimeDuration(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"

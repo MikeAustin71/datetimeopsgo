@@ -9,7 +9,35 @@ import (
 
 func main() {
 
-	mainTest007()
+	mainTest008()
+
+}
+
+func mainTest008() {
+	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"
+	t2str := "04/30/2017 22:58:33.123456789 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	du := dt.DurationTriad{}
+
+	du.SetStartEndTimes(t2, t1, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
+
+	dOut := du.BaseTime.GetYearMthDaysTimeAbbrv()
+
+	fmt.Println("Expected: ", expected)
+	fmt.Println("  Actual: ", dOut)
+
+
+	if expected != dOut {
+		fmt.Printf("Expected: %v. \nError - got %v\n", expected, dOut)
+		return
+	}
 
 }
 
