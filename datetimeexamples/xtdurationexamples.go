@@ -39,14 +39,28 @@ func ExampleSetStartEndTimes() {
 
 	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	outStr = dur.BaseTime.GetCumDaysTimeStr()
+	outStr, err := dur.BaseTime.GetCumDaysTimeStr()
+
+	if err != nil {
+		fmt.Printf("Error returned by dur.BaseTime.GetCumDaysTimeStr(). " +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
 
 	fmt.Println("     Expected WeekDays: ", expected)
 	fmt.Println("     WeekDays Duration: ", outStr)
 
 	fmt.Println()
 	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	outStr = dur.BaseTime.GetCumHoursTimeStr()
+
+	outStr, err = dur.BaseTime.GetCumHoursTimeStr()
+
+	if err != nil {
+		fmt.Printf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). " +
+			"Error='%v'\n", err.Error())
+		return
+	}
 
 	fmt.Println("    Expected Hours: ", expected)
 	fmt.Println("    Hours Duration: ", outStr)
@@ -62,7 +76,14 @@ func ExampleSetStartEndTimes() {
 	fmt.Println()
 
 	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
-	outStr = dur.BaseTime.GetCumWeeksDaysTimeStr()
+
+	outStr, err = dur.BaseTime.GetCumWeeksDaysTimeStr()
+
+	if err != nil {
+		fmt.Printf("Error returned by dur.BaseTime.GetCumWeeksDaysTimeStr(). " +
+			"Error='%v'\n", err.Error())
+		return
+	}
 
 	fmt.Println("Expected Weeks WeekDays Time: ", expected)
 	fmt.Println("     Weeks WeekDays Duration: ", outStr)

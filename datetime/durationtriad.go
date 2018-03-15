@@ -70,7 +70,7 @@ import (
 			f. GetYrMthsWkDayHourSecNanosecDuration()
 			g. GetNanosecondsDuration()
 			h. GetDefaultDuration()
-			i. GetGregorianYearDuration()
+			i. GetGregorianYearDurationStr()
 
 */
 

@@ -20,7 +20,7 @@ func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 
 	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
 
-	dOut := du.BaseTime.GetYearMthDaysTimeAbbrv()
+	dOut := du.BaseTime.GetYearMthDaysTimeAbbrvStr()
 
 
 	if expected != dOut {
@@ -44,7 +44,7 @@ func TestDurationTriad_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 	expected := "0-Hours 1-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
 
-	dOut := du.BaseTime.GetYearsMthsWeeksTimeAbbrv()
+	dOut := du.BaseTime.GetYearsMthsWeeksTimeAbbrvStr()
 
 	if expected != dOut {
 		t.Errorf("Expected: %v. Error - got %v", expected, dOut)
@@ -153,7 +153,7 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error - Expected Default Duration: %v. Instead, got %v", expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetCumDaysTimeStr()
+	outStr, _ = dur.BaseTime.GetCumDaysTimeStr()
 
 	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
@@ -161,7 +161,12 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error - Expected WeekDays Duration: %v. Instead, got %v", expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetCumHoursTimeStr()
+	outStr, err = dur.BaseTime.GetCumHoursTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). " +
+			"Error='%v'", err.Error())
+	}
 
 	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
@@ -178,7 +183,13 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 				expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetCumWeeksDaysTimeStr()
+	outStr, err = dur.BaseTime.GetCumWeeksDaysTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). " +
+			"Error='%v'", err.Error())
+	}
+
 
 	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
@@ -338,7 +349,12 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 			expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetCumDaysTimeStr()
+	outStr, err := dur.BaseTime.GetCumDaysTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by dur.BaseTime.GetCumDaysTimeStr(). " +
+			"Error='%v'", err.Error())
+	}
 
 	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
@@ -347,7 +363,12 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 				expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetCumHoursTimeStr()
+	outStr, err = dur.BaseTime.GetCumHoursTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). " +
+			"Error='%v'", err.Error())
+	}
 
 	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
@@ -364,7 +385,12 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 					expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetCumWeeksDaysTimeStr()
+	outStr, err = dur.BaseTime.GetCumWeeksDaysTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by dur.BaseTime.GetCumWeeksDaysTimeStr(). " +
+			"Error='%v'", err.Error())
+	}
 
 	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 

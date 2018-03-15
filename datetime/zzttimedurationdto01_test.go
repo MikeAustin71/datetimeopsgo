@@ -1038,7 +1038,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
 
 	expectedOutStr := "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
-	actualOutStr := t1Dur.GetCumMonthsDaysTimeStr()
+	actualOutStr, err := t1Dur.GetCumMonthsDaysTimeStr()
+
+	assert.Nil(suite.T(),err,"Error t1Dur.GetCumMonthsDaysTimeStr():")
 
 	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
 	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
@@ -1206,7 +1208,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_02() {
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
 
 	expectedOutStr := "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
-	actualOutStr := t1Dur.GetCumMonthsDaysTimeStr()
+	actualOutStr, err := t1Dur.GetCumMonthsDaysTimeStr()
+
+	assert.Nil(suite.T(),err,"Error t1Dur.GetCumMonthsDaysTimeStr():")
 
 	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
 	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
@@ -1330,7 +1334,10 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
 
 	expectedOutStr := "17-Weeks 0-WeekDays 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
-	actualOutStr := t1Dur.GetCumWeeksDaysTimeStr()
+
+	actualOutStr, err := t1Dur.GetCumWeeksDaysTimeStr()
+
+	assert.Nil(suite.T(),err,"Error t1Dur.GetCumWeeksDaysTimeStr():")
 
 	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
 	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
@@ -1498,7 +1505,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_02() {
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
 
 	expectedOutStr := "17-Weeks 0-WeekDays 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
-	actualOutStr := t1Dur.GetCumWeeksDaysTimeStr()
+	actualOutStr, err := t1Dur.GetCumWeeksDaysTimeStr()
+
+	assert.Nil(suite.T(),err,"Error t1Dur.GetCumWeeksDaysTimeStr():")
 
 	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
 	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
@@ -1622,7 +1631,10 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_01() {
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
 
 	expectedOutStr := "119-Days 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
-	actualOutStr := t1Dur.GetCumDaysTimeStr()
+
+	actualOutStr, err := t1Dur.GetCumDaysTimeStr()
+
+	assert.Nil(suite.T(),err,"Error t1Dur.GetCumDaysTimeStr():")
 
 	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
 	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
@@ -1797,7 +1809,10 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_02() {
 	assert.Equal(suite.T(), expectedTimeDur, time.Duration(dur),"Expected Subtracted Duration DID NOT EQUAL Sum of All Component Nanoseconds!")
 
 	expectedOutStr := "119-Days 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
-	actualOutStr := t1Dur.GetCumDaysTimeStr()
+
+	actualOutStr, err := t1Dur.GetCumDaysTimeStr()
+
+	assert.Nil(suite.T(),err,"Error t1Dur.GetCumDaysTimeStr():")
 
 	s:= fmt.Sprintf("Expected OutStr='%v'. Instead OutStr='%v'",expectedOutStr, actualOutStr)
 	assert.Equal(suite.T(), expectedOutStr, actualOutStr,s )
