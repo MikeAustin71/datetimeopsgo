@@ -51,7 +51,7 @@ import (
 		 	a. SetStartTimeDuration() 		also NewStartTimeDuration()
 		 	b. SetStartEndTimes()					also NewStartEndTimes()
 		 	c. SetStartTimePlusTime()			also NewStartTimePlus()
-		 	d. SetStartTimeMinusTime()		also NewStartTimeMinusTime()
+		 	d. SetEndTimeMinusTimeDto()		also NewEndTimeMinusTimeDto()
 
 	2. After the DurationTriad is initialized in step one above, you are free
 		 to call any of the following 'Get' methods in order to return
@@ -269,20 +269,21 @@ func (durT DurationTriad) NewStartTimeDuration(startDateTime time.Time, duration
 }
 
 
-// NewStartTimeMinusTime - Returns a new DurationTriad based on two input parameters,
-// 'startDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto which is
-// subtracted from 'startDateTime' in order to calculate time duration. The user is
+// NewEndTimeMinusTimeDto - Returns a new DurationTriad based on two input parameters,
+// 'endDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto which is
+// subtracted from 'endDateTime' in order to calculate time duration. The user is
 // required to provide Time Zone Location as an input parameter in order to ensure that
 // time duration calculations are performed using equivalent time zones.
 //
 // Usage:
 //
-// du, err := DurationTriad{}.NewStartTimeMinusTime(startDateTime, timeDto)
+// du, err := DurationTriad{}.NewEndTimeMinusTimeDto(startDateTime, timeDto)
 //
 // Input Parameters:
 // =================
 //
-// startDateTime	time.Time	- Starting time
+// endDateTime		time.Time	- Ending date time. The TimeDto parameter will be subtracted
+//														from this date time in order to compute the starting date time.
 //
 // minusTimeDto		  TimeDto - Provides time values which will be subtracted from
 //														'startDateTime' in order to calculate duration.
@@ -323,17 +324,17 @@ func (durT DurationTriad) NewStartTimeDuration(startDateTime time.Time, duration
 //															format string is:
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-func (durT DurationTriad) NewStartTimeMinusTime(startDateTime time.Time, minusTimeDto TimeDto,
+func (durT DurationTriad) NewEndTimeMinusTimeDto(endDateTime time.Time, minusTimeDto TimeDto,
 														timeZoneLocation, dateTimeFmtStr string) (DurationTriad, error){
 
-ePrefix := "DurationTriad.NewStartTimeMinusTime() "
+ePrefix := "DurationTriad.NewEndTimeMinusTimeDto() "
 
 	du2 := DurationTriad{}
 
-	err := du2.SetStartTimeMinusTime(startDateTime, minusTimeDto, timeZoneLocation, dateTimeFmtStr)
+	err := du2.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto, timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
-		return DurationTriad{}, fmt.Errorf(ePrefix + "Error returned from du2.SetStartTimeMinusTime(startDateTime, minusTimeDto).\nError='%v'", err)
+		return DurationTriad{}, fmt.Errorf(ePrefix + "Error returned from du2.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto).\nError='%v'", err)
 	}
 
 	return du2, nil
@@ -645,10 +646,10 @@ func (durT *DurationTriad) SetStartEndTimes(startDateTime,
 	return nil
 }
 
-// SetStartTimeMinusTime - Calculate duration values based on a Starting Date Time and
-// time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
-// in the 'timeDto' parameter. The time values in the 'timeDto' parameter are subtracted
-// from 'StartTimeDateTz'.
+// SetEndTimeMinusTimeDto - Calculate duration values based on an Ending Date Time and
+// a TimeDto structure consisting of time values (Years, Months, weeks, days, hours,
+// minutes etc.). The time values in the 'timeDto' parameter are subtracted
+// from 'endDateTime'.
 //
 // Time values in the 'timeDto' parameter are first converted to negative
 // numeric values. Then these values are added to the 'startDateTime' value
@@ -656,13 +657,60 @@ func (durT *DurationTriad) SetStartEndTimes(startDateTime,
 //
 // As a result. true values for StartTimeDateTz, EndTimeDateTz and
 // TimeDuration are stored in the DurationTriad data structure.
-// In other words, the input 'startDateTime' becomes the EndTimeDateTz and
-// 'startDateTime' is calculated.
 //
-func (durT *DurationTriad) SetStartTimeMinusTime(endDateTime time.Time,
+// Input Parameters
+// ================
+//
+// endDateTime		time.Time - The ending date time value from which TimeDto
+//														parameter 'minusTimeDto' will be subtracted
+//														in order to compute the Starting Date Time.
+//
+// minusTimeDto			TimeDto - An instance of TimeDto containing time values,
+// 														(Years, Months, weeks, days, hours, minutes etc.)
+//														which will be subtracted from input parameter
+// 														'endDateTime' in order to compute the Starting
+//														Date Time and Time Duration.
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end time comparisons.
+//
+// 														Time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (durT *DurationTriad) SetEndTimeMinusTimeDto(endDateTime time.Time,
 		minusTimeDto TimeDto, timeZoneLocation, dateTimeFmtStr string) error {
 
-	ePrefix := "DurationTriad.SetStartTimeMinusTime() "
+	ePrefix := "DurationTriad.SetEndTimeMinusTimeDto() "
 
 
 	tzLoc := durT.preProcessTimeZoneLocation(timeZoneLocation)

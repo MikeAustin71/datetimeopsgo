@@ -87,7 +87,7 @@ func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
@@ -131,7 +131,7 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
@@ -153,9 +153,9 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 		t.Errorf("Error - Expected Default Duration: %v. Instead, got %v", expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetDaysTimeStr()
+	outStr = dur.BaseTime.GetCumDaysTimeStr()
 
-	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected WeekDays Duration: %v. Instead, got %v", expected, outStr)
@@ -202,10 +202,10 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur, err := DurationTriad{}.NewStartTimeMinusTime(t2, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartTimeMinusTime(t2, timeDto). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto). Error='%v'", err.Error())
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
@@ -226,7 +226,7 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
@@ -269,7 +269,7 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v",
@@ -314,7 +314,7 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
@@ -338,9 +338,9 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 			expected, outStr)
 	}
 
-	outStr = dur.BaseTime.GetDaysTimeStr()
+	outStr = dur.BaseTime.GetCumDaysTimeStr()
 
-	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected WeekDays Duration: %v. Instead, got %v",
@@ -475,7 +475,7 @@ func TestDurationTriad_SetStartTimePlusTime(t *testing.T) {
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
@@ -498,7 +498,7 @@ func TestDurationTriad_SetStartTimeMinusTime(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur.SetStartTimeMinusTime(t2, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur.SetEndTimeMinusTimeDto(t2, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
@@ -517,7 +517,7 @@ func TestDurationTriad_SetStartTimeMinusTime(t *testing.T) {
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v",
@@ -558,7 +558,7 @@ func TestDurationTriad_SetStartTimeDuration(t *testing.T) {
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
-	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)

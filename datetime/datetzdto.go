@@ -807,15 +807,23 @@ func (dtz *DateTzDto) IsValid() error {
 func (dtz *DateTzDto) MinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 	
 	ePrefix := "DateTzDto.MinusTimeDto() "
-	
+	minusTimeDto.NormalizeTimeElements()
 	minusTimeDto.ConvertToNegativeValues()
 	
 	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
 															minusTimeDto.Months, 
 																0)
 
+
 	totNanosecs := int64(minusTimeDto.DateDays) * DayNanoSeconds
-	totNanosecs += minusTimeDto.TotTimeNanoseconds
+	totNanosecs += int64(minusTimeDto.Hours) * HourNanoSeconds
+	totNanosecs += int64(minusTimeDto.Minutes) * MinuteNanoSeconds
+	totNanosecs += int64(minusTimeDto.Seconds) * SecondNanoseconds
+	totNanosecs += int64(minusTimeDto.Milliseconds) * MilliSecondNanoseconds
+	totNanosecs += int64(minusTimeDto.Microseconds) * MicroSecondNanoseconds
+	totNanosecs += int64(minusTimeDto.Nanoseconds)
+
+
 	dt2 := dt1.Add(time.Duration(totNanosecs))
 	
 	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
@@ -1350,6 +1358,7 @@ func (dtz *DateTzDto) PlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.PlusTimeDto() "
 
+	plusTimeDto.NormalizeTimeElements()
 	plusTimeDto.ConvertToAbsoluteValues()
 
 	dt1 := dtz.DateTime.AddDate(plusTimeDto.Years,
@@ -1357,7 +1366,13 @@ func (dtz *DateTzDto) PlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 												0)
 
 	incrementalDur := int64(plusTimeDto.DateDays) * DayNanoSeconds
-	incrementalDur += plusTimeDto.TotTimeNanoseconds
+	incrementalDur += int64(plusTimeDto.Hours) * HourNanoSeconds
+	incrementalDur += int64(plusTimeDto.Minutes) * MinuteNanoSeconds
+	incrementalDur += int64(plusTimeDto.Seconds) * SecondNanoseconds
+	incrementalDur += int64(plusTimeDto.Milliseconds) * MilliSecondNanoseconds
+	incrementalDur += int64(plusTimeDto.Microseconds) * MicroSecondNanoseconds
+	incrementalDur += int64(plusTimeDto.Nanoseconds)
+
 
 	dt2 := dt1.Add(time.Duration(incrementalDur))
 

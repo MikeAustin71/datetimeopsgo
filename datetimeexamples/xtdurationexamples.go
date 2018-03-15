@@ -39,7 +39,7 @@ func ExampleSetStartEndTimes() {
 
 	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	outStr = dur.BaseTime.GetDaysTimeStr()
+	outStr = dur.BaseTime.GetCumDaysTimeStr()
 
 	fmt.Println("     Expected WeekDays: ", expected)
 	fmt.Println("     WeekDays Duration: ", outStr)

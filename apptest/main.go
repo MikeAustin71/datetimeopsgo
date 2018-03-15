@@ -9,8 +9,175 @@ import (
 
 func main() {
 
-	mainTest008()
+	mainTest014()
 
+}
+
+func mainTest014() {
+	t1str := "2014-02-15 19:54:30.000000000 -0600 CST"
+	t2str := "2017-04-30 22:58:32.000000000 -0500 CDT"
+	t1, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t1str)
+	t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
+
+	//t1, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t1str)
+	t1OutStr := t1.Format(dt.FmtDateTimeYrMDayFmtStr)
+	//t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
+	t2OutStr := t2.Format(dt.FmtDateTimeYrMDayFmtStr)
+	t12Dur := t2.Sub(t1)
+
+	timeDto := dt.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto.NormalizeTimeElements()
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto). " +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr) {
+		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n",
+			t1OutStr, dur.BaseTime.StartTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+		return
+	}
+
+	if t2OutStr != dur.BaseTime.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr) {
+		fmt.Printf("Error- Expected End Time %v. Instead, got %v.\n",
+			t2OutStr, dur.BaseTime.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+		return
+	}
+
+	if t12Dur != dur.BaseTime.TimeDuration {
+		fmt.Printf("Error- Expected Time Duration %v. Instead, got %v\n",
+			t12Dur, dur.BaseTime.TimeDuration)
+		return
+	}
+
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
+
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v\n", expected, outStr)
+		return
+	}
+
+	fmt.Println("Successful Completion!")
+}
+
+func mainTest012() {
+	// 101095442000000000
+	t1str := "2014-02-15 19:54:30.000000000 -0600 CST"
+	t2str := "2017-04-30 22:58:32.000000000 -0500 CDT"
+	t1, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t1str)
+	t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
+	eDur := t2.Sub(t1)
+
+	timeDto := dt.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	timeDto.ConvertToNegativeValues()
+
+	dx1 := t2.AddDate(timeDto.Years, timeDto.Months, 0)
+
+	dur := (int64(timeDto.Weeks * 7) + int64(timeDto.WeekDays)) * dt.DayNanoSeconds
+	dur += int64(timeDto.Hours) * dt.HourNanoSeconds
+	dur += int64(timeDto.Minutes) * dt.MinuteNanoSeconds
+	dur += int64(timeDto.Seconds) * dt.SecondNanoseconds
+
+	dx2 := dx1.Add(time.Duration(dur))
+
+	fmt.Println("Expected Start Date Time: ", t1.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println("  Actual Start Date Time: ", dx2.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println("       Expected Duration: ", int64(eDur))
+	fmt.Println("          ActualDuration:  101095442000000000")
+
+}
+
+func mainTest011() {
+
+	t1str := "2014-02-15 19:54:30.000000000 -0600 CST"
+	t2str := "2017-04-30 22:58:32.000000000 -0500 CDT"
+	t1, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t1str)
+	t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
+
+	tDto, err := dt.TimeDurationDto{}.NewStartEndTimesTzCalc(t1, t2, dt.TzIanaUsCentral,
+					dt.TDurCalcTypeSTDYEARMTH, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesTzCalc() " +
+			"Error='%v'", err.Error())
+		return
+	}
+
+	ex.PrintTimeDurationDto(tDto)
+
+}
+
+func mainTest010() {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+
+	timeDto := dt.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto.NormalizeTimeElements()
+
+	dur, err := dt.TimeDurationDto{}.NewEndTimeMinusTimeDto(t2, timeDto, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto). Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println("Expected Start Date Time: ", t1OutStr)
+	fmt.Println("  Actual Start Date Time: ", dur.StartTimeDateTz.String())
+	fmt.Println("-----------------------------------------")
+	fmt.Println("  Expected End Date Time: ", t2OutStr)
+	fmt.Println("    Actual End Date Time: ", dur.EndTimeDateTz.String())
+	fmt.Println("-----------------------------------------")
+	fmt.Println("       Expected Duration: ", t12Dur)
+	fmt.Println("         Actual Duration: ", dur.TimeDuration.String())
+}
+
+func mainTest009() {
+	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"
+	t2str := "04/30/2017 22:58:33.123456789 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	tDto, err :=
+				dt.TimeDurationDto{}.NewStartEndTimesTzCalc(t2, t1,
+								dt.TzIanaUsCentral, dt.TDurCalcTypeSTDYEARMTH, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesTzCalc(). " +
+			" Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println("TimeDurationDto")
+	ex.PrintTimeDurationDto(tDto)
+
+	durT, err := dt.DurationTriad{}.NewStartEndTimes(t2, t1, dt.TzIanaUsCentral, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesTzCalc(). " +
+			" Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println("DurationTriad BaseTimeDto")
+	ex.PrintTimeDurationDto(durT.BaseTime)
 }
 
 func mainTest008() {
@@ -32,12 +199,15 @@ func mainTest008() {
 
 	fmt.Println("Expected: ", expected)
 	fmt.Println("  Actual: ", dOut)
+	fmt.Println("Start Time: ", du.BaseTime.StartTimeDateTz.String())
+	fmt.Println("  End Time: ", du.BaseTime.EndTimeDateTz.String())
 
-
+	/*
 	if expected != dOut {
 		fmt.Printf("Expected: %v. \nError - got %v\n", expected, dOut)
 		return
 	}
+	*/
 
 }
 

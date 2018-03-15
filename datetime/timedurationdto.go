@@ -439,7 +439,7 @@ func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 	t2Dur.MillisecondsNanosecs	= tDur.MillisecondsNanosecs
 	t2Dur.Microseconds					= tDur.Microseconds
 	t2Dur.MicrosecondsNanosecs 	= tDur.MicrosecondsNanosecs
-	t2Dur.Nanoseconds						= tDur.MillisecondsNanosecs
+	t2Dur.Nanoseconds						= tDur.Nanoseconds
 	t2Dur.TotSubSecNanoseconds 	= tDur.TotSubSecNanoseconds
 	t2Dur.TotDateNanoseconds		= tDur.TotDateNanoseconds
 	t2Dur.TotTimeNanoseconds		= tDur.TotTimeNanoseconds
@@ -650,32 +650,6 @@ func (tDur *TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration
 
 }
 
-// GetDaysTimeStr - Returns duration formatted as
-// days, hours, minutes, seconds, milliseconds, microseconds,
-// and nanoseconds.
-// Example: 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-func (tDur *TimeDurationDto) GetDaysTimeStr() string {
-	if int64(tDur.TimeDuration) == 0 {
-		return "0-Nanoseconds"
-	}
-
-
-	str := fmt.Sprintf("%v-Days ", tDur.DateDays)
-
-	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
-
-	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
-
-	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
-
-	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
-
-	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
-
-	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
-
-	return str
-}
 
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
@@ -3136,7 +3110,6 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 				timeZoneLocation, tzLoc, err.Error())
 	}
-
 
 	eDateTime, err := TimeZoneDto{}.New(endDateTime, tzLoc, dtFormat)
 
