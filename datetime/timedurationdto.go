@@ -1406,11 +1406,11 @@ func (tDur TimeDurationDto) New(startDateTime, endDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, tzStartLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, tzStartLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartEndTimesTzCalc(startDateTime, " +
+		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartEndTimesCalcTz(startDateTime, " +
 			"endDateTime, tzStartLocation, dateTimeFmtStr). "+
 			"tzStartLocation='%v'  Error='%v'",
 				tzStartLocation, err.Error())
@@ -1515,11 +1515,11 @@ func (tDur TimeDurationDto) NewStartAutoEndTz(startDateTime time.Time, timeZoneL
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartEndTimesTzCalc(startDt1, endDt1, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
+	err = t2Dur.SetStartEndTimesCalcTz(startDt1, endDt1, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
@@ -1614,18 +1614,18 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 
 	t2Dur := TimeDurationDto{}
 	
-	err = t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
+	err = t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " + 
-			"SetStartEndTimesTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 															
 	return t2Dur, nil
 }
 
-// NewStartEndTimesTzCalc - Creates and returns a new TimeDurationDto populated with
+// NewStartEndTimesCalcTz - Creates and returns a new TimeDurationDto populated with
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters.
 //
 // The Time Zone Location used to standardize the time duration calculation is derived
@@ -1672,7 +1672,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartEndTimesTzCalc(startTime, endTime,
+// tDurDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(startTime, endTime,
 // 																				TDurCalcTypeSTDYEARMTH, FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
@@ -1696,11 +1696,11 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, tDurCalcType, timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, tDurCalcType, timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
@@ -1708,7 +1708,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 
 }
 
-// NewStartEndTimesTzCalc - Creates and returns a new TimeDurationDto populated with
+// NewStartEndTimesCalcTz - Creates and returns a new TimeDurationDto populated with
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters.
 //
 // The user is required to specify a common Time Zone Location for use in converting
@@ -1724,6 +1724,23 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 // startDateTime	time.Time	- Starting time
 //
 // endDateTime		time.Time - Ending time
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
+// 																		day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -1753,23 +1770,6 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 //														 (3)	If 'timeZoneLocation' is submitted as an empty string,
 //																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
-//														time duration:
-//
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
-//
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
-//
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
-//
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
-//
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
-//
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
-//
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
 //															"2006-01-02 15:04:05.000000000 -0700 MST"
@@ -1783,7 +1783,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartEndTimesTzCalc(startTime, endTime, TzIanaUsCentral,
+// tDurDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(startTime, endTime, TzIanaUsCentral,
 // 									TDurCalcTypeSTDYEARMTH, FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
@@ -1792,11 +1792,11 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 // 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 							datetimeconstants.go
 //
-func (tDur TimeDurationDto) NewStartEndTimesTzCalc(startDateTime,
-	endDateTime time.Time, timeZoneLocation string, tDurCalcType TDurCalcType,
+func (tDur TimeDurationDto) NewStartEndTimesCalcTz(startDateTime,
+	endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation string,
 		dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	ePrefix := "TimeDurationDto.NewStartEndTimesTzCalc() "
+	ePrefix := "TimeDurationDto.NewStartEndTimesCalcTz() "
 
 	if startDateTime.IsZero() && endDateTime.IsZero() {
 		return TimeDurationDto{},
@@ -1818,11 +1818,11 @@ func (tDur TimeDurationDto) NewStartEndTimesTzCalc(startDateTime,
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartEndTimesTzCalc(startDateTime, endDateTime, tDurCalcType, tzLoc, dateTimeFmtStr)
+	err = t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, tDurCalcType, tzLoc, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
@@ -1882,7 +1882,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartEndTimesDateDtoTzCalc(startDateTime,
+	err := t2Dur.SetStartEndTimesDateDtoCalcTz(startDateTime,
 															endDateTime,
 																TDurCalcTypeSTDYEARMTH,
 																	timeZoneLocation,
@@ -1890,7 +1890,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesDateDtoTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
@@ -1972,7 +1972,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 
 	timeZoneLocation := startDateTime.TimeZone.LocationName
 
-	err := t2Dur.SetStartEndTimesDateDtoTzCalc(startDateTime,
+	err := t2Dur.SetStartEndTimesDateDtoCalcTz(startDateTime,
 														endDateTime,
 															tDurCalcType,
 																timeZoneLocation,
@@ -1980,14 +1980,14 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesDateDtoTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
 }
 
-// NewStartEndTimesDateDtoTzCalc - Creates and returns a new TimeDurationDto populated with
+// NewStartEndTimesDateDtoCalcTz - Creates and returns a new TimeDurationDto populated with
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters. The
 // 'startDateTime' and 'endDateTime' parameters are of type DateTzDto.
 //
@@ -2004,6 +2004,23 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 // startDateTime	DateTzDto	- Starting date time
 //
 // endDateTime		DateTzDto - Ending date time
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
+// 																		day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -2033,23 +2050,6 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 //														 (3)	If 'timeZoneLocation' is submitted as an empty string,
 //																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
-//														time duration:
-//
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
-//
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
-//
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
-//
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
-//
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
-//
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
-//
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
 //															"2006-01-02 15:04:05.000000000 -0700 MST"
@@ -2072,11 +2072,11 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 // 					'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 						datetimeconstants.go
 //
-func (tDur TimeDurationDto) NewStartEndTimesDateDtoTzCalc(startDateTime,
-										endDateTime DateTzDto, timeZoneLocation string, tDurCalcType TDurCalcType,
+func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalcTz(startDateTime,
+										endDateTime DateTzDto, tDurCalcType TDurCalcType, timeZoneLocation string,
 													dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	ePrefix := "TimeDurationDto.NewStartEndTimesDateDtoTzCalc() "
+	ePrefix := "TimeDurationDto.NewStartEndTimesDateDtoCalcTz() "
 
 	if startDateTime.DateTime.IsZero() && endDateTime.DateTime.IsZero() {
 		return TimeDurationDto{},
@@ -2098,7 +2098,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoTzCalc(startDateTime,
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartEndTimesDateDtoTzCalc(startDateTime,
+	err = t2Dur.SetStartEndTimesDateDtoCalcTz(startDateTime,
 																	endDateTime,
 																		tDurCalcType,
 																			tzLoc,
@@ -2106,7 +2106,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoTzCalc(startDateTime,
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesDateDtoTzCalc(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
 
@@ -2169,11 +2169,11 @@ func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -2277,18 +2277,18 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, TDurCalcTypeSTDYEARMTH , tzLoc, dateTimeFmtStr)
+	err = t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, TDurCalcTypeSTDYEARMTH , tzLoc, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
 
 }
 
-// NewStartTimeDurationTzCalc - Creates and returns a new TimeDurationDto based on input
+// NewStartTimeDurationCalcTz - Creates and returns a new TimeDurationDto based on input
 // parameters, 'startDateTime', time duration, 'timeZoneLocation' and calculation type.
 // 'startDateTime' is converted to the specified 'timeZoneLocation' and the duration value
 // is added to it in order to compute the ending date time.
@@ -2310,6 +2310,23 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //														'startDateTime' is converted to ending date time and
 //														actual starting date time is computed by subtracting
 //														duration.
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
+//														time duration:
+//
+//			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																		day time calculation.
+//
+//			TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
+//
+//			TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
+//
+//			TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
+//
+//			TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
+//
+//			TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																 		Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -2339,23 +2356,6 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //														 (3)	If 'timeZoneLocation' is submitted as an empty string,
 //																	it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
-//														time duration:
-//
-//			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
-// 																		day time calculation.
-//
-//			TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
-//
-//			TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
-//
-//			TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
-//
-//			TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
-//
-//			TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
-//																 		Used for very large duration values.
-//
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
 //															"2006-01-02 15:04:05.000000000 -0700 MST"
@@ -2370,7 +2370,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationTzCalc(startTime, duration,
+// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(startTime, duration,
 // 										TzIanaUsCentral, TDurCalcTypeSTDYEARMTH, FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
@@ -2379,11 +2379,11 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 // 					'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 						datetimeconstants.go
 //
-func (tDur TimeDurationDto) NewStartTimeDurationTzCalc(startDateTime time.Time,
-					duration time.Duration, timeZoneLocation string, tDurCalcType TDurCalcType,
+func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
+					duration time.Duration, tDurCalcType TDurCalcType, timeZoneLocation string,
 							dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	ePrefix := "TimeDurationDto.NewStartTimeDurationTzCalc() "
+	ePrefix := "TimeDurationDto.NewStartTimeDurationCalcTz() "
 
 	if startDateTime.IsZero() && duration==0 {
 		return TimeDurationDto{},
@@ -2405,7 +2405,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTzCalc(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartTimeDurationTzCalc(startDateTime,
+	err = t2Dur.SetStartTimeDurationCalcTz(startDateTime,
 																	duration,
 																		tDurCalcType,
 																			timeZoneLocation,
@@ -2414,7 +2414,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTzCalc(startDateTime time.Time,
 	if err != nil {
 		return TimeDurationDto{},
 		fmt.Errorf(ePrefix +
-			"Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'",
+			"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'",
 				err.Error())
 	}
 
@@ -2503,11 +2503,11 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationTzCalc(startDateTime, duration, tDurCalcType , timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, tDurCalcType , timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -2570,7 +2570,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationDateDtoTzCalc(startDateTime,
+	err := t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
 												duration,
 													TDurCalcTypeSTDYEARMTH,
 														timeZoneLocation,
@@ -2578,7 +2578,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationTzCalc(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -2685,7 +2685,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartTimeDurationDateDtoTzCalc(startDateTime,
+	err = t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
 																	duration,
 																		TDurCalcTypeSTDYEARMTH,
 																			timeZoneLocation,
@@ -2693,7 +2693,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationDateDtoTzCalc(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -2820,7 +2820,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartTimeDurationDateDtoTzCalc(startDateTime,
+	err = t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
 													duration,
 														tDurCalcType,
 															tlz,
@@ -2829,7 +2829,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 	if err != nil {
 		return TimeDurationDto{},
 			fmt.Errorf(ePrefix +
-				"Error returned by t2Dur.SetStartTimeDurationDateDtoTzCalc(...) Error='%v'",
+				"Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'",
 				err.Error())
 	}
 
@@ -2922,7 +2922,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationDateDtoTzCalc(startDateTime,
+	err := t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
 											duration,
 												tDurCalcType ,
 													timeZoneLocation,
@@ -2930,7 +2930,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationDateDtoTzCalc(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -3013,7 +3013,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetStartTimePlusTimeDto(startDateTime,
+	err := t2Dur.SetStartTimePlusTimeDtoCalcTz(startDateTime,
 												plusTimeDto,
 													TDurCalcTypeSTDYEARMTH,
 														timeZoneLocation,
@@ -3021,7 +3021,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 	
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimePlusTimeDto(...) Error='%v'", err.Error())
+		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='%v'", err.Error())
 	}
 	
 	return t2Dur, nil
@@ -3098,12 +3098,12 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 	
-	err := t2Dur.SetEndTimeMinusTimeDto(endDateTime, minusTimeDto,
+	err := t2Dur.SetEndTimeMinusTimeDtoCalcTz(endDateTime, minusTimeDto,
 										TDurCalcTypeSTDYEARMTH,timeZoneLocation, dateTimeFmtStr)
 	
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetEndTimeMinusTimeDto(...) Error='%v'", err.Error())
+		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='%v'", err.Error())
 	}
 	
 	return t2Dur, nil
@@ -3157,17 +3157,17 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 
 	calcType := tDur.CalcType
 
-	err := tDur.SetStartEndTimesTzCalc(tDur.StartTimeDateTz.DateTime, eTime,calcType,
+	err := tDur.SetStartEndTimesCalcTz(tDur.StartTimeDateTz.DateTime, eTime,calcType,
 							tDur.StartTimeDateTz.TimeZone.LocationName, tDur.StartTimeDateTz.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by SetStartEndTimesTzCalc: Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error returned by SetStartEndTimesCalcTz: Error='%v'", err.Error())
 	}
 
 	return nil
 }
 
-// SetEndTimeMinusTimeDto - Sets start date time, end date time and duration
+// SetEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration
 // based on an ending date time and the time components contained in a TimeDto.
 //
 // Starting date time is computed by subtracting the value of the TimeDto from
@@ -3253,10 +3253,10 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 //															format string is:
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
+func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 	minusTimeDto TimeDto, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
 
-	ePrefix := "TimeDurationDto.SetEndTimeMinusTimeDto() "
+	ePrefix := "TimeDurationDto.SetEndTimeMinusTimeDtoCalcTz() "
 
 	if endDateTime.IsZero() && minusTimeDto.IsEmpty() {
 		return 	errors.New(ePrefix + "Error: Both 'endDateTime' and 'minusTimeDto' " +
@@ -3302,7 +3302,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 }
 
 //
-// SetStartEndTimesDateDtoTzCalc - Sets data field values for the current
+// SetStartEndTimesDateDtoCalcTz - Sets data field values for the current
 // TimeDurationDto instance using a Start Date Time, End Date Time and a
 // time zone specification.
 //
@@ -3377,25 +3377,25 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(endDateTime time.Time,
 //															format string is:
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-func (tDur *TimeDurationDto) SetStartEndTimesDateDtoTzCalc(startDateTime,
+func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
 									endDateTime DateTzDto, tDurCalcType TDurCalcType,
 										timeZoneLocation, dateTimeFmtStr string) error {
 
-										ePrefix := "TimeDurationDto.SetStartEndTimesDateDtoTzCalc() "
+										ePrefix := "TimeDurationDto.SetStartEndTimesDateDtoCalcTz() "
 
 
-		err := tDur.SetStartEndTimesTzCalc(startDateTime.DateTime, endDateTime.DateTime,
+		err := tDur.SetStartEndTimesCalcTz(startDateTime.DateTime, endDateTime.DateTime,
 								tDurCalcType, timeZoneLocation, dateTimeFmtStr)
 
 		if err != nil {
-			return fmt.Errorf(ePrefix + "Error returned by SetStartEndTimesTzCalc- " +
+			return fmt.Errorf(ePrefix + "Error returned by SetStartEndTimesCalcTz- " +
 					"Error:='%v'", err.Error())
 		}
 
 		return nil
 }
 
-// SetStartEndTimesTzCalc - Sets data field values for the current TimeDurationDto
+// SetStartEndTimesCalcTz - Sets data field values for the current TimeDurationDto
 // instance using a Start Date Time, End Date Time and a time zone specification.
 // First, 'startDateTime' and 'endDateTime' are converted to the designate Time
 // Zone Location. Next, 'startDateTime' is subtracted from 'endDateTime' to compute
@@ -3466,7 +3466,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoTzCalc(startDateTime,
 //															format string is:
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-func (tDur *TimeDurationDto) SetStartEndTimesTzCalc(startDateTime,
+func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(startDateTime,
 endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartEndTimes() "
@@ -3524,7 +3524,7 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 	return nil
 }
 
-// SetStartTimeDurationTzCalc - Sets start time, end time and duration for the
+// SetStartTimeDurationCalcTz - Sets start time, end time and duration for the
 // current TimeDurationDto instance. 'startDateTime' is converted to the
 // specified 'timeZoneLocation' and the duration value is added to it
 // in order to compute the ending date time.
@@ -3600,11 +3600,11 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //
-func (tDur *TimeDurationDto) SetStartTimeDurationTzCalc(startDateTime time.Time,
+func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 															duration time.Duration, tDurCalcType TDurCalcType,
 																	timeZoneLocation, dateTimeFmtStr string) error {
 
-	ePrefix := "TimeDurationDto.SetStartTimeDurationTzCalc() "
+	ePrefix := "TimeDurationDto.SetStartTimeDurationCalcTz() "
 
 	if startDateTime.IsZero() && duration==0 {
 		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
@@ -3676,7 +3676,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTzCalc(startDateTime time.Time,
 	return nil
 }
 
-// SetStartTimeDurationDateDtoTzCalc - Sets start time, end time and
+// SetStartTimeDurationDateDtoCalcTz - Sets start time, end time and
 // duration for the current TimeDurationDto instance.
 //
 // The input parameter, 'startDateTime', is of type DateTzDto. It is
@@ -3754,11 +3754,11 @@ func (tDur *TimeDurationDto) SetStartTimeDurationTzCalc(startDateTime time.Time,
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //
-func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoTzCalc(startDateTime DateTzDto,
+func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(startDateTime DateTzDto,
 	duration time.Duration, tDurCalcType TDurCalcType,
 	timeZoneLocation, dateTimeFmtStr string) error {
 
-	ePrefix := "TimeDurationDto.SetStartTimeDurationDateDtoTzCalc() "
+	ePrefix := "TimeDurationDto.SetStartTimeDurationDateDtoCalcTz() "
 
 	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 
@@ -3772,20 +3772,20 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoTzCalc(startDateTime Dat
 	}
 
 
-	err = tDur.SetStartTimeDurationTzCalc(startDateTime.DateTime,
+	err = tDur.SetStartTimeDurationCalcTz(startDateTime.DateTime,
 																				duration,
 																					tDurCalcType,
 																						timeZoneLocation,
 																							dateTimeFmtStr)
 
 	if err != nil {
-		fmt.Errorf(ePrefix + "Error returned by SetStartTimeDurationTzCalc: Error='%v'", err.Error())
+		fmt.Errorf(ePrefix + "Error returned by SetStartTimeDurationCalcTz: Error='%v'", err.Error())
 	}
 
 	return nil
 }
 
-// SetStartTimePlusTimeDto - Sets start date time, end date time and duration
+// SetStartTimePlusTimeDtoCalcTz - Sets start date time, end date time and duration
 // based on a starting date time and the time components contained in a TimeDto.
 //
 // The time components of the TimeDto are added to the starting date time to compute
@@ -3872,10 +3872,10 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoTzCalc(startDateTime Dat
 //															format string is:
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(startDateTime time.Time,
+func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(startDateTime time.Time,
 	plusTimeDto TimeDto, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
 	
-	ePrefix := "TimeDurationDto.SetStartTimePlusTimeDto() "
+	ePrefix := "TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() "
 
 	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
 		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'plusTimeDto' " +

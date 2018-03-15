@@ -101,11 +101,11 @@ func mainTest011() {
 	t1, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t1str)
 	t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
 
-	tDto, err := dt.TimeDurationDto{}.NewStartEndTimesTzCalc(t1, t2, dt.TzIanaUsCentral,
-					dt.TDurCalcTypeSTDYEARMTH, dt.FmtDateTimeYrMDayFmtStr)
+	tDto, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1, t2,
+		dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesTzCalc() " +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz() " +
 			"Error='%v'", err.Error())
 		return
 	}
@@ -156,11 +156,11 @@ func mainTest009() {
 	t2, _ := time.Parse(fmtstr, t2str)
 
 	tDto, err :=
-				dt.TimeDurationDto{}.NewStartEndTimesTzCalc(t2, t1,
-								dt.TzIanaUsCentral, dt.TDurCalcTypeSTDYEARMTH, fmtstr)
+				dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t2, t1,
+								dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesTzCalc(). " +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). " +
 			" Error='%v'\n", err.Error())
 		return
 	}
@@ -171,7 +171,7 @@ func mainTest009() {
 	durT, err := dt.DurationTriad{}.NewStartEndTimes(t2, t1, dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesTzCalc(). " +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). " +
 			" Error='%v'\n", err.Error())
 		return
 	}
@@ -195,7 +195,7 @@ func mainTest008() {
 
 	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
 
-	dOut := du.BaseTime.GetYearMthDaysTimeAbbrv()
+	dOut := du.BaseTime.GetYearMthDaysTimeAbbrvStr()
 
 	fmt.Println("Expected: ", expected)
 	fmt.Println("  Actual: ", dOut)

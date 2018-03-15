@@ -17,8 +17,8 @@ func ExampleTimeDuration001() {
 
 	hoursDur := int64(24) * dt.HourNanoSeconds
 
-	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeDurationTzCalc(t1USCentral, time.Duration(hoursDur),
-		dt.TzIanaUsCentral,	dt.TDurCalcTypeSTDYEARMTH, fmtStr)
+	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeDurationCalcTz(t1USCentral, time.Duration(hoursDur),
+		dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral,	fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
@@ -46,8 +46,8 @@ func ExampleTimeDuration002() {
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
 
 
-	t1Dur, err := dt.TimeDurationDto{}.NewStartEndTimesTzCalc (t1USCentral, t2USCentral,
-		dt.TzIanaUsCentral,	dt.TDurCalcTypeCUMDAYS, fmtStr)
+	t1Dur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
+		dt.TDurCalcTypeCUMDAYS, dt.TzIanaUsCentral, fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
@@ -89,8 +89,8 @@ func ExampleTimeDuration003() {
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
 
 
-	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesTzCalc (t1USCentral, t2USCentral,
-		dt.TzIanaUsCentral,	dt.TDurCalcTypeCUMDAYS, fmtStr)
+	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
+		dt.TDurCalcTypeCUMDAYS, dt.TzIanaUsCentral, fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
