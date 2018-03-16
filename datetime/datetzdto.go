@@ -1049,6 +1049,12 @@ func (dtz DateTzDto) NewTz(dateTime time.Time, timeZoneLocation,
 
 	ePrefix := "DateTzDto.New() "
 
+
+	if dateTime.IsZero() {
+		return DateTzDto{}, errors.New(ePrefix + "Error: Input parameter dateTime is Zero value!")
+	}
+
+
 	dtz2 := DateTzDto{}
 
 	err := dtz2.SetFromTimeTz(dateTime, timeZoneLocation, dateTimeFmtStr)
