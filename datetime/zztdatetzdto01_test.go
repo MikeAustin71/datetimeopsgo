@@ -341,7 +341,7 @@ func TestDateTzDto_AddDateTimeToThis_01(t *testing.T) {
 
 	t3 := t2.Add(time.Duration(totNanoSecs))
 
-	err = dTz1.AddDateTimeToThis(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, fmtstr)
+	err = dTz1.AddDateTimeToThis(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
 
 	if err != nil {
 		t.Errorf("Error returned by dTz1.AddDateTimeToThis(years, months, days, hours, minutes, seconds, ...). Error='%v'", err.Error())
