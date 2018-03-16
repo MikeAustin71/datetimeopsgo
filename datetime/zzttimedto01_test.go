@@ -939,7 +939,7 @@ Start Date Plus 8-Weeks:  0000-01-25 00:00:00.000000000 +0000 UCT
 	
 }
 
-func TestTimeDto_NewF1romDateTime_01(t *testing.T) {
+func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)

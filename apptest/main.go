@@ -9,8 +9,41 @@ import (
 
 func main() {
 
-	mainTest014()
+	mainTest015()
 
+}
+
+func mainTest015() {
+
+	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
+	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
+
+	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32,515539300, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). " +
+				"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println("dTzDto.DateTime: ", dTzDto.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	tDto, err := dt.TimeDto{}.NewFromDateTime(dTzDto.DateTime)
+
+	dt2, err := tDto.GetDateTime(dt.TzIanaUsCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by tDto.GetDateTime(TzIanaUsCentral). Error='%v'\n", err.Error())
+		return
+	}
+
+	if !dt2.Equal(dTzDto.DateTime) {
+		fmt.Printf("Error: Expected dTzDto.DateTime='%v'. It did NOT! dTzDto.DateTime='%v'",
+			dt2.Format(dt.FmtDateTimeYrMDayFmtStr), dTzDto.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+		return
+	}
+
+	fmt.Println("Success!")
 }
 
 func mainTest014() {
