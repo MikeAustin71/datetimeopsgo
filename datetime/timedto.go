@@ -616,9 +616,10 @@ func (tDto *TimeDto) NormalizeTimeElements() error {
 // NormalizeDays - Attempts to normalize days. This handles cases
 // where the number of days is greater than the number of days
 // in a month.
+//
 func (tDto *TimeDto) NormalizeDays() (bool, error) {
-	ePrefix := "TimeDto.NormalizeDays() "
 
+	ePrefix := "TimeDto.NormalizeDays() "
 
 	if tDto.Years == 0 && tDto.Months == 0  {
 		return false, nil
@@ -692,7 +693,6 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 			"Error='%v'", err.Error())
 	}
 
-
 	err = t2Dto.allocateTotalNanoseconds(dateTime.Nanosecond())
 
 	if err != nil {
@@ -710,8 +710,9 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 	tDto.CopyIn(t2Dto)
 
 	return true, nil
-
 }
+
+
 
 
 // SetTimeElements - Sets the value of date fields for the current TimeDto instance

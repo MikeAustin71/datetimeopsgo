@@ -9,9 +9,59 @@ import (
 
 func main() {
 
-	mainTest017()
+	mainTest018()
 
 }
+
+func mainTest019() {
+
+}
+
+func mainTest018() {
+	t1Dto := dt.TimeDto{}
+
+	/*
+	t1Dto.Years = 1955
+	t1Dto.Months = 15
+	t1Dto.DateDays = 32
+	t1Dto.Hours = 48
+	t1Dto.Minutes = 71
+	t1Dto.Seconds = 125
+	t1Dto.Milliseconds = 1001
+	t1Dto.Microseconds = 1001
+	t1Dto.Nanoseconds = 1001
+	*/
+
+	t1Dto.Years = 0
+	t1Dto.Months = 0
+	t1Dto.DateDays = 32
+	t1Dto.Hours = 48
+	t1Dto.Minutes = 71
+	t1Dto.Seconds = 125
+	t1Dto.Milliseconds = 0
+	t1Dto.Microseconds = 0
+	t1Dto.Nanoseconds = 0
+
+
+	t1Dto.NormalizeTimeElements()
+	fmt.Println("After Normalize Time Elements ")
+	ex.PrintOutTimeDtoFields(t1Dto)
+
+
+	t1Dto.NormalizeDays()
+	fmt.Println("After ")
+	ex.PrintOutTimeDtoFields(t1Dto)
+	dateTime, err := t1Dto.GetDateTime(dt.TzIanaUTC)
+
+	if err != nil {
+		fmt.Printf("Error returned by t1Dto.GetDateTime(dt.TzIanaUTC). Error='%v'",
+				err.Error())
+	}
+
+	fmt.Println("t1Dto.GetDateTime(): ", dateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+}
+
 
 func mainTest017() {
 	t1Dto := dt.TimeDto{}
