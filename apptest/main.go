@@ -9,8 +9,184 @@ import (
 
 func main() {
 
-	mainTest015()
+	mainTest016()
 
+}
+
+func mainTest016() {
+	locUSCentral, err := time.LoadLocation(dt.TzIanaUsCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	year := 2018
+	month := 3
+	day := 6
+	hour := 20
+	minute := 2
+	second := 18
+	nSecs := 792489279
+
+	t4USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	t4Dto, err := dt.TimeDto{}.New(year, month, 0, day, hour, minute,
+		second, 0, 0, nSecs)
+
+	if err != nil {
+		fmt.Printf("Error returned by t4USCentral TimeDto{}.New(). Error='%v'\n", err.Error())
+		return
+	}
+
+	t4TZoneDef, err := dt.TimeZoneDefDto{}.New(t4USCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDefDto{}.New(t4USCentral). Error='%v'", err.Error())
+		return
+	}
+
+	locTokyo, err := time.LoadLocation(dt.TzIanaAsiaTokyo)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+		return
+	}
+
+	t5Tokyo := time.Date(2012, 9, 30, 11, 58, 48, 123456789, locTokyo)
+
+
+	t5Dto, err := dt.TimeDto{}.New(2012, 9, 0, 30, 11,
+		58, 48,  0, 0, 123456789)
+
+	if err != nil {
+		fmt.Printf("Error returned by t5Tokyo TimeDto{}.New(). Error='%v'", err.Error())
+		return
+	}
+
+	t5TZoneDef, err := dt.TimeZoneDefDto{}.New(t5Tokyo)
+
+	dTz1, err := dt.DateTzDto{}.New(t5Tokyo, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)\n")
+		return
+	}
+
+	if !t5Dto.Equal(dTz1.Time) {
+		fmt.Print("Expected t5Dto == dTz1.Time. It DID NOT!\n")
+
+		fmt.Println("t5Dto")
+		ex.PrintOutTimeDtoFields(t5Dto)
+		fmt.Println("\n\ndTz1.Time")
+		ex.PrintOutTimeDtoFields(dTz1.Time)
+		return
+	}
+
+	if !t5TZoneDef.Equal(dTz1.TimeZone) {
+		fmt.Print("Expected t5TZoneDef == dTz1.TimeZone. It DID NOT!")
+	}
+
+	err = dTz1.SetFromTimeDto(t4Dto, dt.TzIanaUsCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned from dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral). " +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !t4USCentral.Equal(dTz1.DateTime) {
+		fmt.Printf("Expected dTz1.DateTime='%v'.  Instead, dTz1.DateTime='%v'.\n",
+			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr),
+			dTz1.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+		return
+	}
+
+	if !t4Dto.Equal(dTz1.Time) {
+		fmt.Print("Expected t4Dto TimeDto == dTz1.Time Time Dto. THEY ARE NOT EQUAL!\n")
+		fmt.Println("t4Dto")
+
+		ex.PrintOutTimeDtoFields(t5Dto)
+		fmt.Println("\n\ndTz1.Time")
+		ex.PrintOutTimeDtoFields(dTz1.Time)
+		return
+	}
+
+	if !t4TZoneDef.Equal(dTz1.TimeZone) {
+		fmt.Print("Expected t4TZoneDef TimeZoneDef == dTz1.TimeZone TimeZoneDef. " +
+			"THEY ARE NOT EQUAL!\n")
+
+		fmt.Println("t4TZoneDef")
+		ex.PrintOutTimeZoneDefDtoFields(t4TZoneDef)
+		fmt.Println("\n\ndTz1.TimeZone")
+		ex.PrintOutTimeZoneDefDtoFields(dTz1.TimeZone)
+
+		return
+	}
+
+	if year != dTz1.Time.Years {
+		fmt.Printf("Error: Expected Years='%v'. Instead, Years='%v'\n",year, dTz1.Time.Years)
+		return
+	}
+
+	if month != dTz1.Time.Months {
+		fmt.Printf("Error: Expected Months='%v'. Instead, Months='%v'\n",month, dTz1.Time.Months)
+		return
+	}
+
+	if day != dTz1.Time.DateDays {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",day, dTz1.Time.DateDays)
+		return
+	}
+
+	if hour != dTz1.Time.Hours {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",hour, dTz1.Time.Hours)
+		return
+	}
+
+	if minute != dTz1.Time.Minutes {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",minute, dTz1.Time.Minutes)
+		return
+	}
+
+	if second != dTz1.Time.Seconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",second, dTz1.Time.Seconds)
+		return
+	}
+
+	if 792 != dTz1.Time.Milliseconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",792, dTz1.Time.Milliseconds)
+		return
+	}
+
+	if 489 != dTz1.Time.Microseconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",489, dTz1.Time.Microseconds)
+		return
+	}
+
+	if 279 != dTz1.Time.Nanoseconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",279, dTz1.Time.Nanoseconds)
+		return
+	}
+
+	if nSecs != dTz1.Time.TotSubSecNanoseconds {
+		fmt.Printf("Error: Expected dTz1.Time.TotSubSecNanoseconds='%v'. "+
+			"Instead, dTz1.Time.TotSubSecNanoseconds='%v'\n", nSecs, dTz1.Time.TotSubSecNanoseconds)
+		return
+	}
+
+	totTime := int64(hour) * int64(time.Hour)
+	totTime += int64(minute) * int64(time.Minute)
+	totTime += int64(second) * int64(time.Second)
+	totTime += int64(nSecs)
+
+	if totTime != dTz1.Time.TotTimeNanoseconds {
+		fmt.Printf("Error: Expected tDto.TotTimeNanoseconds='%v'. "+
+			"Instead, tDto.TotTimeNanoseconds='%v'\n", totTime, dTz1.Time.TotTimeNanoseconds)
+		return
+	}
+
+
+	fmt.Println("SUCCESSFUL COMPLETION!!!")
 }
 
 func mainTest015() {

@@ -574,6 +574,144 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 
 }
 
+func TestDateTzDto_SetFromTimeDto(t *testing.T) {
+	
+	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	year := 2018
+	month := 3
+	day := 6
+	hour := 20
+	minute := 2
+	second := 18
+	nSecs := 792489279
+
+	t4USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	t4Dto, err := TimeDto{}.New(year, month, 0, day, hour, minute,
+		second, 0, 0, nSecs)
+
+	if err != nil {
+		t.Errorf("Error returned by t4USCentral TimeDto{}.New(). Error='%v'", err.Error())
+	}
+	
+	t4TZoneDef, err := TimeZoneDefDto{}.New(t4USCentral)
+	
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneDefDto{}.New(t4USCentral). Error='%v'", err.Error())
+	}
+	
+	locTokyo, err := time.LoadLocation(TzIanaAsiaTokyo)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+	}
+
+	t5Tokyo := time.Date(2012, 9, 30, 11, 58, 48, 123456789, locTokyo)
+		
+
+	t5Dto, err := TimeDto{}.New(2012, 9, 0, 30, 11,
+							58, 48,  0, 0, 123456789)
+
+	if err != nil {
+		t.Errorf("Error returned by t5Tokyo TimeDto{}.New(). Error='%v'", err.Error())
+	}
+
+	t5TZoneDef, err := TimeZoneDefDto{}.New(t5Tokyo)
+	
+	dTz1, err := DateTzDto{}.New(t5Tokyo, FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)")
+	}
+	
+	if !t5Dto.Equal(dTz1.Time) {
+		t.Error("Expected t5Dto == dTz1.Time. It DID NOT!")
+	}
+	
+	if !t5TZoneDef.Equal(dTz1.TimeZone) {
+		t.Error("Expected t5TZoneDef == dTz1.TimeZone. It DID NOT!")
+	}
+
+	err = dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral)
+	
+	if err != nil {
+		t.Errorf("Error returned from dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral). " +
+			"Error='%v'", err.Error())
+	}
+	
+	if !t4USCentral.Equal(dTz1.DateTime) {
+		t.Errorf("Expected dTz1.DateTime='%v'.  Instead, dTz1.DateTime='%v'.",
+			t4USCentral.Format(FmtDateTimeYrMDayFmtStr),
+			dTz1.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+	}
+	
+	if !t4Dto.Equal(dTz1.Time) {
+		t.Error("Expected t4Dto TimeDto == dTz1.Time Time Dto. THEY ARE NOT EQUAL!")
+	}
+	
+	if !t4TZoneDef.Equal(dTz1.TimeZone) {
+		t.Error("Expected t4TZoneDef TimeZoneDef == dTz1.TimeZone TimeZoneDef. " +
+			"THEY ARE NOT EQUAL!")
+	}
+	
+	if year != dTz1.Time.Years {
+		t.Errorf("Error: Expected Years='%v'. Instead, Years='%v'",year, dTz1.Time.Years)
+	}
+
+	if month != dTz1.Time.Months {
+		t.Errorf("Error: Expected Months='%v'. Instead, Months='%v'",month, dTz1.Time.Months)
+	}
+
+	if day != dTz1.Time.DateDays {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",day, dTz1.Time.DateDays)
+	}
+
+	if hour != dTz1.Time.Hours {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",hour, dTz1.Time.Hours)
+	}
+
+	if minute != dTz1.Time.Minutes {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",minute, dTz1.Time.Minutes)
+	}
+
+	if second != dTz1.Time.Seconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",second, dTz1.Time.Seconds)
+	}
+
+	if 792 != dTz1.Time.Milliseconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",792, dTz1.Time.Milliseconds)
+	}
+
+	if 489 != dTz1.Time.Microseconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",489, dTz1.Time.Microseconds)
+	}
+
+	if 279 != dTz1.Time.Nanoseconds {
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",279, dTz1.Time.Nanoseconds)
+	}
+
+	if nSecs != dTz1.Time.TotSubSecNanoseconds {
+		t.Errorf("Error: Expected dTz1.Time.TotSubSecNanoseconds='%v'. "+
+			"Instead, dTz1.Time.TotSubSecNanoseconds='%v'", nSecs, dTz1.Time.TotSubSecNanoseconds)
+	}
+
+	totTime := int64(hour) * int64(time.Hour)
+	totTime += int64(minute) * int64(time.Minute)
+	totTime += int64(second) * int64(time.Second)
+	totTime += int64(nSecs)
+
+	if totTime != dTz1.Time.TotTimeNanoseconds {
+		t.Errorf("Error: Expected tDto.TotTimeNanoseconds='%v'. "+
+			"Instead, tDto.TotTimeNanoseconds='%v'", totTime, dTz1.Time.TotTimeNanoseconds)
+	}
+	
+}
+
 func TestDateTzDto_Sub_01(t *testing.T) {
 	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
