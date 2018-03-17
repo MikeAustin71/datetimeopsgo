@@ -9,7 +9,125 @@ import (
 
 func main() {
 
-	mainTest016()
+	mainTest017()
+
+}
+
+func mainTest017() {
+	t1Dto := dt.TimeDto{}
+/*
+	t1Dto.Years = 1955
+	t1Dto.Months = 15
+	t1Dto.DateDays = 32
+	t1Dto.Hours = 48
+	t1Dto.Minutes = 71
+	t1Dto.Seconds = 125
+	t1Dto.Milliseconds = 1001
+	t1Dto.Microseconds = 1001
+	t1Dto.Nanoseconds = 1001
+*/
+
+	t1Dto.Years = 1955
+	t1Dto.Months = 15
+	t1Dto.DateDays = 32
+	t1Dto.Hours = 48
+	t1Dto.Minutes = 71
+	t1Dto.Seconds = 125
+	t1Dto.Milliseconds = 0
+	t1Dto.Microseconds = 0
+	t1Dto.Nanoseconds = 123456789
+
+	fmt.Println("Original TimeDto Values")
+	ex.PrintOutTimeDtoFields(t1Dto)
+
+	err := t1Dto.NormalizeTimeElements()
+
+	if err != nil {
+		fmt.Printf("Error returned by t1Dto.NormalizeTimeElements(). Error='%v' \n",
+			err.Error())
+		return
+	}
+
+	fmt.Println("After Normalize Time Elements")
+	ex.PrintOutTimeDtoFields(t1Dto)
+
+	_, err = t1Dto.NormalizeDays()
+
+	if err != nil {
+		fmt.Printf("Error returned by t1Dto.NormalizeDays(). Error='%v' \n",
+			err.Error())
+		return
+	}
+
+	fmt.Println("After Normalize Days")
+	ex.PrintOutTimeDtoFields(t1Dto)
+
+	utcLoc, _ := time.LoadLocation(dt.TzIanaUTC)
+
+	tDate := time.Date(1956, 3, 34, 1, 13, 6, 2002001, utcLoc )
+
+	fmt.Println("tDate: ", tDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Println("SUCCESSFUL COMPLETION!")
+/*
+
+Original TimeDto Values
+========================================
+          TimeDto Printout
+========================================
+                   Years:  1955
+                  Months:  15
+                   Weeks:  0
+                WeekDays:  0
+                DateDays:  32
+                   Hours:  48
+                 Minutes:  71
+                 Seconds:  125
+            Milliseconds:  1001
+            Microseconds:  1001
+             Nanoseconds:  1001
+Total SubSec Nanoseconds:  0
+  Total Time Nanoseconds:  0
+========================================
+After Normalize Time Elements
+========================================
+          TimeDto Printout
+========================================
+                   Years:  1956
+                  Months:  3
+                   Weeks:  4
+                WeekDays:  6
+                DateDays:  34
+                   Hours:  1
+                 Minutes:  13
+                 Seconds:  6
+            Milliseconds:  2
+            Microseconds:  2
+             Nanoseconds:  1
+Total SubSec Nanoseconds:  2002001
+  Total Time Nanoseconds:  4386002002001
+========================================
+After Normalize Days
+========================================
+          TimeDto Printout
+========================================
+                   Years:  1956
+                  Months:  4
+                   Weeks:  0
+                WeekDays:  3
+                DateDays:  3
+                   Hours:  1
+                 Minutes:  13
+                 Seconds:  6
+            Milliseconds:  2
+            Microseconds:  2
+             Nanoseconds:  1
+Total SubSec Nanoseconds:  2002001
+  Total Time Nanoseconds:  4386002002001
+========================================
+tDate:  1956-04-03 01:13:06.002002001 +0000 UCT
+
+*/
 
 }
 
