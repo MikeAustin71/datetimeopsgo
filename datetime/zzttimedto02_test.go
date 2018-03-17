@@ -128,3 +128,65 @@ Total SubSec Nanoseconds:  123456789
 
 
 }
+func TestTimeDto_NormalizeDays_01(t *testing.T) {
+
+	t1Dto := TimeDto{}
+
+	t1Dto.Years = 1955
+	t1Dto.Months = 15
+	t1Dto.Weeks = 0
+	t1Dto.WeekDays = 0
+	t1Dto.DateDays = 32
+	t1Dto.Hours = 48
+	t1Dto.Minutes = 71
+	t1Dto.Seconds = 125
+	t1Dto.Milliseconds = 1001
+	t1Dto.Microseconds = 1001
+	t1Dto.Nanoseconds = 1001
+
+	err := t1Dto.NormalizeTimeElements()
+
+	if err != nil {
+		t.Errorf("Error returned by t1Dto.NormalizeTimeElements(). Error='%v'", err.Error())
+	}
+
+	_, err = t1Dto.NormalizeDays()
+
+	if err != nil {
+		t.Errorf("Error returned by t1Dto.NormalizeDays(). Error='%v'", err.Error())
+	}
+
+	t2Dto := TimeDto{}
+
+	t2Dto.Years = 1956
+	t2Dto.Months = 4
+	t2Dto.Weeks = 0
+	t2Dto.WeekDays = 3
+	t2Dto.DateDays = 3
+	t2Dto.Hours = 1
+	t2Dto.Minutes = 13
+	t2Dto.Seconds = 6
+	t2Dto.Milliseconds = 2
+	t2Dto.Microseconds = 2
+	t2Dto.Nanoseconds = 1
+	t2Dto.TotSubSecNanoseconds = 2002001
+	t2Dto.TotTimeNanoseconds = 4386002002001
+
+	if !t1Dto.Equal(t2Dto) {
+		t.Error("Expected t1Dto to EQUAL t2Dto. IT DID NOT!")
+	}
+
+	expectedDateTime:= "1956-04-03 01:13:06.002002001 +0000 UCT"
+
+	actualDateTime, err := t1Dto.GetDateTime(TzIanaUTC)
+
+	if err != nil {
+		t.Errorf("Error returned by t1Dto.GetDateTime(TzIanaUTC). Error='%v'", err.Error())
+	}
+
+	if expectedDateTime != actualDateTime.Format(FmtDateTimeYrMDayFmtStr) {
+		t.Errorf("Error: Expected t1Dto.GetDateTime(TzIanaUTC)='%v'.  Instead datetime='%v'",
+			expectedDateTime, actualDateTime.Format(FmtDateTimeYrMDayFmtStr))
+	}
+
+}
