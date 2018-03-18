@@ -65,12 +65,12 @@ func (suite *timedurdtoTestSuite) SetupSuite() {
 }
 
 func (suite *timedurdtoTestSuite) TearDownSuite() {
-	//suite.DtFmt = FormatDateTimeUtility{}
+	// suite.DtFmt = FormatDateTimeUtility{}
 }
 
 func (suite *timedurdtoTestSuite) SetupTest() {
 
-	//t1 = "1948-09-07 04:32:16.008185431 -0500 CDT"
+	// t1 = "1948-09-07 04:32:16.008185431 -0500 CDT"
 	suite.t1USCentral = time.Date(1948, time.Month(9),7,4,32,16,8185431,suite.locUSCentral)
 	suite.t1USPacific = suite.t1USCentral.In(suite.locUSPacific)
 	suite.t1EuropeParis = suite.t1USPacific.In(suite.locParis)
@@ -78,7 +78,7 @@ func (suite *timedurdtoTestSuite) SetupTest() {
 	suite.t1EuropeMoscow = suite.t1AfricaCairo.In(suite.locMoscow)
 	suite.t1AsiaTokyo = suite.t1EuropeMoscow.In(suite.locTokyo)
 
-	//t2 = "2014-02-15 19:54:30.987654321 -0600 CST"
+	// t2 = "2014-02-15 19:54:30.987654321 -0600 CST"
 	suite.t2USCentral = time.Date(2014, time.Month(2),15,19,54,30,987654321,suite.locUSCentral)
 	suite.t2USPacific = suite.t2USCentral.In(suite.locUSPacific)
 	suite.t2EuropeParis = suite.t2USPacific.In(suite.locParis)
@@ -86,7 +86,7 @@ func (suite *timedurdtoTestSuite) SetupTest() {
 	suite.t2EuropeMoscow = suite.t2AfricaCairo.In(suite.locMoscow)
 	suite.t2AsiaTokyo = suite.t2EuropeMoscow.In(suite.locTokyo)
 
-	//t3 = "2017-04-30 22:58:32.628149653 -0500 CDT"
+	// t3 = "2017-04-30 22:58:32.628149653 -0500 CDT"
 	suite.t3USCentral = time.Date(2017, time.Month(4),30,22,58,32,628149653,suite.locUSCentral)
 	suite.t3USPacific = suite.t3USCentral.In(suite.locUSPacific)
 	suite.t3EuropeParis = suite.t3USPacific.In(suite.locParis)
@@ -94,7 +94,7 @@ func (suite *timedurdtoTestSuite) SetupTest() {
 	suite.t3EuropeMoscow = suite.t3AfricaCairo.In(suite.locMoscow)
 	suite.t3AsiaTokyo = suite.t3EuropeMoscow.In(suite.locTokyo)
 
-	//t4 = "2018-03-06 20:02:18.792489279 -0600 CST"
+	// t4 = "2018-03-06 20:02:18.792489279 -0600 CST"
 	suite.t4USCentral = time.Date(2018, time.Month(3),06,20,02,18,792489279,suite.locUSCentral)
 	suite.t4USPacific = suite.t4USCentral.In(suite.locUSPacific)
 	suite.t4EuropeParis = suite.t4USPacific.In(suite.locParis)
@@ -102,7 +102,7 @@ func (suite *timedurdtoTestSuite) SetupTest() {
 	suite.t4EuropeMoscow = suite.t4AfricaCairo.In(suite.locMoscow)
 	suite.t4AsiaTokyo = suite.t4EuropeMoscow.In(suite.locTokyo)
 
-	//t5 = "2018-07-04 15:09:05.458621349 -0500 CDT"
+	// t5 = "2018-07-04 15:09:05.458621349 -0500 CDT"
 	suite.t5USCentral = time.Date(2018, time.Month(7),04,15,9,5,458621349, suite.locUSCentral)
 	suite.t5USPacific = suite.t5USCentral.In(suite.locUSPacific)
 	suite.t5EuropeParis = suite.t5USPacific.In(suite.locParis)
@@ -258,11 +258,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_02() {
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartAutoEndTz_01() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 
-	t1Dur, err := TimeDurationDto{}.NewStartAutoEndTz(suite.t1AsiaTokyo, TzIanaUsCentral, suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewAutoEnd(suite.t1AsiaTokyo, TzIanaUsCentral, suite.fmtStr)
 
-	assert.Nil(suite.T(),err,"Error NewStartAutoEndTz() :")
+	assert.Nil(suite.T(),err,"Error NewAutoEnd() :")
 
 	assert.Equal(suite.T(), TzIanaUsCentral, t1Dur.StartTimeDateTz.TimeZone.LocationName,"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
@@ -280,7 +280,31 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartAutoEndTz_01() {
 
 	s:= fmt.Sprintf("Error: checkDur > testMax Nanoseconds!. checkDur='%v'  testMax='%v'", checkDur, testMax)
 	assert.True(suite.T(), testMax > checkDur,s )
+}
 
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoStart_01() {
+
+	t1Dur, err := TimeDurationDto{}.NewAutoStart(TzIanaUsCentral, suite.fmtStr)
+
+	assert.Nil(suite.T(),err,"Error NewAutoStart() :")
+
+	assert.Equal(suite.T(), TzIanaUsCentral, t1Dur.StartTimeDateTz.TimeZone.LocationName,"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+
+	assert.Equal(suite.T(), TzIanaUsCentral, t1Dur.EndTimeDateTz.TimeZone.LocationName,"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+
+	assert.True(suite.T(),
+		suite.fmtStr == t1Dur.StartTimeDateTz.DateTimeFmt,
+				"Error: Expected suite.fmtSTr to EQUAL t1Dur.StartTimeDateTz.DateTimeFmt. THEY ARE NOT EQUAL!")
+
+	err = t1Dur.SetAutoEnd()
+
+	assert.Nil(suite.T(),err,"Error t1Dur.SetAutoEnd() :")
+
+	checkDur := t1Dur.TimeDuration
+	testMax := time.Duration(int64(2) * int64(time.Second))
+
+	s:= fmt.Sprintf("Error: checkDur > testMax Nanoseconds!. checkDur='%v'  testMax='%v'", checkDur, testMax)
+	assert.True(suite.T(), testMax > checkDur,s )
 
 }
 

@@ -1432,27 +1432,26 @@ func (tDur TimeDurationDto) New(
 
 	return t2Dur, nil
 }
-// NewStartAutoEndTz - Creates and returns a new TimeDurationDto populated with
+
+// NewAutoEnd - Creates and returns a new TimeDurationDto populated with
 // time duration data based on 'startDateTime' and 'timeZoneLocation' input parameters.
 //
-// If 'startDateTime' time zone is not equal to 'timeZoneLocation', 'startDateTime' is
-// first converted to the equivalent date time specified by 'timeZoneLocation'.
+// The input parameter 'startDateTime' is first converted to the Time Zone specified
+// by the input parameter, 'timeZoneLocation'.
 //
-// The ending date time is calculated by assigning the current date time acquired through
-// calling time.Now(). The ending date time that is assigned by time.Now() is first
-// converted to the time zone specified by input parameter, 'timeZoneLocation'.
+// The ending date time is calculated automatically by assigning the date time returned
+// by calling time.Now(). The ending date time that is assigned by time.Now() is converted
+// to the time zone specified by input parameter, 'timeZoneLocation'.
 //
 // If the calculated ending date time is prior to 'startDateTime', the values are
 // reversed and ending date time is assigned to 'startDateTime' while 'startDateTime'
 // is assigned to ending date time.
 //
-// The user is required to specify a common Time Zone Location for use in converting
-// date times to a common frame of reference to subsequent time duration calculations.
-//
 // Note: 	This method applies the standard Time Duration allocation, calculation type
-// 				'TDurCalcTypeSTDYEARMTH'. This means that duration is allocated over years,
+// 				'TDurCalcTypeSTDYEARMTH'. This means that time duration is allocated over years,
 // 				months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
-// 				microseconds and nanoseconds.	See Type 'TDurCalcType' for details.
+// 				microseconds and nanoseconds.	For details, see Type 'TDurCalcType' in this source
+//				file: MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // Input Parameters:
 // =================
@@ -1501,21 +1500,20 @@ func (tDur TimeDurationDto) New(
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartEndTimesTz(
+// tDurDto, err := TimeDurationDto{}.NewAutoEnd(
 // 																		startTime,
-// 																		endTime,
 // 																		TzIanaUsCentral,
 // 																		FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 							datetimeconstants.go
 //
-func (tDur TimeDurationDto) NewStartAutoEndTz(
+func (tDur TimeDurationDto) NewAutoEnd(
 															startDateTime time.Time,
 																timeZoneLocation,
 																		dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	ePrefix := "TimeDurationDto.NewStartAutoEndTz() "
+	ePrefix := "TimeDurationDto.NewAutoEnd() "
 
 	tzLoc := tDur.preProcessTimeZoneLocation(timeZoneLocation)
 
@@ -1533,15 +1531,131 @@ func (tDur TimeDurationDto) NewStartAutoEndTz(
 
 	endDt1 := time.Now().In(loc)
 
+	fmtStr := tDur.preProcessDateFormatStr(dateTimeFmtStr)
+
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartEndTimesCalcTz(startDt1, endDt1, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
+	err = t2Dur.SetStartEndTimesCalcTz(startDt1, endDt1, TDurCalcTypeSTDYEARMTH, tzLoc, fmtStr)
 
 	if err != nil {
 		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
 			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
 			"Error='%v'", err.Error())
 	}
+
+	return t2Dur, nil
+}
+
+
+// NewAutoStart - Creates and returns a new TimeDurationDto instance. Starting date time is
+// automatically initialized by calling time.Now(). Afterwards, start date time is converted
+// to the Time Zone specified in input parameter, 'timeZoneLocation'.
+//
+// This method will set ending date time to the same value as starting date time resulting in
+// a time duration value of zero.
+//
+// In order to compute the final time duration value, call the method TimeDurationDto.SetAutoEnd()
+// when ready.  At that point, ending date time will be set by a call to time.Now().
+//
+// Use of these two methods, 'NewAutStart' and 'SetAutoEnd' constitutes a stop watch feature which
+// can be triggered to measure elapsed time.
+//
+// Note: 	This method applies the standard Time Duration allocation, calculation type
+// 				'TDurCalcTypeSTDYEARMTH'. This means that time duration is allocated over years,
+// 				months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
+// 				microseconds and nanoseconds.	For details, see Type 'TDurCalcType' in this source
+//				file: MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// Input Parameters:
+// =================
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end time duration
+// 														calculations.
+//
+// 														Time zone location must be designated as one of two values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.NewAutoStart(
+// 																		TzIanaUsCentral,
+// 																		FmtDateTimeYrMDayFmtStr)
+//
+//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+// 							datetimeconstants.go
+//
+func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
+																					dateTimeFmtStr string) (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto) NewAutoStart"
+
+	s1Time := time.Now()
+
+	tzLocName := tDur.preProcessTimeZoneLocation(timeZoneLocation)
+
+	tzLoc, err := time.LoadLocation(tzLocName)
+
+	if err != nil {
+		return TimeDurationDto{},
+		fmt.Errorf(ePrefix +
+			"Error returned by time.LoadLocation(tzLocName). " +
+			"timeZoneLocation='%v' tzLocName='%v'  Error='%v'",
+				timeZoneLocation, tzLocName, err.Error())
+	}
+
+	startDateTime := s1Time.In(tzLoc)
+
+	endDateTime := startDateTime
+
+	t2Dur := TimeDurationDto{}
+
+	err = t2Dur.SetStartEndTimesCalcTz(startDateTime,
+																			endDateTime,
+																			TDurCalcTypeSTDYEARMTH,
+																			tzLocName,
+																			dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+		fmt.Errorf(ePrefix +
+			"Error returned by SetStartEndTimesCalcTz(...) " +
+			"startDateTime='%v'  Error='%v'",
+				startDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
 
 	return t2Dur, nil
 }
@@ -3504,6 +3618,60 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 	return nil
 }
 
+// SetAutoEnd - When called, this method automatically sets the ending date
+// time and re-calculates the time duration for the current TimeDurationDto
+// instance.
+//
+// Ending date time is assigned the value returned by time.Now(). This ending
+// date time is converted to the specified Time Zone specified by the Time Zone
+// Location associated with the current starting date time value.
+//
+// When used together, the two methods 'NewAutoStart' and this method, 'SetAutoEnd'
+// function as a stop watch feature. Simply calling these functions can set
+// the starting date time and later the ending date time measure elapsed time
+// duration.
+//
+//
+func (tDur *TimeDurationDto) SetAutoEnd() error {
+
+	ePrefix := "TimeDurationDto.SetAutoEnd() "
+
+	locName := tDur.StartTimeDateTz.TimeZone.LocationName
+
+	loc, err := time.LoadLocation(locName)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by time.LoadLocation(locName) " +
+			"locName='%v'  Error='%v' ",
+				locName, err.Error())
+	}
+
+	endDateTime := time.Now().In(loc)
+
+	startDateTime := tDur.StartTimeDateTz.DateTime
+
+	fmtStr := tDur.StartTimeDateTz.DateTimeFmt
+
+	err = tDur.SetStartEndTimesCalcTz(startDateTime,
+																			endDateTime,
+																				TDurCalcTypeSTDYEARMTH,
+																					locName,
+																						fmtStr)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by tDur.SetStartEndTimesCalcTz() " +
+			"startDateTime='%v'  endDateTime='%v'  Error='%v'",
+				startDateTime.Format(FmtDateTimeYrMDayFmtStr),
+					endDateTime.Format(FmtDateTimeYrMDayFmtStr),
+						err.Error())
+	}
+
+
+	return nil
+}
+
 // SetEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration
 // based on an ending date time and the time components contained in a TimeDto.
 //
@@ -4735,7 +4903,7 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
-		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
+		return nil
 	}
 
 	rd -= tDur.YearsNanosecs
@@ -4788,12 +4956,10 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 //
 func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 
-	ePrefix := "TimeDurationDto.calcDateDaysFromDuration() "
-
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
-		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
+		return nil
 	}
 
 	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs
@@ -4846,13 +5012,11 @@ func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 //							TimeDurationDto.calcDateDaysWeeksFromDuration
 //
 func (tDur *TimeDurationDto) calcHoursMinSecs() error {
-	
-	ePrefix := "TimeDurationDto.calcHoursMinSecs() "
 
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
-		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
+		return nil
 	}
 
 	if tDur.DateDays > 0 {
@@ -4909,14 +5073,11 @@ func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 // 
 func (tDur *TimeDurationDto) calcNanoseconds() error {
 
-	ePrefix := "TimeDurationDto.calcNanoseconds() "
-
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
-		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
+		return nil
 	}
-
 
 	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs
 
@@ -4968,13 +5129,11 @@ func (tDur *TimeDurationDto) calcNanoseconds() error {
 //							TimeDurationDto.calcNanoseconds
 //
 func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
-	
-	ePrefix := "TimeDurationDto.calcSummaryTimeElements() "
 
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
-		return errors.New(ePrefix + "Error: tDur.TimeDuration is ZERO!")
+		return nil
 	}
 	
 	tDur.TotDateNanoseconds = 0
