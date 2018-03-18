@@ -616,7 +616,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_01() 
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDuration(suite.t1USCentral, actualTimeDuration, suite.fmtStr)
 
-	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
+	assert.Nil(suite.T(),err,"Error NewStartTimeDurationTz:")
 
 	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr) )
 	assert.True(suite.T(),t1Dur.EndTimeDateTz.DateTime.Equal(suite.t4USCentral),s)
@@ -650,7 +650,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01(
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationTz(suite.t1USCentral, actualTimeDuration, TzIanaUsCentral, suite.fmtStr)
 
-	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
+	assert.Nil(suite.T(),err,"Error NewStartTimeDurationTz:")
 
 	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr) )
 	assert.True(suite.T(),t1Dur.EndTimeDateTz.DateTime.Equal(suite.t4USCentral),s)
@@ -685,7 +685,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTzCalc
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(suite.t1USCentral, actualTimeDuration,
 		TDurCalcTypeSTDYEARMTH, TzIanaUsCentral, suite.fmtStr)
 
-	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
+	assert.Nil(suite.T(),err,"Error NewStartTimeDurationTz:")
 
 	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr) )
 	assert.True(suite.T(),t1Dur.EndTimeDateTz.DateTime.Equal(suite.t4USCentral),s)
@@ -719,7 +719,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationCalc_0
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationCalc(suite.t1USCentral, actualTimeDuration, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
 
-	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
+	assert.Nil(suite.T(),err,"Error NewStartTimeDurationTz:")
 
 	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr) )
 	assert.True(suite.T(),t1Dur.EndTimeDateTz.DateTime.Equal(suite.t4USCentral),s)
@@ -836,7 +836,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTzCalc(dTz, actualTimeDuration, TzIanaUsCentral, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
 
-	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
+	assert.Nil(suite.T(),err,"Error NewStartTimeDurationTz:")
 
 	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr) )
 	assert.True(suite.T(),t1Dur.EndTimeDateTz.DateTime.Equal(suite.t4USCentral),s)
@@ -875,7 +875,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoCalc(dTz, actualTimeDuration, TDurCalcTypeSTDYEARMTH, suite.fmtStr)
 
-	assert.Nil(suite.T(),err,"Error NewStartTimeDuration:")
+	assert.Nil(suite.T(),err,"Error NewStartTimeDurationTz:")
 
 	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr) )
 	assert.True(suite.T(),t1Dur.EndTimeDateTz.DateTime.Equal(suite.t4USCentral),s)

@@ -13,9 +13,6 @@ func main() {
 
 }
 
-func mainTest019() {
-
-}
 
 func mainTest018() {
 	t1Dto := dt.TimeDto{}
@@ -404,10 +401,10 @@ func mainTest014() {
 
 	timeDto := dt.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 	timeDto.NormalizeTimeElements()
-	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto). " +
+		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). " +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -509,7 +506,7 @@ func mainTest010() {
 	dur, err := dt.TimeDurationDto{}.NewEndTimeMinusTimeDto(t2, timeDto, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDto(t2, timeDto). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). Error='%v'\n", err.Error())
 		return
 	}
 
@@ -545,7 +542,7 @@ func mainTest009() {
 	fmt.Println("TimeDurationDto")
 	ex.PrintTimeDurationDto(tDto)
 
-	durT, err := dt.DurationTriad{}.NewStartEndTimes(t2, t1, dt.TzIanaUsCentral, fmtstr)
+	durT, err := dt.DurationTriad{}.NewStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). " +
@@ -568,7 +565,7 @@ func mainTest008() {
 
 	du := dt.DurationTriad{}
 
-	du.SetStartEndTimes(t2, t1, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	du.SetStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
 

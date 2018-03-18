@@ -249,10 +249,10 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	frDto.FileReadEndTime = time.Now()
 	frDto.NumberOfFormatMapKeysGenerated = len(dtf.FormatMap)
 	du := DurationTriad{}
-	err = du.SetStartEndTimes(frDto.FileReadStartTime, frDto.FileReadEndTime, "Local", FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(frDto.FileReadStartTime, frDto.FileReadEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimes() - %v", err.Error())
+		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimesTz() - %v", err.Error())
 	}
 
 	frDto.ElapsedTimeForFileReadOps = du.BaseTime.GetYearMthDaysTimeStr()
@@ -314,7 +314,7 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 
 	du := DurationTriad{}
 
-	err = du.SetStartEndTimes(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error Setting Start End Times for Duration Calculation Error: %v", err.Error())
@@ -386,10 +386,10 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName stri
 
 	outputDto.FileWriteEndTime = time.Now()
 	du := DurationTriad{}
-	err = du.SetStartEndTimes(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		return outputDto, fmt.Errorf("Error Calculating Duration with SetStartEndTimes() Error: %v", err.Error())
+		return outputDto, fmt.Errorf("Error Calculating Duration with SetStartEndTimesTz() Error: %v", err.Error())
 	}
 
 	outputDto.ElapsedTimeForFileWriteOps = du.BaseTime.GetYearMthDaysTimeStr()
