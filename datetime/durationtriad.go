@@ -259,6 +259,207 @@ func (durT DurationTriad) New(startDateTime time.Time,
 
 }
 
+// NewAutoEnd - Creates and returns a new DurationTriad instance. The
+// starting date time is provided by input parameter, 'startDateTime'.
+// The ending date time is automatically assigned by calling time.Now()
+//
+// The required input parameter, 'timeZoneLocation' speicifes the time zone
+// used to configure both starting and ending date time.
+//
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'.
+// 				This means that duration is allocated over years, months, weeks, weekdays, date days,
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
+// 				See Type 'TDurCalcType' for details at MikeAustin71\datetimeopsgo\datetime\timedurationdto.go .
+//
+//
+// Input Parameters:
+// =================
+//
+// startDateTime		time.Time	- Ending date time. The TimeDto parameter will be subtracted
+//														from this date time in order to compute the starting date time.
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end time comparisons.
+//
+// 														Time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// du, err := DurationTriad{}.NewAutoEnd(
+// 															startDateTime,
+// 																TzIanaUsCentral,
+// 																FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
+//						standard year month day time duration allocation.
+//
+// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 							datetimeconstants.go
+//
+func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
+														timeZoneLocation	string,
+															dateTimeFmtStr string) (DurationTriad, error) {
+
+	ePrefix := "DurationTriad.NewAutoEnd() "
+
+	endDateTime := time.Now().Local()
+
+	durT2 := DurationTriad{}
+
+	err := durT2.SetStartEndTimesCalcTz(startDateTime,
+																				endDateTime,
+																					TDurCalcTypeSTDYEARMTH,
+																						timeZoneLocation,
+																							dateTimeFmtStr)
+
+	if err != nil {
+		return DurationTriad{},
+			fmt.Errorf(ePrefix +
+				"Error returned by SetStartEndTimesCalcTz() " +
+				"startDateTime='%v' endDateTime='%v' Error='%v'",
+					startDateTime.Format(FmtDateTimeYrMDayFmtStr),
+						endDateTime.Format(FmtDateTimeYrMDayFmtStr),
+							err.Error())
+	}
+
+	return durT2, err
+}
+
+// NewAutoStart - Creates and returns a new DurationTriad instance. Starting date time is
+// automatically initialized by calling time.Now(). Afterwards, start date time is converted
+// to the Time Zone specified in input parameter, 'timeZoneLocation'.
+//
+// This method will set ending date time to the same value as starting date time resulting in
+// a time duration value of zero.
+//
+// In order to compute the final time duration value, the user must call the method
+// DurationTriad.SetAutoEnd().  At that point, the ending date time will be set by a call to
+// time.Now().
+//
+// Use of these two methods, 'NewAutStart' and 'SetAutoEnd', constitutes a stop watch feature which
+// can be triggered to measure elapsed time.
+//
+// Note: 	This method applies the standard Time Duration allocation, calculation type
+// 				'TDurCalcTypeSTDYEARMTH'. This means that time duration is allocated over years,
+// 				months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
+// 				microseconds and nanoseconds.	For details, see Type 'TDurCalcType' in this source
+//				file: MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// Input Parameters:
+// =================
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end time duration
+// 														calculations.
+//
+// 														Time zone location must be designated as one of two values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := DurationTriad{}.NewAutoStart(
+// 																		TzIanaUsCentral,
+// 																		FmtDateTimeYrMDayFmtStr)
+//
+//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+// 							datetimeconstants.go
+//
+func (durT DurationTriad) NewAutoStart(
+														timeZoneLocation	string,
+															dateTimeFmtStr string) (DurationTriad, error) {
+
+	ePrefix := "DurationTriad.NewAutoStart() "
+
+	startDateTime := time.Now().Local()
+
+	endDateTime := startDateTime
+
+	durT2 := DurationTriad{}
+
+	err := durT2.SetStartEndTimesCalcTz(
+								startDateTime,
+									endDateTime,
+										TDurCalcTypeSTDYEARMTH,
+											timeZoneLocation,
+												dateTimeFmtStr)
+
+	if err != nil {
+		return DurationTriad{},
+			fmt.Errorf(ePrefix +
+				"Error returned by SetStartEndTimesCalcTz() " +
+					"startDateTime='%v' Error='%v'",
+						startDateTime.Format(FmtDateTimeYrMDayFmtStr),
+								err.Error())
+	}
+
+
+	return durT2, nil
+}
+
 // NewEndTimeMinusTimeDto - Returns a new DurationTriad based on two input parameters,
 // 'endDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto which is
 // subtracted from 'endDateTime' in order to calculate starting date time and time duration.
@@ -1127,6 +1328,42 @@ func (durT DurationTriad) NewStartTimePlusTimeTz(startDateTime time.Time, plusTi
 	}
 
 	return du2, nil
+}
+
+// SetAutoEnd - When called, this method automatically sets the ending date
+// time and re-calculates the time duration for the current DurationTriad
+// instance.
+//
+// Ending date time is assigned the value returned by time.Now(). This ending
+// date time is converted to the specified Time Zone specified by the Time Zone
+// Location associated with the current starting date time value.
+//
+// When used together, the two methods 'NewAutoStart' and this method, 'SetAutoEnd'
+// function as a stop watch feature. Simply calling these functions can set
+// the starting date time and later, the ending date time to measure elapsed time
+// or time duration.
+func (durT *DurationTriad) SetAutoEnd() error {
+	ePrefix := "DurationTriad.SetAutoEnd() "
+
+	endDateTime := time.Now().Local()
+
+	calcType := durT.BaseTime.CalcType
+	startDateTime := durT.BaseTime.StartTimeDateTz.DateTime
+	tzLocName := durT.BaseTime.StartTimeDateTz.TimeZone.LocationName
+	fmtStr := durT.BaseTime.StartTimeDateTz.DateTimeFmt
+
+	err := durT.SetStartEndTimesCalcTz(startDateTime, endDateTime, calcType, tzLocName, fmtStr)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned from SetStartEndTimesCalcTz() " +
+			"startDateTime='%v'  endDateTime='%v'  Error='%v'",
+				startDateTime.Format(FmtDateTimeYrMDayFmtStr),
+					endDateTime.Format(FmtDateTimeYrMDayFmtStr),
+						err.Error())
+	}
+
+	return nil
 }
 
 // SetStartTimeDurationCalcTz - Receives a starting date time and calculates

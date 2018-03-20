@@ -1557,7 +1557,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 // In order to compute the final time duration value, call the method TimeDurationDto.SetAutoEnd()
 // when ready.  At that point, ending date time will be set by a call to time.Now().
 //
-// Use of these two methods, 'NewAutStart' and 'SetAutoEnd' constitutes a stop watch feature which
+// Use of these two methods, 'NewAutStart' and 'SetAutoEnd', constitutes a stop watch feature which
 // can be triggered to measure elapsed time.
 //
 // Note: 	This method applies the standard Time Duration allocation, calculation type
@@ -3628,17 +3628,21 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 //
 // When used together, the two methods 'NewAutoStart' and this method, 'SetAutoEnd'
 // function as a stop watch feature. Simply calling these functions can set
-// the starting date time and later the ending date time measure elapsed time
-// duration.
+// the starting date time and later the ending date time to measure elapsed time, or
+// time duration.
 //
+// The time duration calculation type is taken from the current TimeDurationDto
+// calculation type setting.
 //
 func (tDur *TimeDurationDto) SetAutoEnd() error {
 
 	ePrefix := "TimeDurationDto.SetAutoEnd() "
 
+	endDateTime := time.Now().Local()
+
 	locName := tDur.StartTimeDateTz.TimeZone.LocationName
 
-	loc, err := time.LoadLocation(locName)
+	_, err := time.LoadLocation(locName)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix +
@@ -3647,15 +3651,15 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 				locName, err.Error())
 	}
 
-	endDateTime := time.Now().In(loc)
-
 	startDateTime := tDur.StartTimeDateTz.DateTime
 
 	fmtStr := tDur.StartTimeDateTz.DateTimeFmt
 
+	calcType := tDur.CalcType
+
 	err = tDur.SetStartEndTimesCalcTz(startDateTime,
 																			endDateTime,
-																				TDurCalcTypeSTDYEARMTH,
+																				calcType,
 																					locName,
 																						fmtStr)
 

@@ -52,6 +52,49 @@ func TestDurationTriad_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 }
 
+func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
+
+	locCentral, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	startDateTime := time.Now().In(locCentral)
+
+	durT, err := DurationTriad{}.NewAutoEnd(startDateTime, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewAutoEnd() ")
+	}
+
+	expectedDur := time.Duration(int64(2) * int64(time.Second))
+
+	if durT.BaseTime.TimeDuration > expectedDur {
+		t.Error("Expected duration is greater than 2-seconds. Error!")
+	}
+
+}
+
+func TestDurationTriad_NewAutoStart(t *testing.T) {
+
+	durT, err := DurationTriad{}.NewAutoStart(TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewAutoStart() " +
+			"Error='%v' ", err.Error())
+	}
+
+	durT.SetAutoEnd()
+
+	expectedDur := time.Duration(int64(3) * int64(time.Second))
+
+	if durT.BaseTime.TimeDuration > expectedDur {
+		t.Error("Expected duration is greater than 3-seconds. Error!")
+	}
+
+}
+
 func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
