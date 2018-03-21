@@ -1233,31 +1233,30 @@ func (durT DurationTriad) NewStartTimeDurationTz(
 	return du2, nil
 }
 
-// NewStartTimePlusTimeTz - Returns a new DurationTriad based on two input parameters,
-// 'startDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto which is
-// added to 'startDateTime' in order to calculate ending date time as well as time
-// duration.
+
+// NewStartTimePlusTimeCalcTz - Returns a new DurationTriad based on two input
+// parameters, 'startDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto
+// which is added to 'startDateTime' in order to calculate ending date time as
+// well as time duration.
 //
 // The user is required to provide Time Zone Location as an input parameter in order
-// to ensure that time duration calculations are performed using equivalent time zones.
+// to ensure the accuracy of time duration calculations. This Time Zone Location is
+// applied to both starting and ending date times for the DurationTriad.BaseTime value.
 //
-// The standard date time calculation type, 'TDurCalcTypeSTDYEARMTH' is
-// automatically applied by this method. For a discussion of Duration Calculation
+// The user is also required to provide the time duration calculation type which will
+// control the output of the time duration calculation. The standard date time calculation
+// type is, 'TDurCalcTypeSTDYEARMTH'. For a discussion of Duration Calculation
 // types, see Type TDurCalcType located in source file:
 // 					'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
-//
-// Type 'TimeDto' is located in source file:
-//					MikeAustin71\datetimeopsgo\datetime\timedto.go
-// Usage:
-// du, err := DurationTriad{}.NewStartTimePlusTimeTz(startDateTime, timeDto)
 //
 // Input Parameters:
 // =================
 //
-// startDateTime	time.Time	- Starting time
+// endDateTime		time.Time	- Ending date time. The TimeDto parameter will be subtracted
+//														from this date time in order to compute the starting date time.
 //
-// plusTimeDto		  TimeDto - Provides time values which will be subtracted from
-//														'startDateTime' in order to calculate duration.
+// plusTimeDto		  TimeDto - Provides time values which will be added to
+//														'startDateTime' in order to calculate time duration.
 //
 //									type TimeDto struct {
 //										Years          int // Number of Years
@@ -1275,9 +1274,29 @@ func (durT DurationTriad) NewStartTimeDurationTz(
 //																			// 	plus remaining Nanoseconds
 //									}
 //
-// 														Type 'TimeDto' is located in source file:
-//																MikeAustin71\datetimeopsgo\datetime\timedto.go
-
+// 										Type 'TimeDto' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedto.go
+//
+// tDurCalcType TDurCalcType -	Specifies the calculation type to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
+// 																		day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -1314,8 +1333,144 @@ func (durT DurationTriad) NewStartTimeDurationTz(
 //															format string is:
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-func (durT DurationTriad) NewStartTimePlusTimeTz(startDateTime time.Time, plusTimeDto TimeDto,
-	timeZoneLocation, dateTimeFmtStr string) (DurationTriad, error) {
+// Example Usage:
+// ==============
+//
+// du, err := DurationTriad{}.NewStartTimePlusTimeCalcTz(
+// 															startDateTime,
+// 																plusTimeDto,
+// 																TDurCalcTypeSTDYEARMTH,
+// 																TzIanaUsCentral,
+// 																FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
+//						standard year month day time duration allocation.
+//
+// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 							datetimeconstants.go
+//
+func (durT DurationTriad) NewStartTimePlusTimeCalcTz(
+														startDateTime time.Time,
+														plusTimeDto TimeDto,
+														tDurCalcType TDurCalcType,
+														timeZoneLocation,
+														dateTimeFmtStr string) (DurationTriad, error) {
+
+	ePrefix := "DurationTriad.NewStartTimePlusTimeCalcTz() "
+
+	du2 := DurationTriad{}
+
+	err := du2.SetStartTimePlusDtoTimeCalcTz(startDateTime,
+																						plusTimeDto,
+																						tDurCalcType,
+																						timeZoneLocation,
+																						dateTimeFmtStr)
+
+	if err != nil {
+		return DurationTriad{},
+		fmt.Errorf(ePrefix +
+			"Error returned from du2.SetStartTimePlusDtoTimeCalcTz(startDateTime, plusTimeDto). " +
+			"Error='%v'", err)
+	}
+
+	return du2, nil
+}
+
+// NewStartTimePlusTimeTz - Returns a new DurationTriad based on two input parameters,
+// 'startDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto which is
+// added to 'startDateTime' in order to calculate ending date time as well as time
+// duration.
+//
+// The user is required to provide Time Zone Location as an input parameter in order
+// to ensure that time duration calculations are performed using equivalent time zones.
+//
+// The standard date time calculation type, 'TDurCalcTypeSTDYEARMTH' is
+// automatically applied by this method. For a discussion of Duration Calculation
+// types, see Type TDurCalcType located in source file:
+// 					'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
+//
+//
+// Input Parameters:
+// =================
+//
+// startDateTime	time.Time	- Starting time
+//
+// plusTimeDto		  TimeDto - Provides time values which will be subtracted from
+//														'startDateTime' in order to calculate duration.
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			// 	plus remaining Nanoseconds
+//									}
+//
+// 														Type 'TimeDto' is located in source file:
+//																MikeAustin71\datetimeopsgo\datetime\timedto.go
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end time comparisons.
+//
+// 														Time zone location must be designated as one of two values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+// Example Usage:
+// ==============
+//
+// du, err := DurationTriad{}.NewStartTimePlusTimeTz(
+// 															startDateTime,
+// 																plusTimeDto,
+// 																TzIanaUsCentral,
+// 																FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 							datetimeconstants.go
+//
+func (durT DurationTriad) NewStartTimePlusTimeTz(
+														startDateTime time.Time,
+															plusTimeDto TimeDto,
+																timeZoneLocation,
+																		dateTimeFmtStr string) (DurationTriad, error) {
 
 	ePrefix := "DurationTriad.NewStartTimePlusTimeTz() "
 
