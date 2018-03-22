@@ -9,10 +9,45 @@ import (
 
 func main() {
 
-	mainTest018()
+	mainTest019()
 
 }
 
+
+func mainTest019() {
+	locUSCentral, err := time.LoadLocation(dt.TzIanaUsCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	year := 2018
+	month := 3
+	day := 6
+	hour := 20
+	minute := 2
+	second := 18
+	nSecs := 792489279
+
+	t1USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	minute = 3
+	second = 20
+	t2USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(
+																		t1USCentral,
+																		t2USCentral,
+																		dt.TDurCalcTypeSTDYEARMTH,
+																		dt.TzIanaUsCentral,
+																		dt.FmtDateTimeYrMDayFmtStr)
+
+	str, _ := tDur.GetCumSecondsTimeStr()
+
+	fmt.Println("Cumulative Seconds")
+	fmt.Println(str)
+	// 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+}
 
 func mainTest018() {
 	t1Dto := dt.TimeDto{}

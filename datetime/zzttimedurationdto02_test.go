@@ -3,6 +3,7 @@ package datetime
 import (
 	"testing"
 	"time"
+	"fmt"
 )
 
 func TestTimeDurationDto_DaylightSavings_01(t *testing.T) {
@@ -46,6 +47,123 @@ Add Date Results - Cumulative Days
 /*
 *******************************************************************************
  */
+
+func TestTimeDurationDto_GetCumSecondsTimeStr_01(t *testing.T) {
+
+	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	year := 2018
+	month := 3
+	day := 6
+	hour := 20
+	minute := 2
+	second := 18
+	nSecs := 792489279
+
+	t1USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	minute = 3
+	second = 20
+	t2USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	tDur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(
+		t1USCentral,
+		t2USCentral,
+		TDurCalcTypeSTDYEARMTH,
+		TzIanaUsCentral,
+		FmtDateTimeYrMDayFmtStr)
+
+	actualStr, _ := tDur.GetCumSecondsTimeStr()
+
+	expectedStr :=  "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expectedStr != actualStr {
+		t.Errorf("Error: Expected Duration String='%v'. Actual String='%v'",
+			expectedStr, actualStr)
+	}
+
+}
+
+func TestTimeDurationDto_GetCumSecondsDto_01(t *testing.T) {
+
+	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	year := 2018
+	month := 3
+	day := 6
+	hour := 20
+	minute := 2
+	second := 18
+	nSecs := 792489279
+
+	t1USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	minute = 3
+	second = 20
+	t2USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+
+	tDur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(
+		t1USCentral,
+		t2USCentral,
+		TDurCalcTypeSTDYEARMTH,
+		TzIanaUsCentral,
+		FmtDateTimeYrMDayFmtStr)
+
+	d2Dur, _ := tDur.GetCumSecondsCalcDto()
+
+	if d2Dur.Years != 0 {
+		t.Error("INVALID Years!")
+	}
+
+	if d2Dur.Months != 0 {
+		t.Error("INVALID Months!")
+	}
+
+	if d2Dur.Weeks != 0 {
+		t.Error("INVALID Weeks!")
+	}
+
+	if d2Dur.WeekDays != 0 {
+		t.Error("INVALID Weeks!")
+	}
+
+	if d2Dur.DateDays != 0 {
+		t.Error("INVALID DateDays!")
+	}
+
+	if d2Dur.Hours != 0 {
+		t.Error("INVALID Hours!")
+	}
+
+	if d2Dur.Minutes != 0 {
+		t.Error("INVALID Minutes!")
+	}
+
+	if d2Dur.Seconds != 62 {
+		t.Error("INVALID Seconds!")
+	}
+
+	if d2Dur.Milliseconds != 0 {
+		t.Error("INVALID Milliseconds!")
+	}
+
+	if d2Dur.Microseconds != 0 {
+		t.Error("INVALID Microseconds!")
+	}
+
+	if d2Dur.Nanoseconds != 0 {
+		t.Error("INVALID Nanoseconds!")
+	}
+
+}
 
 func TestTimeDurationDto_GetYearMthDaysTimeAbbrvStr(t *testing.T) {
 	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"

@@ -257,7 +257,7 @@ const (
 	// and nanoseconds.  Data Fields for years, months, weeks, days and hours are always set
 	// to zero.
 	//
-	// For the 'TDurCalcTypeCUMHOURS' calculation type, the following fields are
+	// For the 'TDurCalcTypeCUMMINUTES' calculation type, the following fields are
 	// populated:
 	//
 	//	type TimeDurationDto struct {
@@ -292,6 +292,52 @@ const (
 	//	}
 	//
 	TDurCalcTypeCUMMINUTES
+
+
+	// TDurCalcTypeCUMSECONDS - Cumulative Seconds calculations. Years, months, weeks, days,
+	// hours and minutes are ignored. Years, months weeks, days, hours, minutes and 'seconds'
+	// are consolidated and counted as cumulative Seconds.
+	//
+	// Years, months, weeks, days, hours and minutes duration is not calculated. The entire
+	// duration is broken down by cumulative seconds plus milliseconds, microseconds
+	// and nanoseconds.  Data Fields for years, months, weeks, days hours and minuts are always
+	// set to zero.
+	//
+	// For the 'TDurCalcTypeCUMSECONDS' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeCUMSECONDS
+	//			Years                       NOT-populated
+	//			YearsNanosecs               NOT-populated
+	//			Months                      NOT-populated
+	//			MonthsNanosecs              NOT-populated
+	//			Weeks                       NOT-populated
+	//			WeeksNanosecs               NOT-populated
+	//			WeekDays                    NOT-populated
+	//			WeekDaysNanosecs            NOT-populated
+	//			DateDays                    NOT-populated
+	//			DateDaysNanosecs            NOT-populated
+	//			Hours                       NOT-populated
+	//			HoursNanosecs               NOT-populated
+	//			Minutes                     NOT-populated
+	//			MinutesNanosecs             NOT-populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
+	//
+	TDurCalcTypeCUMSECONDS
 
 	// TDurCalcTypeGregorianYrs - Allocates Years, Months, Weeks, WeekDays, Date Days, Hours
 	// Minutes, Seconds, Milliseconds, Microseconds, Nanoseconds. However, the Years allocation
@@ -344,7 +390,7 @@ const (
 
 // TDurCalcTypeLabels - Text Names associated with TDurCalcType types.
 var TDurCalcTypeLabels = [...]string{"StdYearMthCalc","CumMonthsCalc","CumWeeksCalc", "CumDaysCalc",
-																			"CumHoursCalc", "CumMinutesCalc", "GregorianYrsCalc"}
+																			"CumHoursCalc", "CumMinutesCalc","CumSecondsCalc", "GregorianYrsCalc"}
 
 // TimeDurationDto - Is designed to work with incremental time or duration.
 type TimeDurationDto struct {
@@ -852,165 +898,6 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 	return str
 }
 
-// GetCumMonthsDaysTimeStr - Returns a new TimeDurationDto calculated
-// for 'cumulative months.
-//
-// The time values of the current TimeDurationDto are re-calculated and
-// returned in the new TimeDurationDTo as cumulative 'cumulative months'.
-// This means that Years are ignored and assigned a zero value. Instead,
-// Years and Months are consolidated and presented as 'cumulative months'.
-//
-func (tDur *TimeDurationDto) GetCumMonthsCalcDto() (TimeDurationDto, error) {
-
-	ePrefix := "TimeDurationDto.GetCumMonthsCalcDto() "
-
-	if int64(tDur.TimeDuration) == 0 {
-		return TimeDurationDto{}, nil
-	}
-
-	t2Dur := tDur.CopyOut()
-
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
-
-	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) " +
-			"Error='%v' ", err.Error())
-	}
-
-	return t2Dur, nil
-
-}
-
-
-// GetCumMonthsDaysTimeStr - Returns Cumulative Months Display
-// showing Months, Days, Hours, Minutes, Seconds, Milliseconds,
-// Microseconds and Nanoseconds.
-//
-// Years are ignored and assigned a zero value. Instead, years and
-// months are consolidated and presented as cumulative months.
-//
-func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
-
-	ePrefix := "TimeDurationDto.GetCumMonthsDaysTimeStr() "
-
-	if int64(tDur.TimeDuration) == 0 {
-		return "0-Nanoseconds", nil
-	}
-
-	t2Dur := tDur.CopyOut()
-
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
-
-	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) " +
-			"Error='%v' ", err.Error())
-	}
-
-
-	str := ""
-
-	str += fmt.Sprintf("%v-Months ", t2Dur.Months)
-
-	str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
-
-	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
-
-	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
-
-	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
-
-	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
-
-	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
-
-	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
-
-	return str, nil
-
-}
-
-// GetCumWeeksCalcDto - Returns a new TimeDurationDto re-calculated for 'Cumulative Weeks'.
-// The time values of the current TimeDurationDto are converted to cumulative weeks and
-// stored in the returned TimeDurationDto.
-//
-// 'Cumulative Weeks' means that Years and Months are ignored and assigned zero values.
-// Instead, Years, Months and Weeks are consolidated and stored as cumulative Weeks,
-// WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds.
-//
-func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
-
-	ePrefix := "TimeDurationDto.GetCumWeeksCalcDto() "
-
-	if int64(tDur.TimeDuration) == 0 {
-		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error: Time Duration is Zero")
-	}
-
-	t2Dur := tDur.CopyOut()
-
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
-
-	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) " +
-			" Error='%v' ", err.Error())
-	}
-
-	return t2Dur, nil
-}
-
-
-// GetCumWeeksDaysTimeStr - Returns time duration expressed as Weeks, WeekDays, Hours,
-// Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds. Years, Months and
-// Days are ignored and assigned a zero value.
-//
-// Instead, Years, Months, Days and Hours are consolidated and presented as cumulative
-// Hours.
-//
-// Example DisplayStr
-// 126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
-//
-func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
-
-	ePrefix := "TimeDurationDto.GetCumWeeksDaysTimeStr() "
-
-	if int64(tDur.TimeDuration) == 0 {
-		return "0-Nanoseconds", nil
-	}
-
-	t2Dur := tDur.CopyOut()
-	
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
-
-	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) " +
-			" Error='%v' ", err.Error())
-	}
-
-	str := ""
-
-	str += fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)
-
-	str += fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
-
-	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
-
-	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
-
-	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
-
-	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
-
-	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
-
-	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
-
-	return str, nil
-}
-
 // GetCumDaysCalcDto - Returns a new TimeDurationDto which re-calculates
 // the values of the current TimeDurationDto and stores them in a
 // 'cumulative days' format. This format always shows zero years and
@@ -1155,36 +1042,6 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 	return str, nil
 }
 
-// GetYrMthWkDayHrMinSecNanosecsStr - Returns duration formatted
-// as Year, Month, Day, Hour, Second and Nanoseconds.
-// Example: 3-Years 2-Months 3-Weeks 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
-func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
-
-	if int64(tDur.TimeDuration) == 0 {
-		return "0-Nanoseconds"
-	}
-	
-	str := ""
-
-	str += fmt.Sprintf("%v-Years ", tDur.Years)
-
-	str += fmt.Sprintf("%v-Months ", tDur.Months)
-
-	str += fmt.Sprintf("%v-Weeks ", tDur.Weeks)
-
-	str += fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
-
-	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
-
-	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
-
-	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
-
-	str += fmt.Sprintf("%v-Nanoseconds", tDur.TotSubSecNanoseconds)
-
-	return str
-}
-
 
 // GetCumMinutesStr - Returns a new TimeDurationDto calculated and configured
 // for cumulative minutes. This means that years, months, days and hours are
@@ -1202,7 +1059,7 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error: Time Duration is ZERO!")
+			fmt.Errorf(ePrefix + "Error: Time Duration is ZERO!")
 	}
 
 	t2Dur := tDur.CopyOut()
@@ -1261,15 +1118,274 @@ func (tDur *TimeDurationDto) GetCumMinutesStr() (string, error) {
 
 }
 
-// GetNanosecondsDurationStr - Returns duration formatted as
+
+// GetCumMonthsCalcDto - Returns a new TimeDurationDto calculated
+// for 'cumulative months'.
+//
+// The time values of the current TimeDurationDto are re-calculated and
+// returned in the new TimeDurationDTo as 'cumulative months'.
+// This means that Years are ignored and assigned a zero value. Instead,
+// Years and Months are consolidated and presented as 'cumulative months'.
+//
+func (tDur *TimeDurationDto) GetCumMonthsCalcDto() (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto.GetCumMonthsCalcDto() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return TimeDurationDto{}, nil
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
+
+	if err != nil {
+		return TimeDurationDto{}, fmt.Errorf(ePrefix +
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) " +
+			"Error='%v' ", err.Error())
+	}
+
+	return t2Dur, nil
+
+}
+
+
+// GetCumMonthsDaysTimeStr - Returns Cumulative Months Display
+// showing Months, Days, Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+//
+// Years are ignored and assigned a zero value. Instead, years and
+// months are consolidated and presented as cumulative months.
+//
+func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
+
+	ePrefix := "TimeDurationDto.GetCumMonthsDaysTimeStr() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds", nil
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
+
+	if err != nil {
+		return "", fmt.Errorf(ePrefix +
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) " +
+			"Error='%v' ", err.Error())
+	}
+
+
+	str := ""
+
+	str += fmt.Sprintf("%v-Months ", t2Dur.Months)
+
+	str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str, nil
+
+}
+
+// GetCumSecondsCalcDto - Returns a new TimeDurationDto calculated
+// for 'cumulative seconds'.
+//
+// The time values of the current TimeDurationDto are re-calculated and
+// returned in the new TimeDurationDTo as 'cumulative seconds'.
+// This means that Years, months, weeks, week days, date days, hours,
+// and minutes are ignored and assigned a zero value. Instead,
+// time duration is consolidated and presented as 'cumulative seconds'
+// including seconds, milliseconds, microseconds and nanoseconds.
+//
+func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto.GetCumSecondsCalcDto() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return TimeDurationDto{}, nil
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS)
+
+	if err != nil {
+		return TimeDurationDto{}, fmt.Errorf(ePrefix +
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS) " +
+			"Error='%v' ", err.Error())
+	}
+
+	return t2Dur, nil
+
+}
+
+
+// GetCumSecondsTimeStr - Returns a formatted time string presenting
+// time duration as cumulative seconds. The display shows Seconds,
+// Milliseconds, Microseconds and Nanoseconds.
+func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
+
+	ePrefix := "TimeDurationDto.GetCumSecondsTimeStr() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds", nil
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS)
+
+	if err != nil {
+		return "", fmt.Errorf(ePrefix +
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS) " +
+			"Error='%v' ", err.Error())
+	}
+
+
+	str := ""
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str, nil
+
+}
+
+// GetCumNanosecondsDurationStr - Returns duration formatted as
 // Nanoseconds. DisplayStr shows Nanoseconds expressed as a
 // 64-bit integer value.
-func (tDur *TimeDurationDto) GetNanosecondsDurationStr() string {
-	
+func (tDur *TimeDurationDto) GetCumNanosecondsDurationStr() string {
+
 	str := fmt.Sprintf("%v-Nanoseconds", int64(tDur.TimeDuration))
 
 	return str
 
+}
+
+// GetCumWeeksCalcDto - Returns a new TimeDurationDto re-calculated for 'Cumulative Weeks'.
+// The time values of the current TimeDurationDto are converted to cumulative weeks and
+// stored in the returned TimeDurationDto.
+//
+// 'Cumulative Weeks' means that Years and Months are ignored and assigned zero values.
+// Instead, Years, Months and Weeks are consolidated and stored as cumulative Weeks,
+// WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds.
+//
+func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto.GetCumWeeksCalcDto() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix + "Error: Time Duration is Zero")
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
+
+	if err != nil {
+		return TimeDurationDto{}, fmt.Errorf(ePrefix +
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) " +
+			" Error='%v' ", err.Error())
+	}
+
+	return t2Dur, nil
+}
+
+
+// GetCumWeeksDaysTimeStr - Returns time duration expressed as Weeks, WeekDays, Hours,
+// Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds. Years, Months and
+// Days are ignored and assigned a zero value.
+//
+// Instead, Years, Months, Days and Hours are consolidated and presented as cumulative
+// Hours.
+//
+// Example DisplayStr
+// 126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
+
+	ePrefix := "TimeDurationDto.GetCumWeeksDaysTimeStr() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds", nil
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
+
+	if err != nil {
+		return "", fmt.Errorf(ePrefix +
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) " +
+			" Error='%v' ", err.Error())
+	}
+
+	str := ""
+
+	str += fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)
+
+	str += fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
+
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str, nil
+}
+
+// GetYrMthWkDayHrMinSecNanosecsStr - Returns duration formatted
+// as Year, Month, Day, Hour, Second and Nanoseconds.
+// Example: 3-Years 2-Months 3-Weeks 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
+func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+	
+	str := ""
+
+	str += fmt.Sprintf("%v-Years ", tDur.Years)
+
+	str += fmt.Sprintf("%v-Months ", tDur.Months)
+
+	str += fmt.Sprintf("%v-Weeks ", tDur.Weeks)
+
+	str += fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
+
+	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+
+	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", tDur.TotSubSecNanoseconds)
+
+	return str
 }
 
 // GetDefaultDurationStr - Returns duration formatted
@@ -1754,19 +1870,25 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 // tDurCalcType TDurCalcType	-	Specifies the calculation type to be used in allocating
 //															time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -2069,19 +2191,25 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -2161,19 +2289,25 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -2364,19 +2498,25 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -2452,19 +2592,25 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -2758,19 +2904,25 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//			TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//			TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//			TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//			TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//			TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
-//																 		Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -2894,19 +3046,25 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//			TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//			TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//			TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//			TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//			TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
-//																 		Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -3201,19 +3359,25 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//			TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//			TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//			TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//			TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//			TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
-//																 		Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -3311,19 +3475,25 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//			TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//			TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//			TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//			TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//			TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//			TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
-//																 		Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -3516,19 +3686,25 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -3751,20 +3927,25 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
 //
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -3864,19 +4045,25 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 //
 func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(calcType TDurCalcType) error {
@@ -4003,20 +4190,25 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
 //
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4128,19 +4320,25 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4217,19 +4415,25 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4350,19 +4554,25 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4504,19 +4714,25 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4624,20 +4840,25 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(startDateTime Dat
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
 //
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4751,165 +4972,15 @@ func (tDur *TimeDurationDto) calcTimeDurationAllocations(calcType TDurCalcType) 
 	case TDurCalcTypeCUMMINUTES:
 		return tDur.calcTypeCUMMINUTES()
 
+	case TDurCalcTypeCUMSECONDS:
+		return tDur.calcTypeCUMSECONDS()
+
 	case TDurCalcTypeGregorianYrs :
 		return tDur.calcTypeGregorianYears()
 
 	default:
 		return fmt.Errorf(ePrefix + "Error: Invalid TDurCalcType. calcType='%v'", calcType.String())
 	}
-
-	return nil
-}
-
-// calcTypeSTDYEARMTH - Performs Duration calculations for
-// TDurCalcType == TDurCalcTypeSTDYEARMTH
-//
-// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation.
-// All data fields in the TimeDto are populated in the duration
-// allocation.
-func (tDur *TimeDurationDto) calcTypeSTDYEARMTH() error {
-	
-	ePrefix := "TimeDurationDto.calcTypeSTDYEARMTH() "
-
-	tDur.EmptyTimeFields()
-	
-	tDur.CalcType = TDurCalcTypeSTDYEARMTH
-	
-	err := tDur.calcYearsFromDuration()
-	
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcYearsFromDuration(). Error='%v'", err.Error())
-	}
-	
-	err = tDur.calcMonthsFromDuration()
-	
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
-	}
-	
-	err = tDur.calcDateDaysWeeksFromDuration()
-	
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
-	}
-	
-	err = tDur.calcHoursMinSecs()
-	
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-	
-	err = tDur.calcNanoseconds()
-	
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-	
-	err = tDur.calcSummaryTimeElements()
-	
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-	
-	return nil
-}
-
-// Data Fields for Years is always set to Zero. Years
-// and months are consolidated and counted as cumulative
-// months.
-func (tDur *TimeDurationDto) calcTypeCUMMONTHS() error {
-
-	ePrefix := "TimeDurationDto.calcTypeCUMWEEK() "
-
-	tDur.EmptyTimeFields()
-
-	tDur.CalcType = TDurCalcTypeCUMMONTHS
-	
-	err := tDur.calcMonthsFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcDateDaysWeeksFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcHoursMinSecs()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcNanoseconds()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	return nil
-
-}
-
-// calcTypeCUMWEEKS - Data Fields for Years and Months are always set to zero.
-// Years and Months are consolidated and counted as equivalent Weeks.
-func (tDur *TimeDurationDto) calcTypeCUMWEEKS() error {
-
-	ePrefix := "TimeDurationDto.calcTypeCUMWEEKS() "
-
-	tDur.EmptyTimeFields()
-	
-	tDur.CalcType = TDurCalcTypeCUMWEEKS
-
-	rd := int64(tDur.TimeDuration)
-
-	if rd >= WeekNanoSeconds {
-
-		tDur.Weeks = rd / WeekNanoSeconds
-		tDur.WeeksNanosecs = tDur.Weeks * WeekNanoSeconds
-		rd -= tDur.WeeksNanosecs
-
-	}
-
-	if rd >= DayNanoSeconds {
-		tDur.WeekDays = rd / DayNanoSeconds
-		tDur.WeekDaysNanosecs = tDur.WeekDays * DayNanoSeconds
-		rd -= tDur.WeekDaysNanosecs
-	}
-
-	tDur.DateDays = tDur.Weeks * int64(7)
-	tDur.DateDays += tDur.WeekDays
-	tDur.DateDaysNanosecs = tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
-
-	err := tDur.calcHoursMinSecs()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcNanoseconds()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	// For Cumulative Weeks calculation and presentations, set Date Days to zero
-	tDur.DateDays = 0
-	tDur.DateDaysNanosecs = 0
 
 	return nil
 }
@@ -4995,6 +5066,60 @@ func (tDur *TimeDurationDto) calcTypeCUMHours() error {
 	return nil
 }
 
+
+// calcTypeGregorianYears - Allocates Years using the number of nanoseconds in a
+// standard or average GregorianYear
+func (tDur *TimeDurationDto) calcTypeGregorianYears() error {
+	ePrefix := "TimeDurationDto.calcTypeGregorianYears() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeGregorianYrs
+
+	rd := int64(tDur.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
+
+	if rd >= GregorianYearNanoSeconds {
+		tDur.Years = rd / GregorianYearNanoSeconds
+		tDur.YearsNanosecs = tDur.Years * GregorianYearNanoSeconds
+	}
+
+	err := tDur.calcMonthsFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcDateDaysWeeksFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	return nil
+}
+
 // calcTypeCUMMINUTES - Calculates Cumulative Minutes. Years, months, weeks, week days,
 // date days, hours and minutes are consolidated and included in cumulative minutes.
 // Values for years, months, weeks, week days, date days and hours are ignored and set
@@ -5051,25 +5176,16 @@ func (tDur *TimeDurationDto) calcTypeCUMMINUTES() error {
 }
 
 
-// calcTypeGregorianYears - Allocates Years using the number of nanoseconds in a
-// standard or average GregorianYear
-func (tDur *TimeDurationDto) calcTypeGregorianYears() error {
-	ePrefix := "TimeDurationDto.calcTypeGregorianYears() "
+// Data Fields for Years is always set to Zero. Years
+// and months are consolidated and counted as cumulative
+// months.
+func (tDur *TimeDurationDto) calcTypeCUMMONTHS() error {
+
+	ePrefix := "TimeDurationDto.calcTypeCUMWEEK() "
 
 	tDur.EmptyTimeFields()
 
-	tDur.CalcType = TDurCalcTypeGregorianYrs
-	
-rd := int64(tDur.TimeDuration)
-
-	if rd == 0 {
-		return nil
-	}
-
-	if rd >= GregorianYearNanoSeconds {
-		tDur.Years = rd / GregorianYearNanoSeconds
-		tDur.YearsNanosecs = tDur.Years * GregorianYearNanoSeconds
-	}
+	tDur.CalcType = TDurCalcTypeCUMMONTHS
 
 	err := tDur.calcMonthsFromDuration()
 
@@ -5100,6 +5216,159 @@ rd := int64(tDur.TimeDuration)
 	if err != nil {
 		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
+
+	return nil
+
+}
+
+// calcTypeCUMSECONDS - Calculates Cumulative Seconds of
+// time duration.
+//
+// tDur.CalcType = TDurCalcTypeCUMSECONDS
+//
+// Years, months, weeks, weekdays, date days, hours and
+// minutes are ignored and set to zero. Time is accumulated
+// in seconds, milliseconds, microseconds and nanoseconds.
+//
+func (tDur *TimeDurationDto) calcTypeCUMSECONDS() error {
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeCUMSECONDS
+
+	rd := int64(tDur.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
+
+	if rd >= SecondNanoseconds {
+		tDur.Seconds = rd / SecondNanoseconds
+		tDur.SecondsNanosecs = SecondNanoseconds * tDur.Seconds
+		rd -= tDur.SecondsNanosecs
+	}
+
+	if rd >= MilliSecondNanoseconds {
+		tDur.Milliseconds = rd / MilliSecondNanoseconds
+		tDur.MillisecondsNanosecs = MilliSecondNanoseconds * tDur.Milliseconds
+		rd -= tDur.MillisecondsNanosecs
+	}
+
+	if rd >= MicroSecondNanoseconds {
+		tDur.Microseconds = rd / MicroSecondNanoseconds
+		tDur.MicrosecondsNanosecs = MicroSecondNanoseconds * tDur.Microseconds
+		rd -= tDur.MicrosecondsNanosecs
+	}
+
+	tDur.Nanoseconds = rd
+
+	return nil
+}
+
+// calcTypeSTDYEARMTH - Performs Duration calculations for
+// TDurCalcType == TDurCalcTypeSTDYEARMTH
+//
+// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation.
+// All data fields in the TimeDto are populated in the duration
+// allocation.
+func (tDur *TimeDurationDto) calcTypeSTDYEARMTH() error {
+
+	ePrefix := "TimeDurationDto.calcTypeSTDYEARMTH() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeSTDYEARMTH
+
+	err := tDur.calcYearsFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcYearsFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcMonthsFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcDateDaysWeeksFromDuration()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	return nil
+}
+
+// calcTypeCUMWEEKS - Data Fields for Years and Months are always set to zero.
+// Years and Months are consolidated and counted as equivalent Weeks.
+func (tDur *TimeDurationDto) calcTypeCUMWEEKS() error {
+
+	ePrefix := "TimeDurationDto.calcTypeCUMWEEKS() "
+
+	tDur.EmptyTimeFields()
+
+	tDur.CalcType = TDurCalcTypeCUMWEEKS
+
+	rd := int64(tDur.TimeDuration)
+
+	if rd >= WeekNanoSeconds {
+
+		tDur.Weeks = rd / WeekNanoSeconds
+		tDur.WeeksNanosecs = tDur.Weeks * WeekNanoSeconds
+		rd -= tDur.WeeksNanosecs
+
+	}
+
+	if rd >= DayNanoSeconds {
+		tDur.WeekDays = rd / DayNanoSeconds
+		tDur.WeekDaysNanosecs = tDur.WeekDays * DayNanoSeconds
+		rd -= tDur.WeekDaysNanosecs
+	}
+
+	tDur.DateDays = tDur.Weeks * int64(7)
+	tDur.DateDays += tDur.WeekDays
+	tDur.DateDaysNanosecs = tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
+
+	err := tDur.calcHoursMinSecs()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcNanoseconds()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+	}
+
+	err = tDur.calcSummaryTimeElements()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+	}
+
+	// For Cumulative Weeks calculation and presentations, set Date Days to zero
+	tDur.DateDays = 0
+	tDur.DateDaysNanosecs = 0
 
 	return nil
 }

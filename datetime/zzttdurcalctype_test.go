@@ -85,6 +85,19 @@ func TestTDurCalcTypeString_006(t *testing.T) {
 
 func TestTDurCalcTypeString_007(t *testing.T) {
 
+	r := TDurCalcTypeCUMSECONDS
+	expectedStr := "CumSecondsCalc"
+
+	s := r.String()
+
+	if expectedStr != s {
+		t.Errorf("Expected TDurCalcTypeGregorianYrs string='%v'. Instead, string='%v' ", expectedStr, s)
+	}
+
+}
+
+func TestTDurCalcTypeString_008(t *testing.T) {
+
 	r := TDurCalcTypeGregorianYrs
 	expectedStr := "GregorianYrsCalc"
 
@@ -198,12 +211,28 @@ func TestTDurCalcTypeValue_007(t *testing.T) {
 
 	var i int
 
-	r = TDurCalcTypeGregorianYrs
+	r = TDurCalcTypeCUMSECONDS
 
 	i = int(r)
 
 	if i != 6 {
-		t.Errorf("Expected 'TDurCalcTypeGregorianYrs' value = 6. Instead, got %v", i)
+		t.Errorf("Expected 'TDurCalcTypeCUMMINUTES' value = 6. Instead, got %v", i)
+	}
+
+}
+
+func TestTDurCalcTypeValue_008(t *testing.T) {
+
+	var r TDurCalcType
+
+	var i int
+
+	r = TDurCalcTypeGregorianYrs
+
+	i = int(r)
+
+	if i != 7 {
+		t.Errorf("Expected 'TDurCalcTypeGregorianYrs' value = 7. Instead, got %v", i)
 	}
 
 }

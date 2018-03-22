@@ -594,19 +594,25 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 // tDurCalcType TDurCalcType -	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -829,19 +835,25 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -1111,19 +1123,25 @@ func (durT DurationTriad) NewStartTimeDuration(
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -1451,19 +1469,25 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 // tDurCalcType TDurCalcType -	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -1779,19 +1803,25 @@ func (durT *DurationTriad) SetStartTimeDuration(
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month
+//																	 		week day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -2052,19 +2082,25 @@ func (durT *DurationTriad) SetStartEndTimes(startDateTime,
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month
+//																	 		week day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 					For details on Type 'TDurCalcType', see source file:
 //								MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
@@ -2389,19 +2425,25 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month
-//																	 week day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month
+//																	 		week day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 					For a details on 'TDurCalcType', see the source file:
 //																MikeAustin71\datetimeopsgo\datetime\timedto.go
@@ -2785,19 +2827,25 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 // tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
 //														time duration:
 //
-//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
-// 																		day time calculation.
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
 //
-//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
 //
-//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
 //
-//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//																		 Used for very large duration values.
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
