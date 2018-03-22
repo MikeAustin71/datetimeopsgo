@@ -2518,6 +2518,9 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
 //															"2006-01-02 15:04:05.000000000 -0700 MST"
@@ -2612,6 +2615,10 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -2924,6 +2931,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -3065,6 +3075,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
 //
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -3379,6 +3392,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
 //															"2006-01-02 15:04:05.000000000 -0700 MST"
@@ -3494,6 +3510,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 //
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // dateTimeFmtStr string		- A date time format string which will be used
 //															to format and display 'dateTime'. Example:
@@ -3705,6 +3724,9 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 //
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -3947,6 +3969,9 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -4065,6 +4090,8 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(calcType TDurCalcType) error {
 	
@@ -4210,6 +4237,9 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -4340,6 +4370,9 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -4434,6 +4467,9 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
 //
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4573,6 +4609,9 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 //
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
@@ -4734,6 +4773,9 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -4859,6 +4901,9 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(startDateTime Dat
 //
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that

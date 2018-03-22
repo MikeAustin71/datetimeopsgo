@@ -1823,6 +1823,9 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
 //																		 	Used for very large duration values.
 //
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
 //														'oranges are compared to oranges and apples are compared
@@ -2849,7 +2852,6 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //
 // 										Type 'TDurCalcType' is located in source file:
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
-//
 //
 // timeZoneLocation	string	- Designates the standard Time Zone location by which
 //														time duration will be compared. This ensures that
