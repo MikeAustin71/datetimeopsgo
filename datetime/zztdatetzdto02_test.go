@@ -253,6 +253,104 @@ func TestDateTzDto_New_01(t *testing.T) {
 
 }
 
+func TestDateTzDto_NewNowTz_01(t *testing.T) {
+
+	t0 := time.Now().Local()
+
+	dTz, err := DateTzDto{}.NewNowTz(TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned from DateTzDto{}.NewNowTz(TzIanaUsCentral, FmtDateTimeYrMDayFmtStr). " +
+			"Error='%v'", err.Error())
+	}
+
+	loc, err := time.LoadLocation(TzIanaUsCentral)
+
+	if err != nil {
+		t.Errorf("Error returned from time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	t1 := t0.In(loc)
+
+	actualDur := t1.Sub(dTz.DateTime)
+
+	expectedDur := time.Duration(int64(2) * int64(time.Second))
+
+	if actualDur > expectedDur {
+		t.Error("Error: Actual Duration exceeded 2-seconds!")
+	}
+
+	if TzIanaUsCentral != dTz.TimeZone.LocationName {
+		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
+			TzIanaUsCentral, dTz.TimeZone.LocationName)
+	}
+
+}
+
+
+func TestDateTzDto_NewNowLocal_01(t *testing.T) {
+
+	t0 := time.Now().Local()
+	dTz, err := DateTzDto{}.NewNowLocal(FmtDateTimeYrMDayFmtStr)
+
+
+	if err != nil {
+		t.Errorf("Error returned from time.NewNowLocal(FmtDateTimeYrMDayFmtStr). " +
+			"Error='%v'", err.Error())
+	}
+
+	actualDur := t0.Sub(dTz.DateTime)
+
+	expectedDur := time.Duration(int64(2) * int64(time.Second))
+
+	if actualDur > expectedDur {
+		t.Error("Error: Actual Duration exceeded 2-seconds!")
+	}
+
+	if TzGoLocal != dTz.TimeZone.LocationName {
+		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
+			TzGoLocal, dTz.TimeZone.LocationName)
+	}
+
+}
+
+func TestDateTzDto_NewNowUTC_01(t *testing.T) {
+
+	t0 := time.Now().Local()
+
+	loc, err := time.LoadLocation(TzIanaUTC)
+
+	if err != nil {
+		t.Errorf("Error returned from time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+	}
+
+	t1 := t0.In(loc)
+
+	dTz, err := DateTzDto{}.NewNowUTC(FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned from DateTzDto{}.NewNowUTC(FmtDateTimeYrMDayFmtStr). " +
+			"Error='%v'", err.Error())
+	}
+
+
+	actualDur := t1.Sub(dTz.DateTime)
+
+	expectedDur := time.Duration(int64(2) * int64(time.Second))
+
+	if actualDur > expectedDur {
+		t.Error("Error: Actual Duration exceeded 2-seconds!")
+	}
+
+	if TzIanaUTC != dTz.TimeZone.LocationName {
+		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
+			TzIanaUTC, dTz.TimeZone.LocationName)
+	}
+
+}
+
+
+
 func TestDateTzDto_NewTimeDto_01(t *testing.T) {
 
 	t0str := "2017-04-30 22:58:32.515539300 -0500 CDT"

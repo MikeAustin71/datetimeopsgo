@@ -947,7 +947,72 @@ func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string)(DateTzDto, e
 	return dtz2, nil
 }
 
-// NewNow - returns a new DateTzDto instance based on a date time value
+// NewNowLocal - returns a new DateTzDto instance based on a date time value
+// which is automatically assigned by time.Now(). The Time Zone Location
+// is automatically set to 'Local'.
+//
+// Input Parameter
+// ===============
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+//
+//  There are two return values: 	(1) a DateTzDto Type
+//																(2) an Error type
+//
+//  DateTzDto - If successful the method returns a valid, fully populated
+//							DateTzDto type defined as follows:
+//
+//	type DateTzDto struct {
+//		Description			string					// Unused, available for classification, labeling or description
+//		Time       			TimeDto					// Time Components
+//		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
+//	}
+//
+// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
+//						encountered this error Type will encapsulate an error message.
+//
+// Usage
+// =====
+//
+// Example:
+//			dtzDto, err := DateTzDto{}.NewNowLocal(FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'FmtDateTimeYrMDayFmtStr' is a constant defined in
+// 							datetimeconstants.go
+//
+func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string)(DateTzDto, error) {
+
+	ePrefix := "DateTzDto.NewNowLocal() "
+
+	dt := time.Now().Local()
+
+	dTz := DateTzDto{}
+
+	err := dTz.SetFromTimeTz(dt, "Local", dateTimeFmtStr)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned by SetFromTimeTz(). Error='%v'", err.Error())
+	}
+
+	return dTz, nil
+}
+
+// NewNowTz - returns a new DateTzDto instance based on a date time value
 // which is automatically assigned by time.Now()
 //
 // The user is required to provide an input parameter, 'timeZoneLocation',
@@ -1018,21 +1083,90 @@ func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string)(DateTzDto, e
 // =====
 //
 // Example:
-//			dtzDto, err := DateTzDto{}.NewNow(
+//			dtzDto, err := DateTzDto{}.NewNowTz(
 // 																TzIanaUsCentral,
 // 																FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 							datetimeconstants.go
 //
-func (dtz DateTzDto) NewNow(timeZoneLocation, dateTimeFmtStr string)(DateTzDto, error) {
-	ePrefix := "DateTzDto.NewNow() "
+func (dtz DateTzDto) NewNowTz(timeZoneLocation, dateTimeFmtStr string)(DateTzDto, error) {
+	ePrefix := "DateTzDto.NewNowTz() "
 
 	dt := time.Now().Local()
 
 	dTz := DateTzDto{}
 
 	err := dTz.SetFromTimeTz(dt, timeZoneLocation, dateTimeFmtStr)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned by SetFromTimeTz(). Error='%v'", err.Error())
+	}
+
+	return dTz, nil
+}
+
+// NewNowUTC - returns a new DateTzDto instance based on a date time value
+// which is automatically assigned by time.Now(). The Time Zone Location
+// is automatically set to 'UTC'. UTC refers to Universal Coordinated Time
+// and is sometimes referred to as 'Zulu', GMT or Greenwich Mean Time.
+//
+// Reference Universal Coordinated Time:
+// 	https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+// Input Parameter
+// ===============
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+//
+//  There are two return values: 	(1) a DateTzDto Type
+//																(2) an Error type
+//
+//  DateTzDto - If successful the method returns a valid, fully populated
+//							DateTzDto type defined as follows:
+//
+//	type DateTzDto struct {
+//		Description			string					// Unused, available for classification, labeling or description
+//		Time       			TimeDto					// Time Components
+//		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
+//	}
+//
+// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
+//						encountered this error Type will encapsulate an error message.
+//
+// Usage
+// =====
+//
+// Example:
+//			dtzDto, err := DateTzDto{}.NewNowUTC(
+// 																FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'FmtDateTimeYrMDayFmtStr' is a constant defined in
+// 							datetimeconstants.go
+//
+func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string)(DateTzDto, error) {
+	ePrefix := "DateTzDto.NewNowUTC() "
+
+	dt := time.Now().Local()
+
+	dTz := DateTzDto{}
+
+	err := dTz.SetFromTimeTz(dt, TzIanaUTC, dateTimeFmtStr)
 
 	if err != nil {
 		return DateTzDto{},
