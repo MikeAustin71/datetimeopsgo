@@ -300,10 +300,10 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur, err := DurationTriad{}.NewStartTimePlusTimeTz(t1, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartTimePlusTimeTz(t1, timeDto). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto). Error='%v'", err.Error())
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
@@ -525,7 +525,7 @@ func TestDurationTriad_SetStartTimePlusTime(t *testing.T) {
 	dur := DurationTriad{}
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur.SetStartTimePlusTimeTz(t1, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur.SetStartTimePlusTimeDtoTz(t1, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",

@@ -947,6 +947,101 @@ func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string)(DateTzDto, e
 	return dtz2, nil
 }
 
+// NewNow - returns a new DateTzDto instance based on a date time value
+// which is automatically assigned by time.Now()
+//
+// The user is required to provide an input parameter, 'timeZoneLocation',
+// which is used to configure the date time value.
+//
+// Input Parameter
+// ===============
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location to which
+//														input parameter, 'dateTime' will be converted before
+//														being stored and stored in the final DateTzDto instance
+//														returned by the this method.
+//
+// 														Time zone location must be designated as one of two values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+//
+//  There are two return values: 	(1) a DateTzDto Type
+//																(2) an Error type
+//
+//  DateTzDto - If successful the method returns a valid, fully populated
+//							DateTzDto type defined as follows:
+//
+//	type DateTzDto struct {
+//		Description			string					// Unused, available for classification, labeling or description
+//		Time       			TimeDto					// Time Components
+//		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
+//	}
+//
+// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
+//						encountered this error Type will encapsulate an error message.
+//
+// Usage
+// =====
+//
+// Example:
+//			dtzDto, err := DateTzDto{}.NewNow(
+// 																TzIanaUsCentral,
+// 																FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+// 							datetimeconstants.go
+//
+func (dtz DateTzDto) NewNow(timeZoneLocation, dateTimeFmtStr string)(DateTzDto, error) {
+	ePrefix := "DateTzDto.NewNow() "
+
+	dt := time.Now().Local()
+
+	dTz := DateTzDto{}
+
+	err := dTz.SetFromTimeTz(dt, timeZoneLocation, dateTimeFmtStr)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned by SetFromTimeTz(). Error='%v'", err.Error())
+	}
+
+	return dTz, nil
+}
+
 // NewTz - returns a new DateTzDto instance based on a time.Time input parameter ('dateTime').
 // The caller is required to provide a Time Zone Location. Input parameter 'dateTime' will be
 // converted to this Time Zone before storing the converted 'dateTime' in the newly created

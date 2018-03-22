@@ -530,7 +530,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzC
 
 	dTzEnd, err := DateTzDto{}.New(suite.t3AfricaCairo, suite.fmtStr)
 
-	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateDtoCalcTz(dTzStart, dTzEnd,
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalcTz(dTzStart, dTzEnd,
 		TDurCalcTypeSTDYEARMTH, TzIanaUsCentral, suite.fmtStr)
 
 	assert.Nil(suite.T(),err,"Error:")

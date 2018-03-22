@@ -1660,6 +1660,296 @@ func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
 	return t2Dur, nil
 }
 
+// NewStartEndDateTzDto - Creates and returns a new TimeDurationDto populated with
+// time duration data. The input parameters for starting and ending date time are
+// submitted as type 'DateTzDto'.
+//
+// The Time Zone Location is extracted from input parameter, 'startDateTz'. The extracted
+// time zone is used to configure the ending date time thereby providing a common basis for
+// subsequent time duration calculations.
+//
+// This method automatically applies the standard Time Duration allocation, calculation type
+// 'TDurCalcTypeSTDYEARMTH'. This means that duration is allocated over years, months, weeks,
+//  weekdays, date days, hours, minutes, seconds, milliseconds,	microseconds and nanoseconds.
+// For details, see Type 'TDurCalcType' in this source file:
+//				MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// Input Parameters:
+// =================
+//
+// startDateTz	DateTzDto	- Contains the starting date time used in time duration calculations
+//
+// endDateTz		DateTzDto - Contains the ending date time used in time duration calculations.
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.NewStartEndDateTzDto(
+// 											startDateTz,
+// 											endDateTz,
+// 											FmtDateTimeYrMDayFmtStr)
+//
+//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in
+// 							datetimeconstants.go
+//
+func (tDur TimeDurationDto) NewStartEndDateTzDto(
+															startDateTz,
+															endDateTz DateTzDto,
+															dateTimeFmtStr string) (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto.NewStartEndDateTzDto() "
+
+	timeZoneLocation := startDateTz.TimeZone.LocationName
+
+	t2Dur := TimeDurationDto{}
+
+	err := t2Dur.SetStartEndTimesCalcTz(
+								startDateTz.DateTime,
+								endDateTz.DateTime,
+								TDurCalcTypeSTDYEARMTH,
+								timeZoneLocation,
+								dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"Error returned by SetStartEndTimesCalcTz(). Error='%v' ",
+				err.Error())
+	}
+
+	return t2Dur, nil
+}
+
+
+// NewStartEndDateTzDtoCalcTz - Creates and returns a new TimeDurationDto populated with
+// time duration data. The input parameters for starting and ending date time are
+// submitted as type 'DateTzDto'.
+//
+// The user is required to specify a Time Zone Location for use in converting date
+// times to a common frame of reference used in subsequent time duration calculations.
+//
+// The allocation of time duration to data fields, Years, Months, Weeks, WeekDays, DateDays,
+// Hours, Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds is controlled by the
+// input parameter calculation type, 'tDurCalcType'. For details see
+// Type 'TDurCalcType' which is located in source file:
+// 			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// Input Parameters:
+// =================
+//
+// startDateTz			DateTzDto	- Contains the starting date time used in time duration calculations
+//
+// endDateTz				DateTzDto - Contains the ending date time used in time duration calculations.
+//
+// tDurCalcType TDurCalcType	-	Specifies the calculation type to be used in allocating
+//															time duration:
+//
+//					TDurCalcTypeSTDYEARMTH - Default - standard year, month week,
+// 																		day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  - Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS		- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//																		 Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end times used in
+// 														time duration calculations.
+//
+// 														Time zone location must be designated as one of three values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.NewStartEndDateTzDtoCalcTz(
+// 											startDateTz,
+// 											endDateTz,
+// 											TDurCalcTypeSTDYEARMTH,
+// 											TzIanaUsCentral,
+// 											FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
+//						standard year month day time duration allocation.
+//
+// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 							datetimeconstants.go
+//
+func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
+						startDateTz,
+						endDateTz DateTzDto,
+						tDurCalcType TDurCalcType,
+						timeZoneLocation,
+						dateTimeFmtStr string) (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto.NewStartEndDateTzDtoCalcTz() "
+
+	t2Dur := TimeDurationDto{}
+
+	err := t2Dur.SetStartEndTimesCalcTz(
+											startDateTz.DateTime,
+											endDateTz.DateTime,
+											tDurCalcType,
+											timeZoneLocation,
+											dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"Error returned by SetStartEndTimesCalcTz(). Error='%v' ",
+					err.Error())
+	}
+
+	return t2Dur, nil
+}
+
+// NewStartEndDateTzDtoTz - Creates and returns a new TimeDurationDto populated with
+// time duration data. The input parameters for starting and ending date time are
+// submitted as type 'DateTzDto'.
+//
+// The user is required to specify a Time Zone Location for use in converting date
+// times to a common frame of reference used in subsequent time duration calculations.
+//
+// This method automatically applies the standard Time Duration allocation, calculation type
+// 'TDurCalcTypeSTDYEARMTH'. This means that duration is allocated over years, months, weeks,
+//  weekdays, date days, hours, minutes, seconds, milliseconds,	microseconds and nanoseconds.
+// For details, see Type 'TDurCalcType' in this source file:
+//				MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// Input Parameters:
+// =================
+//
+// startDateTz	DateTzDto	- Contains the starting date time used in time duration calculations
+//
+// endDateTz		DateTzDto - Contains the ending date time used in time duration calculations.
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end times used in
+// 														time duration calculations.
+//
+// 														Time zone location must be designated as one of three values.
+//
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.NewStartEndDateTzDtoTz(
+// 											startDateTz,
+// 											endDateTz,
+// 											TzIanaUsCentral,
+// 											FmtDateTimeYrMDayFmtStr)
+//
+//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 							datetimeconstants.go
+//
+func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
+																		startDateTz,
+																		endDateTz DateTzDto,
+																		timeZoneLocation,
+																		dateTimeFmtStr string) (TimeDurationDto, error) {
+
+	ePrefix := "TimeDurationDto.NewStartEndDateTzDtoTz() "
+
+	t2Dur := TimeDurationDto{}
+
+	err := t2Dur.SetStartEndTimesCalcTz(
+											startDateTz.DateTime,
+											endDateTz.DateTime,
+											TDurCalcTypeSTDYEARMTH,
+											timeZoneLocation,
+											dateTimeFmtStr)
+
+	if err != nil {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"Error returned by SetStartEndTimesCalcTz(). Error='%v' ",
+					err.Error())
+	}
+
+	return t2Dur, nil
+}
+
 // NewStartEndTimesTz - Creates and returns a new TimeDurationDto populated with 
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters.
 // The user is required to specify a common Time Zone Location for use in converting
@@ -1683,7 +1973,7 @@ func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -1759,7 +2049,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 	return t2Dur, nil
 }
 
-// NewStartEndTimesCalcTz - Creates and returns a new TimeDurationDto populated with
+// NewStartEndTimesCalc - Creates and returns a new TimeDurationDto populated with
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters.
 //
 // The allocation of time duration to data fields, Years, Months, Weeks, WeekDays, DateDays,
@@ -1857,7 +2147,9 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 //
 // The allocation of time duration to data fields, Years, Months, Weeks, WeekDays, DateDays,
 // Hours, Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds is controlled by the
-// input parameter calculation type, 'tDurCalcType'. See 'TDurCalcType' for details.
+// input parameter calculation type, 'tDurCalcType'. For details see
+// Type 'TDurCalcType' which is located in source file:
+// 			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // Input Parameters:
 // =================
@@ -1893,7 +2185,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -2139,7 +2431,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 	return t2Dur, nil
 }
 
-// NewStartEndTimesDateDtoCalcTz - Creates and returns a new TimeDurationDto populated with
+// NewStartEndTimesDateTzDtoCalcTz - Creates and returns a new TimeDurationDto populated with
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters. The
 // 'startDateTime' and 'endDateTime' parameters are of type DateTzDto.
 //
@@ -2180,7 +2472,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -2224,11 +2516,11 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 // 					'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 						datetimeconstants.go
 //
-func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalcTz(startDateTime,
+func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
 										endDateTime DateTzDto, tDurCalcType TDurCalcType, timeZoneLocation string,
 													dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	ePrefix := "TimeDurationDto.NewStartEndTimesDateDtoCalcTz() "
+	ePrefix := "TimeDurationDto.NewStartEndTimesDateTzDtoCalcTz() "
 
 	if startDateTime.DateTime.IsZero() && endDateTime.DateTime.IsZero() {
 		return TimeDurationDto{},
@@ -2362,7 +2654,7 @@ func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -2486,7 +2778,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -2770,7 +3062,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -2884,7 +3176,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -3244,7 +3536,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -3479,7 +3771,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 //														'oranges are compared to oranges and apples are compared
 //														to apples' with respect to start time and end time comparisons.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
 //
@@ -3731,7 +4023,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //														'oranges are compared to oranges and apples are compared
 //														to apples' with respect to start time and end time comparisons.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
 //
@@ -3856,7 +4148,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -3945,7 +4237,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -4078,7 +4370,7 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -4232,7 +4524,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 //														to apples' with respect to start time and end time duration
 // 														calculations.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 //
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
@@ -4352,7 +4644,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(startDateTime Dat
 //														'oranges are compared to oranges and apples are compared
 //														to apples' with respect to start time and end time comparisons.
 //
-// 														Time zone location must be designated as one of two values.
+// 														Time zone location must be designated as one of three values.
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
 //
