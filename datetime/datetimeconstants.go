@@ -2,7 +2,32 @@ package datetime
 
 import "time"
 
-// Date Time Constants
+/*
+
+ Date Time Constants
+ ===================
+
+ This source file is located in source code repository:
+ 		'https://github.com/MikeAustin71/datetimeopsgo.git'
+
+ This source code file is located at:
+		'MikeAustin71\datetimeopsgo\datetime\datetimeconstants.go'
+
+
+Overview and General Usage
+==========================
+This source file contains a series of constants useful in managing
+date time.
+
+Types of constants defined here include:
+	1. Date Time string formats
+  2. Iana Time Zone designations
+  3. Common Time conversion constants
+
+ */
+
+
+// Date Time Format Constants
 const (
 	// FmtDateTimeSecondStr - Date Time format used
 	// for file names and directory names
@@ -142,7 +167,7 @@ const (
 	TzIanaAmericaMazatlan = "America/Mazatlan" // Baja California
 	TzIanaAmericaMatamoros = "America/Matamoros"
 	TzIanaAmericaMexicoCity = "America/Mexico_City"
-	TzIanaAmericaMotevideo = "America/Montevideo" //Uruguay
+	TzIanaAmericaMotevideo = "America/Montevideo" // Uruguay
 	TzIanaAmericaNassau = "America/Nassau" // Bahamas
 	TzIanaAmericaPanama = "America/Panama"
 	TzIanaAmericaPortOfSpain ="America/Port_of_Spain" // Grenada

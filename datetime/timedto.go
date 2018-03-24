@@ -1,24 +1,39 @@
 package datetime
 
 import (
-	"time"
 	"fmt"
+	"time"
 	"errors"
 	"strings"
 )
 
+/*
+	TimeDto
+  =======
 
+ This source file is located in source code repository:
+ 		https://github.com/MikeAustin71/datetimeopsgo.git'
 
-// TimeDto - a collection of time values.
+ This source code file is located at:
+		MikeAustin71\datetimeopsgo\datetime\timedto.go
+
+ */
+
+// TimeDto - 	is a collection of time element values. Time
+//						element values are represented by Years, Months,
+//						Weeks, WeekDays, DateDays, Hours, Minutes, Seconds,
+//						Milliseconds, Microseconds and Nanoseconds.
 //
 // TimeDto data fields are designed to store one of two
-// time components:
+// types of time components:
+//
 //		(1)	A specific point in time (date time).
 //									or
 //		(2) Incremental time which is useful in adding or subtracting
 //					time values. Note that this structure does not track
 //					time location or time zone. For a fully supported date time
 //					structure, review the DateTzDto located in source file 'datetzdto.go'
+//					Note: TimeDto is part of the DateTzDto structure.
 //
 type TimeDto struct {
 	Years          				int		//	Number of Years

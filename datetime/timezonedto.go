@@ -9,21 +9,59 @@ import (
 )
 
 /*
-	Overview - Location
-	===================
+  TimeZoneDto
+  ===========
 
-  timezonedto.go is part of the date time operations library. The source code repository
+  TimeZoneDto is part of the date time operations library. The source code repository
  	for this file is located at:
 
 					https://github.com/MikeAustin71/datetimeopsgo.git
+
+
+  This source code file is located at:
+
+		      MikeAustin71\datetimeopsgo\datetime\timezonedto.go
+
+
+	Overview and General Usage
+	==========================
+
+	TimeZoneDto is used to convert, store and transport time zone information.
+  The user will use this Type to convert time.Time, date time values, between
+  differing time zones.
+
+  In addition to generating a date time converted to a time zone specified
+	by the user, this Type automatically generates equivalent date time values
+	for Time Zone Locations 'Local' and 'UTC'.
+
+  If you are unfamiliar with the concept of a Time Zone Location, reference
+  'https://golang.org/pkg/time/'. The concept of Time Zone Location is used
+  extensively by Type TimeZoneDto. Time Zone location must be designated as
+	one of two values.
+
+						(1) the string 'Local' - signals the designation of the local time zone
+								location for the host computer.
+
+						(2) IANA Time Zone Location -
+									See https://golang.org/pkg/time/#LoadLocation
+									and https://www.iana.org/time-zones to ensure that
+									the IANA Time Zone Database is properly configured
+									on your system. Note: IANA Time Zone Data base is
+									equivalent to 'tz database'.
+										Examples:
+											"America/New_York"
+											"America/Chicago"
+											"America/Denver"
+											"America/Los_Angeles"
+											"Pacific/Honolulu"
 
 
 
 	Dependencies
 	============
 
-		datetzdto.go
-		timezonedef.go
+		DateTzDto 	- datetzdto.go
+		TimeZoneDef - timezonedef.go
 
 
  */

@@ -5,10 +5,25 @@ import (
 )
 
 /*
-datetimeutility.go is part of the date time operations library. The source code repository
+
+DateTimeUtility
+===============
+
+DateTimeUtility is part of the date time operations library. The source code repository
  	for this file is located at:
 
 					https://github.com/MikeAustin71/datetimeopsgo.git
+
+
+This source code file is located at:
+		MikeAustin71\datetimeopsgo\datetime\datetimeutility.go
+
+
+Overview and General Usage
+==========================
+
+The DateTimeUtility structure provides generalized methods for
+managing the formatting and display of time.Time date time values.
 
  */
 

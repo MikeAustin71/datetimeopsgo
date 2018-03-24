@@ -14,9 +14,42 @@ import (
 )
 
 /*
-	formatdatetimeutility.go is part of the date time operations library. The source code repository
+  FormatDateTimeUtility
+  =====================
+
+	'FormatDateTimeUtility' is part of the date time operations library. The source code repository
  	for this file is located at:
 					https://github.com/MikeAustin71/datetimeopsgo.git
+
+	The location of this source file is:
+					MikeAustin71\datetimeopsgo\datetime\formatdatetimeutility.go
+
+	Overview and General Usage
+  ==========================
+
+  Type 'FormatDateUtility' is designed for one purpose, to analyze date strings passed in
+  by the user and convert these strings to valid numeric date time values. Given the number
+	of date time formats used by different countries and cultures across the globe, this can
+	be a complex task.
+
+	Use of the date time format conversion feature requires three function calls:
+
+	1. Create the type instance
+					dtf := FormatDateTimeUtility{}
+
+  2. Create All Formats In Memory-  Currently this method generates
+ 			approximately 1.5-million permutations of Date Time Formats
+			and stores them in memory from which they will be used to analyze
+			and evaluate user entered date strings. This process currently
+			takes about 1.5-seconds on my machine.
+
+					dtf.CreateAllFormatsInMemory()
+
+  3. Parse the user generated input string into a valid numeric date time.
+
+			dateTime, err := dtf.ParseDateTimeString(dtString, "")
+
+
 */
 
 // WriteDateTimeFormatsToFileDto
