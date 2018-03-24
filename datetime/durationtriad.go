@@ -811,6 +811,67 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 	return du2, nil
 }
 
+
+// NewStartEndDateTzDto - Returns a New DurationTriad based on two input
+// parameters, 'startDateTime' and 'endDateTime'. These two input parameters
+// are submitted as type 'DateTzDto'.
+//
+// Time Zone Location is extracted from input parameter, 'startDateTime'.
+//
+// Date Time Format string is likewise extracted from input parameter,
+// 'startDateTime'.
+//
+// This method automatically applies the time duration calculation type, 'TDurCalcTypeSTDYEARMTH'.
+// The standard time duration calculation type allocates time duration by years, months, weeks,
+// days, hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
+//
+// For details on Type 'TDurCalcType', see source file:
+//			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// Input Parameters:
+// =================
+//
+// startDateTime	DateTzDto	- Starting date time
+//
+// endDateTime		DateTzDto - Ending date time
+//
+//
+// 	Example Usage:
+//	==============
+//
+// du, err := DurationTriad{}.NewStartEndDateTzDto(
+// 															startTimeDateTz,
+// 															endTimeDateTz)
+//
+//
+func (durT DurationTriad) NewStartEndDateTzDto(
+														startDateTime,
+														endDateTime DateTzDto) (DurationTriad, error)  {
+
+	ePrefix := "DurationTriad.NewStartEndTimesCalcTz() "
+
+	du2 := DurationTriad{}
+
+	timeZoneLocation := startDateTime.TimeZone.LocationName
+	dateTimeFmtStr := startDateTime.DateTimeFmt
+
+	err := du2.SetStartEndDateTzCalcTz(
+									startDateTime,
+									endDateTime,
+									TDurCalcTypeSTDYEARMTH,
+									timeZoneLocation,
+									dateTimeFmtStr)
+
+	if err != nil {
+		return DurationTriad{},
+		fmt.Errorf(ePrefix +
+			"Error returned from du2.SetStartEndDateTzCalcTz(...)." +
+			"Error='%v'", err)
+	}
+
+	return du2, nil
+}
+
 // NewStartEndTimesCalcTz - Returns a New DurationTriad based on two input
 // parameters, 'startDateTime' and 'endDateTime'.
 //
@@ -2004,6 +2065,114 @@ func (durT *DurationTriad) SetStartTimeDurationTz(startDateTime time.Time,
 	return nil
 }
 
+// SetStartEndDateTzCalcTz - Calculates duration values and save the results in the current DurationTriad
+// data fields. Calculations are based on a starting date time and an ending date time passed
+// to the method as Type DateTzDto.
+//
+// Input parameter, 'timeZoneLocation', is applied to both the starting and ending
+// date times before computing date time duration. This ensures accuracy in
+// time duration calculations.
+//
+// The allocation of time duration to years, months, weeks, days, hours etc.
+// is controlled by the input parameter calculation type, 'tDurCalcType'.
+// For most purposes, the calculation type 'TDurCalcTypeSTDYEARMTH' will
+// suffice. For details see Type 'TDurCalcType' which is located in
+// source file:
+// 			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// Input Parameters:
+// =================
+//
+// startDateTime	DateTzDto	- Starting date time
+//
+// endDateTime		DateTzDto - Ending date time
+//
+// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
+//														time duration:
+//
+//					TDurCalcTypeSTDYEARMTH 		- Default - standard year, month week,
+// 																			day time calculation.
+//
+//					TDurCalcTypeCUMMONTHS 		- Computes cumulative months - no Years.
+//
+//					TDurCalcTypeCUMWEEKS  		- Computes cumulative weeks. No Years or months
+//
+//					TDurCalcTypeCUMDAYS				- Computes cumulative days. No Years, months or weeks.
+//
+//					TDurCalcTypeCUMHOURS			- Computes cumulative hours. No Years, months, weeks or days.
+//
+//					TDurCalcTypeCUMMINUTES 		- Computes cumulative minutes. No Years, months, weeks, days
+//												   						or hours.
+//
+//					TDurCalcTypeCUMSECONDS 		- Computes cumulative seconds. No Years, months, weeks, days,
+//												    					hours or minutes.
+//
+//					TDurCalcTypeGregorianYrs 	- Computes Years based on average length of a Gregorian Year
+//																		 	Used for very large duration values.
+//
+// 										Type 'TDurCalcType' is located in source file:
+//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// timeZoneLocation	string	- Designates the standard Time Zone location by which
+//														time duration will be compared. This ensures that
+//														'oranges are compared to oranges and apples are compared
+//														to apples' with respect to start time and end time comparisons.
+//
+// 														Time zone location must be designated as one of three values.
+// 														(1) the string 'Local' - signals the designation of the local time zone
+//																location for the host computer.
+//
+//														(2) IANA Time Zone Location -
+// 																See https://golang.org/pkg/time/#LoadLocation
+// 																and https://www.iana.org/time-zones to ensure that
+// 																the IANA Time Zone Database is properly configured
+// 																on your system. Note: IANA Time Zone Data base is
+// 																equivalent to 'tz database'.
+//																Examples:
+//																	"America/New_York"
+//																	"America/Chicago"
+//																	"America/Denver"
+//																	"America/Los_Angeles"
+//																	"Pacific/Honolulu"
+//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//
+//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
+//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (durT *DurationTriad) SetStartEndDateTzCalcTz(
+																startDateTime,
+																endDateTime DateTzDto,
+																tDurCalcType TDurCalcType,
+																timeZoneLocation,
+																dateTimeFmtStr string) error {
+
+
+	ePrefix := "DurationTriad.SetStartEndDateTzCalcTz() "
+
+
+	err := durT.SetStartEndTimesCalcTz(startDateTime.DateTime,
+																			endDateTime.DateTime,
+																			tDurCalcType,
+																			timeZoneLocation,
+																			dateTimeFmtStr)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by SetStartEndTimesCalcTz(...). Error='%v'", err.Error())
+	}
+
+	return nil
+
+}
 
 // SetStartEndTimes - Calculates duration values and save the results in the current DurationTriad
 // data fields. Calculations are based on a starting date time and an ending date time passed
