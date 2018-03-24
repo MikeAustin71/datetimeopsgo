@@ -10,12 +10,13 @@ https://github.com/MikeAustin71/datetimeopsgo.git
 
 The Date Time Utilities currently consist of separate libraries maintained
 in the sub-directory, 'datetime'. This directory also contains tests used to 
-validate these libraries. 
+validate these libraries. For additional documentation, see the source code
+files identified below.
 
 ##### Date Time Operations Component Libraries
 
- 1. DateTimeUtilitiy - The DateTimeUtility structure provides generalized methods for 
-     managing the formatting and display of time.Time date time values.
+ 1. DtMgr - The DtMgr structure provides generalized methods for managing
+     the formatting and display of time.Time, date time values.
      Location: MikeAustin71\datetimeopsgo\datetime\datetimeutility.go 
 
  2. Date Time Constants - This file contains various time constants used

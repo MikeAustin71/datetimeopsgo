@@ -6,31 +6,31 @@ import (
 
 /*
 
-DateTimeUtility
+DtMgr
 ===============
 
-DateTimeUtility is part of the date time operations library. The source code repository
+DtMgr is part of the date time operations library. The source code repository
  	for this file is located at:
 
 					https://github.com/MikeAustin71/datetimeopsgo.git
 
 
 This source code file is located at:
-		MikeAustin71\datetimeopsgo\datetime\datetimeutility.go
+		MikeAustin71\datetimeopsgo\datetime\dtmgr.go
 
 
 Overview and General Usage
 ==========================
 
-The DateTimeUtility structure provides generalized methods for
+The DtMgr structure provides generalized methods for
 managing the formatting and display of time.Time date time values.
 
  */
 
 
-// DateTimeUtility - struct used to export
+// DtMgr - struct used to export
 // Date Time Management methods.
-type DateTimeUtility struct {
+type DtMgr struct {
 	TimeIn     time.Time
 	TimeOut    time.Time
 	TimeStart  time.Time
@@ -44,7 +44,7 @@ type DateTimeUtility struct {
 // GetDateTimeStrNowLocal - Gets current
 // local time and formats it as a date time
 // string
-func (dt DateTimeUtility) GetDateTimeStrNowLocal() string {
+func (dt DtMgr) GetDateTimeStrNowLocal() string {
 
 	return dt.GetDateTimeStr(time.Now().Local())
 
@@ -52,7 +52,7 @@ func (dt DateTimeUtility) GetDateTimeStrNowLocal() string {
 
 // GetDateTimeStr - Returns a date time string
 // in the format 20170427211307
-func (dt DateTimeUtility) GetDateTimeStr(t time.Time) string {
+func (dt DtMgr) GetDateTimeStr(t time.Time) string {
 
 	// Time Format down to the second
 	return t.Format(FmtDateTimeSecondStr)
@@ -62,7 +62,7 @@ func (dt DateTimeUtility) GetDateTimeStr(t time.Time) string {
 // GetDateTimeSecText - Returns formatted
 // date time with seconds for display,
 // 2006-01-02 15:04:05.
-func (dt DateTimeUtility) GetDateTimeSecText(t time.Time) string {
+func (dt DtMgr) GetDateTimeSecText(t time.Time) string {
 	// Time Display Format with seconds
 	return t.Format(FmtDateTimeSecText)
 }
@@ -70,7 +70,7 @@ func (dt DateTimeUtility) GetDateTimeSecText(t time.Time) string {
 // GetDateTimeNanoSecText - Returns formated
 // date time string with nanoseconds
 // 2006-01-02 15:04:05.000000000.
-func (dt DateTimeUtility) GetDateTimeNanoSecText(t time.Time) string {
+func (dt DtMgr) GetDateTimeNanoSecText(t time.Time) string {
 	// Time Format down to the nanosecond
 	return t.Format(FmtDateTimeNanoSecondStr)
 }
@@ -79,7 +79,7 @@ func (dt DateTimeUtility) GetDateTimeNanoSecText(t time.Time) string {
 // the FmtDateTimeTzNano format which incorporates date time to nano seconds
 // and the associated time zone.
 // EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
-func (dt DateTimeUtility) GetDateTimeTzNanoSecText(t time.Time) string {
+func (dt DtMgr) GetDateTimeTzNanoSecText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNano)
 }
 
@@ -88,7 +88,7 @@ func (dt DateTimeUtility) GetDateTimeTzNanoSecText(t time.Time) string {
 // and the associated time zone. In this format, the date is expressed as
 // Year-Month-Day (Example: 2017-12-06)
 // EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
-func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDText(t time.Time) string {
+func (dt DtMgr) GetDateTimeTzNanoSecYMDText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNanoYMD)
 }
 
@@ -98,7 +98,7 @@ func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDText(t time.Time) string {
 // expressed as Year-Month-Day (Example: 2017-12-06). The string is
 // prefixed with the day of the week:
 // EXAMPLE: Monday 2006-01-02 15:04:05.000000000 -0700 MST
-func (dt DateTimeUtility) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
+func (dt DtMgr) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNanoDowYMD)
 }
 
@@ -108,7 +108,7 @@ func (dt DateTimeUtility) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
 // expressed as Year-Month-Day (Example: 2017-12-06). The string includes
 // the abbreviated (limited to 3-characters) day of the week:
 // EXAMPLE: "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
-func (dt DateTimeUtility) GetDateTimeYMDAbbrvDowNano(t time.Time) string {
+func (dt DtMgr) GetDateTimeYMDAbbrvDowNano(t time.Time) string {
 	return t.Format(FmtDateTimeYMDAbbrvDowNano)
 }
 
@@ -117,14 +117,14 @@ func (dt DateTimeUtility) GetDateTimeYMDAbbrvDowNano(t time.Time) string {
 // and the associated time zone. In this format, the date is expressed as
 // Year-Month-Day (Example: 2017-12-06) followed by the day of the week.
 // EXAMPLE: 2006-01-02 Monday 15:04:05.000000000 -0700 MST
-func (dt DateTimeUtility) GetDateTimeTzNanoSecYMDDowText(t time.Time) string {
+func (dt DtMgr) GetDateTimeTzNanoSecYMDDowText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNanoYMDDow)
 }
 
 // GetDateTimeEverything - Receives a time value and formats as
 // a date time string in the format:
 // EXAMPLE: Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
-func (dt DateTimeUtility) GetDateTimeEverything(t time.Time) string {
+func (dt DtMgr) GetDateTimeEverything(t time.Time) string {
 	return t.Format(FmtDateTimeEverything)
 }
 
@@ -132,7 +132,7 @@ func (dt DateTimeUtility) GetDateTimeEverything(t time.Time) string {
 // formatted according to passed in format
 // string. Example format string:
 // 'Monday January 2, 2006 15:04:05.000000000 -0700 MST'
-func (dt DateTimeUtility) GetDateTimeCustomFmt(t time.Time, fmt string) string {
+func (dt DtMgr) GetDateTimeCustomFmt(t time.Time, fmt string) string {
 	return t.Format(fmt)
 }
 
@@ -142,7 +142,7 @@ func (dt DateTimeUtility) GetDateTimeCustomFmt(t time.Time, fmt string) string {
 // 'Local' timezone on the host machine. The time stamp is formatted
 // using the format, 'FmtDateTimeEverything'. Example output:
 // "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
-func (dt DateTimeUtility) GetTimeStampEverything() string {
+func (dt DtMgr) GetTimeStampEverything() string {
 	return time.Now().Local().Format(FmtDateTimeEverything)
 }
 
@@ -151,7 +151,7 @@ func (dt DateTimeUtility) GetTimeStampEverything() string {
 // 'Local' timezone on the host machine. The time stamp is formatted
 // using the format 'FmtDateTimeYMDAbbrvDowNano'. Example output:
 // "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
-func (dt DateTimeUtility) GetTimeStampYMDAbbrvDowNano() string {
+func (dt DtMgr) GetTimeStampYMDAbbrvDowNano() string {
 
 	return time.Now().Local().Format(FmtDateTimeYMDAbbrvDowNano)
 

@@ -13,7 +13,7 @@ func TestGetDateTimeStr(t *testing.T) {
 
 	testTime, _ := time.Parse(fmtstr, tstr)
 
-	result := DateTimeUtility{}.GetDateTimeStr(testTime)
+	result := DtMgr{}.GetDateTimeStr(testTime)
 
 	if result != expected {
 		t.Error("Expected '20170429195430' got", result)
@@ -27,7 +27,7 @@ func TestGetDateTimeSecText(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	expected := "2017-04-29 19:54:30"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	result := DateTimeUtility{}.GetDateTimeSecText(testTime)
+	result := DtMgr{}.GetDateTimeSecText(testTime)
 
 	if result != expected {
 		t.Error("Expected '", expected, "' got", result)
@@ -40,7 +40,7 @@ func TestGetDateTimeNanoSecText(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "2017-04-29 19:54:30.123456489"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	result := dt.GetDateTimeNanoSecText(testTime)
 
 	if result != expected {
@@ -54,7 +54,7 @@ func TestGetDateTimeTzNanoSecText(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "04/29/2017 19:54:30.123456489 -0500 CDT"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	result := dt.GetDateTimeTzNanoSecText(testTime)
 
 	if result != expected {
@@ -68,7 +68,7 @@ func TestGetDateTimeTzNanoSecYMDText(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "2017-04-29 19:54:30.123456489 -0500 CDT"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	result := dt.GetDateTimeTzNanoSecYMDText(testTime)
 
 	if result != expected {
@@ -82,7 +82,7 @@ func TestGetDateTimeTzNanoSecDowYMDText(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "Saturday 2017-04-29 19:54:30.123456489 -0500 CDT"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	result := dt.GetDateTimeTzNanoSecDowYMDText(testTime)
 
 	if result != expected {
@@ -96,7 +96,7 @@ func TestGetDateTimeYMDAbbrvDowNano(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "2017-04-29 Sat 19:54:30.123456489 -0500 CDT"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	result := dt.GetDateTimeYMDAbbrvDowNano(testTime)
 
 	if result != expected {
@@ -110,7 +110,7 @@ func TestGetDateTimeTzNanoSecYMDDowText(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "2017-04-29 Saturday 19:54:30.123456489 -0500 CDT"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	result := dt.GetDateTimeTzNanoSecYMDDowText(testTime)
 
 	if result != expected {
@@ -124,7 +124,7 @@ func TestGetDateTimeEverything(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	str := dt.GetDateTimeEverything(testTime)
 
 	if str != expected {
@@ -134,7 +134,7 @@ func TestGetDateTimeEverything(t *testing.T) {
 }
 
 func TestCustomDateTimeFormat(t *testing.T) {
-	dt := DateTimeUtility{}
+	dt := DtMgr{}
 	tstr := "04/29/2017 19:54:30.123456489 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	expected := "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"

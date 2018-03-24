@@ -9,7 +9,7 @@ import (
 
 // ExamplesDateTimeTimeStampEverything
 func ExamplesDateTimeTimeStampEverything(){
-	du := dt.DateTimeUtility{}
+	du := dt.DtMgr{}
 
 	fmt.Println("------------------------")
 	fmt.Println("  Testing Time Stamps")
@@ -71,7 +71,7 @@ func ExamplesDateTimeGetEverythingFormat() {
 	tstr := "04/29/2017 19:54:30.123456489 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 	testTime, _ := time.Parse(fmtstr, tstr)
-	dateT := dt.DateTimeUtility{}
+	dateT := dt.DtMgr{}
 	str := dateT.GetDateTimeEverything(testTime)
 	fmt.Println("Everything Format: ", str)
 	// Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
@@ -88,7 +88,7 @@ func ExamplesDateTimeGetEverythingFormat() {
 func ExamplesDateTimeGetCurrentTimeAsString() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 
-	dateT	:= dt.DateTimeUtility{}
+	dateT	:= dt.DtMgr{}
 	t, err := time.Parse(dt.FmtDateTimeTzNano, tstr)
 
 	if err != nil {
