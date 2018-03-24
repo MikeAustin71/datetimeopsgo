@@ -7,29 +7,41 @@ import (
 	"strings"
 )
 
-// DateTzDto - Type
-// ================
-// Used to store and transfer date times.
-// The descriptors contained is this structure are intended
-// to define and identify a specific point in time.
+// DateTzDto
+// =========
+// This source file is located in source code repository:
+// 		'https://github.com/MikeAustin71/datetimeopsgo.git'
 //
-// This Type is NOT used to define duration; that is, the
-// difference or time span between two point in time. For
-// these types of operations see:
-// DurationTimeUtility/common/durationtriad.go
+// This source code file is located at:
+//		MikeAustin71\datetimeopsgo\datetime\datetzdto.go
 //
-// DateTzDto defines a specific point in time using
-// a variety of descriptors including year, month, day
-// hour, minute, second, millisecond, microsecond and
-// and nanosecond. In addition this Type specifies a
-// time.Time value as well as time zone location and
-// time zone.
+// Overview and Usage
+// ==================
+// The 'DateTzDto' type is used to store and transfer date time information.
+// The descriptors contained is this structure are intended to define and
+// identify a specific point in time. In addition to date and time identifiers,
+// this type also includes information on associated Time Zones and Time Elements.
+// Time elements includes years, months, weeks, days, hours, minutes, seconds,
+// milliseconds, microseconds and nanoseconds.
 //
-// If you are unfamiliar with the concept of a time
-// zone location, consider the field TimeLoc and
-// TimeLocName below:
+// This Type is NOT used to define time duration; that is, the
+// difference or time span between two points in time. For time
+// duration calculations refer to types, 'TimeDurationDto' and
+// 'DurationTriad' located in source files:
+//					'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
+// 					'MikeAustin71\datetimeopsgo\datetime\durationtriad.go'
 //
-// Time zone location must be designated as one of two values.
+//
+// As previously stated, 'DateTzDto' defines a specific point in time using
+// a variety of descriptors including year, month, day hour, minute, second,
+// millisecond, microsecond and nanosecond. In addition this Type specifies a
+// time.Time value as well as time zone location and time zone.
+//
+// If you are unfamiliar with the concept of a time zone location, reference
+// 'https://golang.org/pkg/time/'. The concept of Time Zone Location is important
+// and several of the 'DateTzDto' methods use Time Zone Location. Time Zone location
+// must be designated as one of two values.
+//
 // 														(1) the string 'Local' - signals the designation of the local time zone
 //																location for the host computer.
 //

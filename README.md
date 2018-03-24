@@ -8,13 +8,24 @@ https://github.com/MikeAustin71/datetimeopsgo.git
 
 ### Examples of Date Time operations in 'golang', the go programming language.
 
-The Date Time Utilities currently consist of four separate libraries:
+The Date Time Utilities currently consist of separate libraries maintained
+in the sub-directory, 'datetime'. This directory also contains tests used to 
+validate these libraries. 
 
-1. ../DateTimeUtility - A generalized utility for managing date time strings
 
-2. ../TimeZoneDto - A utility for managing date times in various timezones
+1. DateTzDto - A type used to identify a specific point in time by date time,
+    time zone and time element (year, month, day, hours etc.).
+    MikeAustin71\datetimeopsgo\datetime\datetzdto.go 
 
-3. ../DurationTimeUtility - A utility for computing durations and elapsed times.
+2. TimeDurationDto - A type used to manage time duration information for 
+    a specific set of starting and ending date times. 
+    Location: MikeAustin71\datetimeopsgo\datetime\timedurationdto.go 
+
+3. DurationTriad - A group of TimeDurationDto types used to automatically 
+    calculate time durations for a user designated BaseTime, LocalTime
+    and UTCTime.
+    Location: MikeAustin71\datetimeopsgo\datetime\durationtriad.go 
+
 
 4. ../DateTimeFormatsUtility - This utility is designed to receive date time strings
  and convert them into time values. There are a number of dependencies associated

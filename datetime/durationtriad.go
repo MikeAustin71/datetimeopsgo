@@ -8,8 +8,8 @@ import (
 )
 
 /*
-	durationtriad.go
-	================
+	DurationTriad
+	=============
 
 	This source file is located in source code repository:
 		'https://github.com/MikeAustin71/datetimeopsgo.git'
@@ -35,7 +35,7 @@ import (
 	==================
 
 	The 'DurationTriad' is used to calculate date time duration. It consists
-	principally of three TimeDurationDto types which perform and store
+	principally of three 'TimeDurationDto' types which perform and store
 	time duration calculations for three Time Zone Locations.
 
 	Calculations for time duration require the identification of a starting date
