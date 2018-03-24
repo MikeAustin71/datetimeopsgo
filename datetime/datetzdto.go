@@ -197,250 +197,6 @@ func (dtz *DateTzDto) AddDateToThis(years, months, days int) error {
 
 }
 
-// AddDuration - Adds Duration to the DateTime Value of the current
-// DateTzDto and returns a new DateTzDto instance with the updated
-// Date Time value.
-//
-// Input Parameter
-// ===============
-//
-// duration time.Duration		- A Time duration value which is added to the DateTime
-//														value of the current DateTzDto instance to produce and
-//														return a new, updated DateTzDto instance.
-//
-// Note: 	The time.Duration input parameter may be either negative
-// 					or positive. Negative values will subtract time from
-// 					the current DateTzDto instance.
-//
-// dateTimeFmtStr string		- A date time format string which will be used
-//															to format and display 'dateTime'. Example:
-//															"2006-01-02 15:04:05.000000000 -0700 MST"
-//
-//														If 'dateTimeFmtStr' is submitted as an
-//															'empty string', a default date time format
-//															string will be applied. The default date time
-//															format string is:
-//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-// Returns
-// =======
-//
-//  There are two return values: 	(1) a DateTzDto Type
-//																(2) an Error type
-//
-//  DateTzDto - If successful the method returns a valid, fully populated
-//							DateTzDto type updated to reflect the added 'duration'
-// 							input parameter. A DateTzDto structure is defined as follows:
-//
-//	type DateTzDto struct {
-//		Description			string					// Unused, available for classification, labeling or description
-//		Year       			int							// Year Number
-//		Month      			int							// Month Number
-//		Day        			int							// Day Number
-//		Hour       			int							// Hour Number
-//		Minute     			int							// Minute Number
-//		Second     			int							// Second Number
-//		Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//		Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
-//		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//		DateTime 				time.Time				// DateTime value for this DateTzDto Type
-//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-// 																		//		associated with this date time.
-//	}
-//
-// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
-//						encountered this error Type will encapsulate an error message.
-//
-func (dtz *DateTzDto) AddDuration(duration time.Duration, dateTimeFmtStr string) (DateTzDto, error) {
-
-	ePrefix := "DateTzDto.AddDuration() "
-
-	newDateTime := dtz.DateTime.Add(duration)
-
-	dtz2, err := DateTzDto{}.New(newDateTime, dateTimeFmtStr)
-
-	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dateTimeFmtStr). newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	return dtz2, nil
-
-}
-
-// AddDurationToThis - Receives a time.Duration input parameter and adds this
-// duration value to the Date Time value of the current DateTzDto. The current
-// DateTzDto Date Time values are updated to reflect the added 'duration'.
-//
-// Input Parameter
-// ===============
-//
-// duration time.Duration		- A Time duration value which is added to the DateTime
-//														value of the current DateTzDto instance to produce and
-//														return a new, updated DateTzDto instance.
-//
-// Note: 	The time.Duration input parameter may be either negative
-// 					or positive. Negative values will subtract time from
-// 					the current DateTzDto instance.
-//
-// Returns
-// =======
-//						There is only one return parameter, an 'error' type.
-//
-//
-// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
-//						encountered this error Type will encapsulate an error message.
-//
-func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
-
-	ePrefix := "DateTzDto.AddDuration() "
-
-	newDateTime := dtz.DateTime.Add(duration)
-
-	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt). newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	dtz.CopyIn(dtz2)
-
-	return nil
-}
-
-// AddTime - Adds time components to the date time value of the current
-// DateTzDto instance. The resulting updated date time value is returned
-// to the calling function in the form of a new DateTzDto instance.
-//
-// Input Parameters
-// ================
-//
-// hours				int	- Number of hours to add.
-// minutes			int	- Number of minutes to add.
-// seconds			int - Number of seconds to add.
-// milliseconds	int	- Number of milliseconds to add.
-// microseconds	int	- Number of microseconds to add.
-// nanoseconds	int - Number of nanoseconds to add.
-//
-// Note: 	  Time Component input parameters may be either negative
-// 					or positive. Negative values will subtract time from
-// 					the current DateTzDto instance.
-//
-// dateTimeFmtStr string		- A date time format string which will be used
-//															to format and display 'dateTime'. Example:
-//															"2006-01-02 15:04:05.000000000 -0700 MST"
-//
-//														If 'dateTimeFmtStr' is submitted as an
-//															'empty string', a default date time format
-//															string will be applied. The default date time
-//															format string is:
-//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-// Returns
-// =======
-// There are two returns	(1) A DateTzDto instance containing the
-//															updated time values.
-//
-//												(2) An 'error' type.
-//
-// (1)  DateTzDto - If successful the method returns a valid, fully populated
-//										DateTzDto type defined as follows:
-//
-//			type DateTzDto struct {
-//				Description			string					// Unused, available for classification, labeling or description
-//				Year       			int							// Year Number
-//				Month      			int							// Month Number
-//				Day        			int							// Day Number
-//				Hour       			int							// Hour Number
-//				Minute     			int							// Minute Number
-//				Second     			int							// Second Number
-//				Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//				Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//				Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//																				// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
-//				TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//				DateTime 				time.Time				// DateTime value for this DateTzDto Type
-//				DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//				TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-// 																		//		associated with this date time.
-//			}
-//
-// (2) error 			- 	If successful the returned error Type is set equal to 'nil'. If errors are
-//											encountered this error Type will encapsulate an error message.
-//
-func (dtz *DateTzDto) AddTime(hours, minutes, seconds, milliseconds, microseconds,
-nanoseconds int, dateTimeFormatStr string ) (DateTzDto, error) {
-
-	ePrefix := "DateTzDto.AddTime() "
-
-	totNanoSecs := int64(hours) * int64(time.Hour)
-	totNanoSecs += int64(minutes) * int64(time.Minute)
-	totNanoSecs += int64(seconds) * int64(time.Second)
-	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
-	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
-	totNanoSecs += int64(nanoseconds)
-
-	newDateTime := dtz.DateTime.Add(time.Duration(totNanoSecs))
-
-	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
-
-	if err != nil {
-		return DateTzDto{},
-			fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt) " +
-				"newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	dtz2.SetDateTimeFmt(dateTimeFormatStr)
-
-	return dtz2, nil
-}
-
-// AddTimeToThis - Adds time components (hours, minutes, seconds etc.)
-// to the current value of this DateTzDto instance.
-//
-// Input Parameters
-// ================
-//
-// hours				int	- Number of hours to add.
-// minutes			int	- Number of minutes to add.
-// seconds			int - Number of seconds to add.
-// milliseconds	int	- Number of milliseconds to add.
-// microseconds	int	- Number of microseconds to add.
-// nanoseconds	int - Number of nanoseconds to add.
-//
-// Note: 	  Time Component input parameters may be either negative
-// 					or positive. Negative values will subtract time from
-// 					the current DateTzDto instance.
-//
-// Returns
-// =======
-// There is only one return; an 'error' type. If successful, the values of the current DateTzDto
-// are updated with the newly calculated date time values.
-//
-//
-// (1) error 			- 	If successful the returned error Type is set equal to 'nil'.
-// 											If errors are encountered this error Type will encapsulate
-// 											an error message.
-//
-func (dtz *DateTzDto) AddTimeToThis(hours, minutes, seconds, milliseconds,
-												microseconds,	nanoseconds int ) error {
-
-	ePrefix := "DateTzDto.AddTimeToThis() "
-
-	dtz2, err := dtz.AddTime(hours, minutes, seconds, milliseconds,
-										microseconds,	nanoseconds, dtz.DateTimeFmt )
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error: '%v'", err.Error())
-	}
-
-	dtz.CopyIn(dtz2)
-
-	return nil
-}
-
 // AddDateTime - Adds date time components to the date time value of the
 // current DateTzDto instance. The updated date time value is returned to
 // the calling function as a new DateTzDto instance.
@@ -570,6 +326,481 @@ func (dtz *DateTzDto) AddDateTimeToThis(years, months, days, hours, minutes, sec
 
 	if err != nil {
 		return fmt.Errorf(ePrefix +	"Error='%v'",  err.Error())
+	}
+
+	dtz.CopyIn(dtz2)
+
+	return nil
+}
+
+// AddDuration - Adds Duration to the DateTime Value of the current
+// DateTzDto and returns a new DateTzDto instance with the updated
+// Date Time value.
+//
+// Input Parameter
+// ===============
+//
+// duration time.Duration		- A Time duration value which is added to the DateTime
+//														value of the current DateTzDto instance to produce and
+//														return a new, updated DateTzDto instance.
+//
+// Note: 	The time.Duration input parameter may be either negative
+// 					or positive. Negative values will subtract time from
+// 					the current DateTzDto instance.
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+//
+//  There are two return values: 	(1) a DateTzDto Type
+//																(2) an Error type
+//
+//  DateTzDto - If successful the method returns a valid, fully populated
+//							DateTzDto type updated to reflect the added 'duration'
+// 							input parameter. A DateTzDto structure is defined as follows:
+//
+//	type DateTzDto struct {
+//		Description			string					// Unused, available for classification, labeling or description
+//		Year       			int							// Year Number
+//		Month      			int							// Month Number
+//		Day        			int							// Day Number
+//		Hour       			int							// Hour Number
+//		Minute     			int							// Minute Number
+//		Second     			int							// Second Number
+//		Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//		Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//		Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//																		// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
+//		TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//		DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//		DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//		TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
+//	}
+//
+// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
+//						encountered this error Type will encapsulate an error message.
+//
+func (dtz *DateTzDto) AddDuration(duration time.Duration, dateTimeFmtStr string) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.AddDuration() "
+
+	newDateTime := dtz.DateTime.Add(duration)
+
+	dtz2, err := DateTzDto{}.New(newDateTime, dateTimeFmtStr)
+
+	if err != nil {
+		return DateTzDto{}, fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dateTimeFmtStr). newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	return dtz2, nil
+
+}
+
+// AddDurationToThis - Receives a time.Duration input parameter and adds this
+// duration value to the Date Time value of the current DateTzDto. The current
+// DateTzDto Date Time values are updated to reflect the added 'duration'.
+//
+// Input Parameter
+// ===============
+//
+// duration time.Duration		- A Time duration value which is added to the DateTime
+//														value of the current DateTzDto instance to produce and
+//														return a new, updated DateTzDto instance.
+//
+// Note: 	The time.Duration input parameter may be either negative
+// 					or positive. Negative values will subtract time from
+// 					the current DateTzDto instance.
+//
+// Returns
+// =======
+//						There is only one return parameter, an 'error' type.
+//
+//
+// error - 		If successful the returned error Type is set equal to 'nil'. If errors are
+//						encountered this error Type will encapsulate an error message.
+//
+func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
+
+	ePrefix := "DateTzDto.AddDuration() "
+
+	newDateTime := dtz.DateTime.Add(duration)
+
+	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt). newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	dtz.CopyIn(dtz2)
+
+	return nil
+}
+
+// AddMinusTimeDto - Creates and returns a new DateTzDto by subtracting a TimeDto
+// from the value of the current DateTzDto Instance.
+//
+// Input Parameters
+// ================
+//
+// minusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be subtracted from the date time value
+//													of the current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.AddMinusTimeDto() "
+	tDto := minusTimeDto.CopyOut()
+
+	tDto.NormalizeTimeElements()
+	tDto.ConvertToNegativeValues()
+
+	dt1 := dtz.DateTime.AddDate(tDto.Years,
+		tDto.Months,
+		0)
+
+	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
+	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
+	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
+	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
+	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
+	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
+	totNanosecs += int64(tDto.Nanoseconds)
+
+	dt2 := dt1.Add(time.Duration(totNanosecs))
+
+	dtz2, err := DateTzDto{}.NewTz(dt2, dtz.TimeZone.LocationName,  dtz.DateTimeFmt)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix +
+				"Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
+				" dt2='%v' dtz.DateTimeFmt='%v'  Error='%v'",
+				dt2.Format(FmtDateTimeYrMDayFmtStr), dtz.DateTimeFmt, err.Error())
+	}
+
+	return dtz2, nil
+}
+
+// AddMinusTimeDtoToThis - Modifies the current DateTzDto instance by subtracting a TimeDto
+// from the value of the current DateTzDto Instance.
+//
+// Input Parameters
+// ================
+//
+// minusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be subtracted from the date time value
+//													of the current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
+
+	ePrefix := "DateTzDto.AddMinusTimeDto() "
+
+	tDto := minusTimeDto.CopyOut()
+
+	tDto.NormalizeTimeElements()
+	tDto.ConvertToNegativeValues()
+
+	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
+		minusTimeDto.Months,
+		0)
+
+	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
+	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
+	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
+	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
+	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
+	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
+	totNanosecs += int64(tDto.Nanoseconds)
+
+	dt2 := dt1.Add(time.Duration(totNanosecs))
+
+
+	dtz2, err := DateTzDto{}.NewTz(dt2, dtz.TimeZone.LocationName, dtz.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
+			" Error='%v'", err.Error())
+	}
+
+	dtz.CopyIn(dtz2)
+
+	return nil
+}
+
+// AddPlusTimeDto - Creates and returns a new DateTzDto by adding a TimeDto
+// to the value of the current DateTzDto Instance.
+//
+// Input Parameters
+// ================
+//
+// plusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be added to the date time value of the
+//													current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.AddPlusTimeDto() "
+	tDto := plusTimeDto.CopyOut()
+	tDto.NormalizeTimeElements()
+	tDto.ConvertToAbsoluteValues()
+
+	dt1 := dtz.DateTime.AddDate(tDto.Years,
+		tDto.Months,
+		0)
+
+	incrementalDur := int64(tDto.DateDays) * DayNanoSeconds
+	incrementalDur += int64(tDto.Hours) * HourNanoSeconds
+	incrementalDur += int64(tDto.Minutes) * MinuteNanoSeconds
+	incrementalDur += int64(tDto.Seconds) * SecondNanoseconds
+	incrementalDur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
+	incrementalDur += int64(tDto.Microseconds) * MicroSecondNanoseconds
+	incrementalDur += int64(tDto.Nanoseconds)
+
+
+	dt2 := dt1.Add(time.Duration(incrementalDur))
+
+	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
+				" Error='%v'", err.Error())
+	}
+
+	return dtz2, nil
+}
+
+// AddPlusTimeDtoToThis - Modifies the current DateTzDto instance by adding a TimeDto
+// to the value of the current DateTzDto Instance.
+//
+// Input Parameters
+// ================
+//
+// plusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
+//													(years, months, weeks, days, hours, minutes etc.)
+//													which will be added to the date time value of the
+//													current DateTzDto instance.
+//
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
+
+	ePrefix := "DateTzDto.AddPlusTimeDto() "
+
+	dtz2, err := dtz.AddPlusTimeDto(plusTimeDto)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error= '%v'", err.Error())
+	}
+
+	dtz.CopyIn(dtz2)
+
+	return nil
+}
+
+// AddTime - Adds time components to the date time value of the current
+// DateTzDto instance. The resulting updated date time value is returned
+// to the calling function in the form of a new DateTzDto instance.
+//
+// Input Parameters
+// ================
+//
+// hours				int	- Number of hours to add.
+// minutes			int	- Number of minutes to add.
+// seconds			int - Number of seconds to add.
+// milliseconds	int	- Number of milliseconds to add.
+// microseconds	int	- Number of microseconds to add.
+// nanoseconds	int - Number of nanoseconds to add.
+//
+// Note: 	  Time Component input parameters may be either negative
+// 					or positive. Negative values will subtract time from
+// 					the current DateTzDto instance.
+//
+// dateTimeFmtStr string		- A date time format string which will be used
+//															to format and display 'dateTime'. Example:
+//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//														If 'dateTimeFmtStr' is submitted as an
+//															'empty string', a default date time format
+//															string will be applied. The default date time
+//															format string is:
+//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+// There are two returns	(1) A DateTzDto instance containing the
+//															updated time values.
+//
+//												(2) An 'error' type.
+//
+// (1)  DateTzDto - If successful the method returns a valid, fully populated
+//										DateTzDto type defined as follows:
+//
+//			type DateTzDto struct {
+//				Description			string					// Unused, available for classification, labeling or description
+//				Year       			int							// Year Number
+//				Month      			int							// Month Number
+//				Day        			int							// Day Number
+//				Hour       			int							// Hour Number
+//				Minute     			int							// Minute Number
+//				Second     			int							// Second Number
+//				Millisecond			int							// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//				Microsecond			int							// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//				Nanosecond 			int							// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//																				// Nanosecond = TotalNanoSecs - millisecond nonseconds - microsecond nanoseconds
+//				TotalNanoSecs		int64						// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//				DateTime 				time.Time				// DateTime value for this DateTzDto Type
+//				DateTimeFmt			string					// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//				TimeZone				TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
+// 																		//		associated with this date time.
+//			}
+//
+// (2) error 			- 	If successful the returned error Type is set equal to 'nil'. If errors are
+//											encountered this error Type will encapsulate an error message.
+//
+func (dtz *DateTzDto) AddTime(hours, minutes, seconds, milliseconds, microseconds,
+nanoseconds int, dateTimeFormatStr string ) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.AddTime() "
+
+	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	newDateTime := dtz.DateTime.Add(time.Duration(totNanoSecs))
+
+	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix + "Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt) " +
+				"newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	dtz2.SetDateTimeFmt(dateTimeFormatStr)
+
+	return dtz2, nil
+}
+
+// AddTimeToThis - Adds time components (hours, minutes, seconds etc.)
+// to the current value of this DateTzDto instance.
+//
+// Input Parameters
+// ================
+//
+// hours				int	- Number of hours to add.
+// minutes			int	- Number of minutes to add.
+// seconds			int - Number of seconds to add.
+// milliseconds	int	- Number of milliseconds to add.
+// microseconds	int	- Number of microseconds to add.
+// nanoseconds	int - Number of nanoseconds to add.
+//
+// Note: 	  Time Component input parameters may be either negative
+// 					or positive. Negative values will subtract time from
+// 					the current DateTzDto instance.
+//
+// Returns
+// =======
+// There is only one return; an 'error' type. If successful, the values of the current DateTzDto
+// are updated with the newly calculated date time values.
+//
+//
+// (1) error 			- 	If successful the returned error Type is set equal to 'nil'.
+// 											If errors are encountered this error Type will encapsulate
+// 											an error message.
+//
+func (dtz *DateTzDto) AddTimeToThis(hours, minutes, seconds, milliseconds,
+microseconds,	nanoseconds int ) error {
+
+	ePrefix := "DateTzDto.AddTimeToThis() "
+
+	dtz2, err := dtz.AddTime(hours, minutes, seconds, milliseconds,
+		microseconds,	nanoseconds, dtz.DateTimeFmt )
+
+	if err != nil {
+		return fmt.Errorf(ePrefix + "Error: '%v'", err.Error())
 	}
 
 	dtz.CopyIn(dtz2)
@@ -764,133 +995,6 @@ func (dtz *DateTzDto) IsValid() error {
 	}
 
 	return nil
-}
-
-// MinusTimeDto - Creates and returns a new DateTzDto by subtracting a TimeDto
-// from the value of the current DateTzDto Instance. 
-//
-// Input Parameters
-// ================
-//
-// minusTimeDto	TimeDto 	- A TimeDto instance consisting of time components 
-//													(years, months, weeks, days, hours, minutes etc.)
-//													which will be subtracted from the date time value
-//													of the current DateTzDto instance.
-//
-//
-//									type TimeDto struct {
-//										Years          int // Number of Years
-//										Months         int // Number of Months
-//										Weeks          int // Number of Weeks
-//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//										Hours          int // Number of Hours.
-//										Minutes        int // Number of Minutes
-//										Seconds        int // Number of Seconds
-//										Milliseconds   int // Number of Milliseconds
-//										Microseconds   int // Number of Microseconds
-//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//																			 // 	plus remaining Nanoseconds
-//									}
-//
-func (dtz *DateTzDto) MinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
-	
-	ePrefix := "DateTzDto.MinusTimeDto() "
-	tDto := minusTimeDto.CopyOut()
-
-	tDto.NormalizeTimeElements()
-	tDto.ConvertToNegativeValues()
-	
-	dt1 := dtz.DateTime.AddDate(tDto.Years,
-															tDto.Months, 
-																0)
-
-	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
-	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
-	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
-	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
-	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	totNanosecs += int64(tDto.Nanoseconds)
-
-	dt2 := dt1.Add(time.Duration(totNanosecs))
-	
-	dtz2, err := DateTzDto{}.NewTz(dt2, dtz.TimeZone.LocationName,  dtz.DateTimeFmt)
-	
-	if err != nil {
-		return DateTzDto{},
-		fmt.Errorf(ePrefix +
-			"Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
-			" dt2='%v' dtz.DateTimeFmt='%v'  Error='%v'",
-			dt2.Format(FmtDateTimeYrMDayFmtStr), dtz.DateTimeFmt, err.Error())
-	}
-	
-	return dtz2, nil	
-}
-
-// MinusTimeDtoToThis - Modifies the current DateTzDto instance by subtracting a TimeDto
-// from the value of the current DateTzDto Instance. 
-//
-// Input Parameters
-// ================
-//
-// minusTimeDto	TimeDto 	- A TimeDto instance consisting of time components 
-//													(years, months, weeks, days, hours, minutes etc.)
-//													which will be subtracted from the date time value
-//													of the current DateTzDto instance.
-//
-//
-//									type TimeDto struct {
-//										Years          int // Number of Years
-//										Months         int // Number of Months
-//										Weeks          int // Number of Weeks
-//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//										Hours          int // Number of Hours.
-//										Minutes        int // Number of Minutes
-//										Seconds        int // Number of Seconds
-//										Milliseconds   int // Number of Milliseconds
-//										Microseconds   int // Number of Microseconds
-//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//																			 // 	plus remaining Nanoseconds
-//									}
-//
-func (dtz *DateTzDto) MinusTimeDtoToThis(minusTimeDto TimeDto) error {
-	
-	ePrefix := "DateTzDto.MinusTimeDto() "
-
-	tDto := minusTimeDto.CopyOut()
-
-	tDto.NormalizeTimeElements()
-	tDto.ConvertToNegativeValues()
-
-	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
-																minusTimeDto.Months,
-																0)
-
-	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
-	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
-	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
-	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
-	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	totNanosecs += int64(tDto.Nanoseconds)
-
-	dt2 := dt1.Add(time.Duration(totNanosecs))
-
-
-	dtz2, err := DateTzDto{}.NewTz(dt2, dtz.TimeZone.LocationName, dtz.DateTimeFmt)
-	
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " + 
-			" Error='%v'", err.Error())
-	}
-	
-	dtz.CopyIn(dtz2)
-	
-	return nil	
 }
 
 // New - returns a new DateTzDto instance based on a time.Time ('dateTime')
@@ -1553,112 +1657,6 @@ func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeF
 
 	return dtz2, nil
 }
-
-
-// PlusTimeDto - Creates and returns a new DateTzDto by adding a TimeDto
-// to the value of the current DateTzDto Instance.
-//
-// Input Parameters
-// ================
-//
-// plusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
-//													(years, months, weeks, days, hours, minutes etc.)
-//													which will be added to the date time value of the
-//													current DateTzDto instance.
-//
-//
-//									type TimeDto struct {
-//										Years          int // Number of Years
-//										Months         int // Number of Months
-//										Weeks          int // Number of Weeks
-//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//										Hours          int // Number of Hours.
-//										Minutes        int // Number of Minutes
-//										Seconds        int // Number of Seconds
-//										Milliseconds   int // Number of Milliseconds
-//										Microseconds   int // Number of Microseconds
-//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//																			 // 	plus remaining Nanoseconds
-//									}
-//
-func (dtz *DateTzDto) PlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
-
-	ePrefix := "DateTzDto.PlusTimeDto() "
-	tDto := plusTimeDto.CopyOut()
-	tDto.NormalizeTimeElements()
-	tDto.ConvertToAbsoluteValues()
-
-	dt1 := dtz.DateTime.AddDate(tDto.Years,
-												tDto.Months,
-												0)
-
-	incrementalDur := int64(tDto.DateDays) * DayNanoSeconds
-	incrementalDur += int64(tDto.Hours) * HourNanoSeconds
-	incrementalDur += int64(tDto.Minutes) * MinuteNanoSeconds
-	incrementalDur += int64(tDto.Seconds) * SecondNanoseconds
-	incrementalDur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	incrementalDur += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	incrementalDur += int64(tDto.Nanoseconds)
-
-
-	dt2 := dt1.Add(time.Duration(incrementalDur))
-
-	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
-
-	if err != nil {
-		return DateTzDto{},
-			fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
-				" Error='%v'", err.Error())
-	}
-
-	return dtz2, nil
-}
-
-// PlusTimeDtoToThis - Modifies the current DateTzDto instance by adding a TimeDto
-// to the value of the current DateTzDto Instance.
-//
-// Input Parameters
-// ================
-//
-// plusTimeDto	TimeDto 	- A TimeDto instance consisting of time components
-//													(years, months, weeks, days, hours, minutes etc.)
-//													which will be added to the date time value of the
-//													current DateTzDto instance.
-//
-//
-//									type TimeDto struct {
-//										Years          int // Number of Years
-//										Months         int // Number of Months
-//										Weeks          int // Number of Weeks
-//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//										Hours          int // Number of Hours.
-//										Minutes        int // Number of Minutes
-//										Seconds        int // Number of Seconds
-//										Milliseconds   int // Number of Milliseconds
-//										Microseconds   int // Number of Microseconds
-//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//																			 // 	plus remaining Nanoseconds
-//									}
-//
-func (dtz *DateTzDto) PlusTimeDtoToThis(plusTimeDto TimeDto) error {
-
-	ePrefix := "DateTzDto.PlusTimeDto() "
-
-	dtz2, err := dtz.PlusTimeDto(plusTimeDto)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix + "Error= '%v'", err.Error())
-	}
-
-	dtz.CopyIn(dtz2)
-
-	return nil
-}
-
 
 // SetDateTimeFmt - Sets the DateTzDto data field 'DateTimeFmt'.
 // This string is used to format the DateTzDto DateTime field

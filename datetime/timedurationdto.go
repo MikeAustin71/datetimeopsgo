@@ -4326,7 +4326,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 
 	tDur.EndTimeDateTz = eDateTime.TimeOut.CopyOut()
 
-	tDur.StartTimeDateTz, err = eDateTime.TimeOut.MinusTimeDto(minusTimeDto)
+	tDur.StartTimeDateTz, err = eDateTime.TimeOut.AddMinusTimeDto(minusTimeDto)
 
 	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
 
@@ -4992,7 +4992,7 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(startDateTime time.Ti
 	
 	tDur.StartTimeDateTz = sDateTime.TimeOut.CopyOut()
 	
-	tDur.EndTimeDateTz, err = sDateTime.TimeOut.PlusTimeDto(plusTimeDto)
+	tDur.EndTimeDateTz, err = sDateTime.TimeOut.AddPlusTimeDto(plusTimeDto)
 	
 	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
 
