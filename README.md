@@ -1,12 +1,12 @@
 # Date Time Operations in Go
 
-The source code for the Date Time Operations library is located in the 
+The source code for the Date Time Operations library is located in this 
 source code repository:
 
 https://github.com/MikeAustin71/datetimeopsgo.git
 
 
-### Examples of Date Time operations in 'golang', the go programming language.
+### Date Time Utilities Written In The Go Programming Language
 
 The Date Time Utilities currently consist of separate libraries maintained
 in the sub-directory, 'datetime'. This directory also contains tests used to 
@@ -24,7 +24,8 @@ files identified below.
      Location: MikeAustin71\datetimeopsgo\datetime\datetimeconstants.go
      
  3. DateTzDto - A type used to identify a specific point in time by date time,
-     time zone and time element (year, month, day, hours etc.).
+     time zone and time element (year, month, day, hours etc.). Compatible
+     with IANA Time Zones.
      Location: MikeAustin71\datetimeopsgo\datetime\datetzdto.go 
 
  4. TimeDto - is a collection of time element values. Time
@@ -49,10 +50,11 @@ files identified below.
 
  8. TimeZoneDefDto - This structure is designed to store detailed information
      on Time Zones. It used primarily as a 'helper' or subsidiary structure
-     for Type, 'TimeZoneDto'.
+     for Type, 'TimeZoneDto'. Compatible with IANA Time Zones.
      Location: MikeAustin71\datetimeopsgo\datetime\timezonedef.go
      
  9.  TimeZoneDto - This structure is used to convert, store and transport time
       zone information. The user will employ this Type to convert time.Time,
-      date time values, between differing time zones.
+      date time values, between differing time zones. Compatible with IANA
+      Time Zones.
       Location:  MikeAustin71\datetimeopsgo\datetime\timezonedto.go
