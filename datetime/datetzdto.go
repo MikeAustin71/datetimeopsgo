@@ -477,33 +477,15 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddMinusTimeDto() "
-	tDto := minusTimeDto.CopyOut()
+	dtz2 := dtz.CopyOut()
 
-	tDto.NormalizeTimeElements()
-	tDto.ConvertToNegativeValues()
-
-	dt1 := dtz.DateTime.AddDate(tDto.Years,
-		tDto.Months,
-		0)
-
-	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
-	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
-	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
-	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
-	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	totNanosecs += int64(tDto.Nanoseconds)
-
-	dt2 := dt1.Add(time.Duration(totNanosecs))
-
-	dtz2, err := DateTzDto{}.NewTz(dt2, dtz.TimeZone.LocationName,  dtz.DateTimeFmt)
+	err := dtz2.AddMinusTimeDtoToThis(minusTimeDto)
 
 	if err != nil {
 		return DateTzDto{},
 			fmt.Errorf(ePrefix +
-				"Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
-				" dt2='%v' dtz.DateTimeFmt='%v'  Error='%v'",
-				dt2.Format(FmtDateTimeYrMDayFmtStr), dtz.DateTimeFmt, err.Error())
+				"Error returned from dtz2.AddMinusTimeDtoToThis(minusTimeDto). " +
+				" Error='%v'", err.Error())
 	}
 
 	return dtz2, nil
@@ -544,10 +526,12 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 	tDto := minusTimeDto.CopyOut()
 
 	tDto.NormalizeTimeElements()
+	tDto.NormalizeDays()
+
 	tDto.ConvertToNegativeValues()
 
-	dt1 := dtz.DateTime.AddDate(minusTimeDto.Years,
-		minusTimeDto.Months,
+	dt1 := dtz.DateTime.AddDate(tDto.Years,
+		tDto.Months,
 		0)
 
 	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
@@ -604,30 +588,14 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddPlusTimeDto() "
-	tDto := plusTimeDto.CopyOut()
-	tDto.NormalizeTimeElements()
-	tDto.ConvertToAbsoluteValues()
 
-	dt1 := dtz.DateTime.AddDate(tDto.Years,
-		tDto.Months,
-		0)
+	dtz2 := dtz.CopyOut()
 
-	incrementalDur := int64(tDto.DateDays) * DayNanoSeconds
-	incrementalDur += int64(tDto.Hours) * HourNanoSeconds
-	incrementalDur += int64(tDto.Minutes) * MinuteNanoSeconds
-	incrementalDur += int64(tDto.Seconds) * SecondNanoseconds
-	incrementalDur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	incrementalDur += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	incrementalDur += int64(tDto.Nanoseconds)
-
-
-	dt2 := dt1.Add(time.Duration(incrementalDur))
-
-	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
+	err := dtz2.AddPlusTimeDtoToThis(plusTimeDto)
 
 	if err != nil {
 		return DateTzDto{},
-			fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
+			fmt.Errorf(ePrefix + "Error returned from dtz2.AddPlusTimeDtoToThis(plusTimeDto). " +
 				" Error='%v'", err.Error())
 	}
 
@@ -665,11 +633,32 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 
 	ePrefix := "DateTzDto.AddPlusTimeDto() "
+	tDto := plusTimeDto.CopyOut()
 
-	dtz2, err := dtz.AddPlusTimeDto(plusTimeDto)
+	tDto.NormalizeTimeElements()
+	tDto.NormalizeDays()
+
+	tDto.ConvertToAbsoluteValues()
+
+	dt1 := dtz.DateTime.AddDate(tDto.Years,
+		tDto.Months,
+		0)
+
+	incrementalDur := int64(tDto.DateDays) * DayNanoSeconds
+	incrementalDur += int64(tDto.Hours) * HourNanoSeconds
+	incrementalDur += int64(tDto.Minutes) * MinuteNanoSeconds
+	incrementalDur += int64(tDto.Seconds) * SecondNanoseconds
+	incrementalDur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
+	incrementalDur += int64(tDto.Microseconds) * MicroSecondNanoseconds
+	incrementalDur += int64(tDto.Nanoseconds)
+
+	dt2 := dt1.Add(time.Duration(incrementalDur))
+
+	dtz2, err := DateTzDto{}.New(dt2, dtz.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error= '%v'", err.Error())
+		fmt.Errorf(ePrefix + "Error returned from DateTzDto{}.New(dt2, dtz.DateTimeFmt). " +
+				" Error='%v'", err.Error())
 	}
 
 	dtz.CopyIn(dtz2)

@@ -40,12 +40,6 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 
 	tzu2.AddTimeDurationDto(tdurDto)
 
-	//tzu2, err := TimeZoneDto{}.NewAddDuration(tzu1, t12Dur, fmtstr)
-
-	//if err != nil {
-	//	t.Errorf("Error returned by TimeZoneDto{}.NewAddDuration(tzu1, t12Dur). Error='%v'", err.Error())
-	//}
-
 	tzu1OutStr := tzu1.TimeIn.DateTime.Format(fmtstr)
 
 	if t1OutStr != tzu1OutStr {
@@ -92,6 +86,94 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 
 	if TzIanaUsPacific != actualTimeOutLoc {
 		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.",TzIanaUsPacific, actualTimeOutLoc)
+	}
+
+}
+
+func TestTimeZoneDto_AddMinusTimeDto(t *testing.T) {
+	// expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	t12Dur := t2.Sub(t1)
+
+	tzu1, err := TimeZoneDto{}.New(t2, TzIanaUsEast, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast). Error='%v'", err.Error())
+	}
+
+	tDto := TimeDto{Years:3, Months:2, DateDays:15, Hours: 3, Minutes: 4, Seconds: 2}
+
+	tzu2 := tzu1.CopyOut()
+
+	tzu2.AddMinusTimeDto(tDto)
+
+	tzu2TimeInStr := tzu2.TimeIn.DateTime.Format(fmtstr)
+
+	if t1OutStr != tzu2TimeInStr {
+		t.Errorf("Error: Expected tzu2.TimeIn='%v'.  Instead, tzu2.TimeIn='%v'. ",t1OutStr, tzu2TimeInStr)
+	}
+
+	tzu2Dur, err := tzu1.Sub(tzu2)
+
+	if err != nil {
+		t.Errorf("Error returned by tzu2.Sub(tzu1)")
+	}
+
+	if t12Dur != tzu2Dur {
+		t.Errorf("Error expected tzu1-tzu2 Duration='%v'.  Instead, Duration='%v'",t12Dur, tzu2Dur)
+	}
+
+}
+
+func TestTimeZoneDto_AddPlusTimeDto(t *testing.T) {
+
+	// expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	tzu1, err := TimeZoneDto{}.New(t1, TzIanaUsEast, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast). Error='%v'", err.Error())
+	}
+
+	tDto := TimeDto{Years:3, Months:2, DateDays:15, Hours: 3, Minutes: 4, Seconds: 2}
+
+	tzu2 := tzu1.CopyOut()
+
+	tzu2.AddPlusTimeDto(tDto)
+
+	tzu2TimeInStr := tzu2.TimeIn.DateTime.Format(fmtstr)
+
+	if t2OutStr != tzu2TimeInStr {
+		t.Errorf("Error: Expected tzu2.TimeIn='%v'.  Instead, tzu2.TimeIn='%v'. ",t2OutStr, tzu2TimeInStr)
+	}
+
+	tzu2Dur, err := tzu2.Sub(tzu1)
+
+	if err != nil {
+		t.Errorf("Error returned by tzu2.Sub(tzu1)")
+	}
+
+	if t12Dur != tzu2Dur {
+		t.Errorf("Error expected tzu1-tzu2 Duration='%v'.  Instead, Duration='%v'",t12Dur, tzu2Dur)
 	}
 
 }
@@ -484,7 +566,7 @@ func TestTimeZoneUtility_New_01(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	//tz := TimeZoneDto{}
+
 	tzu, _:= TimeZoneDto{}.New(tIn, ianaPacificTz, FmtDateTimeYrMDayFmtStr)
 	expectedTimeIn := "2017-04-29 19:54:30.000000000 -0500 CDT"
 	if expectedTimeIn != tzu.TimeIn.String() {

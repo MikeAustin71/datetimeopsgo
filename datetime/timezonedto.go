@@ -298,6 +298,143 @@ func (tzdto *TimeZoneDto) AddDuration(duration time.Duration) error {
 	return nil
 }
 
+// AddMinusTimeDto - This method receives a TimeDto input parameter. It
+// then proceeds to convert all time components to negative values and
+// subtracts those time components from the time values of the current
+// TimeZoneDto.
+//
+// Input Parameters:
+// =================
+//
+// timeDto	TimeDto - A TimeDto type containing time components (i.e.
+//										years, months, weeks, days, hours, minutes,
+//										seconds etc.) to be subtracted from the current
+//										TimeZoneDto.
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+// Returns
+// =======
+// There is only one return: an 'error' type.
+//
+// error - 	If errors are encountered, this method returns an 'error'
+//					instance populated with an error message. If the method completes
+//					successfully, this error value is set to 'nil'
+//
+func (tzdto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
+
+	ePrefix := "TimeZoneDto.AddMinusTimeDto() "
+
+
+	dateTzIn := tzdto.TimeIn.CopyOut()
+
+	err := dateTzIn.AddMinusTimeDtoToThis(timeDto)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by dateTzIn.AddMinusTimeDtoToThis(timeDto) " +
+			"Error='%v'", err.Error())
+	}
+
+	timeZoneLocation := tzdto.TimeOut.TimeZone.LocationName
+
+	fmtStr := tzdto.TimeOut.DateTimeFmt
+
+	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) " +
+			"Error='%v'", err.Error())
+	}
+
+	tzdto.CopyIn(tz2Dto)
+
+	return nil
+}
+
+// AddPlusTimeDto - This method receives a TimeDto input parameter. It
+// then proceeds to convert all time components to positive values and
+// adds those time components to the time values of the current TimeZoneDto.
+//
+// Input Parameters:
+// =================
+//
+// timeDto	TimeDto - A TimeDto type containing time components (i.e.
+//										years, months, weeks, days, hours, minutes,
+//										seconds etc.) to be added to the current
+//										TimeZoneDto.
+//
+//									type TimeDto struct {
+//										Years          int // Number of Years
+//										Months         int // Number of Months
+//										Weeks          int // Number of Weeks
+//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//										Hours          int // Number of Hours.
+//										Minutes        int // Number of Minutes
+//										Seconds        int // Number of Seconds
+//										Milliseconds   int // Number of Milliseconds
+//										Microseconds   int // Number of Microseconds
+//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//																			 // 	plus remaining Nanoseconds
+//									}
+//
+// Returns
+// =======
+// There is only one return: an 'error' type.
+//
+// error - 	If errors are encountered, this method returns an 'error'
+//					instance populated with an error message. If the method completes
+//					successfully, this error value is set to 'nil'
+//
+func (tzdto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
+
+	ePrefix := "TimeZoneDto.AddPlusTimeDto() "
+
+
+	dateTzIn := tzdto.TimeIn.CopyOut()
+
+	err := dateTzIn.AddPlusTimeDtoToThis(timeDto)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by dateTzIn.AddPlusTimeDtoToThis(timeDto) " +
+			"Error='%v'", err.Error())
+	}
+
+	timeZoneLocation := tzdto.TimeOut.TimeZone.LocationName
+
+	fmtStr := tzdto.TimeOut.DateTimeFmt
+
+	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) " +
+			"Error='%v'", err.Error())
+	}
+
+	tzdto.CopyIn(tz2Dto)
+
+	return nil
+}
+
 // AddTime - Adds time elements to the time value of the current
 // TimeZoneDto instance.
 //
