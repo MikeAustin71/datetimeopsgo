@@ -372,6 +372,38 @@ func (tzdto *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microse
 	return nil
 }
 
+// AddTimeDurationDto - Adds time duration as expressed by input type 'TimeDurationDto'
+// to the time values maintained by the current TimeZoneDto.
+//
+// Input Parameters
+// ================
+//
+// durDto		TimeDurationDto		- Contains the time duration value
+//															to be added to the current TimeZoneDto.
+//
+// Returns
+// =======
+// There is only one return: an 'error' type.
+//
+// error - 	If errors are encountered, this method returns an 'error'
+//					instance populated with an error message. If the method completes
+//					successfully, this error value is set to 'nil'
+//
+func (tzdto *TimeZoneDto) AddTimeDurationDto(durDto TimeDurationDto) error {
+
+	ePrefix := "TimeZoneDto.AddTimeDurationDto() "
+
+	err := tzdto.AddDuration(durDto.TimeDuration)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by tzdto.AddDuration(durDto.TimeDuration) " +
+			"Error='%v' ", err.Error())
+	}
+
+	return nil
+}
+
 // ConvertTz - Converts 'tIn' Date Time from existing time zone to a 'targetTz'
 // or target Time Zone. The results are stored and returned in a TimeZoneDto
 // data structure.
