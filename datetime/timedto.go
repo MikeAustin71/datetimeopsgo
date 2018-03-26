@@ -652,6 +652,25 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 		return false, fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
 	}
 
+	weekDays := (t2Dto.Weeks * 7) + t2Dto.WeekDays
+	dateDays := t2Dto.DateDays
+
+	if dateDays == weekDays {
+		weekDays = 0
+	} else if dateDays == 0 && weekDays != 0 {
+		dateDays = weekDays
+		weekDays = 0
+	} else if weekDays != 0 && dateDays!= 0 &&
+		weekDays != dateDays {
+		dateDays += weekDays
+		weekDays = 0
+	}
+
+	// Date Days are already normalized!
+	if dateDays < 29 {
+		return false, nil
+	}
+
 	years := t2Dto.Years
 
 	months := t2Dto.Months
@@ -662,17 +681,7 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 
 	dt1 := time.Date(years, time.Month(months), 0, 0, 0, 0, 0, locUTC)
 
-	weekDays := (t2Dto.Weeks * 7) + t2Dto.WeekDays
-	dateDays := t2Dto.DateDays
 
-	if dateDays == weekDays {
-		weekDays = 0
-	} else if dateDays == 0 && weekDays != 0 {
-		dateDays = weekDays
-	} else if weekDays != 0 && dateDays!= 0 &&
-		weekDays != dateDays {
-		dateDays += weekDays
-	}
 
 	dur := int64(dateDays) * DayNanoSeconds
 	dur += int64(t2Dto.Hours) * HourNanoSeconds

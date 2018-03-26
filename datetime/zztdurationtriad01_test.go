@@ -236,18 +236,6 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 			dur.UTCTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	if dur.BaseTime.TimeDuration != dur.LocalTime.TimeDuration {
-		t.Errorf("Expected Base Time Duration == Local Time Duration. It Did NOT! " +
-			"dur.BaseTime.TimeDuration = '%v'  dur.LocalTime.TimeDuration='%v'",
-			dur.BaseTime.TimeDuration, dur.LocalTime.TimeDuration)
-	}
-
-	if dur.BaseTime.TimeDuration != dur.UTCTime.TimeDuration {
-		t.Errorf("Expected Base Time Duration == UTC Time Duration. It Did NOT! " +
-			"dur.BaseTime.TimeDuration = '%v'  dur.LocalTime.TimeDuration='%v'",
-			dur.BaseTime.TimeDuration, dur.UTCTime.TimeDuration)
-	}
-
 }
 
 func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
@@ -1020,7 +1008,6 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 			t2UTC.Format(FmtDateTimeYrMDayFmtStr),
 			dur.UTCTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
-
 
 }
 
