@@ -1305,6 +1305,74 @@ func (durT DurationTriad) NewStartEndTimesTz(startDateTime,
 
 }
 
+// NewStartTimeDuration - Returns a New DurationTriad based on 'startDateTz'
+// and 'duration' input parameters. Time 'duration' is added to 'startDateTz'
+// in order to compute ending date time.
+//
+// Input parameter 'startDateTz' is of Type, 'DateTzDto'.
+//
+// This method will except negative time durations. A negative duration means that
+// starting date time will be reclassified as ending date time with time duration
+// being subtracted from that ending date time to compute staring date time.
+//
+// Time Zone Location is extracted from input parameter, 'startDateTz', and
+// applied to both starting and ending date times. Applying a common Time Zone
+// to both starting and ending date times ensures accurate time duration calculations.
+//
+// This method automatically applies the standard time duration calculation
+// type, 'TDurCalcTypeSTDYEARMTH'. The standard time duration calculation type
+// allocates time duration by years, months, weeks, days, hours, minutes, seconds,
+// milliseconds, microseconds and nanoseconds. For a discussion of Duration Calculation
+// types, see Type TDurCalcType located in source file:
+// 					'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
+//
+// The Date Time Format string used to format string displays of date time values will
+// be extracted from input parameter 'startDateTz'
+//
+// Input Parameters:
+// =================
+//
+// startDateTz		DateTzDto	- Starting Date Time for duration calculation
+//
+// duration   time.Duration	- Time Duration added to 'startDatTime' in order to
+//														compute Ending Date Time
+//
+// Example Usage:
+// ==============
+//
+// tDurDto, err := TimeDurationDto{}.NewStartDateTzDuration(
+// 													startTime,
+// 													duration)
+//
+//		Note:	'FmtDateTimeYrMDayFmtStr' is a constant defined in
+// 							datetimeconstants.go
+//
+func (durT DurationTriad) NewStartDateTzDuration(
+														startDateTime DateTzDto,
+															duration time.Duration) (DurationTriad, error) {
+
+	ePrefix := "DurationTriad.NewStartDateTzDuration() "
+
+	timeZoneLocation := startDateTime.TimeZone.LocationName
+	dateTimeFmtStr := startDateTime.DateTimeFmt
+
+	du2 := DurationTriad{}
+
+	err := du2.SetStartTimeDurationCalcTz(startDateTime.DateTime,
+																					duration,
+																					TDurCalcTypeSTDYEARMTH,
+																					timeZoneLocation,
+																					dateTimeFmtStr)
+
+	if err != nil {
+		return DurationTriad{}, fmt.Errorf(ePrefix +
+			"Error returned from du2.SetStartTimeDurationCalcTz(startDateTime, duration). " +
+			"Error='%v'", err.Error())
+	}
+
+	return du2, nil
+}
+
 // NewStartTimeDuration - Returns a New DurationTriad based on 'startDateTime'
 // and 'duration' input parameters. Time 'duration' is added to 'startDateTime'
 // in order to compute ending date time.
