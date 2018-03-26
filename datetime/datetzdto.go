@@ -923,6 +923,112 @@ func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 	return tDto, nil
 }
 
+// GetDateTimeStr - Returns a date time string
+// in the format 20170427211307. Useful in naming
+// files.
+func (dtz *DateTzDto) GetDateTimeStr() string {
+
+	// Time Format down to the second
+	return dtz.DateTime.Format(FmtDateTimeSecondStr)
+
+}
+
+// GetDateTimeSecText - Returns formatted
+// date time with seconds for display,
+// 2006-01-02 15:04:05.
+func (dtz *DateTzDto) GetDateTimeSecText() string {
+	// Time Display Format with seconds
+	return dtz.DateTime.Format(FmtDateTimeSecText)
+}
+
+// GetDateTimeNanoSecText - Returns formatted
+// date time string with nanoseconds
+// 2006-01-02 15:04:05.000000000.
+func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
+	// Time Format down to the nanosecond
+	return dtz.DateTime.Format(FmtDateTimeNanoSecondStr)
+}
+
+// GetDateTimeTzNanoSecText - Outputs date time in string format using
+// the FmtDateTimeTzNano format which incorporates date time to nano seconds
+// and the associated time zone.
+// EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
+func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
+	return dtz.DateTime.Format(FmtDateTimeTzNano)
+}
+
+// GetDateTimeTzNanoSecYMDText - Outputs date time in string format using
+// the FmtDateTimeTzNanoYMD format which incorporates date time to nano seconds
+// and the associated time zone. In this format, the date is expressed as
+// Year-Month-Day (Example: 2017-12-06)
+// EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
+func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
+	return dtz.DateTime.Format(FmtDateTimeTzNanoYMD)
+}
+
+// GetDateTimeTzNanoSecDowYMDText - Outputs date time in string format using
+// the FmtDateTimeTzNanoDowYMD format which incorporates date time to the
+// nano second and the associated time zone. In this format, the date is
+// expressed as Year-Month-Day (Example: 2017-12-06). The string is
+// prefixed with the day of the week:
+// EXAMPLE: Monday 2006-01-02 15:04:05.000000000 -0700 MST
+func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
+	return dtz.DateTime.Format(FmtDateTimeTzNanoDowYMD)
+}
+
+// GetDateTimeYMDAbbrvDowNano - Outputs date time in string format using
+// the FmtDateTimeYMDAbbrvDowNano format which incorporates date time to the
+// nano second and the associated time zone. In this format, the date is
+// expressed as Year-Month-Day (Example: 2017-12-06). The string includes
+// the abbreviated (limited to 3-characters) day of the week:
+// EXAMPLE: "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
+func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
+	return dtz.DateTime.Format(FmtDateTimeYMDAbbrvDowNano)
+}
+
+
+// GetDateTimeYrMDayTzFmtStr - Returns a date time string
+// formatted as year-mth-day time and time zone.
+// FmtDateTimeYrMDayFmtStr - Year Month Day Date Format String
+// EXAMPLE: "2006-01-02 15:04:05.000000000 -0700 MST"
+func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
+	return dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr)
+}
+
+// GetDateTimeTzNanoSecYMDDowText - Outputs date time in string format using
+// the FmtDateTimeTzNanoYMDDow format which incorporates date time to nano seconds
+// and the associated time zone. In this format, the date is expressed as
+// Year-Month-Day (Example: 2017-12-06) followed by the day of the week.
+// EXAMPLE: 2006-01-02 Monday 15:04:05.000000000 -0700 MST
+func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
+	return dtz.DateTime.Format(FmtDateTimeTzNanoYMDDow)
+}
+
+// GetDateTimeEverything - Receives a time value and formats as
+// a date time string in the format:
+// EXAMPLE: Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
+func (dtz *DateTzDto) GetDateTimeEverything() string {
+	return dtz.DateTime.Format(FmtDateTimeEverything)
+}
+
+// GetTimeStampEverything - Generates and returns a time stamp as
+// type string. The time stamp is formatted using the format,
+// 'FmtDateTimeEverything'. Example output:
+// "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
+func (dtz *DateTzDto) GetTimeStampEverything() string {
+	return dtz.DateTime.Format(FmtDateTimeEverything)
+}
+
+// GetTimeStampYMDAbbrvDowNano - Generates and returns a time stamp as
+// type string. The time stamp is formatted using the format
+// 'FmtDateTimeYMDAbbrvDowNano'. Example output:
+// "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
+func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
+
+	return dtz.DateTime.Format(FmtDateTimeYMDAbbrvDowNano)
+
+}
+
 // IsEmpty - Analyzes the current DateTzDto instance to determine
 // if the instance is in an 'EMPTY' or uninitialized state.
 //

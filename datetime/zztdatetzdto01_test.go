@@ -557,3 +557,35 @@ func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 	}
 
 }
+
+func TestDateTzDto_GetDateTimeTzNanoSecYMDDowText(t *testing.T) {
+
+	tDto := TimeDto {
+		Years: 2018,
+		Months: 2,
+		DateDays: 6,
+		Hours: 20,
+		Minutes: 2,
+		Seconds: 18,
+		Nanoseconds: 792489279,
+	}
+
+	tDto.NormalizeTimeElements()
+
+	dTz, err := DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by " +
+			"DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr) " +
+			"Error='%v'", err.Error())
+	}
+
+	expectedStr := "2018-02-06 20:02:18.792489279 -0600 CST"
+
+	actualStr := dTz.GetDateTimeYrMDayTzFmtStr()
+
+	if expectedStr != actualStr {
+		t.Errorf("Expected date time string='%v'.  Instead date time string='%v' ",
+			expectedStr, actualStr)
+	}
+}
