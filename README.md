@@ -5,6 +5,37 @@ source code repository:
 
 https://github.com/MikeAustin71/datetimeopsgo.git
 
+### Installing 'datetime' Library
+Use this command to down load and install the datetime library
+locally. 
+
+    go get github.com/MikeAustin71/datetimeopsgo/datetime
+    
+After installation, you may import and reference the library
+as follows:
+
+        import (
+            "MikeAustin71/datetimeopsgo/datetime"
+        )    
+
+To update the library run:
+    
+    go get -u github.com/MikeAustin71/datetimeopsgo/datetime
+
+
+### Installing 'datetime' Library In Your Project
+As an alternative you could clone the library to a local drive:
+
+    git clone https://github.com/MikeAustin71/datetimeopsgo.git
+
+Thereafter just copy the 'MikeAustin71/datetimeopsgo/datetime'
+directory to your local drive and reference it using the '../datetime'
+syntax. Example:
+
+    import (
+        "../datetime"
+    )
+
 
 ### Date Time Utilities Written In The Go Programming Language
 

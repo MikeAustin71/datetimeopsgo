@@ -725,6 +725,136 @@ func (tDur *TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration
 
 }
 
+// GetElapsedTimeStr - Provides a quick means for formatting Years, Months,
+// DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
+// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+//
+// This method only returns date time elements with value greater than zero.
+//
+// Example Return:
+//
+//  864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
+		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+	}
+
+	str := ""
+
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
+	}
+
+	if t2Dur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)
+	}
+
+	if t2Dur.DateDays > 0 || str != "" {
+		str +=  fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+	}
+
+	if t2Dur.Hours > 0 || str != "" {
+
+		str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	}
+
+	if t2Dur.Minutes > 0 || str != "" {
+
+		str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	}
+
+	if t2Dur.Seconds > 0 || str != "" {
+
+		str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	}
+
+	if t2Dur.Milliseconds > 0 || str != "" {
+
+		str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	}
+
+	if t2Dur.Microseconds > 0 || str != "" {
+
+		str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	}
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str
+
+}
+
+// GetElapsedMinutesStr - Provides a quick means for formatting Years, Months,
+// DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
+// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+//
+// This method only returns years, months, days or hours if those values
+// are greater than zero.
+//
+// Example Return:
+//
+//  0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
+
+	if int64(tDur.TimeDuration) == 0 {
+		return "0-Nanoseconds"
+	}
+
+	t2Dur := tDur.CopyOut()
+
+	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
+		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+	}
+
+	str := ""
+
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
+	}
+
+	if t2Dur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)
+	}
+
+	if t2Dur.DateDays > 0 || str != "" {
+		str +=  fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+	}
+
+	if t2Dur.Hours > 0 || str != "" {
+
+		str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+
+	}
+
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+
+	return str
+
+}
 
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
@@ -741,31 +871,37 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 		return "0-Nanoseconds"
 	}
 
+	t2Dur := tDur.CopyOut()
+	
+	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
+		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+	}
+	
 	str := ""
 
-	if tDur.Years > 0 {
-		str += fmt.Sprintf("%v-Years ", tDur.Years)
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
 	}
 
-	if tDur.Months > 0 || str != "" {
-		str += fmt.Sprintf("%v-Months ", tDur.Months)
+	if t2Dur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)
 	}
 
-	if tDur.DateDays > 0 || str != "" {
-		str +=  fmt.Sprintf("%v-Days ", tDur.DateDays)
+	if t2Dur.DateDays > 0 || str != "" {
+		str +=  fmt.Sprintf("%v-Days ", t2Dur.DateDays)
 	}
 
-	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
 
-	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
 
-	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
 
-	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
 
-	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
 
-	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
 
 	return str
 
@@ -791,32 +927,37 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 		return "0-Nanoseconds"
 	}
 
+	t2Dur := tDur.CopyOut()
+
+	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
+		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+	}	
+	
 	str := ""
 	
-	if tDur.Years > 0 {
-		str += fmt.Sprintf("%v-Years ", tDur.Years)	
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)	
 	}
 	
-	if tDur.Months > 0 || str != "" {
-		str += fmt.Sprintf("%v-Months ", tDur.Months)	
+	if t2Dur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)	
 	}
 
-	if tDur.DateDays > 0 || str!= "" {
-		str += fmt.Sprintf("%v-Days ", tDur.DateDays)
+	if t2Dur.DateDays > 0 || str!= "" {
+		str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
 	}
 
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
 
-	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
 
-	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
 
-	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
 
-	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
 
-	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
-
-	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
 
 	return str
 }
@@ -837,35 +978,41 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 		return "0-Nanoseconds"
 	}
 
+	t2Dur := tDur.CopyOut()
+
+	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
+		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+	}
+
 	str := ""
 	
-	if tDur.Years > 0 {
-		str += fmt.Sprintf("%v-Years ", tDur.Years)
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
 	}
 
-	if tDur.Months > 0 || str != "" {
-		str += fmt.Sprintf("%v-Months ", tDur.Months)
+	if t2Dur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)
 	}
 
-	if tDur.Weeks > 0 || str != "" {
-		str += fmt.Sprintf("%v-Weeks ", tDur.Weeks)
+	if t2Dur.Weeks > 0 || str != "" {
+		str += fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)
 	}
 
-	if tDur.WeekDays > 0 || str != "" {
-		str += fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
+	if t2Dur.WeekDays > 0 || str != "" {
+		str += fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
 	}
 
-	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
 
-	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
 
-	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
 
-	str += fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
 
-	str += fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
 
-	str += fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
 
 	return str
 }
@@ -884,33 +1031,39 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
 			return "0-Nanoseconds"
-	}	
+	}
+	
+	t2Dur := tDur.CopyOut()
+
+	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
+		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+	}
 
 	str := ""
 	
-	if tDur.Years > 0 {
-		str += fmt.Sprintf("%v-Years ", tDur.Years)	
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)	
 	}
 	
-	if tDur.Months > 0 || str != "" {
-		str+= fmt.Sprintf("%v-Months ", tDur.Months)
+	if t2Dur.Months > 0 || str != "" {
+		str+= fmt.Sprintf("%v-Months ", t2Dur.Months)
 	}
 
-	str+= fmt.Sprintf("%v-Weeks ", tDur.Weeks)	
+	str+= fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)	
 	
-	str+= fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
+	str+= fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
 
-	str+= fmt.Sprintf("%v-Hours ", tDur.Hours)
+	str+= fmt.Sprintf("%v-Hours ", t2Dur.Hours)
 
-	str+= fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+	str+= fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
 
-	str+= fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+	str+= fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
 
-	str+= fmt.Sprintf("%v-Milliseconds ", tDur.Milliseconds)
+	str+= fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
 
-	str+= fmt.Sprintf("%v-Microseconds ", tDur.Microseconds)
+	str+= fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
 
-	str+= fmt.Sprintf("%v-Nanoseconds", tDur.Nanoseconds)
+	str+= fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
 
 	return str
 }
@@ -1384,23 +1537,29 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 		return "0-Nanoseconds"
 	}
 	
+	t2Dur := tDur.CopyOut()
+
+	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
+		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+	}
+
 	str := ""
 
-	str += fmt.Sprintf("%v-Years ", tDur.Years)
+	str += fmt.Sprintf("%v-Years ", t2Dur.Years)
 
-	str += fmt.Sprintf("%v-Months ", tDur.Months)
+	str += fmt.Sprintf("%v-Months ", t2Dur.Months)
 
-	str += fmt.Sprintf("%v-Weeks ", tDur.Weeks)
+	str += fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)
 
-	str += fmt.Sprintf("%v-WeekDays ", tDur.WeekDays)
+	str += fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
 
-	str += fmt.Sprintf("%v-Hours ", tDur.Hours)
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
 
-	str += fmt.Sprintf("%v-Minutes ", tDur.Minutes)
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
 
-	str += fmt.Sprintf("%v-Seconds ", tDur.Seconds)
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
 
-	str += fmt.Sprintf("%v-Nanoseconds", tDur.TotSubSecNanoseconds)
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.TotSubSecNanoseconds)
 
 	return str
 }
