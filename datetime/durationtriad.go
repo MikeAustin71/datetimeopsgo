@@ -185,11 +185,33 @@ func (durT *DurationTriad) Empty() {
 	durT.UTCTime.Empty()
 }
 
+// GetDurationFromDays - returns a time Duration value
+// based on the number of days passed into this method.
+// No changes are made to or stored in the existing
+// DurationTriad data structures.
+func (durT DurationTriad) GetDurationFromDays(days int64) time.Duration {
+
+	return time.Duration(days * 24) * time.Hour
+
+}
+
+
+// GetDurationFromHours - returns a time Duration value
+// based on the number of hours passed into this method.
+// No changes are made to or stored in the existing
+// DurationTriad data structures.
+func (durT DurationTriad) GetDurationFromHours(hours int64) time.Duration {
+
+	return time.Duration(hours) * time.Hour
+
+}
+
+
 // GetDurationFromMinutes - returns a time Duration value
 // based on the number of minutes passed to this method.
 // No changes are made to or stored in the existing
 // DurationTriad data structures.
-func (durT *DurationTriad) GetDurationFromMinutes(minutes int64) time.Duration {
+func (durT DurationTriad) GetDurationFromMinutes(minutes int64) time.Duration {
 
 	return time.Duration(minutes) * time.Minute
 
@@ -199,13 +221,11 @@ func (durT *DurationTriad) GetDurationFromMinutes(minutes int64) time.Duration {
 // based on the number of seconds passed to this method.
 // No changes are made to or stored in the existing
 // DurationTriad data structures.
-func (durT *DurationTriad) GetDurationFromSeconds(seconds int64) time.Duration {
+func (durT DurationTriad) GetDurationFromSeconds(seconds int64) time.Duration {
 
 	return time.Duration(seconds) * time.Second
 
 }
-
-
 
 // New - Creates and returns a new DurationTriad based on time duration calculations
 // using input parameters 'startDateTime' and 'endDateTime'.

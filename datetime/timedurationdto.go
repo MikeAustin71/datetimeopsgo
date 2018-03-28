@@ -691,7 +691,7 @@ func (tDur *TimeDurationDto) IsValid() error {
 
 // GetDurationFromTime - Calculates and returns a cumulative duration based on
 // input parameters consisting of time elements.
-func (tDur *TimeDurationDto) GetDurationFromTime(hours, minutes, seconds, milliseconds,
+func (tDur TimeDurationDto) GetDurationFromTime(hours, minutes, seconds, milliseconds,
 										microseconds, nanoseconds int) time.Duration {
 
 	dur := int64(hours) * int64(time.Hour)
@@ -705,11 +705,32 @@ func (tDur *TimeDurationDto) GetDurationFromTime(hours, minutes, seconds, millis
 
 }
 
-// GetDurationFromMinutes - returns a time Duration value
-// based on the number of minutes passed to this method.
+// GetDurationFromDays - returns a time Duration value
+// based on the number of days passed into this method.
 // No changes are made to or stored in the existing
-// DurationTriad data structures.
-func (tDur *TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration {
+// TimeDurationDto data structures.
+func (tDur TimeDurationDto) GetDurationFromDays(days int64) time.Duration {
+
+	return time.Duration(days * 24) * time.Hour
+
+}
+
+
+// GetDurationFromHours - returns a time Duration value
+// based on the number of hours passed into this method.
+// No changes are made to or stored in the existing
+// TimeDurationDto data structures.
+func (tDur TimeDurationDto) GetDurationFromHours(hours int64) time.Duration {
+
+	return time.Duration(hours) * time.Hour
+
+}
+
+// GetDurationFromMinutes - returns a time Duration value
+// based on the number of minutes passed into this method.
+// No changes are made to or stored in the existing
+// TimeDurationDto data structures.
+func (tDur TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration {
 
 	return time.Duration(minutes) * time.Minute
 
@@ -718,8 +739,8 @@ func (tDur *TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration
 // GetDurationFromSeconds - returns a time Duration value
 // based on the number of seconds passed to this method.
 // No changes are made to or stored in the existing
-// DurationTriad data structures.
-func (tDur *TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration {
+// TimeDurationDto data structures.
+func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration {
 
 	return time.Duration(seconds) * time.Second
 
@@ -731,6 +752,7 @@ func (tDur *TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration
 // Microseconds and Nanoseconds.
 //
 // This method only returns date time elements with value greater than zero.
+// As a minimum, the string will display Nanoseconds.
 //
 // Example Return:
 //
@@ -805,6 +827,9 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 //
 // This method only returns years, months, days or hours if those values
 // are greater than zero.
+//
+// As a minimum the display string will show minutes, seconds, milliseconds,
+// microseconds and nanoseconds.
 //
 // Example Return:
 //
