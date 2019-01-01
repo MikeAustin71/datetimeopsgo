@@ -15,7 +15,7 @@ func ExampleDateTzDto001() {
 
 	t1OutStr := t1.Format(fmtstr)
 
-	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2014, 2,15,19,54,30,158712300, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2014, 2, 15, 19, 54, 30, 158712300, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DateTzDto{}.NewDateTimeElements(2014, 2,15,19,54,30,158712300, TzUsCentral). Error='%v'\n", err.Error())
@@ -25,4 +25,3 @@ func ExampleDateTzDto001() {
 	PrintOutDateTzDtoFields(dTzDto)
 
 }
-

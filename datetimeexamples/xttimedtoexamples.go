@@ -9,7 +9,7 @@ import (
 // ExampleTimeDto001
 func ExampleTimeDto001() {
 
-	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		fmt.Printf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'\n", err.Error())
@@ -21,8 +21,7 @@ func ExampleTimeDto001() {
 	fmt.Println("====================================")
 	PrintOutTimeDtoFields(t0Dto)
 
-
-	t2Dto, err := dt.TimeDto{}.New(0, 14, 0, 0, 0, 0,0,0,0,0)
+	t2Dto, err := dt.TimeDto{}.New(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
 
 	err = t0Dto.AddTimeDto(t2Dto)
 
@@ -43,7 +42,7 @@ func ExampleTimeDto001() {
 // ExampleTimeDto002
 func ExampleTimeDto002() {
 
-	tDto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		fmt.Printf("Error: dt.TimeDto{}.New() Error='%v'", err.Error())
@@ -51,7 +50,6 @@ func ExampleTimeDto002() {
 
 	fmt.Println("--------- TimeDto --------")
 	PrintOutTimeDtoFields(tDto)
-
 
 }
 
@@ -61,7 +59,6 @@ func ExampleTimeDto003() {
 	locUTC, _ := time.LoadLocation(dt.TzIanaUTC)
 
 	realT0 := time.Time{}.In(locUTC).AddDate(-1, 0, 0)
-
 
 	fmt.Println("realT0: ", realT0.Format(dt.FmtDateTimeYrMDayFmtStr))
 
@@ -75,62 +72,64 @@ func ExampleTimeDto003() {
 	fmt.Println("====================================")
 	PrintOutTimeDtoFields(tDto)
 
-	tDto.NormalizeTimeElements()
+	err := tDto.NormalizeTimeElements()
+
+	if err != nil {
+		panic(fmt.Errorf("ExampleTimeDto003() Error returned by tDto.NormalizeTimeElements(). "+
+			"Error='%v' ", err.Error()))
+	}
 
 	fmt.Println("------------------------------------")
 	fmt.Println("        Normalized TimeDto")
 	fmt.Println("------------------------------------")
 	PrintOutTimeDtoFields(tDto)
 
-
 	startDate, _ := tDto.GetDateTime(dt.TzIanaUTC)
 
 	fmt.Println("Calculated Start Date: ", startDate.Format(dt.FmtDateTimeYrMDayFmtStr))
 
-
-
 	/*
-====================================
-         Original TimeDto
-====================================
-========================================
-          TimeDto Printout
-========================================
-                   Years:  0
-                  Months:  0
-                   Weeks:  -8
-                WeekDays:  0
-                DateDays:  0
-                   Hours:  0
-                 Minutes:  0
-                 Seconds:  0
-            Milliseconds:  0
-            Microseconds:  0
-             Nanoseconds:  0
-Total SubSec Nanoseconds:  0
-  Total Time Nanoseconds:  0
-========================================
-------------------------------------
-        Normalized TimeDto
-------------------------------------
-========================================
-          TimeDto Printout
-========================================
-                   Years:  -1
-                  Months:  11
-                   Weeks:  4
-                WeekDays:  2
-                DateDays:  30
-                   Hours:  0
-                 Minutes:  0
-                 Seconds:  0
-            Milliseconds:  0
-            Microseconds:  0
-             Nanoseconds:  0
-Total SubSec Nanoseconds:  0
-  Total Time Nanoseconds:  0
-========================================
-	 */
+		====================================
+		         Original TimeDto
+		====================================
+		========================================
+		          TimeDto Printout
+		========================================
+		                   Years:  0
+		                  Months:  0
+		                   Weeks:  -8
+		                WeekDays:  0
+		                DateDays:  0
+		                   Hours:  0
+		                 Minutes:  0
+		                 Seconds:  0
+		            Milliseconds:  0
+		            Microseconds:  0
+		             Nanoseconds:  0
+		Total SubSec Nanoseconds:  0
+		  Total Time Nanoseconds:  0
+		========================================
+		------------------------------------
+		        Normalized TimeDto
+		------------------------------------
+		========================================
+		          TimeDto Printout
+		========================================
+		                   Years:  -1
+		                  Months:  11
+		                   Weeks:  4
+		                WeekDays:  2
+		                DateDays:  30
+		                   Hours:  0
+		                 Minutes:  0
+		                 Seconds:  0
+		            Milliseconds:  0
+		            Microseconds:  0
+		             Nanoseconds:  0
+		Total SubSec Nanoseconds:  0
+		  Total Time Nanoseconds:  0
+		========================================
+	*/
 
 }
 
@@ -140,14 +139,12 @@ func ExampleTimeDto004() {
 	year := 69
 	month := 5
 	day := 27
-	hour:= 15
+	hour := 15
 	minute := 30
 	second := 2
 	millisecond := 784
 	microsecond := 303
 	nanosecond := 848
-
-
 
 	tDto := dt.TimeDto{}
 	tDto.Years = year
@@ -165,13 +162,17 @@ func ExampleTimeDto004() {
 	fmt.Println("====================================")
 	PrintOutTimeDtoFields(tDto)
 
-	tDto.NormalizeTimeElements()
+	err := tDto.NormalizeTimeElements()
+
+	if err != nil {
+		panic(fmt.Errorf("ExampleTimeDto004() Error returned by "+
+			"tDto.NormalizeTimeElements(). Error='%v' ", err.Error()))
+	}
 
 	fmt.Println("------------------------------------")
 	fmt.Println("        Normalized TimeDto")
 	fmt.Println("------------------------------------")
 	PrintOutTimeDtoFields(tDto)
-
 
 }
 
@@ -180,7 +181,7 @@ func ExampleTimeDto005() {
 	year := 69
 	month := 5
 	day := 27
-	hour:= 15
+	hour := 15
 	minute := 30
 	second := 2
 	millisecond := 784
@@ -197,20 +198,20 @@ func ExampleTimeDto005() {
 
 	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
-	t1USCentral := time.Date(1948, time.Month(9),7,4,32,16,8185431, locUSCentral)
+	t1USCentral := time.Date(1948, time.Month(9), 7, 4, 32, 16, 8185431, locUSCentral)
 	tDur, err := dt.TimeDurationDto{}.NewStartTimePlusTimeDto(t1USCentral, tDto, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeDurationDto{}.NewStartTimePlusTimeDto(). " +
+		fmt.Printf("Error returned by TimeDurationDto{}.NewStartTimePlusTimeDto(). "+
 			"t1USCentral='%v'  Error:='%v'\n",
 			t1USCentral.Format(dt.FmtDateTimeYrMDayFmtStr), err.Error())
 		return
 	}
 
-	t4USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279,locUSCentral)
+	t4USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
 
 	if !t4USCentral.Equal(tDur.EndTimeDateTz.DateTime) {
-		fmt.Printf("Error: expected EndDateTime='%v'. Instead, EndDateTime='%v'  \n" +
+		fmt.Printf("Error: expected EndDateTime='%v'. Instead, EndDateTime='%v'  \n"+
 			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr), tDur.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
@@ -255,7 +256,7 @@ func ExampleTimeDto006() {
 // ExampleTimeDto007
 func ExampleTimeDto007() {
 
-	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		fmt.Printf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'\n", err.Error())
@@ -267,7 +268,7 @@ func ExampleTimeDto007() {
 	fmt.Println("-----------------------------------------")
 	fmt.Println()
 
-	t2Dto, err := dt.TimeDto{}.New(0, 36, 0, 0, 0, 0,0,0,0,0)
+	t2Dto, err := dt.TimeDto{}.New(0, 36, 0, 0, 0, 0, 0, 0, 0, 0)
 
 	if err != nil {
 		fmt.Printf("Error returned by TimeDto{}.New(0, 0, 0, 1, 0, 0,0,0,0,0). Error='%v'\n", err.Error())
@@ -280,9 +281,7 @@ func ExampleTimeDto007() {
 		return
 	}
 
-
 	fmt.Println("Final t0Dto - TimeDto - Data Fields")
 	PrintOutTimeDtoFields(t0Dto)
 
 }
-

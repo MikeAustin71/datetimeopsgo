@@ -44,26 +44,26 @@ func TestTimeDto_NormalizeTimeElements_01(t *testing.T) {
 		t.Error("Expected t1Dto to EQUAL t2Dto. IT DID NOT!")
 	}
 
-/*
-	After Normalize Time Elements
-	========================================
-	TimeDto Printout
-	========================================
-Years:  1956
-Months:  3
-Weeks:  4
-WeekDays:  6
-DateDays:  34
-Hours:  1
-Minutes:  13
-Seconds:  6
-Milliseconds:  2
-Microseconds:  2
-Nanoseconds:  1
-	Total SubSec Nanoseconds:  2002001
-	Total Time Nanoseconds:  4386002002001
-	========================================
-*/
+	/*
+	   	After Normalize Time Elements
+	   	========================================
+	   	TimeDto Printout
+	   	========================================
+	   Years:  1956
+	   Months:  3
+	   Weeks:  4
+	   WeekDays:  6
+	   DateDays:  34
+	   Hours:  1
+	   Minutes:  13
+	   Seconds:  6
+	   Milliseconds:  2
+	   Microseconds:  2
+	   Nanoseconds:  1
+	   	Total SubSec Nanoseconds:  2002001
+	   	Total Time Nanoseconds:  4386002002001
+	   	========================================
+	*/
 
 }
 
@@ -106,26 +106,25 @@ func TestTimeDto_NormalizeTimeElements_02(t *testing.T) {
 	if !t1Dto.Equal(t2Dto) {
 		t.Error("Expected t1Dto to EQUAL t2Dto. IT DID NOT!")
 	}
-/*
-After Normalize Time Elements
-========================================
-          TimeDto Printout
-========================================
-                   Years:  1956
-                  Months:  3
-                   Weeks:  4
-                WeekDays:  6
-                DateDays:  34
-                   Hours:  1
-                 Minutes:  13
-                 Seconds:  5
-            Milliseconds:  123
-            Microseconds:  456
-             Nanoseconds:  789
-Total SubSec Nanoseconds:  123456789
-  Total Time Nanoseconds:  4385123456789
-*/
-
+	/*
+	   After Normalize Time Elements
+	   ========================================
+	             TimeDto Printout
+	   ========================================
+	                      Years:  1956
+	                     Months:  3
+	                      Weeks:  4
+	                   WeekDays:  6
+	                   DateDays:  34
+	                      Hours:  1
+	                    Minutes:  13
+	                    Seconds:  5
+	               Milliseconds:  123
+	               Microseconds:  456
+	                Nanoseconds:  789
+	   Total SubSec Nanoseconds:  123456789
+	     Total Time Nanoseconds:  4385123456789
+	*/
 
 }
 func TestTimeDto_NormalizeDays_01(t *testing.T) {
@@ -176,7 +175,7 @@ func TestTimeDto_NormalizeDays_01(t *testing.T) {
 		t.Error("Expected t1Dto to EQUAL t2Dto. IT DID NOT!")
 	}
 
-	expectedDateTime:= "1956-04-03 01:13:06.002002001 +0000 UCT"
+	expectedDateTime := "1956-04-03 01:13:06.002002001 +0000 UCT"
 
 	actualDateTime, err := t1Dto.GetDateTime(TzIanaUTC)
 

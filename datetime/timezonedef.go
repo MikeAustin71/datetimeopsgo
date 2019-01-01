@@ -1,10 +1,10 @@
 package datetime
 
 import (
-	"time"
-	"strings"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
 )
 
 /*
@@ -33,16 +33,16 @@ import (
 // Contains detailed parameters describing a specific
 // Time Zone and Time Zone Location
 type TimeZoneDefDto struct {
-	ZoneName						string
-	ZoneOffsetSeconds		int			// Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
-	ZoneSign						int 		// -1 == West of UTC  +1 == East of UTC
-	OffsetHours					int			// Hours offset from UTC. Always a positive number, refer to ZoneSign
-	OffsetMinutes				int			// Minutes offset from UTC. Always a positive number, refer to ZoneSign
-	OffsetSeconds				int			// Seconds offset from UTC. Always a positive number, refer to ZoneSign
-	ZoneOffset					string	// A text string representing the time zone. Example "-0500 CDT"
-	Location						*time.Location	// Pointer to a Time Zone Location
-	LocationName				string					// Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
-	Description					string	// Unused - Available for classification, labeling or description by user.
+	ZoneName          string
+	ZoneOffsetSeconds int            // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
+	ZoneSign          int            // -1 == West of UTC  +1 == East of UTC
+	OffsetHours       int            // Hours offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetMinutes     int            // Minutes offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetSeconds     int            // Seconds offset from UTC. Always a positive number, refer to ZoneSign
+	ZoneOffset        string         // A text string representing the time zone. Example "-0500 CDT"
+	Location          *time.Location // Pointer to a Time Zone Location
+	LocationName      string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+	Description       string         // Unused - Available for classification, labeling or description by user.
 }
 
 // CopyIn - Copies an incoming TimeZoneDefDto into the
@@ -51,16 +51,16 @@ func (tzdef *TimeZoneDefDto) CopyIn(tzdef2 TimeZoneDefDto) {
 
 	tzdef.Empty()
 
-	tzdef.ZoneName					= tzdef2.ZoneName
-	tzdef.ZoneOffsetSeconds	= tzdef2.ZoneOffsetSeconds
-	tzdef.ZoneSign					= tzdef2.ZoneSign
-	tzdef.OffsetHours				= tzdef2.OffsetHours
-	tzdef.OffsetMinutes			= tzdef2.OffsetMinutes
-	tzdef.OffsetSeconds			= tzdef2.OffsetSeconds
-	tzdef.ZoneOffset				= tzdef2.ZoneOffset
-	tzdef.Location	 				= tzdef2.Location
-	tzdef.LocationName			= tzdef2.LocationName
-	tzdef.Description				= tzdef2.Description
+	tzdef.ZoneName = tzdef2.ZoneName
+	tzdef.ZoneOffsetSeconds = tzdef2.ZoneOffsetSeconds
+	tzdef.ZoneSign = tzdef2.ZoneSign
+	tzdef.OffsetHours = tzdef2.OffsetHours
+	tzdef.OffsetMinutes = tzdef2.OffsetMinutes
+	tzdef.OffsetSeconds = tzdef2.OffsetSeconds
+	tzdef.ZoneOffset = tzdef2.ZoneOffset
+	tzdef.Location = tzdef2.Location
+	tzdef.LocationName = tzdef2.LocationName
+	tzdef.Description = tzdef2.Description
 
 }
 
@@ -70,56 +70,54 @@ func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
 
 	tzdef2 := TimeZoneDefDto{}
 
-	tzdef2.ZoneName						= tzdef.ZoneName
-	tzdef2.ZoneOffsetSeconds	= tzdef.ZoneOffsetSeconds
-	tzdef2.ZoneSign						= tzdef.ZoneSign
-	tzdef2.OffsetHours				= tzdef.OffsetHours
-	tzdef2.OffsetMinutes			= tzdef.OffsetMinutes
-	tzdef2.OffsetSeconds			= tzdef.OffsetSeconds
-	tzdef2.ZoneOffset					= tzdef.ZoneOffset
-	tzdef2.Location	  				= tzdef.Location
-	tzdef2.LocationName				= tzdef.LocationName
-	tzdef2.Description				= tzdef.Description
+	tzdef2.ZoneName = tzdef.ZoneName
+	tzdef2.ZoneOffsetSeconds = tzdef.ZoneOffsetSeconds
+	tzdef2.ZoneSign = tzdef.ZoneSign
+	tzdef2.OffsetHours = tzdef.OffsetHours
+	tzdef2.OffsetMinutes = tzdef.OffsetMinutes
+	tzdef2.OffsetSeconds = tzdef.OffsetSeconds
+	tzdef2.ZoneOffset = tzdef.ZoneOffset
+	tzdef2.Location = tzdef.Location
+	tzdef2.LocationName = tzdef.LocationName
+	tzdef2.Description = tzdef.Description
 
 	return tzdef2
 
 }
 
-
 // Empty - Resets all field values for the current TimeZoneDefDto
 // instance to their uninitialized or 'zero' states.
 func (tzdef *TimeZoneDefDto) Empty() {
-	tzdef.ZoneName						= ""
-	tzdef.ZoneOffsetSeconds		= 0
-	tzdef.ZoneSign						= 0
-	tzdef.OffsetHours					= 0
-	tzdef.OffsetMinutes				= 0
-	tzdef.OffsetSeconds				= 0
-	tzdef.ZoneOffset					= ""
-	tzdef.Location						= nil
-	tzdef.LocationName				= ""
-	tzdef.Description					= ""
+	tzdef.ZoneName = ""
+	tzdef.ZoneOffsetSeconds = 0
+	tzdef.ZoneSign = 0
+	tzdef.OffsetHours = 0
+	tzdef.OffsetMinutes = 0
+	tzdef.OffsetSeconds = 0
+	tzdef.ZoneOffset = ""
+	tzdef.Location = nil
+	tzdef.LocationName = ""
+	tzdef.Description = ""
 
 }
 
 // Equal - Determines if two TimeZoneDefDto are equivalent in
 // value. Returns 'true' of two TimeZoneDefDto's are equal in
 // all respects.
-func(tzdef *TimeZoneDefDto) Equal(tzdef2 TimeZoneDefDto) bool {
+func (tzdef *TimeZoneDefDto) Equal(tzdef2 TimeZoneDefDto) bool {
 
-	if tzdef.ZoneName 				== tzdef2.ZoneName 					&&
+	if tzdef.ZoneName == tzdef2.ZoneName &&
 		tzdef.ZoneOffsetSeconds == tzdef2.ZoneOffsetSeconds &&
-		tzdef.ZoneSign 					== tzdef2.ZoneSign 					&&
-		tzdef.OffsetHours 			== tzdef2.OffsetHours 			&&
-		tzdef.OffsetMinutes 		== tzdef2.OffsetMinutes 		&&
-		tzdef.OffsetSeconds 		== tzdef2.OffsetSeconds 		&&
-		tzdef.ZoneOffset 				== tzdef2.ZoneOffset 				&&
+		tzdef.ZoneSign == tzdef2.ZoneSign &&
+		tzdef.OffsetHours == tzdef2.OffsetHours &&
+		tzdef.OffsetMinutes == tzdef2.OffsetMinutes &&
+		tzdef.OffsetSeconds == tzdef2.OffsetSeconds &&
+		tzdef.ZoneOffset == tzdef2.ZoneOffset &&
 		tzdef.Location.String() == tzdef2.Location.String() &&
-		tzdef.LocationName 			== tzdef2.LocationName 			&&
-		tzdef.Description 			== tzdef2.Description {
+		tzdef.LocationName == tzdef2.LocationName &&
+		tzdef.Description == tzdef2.Description {
 		return true
 	}
-
 
 	return false
 }
@@ -194,14 +192,14 @@ func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
 //
 func (tzdef *TimeZoneDefDto) IsEmpty() bool {
 
-	if tzdef.ZoneName 					!= "" ||
-		tzdef.ZoneOffsetSeconds != 0 	||
-		tzdef.ZoneSign 					!= 0 	||
-		tzdef.OffsetHours 			!= 0 	||
-		tzdef.OffsetMinutes 		!= 0 	||
-		tzdef.OffsetSeconds 		!= 0	||
-		tzdef.ZoneOffset				!= "" ||
-		tzdef.LocationName			!= "" {
+	if tzdef.ZoneName != "" ||
+		tzdef.ZoneOffsetSeconds != 0 ||
+		tzdef.ZoneSign != 0 ||
+		tzdef.OffsetHours != 0 ||
+		tzdef.OffsetMinutes != 0 ||
+		tzdef.OffsetSeconds != 0 ||
+		tzdef.ZoneOffset != "" ||
+		tzdef.LocationName != "" {
 		return false
 	}
 
@@ -220,7 +218,7 @@ func (tzdef *TimeZoneDefDto) IsValid() bool {
 		return false
 	}
 
-	if strings.TrimLeft(strings.TrimRight(tzdef.LocationName," "), " ")  == "" {
+	if strings.TrimLeft(strings.TrimRight(tzdef.LocationName, " "), " ") == "" {
 		return false
 	}
 
@@ -319,9 +317,9 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 
 	err := tzDef2.SetFromDateTime(dateTime)
 
-	if err!=nil {
-		return TimeZoneDefDto{}, fmt.Errorf(ePrefix +
-			"Error returned by tzDef2.SetFromDateTime(dateTime). " +
+	if err != nil {
+		return TimeZoneDefDto{}, fmt.Errorf(ePrefix+
+			"Error returned by tzDef2.SetFromDateTime(dateTime). "+
 			"dateTime='%v'  Error='%v'",
 			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
@@ -352,11 +350,8 @@ func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
 
 	tzdef.Description = ""
 
-
-
 	return nil
 }
-
 
 // allocateZoneOffsetSeconds - allocates a signed value of total offset seconds from
 // UTC to the associated fields in the current TimeZoneDefDto instance.
@@ -402,7 +397,7 @@ func (tzdef *TimeZoneDefDto) setZoneString() {
 		tzdef.ZoneOffset += "-"
 	}
 
-	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d",tzdef.OffsetHours,tzdef.OffsetMinutes)
+	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d", tzdef.OffsetHours, tzdef.OffsetMinutes)
 
 	if tzdef.OffsetSeconds > 0 {
 		tzdef.ZoneOffset += fmt.Sprintf("%02d", tzdef.OffsetSeconds)
@@ -412,4 +407,3 @@ func (tzdef *TimeZoneDefDto) setZoneString() {
 
 	return
 }
-

@@ -3,8 +3,8 @@ package main
 import (
 	dt "../datetime"
 	ex "../datetimeexamples"
-	"time"
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -12,7 +12,6 @@ func main() {
 	mainTest019()
 
 }
-
 
 func mainTest019() {
 	locUSCentral, err := time.LoadLocation(dt.TzIanaUsCentral)
@@ -29,18 +28,18 @@ func mainTest019() {
 	second := 18
 	nSecs := 792489279
 
-	t1USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+	t1USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
 	minute = 3
 	second = 20
-	t2USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+	t2USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
 	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(
-																		t1USCentral,
-																		t2USCentral,
-																		dt.TDurCalcTypeSTDYEARMTH,
-																		dt.TzIanaUsCentral,
-																		dt.FmtDateTimeYrMDayFmtStr)
+		t1USCentral,
+		t2USCentral,
+		dt.TDurCalcTypeSTDYEARMTH,
+		dt.TzIanaUsCentral,
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	str, _ := tDur.GetCumSecondsTimeStr()
 
@@ -53,15 +52,15 @@ func mainTest018() {
 	t1Dto := dt.TimeDto{}
 
 	/*
-	t1Dto.Years = 1955
-	t1Dto.Months = 15
-	t1Dto.DateDays = 32
-	t1Dto.Hours = 48
-	t1Dto.Minutes = 71
-	t1Dto.Seconds = 125
-	t1Dto.Milliseconds = 1001
-	t1Dto.Microseconds = 1001
-	t1Dto.Nanoseconds = 1001
+		t1Dto.Years = 1955
+		t1Dto.Months = 15
+		t1Dto.DateDays = 32
+		t1Dto.Hours = 48
+		t1Dto.Minutes = 71
+		t1Dto.Seconds = 125
+		t1Dto.Milliseconds = 1001
+		t1Dto.Microseconds = 1001
+		t1Dto.Nanoseconds = 1001
 	*/
 
 	t1Dto.Years = 0
@@ -74,40 +73,51 @@ func mainTest018() {
 	t1Dto.Microseconds = 0
 	t1Dto.Nanoseconds = 0
 
+	err := t1Dto.NormalizeTimeElements()
+	if err != nil {
+		fmt.Printf("Error returned by t1Dto.NormalizeTimeElements(). "+
+			"Error='%v' ", err.Error())
+		return
+	}
 
-	t1Dto.NormalizeTimeElements()
 	fmt.Println("After Normalize Time Elements ")
 	ex.PrintOutTimeDtoFields(t1Dto)
 
+	_, err = t1Dto.NormalizeDays()
 
-	t1Dto.NormalizeDays()
+	if err != nil {
+		fmt.Printf("Error returned by t1Dto.NormalizeDays(). "+
+			"Error='%v' \n", err.Error())
+		return
+	}
+
 	fmt.Println("After ")
 	ex.PrintOutTimeDtoFields(t1Dto)
 	dateTime, err := t1Dto.GetDateTime(dt.TzIanaUTC)
 
 	if err != nil {
-		fmt.Printf("Error returned by t1Dto.GetDateTime(dt.TzIanaUTC). Error='%v'",
-				err.Error())
+		fmt.Printf("Error returned by t1Dto.GetDateTime(dt.TzIanaUTC). Error='%v'\n",
+			err.Error())
+		return
 	}
 
 	fmt.Println("t1Dto.GetDateTime(): ", dateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
 
 }
 
-
 func mainTest017() {
 	t1Dto := dt.TimeDto{}
-/*
-	t1Dto.Years = 1955
-	t1Dto.Months = 15
-	t1Dto.DateDays = 32
-	t1Dto.Hours = 48
-	t1Dto.Minutes = 71
-	t1Dto.Seconds = 125
-	t1Dto.Milliseconds = 1001
-	t1Dto.Microseconds = 1001
-	t1Dto.Nanoseconds = 1001
-*/
+	/*
+		t1Dto.Years = 1955
+		t1Dto.Months = 15
+		t1Dto.DateDays = 32
+		t1Dto.Hours = 48
+		t1Dto.Minutes = 71
+		t1Dto.Seconds = 125
+		t1Dto.Milliseconds = 1001
+		t1Dto.Microseconds = 1001
+		t1Dto.Nanoseconds = 1001
+	*/
 
 	t1Dto.Years = 1955
 	t1Dto.Months = 15
@@ -146,70 +156,70 @@ func mainTest017() {
 
 	utcLoc, _ := time.LoadLocation(dt.TzIanaUTC)
 
-	tDate := time.Date(1956, 3, 34, 1, 13, 6, 2002001, utcLoc )
+	tDate := time.Date(1956, 3, 34, 1, 13, 6, 2002001, utcLoc)
 
 	fmt.Println("tDate: ", tDate.Format(dt.FmtDateTimeYrMDayFmtStr))
 
 	fmt.Println("SUCCESSFUL COMPLETION!")
-/*
+	/*
 
-Original TimeDto Values
-========================================
-          TimeDto Printout
-========================================
-                   Years:  1955
-                  Months:  15
-                   Weeks:  0
-                WeekDays:  0
-                DateDays:  32
-                   Hours:  48
-                 Minutes:  71
-                 Seconds:  125
-            Milliseconds:  1001
-            Microseconds:  1001
-             Nanoseconds:  1001
-Total SubSec Nanoseconds:  0
-  Total Time Nanoseconds:  0
-========================================
-After Normalize Time Elements
-========================================
-          TimeDto Printout
-========================================
-                   Years:  1956
-                  Months:  3
-                   Weeks:  4
-                WeekDays:  6
-                DateDays:  34
-                   Hours:  1
-                 Minutes:  13
-                 Seconds:  6
-            Milliseconds:  2
-            Microseconds:  2
-             Nanoseconds:  1
-Total SubSec Nanoseconds:  2002001
-  Total Time Nanoseconds:  4386002002001
-========================================
-After Normalize Days
-========================================
-          TimeDto Printout
-========================================
-                   Years:  1956
-                  Months:  4
-                   Weeks:  0
-                WeekDays:  3
-                DateDays:  3
-                   Hours:  1
-                 Minutes:  13
-                 Seconds:  6
-            Milliseconds:  2
-            Microseconds:  2
-             Nanoseconds:  1
-Total SubSec Nanoseconds:  2002001
-  Total Time Nanoseconds:  4386002002001
-========================================
-tDate:  1956-04-03 01:13:06.002002001 +0000 UCT
+	   Original TimeDto Values
+	   ========================================
+	             TimeDto Printout
+	   ========================================
+	                      Years:  1955
+	                     Months:  15
+	                      Weeks:  0
+	                   WeekDays:  0
+	                   DateDays:  32
+	                      Hours:  48
+	                    Minutes:  71
+	                    Seconds:  125
+	               Milliseconds:  1001
+	               Microseconds:  1001
+	                Nanoseconds:  1001
+	   Total SubSec Nanoseconds:  0
+	     Total Time Nanoseconds:  0
+	   ========================================
+	   After Normalize Time Elements
+	   ========================================
+	             TimeDto Printout
+	   ========================================
+	                      Years:  1956
+	                     Months:  3
+	                      Weeks:  4
+	                   WeekDays:  6
+	                   DateDays:  34
+	                      Hours:  1
+	                    Minutes:  13
+	                    Seconds:  6
+	               Milliseconds:  2
+	               Microseconds:  2
+	                Nanoseconds:  1
+	   Total SubSec Nanoseconds:  2002001
+	     Total Time Nanoseconds:  4386002002001
+	   ========================================
+	   After Normalize Days
+	   ========================================
+	             TimeDto Printout
+	   ========================================
+	                      Years:  1956
+	                     Months:  4
+	                      Weeks:  0
+	                   WeekDays:  3
+	                   DateDays:  3
+	                      Hours:  1
+	                    Minutes:  13
+	                    Seconds:  6
+	               Milliseconds:  2
+	               Microseconds:  2
+	                Nanoseconds:  1
+	   Total SubSec Nanoseconds:  2002001
+	     Total Time Nanoseconds:  4386002002001
+	   ========================================
+	   tDate:  1956-04-03 01:13:06.002002001 +0000 UCT
 
-*/
+	*/
 
 }
 
@@ -228,7 +238,7 @@ func mainTest016() {
 	second := 18
 	nSecs := 792489279
 
-	t4USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+	t4USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
 	t4Dto, err := dt.TimeDto{}.New(year, month, 0, day, hour, minute,
 		second, 0, 0, nSecs)
@@ -254,9 +264,8 @@ func mainTest016() {
 
 	t5Tokyo := time.Date(2012, 9, 30, 11, 58, 48, 123456789, locTokyo)
 
-
 	t5Dto, err := dt.TimeDto{}.New(2012, 9, 0, 30, 11,
-		58, 48,  0, 0, 123456789)
+		58, 48, 0, 0, 123456789)
 
 	if err != nil {
 		fmt.Printf("Error returned by t5Tokyo TimeDto{}.New(). Error='%v'", err.Error())
@@ -289,7 +298,7 @@ func mainTest016() {
 	err = dTz1.SetFromTimeDto(t4Dto, dt.TzIanaUsCentral)
 
 	if err != nil {
-		fmt.Printf("Error returned from dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral). " +
+		fmt.Printf("Error returned from dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral). "+
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -324,47 +333,47 @@ func mainTest016() {
 	}
 
 	if year != dTz1.Time.Years {
-		fmt.Printf("Error: Expected Years='%v'. Instead, Years='%v'\n",year, dTz1.Time.Years)
+		fmt.Printf("Error: Expected Years='%v'. Instead, Years='%v'\n", year, dTz1.Time.Years)
 		return
 	}
 
 	if month != dTz1.Time.Months {
-		fmt.Printf("Error: Expected Months='%v'. Instead, Months='%v'\n",month, dTz1.Time.Months)
+		fmt.Printf("Error: Expected Months='%v'. Instead, Months='%v'\n", month, dTz1.Time.Months)
 		return
 	}
 
 	if day != dTz1.Time.DateDays {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",day, dTz1.Time.DateDays)
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", day, dTz1.Time.DateDays)
 		return
 	}
 
 	if hour != dTz1.Time.Hours {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",hour, dTz1.Time.Hours)
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", hour, dTz1.Time.Hours)
 		return
 	}
 
 	if minute != dTz1.Time.Minutes {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",minute, dTz1.Time.Minutes)
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", minute, dTz1.Time.Minutes)
 		return
 	}
 
 	if second != dTz1.Time.Seconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",second, dTz1.Time.Seconds)
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", second, dTz1.Time.Seconds)
 		return
 	}
 
 	if 792 != dTz1.Time.Milliseconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",792, dTz1.Time.Milliseconds)
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 792, dTz1.Time.Milliseconds)
 		return
 	}
 
 	if 489 != dTz1.Time.Microseconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",489, dTz1.Time.Microseconds)
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 489, dTz1.Time.Microseconds)
 		return
 	}
 
 	if 279 != dTz1.Time.Nanoseconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",279, dTz1.Time.Nanoseconds)
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 279, dTz1.Time.Nanoseconds)
 		return
 	}
 
@@ -385,7 +394,6 @@ func mainTest016() {
 		return
 	}
 
-
 	fmt.Println("SUCCESSFUL COMPLETION!!!")
 }
 
@@ -394,11 +402,11 @@ func mainTest015() {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32,515539300, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). " +
-				"Error='%v'\n", err.Error())
+		fmt.Printf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). "+
+			"Error='%v'\n", err.Error())
 		return
 	}
 
@@ -435,11 +443,19 @@ func mainTest014() {
 	t12Dur := t2.Sub(t1)
 
 	timeDto := dt.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	timeDto.NormalizeTimeElements()
+
+	err := timeDto.NormalizeTimeElements()
+
+	if err != nil {
+		fmt.Printf("Error returned by timeDto.NormalizeTimeElements(). "+
+			"Error='%v' ", err.Error())
+		return
+	}
+
 	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). " +
+		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). "+
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -463,7 +479,6 @@ func mainTest014() {
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
-
 
 	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
@@ -489,7 +504,7 @@ func mainTest012() {
 
 	dx1 := t2.AddDate(timeDto.Years, timeDto.Months, 0)
 
-	dur := (int64(timeDto.Weeks * 7) + int64(timeDto.WeekDays)) * dt.DayNanoSeconds
+	dur := (int64(timeDto.Weeks*7) + int64(timeDto.WeekDays)) * dt.DayNanoSeconds
 	dur += int64(timeDto.Hours) * dt.HourNanoSeconds
 	dur += int64(timeDto.Minutes) * dt.MinuteNanoSeconds
 	dur += int64(timeDto.Seconds) * dt.SecondNanoseconds
@@ -514,7 +529,7 @@ func mainTest011() {
 		dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz() " +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz() "+
 			"Error='%v'", err.Error())
 		return
 	}
@@ -534,9 +549,15 @@ func mainTest010() {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-
 	timeDto := dt.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	timeDto.NormalizeTimeElements()
+
+	err := timeDto.NormalizeTimeElements()
+
+	if err != nil {
+		fmt.Printf("Error returned by timeDto.NormalizeTimeElements(). "+
+			"Error='%v' ", err.Error())
+		return
+	}
 
 	dur, err := dt.TimeDurationDto{}.NewEndTimeMinusTimeDto(t2, timeDto, fmtstr)
 
@@ -565,11 +586,11 @@ func mainTest009() {
 	t2, _ := time.Parse(fmtstr, t2str)
 
 	tDto, err :=
-				dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t2, t1,
-								dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, fmtstr)
+		dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t2, t1,
+			dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). " +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). "+
 			" Error='%v'\n", err.Error())
 		return
 	}
@@ -580,7 +601,7 @@ func mainTest009() {
 	durT, err := dt.DurationTriad{}.NewStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). " +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). "+
 			" Error='%v'\n", err.Error())
 		return
 	}
@@ -600,7 +621,13 @@ func mainTest008() {
 
 	du := dt.DurationTriad{}
 
-	du.SetStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err := du.SetStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by du.SetStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, "+
+			"dt.FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
+		return
+	}
 
 	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
 
@@ -612,17 +639,17 @@ func mainTest008() {
 	fmt.Println("  End Time: ", du.BaseTime.EndTimeDateTz.String())
 
 	/*
-	if expected != dOut {
-		fmt.Printf("Expected: %v. \nError - got %v\n", expected, dOut)
-		return
-	}
+		if expected != dOut {
+			fmt.Printf("Expected: %v. \nError - got %v\n", expected, dOut)
+			return
+		}
 	*/
 
 }
 
 func mainTest007() {
 
-	mthTest := int (time.Month(0))
+	mthTest := int(time.Month(0))
 
 	fmt.Println("===============================")
 	fmt.Println("       Month Zero Test")
@@ -630,15 +657,15 @@ func mainTest007() {
 	fmt.Println("int (time.Month(0))= ", mthTest)
 
 	/* Result = Sending zero to time.Month(0) yields a
-			a zero value. NOT GOOD! Best to use '1' in
-			place of zero month number.
+	a zero value. NOT GOOD! Best to use '1' in
+	place of zero month number.
 
-				===============================
-							 Month Zero Test
-				===============================
-				int (time.Month(0))=  0
+		===============================
+					 Month Zero Test
+		===============================
+		int (time.Month(0))=  0
 
-	 */
+	*/
 
 }
 
@@ -650,46 +677,46 @@ func mainTest006() {
 	fmt.Println("2018-00")
 	fmt.Println()
 
-	tDateTime := time.Date(2018, 0, 0 ,0 ,0 ,0 ,0, locUTC)
+	tDateTime := time.Date(2018, 0, 0, 0, 0, 0, 0, locUTC)
 
 	ex.PrintDateTime(tDateTime, dt.FmtDateTimeYrMDayFmtStr)
 	/*		Result - Don't Use a Zero Month
-					2018-00
-					----------------------------------
-										 Date Time
-					----------------------------------
-					Date Time:  2017-11-30 00:00:00.000000000 +0000 UCT
-					The integer month is:  11
-					The integer day is: 30
-					The integer year is: 2017
-					The integer hour is: 0
-					The integer minute is: 0
-					The integer second is: 0
-					The integer nanosecond is 0
+			2018-00
+			----------------------------------
+								 Date Time
+			----------------------------------
+			Date Time:  2017-11-30 00:00:00.000000000 +0000 UCT
+			The integer month is:  11
+			The integer day is: 30
+			The integer year is: 2017
+			The integer hour is: 0
+			The integer minute is: 0
+			The integer second is: 0
+			The integer nanosecond is 0
 	*/
 
 	fmt.Println()
 	fmt.Println("2018-01")
 	fmt.Println()
 
-	t2 := time.Date(2018, 1, 0 ,0 ,0 ,0 ,0, locUTC)
+	t2 := time.Date(2018, 1, 0, 0, 0, 0, 0, locUTC)
 
 	ex.PrintDateTime(t2, dt.FmtDateTimeYrMDayFmtStr)
 	/* Result - Best Approach - Use 1 as month number instead of zero month number.
-			Also - Use Zero Days. Convert days to duration and add the duration.
-			2018-01
+	Also - Use Zero Days. Convert days to duration and add the duration.
+	2018-01
 
-			----------------------------------
-								 Date Time
-			----------------------------------
-			Date Time:  2017-12-31 00:00:00.000000000 +0000 UCT
-			The integer month is:  12
-			The integer day is: 31
-			The integer year is: 2017
-			The integer hour is: 0
-			The integer minute is: 0
-			The integer second is: 0
-			The integer nanosecond is 0
+	----------------------------------
+						 Date Time
+	----------------------------------
+	Date Time:  2017-12-31 00:00:00.000000000 +0000 UCT
+	The integer month is:  12
+	The integer day is: 31
+	The integer year is: 2017
+	The integer hour is: 0
+	The integer minute is: 0
+	The integer second is: 0
+	The integer nanosecond is 0
 	*/
 
 	fmt.Println()
@@ -702,21 +729,21 @@ func mainTest006() {
 
 	ex.PrintDateTime(t3, dt.FmtDateTimeYrMDayFmtStr)
 	/*
-			Add 1 Day to	2017-12-31 00:00:00.000000000 +0000 UCT
-			Gives desired result
+		Add 1 Day to	2017-12-31 00:00:00.000000000 +0000 UCT
+		Gives desired result
 
-			----------------------------------
-								 Date Time
-			----------------------------------
-			Date Time:  2018-01-01 00:00:00.000000000 +0000 UCT
-			The integer month is:  1
-			The integer day is: 1
-			The integer year is: 2018
-			The integer hour is: 0
-			The integer minute is: 0
-			The integer second is: 0
-			The integer nanosecond is 0
-	 */
+		----------------------------------
+							 Date Time
+		----------------------------------
+		Date Time:  2018-01-01 00:00:00.000000000 +0000 UCT
+		The integer month is:  1
+		The integer day is: 1
+		The integer year is: 2018
+		The integer hour is: 0
+		The integer minute is: 0
+		The integer second is: 0
+		The integer nanosecond is 0
+	*/
 
 }
 
@@ -724,7 +751,7 @@ func mainTest005() {
 
 	locUTC, _ := time.LoadLocation(dt.TzIanaUTC)
 
-	tDateTime := time.Date(2018, 2, 0 ,0 ,0 ,0 ,0, locUTC)
+	tDateTime := time.Date(2018, 2, 0, 0, 0, 0, 0, locUTC)
 
 	ex.PrintDateTime(tDateTime, dt.FmtDateTimeYrMDayFmtStr)
 
@@ -737,7 +764,7 @@ func mainTest005() {
 
 	ex.PrintDateTime(t2, dt.FmtDateTimeYrMDayFmtStr)
 
-	expectedDt := time.Date(2018, 2, 3 ,0 ,0 ,0 ,0, locUTC)
+	expectedDt := time.Date(2018, 2, 3, 0, 0, 0, 0, locUTC)
 
 	fmt.Println()
 	fmt.Println("Complete Date 2018-02-03")
@@ -754,9 +781,9 @@ func mainTest004() {
 	locParis, _ := time.LoadLocation(dt.TzIanaEuropeParis)
 	locCairo, _ := time.LoadLocation(dt.TzIanaAfricaCairo)
 	locMoscow, _ := time.LoadLocation(dt.TzIanaEuropeMoscow)
-	locTokyo, _ :=	time.LoadLocation(dt.TzIanaAsiaTokyo)
+	locTokyo, _ := time.LoadLocation(dt.TzIanaAsiaTokyo)
 
-	t1USCentral := time.Date(1948, time.Month(9),7,4,32,16,8185431,locUSCentral)
+	t1USCentral := time.Date(1948, time.Month(9), 7, 4, 32, 16, 8185431, locUSCentral)
 	t1USPacific := t1USCentral.In(locUSPacific)
 	t1EuropeParis := t1USPacific.In(locParis)
 	t1AfricaCairo := t1EuropeParis.In(locCairo)
@@ -780,10 +807,10 @@ func mainTest003() {
 	t1 := time.Date(2014, time.Month(15), 67, 19, 54, 30, 158712300, loc)
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	addYear  	:= 	0
-	addMonth 	:= 	15
-	addDay 		:=	64
-	addHours	:=  0
+	addYear := 0
+	addMonth := 15
+	addDay := 64
+	addHours := 0
 	addMinutes := 0
 	addSeconds := 0
 	addMilliSeconds := 0
@@ -792,7 +819,7 @@ func mainTest003() {
 
 	var totDuration int64
 
-	t2 := t1.AddDate(addYear,addMonth, addDay)
+	t2 := t1.AddDate(addYear, addMonth, addDay)
 
 	totDuration = int64(addHours) * int64(time.Hour)
 	totDuration += int64(addMinutes) * int64(time.Minute)
@@ -811,7 +838,7 @@ func mainTest003() {
 
 func mainTest002() {
 
-	tDto, err := dt.TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0 )
+	tDto, err := dt.TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
 
 	if err != nil {
 		fmt.Printf("Error returned from TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0 ) Error='%v' \n", err.Error())
@@ -839,4 +866,3 @@ func mainTest001() {
 	fmt.Println("t2: ", t2.Format(fmtstr))
 
 }
-

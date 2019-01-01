@@ -4,10 +4,9 @@ import (
 	"testing"
 )
 
-
 func TestTDurCalcTypeString_001(t *testing.T) {
 
-r := TDurCalcTypeSTDYEARMTH
+	r := TDurCalcTypeSTDYEARMTH
 
 	s := r.String()
 
@@ -29,7 +28,6 @@ func TestTDurCalcTypeString_002(t *testing.T) {
 	}
 
 }
-
 
 func TestTDurCalcTypeString_003(t *testing.T) {
 

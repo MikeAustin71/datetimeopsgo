@@ -1,14 +1,13 @@
 package datetimeexamples
 
-
 import (
-	 dt "../datetime"
+	dt "../datetime"
 	"fmt"
 	"time"
 )
 
 // ExamplesDateTimeTimeStampEverything
-func ExamplesDateTimeTimeStampEverything(){
+func ExamplesDateTimeTimeStampEverything() {
 	du := dt.DtMgr{}
 
 	fmt.Println("------------------------")
@@ -88,7 +87,7 @@ func ExamplesDateTimeGetEverythingFormat() {
 func ExamplesDateTimeGetCurrentTimeAsString() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 
-	dateT	:= dt.DtMgr{}
+	dateT := dt.DtMgr{}
 	t, err := time.Parse(dt.FmtDateTimeTzNano, tstr)
 
 	if err != nil {

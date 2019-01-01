@@ -16,6 +16,7 @@ This source code file is located in the source code repository:
 https://github.com/MikeAustin71/pathfilego.git
 */
 
+// FileWalkInfo
 type FileWalkInfo struct {
 	Path string
 	Info os.FileInfo
@@ -126,14 +127,24 @@ func (fh FileHelper) CopyFile(src, dst string) (err error) {
 // files.
 // See: https://stackoverflow.com/questions/21060945/simple-way-to-copy-a-file-in-golang
 func (fh FileHelper) CopyFileContents(src, dst string) (err error) {
-	in, err := os.Open(src)
-	if err != nil {
-		return
+
+	ePrefix := "FileHelper.CopyFileContents() "
+
+	in, err2 := os.Open(src)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix+"Error returned by os.Open(src). "+
+			"Error='%v' ", err2.Error())
+		return err
 	}
-	defer in.Close()
-	out, err := os.Create(dst)
-	if err != nil {
-		return
+
+	out, err2 := os.Create(dst)
+
+	if err2 != nil {
+		_ = in.Close()
+		err = fmt.Errorf(ePrefix+"Error returned by os.Create(dst). "+
+			"Error='%v' ", err2.Error())
+		return err
 	}
 
 	defer func() {
@@ -144,9 +155,15 @@ func (fh FileHelper) CopyFileContents(src, dst string) (err error) {
 	}()
 
 	if _, err = io.Copy(out, in); err != nil {
+		_ = in.Close()
+		_ = out.Close()
 		return
 	}
+
 	err = out.Sync()
+
+	_ = in.Close()
+	_ = out.Close()
 
 	return
 }
@@ -169,6 +186,7 @@ func (fh FileHelper) CopyFileContents(src, dst string) (err error) {
 // If the result of this process is an empty string,
 // Clean returns the string ".".
 
+// CleanPathStr
 func (fh FileHelper) CleanPathStr(pathStr string) string {
 
 	return fp.Clean(pathStr)
@@ -797,6 +815,7 @@ func (fh FileHelper) MakePurgeFilesFunc(dInfo *DirWalkInfo) func(string, os.File
 	}
 }
 
+// ReadFileBytes
 func (fh FileHelper) ReadFileBytes(rFile *os.File, byteBuff []byte) (int, error) {
 	return rFile.Read(byteBuff)
 }

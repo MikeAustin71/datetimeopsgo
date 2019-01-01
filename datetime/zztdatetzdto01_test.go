@@ -21,7 +21,7 @@ func TestDateTzDto_AddDate_01(t *testing.T) {
 	}
 
 	if expectedOutDate != dtz1.String() {
-		t.Errorf("Error: Expected dtz1.String()='%v'. Instead, dtz1.String()='%v' ",expectedOutDate, dtz1.String())
+		t.Errorf("Error: Expected dtz1.String()='%v'. Instead, dtz1.String()='%v' ", expectedOutDate, dtz1.String())
 	}
 
 	t2 := t1.AddDate(5, 6, 12)
@@ -35,7 +35,7 @@ func TestDateTzDto_AddDate_01(t *testing.T) {
 	expectedOutDate = t2.Format(fmtstr)
 
 	if expectedOutDate != dtz2.String() {
-		t.Errorf("Error: Expected dtz2.String()='%v'. Instead, dtz2.String()='%v' ",expectedOutDate, dtz2.String())
+		t.Errorf("Error: Expected dtz2.String()='%v'. Instead, dtz2.String()='%v' ", expectedOutDate, dtz2.String())
 	}
 
 }
@@ -55,7 +55,7 @@ func TestDateTzDto_AddDateToThis_01(t *testing.T) {
 	}
 
 	if expectedOutDate != dtz1.String() {
-		t.Errorf("Error: Expected dtz1.String()='%v'. Instead, dtz1.String()='%v' ",expectedOutDate, dtz1.String())
+		t.Errorf("Error: Expected dtz1.String()='%v'. Instead, dtz1.String()='%v' ", expectedOutDate, dtz1.String())
 	}
 
 	t2 := t1.AddDate(5, 6, 12)
@@ -69,7 +69,7 @@ func TestDateTzDto_AddDateToThis_01(t *testing.T) {
 	expectedOutDate = t2.Format(fmtstr)
 
 	if expectedOutDate != dtz1.String() {
-		t.Errorf("Error: Expected updated dtz1.String()='%v'. Instead, dtz1.String()='%v' ",expectedOutDate, dtz1.String())
+		t.Errorf("Error: Expected updated dtz1.String()='%v'. Instead, dtz1.String()='%v' ", expectedOutDate, dtz1.String())
 	}
 
 }
@@ -95,7 +95,7 @@ func TestDateTzDto_AddDuration_01(t *testing.T) {
 	expectedOutStr := t1.Format(fmtstr)
 
 	if expectedOutStr != dTz1.String() {
-		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'",expectedOutStr, dTz1.String())
+		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'", expectedOutStr, dTz1.String())
 	}
 
 	dTz2, err := dTz1.AddDuration(duration, fmtstr)
@@ -107,7 +107,7 @@ func TestDateTzDto_AddDuration_01(t *testing.T) {
 	expectedOutStr = t2.Format(fmtstr)
 
 	if expectedOutStr != dTz2.String() {
-		t.Errorf("Error: Expected dTz2.String()='%v'. Instead, dTz2.String()='%v'",expectedOutStr, dTz2.String())
+		t.Errorf("Error: Expected dTz2.String()='%v'. Instead, dTz2.String()='%v'", expectedOutStr, dTz2.String())
 	}
 
 }
@@ -132,7 +132,7 @@ func TestDateTzDto_AddDurationToThis_01(t *testing.T) {
 	expectedOutStr := t1.Format(fmtstr)
 
 	if expectedOutStr != dTz1.String() {
-		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'",expectedOutStr, dTz1.String())
+		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'", expectedOutStr, dTz1.String())
 	}
 
 	err = dTz1.AddDurationToThis(duration)
@@ -144,7 +144,7 @@ func TestDateTzDto_AddDurationToThis_01(t *testing.T) {
 	expectedOutStr = t2.Format(fmtstr)
 
 	if expectedOutStr != dTz1.String() {
-		t.Errorf("Error: Expected updated dTz1.String()='%v'. Instead, updated dTz1.String()='%v'",expectedOutStr, dTz1.String())
+		t.Errorf("Error: Expected updated dTz1.String()='%v'. Instead, updated dTz1.String()='%v'", expectedOutStr, dTz1.String())
 	}
 
 }
@@ -179,7 +179,7 @@ func TestDateTzDto_AddTime_01(t *testing.T) {
 	expectedOutputStr := t1.Format(fmtstr)
 
 	if expectedOutputStr != dTz1.String() {
-		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.",expectedOutputStr, dTz1.String())
+		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.", expectedOutputStr, dTz1.String())
 	}
 
 	t2 := t1.Add(time.Duration(totNanoSecs))
@@ -193,7 +193,7 @@ func TestDateTzDto_AddTime_01(t *testing.T) {
 	expectedOutputStr = t2.Format(fmtstr)
 
 	if expectedOutputStr != dTz2.String() {
-		t.Errorf("Error: Expected updated dTz2.String()='%v'. Instead, dTz2.String()='%v'. ",expectedOutputStr, dTz2.String())
+		t.Errorf("Error: Expected updated dTz2.String()='%v'. Instead, dTz2.String()='%v'. ", expectedOutputStr, dTz2.String())
 	}
 
 }
@@ -228,7 +228,7 @@ func TestDateTzDto_AddTimeToThis_01(t *testing.T) {
 	expectedOutputStr := t1.Format(fmtstr)
 
 	if expectedOutputStr != dTz1.String() {
-		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.",expectedOutputStr, dTz1.String())
+		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.", expectedOutputStr, dTz1.String())
 	}
 
 	t2 := t1.Add(time.Duration(totNanoSecs))
@@ -242,7 +242,7 @@ func TestDateTzDto_AddTimeToThis_01(t *testing.T) {
 	expectedOutputStr = t2.Format(fmtstr)
 
 	if expectedOutputStr != dTz1.String() {
-		t.Errorf("Error: Expected updated dTz1.String()='%v'. Instead, dTz1.String()='%v'. ",expectedOutputStr, dTz1.String())
+		t.Errorf("Error: Expected updated dTz1.String()='%v'. Instead, dTz1.String()='%v'. ", expectedOutputStr, dTz1.String())
 	}
 
 }
@@ -280,7 +280,7 @@ func TestDateTzDto_AddDateTime(t *testing.T) {
 	expectedOutputStr := t1.Format(fmtstr)
 
 	if expectedOutputStr != dTz1.String() {
-		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.",expectedOutputStr, dTz1.String())
+		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.", expectedOutputStr, dTz1.String())
 	}
 
 	t2 := t1.AddDate(years, months, days)
@@ -290,13 +290,13 @@ func TestDateTzDto_AddDateTime(t *testing.T) {
 	dTz2, err := dTz1.AddDateTime(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by dTz1.AddDateTime(years, months, days, hours, minutes, ...) Error='%v'.", err.Error() )
+		t.Errorf("Error returned by dTz1.AddDateTime(years, months, days, hours, minutes, ...) Error='%v'.", err.Error())
 	}
 
 	expectedOutputStr = t3.Format(fmtstr)
 
 	if expectedOutputStr != dTz2.String() {
-		t.Errorf("Error: Expected updated dTz2.String()='%v'. Instead, dTz2.String()='%v'.",expectedOutputStr, dTz2.String())
+		t.Errorf("Error: Expected updated dTz2.String()='%v'. Instead, dTz2.String()='%v'.", expectedOutputStr, dTz2.String())
 	}
 
 }
@@ -334,7 +334,7 @@ func TestDateTzDto_AddDateTimeToThis_01(t *testing.T) {
 	expectedOutputStr := t1.Format(fmtstr)
 
 	if expectedOutputStr != dTz1.String() {
-		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.",expectedOutputStr, dTz1.String())
+		t.Errorf("Error: Expected dTz1.String()='%v'. Instead, dTz1.String()='%v'.", expectedOutputStr, dTz1.String())
 	}
 
 	t2 := t1.AddDate(years, months, days)
@@ -350,7 +350,7 @@ func TestDateTzDto_AddDateTimeToThis_01(t *testing.T) {
 	expectedOutputStr = t3.Format(fmtstr)
 
 	if expectedOutputStr != dTz1.String() {
-		t.Errorf("Error: Expected updated dTz1.String()='%v'. Instead, dTz1.String()='%v'.",expectedOutputStr, dTz1.String())
+		t.Errorf("Error: Expected updated dTz1.String()='%v'. Instead, dTz1.String()='%v'.", expectedOutputStr, dTz1.String())
 	}
 
 }
@@ -418,11 +418,11 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 	actualTimeStr := dTzDto.DateTime.Format(fmtstr)
 
 	if t1OutStr != actualTimeStr {
-		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'",t1OutStr, actualTimeStr)
+		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
 	}
 
 	if t1ExpectedZone != dTzDto.TimeZone.ZoneName {
-		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneName='%v'. Instead, dTzDto.TimeZone.ZoneName='%v'",t1ExpectedZone, dTzDto.TimeZone.ZoneName)
+		t.Errorf("Error: Expected dTzDto.TimeZone.ZoneName='%v'. Instead, dTzDto.TimeZone.ZoneName='%v'", t1ExpectedZone, dTzDto.TimeZone.ZoneName)
 	}
 
 	if t1ExpectedZoneOffset != dTzDto.TimeZone.ZoneOffsetSeconds {
@@ -434,31 +434,31 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 	}
 
 	if t1.Year() != dTzDto.Time.Years {
-		t.Errorf("Expected Year='%v'.  Instead Year='%v'",t1.Year(), dTzDto.Time.Years)
+		t.Errorf("Expected Year='%v'.  Instead Year='%v'", t1.Year(), dTzDto.Time.Years)
 	}
 
 	if int(t1.Month()) != dTzDto.Time.Months {
-		t.Errorf("Expected Month Number='%v'.  Instead Month Number='%v'",int(t1.Month()), dTzDto.Time.Months)
+		t.Errorf("Expected Month Number='%v'.  Instead Month Number='%v'", int(t1.Month()), dTzDto.Time.Months)
 	}
 
 	if t1.Day() != dTzDto.Time.DateDays {
-		t.Errorf("Expected Date Day Number='%v'.  Instead Date Day Number='%v'",t1.Day(), dTzDto.Time.DateDays)
+		t.Errorf("Expected Date Day Number='%v'.  Instead Date Day Number='%v'", t1.Day(), dTzDto.Time.DateDays)
 	}
 
 	if t1.Hour() != dTzDto.Time.Hours {
-		t.Errorf("Expected Hour Number='%v'.  Instead Hour Number='%v'",t1.Hour(), dTzDto.Time.Hours)
+		t.Errorf("Expected Hour Number='%v'.  Instead Hour Number='%v'", t1.Hour(), dTzDto.Time.Hours)
 	}
 
 	if t1.Minute() != dTzDto.Time.Minutes {
-		t.Errorf("Expected Minute Number='%v'.  Instead Minute Number='%v'",t1.Minute(), dTzDto.Time.Minutes)
+		t.Errorf("Expected Minute Number='%v'.  Instead Minute Number='%v'", t1.Minute(), dTzDto.Time.Minutes)
 	}
 
 	if t1.Second() != dTzDto.Time.Seconds {
-		t.Errorf("Expected Second Number='%v'.  Instead Second Number='%v'",t1.Second(), dTzDto.Time.Seconds)
+		t.Errorf("Expected Second Number='%v'.  Instead Second Number='%v'", t1.Second(), dTzDto.Time.Seconds)
 	}
 
 	if 38 != dTzDto.Time.Milliseconds {
-		t.Errorf("Expected Millisecond='38'.  Instead, Millisecond='%v'",  dTzDto.Time.Milliseconds )
+		t.Errorf("Expected Millisecond='38'.  Instead, Millisecond='%v'", dTzDto.Time.Milliseconds)
 	}
 
 	if 175 != dTzDto.Time.Microseconds {
@@ -491,56 +491,56 @@ func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 	second := 18
 	nSecs := 792489279
 
-	t4USCentral := time.Date(year, time.Month(month),day,hour,minute,second,nSecs,locUSCentral)
+	t4USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
 	dTz1, err := DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)
-	
+
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)")
 	}
-	
+
 	tDto, err := dTz1.GetTimeDto()
-	
+
 	if err != nil {
 		t.Errorf("Error returned by dTz1.GetTimeDto(). Error=%v'", err.Error())
 	}
 
 	if year != tDto.Years {
-		t.Errorf("Error: Expected Years='%v'. Instead, Years='%v'",year, tDto.Years)
+		t.Errorf("Error: Expected Years='%v'. Instead, Years='%v'", year, tDto.Years)
 	}
 
 	if month != tDto.Months {
-		t.Errorf("Error: Expected Months='%v'. Instead, Months='%v'",month, tDto.Months)
+		t.Errorf("Error: Expected Months='%v'. Instead, Months='%v'", month, tDto.Months)
 	}
 
 	if day != tDto.DateDays {
-		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",day, tDto.DateDays)
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'", day, tDto.DateDays)
 	}
 
 	if hour != tDto.Hours {
-		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",hour, tDto.Hours)
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'", hour, tDto.Hours)
 	}
 
 	if minute != tDto.Minutes {
-		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",minute, tDto.Minutes)
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'", minute, tDto.Minutes)
 	}
 
 	if second != tDto.Seconds {
-		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",second, tDto.Seconds)
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'", second, tDto.Seconds)
 	}
 
 	if 792 != tDto.Milliseconds {
-		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",792, tDto.Milliseconds)
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'", 792, tDto.Milliseconds)
 	}
-	
+
 	if 489 != tDto.Microseconds {
-		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",489, tDto.Microseconds)
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'", 489, tDto.Microseconds)
 	}
-	
+
 	if 279 != tDto.Nanoseconds {
-		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'",279, tDto.Nanoseconds)
+		t.Errorf("Error: Expected Days='%v'. Instead, Days='%v'", 279, tDto.Nanoseconds)
 	}
-	
+
 	if nSecs != tDto.TotSubSecNanoseconds {
 		t.Errorf("Error: Expected tDto.TotSubSecNanoseconds='%v'. "+
 			"Instead, tDto.TotSubSecNanoseconds='%v'", nSecs, tDto.TotSubSecNanoseconds)
@@ -560,23 +560,28 @@ func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 
 func TestDateTzDto_GetDateTimeTzNanoSecYMDDowText(t *testing.T) {
 
-	tDto := TimeDto {
-		Years: 2018,
-		Months: 2,
-		DateDays: 6,
-		Hours: 20,
-		Minutes: 2,
-		Seconds: 18,
+	tDto := TimeDto{
+		Years:       2018,
+		Months:      2,
+		DateDays:    6,
+		Hours:       20,
+		Minutes:     2,
+		Seconds:     18,
 		Nanoseconds: 792489279,
 	}
 
-	tDto.NormalizeTimeElements()
+	err := tDto.NormalizeTimeElements()
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.NormalizeTimeElements(). Error='%v' ",
+			err.Error())
+	}
 
 	dTz, err := DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by " +
-			"DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr) " +
+		t.Errorf("Error returned by "+
+			"DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr) "+
 			"Error='%v'", err.Error())
 	}
 

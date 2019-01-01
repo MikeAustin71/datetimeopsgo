@@ -1,13 +1,12 @@
 package testlibs
 
-
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"math"
 	"math/big"
 	"strconv"
-	"bytes"
 )
 
 /*
@@ -31,8 +30,7 @@ import (
 
 	nthroot.go - Source Repository: https://github.com/MikeAustin71/mathhlpr.git
 
- */
-
+*/
 
 // A fraction represented by a numerator and a denominator.
 // Both numerator and denominator are of type intAry
@@ -122,6 +120,7 @@ func (fIa *FracIntAry) GetRationalValue(maxPrecision int) (*big.Rat, error) {
 
 }
 
+// BackUpIntAry
 type BackUpIntAry struct {
 	intAry                 []uint8
 	intAryLen              int
@@ -137,11 +136,12 @@ type BackUpIntAry struct {
 	decimalSeparator       rune // https://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html
 	thousandsSeparator     rune // https://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html
 	currencySymbol         rune // See Currency Symbol References below:
-															// https://gist.github.com/bzerangue/5484121
-															// http://symbologic.info/currency.htm
-															// http://www.xe.com/symbols.php
+	// https://gist.github.com/bzerangue/5484121
+	// http://symbologic.info/currency.htm
+	// http://www.xe.com/symbols.php
 }
 
+// New
 func (iBa BackUpIntAry) New() BackUpIntAry {
 	iAry := BackUpIntAry{}
 
@@ -163,6 +163,7 @@ func (iBa BackUpIntAry) New() BackUpIntAry {
 	return iAry
 }
 
+// Empty
 func (iBa *BackUpIntAry) Empty() {
 	iBa.intAry = []uint8{}
 	iBa.intAryLen = 0
@@ -188,6 +189,7 @@ func (iBa *BackUpIntAry) Empty() {
 	}
 }
 
+// CopyIn
 func (iBa *BackUpIntAry) CopyIn(iBa2 *BackUpIntAry) {
 	iBa2.SetInternalFlags()
 	iBa.Empty()
@@ -213,6 +215,7 @@ func (iBa *BackUpIntAry) CopyIn(iBa2 *BackUpIntAry) {
 
 }
 
+// CopyOut
 func (iBa *BackUpIntAry) CopyOut() BackUpIntAry {
 	iBa.SetInternalFlags()
 	iAry2 := BackUpIntAry{}.New()
@@ -240,6 +243,7 @@ func (iBa *BackUpIntAry) CopyOut() BackUpIntAry {
 	return iAry2
 }
 
+// Equals
 func (iBa *BackUpIntAry) Equals(iBa2 *BackUpIntAry) bool {
 	iBa.SetInternalFlags()
 	iBa2.SetInternalFlags()
@@ -265,7 +269,7 @@ func (iBa *BackUpIntAry) Equals(iBa2 *BackUpIntAry) bool {
 		iBa.signVal != iBa2.signVal ||
 		iBa.decimalSeparator != iBa2.decimalSeparator ||
 		iBa.thousandsSeparator != iBa2.thousandsSeparator ||
-		iBa.currencySymbol != iBa2.currencySymbol	{
+		iBa.currencySymbol != iBa2.currencySymbol {
 
 		return false
 	}
@@ -273,6 +277,7 @@ func (iBa *BackUpIntAry) Equals(iBa2 *BackUpIntAry) bool {
 	return true
 }
 
+// GetIntAryStats
 func (iBa *BackUpIntAry) GetIntAryStats() IntAryStatsDto {
 
 	iBa.SetInternalFlags()
@@ -284,7 +289,7 @@ func (iBa *BackUpIntAry) GetIntAryStats() IntAryStatsDto {
 	iStats.SignificantIntegerLen = iBa.significantIntegerLen
 	iStats.SignificantFractionLen = iBa.significantFractionLen
 	iStats.Precision = iBa.precision
-	iStats.SignVal	= iBa.signVal
+	iStats.SignVal = iBa.signVal
 	iStats.FirstDigitIdx = iBa.firstDigitIdx
 	iStats.LastDigitIdx = iBa.lastDigitIdx
 	iStats.IsZeroValue = iBa.isZeroValue
@@ -297,6 +302,7 @@ func (iBa *BackUpIntAry) GetIntAryStats() IntAryStatsDto {
 
 }
 
+// GetNumStr
 func (iBa *BackUpIntAry) GetNumStr() string {
 
 	iBa.SetInternalFlags()
@@ -313,14 +319,14 @@ func (iBa *BackUpIntAry) GetNumStr() string {
 
 	intLen := iBa.intAryLen - iBa.precision
 
-	for i:=0 ; i < intLen; i++ {
+	for i := 0; i < intLen; i++ {
 		buffer.WriteRune(rune(iBa.intAry[i] + 48))
 	}
 
 	if iBa.precision > 0 {
 		buffer.WriteRune(iBa.decimalSeparator)
 
-		for j:= 0; j < iBa.precision; j++ {
+		for j := 0; j < iBa.precision; j++ {
 			buffer.WriteRune(rune(iBa.intAry[intLen] + 48))
 			intLen++
 		}
@@ -331,17 +337,17 @@ func (iBa *BackUpIntAry) GetNumStr() string {
 
 }
 
+// GetPrecision
 func (iBa *BackUpIntAry) GetPrecision() int {
 	return iBa.precision
 }
 
-
+// GetSignValue
 func (iBa *BackUpIntAry) GetSignValue() int {
 	return iBa.signVal
 }
 
-
-
+// SetInternalFlags
 func (iBa *BackUpIntAry) SetInternalFlags() {
 
 	iBa.intAryLen = len(iBa.intAry)
@@ -407,6 +413,7 @@ func (iBa *BackUpIntAry) SetInternalFlags() {
 
 }
 
+//SetSignValue
 func (iBa *BackUpIntAry) SetSignValue(signVal int) {
 
 	if signVal < 0 {
@@ -573,9 +580,7 @@ func (ia *IntAry) AddIntToThis(num int, precision uint) error {
 		return err
 	}
 
-	ia.AddToThis(&ia2)
-
-	return nil
+	return ia.AddToThis(&ia2)
 }
 
 // AddInt64ToThis - Adds an integer (int64) to the value of the
@@ -605,9 +610,7 @@ func (ia *IntAry) AddInt64ToThis(num int64, precision uint) error {
 		return err
 	}
 
-	ia.AddToThis(&ia2)
-
-	return nil
+	return ia.AddToThis(&ia2)
 }
 
 // AddBigIntToThis - Adds the value of the *big.Int input
@@ -646,10 +649,9 @@ func (ia *IntAry) AddBigIntToThis(num *big.Int, precision uint) error {
 		return err
 	}
 
-	ia.AddToThis(&ia2)
-
-	return nil
+	return ia.AddToThis(&ia2)
 }
+
 // AddFloat32ToThis - Adds the value of input number (float32)
 // to the current value of this IntAry object.
 //
@@ -693,9 +695,7 @@ func (ia *IntAry) AddFloat32ToThis(num float32, precision int) error {
 		return nil
 	}
 
-	ia.AddToThis(&ia2)
-
-	return nil
+	return ia.AddToThis(&ia2)
 }
 
 // AddFloat64ToThis - Adds a floating point number (float64) to the
@@ -734,9 +734,7 @@ func (ia *IntAry) AddFloat64ToThis(num float64, precision int) error {
 		return err
 	}
 
-	ia.AddToThis(&ia2)
-
-	return nil
+	return ia.AddToThis(&ia2)
 }
 
 // AddFloatBigToThis - Adds a *big.Float number to the current
@@ -769,16 +767,13 @@ func (ia *IntAry) AddFloatBigToThis(num *big.Float, precision int) error {
 		return fmt.Errorf("AddFloatBigToThis() Error: Input parameter 'precision' is invalid. 'precision' must be greater than or equal to -1. 'precision'= '%v'", precision)
 	}
 
-
 	ia2, err := IntAry{}.NewFloatBig(num, precision)
 
 	if err != nil {
 		return err
 	}
 
-	ia.AddToThis(&ia2)
-
-	return nil
+	return ia.AddToThis(&ia2)
 }
 
 // AddMultipleToThis - Add the values of  multiple intAry objects to the current
@@ -809,8 +804,8 @@ func (ia *IntAry) AddMultipleToThis(iaMany ...*IntAry) error {
 func (ia *IntAry) addToSubtractFromThis(ia2 *IntAry, newSignVal int, doAdd bool, isZeroResult bool, doReverseNums bool) error {
 
 	if isZeroResult {
-		ia.SetIntAryToZero(ia.precision)
-		return nil
+
+		return ia.SetIntAryToZero(ia.precision)
 	}
 
 	ia.signVal = newSignVal
@@ -913,19 +908,19 @@ func (ia *IntAry) AddArrayLengthRight(addLen int) {
 	ia.SetIntAryLength()
 }
 
-
 // AppendToIntAry - appends an integer of
 // type uint8 to the internal Integer Array
 // of the current IntAry object.
 func (ia *IntAry) AppendToIntAry(num uint8) {
 	ia.intAry = append(ia.intAry, num)
-	ia.intAryLen  = len(ia.intAry)
+	ia.intAryLen = len(ia.intAry)
 	ia.integerLen = ia.intAryLen - ia.precision
 	if num > 0 {
 		ia.isZeroValue = false
 	}
 }
 
+//Ceiling
 func (ia *IntAry) Ceiling() (IntAry, error) {
 
 	err := ia.IsIntAryValid("Ceiling() - ")
@@ -990,10 +985,10 @@ func (ia *IntAry) Ceiling() (IntAry, error) {
 
 		} else {
 
-			if int(n1) + carry < 0 {
+			if int(n1)+carry < 0 {
 				n2 = 10 + n1
 				carry = -1
-			} else if int(n1) + carry > 9 {
+			} else if int(n1)+carry > 9 {
 				n2 = n1 - 10
 				carry = 1
 			} else {
@@ -1022,6 +1017,7 @@ func (ia *IntAry) Ceiling() (IntAry, error) {
 	return iAry2, nil
 }
 
+//CompareSignedValues
 func (ia *IntAry) CompareSignedValues(iAry2 *IntAry) int {
 
 	iCompare := ia.CompareAbsoluteValues(iAry2)
@@ -1051,6 +1047,7 @@ func (ia *IntAry) CompareSignedValues(iAry2 *IntAry) int {
 
 }
 
+//CompareAbsoluteValues
 func (ia *IntAry) CompareAbsoluteValues(iAry2 *IntAry) int {
 
 	ia.SetIntAryLength()
@@ -1226,7 +1223,7 @@ func (ia *IntAry) CompareAbsoluteValues(iAry2 *IntAry) int {
 
 }
 
-
+//CopyIn
 func (ia *IntAry) CopyIn(iAry2 *IntAry, copyBackUp bool) {
 	iAry2.SetInternalFlags()
 	ia.Empty()
@@ -1255,6 +1252,7 @@ func (ia *IntAry) CopyIn(iAry2 *IntAry, copyBackUp bool) {
 	}
 }
 
+//CopyOut
 func (ia *IntAry) CopyOut() IntAry {
 	ia.SetInternalFlags()
 	iAry2 := IntAry{}.New()
@@ -1317,7 +1315,7 @@ func (ia *IntAry) CopyToBackUp() {
 //
 // IMPORTANT: This method assumes that SetIntAryLength() and
 // SetIsZeroValue() have already been called.
-
+//
 func (ia *IntAry) DecrementIntegerOne() error {
 
 	if ia.isZeroValue || ia.isIntegerZeroValue {
@@ -1328,7 +1326,7 @@ func (ia *IntAry) DecrementIntegerOne() error {
 	intIdx := intLen - 1
 	lastIdx := ia.intAryLen - 1
 
-	n1 :=0
+	n1 := 0
 	n2 := 0
 	carry := 0
 
@@ -1368,7 +1366,7 @@ func (ia *IntAry) DecrementIntegerOne() error {
 		} else {
 			// Must be i < intIdx
 
-			n2 = n1 + ( (ia.signVal * carry) * -1)
+			n2 = n1 + ((ia.signVal * carry) * -1)
 
 			if n2 < 0 {
 				n2 = n1 + 10 - carry
@@ -1418,7 +1416,7 @@ func (ia *IntAry) DivideByTwo() {
 
 	if ia.isZeroValue {
 
-		ia.SetIntAryToZero(ia.precision)
+		_ = ia.SetIntAryToZero(ia.precision)
 
 		return
 	}
@@ -1460,10 +1458,7 @@ func (ia *IntAry) DivideByInt64(divisor int64, maxPrecision uint64) error {
 	ia.OptimizeIntArrayLen(false)
 
 	if ia.isZeroValue {
-
-		ia.SetIntAryToZero(ia.precision)
-
-		return nil
+		return ia.SetIntAryToZero(ia.precision)
 	}
 
 	dSignVal := 1
@@ -1519,7 +1514,7 @@ func (ia *IntAry) DivideByInt64(divisor int64, maxPrecision uint64) error {
 
 	if precisionCnt >= iMaxPrecision {
 		iMaxPrecision--
-		ia.RoundToPrecision(iMaxPrecision)
+		_ = ia.RoundToPrecision(iMaxPrecision)
 	}
 
 	if ia.intAry[0] == 0 {
@@ -1605,7 +1600,7 @@ func (ia *IntAry) DivideThisBy(iAry2 *IntAry, maxPrecision int) (IntAry, error) 
 	}
 
 	quotient := IntAry{}.New()
-	quotient.SetIntAryToZero(0)
+	_ = quotient.SetIntAryToZero(0)
 
 	if ia.isZeroValue {
 		return quotient, nil
@@ -1616,7 +1611,7 @@ func (ia *IntAry) DivideThisBy(iAry2 *IntAry, maxPrecision int) (IntAry, error) 
 	divisor := iAry2.CopyOut()
 
 	tensCount := IntAry{}.New()
-	tensCount.SetIntAryToOne(0)
+	_ = tensCount.SetIntAryToOne(0)
 
 	newSignVal := 1
 
@@ -1641,7 +1636,7 @@ func (ia *IntAry) DivideThisBy(iAry2 *IntAry, maxPrecision int) (IntAry, error) 
 	if dividendMag > divisorMag {
 		deltaMag = uint(dividendMag - divisorMag)
 		tensCount.MultiplyByTenToPower(deltaMag)
-		incrementVal.MultiplyThisBy(&tensCount, -1)
+		_ = incrementVal.MultiplyThisBy(&tensCount, -1)
 
 	} else if divisorMag > dividendMag {
 		deltaMag = uint(divisorMag - dividendMag)
@@ -1656,7 +1651,7 @@ func (ia *IntAry) DivideThisBy(iAry2 *IntAry, maxPrecision int) (IntAry, error) 
 	for true {
 
 		if quotient.precision >= precisionCutOff {
-			quotient.RoundToPrecision(maxPrecision)
+			_ = quotient.RoundToPrecision(maxPrecision)
 			quotient.OptimizeIntArrayLen(true)
 			quotient.signVal = newSignVal
 			return quotient, nil
@@ -1666,18 +1661,18 @@ func (ia *IntAry) DivideThisBy(iAry2 *IntAry, maxPrecision int) (IntAry, error) 
 
 		if compare == 0 {
 			// incrementalVal is equal to trialDividend
-			quotient.AddToThis(&tensCount)
-			quotient.RoundToPrecision(maxPrecision)
+			_ = quotient.AddToThis(&tensCount)
+			_ = quotient.RoundToPrecision(maxPrecision)
 			quotient.OptimizeIntArrayLen(true)
 			quotient.signVal = newSignVal
 			return quotient, nil
 
 		} else if compare == -1 {
 			// incrementalVal < trialDividend
-			quotient.AddToThis(&tensCount)
+			_ = quotient.AddToThis(&tensCount)
 
 			// Calc Remainder
-			trialDividend.SubtractFromThis(&incrementVal)
+			_ = trialDividend.SubtractFromThis(&incrementVal)
 
 			continue
 
@@ -1781,7 +1776,12 @@ func (ia *IntAry) Floor() (IntAry, error) {
 	iAry2 := IntAry{}.New()
 
 	if ia.isZeroValue {
-		iAry2.SetIntAryToZero(ia.precision)
+		err = iAry2.SetIntAryToZero(ia.precision)
+
+		if err != nil {
+			return IntAry{}, err
+		}
+
 	}
 
 	hasFracDigits, err := ia.HasFractionalDigits()
@@ -1920,7 +1920,6 @@ func (ia *IntAry) GetCurrencySymbol() rune {
 	return ia.currencySymbol
 }
 
-
 // GetDecimalSeparator - returns a type 'rune'
 // which represents the setting for decimal
 // separator in the current IntAry object.
@@ -1956,7 +1955,7 @@ func (ia *IntAry) GetFractionalDigits() (IntAry, error) {
 
 	iAry2 := IntAry{}.New()
 
-	iAry2.SetIntAryToZero(0)
+	_ = iAry2.SetIntAryToZero(0)
 
 	if ia.precision == 0 {
 		return iAry2, nil
@@ -1993,7 +1992,7 @@ func (ia *IntAry) GetIntegerDigits() (IntAry, error) {
 	iAry2 := IntAry{}.New()
 
 	if ia.isZeroValue {
-		iAry2.SetIntAryToZero(0)
+		_ = iAry2.SetIntAryToZero(0)
 		return iAry2, nil
 	}
 
@@ -2086,7 +2085,6 @@ func (ia *IntAry) GetInt64() (int64, error) {
 	return result.Int64(), nil
 }
 
-
 // GetIntAryElement - Returns an element of the
 // internal integer array maintained by the
 // current IntAry object.
@@ -2103,8 +2101,7 @@ func (ia *IntAry) GetInt64() (int64, error) {
 //								integer array at the specified index.
 func (ia *IntAry) GetIntAryElement(index int) (uint8, error) {
 
-
-	if index < 0 || index > (ia.intAryLen - 1) {
+	if index < 0 || index > (ia.intAryLen-1) {
 		return 0, fmt.Errorf("Error: GetIntAryElement(index int) - Index is INVALID! index Out Of Array Bounds! index= '%v'", index)
 	}
 
@@ -2169,7 +2166,7 @@ func (ia *IntAry) GetIntAryDeepCopy() ([]uint8, int) {
 	ia.SetInternalFlags()
 	ary := make([]uint8, ia.intAryLen)
 
-	for i:= 0; i < ia.intAryLen; i++ {
+	for i := 0; i < ia.intAryLen; i++ {
 		ary[i] = ia.intAry[i]
 	}
 
@@ -2246,7 +2243,7 @@ func (ia *IntAry) GetIntAryStats() IntAryStatsDto {
 	iStats.SignificantFractionLen = ia.significantFractionLen
 	iStats.Precision = ia.precision
 	iStats.SignVal = ia.signVal
-	iStats.FirstDigitIdx =  ia.firstDigitIdx
+	iStats.FirstDigitIdx = ia.firstDigitIdx
 	iStats.LastDigitIdx = ia.lastDigitIdx
 	iStats.IsZeroValue = ia.isZeroValue
 	iStats.IsIntegerZeroValue = ia.isIntegerZeroValue
@@ -2275,14 +2272,14 @@ func (ia *IntAry) GetNumStr() string {
 
 	intLen := ia.intAryLen - ia.precision
 
-	for i:=0 ; i < intLen; i++ {
+	for i := 0; i < intLen; i++ {
 		buffer.WriteRune(rune(ia.intAry[i] + 48))
 	}
 
 	if ia.precision > 0 {
 		buffer.WriteRune(ia.decimalSeparator)
 
-		for j:= 0; j < ia.precision; j++ {
+		for j := 0; j < ia.precision; j++ {
 			buffer.WriteRune(rune(ia.intAry[intLen] + 48))
 			intLen++
 		}
@@ -2294,6 +2291,7 @@ func (ia *IntAry) GetNumStr() string {
 	// return ia.numStr
 }
 
+//GetMagnitude
 func (ia *IntAry) GetMagnitude() int {
 	ia.SetSignificantDigitIdxs()
 	return ia.intAryLen - ia.precision - ia.firstDigitIdx
@@ -2533,7 +2531,6 @@ func (ia *IntAry) IsIntAryValid(errName string) error {
 		return fmt.Errorf("%v precision Value is INVALID! Sign Value= '%v'", errName, ia.precision)
 	}
 
-
 	if ia.precision >= ia.intAryLen {
 		return fmt.Errorf("%v error: precision is greater than or equal to IntArray length - ia.precision= %v  ia.intAryLen= %v ", errName, ia.precision, ia.intAryLen)
 	}
@@ -2645,10 +2642,10 @@ func (ia *IntAry) MultiplyByTenToPower(power uint) {
 
 }
 
+//MultiplyThisBy
 func (ia *IntAry) MultiplyThisBy(ia2 *IntAry, maxPrecision int) error {
 
 	return ia.Multiply(ia, ia2, ia, maxPrecision)
-
 
 }
 
@@ -2689,9 +2686,8 @@ func (ia *IntAry) Multiply(ia1, ia2, iaResult *IntAry, maxResultPrecision int) e
 	ia1.SetInternalFlags()
 	ia2.SetInternalFlags()
 
-
 	if ia1.isZeroValue || ia2.isZeroValue {
-		iaResult.SetIntAryToZero(ia2.GetPrecision())
+		_ = iaResult.SetIntAryToZero(ia2.GetPrecision())
 		return nil
 	}
 
@@ -2714,12 +2710,12 @@ func (ia *IntAry) Multiply(ia1, ia2, iaResult *IntAry, maxResultPrecision int) e
 	resultIdx := 0
 	offset := 0
 
-	for i := ia2.intAryLen -1; i >=0 ; i-- {
+	for i := ia2.intAryLen - 1; i >= 0; i-- {
 		multiplicand = ia2.intAry[i]
 		offset++
 		nextResultIdx := newIntAryLen - offset
 
-		for j := ia1.intAryLen - 1; j >= 0 ; j-- {
+		for j := ia1.intAryLen - 1; j >= 0; j-- {
 
 			multiplier = ia1.intAry[j]
 
@@ -2727,8 +2723,7 @@ func (ia *IntAry) Multiply(ia1, ia2, iaResult *IntAry, maxResultPrecision int) e
 
 			resultIdx = nextResultIdx
 
-			resultAry[resultIdx]+= product
-
+			resultAry[resultIdx] += product
 
 			for resultAry[resultIdx] > 9 {
 				carry = resultAry[resultIdx] / 10
@@ -2736,7 +2731,7 @@ func (ia *IntAry) Multiply(ia1, ia2, iaResult *IntAry, maxResultPrecision int) e
 
 				resultIdx--
 
-				resultAry[resultIdx]+= carry
+				resultAry[resultIdx] += carry
 
 			}
 
@@ -2746,8 +2741,7 @@ func (ia *IntAry) Multiply(ia1, ia2, iaResult *IntAry, maxResultPrecision int) e
 
 	}
 
-
-	if newIntAryLen - newPrecision > 1 && resultAry[0] == 0 {
+	if newIntAryLen-newPrecision > 1 && resultAry[0] == 0 {
 
 		iaResult.intAry = resultAry[1:]
 		newIntAryLen--
@@ -2762,7 +2756,7 @@ func (ia *IntAry) Multiply(ia1, ia2, iaResult *IntAry, maxResultPrecision int) e
 	iaResult.isZeroValue = false
 
 	if maxResultPrecision > -1 && maxResultPrecision < newPrecision {
-		iaResult.SetPrecision(maxResultPrecision, true)
+		_ = iaResult.SetPrecision(maxResultPrecision, true)
 	}
 
 	return nil
@@ -2854,7 +2848,6 @@ func (ia IntAry) NewFloat32(num float32, precision int) (IntAry, error) {
 		return iAry, fmt.Errorf("NewFloat32() Error: 'precision' INVALID. 'precision' must be greater than or equal to -1. precision='%v'", precision)
 	}
 
-
 	err := iAry.SetIntAryWithFloat32(num, precision)
 
 	if err != nil {
@@ -2893,7 +2886,6 @@ func (ia IntAry) NewFloat64(num float64, precision int) (IntAry, error) {
 		return iAry, fmt.Errorf("NewFloat64() Error: 'precision' INVALID. 'precision' must be greater than or equal to -1. precision='%v'", precision)
 	}
 
-
 	err := iAry.SetIntAryWithFloat64(num, precision)
 
 	if err != nil {
@@ -2902,7 +2894,6 @@ func (ia IntAry) NewFloat64(num float64, precision int) (IntAry, error) {
 
 	return iAry, nil
 }
-
 
 // NewFloatBig - Creates a new intAry object initialized
 // to the value of input parameter 'num' which is passed
@@ -3059,7 +3050,7 @@ func (ia *IntAry) OptimizeIntArrayLen(optimizeFracDigits bool) {
 
 	if optimizeFracDigits {
 
-		ia.intAry = ia.intAry[ia.firstDigitIdx: ia.lastDigitIdx+1]
+		ia.intAry = ia.intAry[ia.firstDigitIdx : ia.lastDigitIdx+1]
 		ia.intAryLen = ia.lastDigitIdx - ia.firstDigitIdx + 1
 	} else {
 		ia.intAry = ia.intAry[ia.firstDigitIdx:]
@@ -3117,11 +3108,10 @@ func (ia *IntAry) Pow(power, maxResultPrecision, internalPrecision int) error {
 // PowThisSquared - Raises the value of the current intAry object
 // to a power of '2'.  Essentially the new value of this intAry object
 // is equal to the original value squared.
-func (ia *IntAry)PowThisSquared() error {
+func (ia *IntAry) PowThisSquared() error {
 
 	return ia.MultiplyThisBy(ia, -1)
 }
-
 
 // PowByTwos - Raises the value of the current intAry to the power indicated by the parameter,
 // 'power'.
@@ -3159,10 +3149,8 @@ func (ia *IntAry)PowThisSquared() error {
 //
 func (ia *IntAry) PowByTwos(power *big.Int, maxResultPrecision, internalPrecision int) error {
 
-
 	return ia.pwrByTwos(power, maxResultPrecision, internalPrecision)
 }
-
 
 // pwrByTwos - Raises a *big.Int 'base', to the specified 'power'
 // using the Exponentiation by squaring algorithm.
@@ -3204,7 +3192,7 @@ func (ia *IntAry) PowByTwos(power *big.Int, maxResultPrecision, internalPrecisio
 //				the number of decimals places to right of the decimal
 //				point during internal multiplication operations.
 //
-func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecision int ) error {
+func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecision int) error {
 
 	if maxResultPrecision < -1 {
 		return fmt.Errorf("Error: Parameter maxResultPrecision is less than -1. maxResultPrecision= %v", maxResultPrecision)
@@ -3214,7 +3202,6 @@ func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecisio
 		return fmt.Errorf("Error: Parameter internalPrecision is less than -1. internalPrecision= %v", internalPrecision)
 	}
 
-
 	ia.SetInternalFlags()
 	tPower := big.NewInt(0).Set(power)
 	one := big.NewInt(1)
@@ -3222,7 +3209,7 @@ func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecisio
 	two := big.NewInt(2)
 
 	if ia.isZeroValue {
-		ia.SetIntAryToZero(0)
+		_ = ia.SetIntAryToZero(0)
 		return nil
 	}
 
@@ -3243,7 +3230,7 @@ func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecisio
 			// no change in value. x^1 == x
 			return nil
 		} else if tPower.Cmp(zero) == 0 {
-			ia.SetIntAryToOne(0)
+			_ = ia.SetIntAryToOne(0)
 			return nil
 		}
 
@@ -3251,7 +3238,7 @@ func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecisio
 
 	tBase := ia.CopyOut()
 
-	ia.SetIntAryToOne(0)
+	_ = ia.SetIntAryToOne(0)
 
 	for tPower.Cmp(zero) == 1 {
 		//temp, _:= intAry{}.NewNumStr("0")
@@ -3268,19 +3255,17 @@ func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecisio
 
 			if tPower.Cmp(one) == 0 {
 				if maxResultPrecision > -1 && maxResultPrecision < ia.GetPrecision() {
-					ia.SetPrecision(maxResultPrecision, true)
+					_ = ia.SetPrecision(maxResultPrecision, true)
 				}
 
 				return nil
 			}
 		}
 
-
-		err:= tBase.MultiplyThisBy(&tBase, internalPrecision)
+		err := tBase.MultiplyThisBy(&tBase, internalPrecision)
 		if err != nil {
 			return fmt.Errorf("intAry.pwrByTwos() - Error From tBase.MultiplyThisBy(&temp, true). Error= %v", err)
 		}
-
 
 		tPower = big.NewInt(0).Div(tPower, two)
 	}
@@ -3289,8 +3274,8 @@ func (ia *IntAry) pwrByTwos(power *big.Int, maxResultPrecision, internalPrecisio
 		return nil
 	}
 
-	if maxResultPrecision > -1 && maxResultPrecision < ia.GetPrecision()  {
-		ia.SetPrecision(maxResultPrecision, true)
+	if maxResultPrecision > -1 && maxResultPrecision < ia.GetPrecision() {
+		_ = ia.SetPrecision(maxResultPrecision, true)
 	}
 
 	return nil
@@ -3304,7 +3289,7 @@ func (ia *IntAry) pwrByOnes(power, maxPrecision int) error {
 	}
 
 	if power == 0 {
-		ia.SetIntAryToOne(ia.precision)
+		_ = ia.SetIntAryToOne(ia.precision)
 		return nil
 	}
 
@@ -3324,7 +3309,7 @@ func (ia *IntAry) pwrByOnes(power, maxPrecision int) error {
 	multiplier := ia.CopyOut()
 
 	for i := 0; i < power; i++ {
-		ia.MultiplyThisBy(&multiplier, -1)
+		_ = ia.MultiplyThisBy(&multiplier, -1)
 	}
 
 	if oldPowerSignVal == 1 {
@@ -3336,7 +3321,8 @@ func (ia *IntAry) pwrByOnes(power, maxPrecision int) error {
 	iaInv, err := ia.Inverse(maxPrecision)
 
 	if err != nil {
-		fmt.Errorf("Pow() - Error returned from ia.Inverse(maxPrecision). Error= %v ", err)
+		return fmt.Errorf("Pow() - Error returned from ia.Inverse(maxPrecision). "+
+			"Error= %v ", err)
 	}
 
 	ia.CopyIn(&iaInv, false)
@@ -3350,8 +3336,8 @@ func (ia *IntAry) pwrByOnes(power, maxPrecision int) error {
 // integer array maintained by the current
 // IntAry object.
 func (ia *IntAry) PrefixToIntAry(num uint8) {
-	ia.intAry = append([]uint8{num}, ia.intAry ...)
-	ia.intAryLen  = len(ia.intAry)
+	ia.intAry = append([]uint8{num}, ia.intAry...)
+	ia.intAryLen = len(ia.intAry)
 	ia.integerLen = ia.intAryLen - ia.precision
 	if num > 0 {
 		ia.isZeroValue = false
@@ -3387,7 +3373,8 @@ func (ia *IntAry) ResetFromBackUp() {
 func (ia *IntAry) RoundToPrecision(roundToPrecision int) error {
 
 	if roundToPrecision < 0 {
-		fmt.Errorf("RoundToPrecision() - Error: roundToPrecision is less than ZERO! roundToPrecision= '%v'", roundToPrecision)
+		return fmt.Errorf("RoundToPrecision() - Error: roundToPrecision is less "+
+			"than ZERO! roundToPrecision= '%v'", roundToPrecision)
 	}
 
 	if ia.precision == 0 {
@@ -3401,7 +3388,7 @@ func (ia *IntAry) RoundToPrecision(roundToPrecision int) error {
 	}
 
 	if ia.isZeroValue {
-		ia.SetIntAryToZero(roundToPrecision)
+		_ = ia.SetIntAryToZero(roundToPrecision)
 		return nil
 	}
 
@@ -3471,7 +3458,7 @@ func (ia *IntAry) RoundToPrecision(roundToPrecision int) error {
 // value of this intAry object to its
 // absolute value.
 func (ia *IntAry) SetAbsoluteValueThis() {
-	ia.SetSign(1)
+	_ = ia.SetSign(1)
 }
 
 // SetCurrencySymbol is used to set the value of the currency
@@ -3574,7 +3561,7 @@ func (ia *IntAry) SetIntAryWithInt(intDigits int, precision uint) error {
 	}
 
 	if intDigits == 0 {
-		ia.SetIntAryToZero(int(precision))
+		_ = ia.SetIntAryToZero(int(precision))
 		return nil
 	}
 
@@ -3641,7 +3628,7 @@ func (ia *IntAry) SetIntAryWithInt32(intDigits int32, precision uint) error {
 	}
 
 	if intDigits == 0 {
-		ia.SetIntAryToZero(int(precision))
+		_ = ia.SetIntAryToZero(int(precision))
 		return nil
 	}
 
@@ -3711,7 +3698,7 @@ func (ia *IntAry) SetIntAryWithInt64(intDigits int64, precision uint) error {
 	}
 
 	if intDigits == 0 {
-		ia.SetIntAryToZero(int(precision))
+		_ = ia.SetIntAryToZero(int(precision))
 		return nil
 	}
 
@@ -3775,7 +3762,7 @@ func (ia *IntAry) SetIntAryWithUint64(intDigits uint64, precision uint, signVal 
 	ia.signVal = signVal
 
 	if intDigits == 0 {
-		ia.SetIntAryToZero(int(precision))
+		_ = ia.SetIntAryToZero(int(precision))
 		return nil
 	}
 
@@ -3853,7 +3840,7 @@ func (ia *IntAry) SetIntAryWithBigInt(intDigits *big.Int, precision uint) error 
 	}
 
 	if compare == 0 {
-		ia.SetIntAryToZero(int(precision))
+		_ = ia.SetIntAryToZero(int(precision))
 		return nil
 	}
 
@@ -3921,15 +3908,18 @@ func (ia *IntAry) SetIntAryWithFloat32(floatNum float32, precision int) error {
 	err := ia.SetIntAryWithNumStr(numStr)
 
 	if err != nil {
-		return fmt.Errorf("SetIntAryWithFloat32() - Error returned from ia.SetIntAryWithNumStr(numStr). numStr= '%v'  Error= '%v'", numStr, err)
+		return fmt.Errorf("SetIntAryWithFloat32() - Error returned from "+
+			"ia.SetIntAryWithNumStr(numStr). numStr= '%v'  Error= '%v'", numStr, err)
 	}
 
 	if precision > -1 {
 
-		ia.SetPrecision(precision, true)
+		_ = ia.SetPrecision(precision, true)
 
 		if err != nil {
-			return fmt.Errorf("SetIntAryWithFloat32() - Error returned from ia.SetPrecision(precision, true). precision='%v' Error= '%v'", precision, err)
+			return fmt.Errorf("SetIntAryWithFloat32() - Error returned from "+
+				"ia.SetPrecision(precision, true). precision='%v' Error= '%v'",
+				precision, err)
 		}
 
 	}
@@ -3954,12 +3944,12 @@ func (ia *IntAry) SetIntAryWithFloat64(floatNum float64, precision int) error {
 		return fmt.Errorf("SetIntAryWithFloat64() Error: Invalid input parameter 'precision'. 'precision' must be greater than or equal to -1. precision= '%v'", precision)
 	}
 
-	numStr :=  strconv.FormatFloat(floatNum, 'f', -1, 64)
+	numStr := strconv.FormatFloat(floatNum, 'f', -1, 64)
 
 	err := ia.SetIntAryWithNumStr(numStr)
 
 	if err != nil {
-		return fmt.Errorf("SetIntAryWithFloat64() - ia.SetIntAryWithNumStr(numStr) returned error. numStr='%v' Error='%v'",numStr, err)
+		return fmt.Errorf("SetIntAryWithFloat64() - ia.SetIntAryWithNumStr(numStr) returned error. numStr='%v' Error='%v'", numStr, err)
 	}
 
 	if precision > -1 {
@@ -3970,7 +3960,6 @@ func (ia *IntAry) SetIntAryWithFloat64(floatNum float64, precision int) error {
 		}
 
 	}
-
 
 	return nil
 }
@@ -4065,7 +4054,7 @@ func (ia *IntAry) SetIntAryWithIntAry(iAry2 []int, precision uint, signVal int) 
 // Input parameter 'signVal' must be either +1 or -1 indicating the sign of the
 // number represented by the integer array. Note: If signVal is not equal to +1 or -1,
 // an error is generated.
-func (ia *IntAry) SetIntAryWithUint8Ary( iAry2 []uint8,precision uint, signVal int) error {
+func (ia *IntAry) SetIntAryWithUint8Ary(iAry2 []uint8, precision uint, signVal int) error {
 
 	if signVal != 1 && signVal != -1 {
 		return fmt.Errorf("SetIntAryWithUint8Ary() - Error: signVal parameter is INVALID! signVal must be -1 or +1. signVal='%v'", signVal)
@@ -4090,7 +4079,7 @@ func (ia *IntAry) SetIntAryWithUint8Ary( iAry2 []uint8,precision uint, signVal i
 	return nil
 }
 
-
+//SetIntAryWithIntAryObj
 func (ia *IntAry) SetIntAryWithIntAryObj(iAry2 *IntAry, copyBackup bool) error {
 
 	err := iAry2.IsIntAryValid("SetIntAryWithIntAryObj()")
@@ -4196,10 +4185,9 @@ func (ia *IntAry) SetIntAryWithNumStr(str string) error {
 	ia.SetSignificantDigitIdxs()
 
 	if ia.intAryLen == 0 || ia.isZeroValue {
-		ia.SetIntAryToZero(ia.precision)
+		_ = ia.SetIntAryToZero(ia.precision)
 		return nil
 	}
-
 
 	// Validate intAry object
 	err := ia.IsIntAryValid("SetIntAryWithNumStr() - ")
@@ -4208,10 +4196,10 @@ func (ia *IntAry) SetIntAryWithNumStr(str string) error {
 		return err
 	}
 
-
 	return nil
 }
 
+//SetIntAryLength
 func (ia *IntAry) SetIntAryLength() {
 	ia.intAryLen = len(ia.intAry)
 }
@@ -4320,7 +4308,6 @@ func (ia *IntAry) SetInternalFlags() {
 	ia.SetSignificantDigitIdxs()
 }
 
-
 // SetTruncateToPrecision - Truncates the existing
 // value to precision specified by the 'precision'
 // parameter. No rounding is performed.
@@ -4334,7 +4321,7 @@ func (ia *IntAry) SetInternalFlags() {
 //
 // If 'precision' is greater than the existing precision,
 // trailing zeros will be added
-
+//
 func (ia *IntAry) SetPrecision(precision int, roundResult bool) error {
 
 	if precision < 0 {
@@ -4348,7 +4335,7 @@ func (ia *IntAry) SetPrecision(precision int, roundResult bool) error {
 	}
 
 	if ia.isZeroValue {
-		ia.SetIntAryToZero(precision)
+		_ = ia.SetIntAryToZero(precision)
 		return nil
 	}
 
@@ -4371,7 +4358,7 @@ func (ia *IntAry) SetPrecision(precision int, roundResult bool) error {
 	// Must ia.precision > precision
 
 	if roundResult {
-		ia.RoundToPrecision(precision)
+		_ = ia.RoundToPrecision(precision)
 		return nil
 	}
 
@@ -4524,7 +4511,7 @@ func (ia *IntAry) SubtractFromThis(ia2 *IntAry) error {
 	ia.SetEqualArrayLengths(ia2)
 
 	if ia.isZeroValue && ia2.isZeroValue {
-		ia.SetIntAryToZero(ia.precision)
+		_ = ia.SetIntAryToZero(ia.precision)
 		return nil
 	}
 

@@ -23,8 +23,9 @@ import (
 		intary.go
 		nthroot.go
 
- */
+*/
 
+//NumStrUtility
 type NumStrUtility struct {
 	Nation             string
 	CurrencySymbol     rune
@@ -39,6 +40,7 @@ type NumStrUtility struct {
 	Float64Val         float64
 }
 
+//DLimInt
 func (ns NumStrUtility) DLimInt(num int, delimiter byte) string {
 	return ns.DnumStr(strconv.Itoa(num), delimiter)
 }
@@ -50,6 +52,7 @@ func (ns NumStrUtility) DLimI64(num int64, delimiter byte) string {
 	return ns.DnumStr(fmt.Sprintf("%v", num), delimiter)
 }
 
+//DlimDecCurrStr
 func (ns NumStrUtility) DlimDecCurrStr(rawStr string, thousandsSeparator rune, decimal rune, currency rune) string {
 
 	const maxStr = 256
@@ -245,6 +248,7 @@ func (ns NumStrUtility) ConvertInt64ToStr(num int64) (string, error) {
 	return numStr, nil
 }
 
+//ConvertRunesToInt64
 func (ns *NumStrUtility) ConvertRunesToInt64(rAry []rune, signVal int) (int64, error) {
 
 	lNumRunes := len(rAry)
@@ -276,98 +280,100 @@ func (ns *NumStrUtility) ConvertRunesToInt64(rAry []rune, signVal int) (int64, e
 
 }
 
+//ParseNumString
 func (ns *NumStrUtility) ParseNumString(str string) (NumStrDto, error) {
 	return NumStrDto{}.NewPtr().ParseNumStr(str)
-/*
-	nDto.NumStrIn = str
+	/*
+		nDto.NumStrIn = str
 
-	if len(nDto.NumStrIn) == 0 {
-		return nDto, errors.New("Zero length number string!")
-	}
+		if len(nDto.NumStrIn) == 0 {
+			return nDto, errors.New("Zero length number string!")
+		}
 
-	nDto.SignVal = 1
-	baseRunes := []rune(nDto.NumStrIn)
-	lBaseRunes := len(baseRunes)
-	isStartRunes := false
-	isEndRunes := false
+		nDto.SignVal = 1
+		baseRunes := []rune(nDto.NumStrIn)
+		lBaseRunes := len(baseRunes)
+		isStartRunes := false
+		isEndRunes := false
 
-	for i := 0; i < lBaseRunes && isEndRunes == false; i++ {
+		for i := 0; i < lBaseRunes && isEndRunes == false; i++ {
 
-		if baseRunes[i] == '-' &&
-			isStartRunes == false && isEndRunes == false &&
-			i+1 < lBaseRunes &&
-			((baseRunes[i+1] >= '0' && baseRunes[i+1] <= '9') ||
-				baseRunes[i+1] == '.') {
+			if baseRunes[i] == '-' &&
+				isStartRunes == false && isEndRunes == false &&
+				i+1 < lBaseRunes &&
+				((baseRunes[i+1] >= '0' && baseRunes[i+1] <= '9') ||
+					baseRunes[i+1] == '.') {
 
-			nDto.SignVal = -1
-			isStartRunes = true
-			continue
+				nDto.SignVal = -1
+				isStartRunes = true
+				continue
 
-		} else if isEndRunes == false &&
-			baseRunes[i] >= '0' && baseRunes[i] <= '9' {
+			} else if isEndRunes == false &&
+				baseRunes[i] >= '0' && baseRunes[i] <= '9' {
 
-			nDto.AbsAllNumRunes = append(nDto.AbsAllNumRunes, baseRunes[i])
-			isStartRunes = true
-			nDto.HasNumericDigits = true
+				nDto.AbsAllNumRunes = append(nDto.AbsAllNumRunes, baseRunes[i])
+				isStartRunes = true
+				nDto.HasNumericDigits = true
 
-			if nDto.IsFractionalValue {
-				nDto.AbsFracRunes = append(nDto.AbsFracRunes, baseRunes[i])
-			} else {
-				nDto.AbsIntRunes = append(nDto.AbsIntRunes, baseRunes[i])
+				if nDto.IsFractionalValue {
+					nDto.AbsFracRunes = append(nDto.AbsFracRunes, baseRunes[i])
+				} else {
+					nDto.AbsIntRunes = append(nDto.AbsIntRunes, baseRunes[i])
+				}
+
+			} else if (ns.ThousandsSeparator != ' ' && baseRunes[i] == ns.ThousandsSeparator) ||
+				(ns.CurrencySymbol != ' ' && baseRunes[i] == ns.CurrencySymbol) ||
+				baseRunes[i] == ' ' {
+
+				continue
+
+			} else if isEndRunes == false &&
+				i+1 < lBaseRunes &&
+				baseRunes[i+1] >= '0' && baseRunes[i+1] <= '9' &&
+				baseRunes[i] == '.' {
+
+				nDto.IsFractionalValue = true
+				continue
+
+			} else if isStartRunes && !isEndRunes {
+
+				isEndRunes = true
+
 			}
-
-		} else if (ns.ThousandsSeparator != ' ' && baseRunes[i] == ns.ThousandsSeparator) ||
-			(ns.CurrencySymbol != ' ' && baseRunes[i] == ns.CurrencySymbol) ||
-			baseRunes[i] == ' ' {
-
-			continue
-
-		} else if isEndRunes == false &&
-			i+1 < lBaseRunes &&
-			baseRunes[i+1] >= '0' && baseRunes[i+1] <= '9' &&
-			baseRunes[i] == '.' {
-
-			nDto.IsFractionalValue = true
-			continue
-
-		} else if isStartRunes && !isEndRunes {
-
-			isEndRunes = true
 
 		}
 
-	}
+		if len(nDto.AbsAllNumRunes) == 0 {
+			nDto.HasNumericDigits = false
+			nDto.NumStrOut = "0"
+			nDto.AbsIntRunes = append(nDto.AbsIntRunes, '0')
+			nDto.SignVal = 1
+			nDto.IsFractionalValue = false
+			return nDto, nil
+		}
 
-	if len(nDto.AbsAllNumRunes) == 0 {
-		nDto.HasNumericDigits = false
-		nDto.NumStrOut = "0"
-		nDto.AbsIntRunes = append(nDto.AbsIntRunes, '0')
-		nDto.SignVal = 1
-		nDto.IsFractionalValue = false
+		if len(nDto.AbsIntRunes) == 0 {
+			nDto.AbsIntRunes = append(nDto.AbsIntRunes, '0')
+		}
+
+		if nDto.SignVal < 0 {
+			nDto.NumStrOut = "-"
+		}
+
+		nDto.NumStrOut += string(nDto.AbsIntRunes)
+
+		if nDto.IsFractionalValue {
+			nDto.Precision = uint(len(nDto.AbsFracRunes))
+			nDto.NumStrOut += "." + string(nDto.AbsFracRunes)
+		}
+
+		nDto.IsValidDateTime = true
+
 		return nDto, nil
-	}
-
-	if len(nDto.AbsIntRunes) == 0 {
-		nDto.AbsIntRunes = append(nDto.AbsIntRunes, '0')
-	}
-
-	if nDto.SignVal < 0 {
-		nDto.NumStrOut = "-"
-	}
-
-	nDto.NumStrOut += string(nDto.AbsIntRunes)
-
-	if nDto.IsFractionalValue {
-		nDto.Precision = uint(len(nDto.AbsFracRunes))
-		nDto.NumStrOut += "." + string(nDto.AbsFracRunes)
-	}
-
-	nDto.IsValidDateTime = true
-
-	return nDto, nil
 	*/
 }
 
+//ConvertNumStrToDecimal
 func (ns *NumStrUtility) ConvertNumStrToDecimal(str string) (Decimal, error) {
 	dec := Decimal{}.New()
 
@@ -423,8 +429,7 @@ func (ns *NumStrUtility) ConvertStrToIntNumRunes(str string) []rune {
 
 }
 
-
-
+//ConvertStrToFloat64
 func (ns *NumStrUtility) ConvertStrToFloat64(str string) (float64, error) {
 
 	numF64 := float64(0.0)
@@ -432,7 +437,7 @@ func (ns *NumStrUtility) ConvertStrToFloat64(str string) (float64, error) {
 	nDto, err := NumStrDto{}.NewPtr().ParseNumStr(str)
 
 	if err != nil {
-		return numF64, fmt.Errorf("ConvertStrToFloat64() - Error returned from NumStrDto.ParseNumStr(str). str= '%v' Error= %v",str, err)
+		return numF64, fmt.Errorf("ConvertStrToFloat64() - Error returned from NumStrDto.ParseNumStr(str). str= '%v' Error= %v", str, err)
 	}
 
 	numF64, err = strconv.ParseFloat(nDto.NumStrOut, 64)
@@ -444,11 +449,10 @@ func (ns *NumStrUtility) ConvertStrToFloat64(str string) (float64, error) {
 	return numF64, nil
 }
 
-
 // ConvertInt64ToIntegerFloat64Value - Receives an int64 value and converts to a
 // float64 value.  All of the digits are positioned to the right of the decimal
 // place.
-func (ns *NumStrUtility) ConvertInt64ToIntegerFloat64Value(i64 int64) (float64, error){
+func (ns *NumStrUtility) ConvertInt64ToIntegerFloat64Value(i64 int64) (float64, error) {
 
 	f64 := float64(i64)
 
@@ -486,21 +490,18 @@ func (ns *NumStrUtility) ConvertInt64ToFractionalValue(i64 int64) (float64, erro
 // '+' plus.
 func (ns *NumStrUtility) ScaleNumStr(str string, precision uint, roundResult bool) (NumStrDto, error) {
 
-
-
-	return NumStrDto{}.NewPtr().SetPrecision(str,precision, roundResult)
-
-
+	return NumStrDto{}.NewPtr().SetPrecision(str, precision, roundResult)
 
 }
 
+//SetCountryAndCurrency
 func (ns *NumStrUtility) SetCountryAndCurrency(country string) error {
 
 	lcStr := strings.ToLower(country)
 
 	if strings.Contains(lcStr, "united states") {
 		ns.Nation = "United States"
-		ns.CurrencySymbol = NumStrCurrencySymbols[28]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[28]
 		ns.ThousandsSeparator = ','
 		ns.DecimalSeparator = '.'
 		return nil
@@ -508,26 +509,26 @@ func (ns *NumStrUtility) SetCountryAndCurrency(country string) error {
 
 	if strings.Contains(lcStr, "united kingdom") {
 		ns.Nation = "United Kingdom"
-		ns.CurrencySymbol = NumStrCurrencySymbols[29]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[29]
 		ns.DecimalSeparator = '.'
 		return nil
 	}
 
 	if strings.Contains(lcStr, "australia") {
 		ns.Nation = "Australia"
-		ns.CurrencySymbol = NumStrCurrencySymbols[0]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[0]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "brazil") {
 		ns.Nation = "Brazil"
-		ns.CurrencySymbol = NumStrCurrencySymbols[1]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[1]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "canada") {
 		ns.Nation = "Canada"
-		ns.CurrencySymbol = NumStrCurrencySymbols[2]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[2]
 		ns.ThousandsSeparator = ','
 		ns.DecimalSeparator = '.'
 		return nil
@@ -535,175 +536,175 @@ func (ns *NumStrUtility) SetCountryAndCurrency(country string) error {
 
 	if strings.Contains(lcStr, "china") {
 		ns.Nation = "China"
-		ns.CurrencySymbol = NumStrCurrencySymbols[3]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[3]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "colombia") {
 		ns.Nation = "Colombia"
-		ns.CurrencySymbol = NumStrCurrencySymbols[4]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[4]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "czech") {
 		ns.Nation = "Czechoslovakia"
-		ns.CurrencySymbol = NumStrCurrencySymbols[5]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[5]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "egypt") {
 		ns.Nation = "Egypt"
-		ns.CurrencySymbol = NumStrCurrencySymbols[6]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[6]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "euro") {
 		ns.Nation = "Euro"
-		ns.CurrencySymbol = NumStrCurrencySymbols[7]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[7]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "germany") {
 		ns.Nation = "Germany"
-		ns.CurrencySymbol = NumStrCurrencySymbols[7]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[7]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "france") {
 		ns.Nation = "France"
-		ns.CurrencySymbol = NumStrCurrencySymbols[7]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[7]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "italy") {
 		ns.Nation = "Italy"
-		ns.CurrencySymbol = NumStrCurrencySymbols[7]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[7]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "spain") {
 		ns.Nation = "Spain"
-		ns.CurrencySymbol = NumStrCurrencySymbols[7]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[7]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "hungary") {
 		ns.Nation = "Hungary"
-		ns.CurrencySymbol = NumStrCurrencySymbols[8]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[8]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "iceland") {
 		ns.Nation = "Iceland"
-		ns.CurrencySymbol = NumStrCurrencySymbols[9]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[9]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "indonesia") {
 		ns.Nation = "Indonesia"
-		ns.CurrencySymbol = NumStrCurrencySymbols[10]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[10]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "israel") {
 		ns.Nation = "Israel"
-		ns.CurrencySymbol = NumStrCurrencySymbols[11]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[11]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "japan") {
 		ns.Nation = "Japan"
-		ns.CurrencySymbol = NumStrCurrencySymbols[12]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[12]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "korea") {
 		ns.Nation = "Korea"
-		ns.CurrencySymbol = NumStrCurrencySymbols[13]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[13]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "malaysia") {
 		ns.Nation = "Malaysia"
-		ns.CurrencySymbol = NumStrCurrencySymbols[14]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[14]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "mexico") {
 		ns.Nation = "Mexico"
-		ns.CurrencySymbol = NumStrCurrencySymbols[15]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[15]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "norway") {
 		ns.Nation = "Norway"
-		ns.CurrencySymbol = NumStrCurrencySymbols[16]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[16]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "netherlands") {
 		ns.Nation = "Netherlands"
-		ns.CurrencySymbol = NumStrCurrencySymbols[17]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[17]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "pakistan") {
 		ns.Nation = "Pakistan"
-		ns.CurrencySymbol = NumStrCurrencySymbols[18]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[18]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "russia") {
 		ns.Nation = "Russia"
-		ns.CurrencySymbol = NumStrCurrencySymbols[19]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[19]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "saudi") {
 		ns.Nation = "Saudi Arabia"
-		ns.CurrencySymbol = NumStrCurrencySymbols[20]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[20]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "south africa") {
 		ns.Nation = "South Africa"
-		ns.CurrencySymbol = NumStrCurrencySymbols[21]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[21]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "sweden") {
 		ns.Nation = "Sweden"
-		ns.CurrencySymbol = NumStrCurrencySymbols[22]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[22]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "switzerland") {
 		ns.Nation = "Switzerland"
-		ns.CurrencySymbol = NumStrCurrencySymbols[23]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[23]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "taiwan") {
 		ns.Nation = "Taiwan"
-		ns.CurrencySymbol = NumStrCurrencySymbols[24]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[24]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "turkey") {
 		ns.Nation = "Turkey"
-		ns.CurrencySymbol = NumStrCurrencySymbols[25]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[25]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "venezuela") {
 		ns.Nation = "Venezuela"
-		ns.CurrencySymbol = NumStrCurrencySymbols[26]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[26]
 		return nil
 	}
 
 	if strings.Contains(lcStr, "viet nam") {
 		ns.Nation = "Viet Nam"
-		ns.CurrencySymbol = NumStrCurrencySymbols[27]
+		ns.CurrencySymbol = CurrencySymbolsNumStrExamples[27]
 		return nil
 	}
 

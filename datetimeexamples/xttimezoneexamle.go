@@ -1,12 +1,10 @@
 package datetimeexamples
 
-
 import (
 	dt "../datetime"
 	"fmt"
 	"time"
 )
-
 
 // Tex001 - Test Example 1
 func Tex001() {
@@ -48,8 +46,6 @@ func Tex002() {
 // Tex003 - Test Example 0003 demonstrates use of
 // method TimeZoneDto.ConvertTz()
 func Tex003() {
-
-
 
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
@@ -180,7 +176,7 @@ func Tex008() {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu, err :=	dt.TimeZoneDto{}.ConvertTz(tIn, ianaPacificTz, fmtstr)
+	tzu, err := dt.TimeZoneDto{}.ConvertTz(tIn, ianaPacificTz, fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned from TimeZoneDto{}.ConvertTz(tIn, ianaPacificTz) tIn='%v'  Error='%v' \n", tIn.Format(dt.FmtDateTimeYrMDayFmtStr), err.Error())
@@ -309,7 +305,6 @@ func Tex011() {
 		return
 	}
 
-
 	tzuEast := dt.TimeZoneDto{}
 	tzuEast.CopyIn(tzuOut)
 	tzuEast.Description = "CDT to Eastern Time Zone Conversion"
@@ -347,9 +342,9 @@ func TzExampleParseIn0012() {
 
 	// "01/02/2006 15:04:05.000000000"
 	// "02/15/2014 19:54:30.038175584"
-	tPacific2, err := time.ParseInLocation(neutralFmtStr, t2str , pacificLoc)
+	tPacific2, err := time.ParseInLocation(neutralFmtStr, t2str, pacificLoc)
 
-	if err!= nil {
+	if err != nil {
 		fmt.Printf("Error returned from time.ParseInLocation(\"01/02/2006 15:04:05.000000000\", \"02/15/2014 19:54:30.038175584\", pacificLoc). Error='%v'", err.Error())
 		return
 
@@ -369,8 +364,8 @@ func TimeZoneDefExample014() {
 
 	//neutralFmtStr := "2006-01-02 15:04:05.000000000"
 	hongKongLoc, _ := time.LoadLocation(dt.TzIanaAsiaHongKong)
-	beijingLoc, _ :=time.LoadLocation(dt.TzIanaAsiaShanghai)
-	usPacificLoc, _ :=time.LoadLocation(dt.TzIanaUsPacific)
+	beijingLoc, _ := time.LoadLocation(dt.TzIanaAsiaShanghai)
+	usPacificLoc, _ := time.LoadLocation(dt.TzIanaUsPacific)
 
 	tHongKong := time.Date(2014, 2, 15, 19, 54, 30, 38175584, hongKongLoc)
 	tBeijing := time.Date(2014, 2, 15, 19, 54, 30, 38175584, beijingLoc)
@@ -383,15 +378,14 @@ func TimeZoneDefExample014() {
 		return
 	}
 
-
 	fmt.Println(" tHongKong: ", tHongKong.Format(fmtstr))
 	fmt.Println("  tBeijing: ", tBeijing.Format(fmtstr))
 	fmt.Println("----------------------------------------")
 	fmt.Println("       tUsPacific: ", tUsPacific.Format(fmtstr))
 	fmt.Println("         ZoneName: ", tzDef.ZoneName)
-	fmt.Println("       ZoneOffset: ",tzDef.ZoneOffset)
+	fmt.Println("       ZoneOffset: ", tzDef.ZoneOffset)
 	fmt.Println("ZoneOffsetSeconds:", tzDef.ZoneOffsetSeconds)
-	fmt.Println("         ZoneSign: ",tzDef.ZoneSign)
+	fmt.Println("         ZoneSign: ", tzDef.ZoneSign)
 	fmt.Println("      OffsetHours: ", tzDef.OffsetHours)
 	fmt.Println("    OffsetMinutes: ", tzDef.OffsetMinutes)
 	fmt.Println("    OffsetSeconds: ", tzDef.OffsetSeconds)
@@ -407,7 +401,7 @@ func Tex021() {
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
 	//tz := TimeZoneDto{}
-	tzu, _:= dt.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+	tzu, _ := dt.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	fmt.Println("Original Time String: ", tstr)
 	fmt.Println("          tzu.TimeIn: ", tzu.TimeIn)
@@ -517,11 +511,11 @@ func TestExampleNewAddDate023() {
 	tzu1OutStrTIn := tzu1.TimeIn.DateTime.Format(fmtstr)
 
 	if t1OutStr != tzu1OutStrTIn {
-		fmt.Printf("Error: Expected tzu1OutStrTIn='%v'.  Instead, tzu1OutStrTIn='%v'", t1OutStr, tzu1OutStrTIn )
+		fmt.Printf("Error: Expected tzu1OutStrTIn='%v'.  Instead, tzu1OutStrTIn='%v'", t1OutStr, tzu1OutStrTIn)
 		return
 	}
 
-	t2 := t1.AddDate(3,2, 15)
+	t2 := t1.AddDate(3, 2, 15)
 	t2OutStr := t2.Format(fmtstr)
 
 	tzu2, err := dt.TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)
@@ -543,7 +537,7 @@ func TestExampleNewAddDate023() {
 	expectedDuration := t2.Sub(t1)
 
 	if expectedDuration != actualDuration {
-		fmt.Printf("Error: Expected Duration='%v'. Instead, Actual Duration='%v'", expectedDuration, actualDuration )
+		fmt.Printf("Error: Expected Duration='%v'. Instead, Actual Duration='%v'", expectedDuration, actualDuration)
 		return
 	}
 
@@ -582,9 +576,9 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefDto) {
 	fmt.Println("-----------------------------------------------")
 	fmt.Println("           ZoneName: ", tzDef.ZoneName)
-	fmt.Println("         ZoneOffset: ",tzDef.ZoneOffset)
+	fmt.Println("         ZoneOffset: ", tzDef.ZoneOffset)
 	fmt.Println("  ZoneOffsetSeconds:", tzDef.ZoneOffsetSeconds)
-	fmt.Println("           ZoneSign: ",tzDef.ZoneSign)
+	fmt.Println("           ZoneSign: ", tzDef.ZoneSign)
 	fmt.Println("        OffsetHours: ", tzDef.OffsetHours)
 	fmt.Println("      OffsetMinutes: ", tzDef.OffsetMinutes)
 	fmt.Println("      OffsetSeconds: ", tzDef.OffsetSeconds)

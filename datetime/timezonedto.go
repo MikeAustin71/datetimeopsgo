@@ -3,9 +3,8 @@ package datetime
 import (
 	"errors"
 	"fmt"
-	"time"
 	"strings"
-
+	"time"
 )
 
 /*
@@ -64,22 +63,22 @@ import (
 		TimeZoneDef - timezonedef.go
 
 
- */
+*/
 
 // TimeZoneDto - Time Zone Data and Methods
 // ============================================
 type TimeZoneDto struct {
-	Description 	string					// Unused - available for tagging, classification or
-																//		labeling.
-	TimeIn      	DateTzDto				// Original input time value
-	TimeOut     	DateTzDto				// TimeOut - 'TimeIn' value converted to TimeOut
-	TimeUTC     	DateTzDto				// TimeUTC (Universal Coordinated Time aka 'Zulu') value
-																// 		equivalent to TimeIn
-	TimeLocal			DateTzDto				// TimeIn value converted to the 'Local' Time Zone Location.
-																// 		'Local' is the Time Zone Location	used by the host computer.
-	DateTimeFmt			string				// Date Time Format String. This format string is used to format
-																//		Date Time text displays. The Default format string is:
-																// 		"2006-01-02 15:04:05.000000000 -0700 MST"
+	Description string // Unused - available for tagging, classification or
+	//		labeling.
+	TimeIn  DateTzDto // Original input time value
+	TimeOut DateTzDto // TimeOut - 'TimeIn' value converted to TimeOut
+	TimeUTC DateTzDto // TimeUTC (Universal Coordinated Time aka 'Zulu') value
+	// 		equivalent to TimeIn
+	TimeLocal DateTzDto // TimeIn value converted to the 'Local' Time Zone Location.
+	// 		'Local' is the Time Zone Location	used by the host computer.
+	DateTimeFmt string // Date Time Format String. This format string is used to format
+	//		Date Time text displays. The Default format string is:
+	// 		"2006-01-02 15:04:05.000000000 -0700 MST"
 }
 
 // AddDate - Adds specified years, months and days values to the
@@ -109,38 +108,35 @@ func (tzdto *TimeZoneDto) AddDate(years, months, days int) error {
 	err := tzdto.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error: This Time Zone Utility is INVALID!  Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error: This Time Zone Utility is INVALID!  Error='%v'", err.Error())
 	}
 
 	tzdto.TimeIn, err = tzdto.TimeIn.AddDate(years, months, days, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tzdto.TimeIn.AddDate(years, months, days). TimeIn.DateTime='%v' years='%v  months='%v' days='%v'  Error='%v'", tzdto.TimeIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tzdto.TimeIn.AddDate(years, months, days). TimeIn.DateTime='%v' years='%v  months='%v' days='%v'  Error='%v'", tzdto.TimeIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
 
 	tzdto.TimeOut, err = tzdto.TimeOut.AddDate(years, months, days, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tzdto.TimeOut.AddDate(years, months, days). tzdto.TimeOut='%v' years='%v' months='%v' days='%v'  Error='%v'", tzdto.TimeOut.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tzdto.TimeOut.AddDate(years, months, days). tzdto.TimeOut='%v' years='%v' months='%v' days='%v'  Error='%v'", tzdto.TimeOut.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
 
 	tzdto.TimeUTC, err = tzdto.TimeUTC.AddDate(years, months, days, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tzdto.TimeUTC.AddDate(years, months, days). tzdto.TimeUTC='%v' years='%v' months='%v' days='%v'  Error='%v'", tzdto.TimeUTC.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tzdto.TimeUTC.AddDate(years, months, days). tzdto.TimeUTC='%v' years='%v' months='%v' days='%v'  Error='%v'", tzdto.TimeUTC.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
-	
-	
+
 	tzdto.TimeLocal, err = tzdto.TimeLocal.AddDate(years, months, days, tzdto.DateTimeFmt)
 
-
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tzdto.TimeLocal.AddDate(years, months, days). tzdto.TimeLocal='%v' years='%v' months='%v' days='%v'  Error='%v'", tzdto.TimeLocal.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tzdto.TimeLocal.AddDate(years, months, days). tzdto.TimeLocal='%v' years='%v' months='%v' days='%v'  Error='%v'", tzdto.TimeLocal.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
 
 	return nil
 }
-
 
 // AddDateTime - Adds input time elements to the time
 // value of the current TimeZoneDto instance.
@@ -170,33 +166,33 @@ func (tzdto *TimeZoneDto) AddDate(years, months, days int) error {
 //					successfully, this error value is set to 'nil'
 //
 func (tzdto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
-												seconds, milliseconds, microseconds, nanoseconds int) error {
+	seconds, milliseconds, microseconds, nanoseconds int) error {
 
 	ePrefix := "TimeZoneDto.AddDateTime() "
 
 	err := tzdto.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "This current TimeZoneDto instance is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"This current TimeZoneDto instance is INVALID! Error='%v'", err.Error())
 	}
 
 	tzdto.TimeIn, err = tzdto.TimeIn.AddDateTime(years, months, days, hours, minutes,
-												seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
+		seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeIn.AddDateTime(years, months, days, hours, minutes, seconds, " +
-				"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). " +
-				"Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeIn.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). "+
+			"Error='%v'", err.Error())
 	}
 
 	tzdto.TimeOut, err = tzdto.TimeOut.AddDateTime(years, months, days, hours, minutes,
 		seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeOut.AddDateTime(years, months, days, hours, minutes, seconds, " +
-			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeOut.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -204,9 +200,9 @@ func (tzdto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 		seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeUTC.AddDateTime(years, months, days, hours, minutes, seconds, " +
-			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeUTC.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -214,9 +210,9 @@ func (tzdto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 		seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeLocal.AddDate(years, months, days, hours, minutes, seconds, " +
-			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeLocal.AddDate(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -256,23 +252,23 @@ func (tzdto *TimeZoneDto) AddDuration(duration time.Duration) error {
 	err := tzdto.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "This current TimeZoneDto instance is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"This current TimeZoneDto instance is INVALID! Error='%v'", err.Error())
 	}
 
 	tzdto.TimeIn, err = tzdto.TimeIn.AddDuration(duration, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned from tzdto.TimeIn.AddDuration(duration). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned from tzdto.TimeIn.AddDuration(duration). "+
 			"tzdto.TimeIn.DateTime='%v'  Error='%v'",
 			tzdto.TimeIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
-	
+
 	tzdto.TimeOut, err = tzdto.TimeOut.AddDuration(duration, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned from tzdto.TimeOut.AddDuration(duration). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned from tzdto.TimeOut.AddDuration(duration). "+
 			"tzdto.TimeOut.DateTime='%v'  Error='%v'",
 			tzdto.TimeOut.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
@@ -280,8 +276,8 @@ func (tzdto *TimeZoneDto) AddDuration(duration time.Duration) error {
 	tzdto.TimeUTC, err = tzdto.TimeUTC.AddDuration(duration, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned from tzdto.TimeUTC.AddDuration(duration). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned from tzdto.TimeUTC.AddDuration(duration). "+
 			"tzdto.TimeUTC.DateTime='%v'  Error='%v'",
 			tzdto.TimeUTC.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
@@ -289,8 +285,8 @@ func (tzdto *TimeZoneDto) AddDuration(duration time.Duration) error {
 	tzdto.TimeLocal, err = tzdto.TimeLocal.AddDuration(duration, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned from tzdto.TimeLocal.AddDuration(duration). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned from tzdto.TimeLocal.AddDuration(duration). "+
 			"tzdto.TimeLocal.DateTime='%v'  Error='%v'",
 			tzdto.TimeLocal.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
@@ -339,14 +335,13 @@ func (tzdto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 
 	ePrefix := "TimeZoneDto.AddMinusTimeDto() "
 
-
 	dateTzIn := tzdto.TimeIn.CopyOut()
 
 	err := dateTzIn.AddMinusTimeDtoToThis(timeDto)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by dateTzIn.AddMinusTimeDtoToThis(timeDto) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by dateTzIn.AddMinusTimeDtoToThis(timeDto) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -357,8 +352,8 @@ func (tzdto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -407,14 +402,13 @@ func (tzdto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 
 	ePrefix := "TimeZoneDto.AddPlusTimeDto() "
 
-
 	dateTzIn := tzdto.TimeIn.CopyOut()
 
 	err := dateTzIn.AddPlusTimeDtoToThis(timeDto)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by dateTzIn.AddPlusTimeDtoToThis(timeDto) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by dateTzIn.AddPlusTimeDtoToThis(timeDto) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -425,8 +419,8 @@ func (tzdto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -467,15 +461,15 @@ func (tzdto *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microse
 	err := tzdto.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "This TimeZoneDto instance is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"This TimeZoneDto instance is INVALID! Error='%v'", err.Error())
 	}
 
 	tzdto.TimeIn, err =
 		tzdto.TimeIn.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeIn.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeIn.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -483,8 +477,8 @@ func (tzdto *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microse
 		tzdto.TimeOut.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeOut.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeOut.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -492,8 +486,8 @@ func (tzdto *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microse
 		tzdto.TimeUTC.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeUTC.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeUTC.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -501,8 +495,8 @@ func (tzdto *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microse
 		tzdto.TimeLocal.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.TimeLocal.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.TimeLocal.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzdto.DateTimeFmt) "+
 			"Error='%v'", err.Error())
 	}
 
@@ -533,8 +527,8 @@ func (tzdto *TimeZoneDto) AddTimeDurationDto(durDto TimeDurationDto) error {
 	err := tzdto.AddDuration(durDto.TimeDuration)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tzdto.AddDuration(durDto.TimeDuration) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzdto.AddDuration(durDto.TimeDuration) "+
 			"Error='%v' ", err.Error())
 	}
 
@@ -629,7 +623,7 @@ func (tzdto TimeZoneDto) ConvertTz(tIn time.Time, targetTz, dateTimeFmtStr strin
 	tzOut, err := time.LoadLocation(targetTz)
 
 	if err != nil {
-		return tzuOut, fmt.Errorf("%vError Loading Target IANA Time Zone 'targetTz', %v. Errors: %v ",ePrefix, targetTz, err.Error())
+		return tzuOut, fmt.Errorf("%vError Loading Target IANA Time Zone 'targetTz', %v. Errors: %v ", ePrefix, targetTz, err.Error())
 	}
 
 	tzuOut.SetDateTimeFormatStr(dateTimeFmtStr)
@@ -637,25 +631,25 @@ func (tzdto TimeZoneDto) ConvertTz(tIn time.Time, targetTz, dateTimeFmtStr strin
 	err = tzuOut.setTimeIn(tIn)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.setTimeIn(tIn). Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.setTimeIn(tIn). Error='%v'", err.Error())
 	}
 
 	err = tzuOut.setTimeOut(tIn.In(tzOut))
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.setTimeOut(tIn.In(tzOut)). Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.setTimeOut(tIn.In(tzOut)). Error='%v'", err.Error())
 	}
 
 	err = tzuOut.setUTCTime(tIn)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.setUTCTime(tIn). Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.setUTCTime(tIn). Error='%v'", err.Error())
 	}
 
 	err = tzuOut.setLocalTime(tIn)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.SetLocalTime(tIn). Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.SetLocalTime(tIn). Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil
@@ -690,12 +684,12 @@ func (tzdto TimeZoneDto) ConvertTz(tIn time.Time, targetTz, dateTimeFmtStr strin
 //
 func (tzdto *TimeZoneDto) CopyOut() TimeZoneDto {
 	tzu2 := TimeZoneDto{}
-	tzu2.Description 		= tzdto.Description
-	tzu2.TimeIn 				= tzdto.TimeIn.CopyOut()
-	tzu2.TimeOut 				= tzdto.TimeOut.CopyOut()
-	tzu2.TimeUTC 				= tzdto.TimeUTC.CopyOut()
-	tzu2.TimeLocal 			= tzdto.TimeLocal.CopyOut()
-	tzu2.DateTimeFmt		= tzdto.DateTimeFmt
+	tzu2.Description = tzdto.Description
+	tzu2.TimeIn = tzdto.TimeIn.CopyOut()
+	tzu2.TimeOut = tzdto.TimeOut.CopyOut()
+	tzu2.TimeUTC = tzdto.TimeUTC.CopyOut()
+	tzu2.TimeLocal = tzdto.TimeLocal.CopyOut()
+	tzu2.DateTimeFmt = tzdto.DateTimeFmt
 
 	return tzu2
 }
@@ -735,15 +729,15 @@ func (tzdto *TimeZoneDto) CopyOut() TimeZoneDto {
 // 	None
 //
 func (tzdto *TimeZoneDto) CopyIn(tzdto2 TimeZoneDto) {
-	
+
 	tzdto.Empty()
 
-	tzdto.Description 		= tzdto2.Description
-	tzdto.TimeIn 					= tzdto2.TimeIn.CopyOut()
-	tzdto.TimeOut 				= tzdto2.TimeOut.CopyOut()
-	tzdto.TimeUTC 				= tzdto2.TimeUTC.CopyOut()
-	tzdto.TimeLocal 			= tzdto2.TimeLocal.CopyOut()
-	tzdto.DateTimeFmt			= tzdto2.DateTimeFmt
+	tzdto.Description = tzdto2.Description
+	tzdto.TimeIn = tzdto2.TimeIn.CopyOut()
+	tzdto.TimeOut = tzdto2.TimeOut.CopyOut()
+	tzdto.TimeUTC = tzdto2.TimeUTC.CopyOut()
+	tzdto.TimeLocal = tzdto2.TimeLocal.CopyOut()
+	tzdto.DateTimeFmt = tzdto2.DateTimeFmt
 
 }
 
@@ -770,17 +764,17 @@ func (tzdto *TimeZoneDto) CopyIn(tzdto2 TimeZoneDto) {
 //						method returns 'false'
 //
 func (tzdto *TimeZoneDto) Equal(tzdto2 TimeZoneDto) bool {
-	
-	if !tzdto.TimeIn.Equal(tzdto2.TimeIn) 					||
-		!tzdto.TimeOut.Equal(tzdto2.TimeOut) 					||
-		!tzdto.TimeUTC.Equal(tzdto2.TimeUTC)  				||
-		!tzdto.TimeLocal.Equal(tzdto2.TimeLocal)		 	||
-		tzdto.Description != tzdto2.Description				||
-		tzdto.DateTimeFmt != tzdto2.DateTimeFmt				{
+
+	if !tzdto.TimeIn.Equal(tzdto2.TimeIn) ||
+		!tzdto.TimeOut.Equal(tzdto2.TimeOut) ||
+		!tzdto.TimeUTC.Equal(tzdto2.TimeUTC) ||
+		!tzdto.TimeLocal.Equal(tzdto2.TimeLocal) ||
+		tzdto.Description != tzdto2.Description ||
+		tzdto.DateTimeFmt != tzdto2.DateTimeFmt {
 
 		return false
 	}
-	
+
 	return true
 }
 
@@ -788,13 +782,12 @@ func (tzdto *TimeZoneDto) Equal(tzdto2 TimeZoneDto) bool {
 // TimeZoneDto to an uninitialized
 // or 'Empty' state.
 func (tzdto *TimeZoneDto) Empty() {
-	tzdto.Description 	= ""
-	tzdto.TimeIn 				= DateTzDto{}
-	tzdto.TimeOut 			= DateTzDto{}
-	tzdto.TimeUTC 			= DateTzDto{}
-	tzdto.TimeLocal 		= DateTzDto{}
+	tzdto.Description = ""
+	tzdto.TimeIn = DateTzDto{}
+	tzdto.TimeOut = DateTzDto{}
+	tzdto.TimeUTC = DateTzDto{}
+	tzdto.TimeLocal = DateTzDto{}
 }
-
 
 // IsTimeZoneDtoValid - Analyzes the current TimeZoneDto
 // instance and returns an error if the instance is INVALID.
@@ -804,19 +797,19 @@ func (tzdto *TimeZoneDto) IsTimeZoneDtoValid() error {
 	ePrefix := "TimeZoneDto.IsTimeZoneDtoValid() "
 
 	if err := tzdto.TimeIn.IsValid(); err != nil {
-		return fmt.Errorf(ePrefix + "tzdto.TimeIn is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"tzdto.TimeIn is INVALID! Error='%v'", err.Error())
 	}
 
 	if err := tzdto.TimeOut.IsValid(); err != nil {
-		return fmt.Errorf(ePrefix + "Error: TimeOut is INVALID!  Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error: TimeOut is INVALID!  Error='%v'", err.Error())
 	}
 
 	if err := tzdto.TimeUTC.IsValid(); err != nil {
-		return fmt.Errorf(ePrefix + "Error: TimeUTC is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error: TimeUTC is INVALID! Error='%v'", err.Error())
 	}
-	
+
 	if err := tzdto.TimeLocal.IsValid(); err != nil {
-		return fmt.Errorf(ePrefix + "Error: TimeLocal is INVALID! Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error: TimeLocal is INVALID! Error='%v'", err.Error())
 	}
 
 	return nil
@@ -862,7 +855,6 @@ func (tzdto *TimeZoneDto) IsValidTimeZone(tZone string) (isValidTz, isValidIanaT
 	return
 
 }
-
 
 // New - Initializes and returns a new TimeZoneDto object.
 //
@@ -992,14 +984,14 @@ func (tzdto TimeZoneDto) New(tIn time.Time, timeZoneOutLocation, dateTimeFmtStr 
 // 							populated with an error message.
 //
 func (tzdto TimeZoneDto) NewAddDate(tzuIn TimeZoneDto, years, months, days int,
-													dateTimeFmtStr string) (TimeZoneDto, error) {
+	dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewAddDate()"
 
-	err:= tzuIn.IsTimeZoneDtoValid()
+	err := tzuIn.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error: Input parameter tzuIn (TimeZoneDto) is INVALID! Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input parameter tzuIn (TimeZoneDto) is INVALID! Error='%v'", err.Error())
 	}
 
 	tzuOut := tzuIn.CopyOut()
@@ -1009,7 +1001,7 @@ func (tzdto TimeZoneDto) NewAddDate(tzuIn TimeZoneDto, years, months, days int,
 	err = tzuOut.AddDate(years, months, days)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDate(years, months, days) years='%v' months='%v' days='%v'  Error='%v'",years, months, days, err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDate(years, months, days) years='%v' months='%v' days='%v'  Error='%v'", years, months, days, err.Error())
 	}
 
 	return tzuOut, nil
@@ -1076,8 +1068,8 @@ func (tzdto TimeZoneDto) NewAddDate(tzuIn TimeZoneDto, years, months, days int,
 //							error type is set to 'nil'.
 //
 func (tzdto TimeZoneDto) NewAddDateTime(tzdtoIn TimeZoneDto, years, months, days, hours, minutes,
-				seconds, milliseconds, microseconds, nanoseconds int,
-					dateTimeFmtStr string) (TimeZoneDto, error) {
+	seconds, milliseconds, microseconds, nanoseconds int,
+	dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewAddDateTime() "
 
@@ -1085,8 +1077,8 @@ func (tzdto TimeZoneDto) NewAddDateTime(tzdtoIn TimeZoneDto, years, months, days
 
 	if err != nil {
 		return TimeZoneDto{},
-			fmt.Errorf(ePrefix + "Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'",
-										err.Error())
+			fmt.Errorf(ePrefix+"Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'",
+				err.Error())
 	}
 
 	tzuOut := tzdtoIn.CopyOut()
@@ -1098,7 +1090,7 @@ func (tzdto TimeZoneDto) NewAddDateTime(tzdtoIn TimeZoneDto, years, months, days
 
 	if err != nil {
 		return TimeZoneDto{},
-		fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDateTime(...). Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDateTime(...). Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil
@@ -1160,14 +1152,14 @@ func (tzdto TimeZoneDto) NewAddDateTime(tzdtoIn TimeZoneDto, years, months, days
 //							error type is set to 'nil'.
 //
 func (tzdto TimeZoneDto) NewAddDuration(tzdtoIn TimeZoneDto, duration time.Duration,
-														dateTimeFmtStr string) (TimeZoneDto, error) {
+	dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewAddDuration() "
 
 	err := tzdtoIn.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
 	}
 
 	tzuOut := tzdtoIn.CopyOut()
@@ -1177,7 +1169,7 @@ func (tzdto TimeZoneDto) NewAddDuration(tzdtoIn TimeZoneDto, duration time.Durat
 	err = tzuOut.AddDuration(duration)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDuration(duration). Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDuration(duration). Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil
@@ -1239,14 +1231,14 @@ func (tzdto TimeZoneDto) NewAddDuration(tzdtoIn TimeZoneDto, duration time.Durat
 //					with an error message.
 //
 func (tzdto TimeZoneDto) NewAddTime(tzdtoIn TimeZoneDto, hours, minutes, seconds, milliseconds, microseconds,
-														nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
+	nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewAddTime() "
 
 	err := tzdtoIn.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
 	}
 
 	tzuOut := tzdtoIn.CopyOut()
@@ -1368,9 +1360,9 @@ func (tzdto TimeZoneDto) NewDateTz(dateTzDtoIn DateTzDto, tZoneOutLocation, date
 
 	if err != nil {
 		return TimeZoneDto{},
-		fmt.Errorf(ePrefix + "Error returned by tzdto.ConvertTz(dateTzDtoIn, tZoneOutLocation). " +
-			"dateTzDtoIn.DateTime='%v' tZoneOutLocation='%v'  Error='%v'",
-			dateTzDtoIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), tZoneOutLocation, err.Error())
+			fmt.Errorf(ePrefix+"Error returned by tzdto.ConvertTz(dateTzDtoIn, tZoneOutLocation). "+
+				"dateTzDtoIn.DateTime='%v' tZoneOutLocation='%v'  Error='%v'",
+				dateTzDtoIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), tZoneOutLocation, err.Error())
 	}
 
 	return tzuOut, nil
@@ -1458,20 +1450,20 @@ func (tzdto TimeZoneDto) NewDateTz(dateTzDtoIn DateTzDto, tZoneOutLocation, date
 //					with an error message.
 //
 func (tzdto TimeZoneDto) NewTimeAddDate(tIn time.Time, tZoneOutLocation string, years,
-															months, days int, dateTimeFmtStr string) (TimeZoneDto, error) {
+	months, days int, dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewTimeAddDate() "
 
 	tzuOut, err := tzdto.ConvertTz(tIn, tZoneOutLocation, dateTimeFmtStr)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returne by tzdto.ConvertTz(tIn, tZoneOutLocation). tIn='%v' tZoneOutLocation='%v'  Error='%v'", tIn, tZoneOutLocation, err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returne by tzdto.ConvertTz(tIn, tZoneOutLocation). tIn='%v' tZoneOutLocation='%v'  Error='%v'", tIn, tZoneOutLocation, err.Error())
 	}
 
 	err = tzuOut.AddDate(years, months, days)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDate(years, months, days) years='%v' months='%v' days='%v' Error='%v'", years, months, days, err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDate(years, months, days) years='%v' months='%v' days='%v' Error='%v'", years, months, days, err.Error())
 	}
 
 	return tzuOut, nil
@@ -1561,27 +1553,26 @@ func (tzdto TimeZoneDto) NewTimeAddDate(tIn time.Time, tZoneOutLocation string, 
 //							with an error message.
 //
 func (tzdto TimeZoneDto) NewTimeAddDateTime(tIn time.Time, tZoneLocation string, years, months,
-															days, hours, minutes, seconds, milliseconds, microseconds,
-																	nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
+	days, hours, minutes, seconds, milliseconds, microseconds,
+	nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewTimeAddDateTime() "
 
 	tzuOut, err := tzdto.ConvertTz(tIn, tZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returne by tzdto.ConvertTz(tIn, tZoneLocation). tIn='%v' tZoneLocation='%v'  Error='%v'", tIn, tZoneLocation, err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returne by tzdto.ConvertTz(tIn, tZoneLocation). tIn='%v' tZoneLocation='%v'  Error='%v'", tIn, tZoneLocation, err.Error())
 	}
 
 	err = tzuOut.AddDateTime(years, months, days, hours, minutes, seconds, milliseconds,
-														microseconds, nanoseconds)
+		microseconds, nanoseconds)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDateTime(...)  Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDateTime(...)  Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil
 }
-
 
 // NewTimeAddDuration - receives a 'tIn' time.Time parameter and a 'tZoneLocation' parameter
 // which are used to construct an initial TimeZoneDto instance. The 'TimeOut'
@@ -1665,20 +1656,20 @@ func (tzdto TimeZoneDto) NewTimeAddDateTime(tIn time.Time, tZoneLocation string,
 //							error type is set to 'nil'.
 //
 func (tzdto TimeZoneDto) NewTimeAddDuration(tIn time.Time, tZoneLocation string, duration time.Duration,
-																						dateTimeFmtStr string) (TimeZoneDto, error) {
+	dateTimeFmtStr string) (TimeZoneDto, error) {
 
 	ePrefix := "TimeZoneDto.NewTimeAddDuration() "
 
 	tzuOut, err := tzdto.ConvertTz(tIn, tZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returne by tzdto.ConvertTz(tIn, tZoneLocation). tIn='%v' tZoneLocation='%v'  Error='%v'", tIn, tZoneLocation, err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returne by tzdto.ConvertTz(tIn, tZoneLocation). tIn='%v' tZoneLocation='%v'  Error='%v'", tIn, tZoneLocation, err.Error())
 	}
 
 	err = tzuOut.AddDuration(duration)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddDuration(duration). duration='%v'  Error='%v'",duration, err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDuration(duration). duration='%v'  Error='%v'", duration, err.Error())
 	}
 
 	return tzuOut, nil
@@ -1769,21 +1760,21 @@ func (tzdto TimeZoneDto) NewTimeAddDuration(tIn time.Time, tZoneLocation string,
 //							error type is set to 'nil'.
 //
 func (tzdto TimeZoneDto) NewTimeAddTime(tIn time.Time, tZoneLocation string, hours, minutes, seconds, milliseconds,
-												microseconds, nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
+	microseconds, nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
 
-ePrefix := "TimeZoneDto.NewTimeAddTime() "
+	ePrefix := "TimeZoneDto.NewTimeAddTime() "
 
 	tzuOut, err := tzdto.ConvertTz(tIn, tZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returne by tzdto.ConvertTz(tIn, tZoneLocation). tIn='%v' tZoneLocation='%v'  Error='%v'", tIn, tZoneLocation, err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returne by tzdto.ConvertTz(tIn, tZoneLocation). tIn='%v' tZoneLocation='%v'  Error='%v'", tIn, tZoneLocation, err.Error())
 	}
 
 	err = tzuOut.AddTime(hours, minutes, seconds, milliseconds,
 		microseconds, nanoseconds)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix + "Error returned by tzuOut.AddTime(...)  Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddTime(...)  Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil
@@ -1834,19 +1825,19 @@ func (tzdto *TimeZoneDto) ReclassifyTimeWithNewTz(tIn time.Time, tZoneLocation s
 	isValidTz, _, _ := tzdto.IsValidTimeZone(tZoneLocation)
 
 	if !isValidTz {
-		return time.Time{}, fmt.Errorf(ePrefix + "Error: Input Time Zone Location is INVALID! tZoneLocation='%v'", tZoneLocation)
+		return time.Time{}, fmt.Errorf(ePrefix+"Error: Input Time Zone Location is INVALID! tZoneLocation='%v'", tZoneLocation)
 	}
 
 	tzNew, err := time.LoadLocation(tZoneLocation)
 
 	if err != nil {
-		return time.Time{}, fmt.Errorf(ePrefix + "Error returned by time.Location('%v') - Error: %v", tZoneLocation, err.Error())
+		return time.Time{}, fmt.Errorf(ePrefix+"Error returned by time.Location('%v') - Error: %v", tZoneLocation, err.Error())
 	}
 
 	tOut, err := time.ParseInLocation(FmtDateTimeNeutralDateFmt, strTime, tzNew)
 
 	if err != nil {
-		return tOut, fmt.Errorf(ePrefix + "Error returned by time.Parse - Error: %v", err.Error())
+		return tOut, fmt.Errorf(ePrefix+"Error returned by time.Parse - Error: %v", err.Error())
 	}
 
 	return tOut, nil
@@ -1892,13 +1883,13 @@ func (tzdto *TimeZoneDto) Sub(tzu2 TimeZoneDto) (time.Duration, error) {
 	err := tzdto.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return time.Duration(0), fmt.Errorf(ePrefix + "Error: Current TimeZoneDto (tzdto) is INVALID. Error='%v'", err.Error())
+		return time.Duration(0), fmt.Errorf(ePrefix+"Error: Current TimeZoneDto (tzdto) is INVALID. Error='%v'", err.Error())
 	}
 
 	err = tzu2.IsTimeZoneDtoValid()
 
 	if err != nil {
-		return time.Duration(0), fmt.Errorf(ePrefix + "Error: Input Parameter 'tzu2' is INVALID! Error='%v'", err.Error())
+		return time.Duration(0), fmt.Errorf(ePrefix+"Error: Input Parameter 'tzu2' is INVALID! Error='%v'", err.Error())
 	}
 
 	return tzdto.TimeLocal.Sub(tzu2.TimeLocal), nil
@@ -1911,7 +1902,6 @@ func (tzdto *TimeZoneDto) TimeWithoutTimeZone(t time.Time) string {
 	return t.Format(FmtDateTimeNeutralDateFmt)
 }
 
-
 // setTimeIn - Assigns time and zone values to field 'TimeIn'
 func (tzdto *TimeZoneDto) setTimeIn(tIn time.Time) error {
 
@@ -1921,7 +1911,7 @@ func (tzdto *TimeZoneDto) setTimeIn(tIn time.Time) error {
 	tzdto.TimeIn, err = DateTzDto{}.New(tIn, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error retrned by DateTzDto{}.New(tIn,tzdto.DateTimeFmt), tIn='%v'  Error='%v'",tIn.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix+"Error retrned by DateTzDto{}.New(tIn,tzdto.DateTimeFmt), tIn='%v'  Error='%v'", tIn.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	return nil
@@ -1937,7 +1927,7 @@ func (tzdto *TimeZoneDto) setTimeOut(tOut time.Time) error {
 	tzdto.TimeOut, err = DateTzDto{}.New(tOut, tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error retrned by DateTzDto{}.New(tOut,tzdto.DateTimeFmt). tOut='%v'  Error='%v'", tOut.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix+"Error retrned by DateTzDto{}.New(tOut,tzdto.DateTimeFmt). tOut='%v'  Error='%v'", tOut.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	return nil
@@ -1954,7 +1944,7 @@ func (tzdto *TimeZoneDto) setUTCTime(t time.Time) error {
 	tzdto.TimeUTC, err = DateTzDto{}.New(t.UTC(), tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error retrned by DateTzDto{}.New(t.UTC(),tzdto.DateTimeFmt) tUTC='%v'  Error='%v'", t.UTC(), err.Error())
+		return fmt.Errorf(ePrefix+"Error retrned by DateTzDto{}.New(t.UTC(),tzdto.DateTimeFmt) tUTC='%v'  Error='%v'", t.UTC(), err.Error())
 	}
 
 	return nil
@@ -1968,13 +1958,13 @@ func (tzdto *TimeZoneDto) setLocalTime(t time.Time) error {
 	tzLocal, err := time.LoadLocation("Local")
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by time.LoadLocation(\"Local\") Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by time.LoadLocation(\"Local\") Error='%v'", err.Error())
 	}
 
 	tzdto.TimeLocal, err = DateTzDto{}.New(t.In(tzLocal), tzdto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error retrned by DateTzDto{}.New(t.In(tzLocal),tzdto.DateTimeFmt). t.In(tzLocal)='%v'  Error='%v'", t.In(tzLocal).Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix+"Error retrned by DateTzDto{}.New(t.In(tzLocal),tzdto.DateTimeFmt). t.In(tzLocal)='%v'  Error='%v'", t.In(tzLocal).Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	return nil

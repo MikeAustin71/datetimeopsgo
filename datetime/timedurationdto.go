@@ -1,10 +1,10 @@
 package datetime
 
 import (
-	"time"
-	"fmt"
 	"errors"
+	"fmt"
 	"strings"
+	"time"
 )
 
 /*
@@ -34,19 +34,18 @@ import (
 		MikeAustin71\datetimeopsgo\datetime\datetzdto.go
 
 
- */
+*/
 
-
-// TDurCalcType - Time Duration Calculation Type. 
-// Specifies how time duration is allocated by 
-// Years, Months, Weeks, Days, Hours, Seconds, 
+// TDurCalcType - Time Duration Calculation Type.
+// Specifies how time duration is allocated by
+// Years, Months, Weeks, Days, Hours, Seconds,
 // Milliseconds, Microseconds and Nanoseconds.
 type TDurCalcType int
 
-// String - Returns a string equivalent to the 
+// String - Returns a string equivalent to the
 // integer value of TDurCalcType
 func (tDurCalcType TDurCalcType) String() string {
-	
+
 	return TDurCalcTypeLabels[tDurCalcType]
 }
 
@@ -55,91 +54,91 @@ func (tDurCalcType TDurCalcType) String() string {
 // duration and the allocation of time duration across subsidiary time
 // components.
 const (
-	
-// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation. All data
-// fields in the TimeDto are populated in the duration allocation.
-//
-// For the 'TDurCalcTypeYEARMTH' calculation type, the following fields are
-// populated:
-//
-//	type TimeDurationDto struct {
-//			StartTimeDateTz							populated
-//			EndTimeDateTz               populated
-//			TimeDuration                populated
-//			CalcType                    = TDurCalcTypeYEARMTH
-//			Years                       populated
-//			YearsNanosecs               populated
-//			Months                      populated
-//			MonthsNanosecs              populated
-//			Weeks                       populated
-//			WeeksNanosecs               populated
-//			WeekDays                    populated
-//			WeekDaysNanosecs            populated
-//			DateDays                    populated
-//			DateDaysNanosecs            populated
-//			Hours                       populated
-//			HoursNanosecs               populated
-//			Minutes                     populated
-//			MinutesNanosecs             populated
-//			Seconds                     populated
-//			SecondsNanosecs             populated
-//			Milliseconds                populated
-//			MillisecondsNanosecs        populated
-//			Microseconds                populated
-//			MicrosecondsNanosecs        populated
-//			Nanoseconds                 populated
-//			TotSubSecNanoseconds        populated
-//			TotDateNanoseconds          populated
-//			TotTimeNanoseconds          populated
-//	}
-//
-	TDurCalcTypeSTDYEARMTH	TDurCalcType = iota
 
-// TDurCalcTypeCUMMONTHS - Cumulative Months Calculation. Years are ignored.
-// Years and Months are consolidated and counted as cumulative months. Years
-// duration is not provided. The entire duration is broken down by cumulative
-// months plus weeks, week days, date days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds. The Data Fields for for Years is set to zero.
-//
-// For the 'TDurCalcTypeCUMMONTHS' calculation type, the following fields are
-// populated:
-//
-//	type TimeDurationDto struct {
-//			StartTimeDateTz							populated
-//			EndTimeDateTz               populated
-//			TimeDuration                populated
-//			CalcType                    = TDurCalcTypeCUMMONTHS
-//			Years                       NOT-populated
-//			YearsNanosecs               NOT-populated
-//			Months                      populated
-//			MonthsNanosecs              populated
-//			Weeks                       populated
-//			WeeksNanosecs               populated
-//			WeekDays                    populated
-//			WeekDaysNanosecs            populated
-//			DateDays                    populated
-//			DateDaysNanosecs            populated
-//			Hours                       populated
-//			HoursNanosecs               populated
-//			Minutes                     populated
-//			MinutesNanosecs             populated
-//			Seconds                     populated
-//			SecondsNanosecs             populated
-//			Milliseconds                populated
-//			MillisecondsNanosecs        populated
-//			Microseconds                populated
-//			MicrosecondsNanosecs        populated
-//			Nanoseconds                 populated
-//			TotSubSecNanoseconds        populated
-//			TotDateNanoseconds          populated
-//			TotTimeNanoseconds          populated
-//	}
-//
+	// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation. All data
+	// fields in the TimeDto are populated in the duration allocation.
+	//
+	// For the 'TDurCalcTypeYEARMTH' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeYEARMTH
+	//			Years                       populated
+	//			YearsNanosecs               populated
+	//			Months                      populated
+	//			MonthsNanosecs              populated
+	//			Weeks                       populated
+	//			WeeksNanosecs               populated
+	//			WeekDays                    populated
+	//			WeekDaysNanosecs            populated
+	//			DateDays                    populated
+	//			DateDaysNanosecs            populated
+	//			Hours                       populated
+	//			HoursNanosecs               populated
+	//			Minutes                     populated
+	//			MinutesNanosecs             populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
+	//
+	TDurCalcTypeSTDYEARMTH TDurCalcType = iota
+
+	// TDurCalcTypeCUMMONTHS - Cumulative Months Calculation. Years are ignored.
+	// Years and Months are consolidated and counted as cumulative months. Years
+	// duration is not provided. The entire duration is broken down by cumulative
+	// months plus weeks, week days, date days, hours, minutes, seconds, milliseconds,
+	// microseconds and nanoseconds. The Data Fields for for Years is set to zero.
+	//
+	// For the 'TDurCalcTypeCUMMONTHS' calculation type, the following fields are
+	// populated:
+	//
+	//	type TimeDurationDto struct {
+	//			StartTimeDateTz							populated
+	//			EndTimeDateTz               populated
+	//			TimeDuration                populated
+	//			CalcType                    = TDurCalcTypeCUMMONTHS
+	//			Years                       NOT-populated
+	//			YearsNanosecs               NOT-populated
+	//			Months                      populated
+	//			MonthsNanosecs              populated
+	//			Weeks                       populated
+	//			WeeksNanosecs               populated
+	//			WeekDays                    populated
+	//			WeekDaysNanosecs            populated
+	//			DateDays                    populated
+	//			DateDaysNanosecs            populated
+	//			Hours                       populated
+	//			HoursNanosecs               populated
+	//			Minutes                     populated
+	//			MinutesNanosecs             populated
+	//			Seconds                     populated
+	//			SecondsNanosecs             populated
+	//			Milliseconds                populated
+	//			MillisecondsNanosecs        populated
+	//			Microseconds                populated
+	//			MicrosecondsNanosecs        populated
+	//			Nanoseconds                 populated
+	//			TotSubSecNanoseconds        populated
+	//			TotDateNanoseconds          populated
+	//			TotTimeNanoseconds          populated
+	//	}
+	//
 	TDurCalcTypeCUMMONTHS
 
 	// TDurCalcTypeCUMWEEKS - Cumulative Weeks calculation. Years and months are ignored.
 	// Years, months, weeks are consolidated and counted as cumulative weeks. Years and
-	// months duration is not provided. The entire duration is broken down by cumulative 
+	// months duration is not provided. The entire duration is broken down by cumulative
 	// weeks, plus week days, hours, minutes, seconds, milliseconds, microseconds and
 	// nanoseconds. Data Fields for Years and Months are always set to zero.
 	//
@@ -178,10 +177,10 @@ const (
 	//	}
 	//
 	TDurCalcTypeCUMWEEKS
-	
-	// TDurCalcTypeCUMDAYS - Cumulative Days calculation. Years, months and weeks are 
+
+	// TDurCalcTypeCUMDAYS - Cumulative Days calculation. Years, months and weeks are
 	// ignored. Years, months, weeks and days are consolidated and counted as cumulative
-	// days. Years, months and weeks duration is not calculated. The entire duration is 
+	// days. Years, months and weeks duration is not calculated. The entire duration is
 	// broken down by cumulative days plus hours, minutes, seconds, milliseconds,
 	// microseconds and nanoseconds. Data Fields for years, months, weeks, and weekdays
 	// are always set to zero.
@@ -221,13 +220,13 @@ const (
 	//	}
 	//
 	TDurCalcTypeCUMDAYS
-	
+
 	// TDurCalcTypeCUMHOURS - Cumulative Hours calculations. Years, months, weeks, and days
 	// are ignored. Years, months weeks, days and hours are consolidated as cumulative hours.
-	// Years, months, weeks and days duration is not calculated. The entire duration is 
+	// Years, months, weeks and days duration is not calculated. The entire duration is
 	// broken down by cumulative hours plus minutes, seconds, milliseconds, microseconds
 	// and nanoseconds.  Data Fields for years, months, weeks, and days are always set
-	// to zero. 
+	// to zero.
 	//
 	// For the 'TDurCalcTypeCUMHOURS' calculation type, the following fields are
 	// populated:
@@ -310,7 +309,6 @@ const (
 	//
 	TDurCalcTypeCUMMINUTES
 
-
 	// TDurCalcTypeCUMSECONDS - Cumulative Seconds calculations. Years, months, weeks, days,
 	// hours and minutes are ignored. Years, months weeks, days, hours, minutes and 'seconds'
 	// are consolidated and counted as cumulative Seconds.
@@ -358,7 +356,7 @@ const (
 
 	// TDurCalcTypeGregorianYrs - Allocates Years, Months, Weeks, WeekDays, Date Days, Hours
 	// Minutes, Seconds, Milliseconds, Microseconds, Nanoseconds. However, the Years allocation
-	// is performed using standard Gregorian Years. 
+	// is performed using standard Gregorian Years.
 	//			Sources:
 	//					https://en.wikipedia.org/wiki/Year
 	//					Source: https://en.wikipedia.org/wiki/Gregorian_calendar
@@ -402,45 +400,44 @@ const (
 	//	}
 	//
 	TDurCalcTypeGregorianYrs
-	
 )
 
 // TDurCalcTypeLabels - Text Names associated with TDurCalcType types.
-var TDurCalcTypeLabels = [...]string{"StdYearMthCalc","CumMonthsCalc","CumWeeksCalc", "CumDaysCalc",
-																			"CumHoursCalc", "CumMinutesCalc","CumSecondsCalc", "GregorianYrsCalc"}
+var TDurCalcTypeLabels = [...]string{"StdYearMthCalc", "CumMonthsCalc", "CumWeeksCalc", "CumDaysCalc",
+	"CumHoursCalc", "CumMinutesCalc", "CumSecondsCalc", "GregorianYrsCalc"}
 
 // TimeDurationDto - Is designed to work with incremental time or duration.
 type TimeDurationDto struct {
-	StartTimeDateTz				DateTzDto			// Starting Date Time with Time Zone info
-	EndTimeDateTz        	DateTzDto			// Ending Date Time with Time Zone info
-	TimeDuration         	time.Duration	// Elapsed time or duration between starting and ending date time
-	CalcType              TDurCalcType  // The calculation Type. This controls the allocation of time 
-																			// 		duration over years, months, weeks, days and hours.
-	Years                	int64					// Number of Years
-	YearsNanosecs        	int64					// Number of Years in Nanoseconds
-	Months               	int64					// Number of Months
-	MonthsNanosecs       	int64					// Number of Months in Nanoseconds
-	Weeks                	int64					// Number of Weeks: Date Days / 7
-	WeeksNanosecs        	int64					// Number of Weeks in Nanoseconds
-	WeekDays             	int64					// WeekDays = DateDays - (Weeks * 7)
-	WeekDaysNanosecs     	int64					// Equivalent WeekDays in NanoSeconds
-	DateDays             	int64					// Day Number in Month (1-31)
-	DateDaysNanosecs     	int64					// DateDays in equivalent nanoseconds
-	Hours                	int64					// Number of Hours 
-	HoursNanosecs        	int64					// Number of Hours in Nanoseconds
-	Minutes              	int64					// Number of Minutes
-	MinutesNanosecs      	int64					// Number of Minutes in Nanoseconds
-	Seconds              	int64					// Number of Seconds
-	SecondsNanosecs      	int64					// Number of Seconds in Nanoseconds
-	Milliseconds         	int64					// Number of Milliseconds
-	MillisecondsNanosecs 	int64					// Number of Milliseconds in Nanoseconds
-	Microseconds         	int64					// Number of Microseconds
-	MicrosecondsNanosecs 	int64					// Number of Microseconds in Nanoseconds
-	Nanoseconds          	int64					// Number of Nanoseconds (Remainder after Milliseconds & Microseconds) 
-	TotSubSecNanoseconds 	int64					// Equivalent Nanoseconds for Milliseconds + Microseconds + Nanoseconds
-	TotDateNanoseconds		int64					// Equal to Years + Months + DateDays in equivalent nanoseconds.
-	TotTimeNanoseconds		int64					// Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
-																			// 		in equivalent nanoseconds
+	StartTimeDateTz DateTzDto     // Starting Date Time with Time Zone info
+	EndTimeDateTz   DateTzDto     // Ending Date Time with Time Zone info
+	TimeDuration    time.Duration // Elapsed time or duration between starting and ending date time
+	CalcType        TDurCalcType  // The calculation Type. This controls the allocation of time
+	// 		duration over years, months, weeks, days and hours.
+	Years                int64 // Number of Years
+	YearsNanosecs        int64 // Number of Years in Nanoseconds
+	Months               int64 // Number of Months
+	MonthsNanosecs       int64 // Number of Months in Nanoseconds
+	Weeks                int64 // Number of Weeks: Date Days / 7
+	WeeksNanosecs        int64 // Number of Weeks in Nanoseconds
+	WeekDays             int64 // WeekDays = DateDays - (Weeks * 7)
+	WeekDaysNanosecs     int64 // Equivalent WeekDays in NanoSeconds
+	DateDays             int64 // Day Number in Month (1-31)
+	DateDaysNanosecs     int64 // DateDays in equivalent nanoseconds
+	Hours                int64 // Number of Hours
+	HoursNanosecs        int64 // Number of Hours in Nanoseconds
+	Minutes              int64 // Number of Minutes
+	MinutesNanosecs      int64 // Number of Minutes in Nanoseconds
+	Seconds              int64 // Number of Seconds
+	SecondsNanosecs      int64 // Number of Seconds in Nanoseconds
+	Milliseconds         int64 // Number of Milliseconds
+	MillisecondsNanosecs int64 // Number of Milliseconds in Nanoseconds
+	Microseconds         int64 // Number of Microseconds
+	MicrosecondsNanosecs int64 // Number of Microseconds in Nanoseconds
+	Nanoseconds          int64 // Number of Nanoseconds (Remainder after Milliseconds & Microseconds)
+	TotSubSecNanoseconds int64 // Equivalent Nanoseconds for Milliseconds + Microseconds + Nanoseconds
+	TotDateNanoseconds   int64 // Equal to Years + Months + DateDays in equivalent nanoseconds.
+	TotTimeNanoseconds   int64 // Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
+	// 		in equivalent nanoseconds
 
 }
 
@@ -451,220 +448,219 @@ type TimeDurationDto struct {
 // When this method completes, the current TimeDurationDto will
 // equal in all respects to the incoming TimeDurationDto.
 func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
-	
+
 	tDur.Empty()
 
-	tDur.StartTimeDateTz 				= t2Dur.StartTimeDateTz.CopyOut()
-	tDur.EndTimeDateTz 					=	t2Dur.EndTimeDateTz.CopyOut()
-	tDur.TimeDuration     			= t2Dur.TimeDuration
-	tDur.CalcType								= t2Dur.CalcType
-	tDur.Years									= t2Dur.Years
-	tDur.YearsNanosecs    			= t2Dur.YearsNanosecs
-	tDur.Months           			= t2Dur.Months
-	tDur.MonthsNanosecs   			= t2Dur.MonthsNanosecs
-	tDur.Weeks            			= t2Dur.Weeks
-	tDur.WeeksNanosecs    			= t2Dur.WeeksNanosecs
-	tDur.WeekDays								= t2Dur.WeekDays
-	tDur.WeekDaysNanosecs				= t2Dur.WeekDaysNanosecs
-	tDur.DateDays								= t2Dur.DateDays
-	tDur.DateDaysNanosecs				= t2Dur.DateDaysNanosecs
-	tDur.Hours									= t2Dur.Hours
-	tDur.HoursNanosecs					= t2Dur.HoursNanosecs
-	tDur.Minutes								= t2Dur.Minutes
-	tDur.MinutesNanosecs				= t2Dur.MinutesNanosecs
-	tDur.Seconds								= t2Dur.Seconds
-	tDur.SecondsNanosecs				= t2Dur.SecondsNanosecs
-	tDur.Milliseconds						= t2Dur.Milliseconds
-	tDur.MillisecondsNanosecs		= t2Dur.MillisecondsNanosecs
-	tDur.Microseconds						= t2Dur.Microseconds
-	tDur.MicrosecondsNanosecs 	= t2Dur.MicrosecondsNanosecs
-	tDur.Nanoseconds						= t2Dur.MillisecondsNanosecs
-	tDur.TotSubSecNanoseconds 	= t2Dur.TotSubSecNanoseconds
-	tDur.TotDateNanoseconds			= t2Dur.TotDateNanoseconds
-	tDur.TotTimeNanoseconds			= t2Dur.TotTimeNanoseconds
+	tDur.StartTimeDateTz = t2Dur.StartTimeDateTz.CopyOut()
+	tDur.EndTimeDateTz = t2Dur.EndTimeDateTz.CopyOut()
+	tDur.TimeDuration = t2Dur.TimeDuration
+	tDur.CalcType = t2Dur.CalcType
+	tDur.Years = t2Dur.Years
+	tDur.YearsNanosecs = t2Dur.YearsNanosecs
+	tDur.Months = t2Dur.Months
+	tDur.MonthsNanosecs = t2Dur.MonthsNanosecs
+	tDur.Weeks = t2Dur.Weeks
+	tDur.WeeksNanosecs = t2Dur.WeeksNanosecs
+	tDur.WeekDays = t2Dur.WeekDays
+	tDur.WeekDaysNanosecs = t2Dur.WeekDaysNanosecs
+	tDur.DateDays = t2Dur.DateDays
+	tDur.DateDaysNanosecs = t2Dur.DateDaysNanosecs
+	tDur.Hours = t2Dur.Hours
+	tDur.HoursNanosecs = t2Dur.HoursNanosecs
+	tDur.Minutes = t2Dur.Minutes
+	tDur.MinutesNanosecs = t2Dur.MinutesNanosecs
+	tDur.Seconds = t2Dur.Seconds
+	tDur.SecondsNanosecs = t2Dur.SecondsNanosecs
+	tDur.Milliseconds = t2Dur.Milliseconds
+	tDur.MillisecondsNanosecs = t2Dur.MillisecondsNanosecs
+	tDur.Microseconds = t2Dur.Microseconds
+	tDur.MicrosecondsNanosecs = t2Dur.MicrosecondsNanosecs
+	tDur.Nanoseconds = t2Dur.MillisecondsNanosecs
+	tDur.TotSubSecNanoseconds = t2Dur.TotSubSecNanoseconds
+	tDur.TotDateNanoseconds = t2Dur.TotDateNanoseconds
+	tDur.TotTimeNanoseconds = t2Dur.TotTimeNanoseconds
 }
 
-// CopyOut - Returns a deep copy of the current 
+// CopyOut - Returns a deep copy of the current
 // TimeDurationDto instance.
 func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 
 	t2Dur := TimeDurationDto{}
-	
-	t2Dur.StartTimeDateTz 			= tDur.StartTimeDateTz.CopyOut()
-	t2Dur.EndTimeDateTz 				=	tDur.EndTimeDateTz.CopyOut()
-	t2Dur.TimeDuration     			= tDur.TimeDuration
-	t2Dur.CalcType							= tDur.CalcType
-	t2Dur.Years									= tDur.Years
-	t2Dur.YearsNanosecs    			= tDur.YearsNanosecs
-	t2Dur.Months           			= tDur.Months
-	t2Dur.MonthsNanosecs   			= tDur.MonthsNanosecs
-	t2Dur.Weeks            			= tDur.Weeks
-	t2Dur.WeeksNanosecs    			= tDur.WeeksNanosecs
-	t2Dur.WeekDays							= tDur.WeekDays
-	t2Dur.WeekDaysNanosecs			= tDur.WeekDaysNanosecs
-	t2Dur.DateDays							= tDur.DateDays
-	t2Dur.DateDaysNanosecs			= tDur.DateDaysNanosecs
-	t2Dur.Hours									= tDur.Hours
-	t2Dur.HoursNanosecs					= tDur.HoursNanosecs
-	t2Dur.Minutes								= tDur.Minutes
-	t2Dur.MinutesNanosecs				= tDur.MinutesNanosecs
-	t2Dur.Seconds								= tDur.Seconds
-	t2Dur.SecondsNanosecs				= tDur.SecondsNanosecs
-	t2Dur.Milliseconds					= tDur.Milliseconds
-	t2Dur.MillisecondsNanosecs	= tDur.MillisecondsNanosecs
-	t2Dur.Microseconds					= tDur.Microseconds
-	t2Dur.MicrosecondsNanosecs 	= tDur.MicrosecondsNanosecs
-	t2Dur.Nanoseconds						= tDur.Nanoseconds
-	t2Dur.TotSubSecNanoseconds 	= tDur.TotSubSecNanoseconds
-	t2Dur.TotDateNanoseconds		= tDur.TotDateNanoseconds
-	t2Dur.TotTimeNanoseconds		= tDur.TotTimeNanoseconds
-	
+
+	t2Dur.StartTimeDateTz = tDur.StartTimeDateTz.CopyOut()
+	t2Dur.EndTimeDateTz = tDur.EndTimeDateTz.CopyOut()
+	t2Dur.TimeDuration = tDur.TimeDuration
+	t2Dur.CalcType = tDur.CalcType
+	t2Dur.Years = tDur.Years
+	t2Dur.YearsNanosecs = tDur.YearsNanosecs
+	t2Dur.Months = tDur.Months
+	t2Dur.MonthsNanosecs = tDur.MonthsNanosecs
+	t2Dur.Weeks = tDur.Weeks
+	t2Dur.WeeksNanosecs = tDur.WeeksNanosecs
+	t2Dur.WeekDays = tDur.WeekDays
+	t2Dur.WeekDaysNanosecs = tDur.WeekDaysNanosecs
+	t2Dur.DateDays = tDur.DateDays
+	t2Dur.DateDaysNanosecs = tDur.DateDaysNanosecs
+	t2Dur.Hours = tDur.Hours
+	t2Dur.HoursNanosecs = tDur.HoursNanosecs
+	t2Dur.Minutes = tDur.Minutes
+	t2Dur.MinutesNanosecs = tDur.MinutesNanosecs
+	t2Dur.Seconds = tDur.Seconds
+	t2Dur.SecondsNanosecs = tDur.SecondsNanosecs
+	t2Dur.Milliseconds = tDur.Milliseconds
+	t2Dur.MillisecondsNanosecs = tDur.MillisecondsNanosecs
+	t2Dur.Microseconds = tDur.Microseconds
+	t2Dur.MicrosecondsNanosecs = tDur.MicrosecondsNanosecs
+	t2Dur.Nanoseconds = tDur.Nanoseconds
+	t2Dur.TotSubSecNanoseconds = tDur.TotSubSecNanoseconds
+	t2Dur.TotDateNanoseconds = tDur.TotDateNanoseconds
+	t2Dur.TotTimeNanoseconds = tDur.TotTimeNanoseconds
+
 	return t2Dur
 }
 
 // Empty - Resets all of the current TimeDurationDto
 // data fields to their zero or uninitialized values.
 func (tDur *TimeDurationDto) Empty() {
-	tDur.StartTimeDateTz 			= DateTzDto{}
-	tDur.EndTimeDateTz 				=	DateTzDto{}
-	tDur.TimeDuration     		= time.Duration(0)
-	tDur.CalcType							= TDurCalcTypeSTDYEARMTH
-	tDur.Years								= 0
-	tDur.YearsNanosecs    		= 0
-	tDur.Months           		= 0
-	tDur.MonthsNanosecs   		= 0
-	tDur.Weeks            		= 0
-	tDur.WeeksNanosecs    		= 0
-	tDur.WeekDays							= 0
-	tDur.WeekDaysNanosecs			= 0
-	tDur.DateDays							= 0
-	tDur.DateDaysNanosecs			= 0
-	tDur.Hours								= 0
-	tDur.HoursNanosecs				= 0
-	tDur.Minutes							= 0
-	tDur.MinutesNanosecs			= 0
-	tDur.Seconds							= 0
-	tDur.SecondsNanosecs			= 0
-	tDur.Milliseconds					= 0
-	tDur.MillisecondsNanosecs	= 0
-	tDur.Microseconds					= 0
+	tDur.StartTimeDateTz = DateTzDto{}
+	tDur.EndTimeDateTz = DateTzDto{}
+	tDur.TimeDuration = time.Duration(0)
+	tDur.CalcType = TDurCalcTypeSTDYEARMTH
+	tDur.Years = 0
+	tDur.YearsNanosecs = 0
+	tDur.Months = 0
+	tDur.MonthsNanosecs = 0
+	tDur.Weeks = 0
+	tDur.WeeksNanosecs = 0
+	tDur.WeekDays = 0
+	tDur.WeekDaysNanosecs = 0
+	tDur.DateDays = 0
+	tDur.DateDaysNanosecs = 0
+	tDur.Hours = 0
+	tDur.HoursNanosecs = 0
+	tDur.Minutes = 0
+	tDur.MinutesNanosecs = 0
+	tDur.Seconds = 0
+	tDur.SecondsNanosecs = 0
+	tDur.Milliseconds = 0
+	tDur.MillisecondsNanosecs = 0
+	tDur.Microseconds = 0
 	tDur.MicrosecondsNanosecs = 0
-	tDur.Nanoseconds					= 0
+	tDur.Nanoseconds = 0
 	tDur.TotSubSecNanoseconds = 0
-	tDur.TotDateNanoseconds		= 0
-	tDur.TotTimeNanoseconds		= 0
+	tDur.TotDateNanoseconds = 0
+	tDur.TotTimeNanoseconds = 0
 }
 
 // EmptyTimeFields - Sets all of the data fields
 // associated with time duration allocation to zero.
 func (tDur *TimeDurationDto) EmptyTimeFields() {
 
-	tDur.Years								= 0
-	tDur.YearsNanosecs    		= 0
-	tDur.Months           		= 0
-	tDur.MonthsNanosecs   		= 0
-	tDur.Weeks            		= 0
-	tDur.WeeksNanosecs    		= 0
-	tDur.WeekDays							= 0
-	tDur.WeekDaysNanosecs			= 0
-	tDur.DateDays							= 0
-	tDur.DateDaysNanosecs			= 0
-	tDur.Hours								= 0
-	tDur.HoursNanosecs				= 0
-	tDur.Minutes							= 0
-	tDur.MinutesNanosecs			= 0
-	tDur.Seconds							= 0
-	tDur.SecondsNanosecs			= 0
-	tDur.Milliseconds					= 0
-	tDur.MillisecondsNanosecs	= 0
-	tDur.Microseconds					= 0
+	tDur.Years = 0
+	tDur.YearsNanosecs = 0
+	tDur.Months = 0
+	tDur.MonthsNanosecs = 0
+	tDur.Weeks = 0
+	tDur.WeeksNanosecs = 0
+	tDur.WeekDays = 0
+	tDur.WeekDaysNanosecs = 0
+	tDur.DateDays = 0
+	tDur.DateDaysNanosecs = 0
+	tDur.Hours = 0
+	tDur.HoursNanosecs = 0
+	tDur.Minutes = 0
+	tDur.MinutesNanosecs = 0
+	tDur.Seconds = 0
+	tDur.SecondsNanosecs = 0
+	tDur.Milliseconds = 0
+	tDur.MillisecondsNanosecs = 0
+	tDur.Microseconds = 0
 	tDur.MicrosecondsNanosecs = 0
-	tDur.Nanoseconds					= 0
+	tDur.Nanoseconds = 0
 	tDur.TotSubSecNanoseconds = 0
-	tDur.TotDateNanoseconds		= 0
-	tDur.TotTimeNanoseconds		= 0
+	tDur.TotDateNanoseconds = 0
+	tDur.TotTimeNanoseconds = 0
 
 }
 
 // Equal - Compares two TimeDurationDto instances to determine
 // if they are equivalent.
 func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
-	
-	if	!tDur.StartTimeDateTz.Equal(t2Dur.StartTimeDateTz)				||
-		 	!tDur.EndTimeDateTz.Equal(t2Dur.EndTimeDateTz)						||
-			tDur.TimeDuration 				!= 	t2Dur.TimeDuration					||
-			tDur.CalcType							!=	t2Dur.CalcType							||
-			tDur.Years								!= 	t2Dur.Years									||
-			tDur.YearsNanosecs    		!= 	t2Dur.YearsNanosecs					||
-			tDur.Months           		!= 	t2Dur.Months 								||
-			tDur.MonthsNanosecs   		!= 	t2Dur.MonthsNanosecs				||
-			tDur.Weeks            		!= 	t2Dur.Weeks									||
-			tDur.WeeksNanosecs    		!= 	t2Dur.WeeksNanosecs					||
-			tDur.WeekDays							!= 	t2Dur.WeekDays							||
-			tDur.WeekDaysNanosecs			!= 	t2Dur.WeekDaysNanosecs			||
-			tDur.DateDays							!= 	t2Dur.DateDays							||
-			tDur.DateDaysNanosecs 		!= 	t2Dur.DateDaysNanosecs			||
-			tDur.Hours								!= 	t2Dur.Hours									||
-			tDur.HoursNanosecs				!= 	t2Dur.HoursNanosecs					||
-			tDur.Minutes							!=	t2Dur.Minutes								||
-			tDur.MinutesNanosecs			!= 	t2Dur.MinutesNanosecs				||
-			tDur.Seconds							!= 	t2Dur.Seconds								||
-			tDur.SecondsNanosecs			!= 	t2Dur.SecondsNanosecs				||
-			tDur.Milliseconds					!= 	t2Dur.Milliseconds					||
-			tDur.MillisecondsNanosecs	!=	t2Dur.MillisecondsNanosecs	||
-			tDur.Microseconds					!= 	t2Dur.Microseconds					||
-			tDur.MicrosecondsNanosecs != 	t2Dur.MicrosecondsNanosecs	||
-			tDur.Nanoseconds					!= t2Dur.MillisecondsNanosecs		||
-			tDur.TotSubSecNanoseconds != t2Dur.TotSubSecNanoseconds		||
-			tDur.TotDateNanoseconds		!= t2Dur.TotDateNanoseconds			||
-			tDur.TotTimeNanoseconds		!= t2Dur.TotTimeNanoseconds			{
-				
-				return false
+
+	if !tDur.StartTimeDateTz.Equal(t2Dur.StartTimeDateTz) ||
+		!tDur.EndTimeDateTz.Equal(t2Dur.EndTimeDateTz) ||
+		tDur.TimeDuration != t2Dur.TimeDuration ||
+		tDur.CalcType != t2Dur.CalcType ||
+		tDur.Years != t2Dur.Years ||
+		tDur.YearsNanosecs != t2Dur.YearsNanosecs ||
+		tDur.Months != t2Dur.Months ||
+		tDur.MonthsNanosecs != t2Dur.MonthsNanosecs ||
+		tDur.Weeks != t2Dur.Weeks ||
+		tDur.WeeksNanosecs != t2Dur.WeeksNanosecs ||
+		tDur.WeekDays != t2Dur.WeekDays ||
+		tDur.WeekDaysNanosecs != t2Dur.WeekDaysNanosecs ||
+		tDur.DateDays != t2Dur.DateDays ||
+		tDur.DateDaysNanosecs != t2Dur.DateDaysNanosecs ||
+		tDur.Hours != t2Dur.Hours ||
+		tDur.HoursNanosecs != t2Dur.HoursNanosecs ||
+		tDur.Minutes != t2Dur.Minutes ||
+		tDur.MinutesNanosecs != t2Dur.MinutesNanosecs ||
+		tDur.Seconds != t2Dur.Seconds ||
+		tDur.SecondsNanosecs != t2Dur.SecondsNanosecs ||
+		tDur.Milliseconds != t2Dur.Milliseconds ||
+		tDur.MillisecondsNanosecs != t2Dur.MillisecondsNanosecs ||
+		tDur.Microseconds != t2Dur.Microseconds ||
+		tDur.MicrosecondsNanosecs != t2Dur.MicrosecondsNanosecs ||
+		tDur.Nanoseconds != t2Dur.MillisecondsNanosecs ||
+		tDur.TotSubSecNanoseconds != t2Dur.TotSubSecNanoseconds ||
+		tDur.TotDateNanoseconds != t2Dur.TotDateNanoseconds ||
+		tDur.TotTimeNanoseconds != t2Dur.TotTimeNanoseconds {
+
+		return false
 	}
-	
+
 	return true
-	
+
 }
 
 // IsEmpty() - Returns 'true' if the current TimeDurationDto
 // instance is uninitialized and consists entirely of zero values.
 func (tDur *TimeDurationDto) IsEmpty() bool {
 
+	if tDur.StartTimeDateTz.IsEmpty() &&
+		tDur.EndTimeDateTz.IsEmpty() &&
+		tDur.TimeDuration == 0 &&
+		tDur.Years == 0 &&
+		tDur.YearsNanosecs == 0 &&
+		tDur.Months == 0 &&
+		tDur.MonthsNanosecs == 0 &&
+		tDur.Weeks == 0 &&
+		tDur.WeeksNanosecs == 0 &&
+		tDur.WeekDays == 0 &&
+		tDur.WeekDaysNanosecs == 0 &&
+		tDur.DateDays == 0 &&
+		tDur.DateDaysNanosecs == 0 &&
+		tDur.Hours == 0 &&
+		tDur.HoursNanosecs == 0 &&
+		tDur.Minutes == 0 &&
+		tDur.MinutesNanosecs == 0 &&
+		tDur.Seconds == 0 &&
+		tDur.SecondsNanosecs == 0 &&
+		tDur.Milliseconds == 0 &&
+		tDur.MillisecondsNanosecs == 0 &&
+		tDur.Microseconds == 0 &&
+		tDur.MicrosecondsNanosecs == 0 &&
+		tDur.Nanoseconds == 0 &&
+		tDur.TotSubSecNanoseconds == 0 &&
+		tDur.TotDateNanoseconds == 0 &&
+		tDur.TotTimeNanoseconds == 0 {
 
-	if	tDur.StartTimeDateTz.IsEmpty()				&&
-		  tDur.EndTimeDateTz.IsEmpty()					&&
-			tDur.TimeDuration 						== 0 		&&
-			tDur.Years										== 0 		&&
-			tDur.YearsNanosecs   					== 0 		&&
-			tDur.Months          					== 0 	 	&&
-			tDur.MonthsNanosecs 			 		== 0 		&&
-			tDur.Weeks 			          		== 0 		&&
-			tDur.WeeksNanosecs		    		== 0 		&&
-			tDur.WeekDays									== 0 		&&
-			tDur.WeekDaysNanosecs					== 0 		&&
-			tDur.DateDays									== 0		&&
-			tDur.DateDaysNanosecs 				== 0		&&
-			tDur.Hours										== 0		&&
-			tDur.HoursNanosecs						== 0		&&
-			tDur.Minutes									== 0		&&
-			tDur.MinutesNanosecs					== 0		&&
-			tDur.Seconds									== 0		&&
-			tDur.SecondsNanosecs					== 0		&&
-			tDur.Milliseconds							== 0		&&
-			tDur.MillisecondsNanosecs			== 0		&&
-			tDur.Microseconds							== 0		&&
-			tDur.MicrosecondsNanosecs 		== 0		&&
-			tDur.Nanoseconds							== 0		&&
-			tDur.TotSubSecNanoseconds 		== 0		&&
-			tDur.TotDateNanoseconds				== 0		&&
-			tDur.TotTimeNanoseconds				== 0			{
-
-		tDur.CalcType = TDurCalcTypeSTDYEARMTH	
+		tDur.CalcType = TDurCalcTypeSTDYEARMTH
 		return true
 	}
 
 	return false
-	
+
 }
 
 // IsValid - Returns an error value signaling whether
@@ -673,18 +669,15 @@ func (tDur *TimeDurationDto) IsValid() error {
 	ePrefix := "TimeDurationDto.IsValid() "
 
 	if tDur.StartTimeDateTz.DateTime.IsZero() &&
-				tDur.EndTimeDateTz.DateTime.IsZero() {
+		tDur.EndTimeDateTz.DateTime.IsZero() {
 
 		return fmt.Errorf(ePrefix + "Error: Both Start and End Times are Zero!")
 
 	}
 
-
 	if tDur.EndTimeDateTz.DateTime.Before(tDur.StartTimeDateTz.DateTime) {
-		return fmt.Errorf(ePrefix + "Error: End Time is Before Start Time! " )
+		return fmt.Errorf(ePrefix + "Error: End Time is Before Start Time! ")
 	}
-
-
 
 	return nil
 }
@@ -692,7 +685,7 @@ func (tDur *TimeDurationDto) IsValid() error {
 // GetDurationFromTime - Calculates and returns a cumulative duration based on
 // input parameters consisting of time elements.
 func (tDur TimeDurationDto) GetDurationFromTime(hours, minutes, seconds, milliseconds,
-										microseconds, nanoseconds int) time.Duration {
+	microseconds, nanoseconds int) time.Duration {
 
 	dur := int64(hours) * int64(time.Hour)
 	dur += int64(minutes) * int64(time.Minute)
@@ -711,10 +704,9 @@ func (tDur TimeDurationDto) GetDurationFromTime(hours, minutes, seconds, millise
 // TimeDurationDto data structures.
 func (tDur TimeDurationDto) GetDurationFromDays(days int64) time.Duration {
 
-	return time.Duration(days * 24) * time.Hour
+	return time.Duration(days*24) * time.Hour
 
 }
-
 
 // GetDurationFromHours - returns a time Duration value
 // based on the number of hours passed into this method.
@@ -767,7 +759,11 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 	t2Dur := tDur.CopyOut()
 
 	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
-		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+		if err != nil {
+			return fmt.Sprintf("GetElapsedTimeStr() Error returned by t2Dur.ReCalcTimeDurationAllocation("+
+				"TDurCalcTypeSTDYEARMTH) Error='%v'", err.Error())
+		}
 	}
 
 	str := ""
@@ -781,7 +777,7 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 	}
 
 	if t2Dur.DateDays > 0 || str != "" {
-		str +=  fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+		str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
 	}
 
 	if t2Dur.Hours > 0 || str != "" {
@@ -844,7 +840,14 @@ func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 	t2Dur := tDur.CopyOut()
 
 	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
-		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+
+		if err != nil {
+			return fmt.Sprintf("TimeDurationDto.GetElapsedMinutesStr() "+
+				"Error returned by t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH). "+
+				"Error='%v' ", err.Error())
+		}
+
 	}
 
 	str := ""
@@ -858,7 +861,7 @@ func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 	}
 
 	if t2Dur.DateDays > 0 || str != "" {
-		str +=  fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+		str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
 	}
 
 	if t2Dur.Hours > 0 || str != "" {
@@ -897,11 +900,18 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 	}
 
 	t2Dur := tDur.CopyOut()
-	
+
 	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
-		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+
+		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+
+		if err != nil {
+			return fmt.Sprintf("TimeDurationDto.GetYearMthDaysTimeAbbrvStr() "+
+				"Error returned by t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH). "+
+				"Error='%v' ", err.Error())
+		}
 	}
-	
+
 	str := ""
 
 	if t2Dur.Years > 0 {
@@ -913,7 +923,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 	}
 
 	if t2Dur.DateDays > 0 || str != "" {
-		str +=  fmt.Sprintf("%v-Days ", t2Dur.DateDays)
+		str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
 	}
 
 	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
@@ -943,7 +953,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 //
 // 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
-// If Years, Months and Days have a zero value, only the time components will be displayed. 
+// If Years, Months and Days have a zero value, only the time components will be displayed.
 // Example:
 //		13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
@@ -955,20 +965,28 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 	t2Dur := tDur.CopyOut()
 
 	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
-		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
-	}	
-	
-	str := ""
-	
-	if t2Dur.Years > 0 {
-		str += fmt.Sprintf("%v-Years ", t2Dur.Years)	
-	}
-	
-	if t2Dur.Months > 0 || str != "" {
-		str += fmt.Sprintf("%v-Months ", t2Dur.Months)	
+
+		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+
+		if err != nil {
+			return fmt.Sprintf("TimeDurationDto.GetYearMthDaysTimeStr() "+
+				"Error returned by t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH). "+
+				"Error='%v' ", err.Error())
+		}
+
 	}
 
-	if t2Dur.DateDays > 0 || str!= "" {
+	str := ""
+
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
+	}
+
+	if t2Dur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)
+	}
+
+	if t2Dur.DateDays > 0 || str != "" {
 		str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
 	}
 
@@ -989,8 +1007,8 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 
 // GetYearsMthsWeeksTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // Weeks, WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds,
-// Nanoseconds. 
-// 
+// Nanoseconds.
+//
 // At a minimum only Hours, Minutes, Seconds, Milliseconds, Microseconds
 // Nanoseconds are displayed. Example return when Years, Months, Weeks
 // and WeekDays are zero:
@@ -1006,11 +1024,18 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 	t2Dur := tDur.CopyOut()
 
 	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
-		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+
+		if err != nil {
+			return fmt.Sprintf("TimeDurationDto.GetYearsMthsWeeksTimeAbbrvStr() "+
+				"Error returned by t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH). "+
+				"Error='%v' ", err.Error())
+		}
+
 	}
 
 	str := ""
-	
+
 	if t2Dur.Years > 0 {
 		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
 	}
@@ -1047,7 +1072,7 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 //
 // At a minimum only Weeks, WeekDays, Hours, Minutes, Seconds,
 // Milliseconds, Microseconds and Nanoseconds are displayed.
-// 
+//
 // Example return when Years, and Months are zero:
 //
 // 3-Weeks 2-WeekDays 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
@@ -1055,40 +1080,46 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 
 	if int64(tDur.TimeDuration) == 0 {
-			return "0-Nanoseconds"
+		return "0-Nanoseconds"
 	}
-	
+
 	t2Dur := tDur.CopyOut()
 
 	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
-		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+
+		if err != nil {
+			return fmt.Sprintf("TimeDurationDto.GetYearsMthsWeeksTimeStr() "+
+				"Error returned by t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH). "+
+				"Error='%v' ", err.Error())
+		}
 	}
 
 	str := ""
-	
+
 	if t2Dur.Years > 0 {
-		str += fmt.Sprintf("%v-Years ", t2Dur.Years)	
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
 	}
-	
+
 	if t2Dur.Months > 0 || str != "" {
-		str+= fmt.Sprintf("%v-Months ", t2Dur.Months)
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)
 	}
 
-	str+= fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)	
-	
-	str+= fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
+	str += fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)
 
-	str+= fmt.Sprintf("%v-Hours ", t2Dur.Hours)
+	str += fmt.Sprintf("%v-WeekDays ", t2Dur.WeekDays)
 
-	str+= fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
+	str += fmt.Sprintf("%v-Hours ", t2Dur.Hours)
 
-	str+= fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
+	str += fmt.Sprintf("%v-Minutes ", t2Dur.Minutes)
 
-	str+= fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
+	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
 
-	str+= fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+	str += fmt.Sprintf("%v-Milliseconds ", t2Dur.Milliseconds)
 
-	str+= fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
+	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
+
+	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
 
 	return str
 }
@@ -1112,20 +1143,21 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMDAYS)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMDAYS)" +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMDAYS)"+
 			" Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
 
 }
+
 // GetCumDaysTimeStr - Returns duration formatted as
 // days, hours, minutes, seconds, milliseconds, microseconds,
-// and nanoseconds. Years, months and weeks are always excluded and 
+// and nanoseconds. Years, months and weeks are always excluded and
 // included in cumulative 'days'.
 //
-// Example: 
-// 
+// Example:
+//
 // 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
@@ -1136,14 +1168,14 @@ func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 	}
 
 	t2Dur := tDur.CopyOut()
-	
+
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMDAYS)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix + "Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMDAYS)" +
+		return "", fmt.Errorf(ePrefix+"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMDAYS)"+
 			" Error='%v'", err.Error())
 	}
-	
+
 	str := ""
 
 	str += fmt.Sprintf("%v-Days ", t2Dur.DateDays)
@@ -1159,7 +1191,6 @@ func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 	str += fmt.Sprintf("%v-Microseconds ", t2Dur.Microseconds)
 
 	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
-
 
 	return str, nil
 }
@@ -1178,7 +1209,7 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 
 	if int64(tDur.TimeDuration) == 0 {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error: Time Duration is ZERO value!")
+			fmt.Errorf(ePrefix + "Error: Time Duration is ZERO value!")
 	}
 
 	t2Dur := tDur.CopyOut()
@@ -1186,8 +1217,8 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMHOURS)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMHOURS) " +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMHOURS) "+
 			"Error='%v' ", err.Error())
 	}
 
@@ -1215,8 +1246,8 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMHOURS)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMHOURS) " +
+		return "", fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMHOURS) "+
 			"Error='%v' ", err.Error())
 	}
 
@@ -1236,7 +1267,6 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 
 	return str, nil
 }
-
 
 // GetCumMinutesStr - Returns a new TimeDurationDto calculated and configured
 // for cumulative minutes. This means that years, months, days and hours are
@@ -1262,8 +1292,8 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMINUTES)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMINUTES) " +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMINUTES) "+
 			" Error='%v'", err.Error())
 	}
 
@@ -1292,8 +1322,8 @@ func (tDur *TimeDurationDto) GetCumMinutesStr() (string, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMINUTES)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMINUTES) " +
+		return "", fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMINUTES) "+
 			" Error='%v'", err.Error())
 	}
 
@@ -1312,7 +1342,6 @@ func (tDur *TimeDurationDto) GetCumMinutesStr() (string, error) {
 	return str, nil
 
 }
-
 
 // GetCumMonthsCalcDto - Returns a new TimeDurationDto calculated
 // for 'cumulative months'.
@@ -1335,15 +1364,14 @@ func (tDur *TimeDurationDto) GetCumMonthsCalcDto() (TimeDurationDto, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) " +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) "+
 			"Error='%v' ", err.Error())
 	}
 
 	return t2Dur, nil
 
 }
-
 
 // GetCumMonthsDaysTimeStr - Returns Cumulative Months Display
 // showing Months, Days, Hours, Minutes, Seconds, Milliseconds,
@@ -1365,11 +1393,10 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) " +
+		return "", fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMMONTHS) "+
 			"Error='%v' ", err.Error())
 	}
-
 
 	str := ""
 
@@ -1416,15 +1443,14 @@ func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS) " +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS) "+
 			"Error='%v' ", err.Error())
 	}
 
 	return t2Dur, nil
 
 }
-
 
 // GetCumSecondsTimeStr - Returns a formatted time string presenting
 // time duration as cumulative seconds. The display shows Seconds,
@@ -1442,11 +1468,10 @@ func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS) " +
+		return "", fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMSECONDS) "+
 			"Error='%v' ", err.Error())
 	}
-
 
 	str := ""
 
@@ -1495,14 +1520,13 @@ func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) " +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) "+
 			" Error='%v' ", err.Error())
 	}
 
 	return t2Dur, nil
 }
-
 
 // GetCumWeeksDaysTimeStr - Returns time duration expressed as Weeks, WeekDays, Hours,
 // Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds. Years, Months and
@@ -1527,8 +1551,8 @@ func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) " +
+		return "", fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeCUMWEEKS) "+
 			" Error='%v' ", err.Error())
 	}
 
@@ -1561,11 +1585,18 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
-	
+
 	t2Dur := tDur.CopyOut()
 
 	if t2Dur.CalcType != TDurCalcTypeSTDYEARMTH {
-		t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH)
+
+		if err != nil {
+			return fmt.Sprintf("TimeDurationDto.GetYrMthWkDayHrMinSecNanosecsStr() "+
+				"Error returned by t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeSTDYEARMTH). "+
+				"Error='%v' ", err.Error())
+		}
+
 	}
 
 	str := ""
@@ -1624,14 +1655,13 @@ func (tDur *TimeDurationDto) GetGregorianYearCalcDto() (TimeDurationDto, error) 
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeGregorianYrs)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeGregorianYrs) " +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeGregorianYrs) "+
 			"Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
 }
-
 
 // GetGregorianYearDurationStr - Returns a string showing the
 // breakdown of duration by Gregorian Years, WeekDays, Hours, Minutes,
@@ -1658,11 +1688,11 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcTypeGregorianYrs)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix +
-			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeGregorianYrs) " +
+		return "", fmt.Errorf(ePrefix+
+			"Error returned by ReCalcTimeDurationAllocation(TDurCalcTypeGregorianYrs) "+
 			"Error='%v'", err.Error())
 	}
-	
+
 	str := fmt.Sprintf("%v-Gregorian Years ", t2Dur.Years)
 
 	str += fmt.Sprintf("%v-Months ", t2Dur.Months)
@@ -1684,16 +1714,15 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 	return str, nil
 }
 
-
 // New - Creates and returns a new TimeDurationDto based on starting
 // and ending date times.  Because, time zone location is crucial to
 // completely accurate duration calculations, the time zone of the
 // starting date time, 'startDateTime' is applied to parameter,
 // 'endDateTime' before making the duration calculation.
 //
-// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'.
 // 				This means that duration is allocated over years, months, weeks, weekdays, date days,
-//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
 // 				See Type 'TDurCalcType' for details.
 //
 //	Input Parameters:
@@ -1721,16 +1750,16 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 //		Note: FmtDateTimeYrMDayFmtStr' is a constant available in datetimeconstants.go
 //
 func (tDur TimeDurationDto) New(
-														startDateTime,
-														endDateTime time.Time,
-														dateTimeFmtStr string) (TimeDurationDto, error) {
+	startDateTime,
+	endDateTime time.Time,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-  ePrefix := "TimeDurationDto.New() "
+	ePrefix := "TimeDurationDto.New() "
 
-  if startDateTime.IsZero() && endDateTime.IsZero() {
-  	return TimeDurationDto{},
-  	errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
-  		"input parameters are ZERO!")
+	if startDateTime.IsZero() && endDateTime.IsZero() {
+		return TimeDurationDto{},
+			errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
+				"input parameters are ZERO!")
 	}
 
 	tzStartLocation := startDateTime.Location().String()
@@ -1741,9 +1770,9 @@ func (tDur TimeDurationDto) New(
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartEndTimesCalcTz(startDateTime, " +
-			"endDateTime, tzStartLocation, dateTimeFmtStr). "+
-			"tzStartLocation='%v'  Error='%v'",
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartEndTimesCalcTz(startDateTime, "+
+				"endDateTime, tzStartLocation, dateTimeFmtStr). "+
+				"tzStartLocation='%v'  Error='%v'",
 				tzStartLocation, err.Error())
 	}
 
@@ -1826,9 +1855,9 @@ func (tDur TimeDurationDto) New(
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewAutoEnd(
-															startDateTime time.Time,
-																timeZoneLocation,
-																		dateTimeFmtStr string) (TimeDurationDto, error) {
+	startDateTime time.Time,
+	timeZoneLocation,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewAutoEnd() "
 
@@ -1838,8 +1867,8 @@ func (tDur TimeDurationDto) NewAutoEnd(
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
 				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 				timeZoneLocation, tzLoc, err.Error())
 	}
@@ -1855,14 +1884,13 @@ func (tDur TimeDurationDto) NewAutoEnd(
 	err = t2Dur.SetStartEndTimesCalcTz(startDt1, endDt1, TDurCalcTypeSTDYEARMTH, tzLoc, fmtStr)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
 			"Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
 }
-
 
 // NewAutoStart - Creates and returns a new TimeDurationDto instance. Starting date time is
 // automatically initialized by calling time.Now(). Afterwards, start date time is converted
@@ -1935,7 +1963,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
-																					dateTimeFmtStr string) (TimeDurationDto, error) {
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto) NewAutoStart"
 
@@ -1947,9 +1975,9 @@ func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix +
-			"Error returned by time.LoadLocation(tzLocName). " +
-			"timeZoneLocation='%v' tzLocName='%v'  Error='%v'",
+			fmt.Errorf(ePrefix+
+				"Error returned by time.LoadLocation(tzLocName). "+
+				"timeZoneLocation='%v' tzLocName='%v'  Error='%v'",
 				timeZoneLocation, tzLocName, err.Error())
 	}
 
@@ -1960,19 +1988,18 @@ func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
 	t2Dur := TimeDurationDto{}
 
 	err = t2Dur.SetStartEndTimesCalcTz(startDateTime,
-																			endDateTime,
-																			TDurCalcTypeSTDYEARMTH,
-																			tzLocName,
-																			dateTimeFmtStr)
+		endDateTime,
+		TDurCalcTypeSTDYEARMTH,
+		tzLocName,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix +
-			"Error returned by SetStartEndTimesCalcTz(...) " +
-			"startDateTime='%v'  Error='%v'",
+			fmt.Errorf(ePrefix+
+				"Error returned by SetStartEndTimesCalcTz(...) "+
+				"startDateTime='%v'  Error='%v'",
 				startDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
-
 
 	return t2Dur, nil
 }
@@ -2020,9 +2047,9 @@ func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDto(
-															startDateTz,
-															endDateTz DateTzDto,
-															dateTimeFmtStr string) (TimeDurationDto, error) {
+	startDateTz,
+	endDateTz DateTzDto,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndDateTzDto() "
 
@@ -2031,22 +2058,21 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartEndTimesCalcTz(
-								startDateTz.DateTime,
-								endDateTz.DateTime,
-								TDurCalcTypeSTDYEARMTH,
-								timeZoneLocation,
-								dateTimeFmtStr)
+		startDateTz.DateTime,
+		endDateTz.DateTime,
+		TDurCalcTypeSTDYEARMTH,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
+			fmt.Errorf(ePrefix+
 				"Error returned by SetStartEndTimesCalcTz(). Error='%v' ",
 				err.Error())
 	}
 
 	return t2Dur, nil
 }
-
 
 // NewStartEndDateTzDtoCalcTz - Creates and returns a new TimeDurationDto populated with
 // time duration data. The input parameters for starting and ending date time are
@@ -2149,28 +2175,28 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
-						startDateTz,
-						endDateTz DateTzDto,
-						tDurCalcType TDurCalcType,
-						timeZoneLocation,
-						dateTimeFmtStr string) (TimeDurationDto, error) {
+	startDateTz,
+	endDateTz DateTzDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndDateTzDtoCalcTz() "
 
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartEndTimesCalcTz(
-											startDateTz.DateTime,
-											endDateTz.DateTime,
-											tDurCalcType,
-											timeZoneLocation,
-											dateTimeFmtStr)
+		startDateTz.DateTime,
+		endDateTz.DateTime,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
+			fmt.Errorf(ePrefix+
 				"Error returned by SetStartEndTimesCalcTz(). Error='%v' ",
-					err.Error())
+				err.Error())
 	}
 
 	return t2Dur, nil
@@ -2247,33 +2273,33 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
-																		startDateTz,
-																		endDateTz DateTzDto,
-																		timeZoneLocation,
-																		dateTimeFmtStr string) (TimeDurationDto, error) {
+	startDateTz,
+	endDateTz DateTzDto,
+	timeZoneLocation,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndDateTzDtoTz() "
 
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartEndTimesCalcTz(
-											startDateTz.DateTime,
-											endDateTz.DateTime,
-											TDurCalcTypeSTDYEARMTH,
-											timeZoneLocation,
-											dateTimeFmtStr)
+		startDateTz.DateTime,
+		endDateTz.DateTime,
+		TDurCalcTypeSTDYEARMTH,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
+			fmt.Errorf(ePrefix+
 				"Error returned by SetStartEndTimesCalcTz(). Error='%v' ",
-					err.Error())
+				err.Error())
 	}
 
 	return t2Dur, nil
 }
 
-// NewStartEndTimesTz - Creates and returns a new TimeDurationDto populated with 
+// NewStartEndTimesTz - Creates and returns a new TimeDurationDto populated with
 // time duration data based on 'startDateTime' and 'endDateTime' input parameters.
 // The user is required to specify a common Time Zone Location for use in converting
 // date times to a common frame of reference to subsequent time duration calculations.
@@ -2337,7 +2363,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.Time,
-																timeZoneLocation, dateTimeFmtStr string) (TimeDurationDto, error) {
+	timeZoneLocation, dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesTz() "
 
@@ -2353,22 +2379,22 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-			"Error: 'timeZoneLocation' input parameter is INVALID! " +
-			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
-			timeZoneLocation, tzLoc, err.Error())
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
+				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+				timeZoneLocation, tzLoc, err.Error())
 	}
 
 	t2Dur := TimeDurationDto{}
-	
+
 	err = t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
-	
+
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " + 
-			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
 			"Error='%v'", err.Error())
 	}
-															
+
 	return t2Dur, nil
 }
 
@@ -2440,9 +2466,9 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 // 						'FmtDateTimeYrMDayFmtStr' is a constant defined in datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
-																										endDateTime time.Time,
-																											tDurCalcType TDurCalcType,
-																												dateTimeFmtStr string) (TimeDurationDto, error) {
+	endDateTime time.Time,
+	tDurCalcType TDurCalcType,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesCalc() "
 
@@ -2459,8 +2485,8 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 	err := t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, tDurCalcType, timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
 			"Error='%v'", err.Error())
 	}
 
@@ -2569,11 +2595,11 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
-														startDateTime,
-														endDateTime time.Time,
-														tDurCalcType TDurCalcType,
-														timeZoneLocation string,
-														dateTimeFmtStr string) (TimeDurationDto, error) {
+	startDateTime,
+	endDateTime time.Time,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation string,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesCalcTz() "
 
@@ -2589,8 +2615,8 @@ func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
 				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 				timeZoneLocation, tzLoc, err.Error())
 	}
@@ -2600,8 +2626,8 @@ func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
 	err = t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, tDurCalcType, tzLoc, dateTimeFmtStr)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
+			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
 			"Error='%v'", err.Error())
 	}
 
@@ -2646,8 +2672,8 @@ func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
 // NOTE:		FmtDateTimeYrMDayFmtStr' is a constant defined in source file, datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
-										endDateTime DateTzDto,
-											dateTimeFmtStr string) (TimeDurationDto, error) {
+	endDateTime DateTzDto,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesDateDto() "
 
@@ -2662,14 +2688,14 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartEndTimesDateDtoCalcTz(startDateTime,
-															endDateTime,
-																TDurCalcTypeSTDYEARMTH,
-																	timeZoneLocation,
-																		dateTimeFmtStr)
+		endDateTime,
+		TDurCalcTypeSTDYEARMTH,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
+			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
 			"Error='%v'", err.Error())
 	}
 
@@ -2745,8 +2771,8 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 // 						datetimeconstants.go.
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
-										endDateTime DateTzDto, tDurCalcType TDurCalcType,
-													dateTimeFmtStr string) (TimeDurationDto, error) {
+	endDateTime DateTzDto, tDurCalcType TDurCalcType,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesDateDtoCalc() "
 
@@ -2761,14 +2787,14 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 	timeZoneLocation := startDateTime.TimeZone.LocationName
 
 	err := t2Dur.SetStartEndTimesDateDtoCalcTz(startDateTime,
-														endDateTime,
-															tDurCalcType,
-																timeZoneLocation,
-																		dateTimeFmtStr)
+		endDateTime,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
+			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
 			"Error='%v'", err.Error())
 	}
 
@@ -2871,8 +2897,8 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 // 						datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
-										endDateTime DateTzDto, tDurCalcType TDurCalcType, timeZoneLocation string,
-													dateTimeFmtStr string) (TimeDurationDto, error) {
+	endDateTime DateTzDto, tDurCalcType TDurCalcType, timeZoneLocation string,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesDateTzDtoCalcTz() "
 
@@ -2888,8 +2914,8 @@ func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
 				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 				timeZoneLocation, tzLoc, err.Error())
 	}
@@ -2897,14 +2923,14 @@ func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
 	t2Dur := TimeDurationDto{}
 
 	err = t2Dur.SetStartEndTimesDateDtoCalcTz(startDateTime,
-																	endDateTime,
-																		tDurCalcType,
-																			tzLoc,
-																				dateTimeFmtStr)
+		endDateTime,
+		tDurCalcType,
+		tzLoc,
+		dateTimeFmtStr)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix + "Error returned from " +
-			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)." +
+		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
+			"SetStartEndTimesDateDtoCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
 			"Error='%v'", err.Error())
 	}
 
@@ -2952,12 +2978,12 @@ func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
 //		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
-															duration time.Duration,
-																dateTimeFmtStr string) (TimeDurationDto, error) {
+	duration time.Duration,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
 
-	if startDateTime.IsZero() && duration==0 {
+	if startDateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -2967,11 +2993,11 @@ func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, TDurCalcTypeSTDYEARMTH , timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, TDurCalcTypeSTDYEARMTH, timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -2986,9 +3012,9 @@ func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
 // If 'duration' is a negative value 'startDateTime' is converted to ending date time and the
 // 	actual starting date time is computed by subtracting duration.
 //
-// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'.
 // 				This means that duration is allocated over years, months, weeks, weekdays, date days,
-//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
 // 				See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
@@ -3055,7 +3081,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
 
-	if startDateTime.IsZero() && duration==0 {
+	if startDateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3067,19 +3093,19 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
 				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 				timeZoneLocation, tzLoc, err.Error())
 	}
 
 	t2Dur := TimeDurationDto{}
 
-	err = t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, TDurCalcTypeSTDYEARMTH , tzLoc, dateTimeFmtStr)
+	err = t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, TDurCalcTypeSTDYEARMTH, tzLoc, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -3187,12 +3213,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 // 						datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
-					duration time.Duration, tDurCalcType TDurCalcType, timeZoneLocation string,
-							dateTimeFmtStr string) (TimeDurationDto, error) {
+	duration time.Duration, tDurCalcType TDurCalcType, timeZoneLocation string,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationCalcTz() "
 
-	if startDateTime.IsZero() && duration==0 {
+	if startDateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3204,8 +3230,8 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
 				"'timeZoneLocation'='%v'  processed tzl= '%v' Error='%v'",
 				timeZoneLocation, tlz, err.Error())
 	}
@@ -3213,15 +3239,15 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
 	t2Dur := TimeDurationDto{}
 
 	err = t2Dur.SetStartTimeDurationCalcTz(startDateTime,
-																	duration,
-																		tDurCalcType,
-																			timeZoneLocation,
-																				dateTimeFmtStr)
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix +
-			"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'",
+			fmt.Errorf(ePrefix+
+				"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'",
 				err.Error())
 	}
 
@@ -3304,12 +3330,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
 // 						file, datetimeconstants.go.
 //
 func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
-					duration time.Duration, tDurCalcType TDurCalcType,
-							dateTimeFmtStr string) (TimeDurationDto, error) {
+	duration time.Duration, tDurCalcType TDurCalcType,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationCalc() "
 
-	if startDateTime.IsZero() && duration==0 {
+	if startDateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3319,11 +3345,11 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 
 	t2Dur := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, tDurCalcType , timeZoneLocation, dateTimeFmtStr)
+	err := t2Dur.SetStartTimeDurationCalcTz(startDateTime, duration, tDurCalcType, timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -3372,11 +3398,11 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 //		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
-	duration time.Duration,	dateTimeFmtStr string) (TimeDurationDto, error) {
+	duration time.Duration, dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
 
-	if startDateTime.DateTime.IsZero() && duration==0 {
+	if startDateTime.DateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3387,19 +3413,18 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
-												duration,
-													TDurCalcTypeSTDYEARMTH,
-														timeZoneLocation,
-															dateTimeFmtStr)
+		duration,
+		TDurCalcTypeSTDYEARMTH,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
 }
-
 
 // NewStartTimeDurationDateDtoTz - Creates and returns a new TimeDurationDto based on input
 // parameters 'startDateTime', time duration and 'timeZoneLocation'. 'startDateTime' is
@@ -3476,12 +3501,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDto,
-								duration time.Duration, timeZoneLocation string,
-									dateTimeFmtStr string) (TimeDurationDto, error) {
+	duration time.Duration, timeZoneLocation string,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationDateDtoTz() "
 
-	if startDateTime.DateTime.IsZero() && duration==0 {
+	if startDateTime.DateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3493,8 +3518,8 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
 				"'timeZoneLocation'='%v'  processed tzl= '%v' Error='%v'",
 				timeZoneLocation, tlz, err.Error())
 	}
@@ -3502,14 +3527,14 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 	t2Dur := TimeDurationDto{}
 
 	err = t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
-																	duration,
-																		TDurCalcTypeSTDYEARMTH,
-																			timeZoneLocation,
-																					dateTimeFmtStr)
+		duration,
+		TDurCalcTypeSTDYEARMTH,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -3625,7 +3650,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationDateDtoTzCalc() "
 
-	if startDateTime.DateTime.IsZero() && duration==0 {
+	if startDateTime.DateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3637,8 +3662,8 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
+			fmt.Errorf(ePrefix+
+				"Error: 'timeZoneLocation' input parameter is INVALID! "+
 				"'timeZoneLocation'='%v'  processed tzl= '%v' Error='%v'",
 				timeZoneLocation, tlz, err.Error())
 	}
@@ -3646,14 +3671,14 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 	t2Dur := TimeDurationDto{}
 
 	err = t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
-													duration,
-														tDurCalcType,
-															tlz,
-																dateTimeFmtStr)
+		duration,
+		tDurCalcType,
+		tlz,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
+			fmt.Errorf(ePrefix+
 				"Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'",
 				err.Error())
 	}
@@ -3746,7 +3771,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationDateDtoCalc() "
 
-	if startDateTime.DateTime.IsZero() && duration==0 {
+	if startDateTime.DateTime.IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3757,20 +3782,20 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
-											duration,
-												tDurCalcType ,
-													timeZoneLocation,
-														dateTimeFmtStr)
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimeDurationDateDtoCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
 }
 
-// NewStartTimePlusTimeDto - Creates and returns a new TimeDurationDto setting 
+// NewStartTimePlusTimeDto - Creates and returns a new TimeDurationDto setting
 // the start date time, end date time and duration based on a starting date time
 // and the time components contained in a TimeDto.
 //
@@ -3780,9 +3805,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 // For the purposes of this time duration calculation, the Time Zone Location is
 // extracted from the input parameter, 'startDateTime'.
 //
-// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'.
 // 				This means that duration is allocated over years, months, weeks, weekdays, date days,
-//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
 // 				See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
@@ -3833,8 +3858,8 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 //		Note: 'FmtDateTimeYrMDayFmtStr' are constants available in datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
-								plusTimeDto TimeDto, dateTimeFmtStr string)	(TimeDurationDto, error) {
-									
+	plusTimeDto TimeDto, dateTimeFmtStr string) (TimeDurationDto, error) {
+
 	ePrefix := "TimeDurationDto.NewStartTimePlusTimeDto() "
 
 	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
@@ -3846,22 +3871,20 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 	timeZoneLocation := startDateTime.Location().String()
 
 	t2Dur := TimeDurationDto{}
-	
+
 	err := t2Dur.SetStartTimePlusTimeDtoCalcTz(startDateTime,
-												plusTimeDto,
-													TDurCalcTypeSTDYEARMTH,
-														timeZoneLocation,
-																dateTimeFmtStr)
-	
+		plusTimeDto,
+		TDurCalcTypeSTDYEARMTH,
+		timeZoneLocation,
+		dateTimeFmtStr)
+
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='%v'", err.Error())
 	}
-	
+
 	return t2Dur, nil
 }
-
-
 
 // NewStartTimePlusTimeDtoCalcTz - Creates and returns a new TimeDurationDto setting
 // the start date time, end date time and duration based on a starting date time
@@ -3985,11 +4008,11 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
-															startDateTime time.Time,
-															plusTimeDto TimeDto,
-															tDurCalcType TDurCalcType,
-															timeZoneLocation,
-															dateTimeFmtStr string)	(TimeDurationDto, error) {
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewStartTimePlusTimeDto() "
 
@@ -3999,25 +4022,23 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 				"input parameters are ZERO/EMPTY!")
 	}
 
-
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartTimePlusTimeDtoCalcTz(
-									startDateTime,
-									plusTimeDto,
-									tDurCalcType,
-									timeZoneLocation,
-									dateTimeFmtStr)
+		startDateTime,
+		plusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix	+
-				"Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) " +
+			fmt.Errorf(ePrefix+
+				"Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) "+
 				"Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
-
 
 }
 
@@ -4032,9 +4053,9 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 // is extracted from input parameter, 'endDateTime'. This Time Zone Location is
 // applied to both the starting and ending date times.
 //
-// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'. 
+// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcTypeSTDYEARMTH'.
 // 				This means that duration is allocated over years, months, weeks, weekdays, date days,
-//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds. 
+//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
 // 				See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
@@ -4082,8 +4103,8 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 // 							datetimeconstants.go.
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
-								minusTimeDto TimeDto, dateTimeFmtStr string)	(TimeDurationDto, error) {
-									
+	minusTimeDto TimeDto, dateTimeFmtStr string) (TimeDurationDto, error) {
+
 	ePrefix := "TimeDurationDto.NewEndTimeMinusTimeDtoTz() "
 
 	if endDateTime.IsZero() && minusTimeDto.IsEmpty() {
@@ -4095,18 +4116,17 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 	timeZoneLocation := endDateTime.Location().String()
 
 	t2Dur := TimeDurationDto{}
-	
+
 	err := t2Dur.SetEndTimeMinusTimeDtoCalcTz(endDateTime, minusTimeDto,
-										TDurCalcTypeSTDYEARMTH,timeZoneLocation, dateTimeFmtStr)
-	
+		TDurCalcTypeSTDYEARMTH, timeZoneLocation, dateTimeFmtStr)
+
 	if err != nil {
 		return TimeDurationDto{},
-		fmt.Errorf(ePrefix + "Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='%v'", err.Error())
 	}
-	
+
 	return t2Dur, nil
 }
-
 
 // NewEndTimeMinusTimeDtoCalcTz - Creates and returns a new TimeDurationDto setting
 // start date time, end date time and duration based on an ending date time
@@ -4227,11 +4247,11 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
-															endDateTime time.Time,
-															minusTimeDto TimeDto,
-															tDurCalcType TDurCalcType,
-															timeZoneLocation,
-															dateTimeFmtStr string) (TimeDurationDto, error) {
+	endDateTime time.Time,
+	minusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.NewEndTimeMinusTimeDtoTz() "
 
@@ -4241,19 +4261,18 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 				"input parameters are ZERO/EMPTY!")
 	}
 
-
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetEndTimeMinusTimeDtoCalcTz(
-										endDateTime,
-											minusTimeDto,
-												tDurCalcType,
-													timeZoneLocation,
-															dateTimeFmtStr)
+		endDateTime,
+		minusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
 		return TimeDurationDto{},
-			fmt.Errorf(ePrefix + "Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='%v'", err.Error())
 	}
 
 	return t2Dur, nil
@@ -4295,9 +4314,9 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 //												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(calcType TDurCalcType) error {
-	
+
 	return tDur.calcTimeDurationAllocations(calcType)
-	
+
 }
 
 // ReCalcEndDateTimeToNow - Recomputes time duration values for the
@@ -4315,11 +4334,11 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 
 	calcType := tDur.CalcType
 
-	err := tDur.SetStartEndTimesCalcTz(tDur.StartTimeDateTz.DateTime, eTime,calcType,
-							tDur.StartTimeDateTz.TimeZone.LocationName, tDur.StartTimeDateTz.DateTimeFmt)
+	err := tDur.SetStartEndTimesCalcTz(tDur.StartTimeDateTz.DateTime, eTime, calcType,
+		tDur.StartTimeDateTz.TimeZone.LocationName, tDur.StartTimeDateTz.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by SetStartEndTimesCalcTz: Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz: Error='%v'", err.Error())
 	}
 
 	return nil
@@ -4352,10 +4371,10 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 	_, err := time.LoadLocation(locName)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by time.LoadLocation(locName) " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by time.LoadLocation(locName) "+
 			"locName='%v'  Error='%v' ",
-				locName, err.Error())
+			locName, err.Error())
 	}
 
 	startDateTime := tDur.StartTimeDateTz.DateTime
@@ -4365,20 +4384,19 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 	calcType := tDur.CalcType
 
 	err = tDur.SetStartEndTimesCalcTz(startDateTime,
-																			endDateTime,
-																				calcType,
-																					locName,
-																						fmtStr)
+		endDateTime,
+		calcType,
+		locName,
+		fmtStr)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error returned by tDur.SetStartEndTimesCalcTz() " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by tDur.SetStartEndTimesCalcTz() "+
 			"startDateTime='%v'  endDateTime='%v'  Error='%v'",
-				startDateTime.Format(FmtDateTimeYrMDayFmtStr),
-					endDateTime.Format(FmtDateTimeYrMDayFmtStr),
-						err.Error())
+			startDateTime.Format(FmtDateTimeYrMDayFmtStr),
+			endDateTime.Format(FmtDateTimeYrMDayFmtStr),
+			err.Error())
 	}
-
 
 	return nil
 }
@@ -4483,8 +4501,8 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 	ePrefix := "TimeDurationDto.SetEndTimeMinusTimeDtoCalcTz() "
 
 	if endDateTime.IsZero() && minusTimeDto.IsEmpty() {
-		return 	errors.New(ePrefix + "Error: Both 'endDateTime' and 'minusTimeDto' " +
-				"input parameters are ZERO/EMPTY!")
+		return errors.New(ePrefix + "Error: Both 'endDateTime' and 'minusTimeDto' " +
+			"input parameters are ZERO/EMPTY!")
 	}
 
 	dtFormat := tDur.preProcessDateFormatStr(dateTimeFmtStr)
@@ -4493,16 +4511,16 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 	_, err := time.LoadLocation(tzLoc)
 
 	if err != nil {
-		return 	fmt.Errorf(ePrefix +
-				"Error: 'timeZoneLocation' input parameter is INVALID! " +
-				"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
-				timeZoneLocation, tzLoc, err.Error())
+		return fmt.Errorf(ePrefix+
+			"Error: 'timeZoneLocation' input parameter is INVALID! "+
+			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
+			timeZoneLocation, tzLoc, err.Error())
 	}
 
 	eDateTime, err := TimeZoneDto{}.New(endDateTime, tzLoc, dtFormat)
 
-	if err!= nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(endDateTime, tzLoc, " +
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by TimeZoneDto{}.New(endDateTime, tzLoc, "+
 			"dtFormat). Error='%v'", err.Error())
 	}
 
@@ -4518,7 +4536,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 
 	if err != nil {
 		tDur.Empty()
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcTypeSTDYEARMTH(). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -4613,21 +4631,20 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
-									endDateTime DateTzDto, tDurCalcType TDurCalcType,
-										timeZoneLocation, dateTimeFmtStr string) error {
+	endDateTime DateTzDto, tDurCalcType TDurCalcType,
+	timeZoneLocation, dateTimeFmtStr string) error {
 
-										ePrefix := "TimeDurationDto.SetStartEndTimesDateDtoCalcTz() "
+	ePrefix := "TimeDurationDto.SetStartEndTimesDateDtoCalcTz() "
 
+	err := tDur.SetStartEndTimesCalcTz(startDateTime.DateTime, endDateTime.DateTime,
+		tDurCalcType, timeZoneLocation, dateTimeFmtStr)
 
-		err := tDur.SetStartEndTimesCalcTz(startDateTime.DateTime, endDateTime.DateTime,
-								tDurCalcType, timeZoneLocation, dateTimeFmtStr)
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz- "+
+			"Error:='%v'", err.Error())
+	}
 
-		if err != nil {
-			return fmt.Errorf(ePrefix + "Error returned by SetStartEndTimesCalcTz- " +
-					"Error:='%v'", err.Error())
-		}
-
-		return nil
+	return nil
 }
 
 // SetStartEndTimesCalcTz - Sets data field values for the current TimeDurationDto
@@ -4711,12 +4728,12 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
 //															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(startDateTime,
-endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
+	endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartEndTimesTz() "
 
 	if startDateTime.IsZero() && endDateTime.IsZero() {
-		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
+		return errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
 			"input parameters are ZERO!")
 	}
 
@@ -4726,8 +4743,8 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 	_, err := time.LoadLocation(tzLoc)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+		return fmt.Errorf(ePrefix+
+			"Error: 'timeZoneLocation' input parameter is INVALID! "+
 			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 			timeZoneLocation, tzLoc, err.Error())
 	}
@@ -4735,18 +4752,18 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 	sTime, err := TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + 
-			"Error returned by TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat). " +
+		return fmt.Errorf(ePrefix+
+			"Error returned by TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat). "+
 			"Error='%v'", err.Error())
 	}
 
 	eTime, err := TimeZoneDto{}.New(endDateTime, tzLoc, dtFormat)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(endDateTime, tzLoc, dtFormat). " +
+		return fmt.Errorf(ePrefix+"Error returned by TimeZoneDto{}.New(endDateTime, tzLoc, dtFormat). "+
 			"Error='%v'", err.Error())
 	}
-	
+
 	if eTime.TimeOut.DateTime.Before(sTime.TimeOut.DateTime) {
 		s2 := sTime.CopyOut()
 		sTime = eTime.CopyOut()
@@ -4755,16 +4772,16 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 
 	tDur.Empty()
 	tDur.StartTimeDateTz = sTime.TimeOut.CopyOut()
-	tDur.EndTimeDateTz	= eTime.TimeOut.CopyOut()
+	tDur.EndTimeDateTz = eTime.TimeOut.CopyOut()
 	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
 
 	err = tDur.calcTimeDurationAllocations(tDurCalcType)
-	
+
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
-				"Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcTypeSTDYEARMTH(). "+
+			"Error='%v'", err.Error())
 	}
-	
+
 	return nil
 }
 
@@ -4854,13 +4871,13 @@ endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtS
 //
 //
 func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
-															duration time.Duration, tDurCalcType TDurCalcType,
-																	timeZoneLocation, dateTimeFmtStr string) error {
+	duration time.Duration, tDurCalcType TDurCalcType,
+	timeZoneLocation, dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartTimeDurationCalcTz() "
 
-	if startDateTime.IsZero() && duration==0 {
-		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
+	if startDateTime.IsZero() && duration == 0 {
+		return errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 			"input parameters are ZERO!")
 	}
 
@@ -4870,16 +4887,16 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 	_, err := time.LoadLocation(tzLoc)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+		return fmt.Errorf(ePrefix+
+			"Error: 'timeZoneLocation' input parameter is INVALID! "+
 			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 			timeZoneLocation, tzLoc, err.Error())
 	}
 
 	xTime, err := TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
-	if err!= nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, tzLoc, " +
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by TimeZoneDto{}.New(startDateTime, tzLoc, "+
 			"dtFormat). Error='%v'", err.Error())
 	}
 
@@ -4893,8 +4910,8 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 
 		if err != nil {
 			tDur.Empty()
-			return fmt.Errorf(ePrefix + "Error returned from tDur.EndTimeDateTz."+
-				"AddDuration(duration, dtFormat) " +
+			return fmt.Errorf(ePrefix+"Error returned from tDur.EndTimeDateTz."+
+				"AddDuration(duration, dtFormat) "+
 				" Error='%v'", err.Error())
 
 		}
@@ -4909,8 +4926,8 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 
 		if err != nil {
 			tDur.Empty()
-			return fmt.Errorf(ePrefix + "Error returned from tDur.StartTimeDateTz."+
-				"AddDuration(duration, dtFormat) " +
+			return fmt.Errorf(ePrefix+"Error returned from tDur.StartTimeDateTz."+
+				"AddDuration(duration, dtFormat) "+
 				" Error='%v'", err.Error())
 		}
 
@@ -4922,7 +4939,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(startDateTime time.Time,
 
 	if err != nil {
 		tDur.Empty()
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcTypeSTDYEARMTH(). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -5027,21 +5044,20 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(startDateTime Dat
 	_, err := time.LoadLocation(tzLoc)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+		return fmt.Errorf(ePrefix+
+			"Error: 'timeZoneLocation' input parameter is INVALID! "+
 			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 			timeZoneLocation, tzLoc, err.Error())
 	}
 
-
 	err = tDur.SetStartTimeDurationCalcTz(startDateTime.DateTime,
-																				duration,
-																					tDurCalcType,
-																						timeZoneLocation,
-																							dateTimeFmtStr)
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
 	if err != nil {
-		fmt.Errorf(ePrefix + "Error returned by SetStartTimeDurationCalcTz: Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by SetStartTimeDurationCalcTz: Error='%v'", err.Error())
 	}
 
 	return nil
@@ -5144,11 +5160,11 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(startDateTime Dat
 //
 func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(startDateTime time.Time,
 	plusTimeDto TimeDto, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
-	
+
 	ePrefix := "TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() "
 
 	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
-		return 	errors.New(ePrefix + "Error: Both 'startDateTime' and 'plusTimeDto' " +
+		return errors.New(ePrefix + "Error: Both 'startDateTime' and 'plusTimeDto' " +
 			"input parameters are ZERO/EMPTY!")
 	}
 
@@ -5158,37 +5174,36 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(startDateTime time.Ti
 	_, err := time.LoadLocation(tzLoc)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error: 'timeZoneLocation' input parameter is INVALID! " +
+		return fmt.Errorf(ePrefix+
+			"Error: 'timeZoneLocation' input parameter is INVALID! "+
 			"'timeZoneLocation'='%v'  processed tzLoc= '%v' Error='%v'",
 			timeZoneLocation, tzLoc, err.Error())
 	}
 
-
 	sDateTime, err := TimeZoneDto{}.New(startDateTime, tzLoc, dtFormat)
 
-	if err!= nil {
-		return fmt.Errorf(ePrefix + "Error returned by TimeZoneDto{}.New(startDateTime, tzLoc, " +
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by TimeZoneDto{}.New(startDateTime, tzLoc, "+
 			"dtFormat). Error='%v'", err.Error())
 	}
 
 	tDur.Empty()
-	
+
 	tDur.StartTimeDateTz = sDateTime.TimeOut.CopyOut()
-	
+
 	tDur.EndTimeDateTz, err = sDateTime.TimeOut.AddPlusTimeDto(plusTimeDto)
-	
+
 	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
 
 	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 
 	if err != nil {
 		tDur.Empty()
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcTypeSTDYEARMTH(). " +
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcTypeSTDYEARMTH(). "+
 			"Error='%v'", err.Error())
 	}
 
-	return nil		
+	return nil
 }
 
 // calcTimeDurationAllocations - Examines the input parameter 'calcType' and
@@ -5200,19 +5215,19 @@ func (tDur *TimeDurationDto) calcTimeDurationAllocations(calcType TDurCalcType) 
 
 	switch calcType {
 
-	case TDurCalcTypeSTDYEARMTH :
+	case TDurCalcTypeSTDYEARMTH:
 		return tDur.calcTypeSTDYEARMTH()
 
-	case TDurCalcTypeCUMMONTHS :
+	case TDurCalcTypeCUMMONTHS:
 		return tDur.calcTypeCUMMONTHS()
 
-	case TDurCalcTypeCUMWEEKS :
+	case TDurCalcTypeCUMWEEKS:
 		return tDur.calcTypeCUMWEEKS()
 
-	case TDurCalcTypeCUMDAYS :
+	case TDurCalcTypeCUMDAYS:
 		return tDur.calcTypeCUMDays()
 
-	case TDurCalcTypeCUMHOURS :
+	case TDurCalcTypeCUMHOURS:
 		return tDur.calcTypeCUMHours()
 
 	case TDurCalcTypeCUMMINUTES:
@@ -5221,14 +5236,12 @@ func (tDur *TimeDurationDto) calcTimeDurationAllocations(calcType TDurCalcType) 
 	case TDurCalcTypeCUMSECONDS:
 		return tDur.calcTypeCUMSECONDS()
 
-	case TDurCalcTypeGregorianYrs :
+	case TDurCalcTypeGregorianYrs:
 		return tDur.calcTypeGregorianYears()
-
-	default:
-		return fmt.Errorf(ePrefix + "Error: Invalid TDurCalcType. calcType='%v'", calcType.String())
 	}
 
-	return nil
+	return fmt.Errorf(ePrefix+
+		"Error: Invalid TDurCalcType. calcType='%v'", calcType.String())
 }
 
 // calcTypeCUMDays - Calculates Cumulative Days. Years, months and weeks are consolidated
@@ -5241,7 +5254,7 @@ func (tDur *TimeDurationDto) calcTypeCUMDays() error {
 	tDur.EmptyTimeFields()
 
 	tDur.CalcType = TDurCalcTypeCUMDAYS
-	
+
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
@@ -5256,19 +5269,19 @@ func (tDur *TimeDurationDto) calcTypeCUMDays() error {
 	err := tDur.calcHoursMinSecs()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcNanoseconds()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcSummaryTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 
 	return nil
@@ -5294,24 +5307,23 @@ func (tDur *TimeDurationDto) calcTypeCUMHours() error {
 	err := tDur.calcHoursMinSecs()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcNanoseconds()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcSummaryTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 
 	return nil
 }
-
 
 // calcTypeGregorianYears - Allocates Years using the number of nanoseconds in a
 // standard or average GregorianYear
@@ -5336,31 +5348,31 @@ func (tDur *TimeDurationDto) calcTypeGregorianYears() error {
 	err := tDur.calcMonthsFromDuration()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcDateDaysWeeksFromDuration()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcHoursMinSecs()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcNanoseconds()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcSummaryTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 
 	return nil
@@ -5414,13 +5426,12 @@ func (tDur *TimeDurationDto) calcTypeCUMMINUTES() error {
 	err := tDur.calcSummaryTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 
 	return nil
 
 }
-
 
 // Data Fields for Years is always set to Zero. Years
 // and months are consolidated and counted as cumulative
@@ -5436,31 +5447,31 @@ func (tDur *TimeDurationDto) calcTypeCUMMONTHS() error {
 	err := tDur.calcMonthsFromDuration()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcDateDaysWeeksFromDuration()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcHoursMinSecs()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcNanoseconds()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcSummaryTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 
 	return nil
@@ -5528,37 +5539,37 @@ func (tDur *TimeDurationDto) calcTypeSTDYEARMTH() error {
 	err := tDur.calcYearsFromDuration()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcYearsFromDuration(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcYearsFromDuration(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcMonthsFromDuration()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcDateDaysWeeksFromDuration()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcHoursMinSecs()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcNanoseconds()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcSummaryTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 
 	return nil
@@ -5597,19 +5608,19 @@ func (tDur *TimeDurationDto) calcTypeCUMWEEKS() error {
 	err := tDur.calcHoursMinSecs()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcNanoseconds()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
 	}
 
 	err = tDur.calcSummaryTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix + "Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
 	}
 
 	// For Cumulative Weeks calculation and presentations, set Date Days to zero
@@ -5621,7 +5632,7 @@ func (tDur *TimeDurationDto) calcTypeCUMWEEKS() error {
 
 // calcYearsFromDuration - Calculates number of years duration and nanoseconds
 // represented by years duration using input parameters 'tDur.StartTimeDateTz' and
-// 'tDur.EndTimeDateTz'.  
+// 'tDur.EndTimeDateTz'.
 //
 // NOTE:	Before calling this method, ensure that tDur.StartTimeDateTz,
 //				tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
@@ -5640,7 +5651,7 @@ func (tDur *TimeDurationDto) calcYearsFromDuration() error {
 	}
 
 	if startTime.Location().String() != endTime.Location().String() {
-		return fmt.Errorf(ePrefix + "Error: 'startTime' and 'endTime' Time Zone Location do NOT match! " +
+		return fmt.Errorf(ePrefix+"Error: 'startTime' and 'endTime' Time Zone Location do NOT match! "+
 			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
 			startTime.Location().String(), endTime.Location().String())
 	}
@@ -5682,14 +5693,13 @@ func (tDur *TimeDurationDto) calcYearsFromDuration() error {
 	return nil
 }
 
-
 // calcMonthsFromDuration - calculates the months duration
 // using the start and end dates, 'tDur.StartTimeDateTz' and
 // 'tDur.EndTimeDateTz.DateTime'.
 //
 // NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
 //						tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
-// 
+//
 //				(2) Before calling this method, ensure that the following method is called
 //						first:
 //										TimeDurationDto.calcYearsFromDuration
@@ -5706,7 +5716,7 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 	}
 
 	if startTime.Location().String() != endTime.Location().String() {
-		return fmt.Errorf(ePrefix + "Error: 'startTime' and 'endTime' Time Zone Location do NOT match! " +
+		return fmt.Errorf(ePrefix+"Error: 'startTime' and 'endTime' Time Zone Location do NOT match! "+
 			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
 			startTime.Location().String(), endTime.Location().String())
 	}
@@ -5729,7 +5739,7 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 
 		i++
 
-		mthDateTime = yearDateTime.AddDate(0,i,0)
+		mthDateTime = yearDateTime.AddDate(0, i, 0)
 
 	}
 
@@ -5739,7 +5749,7 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 
 		tDur.Months = int64(i)
 
-		mthDateTime = yearDateTime.AddDate( 0, i, 0)
+		mthDateTime = yearDateTime.AddDate(0, i, 0)
 
 		tDur.MonthsNanosecs = int64(mthDateTime.Sub(yearDateTime))
 
@@ -5752,14 +5762,14 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 }
 
 // calcDateDaysWeeksFromDuration - Calculates the Days associated
-// with the duration for this TimeDurationDto. 
+// with the duration for this TimeDurationDto.
 //
-// Calculates 'tDur.DateDays', 'tDur.DateDaysNanosecs', 'tDur.Weeks', 'tDur.WeeksNanosecs', 
+// Calculates 'tDur.DateDays', 'tDur.DateDaysNanosecs', 'tDur.Weeks', 'tDur.WeeksNanosecs',
 // 'tDur.WeekDays' and 'tDur.WeekDaysNanosecs'.
 //
 // NOTE:	(1) Before calling this method, ensure that TimeDurationDto.StartTimeDateTz,
 //						TimeDurationDto.EndTimeDateTz and tDur.TimeDuration are properly initialized.
-// 
+//
 //				(2) Before calling this method, ensure that the following methods are called
 //						first, in sequence:
 //							TimeDurationDto.calcYearsFromDuration
@@ -5783,7 +5793,7 @@ func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 		tDur.DateDays = rd / DayNanoSeconds
 		tDur.DateDaysNanosecs = DayNanoSeconds * tDur.DateDays
 	}
-	
+
 	// Calculate Weeks and WeekDays
 	tDur.Weeks = 0
 	tDur.WeeksNanosecs = 0
@@ -5796,26 +5806,26 @@ func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 
 			tDur.Weeks = tDur.DateDays / int64(7)
 			tDur.WeeksNanosecs = WeekNanoSeconds * tDur.Weeks
-			
+
 		}
 
-		tDur.WeekDays = tDur.DateDays -  (tDur.Weeks * 7)
+		tDur.WeekDays = tDur.DateDays - (tDur.Weeks * 7)
 		tDur.WeekDaysNanosecs = tDur.WeekDays * DayNanoSeconds
-		
+
 	}
 
 	return nil
 }
 
-// calcHoursMinSecs - Calculates Hours, Minute, and 
-// Seconds of duration using startTime, tDur.StartTimeDateTz, 
+// calcHoursMinSecs - Calculates Hours, Minute, and
+// Seconds of duration using startTime, tDur.StartTimeDateTz,
 // and endTime, tDur.EndTimeDateTz.DateTime.
 //
 //
 // NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
 //						TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
 // 						are properly initialized.
-// 
+//
 //				(2) Before calling this method, ensure that the following methods are called
 //						first, in sequence:
 //							TimeDurationDto.calcYearsFromDuration
@@ -5838,12 +5848,12 @@ func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 			tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
 	}
 
-	tDur.Hours 						= 0
-	tDur.HoursNanosecs 		= 0
-	tDur.Minutes 					= 0
-	tDur.MinutesNanosecs 	= 0
-	tDur.Seconds 					= 0 
-	tDur.SecondsNanosecs 	= 0
+	tDur.Hours = 0
+	tDur.HoursNanosecs = 0
+	tDur.Minutes = 0
+	tDur.MinutesNanosecs = 0
+	tDur.Seconds = 0
+	tDur.SecondsNanosecs = 0
 
 	if rd >= HourNanoSeconds {
 		tDur.Hours = rd / HourNanoSeconds
@@ -5854,7 +5864,7 @@ func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 	if rd >= MinuteNanoSeconds {
 		tDur.Minutes = rd / MinuteNanoSeconds
 		tDur.MinutesNanosecs = MinuteNanoSeconds * tDur.Minutes
-		rd -=tDur.MinutesNanosecs
+		rd -= tDur.MinutesNanosecs
 	}
 
 	if rd >= SecondNanoseconds {
@@ -5866,22 +5876,21 @@ func (tDur *TimeDurationDto) calcHoursMinSecs() error {
 	return nil
 }
 
-
-// calcNanoseconds - Calculates 'tDur.Milliseconds', 'tDur.MillisecondsNanosecs', 
+// calcNanoseconds - Calculates 'tDur.Milliseconds', 'tDur.MillisecondsNanosecs',
 // 'tDur.Microseconds', 'tDur.MicrosecondsNanosecs',  and 'tDur.Nanoseconds'.
 //
 //
 // NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
 //						TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
 // 						are properly initialized.
-// 
+//
 //				(2) Before calling this method, ensure that the following methods are called
 //						first, in sequence:
 //							TimeDurationDto.calcYearsFromDuration
 //							TimeDurationDto.calcMonthsFromDuration
 //							TimeDurationDto.calcDateDaysWeeksFromDuration
 //							TimeDurationDto.calcHoursMinSecs
-// 
+//
 func (tDur *TimeDurationDto) calcNanoseconds() error {
 
 	rd := int64(tDur.TimeDuration)
@@ -5899,14 +5908,14 @@ func (tDur *TimeDurationDto) calcNanoseconds() error {
 	}
 
 	rd -= tDur.HoursNanosecs +
-					tDur.MinutesNanosecs + tDur.SecondsNanosecs
-					
-	tDur.Milliseconds 					= 0
-	tDur.MillisecondsNanosecs 	= 0
-	tDur.Microseconds						= 0
-	tDur.MicrosecondsNanosecs		= 0
-	tDur.Nanoseconds 						= 0
-	
+		tDur.MinutesNanosecs + tDur.SecondsNanosecs
+
+	tDur.Milliseconds = 0
+	tDur.MillisecondsNanosecs = 0
+	tDur.Microseconds = 0
+	tDur.MicrosecondsNanosecs = 0
+	tDur.Nanoseconds = 0
+
 	if rd >= MilliSecondNanoseconds {
 		tDur.Milliseconds = rd / MilliSecondNanoseconds
 		tDur.MillisecondsNanosecs = MilliSecondNanoseconds * tDur.Milliseconds
@@ -5920,17 +5929,17 @@ func (tDur *TimeDurationDto) calcNanoseconds() error {
 	}
 
 	tDur.Nanoseconds = rd
-	
-	return nil					
+
+	return nil
 }
 
-// calcSummaryTimeElements - Calculates totals for Date, Time and 
-// sub-second nanoseconds. 
+// calcSummaryTimeElements - Calculates totals for Date, Time and
+// sub-second nanoseconds.
 //
 // NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
 //						TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
 // 						are properly initialized.
-// 
+//
 //				(2) Before calling this method, ensure that the following methods are called
 //						first, in sequence:
 //							TimeDurationDto.calcYearsFromDuration
@@ -5946,7 +5955,7 @@ func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
 	if rd == 0 {
 		return nil
 	}
-	
+
 	tDur.TotDateNanoseconds = 0
 	tDur.TotTimeNanoseconds = 0
 	tDur.TotSubSecNanoseconds = 0
@@ -5954,7 +5963,7 @@ func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
 	tDur.TotDateNanoseconds = tDur.YearsNanosecs
 	tDur.TotDateNanoseconds += tDur.MonthsNanosecs
 
-	if tDur.DateDaysNanosecs == 0  {
+	if tDur.DateDaysNanosecs == 0 {
 		tDur.TotDateNanoseconds += tDur.WeeksNanosecs
 		tDur.TotDateNanoseconds += tDur.WeekDaysNanosecs
 	} else {
@@ -5964,7 +5973,6 @@ func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
 	tDur.TotSubSecNanoseconds = tDur.MillisecondsNanosecs
 	tDur.TotSubSecNanoseconds += tDur.MicrosecondsNanosecs
 	tDur.TotSubSecNanoseconds += tDur.Nanoseconds
-	
 
 	tDur.TotTimeNanoseconds = tDur.HoursNanosecs
 	tDur.TotTimeNanoseconds += tDur.MinutesNanosecs
@@ -5974,7 +5982,6 @@ func (tDur *TimeDurationDto) calcSummaryTimeElements() error {
 	return nil
 }
 
-
 func (tDur *TimeDurationDto) preProcessDateFormatStr(dateTimeFmtStr string) string {
 
 	if len(dateTimeFmtStr) == 0 {
@@ -5983,7 +5990,6 @@ func (tDur *TimeDurationDto) preProcessDateFormatStr(dateTimeFmtStr string) stri
 
 	return dateTimeFmtStr
 }
-
 
 func (tDur *TimeDurationDto) preProcessTimeZoneLocation(timeZoneLocation string) string {
 

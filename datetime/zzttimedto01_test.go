@@ -6,38 +6,35 @@ import (
 	"time"
 )
 
-
 func TestTimeDto_AddTimeDto(t *testing.T) {
 
-	Years 				:=  2018
-	Months				:=  6
-	Weeks					:=  4
-	WeekDays			:=  2
-	DateDays			:=  30
-	Hours     		:= 	22
-	Minutes				:=  58
-	Seconds   		:=  32
-	Milliseconds 	:= 	515
-	Microseconds 	:= 	539
-	Nanoseconds 	:= 	300
-	TotSubSecNanoseconds:=  515539300
-	TotalTimeNanoseconds:=  int64(82712515539300)
+	Years := 2018
+	Months := 6
+	Weeks := 4
+	WeekDays := 2
+	DateDays := 30
+	Hours := 22
+	Minutes := 58
+	Seconds := 32
+	Milliseconds := 515
+	Microseconds := 539
+	Nanoseconds := 300
+	TotSubSecNanoseconds := 515539300
+	TotalTimeNanoseconds := int64(82712515539300)
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-
-	t2Dto, err := TimeDto{}.New(0, 14, 0, 0, 0, 0,0,0,0,0)
+	t2Dto, err := TimeDto{}.New(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
 
 	err = tDto.AddTimeDto(t2Dto)
 
 	if err != nil {
 		t.Errorf("Error returned by t0Dto.AddTimeDto(t2Dto). Error='%v'", err.Error())
 	}
-
 
 	if Years != tDto.Years {
 		t.Errorf("Error: Expected tDto.Years='%v'. Instead, tDto.Years='%v'",
@@ -106,10 +103,9 @@ func TestTimeDto_AddTimeDto(t *testing.T) {
 
 }
 
-
 func TestTimeDto_CopyOut_01(t *testing.T) {
 
-	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
@@ -165,18 +161,17 @@ func TestTimeDto_CopyOut_01(t *testing.T) {
 		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
 
-
 }
 
 func TestTimeDto_CopyIn_01(t *testing.T) {
 
-	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	tDto, err := TimeDto{}.New(2014, 9, 0, 14, 5, 5,19,850,850,850)
+	tDto, err := TimeDto{}.New(2014, 9, 0, 14, 5, 5, 19, 850, 850, 850)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2014, 9, 0, 14, 5, 5,19,850,850,850). Error='%v'", err.Error())
@@ -236,7 +231,7 @@ func TestTimeDto_CopyIn_01(t *testing.T) {
 
 func TestTimeDto_ConvertToNegativeValues(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
@@ -295,7 +290,7 @@ func TestTimeDto_ConvertToNegativeValues(t *testing.T) {
 }
 
 func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
@@ -405,7 +400,7 @@ func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
 
 func TestTimeDto_Empty(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
@@ -458,7 +453,6 @@ func TestTimeDto_Empty(t *testing.T) {
 	if 515539300 != tDto.TotSubSecNanoseconds {
 		t.Errorf("Error: Expected Total Nanoseconds='%v'.  Instead, Total Nanoseconds='%v'", 515539300, tDto.TotSubSecNanoseconds)
 	}
-
 
 	tDto.Empty()
 
@@ -518,7 +512,7 @@ func TestTimeDto_Empty(t *testing.T) {
 
 func TestTimeDto_Equal_01(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
@@ -581,7 +575,7 @@ func TestTimeDto_Equal_01(t *testing.T) {
 
 func TestTimeDto_Equal_02(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
@@ -658,7 +652,7 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 	microsecond := 0
 	totNanoSecs := 515539300
 
-	tDto, err := TimeDto{}.New(year, month, 0, dateDay, hour, minute,second,millisecond,microsecond,totNanoSecs)
+	tDto, err := TimeDto{}.New(year, month, 0, dateDay, hour, minute, second, millisecond, microsecond, totNanoSecs)
 
 	millisecond = 515
 	microsecond = 539
@@ -677,11 +671,11 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 	loc, err := time.LoadLocation(TzIanaUsCentral)
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). " +
-							"TzIanaUsCentral='%v'  Error='%v'", TzIanaUsCentral, err.Error())
+		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). "+
+			"TzIanaUsCentral='%v'  Error='%v'", TzIanaUsCentral, err.Error())
 	}
 
-	t2 := time.Date(year, time.Month(month), dateDay, hour, minute, second, totNanoSecs, loc )
+	t2 := time.Date(year, time.Month(month), dateDay, hour, minute, second, totNanoSecs, loc)
 
 	if year != tDto.Years {
 		t.Errorf("Error: Expected Years='%v'.  Instead, Years='%v'", year, tDto.Years)
@@ -739,26 +733,26 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 
 func TestTimeDto_New_01(t *testing.T) {
 	/*
-Original t0str:  2017-04-30 22:58:32.515539300 -0500 CDT
-Original t0:  2017-04-30 22:58:32.515539300 -0500 CDT
-========================================
-          TimeDto Printout
-========================================
-            Years:  2017
-           Months:  4
-            Weeks:  4
-         WeekDays:  2
-         DateDays:  30
-            Hours:  22
-          Minutes:  58
-          Seconds:  32
-     Milliseconds:  515
-     Microseconds:  539
-      Nanoseconds:  300
-Total Nanoseconds:  515539300
-========================================
+		Original t0str:  2017-04-30 22:58:32.515539300 -0500 CDT
+		Original t0:  2017-04-30 22:58:32.515539300 -0500 CDT
+		========================================
+		          TimeDto Printout
+		========================================
+		            Years:  2017
+		           Months:  4
+		            Weeks:  4
+		         WeekDays:  2
+		         DateDays:  30
+		            Hours:  22
+		          Minutes:  58
+		          Seconds:  32
+		     Milliseconds:  515
+		     Microseconds:  539
+		      Nanoseconds:  300
+		Total Nanoseconds:  515539300
+		========================================
 	*/
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300)
+	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
@@ -816,127 +810,124 @@ Total Nanoseconds:  515539300
 
 func TestTimeDto_New_02(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0 )
+	tDto, err := TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
 
 	if err != nil {
 		t.Errorf("Error returned from TimeDto{}.New() Weeks=-8. Error='%v'", err.Error())
 	}
 
-	Years 				:=  0
-	Months				:=  0
-	Weeks					:=  -8
-	WeekDays			:=  0
-	DateDays			:=  -56
-	Hours     		:= 	0
-	Minutes				:=  0
-	Seconds   		:=  0
-	Milliseconds 	:= 	0
-	Microseconds 	:= 	0
-	Nanoseconds 	:= 	0
-	
-	
+	Years := 0
+	Months := 0
+	Weeks := -8
+	WeekDays := 0
+	DateDays := -56
+	Hours := 0
+	Minutes := 0
+	Seconds := 0
+	Milliseconds := 0
+	Microseconds := 0
+	Nanoseconds := 0
 
 	if Years != tDto.Years {
 		t.Errorf("Error: Expected tDto.Years='%v'. Instead, tDto.Years='%v'",
-				Years, tDto.Years)
+			Years, tDto.Years)
 	}
 
 	if Months != tDto.Months {
 		t.Errorf("Error: Expected tDto.Months='%v'. Instead, tDto.Months='%v'",
-				Months, tDto.Months)
+			Months, tDto.Months)
 	}
 
 	if Weeks != tDto.Weeks {
 		t.Errorf("Error: Expected tDto.Weeks='%v'. Instead, tDto.Weeks='%v'",
-				Weeks, tDto.Weeks)
+			Weeks, tDto.Weeks)
 	}
 
 	if WeekDays != tDto.WeekDays {
 		t.Errorf("Error: Expected tDto.WeekDays='%v'. Instead, tDto.WeekDays='%v'",
-				WeekDays, tDto.WeekDays)
+			WeekDays, tDto.WeekDays)
 	}
 
 	if DateDays != tDto.DateDays {
 		t.Errorf("Error: Expected tDto.DateDays='%v'. Instead, tDto.DateDays='%v'",
-				DateDays, tDto.DateDays)
+			DateDays, tDto.DateDays)
 	}
 
 	if Hours != tDto.Hours {
 		t.Errorf("Error: Expected tDto.Hours='%v'. Instead, tDto.Hours='%v'",
-				Hours, tDto.Hours)
+			Hours, tDto.Hours)
 	}
 
 	if Minutes != tDto.Minutes {
 		t.Errorf("Error: Expected tDto.Minutes='%v'. Instead, tDto.Minutes='%v'",
-				Minutes, tDto.Minutes)
+			Minutes, tDto.Minutes)
 	}
 
 	if Seconds != tDto.Seconds {
 		t.Errorf("Error: Expected tDto.Seconds='%v'. Instead, tDto.Seconds='%v'",
-				Seconds, tDto.Seconds)
+			Seconds, tDto.Seconds)
 	}
 
 	if Milliseconds != tDto.Milliseconds {
 		t.Errorf("Error: Expected tDto.Milliseconds='%v'. Instead, tDto.Milliseconds='%v'",
-				Milliseconds, tDto.Milliseconds)
+			Milliseconds, tDto.Milliseconds)
 	}
 
 	if Microseconds != tDto.Microseconds {
 		t.Errorf("Error: Expected tDto.Microseconds='%v'. Instead, tDto.Microseconds='%v'",
-				Microseconds, tDto.Microseconds)
+			Microseconds, tDto.Microseconds)
 	}
 
 	if Nanoseconds != tDto.Nanoseconds {
 		t.Errorf("Error: Expected tDto.Nanoseconds='%v'. Instead, tDto.Nanoseconds='%v'",
-				Nanoseconds, tDto.Nanoseconds)
+			Nanoseconds, tDto.Nanoseconds)
 	}
 
-	
 	/*
-	====================================
-         Original TimeDto
-====================================
-========================================
-          TimeDto Printout
-========================================
-                   Years:  0
-                  Months:  0
-                   Weeks:  -8
-                WeekDays:  0
-                DateDays:  0
-                   Hours:  0
-                 Minutes:  0
-                 Seconds:  0
-            Milliseconds:  0
-            Microseconds:  0
-             Nanoseconds:  0
-Total SubSec Nanoseconds:  0
-  Total Time Nanoseconds:  0
-========================================
-------------------------------------
-        Normalized TimeDto
-------------------------------------
-========================================
-          TimeDto Printout
-========================================
-                   Years:  -1
-                  Months:  11
-                   Weeks:  4
-                WeekDays:  2
-                DateDays:  30
-                   Hours:  0
-                 Minutes:  0
-                 Seconds:  0
-            Milliseconds:  0
-            Microseconds:  0
-             Nanoseconds:  0
-Total SubSec Nanoseconds:  0
-  Total Time Nanoseconds:  0
-========================================
-             Start Date:  -0001-11-30 00:00:00.000000000 +0000 UCT
-Start Date Plus 8-Weeks:  0000-01-25 00:00:00.000000000 +0000 UCT
-	 */
-	
+			====================================
+		         Original TimeDto
+		====================================
+		========================================
+		          TimeDto Printout
+		========================================
+		                   Years:  0
+		                  Months:  0
+		                   Weeks:  -8
+		                WeekDays:  0
+		                DateDays:  0
+		                   Hours:  0
+		                 Minutes:  0
+		                 Seconds:  0
+		            Milliseconds:  0
+		            Microseconds:  0
+		             Nanoseconds:  0
+		Total SubSec Nanoseconds:  0
+		  Total Time Nanoseconds:  0
+		========================================
+		------------------------------------
+		        Normalized TimeDto
+		------------------------------------
+		========================================
+		          TimeDto Printout
+		========================================
+		                   Years:  -1
+		                  Months:  11
+		                   Weeks:  4
+		                WeekDays:  2
+		                DateDays:  30
+		                   Hours:  0
+		                 Minutes:  0
+		                 Seconds:  0
+		            Milliseconds:  0
+		            Microseconds:  0
+		             Nanoseconds:  0
+		Total SubSec Nanoseconds:  0
+		  Total Time Nanoseconds:  0
+		========================================
+		             Start Date:  -0001-11-30 00:00:00.000000000 +0000 UCT
+		Start Date Plus 8-Weeks:  0000-01-25 00:00:00.000000000 +0000 UCT
+	*/
+
 }
 
 func TestTimeDto_NewFromDateTime_01(t *testing.T) {
@@ -944,7 +935,7 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32,515539300, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). Error='%v'", err.Error())
@@ -969,7 +960,7 @@ func TestTimeDto_NewFromDateTzDto_01(t *testing.T) {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32,515539300, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). Error='%v'", err.Error())
@@ -989,7 +980,7 @@ func TestTimeDto_NewTimeElements_01(t *testing.T) {
 	year := 69
 	month := 5
 	day := 27
-	hour:= 15
+	hour := 15
 	minute := 30
 	second := 2
 	millisecond := 784
@@ -1000,54 +991,53 @@ func TestTimeDto_NewTimeElements_01(t *testing.T) {
 	tDto, err := TimeDto{}.NewTimeElements(year, month, day, hour, minute, second, totNanosecs)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.NewTimeElements(...). " + 
-					"Error='%v'", err.Error())
+		t.Errorf("Error returned by TimeDto{}.NewTimeElements(...). "+
+			"Error='%v'", err.Error())
 	}
 
 	if year != tDto.Years {
 		t.Errorf("Error: Expected tDto.Years='%v'. Instead, tDto.Years='%v'",
-											year, tDto.Years )
+			year, tDto.Years)
 	}
 
 	if month != tDto.Months {
 		t.Errorf("Error: Expected tDto.Months='%v'. Instead, tDto.Months='%v'",
-											month, tDto.Months )
+			month, tDto.Months)
 	}
 
 	if day != tDto.DateDays {
 		t.Errorf("Error: Expected tDto.DateDays='%v'. Instead, tDto.DateDays='%v'",
-											day, tDto.DateDays )
+			day, tDto.DateDays)
 	}
-	
+
 	if hour != tDto.Hours {
 		t.Errorf("Error: Expected tDto.Hours='%v'. Instead, tDto.Hours='%v'",
-											hour, tDto.Hours )
+			hour, tDto.Hours)
 	}
-	
+
 	if minute != tDto.Minutes {
 		t.Errorf("Error: Expected tDto.Minutes='%v'. Instead, tDto.Minutes='%v'",
-											minute, tDto.Minutes )
+			minute, tDto.Minutes)
 	}
-	
+
 	if second != tDto.Seconds {
 		t.Errorf("Error: Expected tDto.Seconds='%v'. Instead, tDto.Seconds='%v'",
-											second, tDto.Seconds )
+			second, tDto.Seconds)
 	}
-	
+
 	if millisecond != tDto.Milliseconds {
 		t.Errorf("Error: Expected tDto.Milliseconds='%v'. Instead, tDto.Milliseconds='%v'",
-											millisecond, tDto.Milliseconds )
+			millisecond, tDto.Milliseconds)
 	}
-		
+
 	if microsecond != tDto.Microseconds {
 		t.Errorf("Error: Expected tDto.Microseconds='%v'. Instead, tDto.Microseconds='%v'",
-											microsecond, tDto.Microseconds )
+			microsecond, tDto.Microseconds)
 	}
-	
-		
+
 	if nanosecond != tDto.Nanoseconds {
 		t.Errorf("Error: Expected tDto.Nanoseconds='%v'. Instead, tDto.Nanoseconds='%v'",
-											nanosecond, tDto.Nanoseconds )
+			nanosecond, tDto.Nanoseconds)
 	}
 
 	dur := int64(hour) * int64(time.Hour)
@@ -1066,5 +1056,5 @@ func TestTimeDto_NewTimeElements_01(t *testing.T) {
 			"Instead, tDto.TotSubSecNanoseconds='%v'",
 			totNanosecs, tDto.TotSubSecNanoseconds)
 	}
-	
+
 }

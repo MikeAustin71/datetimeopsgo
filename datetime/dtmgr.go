@@ -25,8 +25,7 @@ Overview and General Usage
 The DtMgr structure provides generalized methods for
 managing the formatting and display of time.Time date time values.
 
- */
-
+*/
 
 // DtMgr - struct used to export
 // Date Time Management methods.
@@ -135,7 +134,6 @@ func (dt DtMgr) GetDateTimeEverything(t time.Time) string {
 func (dt DtMgr) GetDateTimeCustomFmt(t time.Time, fmt string) string {
 	return t.Format(fmt)
 }
-
 
 // GetTimeStampEverything - Generates and returns a time stamp as
 // type string. The current time is computed using time.Now() for the

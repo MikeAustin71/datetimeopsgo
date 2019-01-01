@@ -24,8 +24,7 @@ Types of constants defined here include:
   2. Iana Time Zone designations
   3. Common Time conversion constants
 
- */
-
+*/
 
 // Date Time Format Constants
 const (
@@ -74,9 +73,7 @@ const (
 	FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 )
 
-
 const (
-
 
 	// Note: A Nanosecond is equal to 1 one-billionth or
 	//       1/1,000,000,000 of a second.
@@ -91,7 +88,6 @@ const (
 	// NanoSecondsPerMicroSecond - The number of nanoseconds in
 	// a microsecond.
 	NanoSecondsPerMicroSecond = int64(1000)
-
 
 	// MilliSecondNanoseconds - Number of Nanoseconds in a MilliSecond
 	//	 A millisecond is 1/1,000 or 1 one-thousandth of a second
@@ -131,9 +127,6 @@ const (
 	GregorianYearNanoSeconds = int64(31556952000000000)
 )
 
-
-
-
 // NOTE: See https://golang.org/pkg/time/#LoadLocation
 // and https://www.iana.org/time-zones to ensure that
 // the IANA Time Zone Database is properly configured
@@ -142,134 +135,133 @@ const (
 //
 // Reference: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 const (
-
-	TzIanaAfricaCairo = "Africa/Cairo"
-	TzIanaAfricaJohannesburg = "Africa/Johannesburg"
-	TzIanaAfricaTripoli = "Africa/Tripoli"
-	TzIanaAfricaTunis = "Africa/Tunis"
-	TzIanaAmericaBuenosAires = "America/Argentina/Buenos_Aires"
-	TzIanaAmericaBogota = "America/Bogota"
-	TzIanaAmericaCancum = "America/Cancun"
-	TzIanaAmericaCaracas = "America/Caracas"
-	TzIanaAmericaCostaRica = "America/Costa_Rica"
-	TzIanaAmericaElSalvador = "America/El_Salvador"
-	TzIanaAmericaGooseBay = "America/Goose_Bay"
-	TzIanaAmericaGuatemala = "America/Guatemala"
-	TzIanaAmericaGuayaquil = "America/Guayaquil" // Ecuador
-	TzIanaAmericaGuyana = "America/Guyana"
-	TzIanaAmericaHalifax = "America/Halifax"
-	TzIanaAmericaHavana = "America/Havana"
-	TzIanaAmericaJamaica = "America/Jamaica"
-	TzIanaAmericaLaPaz = "America/La_Paz"
-	TzIanaAmericaLima = "America/Lima"
-	TzIanaAmericaManaus = "America/Manaus"  // Amazonas East
-	TzIanaAmericaMartinique = "America/Martinique"
-	TzIanaAmericaMazatlan = "America/Mazatlan" // Baja California
-	TzIanaAmericaMatamoros = "America/Matamoros"
-	TzIanaAmericaMexicoCity = "America/Mexico_City"
-	TzIanaAmericaMotevideo = "America/Montevideo" // Uruguay
-	TzIanaAmericaNassau = "America/Nassau" // Bahamas
-	TzIanaAmericaPanama = "America/Panama"
-	TzIanaAmericaPortOfSpain ="America/Port_of_Spain" // Grenada
-	TzIanaAmericaPuertoRico = "America/Puerto_Rico"
-	TzIanaAmericaRecife = "America/Recife"
-	TzIanaAmericaSantiago = "America/Santiago"
+	TzIanaAfricaCairo         = "Africa/Cairo"
+	TzIanaAfricaJohannesburg  = "Africa/Johannesburg"
+	TzIanaAfricaTripoli       = "Africa/Tripoli"
+	TzIanaAfricaTunis         = "Africa/Tunis"
+	TzIanaAmericaBuenosAires  = "America/Argentina/Buenos_Aires"
+	TzIanaAmericaBogota       = "America/Bogota"
+	TzIanaAmericaCancum       = "America/Cancun"
+	TzIanaAmericaCaracas      = "America/Caracas"
+	TzIanaAmericaCostaRica    = "America/Costa_Rica"
+	TzIanaAmericaElSalvador   = "America/El_Salvador"
+	TzIanaAmericaGooseBay     = "America/Goose_Bay"
+	TzIanaAmericaGuatemala    = "America/Guatemala"
+	TzIanaAmericaGuayaquil    = "America/Guayaquil" // Ecuador
+	TzIanaAmericaGuyana       = "America/Guyana"
+	TzIanaAmericaHalifax      = "America/Halifax"
+	TzIanaAmericaHavana       = "America/Havana"
+	TzIanaAmericaJamaica      = "America/Jamaica"
+	TzIanaAmericaLaPaz        = "America/La_Paz"
+	TzIanaAmericaLima         = "America/Lima"
+	TzIanaAmericaManaus       = "America/Manaus" // Amazonas East
+	TzIanaAmericaMartinique   = "America/Martinique"
+	TzIanaAmericaMazatlan     = "America/Mazatlan" // Baja California
+	TzIanaAmericaMatamoros    = "America/Matamoros"
+	TzIanaAmericaMexicoCity   = "America/Mexico_City"
+	TzIanaAmericaMotevideo    = "America/Montevideo" // Uruguay
+	TzIanaAmericaNassau       = "America/Nassau"     // Bahamas
+	TzIanaAmericaPanama       = "America/Panama"
+	TzIanaAmericaPortOfSpain  = "America/Port_of_Spain" // Grenada
+	TzIanaAmericaPuertoRico   = "America/Puerto_Rico"
+	TzIanaAmericaRecife       = "America/Recife"
+	TzIanaAmericaSantiago     = "America/Santiago"
 	TzIanaAmericaSantoDomingo = "America/Santo_Domingo"
-	TzIanaAmericaSaoPaulo = "America/Sao_Paulo"
-	TzIanaAmericaStJohns = "America/St_Johns" // Newfoundland Labrador
-	TzIanaAmericaStThomas = "America/St_Thomas"
-	TzIanaAmericaTijuana = "America/Tijuana"
-	TzIanaAmericaThule = "America/Thule"
-	TzIanaAmericaToronto = "America/Toronto" // Eastern - ON, QC (most areas)
-	TzIanaAmericaVancouver = "America/Vancouver" // Pacific - BC (most areas)
-	TzIanaAmericaWinnipeg = "America/Winnipeg" // Central - ON (west); Manitoba
-	TzIanaAmericaWhitehorse = "America/Whitehorse" // Pacific - Yukon (south)
-	TzIanaAntarcticaMcMurdo = "Antarctica/McMurdo"
+	TzIanaAmericaSaoPaulo     = "America/Sao_Paulo"
+	TzIanaAmericaStJohns      = "America/St_Johns" // Newfoundland Labrador
+	TzIanaAmericaStThomas     = "America/St_Thomas"
+	TzIanaAmericaTijuana      = "America/Tijuana"
+	TzIanaAmericaThule        = "America/Thule"
+	TzIanaAmericaToronto      = "America/Toronto"    // Eastern - ON, QC (most areas)
+	TzIanaAmericaVancouver    = "America/Vancouver"  // Pacific - BC (most areas)
+	TzIanaAmericaWinnipeg     = "America/Winnipeg"   // Central - ON (west); Manitoba
+	TzIanaAmericaWhitehorse   = "America/Whitehorse" // Pacific - Yukon (south)
+	TzIanaAntarcticaMcMurdo   = "Antarctica/McMurdo"
 	TzIanaAntarcticaSouthPole = "Pacific/Auckland"
-	TzIanaAsiaBankok = "Asia/Bangkok"
-	TzIanaAsiaBaghdad = "Asia/Baghdad"
-	TzIanaAsiaBahrain = "Asia/Bahrain"
-	TzIanaAsiaBaku = "Asia/Baku"
-	TzIanaAsiaBrunei = "Asia/Brunei"
-	TzIanaAsiaBeirut = "Asia/Beirut"
-	TzIanaAsiaDamasucs = "Asia/Damascus"
-	TzIanaAsiaDubai = "Asia/Dubai"
-	TzIanaAsiaHoChiMinh = "Asia/Ho_Chi_Minh"			// Saigon Vietnam
-	TzIanaAsiaHongKong = "Asia/Hong_Kong"
-	TzIanaAsiaIndia = "Asia/Kolkata"						// Formerly Calcutta  - India Time
-	TzIanaAsiaJakarta = "Asia/Jakarta"
-	TzIanaAsiaJerusalem = "Asia/Jerusalem"
-	TzIanaAsiaKabul = "Asia/Kabul"
-	TzIanaAsiaKarachi = "Asia/Karachi"
-	TzIanaAsiaKualaLumpur = "Asia/Kuala_Lumpur"
-	TzIanaAsiaKuwait = "Asia/Kuwait"
-	TzIanaAsiaManila = "Asia/Manila"
-	TzIanaAsiaPhnomPenh = "Asia/Phnom_Penh"
-	TzIanaAsiaPyongyang = "Asia/Pyongyang"
-	TzIanaAsiaQatar = "Asia/Qatar"
-	TzIanaAsiaRangoon = "Asia/Yangon" 							// Rangoon
-	TzIanaAsiaRiyadh = "Asia/Riyadh"
-	TzIanaAsiaSeoul = "Asia/Seoul"
-	TzIanaAsiaShanghai = "Asia/Shanghai"						// Beijing time
-	TzIanaAsiaSigapore = "Asia/Singapore"
-	TzIanaAsiaTaipei = "Asia/Taipei"
-	TzIanaAsiaTehran = "Asia/Tehran"
-	TzIanaAsiaTokyo = "Asia/Tokyo"
-	TzIanaAsiaVladivostok = "Asia/Vladivostok"
-	TzIanaAtlanticAzores = "Atlantic/Azores"
-	TzIanaAtlanticBermuda = "Atlantic/Bermuda"
-	TzIanaAtlanticCanary = "Atlantic/Canary"
-	TzIanaAtlanticCapeVerde = "Atlantic/Cape_Verde"
-	TzIanaAtlanticReykjavik = "Atlantic/Reykjavik"
-	TzIanaAtlanticStanley = "Atlantic/Stanley"
-	TzIanaAustraliaDarwin = "Australia/Darwin"
-	TzIanaAustraliaMelbourne = "Australia/Melbourne"
-	TzIanaAustraliaPerth = "Australia/Perth"
-	TzIanaAustraliaSydney = "Australia/Sydney"
-	TzIanaEuropeAmsterdam = "Europe/Amsterdam"
-	TzIanaEuropeAthens = "Europe/Athens"
-	TzIanaEuropeBelgrade = "Europe/Belgrade"
-	TzIanaEuropeBerlin = "Europe/Berlin"
-	TzIanaEuropeBrussels = "Europe/Brussels"
-	TzIanaEuropeBucharest = "Europe/Bucharest"
-	TzIanaEuropeBudapest = "Europe/Budapest"
-	TzIanaEuropeCopenhagen = "Europe/Copenhagen"
-	TzIanaEuropeDublin = "Europe/Dublin"
-	TzIanaEuropeGibraltar = "Europe/Gibraltar"
-	TzIanaEuropeHelsinki = "Europe/Helsinki"
-	TzIanaEuropeIstanbul = "Europe/Istanbul"
-	TzIanaEuropeKiev = "Europe/Kiev"
-	TzIanaEuropeLisbon = "Europe/Lisbon"
-	TzIanaEuropeLondon = "Europe/London"
-	TzIanaEuropeLuxembourg = "Europe/Luxembourg"
-	TzIanaEuropeMadrid = "Europe/Madrid"
-	TzIanaEuropeMalta = "Europe/Malta"
-	TzIanaEuropeMinsk = "Europe/Minsk"
-	TzIanaEuropeMonaco = "Europe/Monaco"
-	TzIanaEuropeMoscow = "Europe/Moscow"
-	TzIanaEuropeOslo = "Europe/Oslo"
-	TzIanaEuropeParis = "Europe/Paris"
-	TzIanaEuropePrague = "Europe/Prague"
-	TzIanaEuropeRiga = "Europe/Riga"
-	TzIanaEuropeRome = "Europe/Rome"
-	TzIanaEuropeSofia = "Europe/Sofia"
-	TzIanaEuropeStockholm = "Europe/Stockholm"
-	TzIanaEuropeVienna = "Europe/Vienna"
-	TzIanaEuropeVilnius = "Europe/Vilnius"
-	TzIanaEuropeWarsaw = "Europe/Warsaw"
-	TzIanaEuropeZurich ="Europe/Zurich"
-	TzIanaPacificAuckland = "Pacific/Auckland"
-	TzIanaPacificFiji = "Pacific/Fiji"
-	TzIanaPacificGuam = "Pacific/Guam"
-	TzIanaPacificHonolulu = "Pacific/Honolulu"
-	TzIanaPacificPortMoresby = "Pacific/Port_Moresby"
-	TzIanaPacificTahiti = "Pacific/Tahiti"
+	TzIanaAsiaBankok          = "Asia/Bangkok"
+	TzIanaAsiaBaghdad         = "Asia/Baghdad"
+	TzIanaAsiaBahrain         = "Asia/Bahrain"
+	TzIanaAsiaBaku            = "Asia/Baku"
+	TzIanaAsiaBrunei          = "Asia/Brunei"
+	TzIanaAsiaBeirut          = "Asia/Beirut"
+	TzIanaAsiaDamasucs        = "Asia/Damascus"
+	TzIanaAsiaDubai           = "Asia/Dubai"
+	TzIanaAsiaHoChiMinh       = "Asia/Ho_Chi_Minh" // Saigon Vietnam
+	TzIanaAsiaHongKong        = "Asia/Hong_Kong"
+	TzIanaAsiaIndia           = "Asia/Kolkata" // Formerly Calcutta  - India Time
+	TzIanaAsiaJakarta         = "Asia/Jakarta"
+	TzIanaAsiaJerusalem       = "Asia/Jerusalem"
+	TzIanaAsiaKabul           = "Asia/Kabul"
+	TzIanaAsiaKarachi         = "Asia/Karachi"
+	TzIanaAsiaKualaLumpur     = "Asia/Kuala_Lumpur"
+	TzIanaAsiaKuwait          = "Asia/Kuwait"
+	TzIanaAsiaManila          = "Asia/Manila"
+	TzIanaAsiaPhnomPenh       = "Asia/Phnom_Penh"
+	TzIanaAsiaPyongyang       = "Asia/Pyongyang"
+	TzIanaAsiaQatar           = "Asia/Qatar"
+	TzIanaAsiaRangoon         = "Asia/Yangon" // Rangoon
+	TzIanaAsiaRiyadh          = "Asia/Riyadh"
+	TzIanaAsiaSeoul           = "Asia/Seoul"
+	TzIanaAsiaShanghai        = "Asia/Shanghai" // Beijing time
+	TzIanaAsiaSigapore        = "Asia/Singapore"
+	TzIanaAsiaTaipei          = "Asia/Taipei"
+	TzIanaAsiaTehran          = "Asia/Tehran"
+	TzIanaAsiaTokyo           = "Asia/Tokyo"
+	TzIanaAsiaVladivostok     = "Asia/Vladivostok"
+	TzIanaAtlanticAzores      = "Atlantic/Azores"
+	TzIanaAtlanticBermuda     = "Atlantic/Bermuda"
+	TzIanaAtlanticCanary      = "Atlantic/Canary"
+	TzIanaAtlanticCapeVerde   = "Atlantic/Cape_Verde"
+	TzIanaAtlanticReykjavik   = "Atlantic/Reykjavik"
+	TzIanaAtlanticStanley     = "Atlantic/Stanley"
+	TzIanaAustraliaDarwin     = "Australia/Darwin"
+	TzIanaAustraliaMelbourne  = "Australia/Melbourne"
+	TzIanaAustraliaPerth      = "Australia/Perth"
+	TzIanaAustraliaSydney     = "Australia/Sydney"
+	TzIanaEuropeAmsterdam     = "Europe/Amsterdam"
+	TzIanaEuropeAthens        = "Europe/Athens"
+	TzIanaEuropeBelgrade      = "Europe/Belgrade"
+	TzIanaEuropeBerlin        = "Europe/Berlin"
+	TzIanaEuropeBrussels      = "Europe/Brussels"
+	TzIanaEuropeBucharest     = "Europe/Bucharest"
+	TzIanaEuropeBudapest      = "Europe/Budapest"
+	TzIanaEuropeCopenhagen    = "Europe/Copenhagen"
+	TzIanaEuropeDublin        = "Europe/Dublin"
+	TzIanaEuropeGibraltar     = "Europe/Gibraltar"
+	TzIanaEuropeHelsinki      = "Europe/Helsinki"
+	TzIanaEuropeIstanbul      = "Europe/Istanbul"
+	TzIanaEuropeKiev          = "Europe/Kiev"
+	TzIanaEuropeLisbon        = "Europe/Lisbon"
+	TzIanaEuropeLondon        = "Europe/London"
+	TzIanaEuropeLuxembourg    = "Europe/Luxembourg"
+	TzIanaEuropeMadrid        = "Europe/Madrid"
+	TzIanaEuropeMalta         = "Europe/Malta"
+	TzIanaEuropeMinsk         = "Europe/Minsk"
+	TzIanaEuropeMonaco        = "Europe/Monaco"
+	TzIanaEuropeMoscow        = "Europe/Moscow"
+	TzIanaEuropeOslo          = "Europe/Oslo"
+	TzIanaEuropeParis         = "Europe/Paris"
+	TzIanaEuropePrague        = "Europe/Prague"
+	TzIanaEuropeRiga          = "Europe/Riga"
+	TzIanaEuropeRome          = "Europe/Rome"
+	TzIanaEuropeSofia         = "Europe/Sofia"
+	TzIanaEuropeStockholm     = "Europe/Stockholm"
+	TzIanaEuropeVienna        = "Europe/Vienna"
+	TzIanaEuropeVilnius       = "Europe/Vilnius"
+	TzIanaEuropeWarsaw        = "Europe/Warsaw"
+	TzIanaEuropeZurich        = "Europe/Zurich"
+	TzIanaPacificAuckland     = "Pacific/Auckland"
+	TzIanaPacificFiji         = "Pacific/Fiji"
+	TzIanaPacificGuam         = "Pacific/Guam"
+	TzIanaPacificHonolulu     = "Pacific/Honolulu"
+	TzIanaPacificPortMoresby  = "Pacific/Port_Moresby"
+	TzIanaPacificTahiti       = "Pacific/Tahiti"
 
 	// TzIanaUsAlaska - USA Alaska
-	TzIanaUsAlaskaAnchorage =  "America/Anchorage"
-	TzIanaUsAlaskaJuneau = "America/Juneau"
-	TzIanaUsAlaskaNome = "America/Nome"
-	TzIanaUsAlaskaYakutat = "America/Yakutat"
+	TzIanaUsAlaskaAnchorage = "America/Anchorage"
+	TzIanaUsAlaskaJuneau    = "America/Juneau"
+	TzIanaUsAlaskaNome      = "America/Nome"
+	TzIanaUsAlaskaYakutat   = "America/Yakutat"
 	TzIanaUsAleutianIslands = "America/Adak"
 
 	// TzIanaUsArizona
@@ -289,7 +281,7 @@ const (
 
 	// TzIanaUsPacific - USA Pacific Time Zone
 	// IANA database identifier
-	TzIanaUsPacific  = "America/Los_Angeles"
+	TzIanaUsPacific = "America/Los_Angeles"
 
 	// TzIanaUsHawaii - USA Hawaiian Time Zone
 	// IANA database identifier
@@ -300,7 +292,7 @@ const (
 	TzIanaZulu = "Etc/UCT"
 
 	// TzIanaGMT - Alias for UTC
-	TzIanaGMT	= "Etc/UCT"
+	TzIanaGMT = "Etc/UCT"
 
 	// TzIanaUTC - Alias for UTC
 	TzIanaUTC = "Etc/UCT"
@@ -308,6 +300,4 @@ const (
 	// TzGoLocal - Golang Local Time Zone
 	// configured on host computer
 	TzGoLocal = "Local"
-
 )
-

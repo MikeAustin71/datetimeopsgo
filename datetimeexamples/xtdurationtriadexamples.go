@@ -2,10 +2,9 @@ package datetimeexamples
 
 import (
 	dt "../datetime"
-	"time"
 	"fmt"
+	"time"
 )
-
 
 // ExampleSetStartEndTimes
 func ExampleSetStartEndTimes() {
@@ -19,7 +18,12 @@ func ExampleSetStartEndTimes() {
 
 	dur := dt.DurationTriad{}
 
-	dur.SetStartEndTimesTz(t1, t2, dt.TzIanaUsCentral, fmtstr)
+	err := dur.SetStartEndTimesTz(t1, t2, dt.TzIanaUsCentral, fmtstr)
+
+	if err != nil {
+		panic(fmt.Errorf("ExampleSetStartEndTimes() Error returned by "+
+			"dur.SetStartEndTimesTz(). Error='%v' ", err.Error()))
+	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
@@ -39,14 +43,13 @@ func ExampleSetStartEndTimes() {
 
 	expected = "1170-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
-	outStr, err := dur.BaseTime.GetCumDaysTimeStr()
+	outStr, err = dur.BaseTime.GetCumDaysTimeStr()
 
 	if err != nil {
-		fmt.Printf("Error returned by dur.BaseTime.GetCumDaysTimeStr(). " +
+		fmt.Printf("Error returned by dur.BaseTime.GetCumDaysTimeStr(). "+
 			"Error='%v'\n", err.Error())
 		return
 	}
-
 
 	fmt.Println("     Expected WeekDays: ", expected)
 	fmt.Println("     WeekDays Duration: ", outStr)
@@ -57,7 +60,7 @@ func ExampleSetStartEndTimes() {
 	outStr, err = dur.BaseTime.GetCumHoursTimeStr()
 
 	if err != nil {
-		fmt.Printf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). " +
+		fmt.Printf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). "+
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -80,7 +83,7 @@ func ExampleSetStartEndTimes() {
 	outStr, err = dur.BaseTime.GetCumWeeksDaysTimeStr()
 
 	if err != nil {
-		fmt.Printf("Error returned by dur.BaseTime.GetCumWeeksDaysTimeStr(). " +
+		fmt.Printf("Error returned by dur.BaseTime.GetCumWeeksDaysTimeStr(). "+
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -105,7 +108,7 @@ func ExampleNewstarttimeduration01() {
 	t12Dur := t2.Sub(t1)
 	t12UTCDur := t2Utc.Sub(t1Utc)
 
-	dur, err := dt.DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur,dt.TzIanaUsCentral, fmtstr)
+	dur, err := dt.DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur). Error='%v'\n", err.Error())
@@ -115,7 +118,7 @@ func ExampleNewstarttimeduration01() {
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
 		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n", t1OutStr,
-				dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr))
+			dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr))
 	}
 
 	if t2OutStr != dur.BaseTime.EndTimeDateTz.DateTime.Format(fmtstr) {
@@ -134,9 +137,7 @@ func ExampleNewstarttimeduration01() {
 	fmt.Println("Time  In Duration: ", t12Dur)
 	fmt.Println("Time UTC Duration: ", t12UTCDur)
 
-
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
-
 
 	expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
@@ -144,8 +145,7 @@ func ExampleNewstarttimeduration01() {
 		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
 	}
 
-
-	tdatePlus := t1.AddDate(3,2,15)
+	tdatePlus := t1.AddDate(3, 2, 15)
 	tdatePlusDur := tdatePlus.Sub(t1)
 	ns := int64(0)
 
@@ -163,7 +163,7 @@ func ExampleNewstarttimeduration01() {
 	ans := dur.BaseTime.YearsNanosecs
 
 	fmt.Println("  Actual Counted Year NanoSeconds: ", ans)
-	t3Years := t1.AddDate(3,0,0)
+	t3Years := t1.AddDate(3, 0, 0)
 	t3YearsDur := t3Years.Sub(t1)
 	fmt.Println("        Computed Year NanoSeconds: ", int64(t3YearsDur))
 	ans += dur.BaseTime.MonthsNanosecs
@@ -172,10 +172,9 @@ func ExampleNewstarttimeduration01() {
 	fmt.Println("Actual Counted YearMonthDay Nanoseconds: ", ans)
 	fmt.Println("      Computed YearMonthDay NanoSeconds: ", int64(tdatePlusDur))
 	fmt.Println("---------------------------------------------")
-	t3YearsMonths := t3Years.AddDate(0,2, 0)
+	t3YearsMonths := t3Years.AddDate(0, 2, 0)
 	t3MonthsDur := t3YearsMonths.Sub(t3Years)
 	fmt.Println("  Actual Counted Month NanoSeconds: ", dur.BaseTime.MonthsNanosecs)
 	fmt.Println("        Computed Month NanoSeconds: ", int64(t3MonthsDur))
 	fmt.Println("           Info 1-Hour NanoSeconds: ", dt.HourNanoSeconds)
 }
-

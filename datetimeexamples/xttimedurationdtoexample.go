@@ -1,16 +1,17 @@
 package datetimeexamples
-import(
+
+import (
 	dt "../datetime"
 	"fmt"
 	"time"
 )
 
-// ExampleTimeDuration001 
+// ExampleTimeDuration001
 func ExampleTimeDuration001() {
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
 	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
-	t1USCentral := time.Date(2018, time.Month(3),10,18,0,0,0, locUSCentral)
+	t1USCentral := time.Date(2018, time.Month(3), 10, 18, 0, 0, 0, locUSCentral)
 	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
 
 	//t2AddDate := t1USCentral.AddDate(0, 0, 1)
@@ -18,12 +19,11 @@ func ExampleTimeDuration001() {
 	hoursDur := int64(24) * dt.HourNanoSeconds
 
 	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeDurationCalcTz(t1USCentral, time.Duration(hoursDur),
-		dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral,	fmtStr)
+		dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
 	}
-
 
 	fmt.Println("Add Date Results - Cumulative Days")
 	fmt.Println("            Start Date Time: ", t1USCentral.Format(dt.FmtDateTimeYrMDayFmtStr))
@@ -33,18 +33,17 @@ func ExampleTimeDuration001() {
 
 }
 
-// ExampleTimeDuration002 
+// ExampleTimeDuration002
 func ExampleTimeDuration002() {
 
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
 	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
-	t1USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279, locUSCentral)
+	t1USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
 	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
 
-	t2USCentral := time.Date(2018, time.Month(7),04,15,9,5,458621349, locUSCentral)
+	t2USCentral := time.Date(2018, time.Month(7), 04, 15, 9, 5, 458621349, locUSCentral)
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
-
 
 	t1Dur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
 		dt.TDurCalcTypeCUMDAYS, dt.TzIanaUsCentral, fmtStr)
@@ -77,17 +76,16 @@ func ExampleTimeDuration002() {
 
 }
 
-// ExampleTimeDuration003 
+// ExampleTimeDuration003
 func ExampleTimeDuration003() {
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
 	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
 
-	t1USCentral := time.Date(2018, time.Month(3),06,20,02,18,792489279, locUSCentral)
+	t1USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
 	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
 
-	t2USCentral := time.Date(2018, time.Month(7),04,15,9,5,458621349, locUSCentral)
+	t2USCentral := time.Date(2018, time.Month(7), 04, 15, 9, 5, 458621349, locUSCentral)
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
-
 
 	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
 		dt.TDurCalcTypeCUMDAYS, dt.TzIanaUsCentral, fmtStr)
@@ -105,10 +103,9 @@ func ExampleTimeDuration003() {
 
 }
 
-
 // PrintTimeDurationDto - Prints TimeDurationDto
 // data fields.
-func PrintTimeDurationDto(tDur dt.TimeDurationDto){
+func PrintTimeDurationDto(tDur dt.TimeDurationDto) {
 
 	fmt.Println("     StartTimeDateTz: ", tDur.StartTimeDateTz.String())
 	fmt.Println("       EndTimeDateTz: ", tDur.EndTimeDateTz.String())
@@ -141,10 +138,8 @@ func PrintTimeDurationDto(tDur dt.TimeDurationDto){
 	fmt.Println("  TotTimeNanoseconds: ", tDur.TotTimeNanoseconds)
 	fmt.Println("-----------------------------------------------------")
 	fmt.Println("Check Total:")
-	fmt.Println("   Date + Time Nanoseconds: ", tDur.TotTimeNanoseconds + tDur.TotDateNanoseconds)
+	fmt.Println("   Date + Time Nanoseconds: ", tDur.TotTimeNanoseconds+tDur.TotDateNanoseconds)
 	fmt.Println("Total Duration Nanoseconds: ", int64(tDur.TimeDuration))
 	fmt.Println("-----------------------------------------------------")
-
-
 
 }

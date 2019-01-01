@@ -2,12 +2,11 @@ package datetimeexamples
 
 import (
 	dt "../datetime"
+	"../testlibs"
 	"errors"
 	"fmt"
-	"../testlibs"
 	"time"
 )
-
 
 // WriteAllFormatsToFile - This method will write all generated
 // formats to a text file in this directory structure. Be advised,
@@ -20,12 +19,23 @@ func WriteAllFormatsToFile() {
 
 	dtf := dt.FormatDateTimeUtility{}
 
-	dtf.CreateAllFormatsInMemory()
+	err := dtf.CreateAllFormatsInMemory()
+
+	if err != nil {
+		panic(fmt.Errorf("WriteAllFormatsToFile(). Error returned by "+
+			"dtf.CreateAllFormatsInMemory(). Error='%v' ", err.Error()))
+	}
 
 	endTimeGetFormats := time.Now()
-	du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf("WriteAllFormatsToFile(). Error returned by "+
+			"du.SetStartEndTimesTz(...). Error='%v' ", err.Error()))
+	}
+
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
-	fmt.Println("Elapsed Time For Format Map Creation: ",outStr)
+	fmt.Println("Elapsed Time For Format Map Creation: ", outStr)
 	fmt.Println()
 
 	lFmts := len(dtf.FormatMap)
@@ -44,12 +54,24 @@ func WriteAllFormatsToFile() {
 
 	endTime := time.Now()
 
-	du.SetStartEndTimesTz(endTimeGetFormats, endTime, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(endTimeGetFormats, endTime, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf("Error returned by du.SetStartEndTimesTz(...). "+
+			"Error='%v' ", err.Error()))
+	}
+
 	outStrX1 := du.BaseTime.GetYearMthDaysTimeStr()
 
 	d2 := dt.DurationTriad{}
 
-	d2.SetStartEndTimesTz(startTime, endTime, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = d2.SetStartEndTimesTz(startTime, endTime, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf("Error returned by d2.SetStartEndTimesTz(...). "+
+			"Error='%v' ", err.Error()))
+	}
+
 	outStrX2 := d2.BaseTime.GetYearMthDaysTimeStr()
 	nu := testlibs.NumStrUtility{}
 	fmt.Println("Formats File Write Operation Completed to file: ", outputFile)
@@ -71,11 +93,22 @@ func WriteFormatStatsToFile() {
 
 	startTime := time.Now()
 
-	dtf.CreateAllFormatsInMemory()
+	err := dtf.CreateAllFormatsInMemory()
+
+	if err != nil {
+		panic(fmt.Errorf("WriteFormatStatsToFile(): Error returned by "+
+			"dtf.CreateAllFormatsInMemory(). Error='%v' ", err.Error()))
+	}
 
 	endTimeCreateFormats := time.Now()
 	du := dt.DurationTriad{}
-	du.SetStartEndTimesTz(startTime, endTimeCreateFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeCreateFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf("WriteFormatStatsToFile(): Error returned by "+
+			"du.SetStartEndTimesTz(...). Error='%v' ", err.Error()))
+	}
+
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 	nu := testlibs.NumStrUtility{}
 
@@ -110,14 +143,29 @@ func WriteFormatStatsToFile() {
 func HammerSampleDateTimes() {
 	startTime := time.Now()
 
+	ePrefix := "HammerSampleDateTimes() "
+
 	dtf := dt.FormatDateTimeUtility{}
 
-	dtf.CreateAllFormatsInMemory()
+	err := dtf.CreateAllFormatsInMemory()
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by dtf.CreateAllFormatsInMemory(). Error='%v' ",
+			err.Error()))
+	}
 
 	endTimeGetFormats := time.Now()
 	du := dt.DurationTriad{}
 
-	du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by du.SetStartEndTimesTz(...). Error='%v' ",
+			err.Error()))
+	}
+
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("********************************************************")
 	fmt.Println("Elapsed Time For Format Creation: ", outStr)
@@ -143,7 +191,18 @@ func HammerSampleDateTimes() {
 	}
 
 	hammerEndTime := time.Now()
-	du.SetStartEndTimesTz(hammerStartTime, hammerEndTime, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err =
+		du.SetStartEndTimesTz(
+			hammerStartTime,
+			hammerEndTime,
+			dt.TzIanaUsCentral,
+			dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+"Error returned by du.SetStartEndTimesTz(...) "+
+			"Error='%v' ", err.Error()))
+	}
+
 	outStr2 := du.BaseTime.GetYearMthDaysTimeStr()
 
 	fmt.Println("********************************************************")
@@ -157,17 +216,31 @@ func HammerSampleDateTimes() {
 
 // TestParseSampleDateTimes
 func TestParseSampleDateTimes() {
+
+	ePrefix := "TestParseSampleDateTimes() "
+
 	startTime := time.Now()
 
 	du := dt.DurationTriad{}
 
 	dtf := dt.FormatDateTimeUtility{}
 
-	dtf.CreateAllFormatsInMemory()
+	err := dtf.CreateAllFormatsInMemory()
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+"Error returned by dtf.CreateAllFormatsInMemory(). "+
+			"Error='%v' ", err.Error()))
+	}
 
 	endTimeGetFormats := time.Now()
 
-	du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+"Error returned by du.SetStartEndTimesTz(). "+
+			"Error='%v' ", err.Error()))
+	}
+
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("********************************************************")
 	fmt.Println("Elapsed Time For Format Creation: ", outStr)
@@ -190,14 +263,33 @@ func TestParseSampleDateTimes() {
 // are loaded in memory in field DurationTriad.FormatMap.
 func TestParseDateTime(dtf dt.FormatDateTimeUtility, dateTimeStr string, probableDateTimeFormat string) {
 
+	ePrefix := "TestParseDateTime() "
+
 	startTimeParse := time.Now()
 
 	_, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
 
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+"Error returned by dtf.ParseDateTimeString(dateTimeStr, "+
+			"probableDateTimeFormat). Error='%v' ", err.Error()))
+	}
+
 	endTimeParse := time.Now()
 	fmt.Println()
 	du := dt.DurationTriad{}
-	du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	err =
+		du.SetStartEndTimesTz(
+			startTimeParse,
+			endTimeParse,
+			dt.TzIanaUsCentral,
+			dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+"Error returned by du.SetStartEndTimesTz(...) "+
+			" Error='%v' ", err.Error()))
+	}
+
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 
@@ -219,17 +311,34 @@ func TestParseDateTime(dtf dt.FormatDateTimeUtility, dateTimeStr string, probabl
 // TestParseDateTimeCreateFormatsInMemory
 func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTimeFormat string) {
 
+	ePrefix := "TestParseDateTimeCreateFormatsInMemory() "
+
 	startTime := time.Now()
 
 	du := dt.DurationTriad{}
 
 	dtf := dt.FormatDateTimeUtility{}
 
-	dtf.CreateAllFormatsInMemory()
+	err := dtf.CreateAllFormatsInMemory()
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+"Error returned by dtf.CreateAllFormatsInMemory(). "+
+			"Error='%v' ", err.Error()))
+	}
 
 	endTimeGetFormats := time.Now()
 
-	du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(
+		startTime,
+		endTimeGetFormats,
+		dt.TzIanaUsCentral,
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+"Error returned by du.SetStartEndTimesTz(). "+
+			"Error='%v' ", err.Error()))
+	}
+
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Elapsed Time For Format Creation: ", outStr)
 
@@ -239,16 +348,37 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 
 	startTimeParse := time.Now()
 
-	_, err := dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
+	_, err = dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by dtf.ParseDateTimeString(dateTimeStr, "+
+			"probableDateTimeFormat)). Error='%v' ", err.Error()))
+	}
 
 	endTimeParse := time.Now()
 	fmt.Println()
-	du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by du.SetStartEndTimesTz(...). Error='%v' ",
+			err.Error()))
+	}
+
 	outStr = du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 	fmt.Println("Actual Duration Value: ", du.BaseTime.TimeDuration)
 
-	du.SetStartEndTimesTz(startTime, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by 2nd du.SetStartEndTimesTz(...). Error='%v' ",
+			err.Error()))
+	}
+
 	outStr = du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Total Elapsed Time For All Operations: ", outStr)
 	fmt.Println()
@@ -265,6 +395,8 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 
 // TestParseDateTimeFromFile
 func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string) {
+
+	ePrefix := "TestParseDateTimeFromFile() "
 
 	startTime := time.Now()
 
@@ -289,15 +421,36 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 
 	_, err = dtf.ParseDateTimeString(dateTimeStr, probableDateTimeFormat)
 
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by dtf.ParseDateTimeString(...). Error='%v' ",
+			err.Error()))
+	}
+
 	endTimeParse := time.Now()
 	fmt.Println()
-	du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by du.SetStartEndTimesTz(...). Error='%v' ",
+			err.Error()))
+	}
+
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 	fmt.Println("Actual Duration Value: ", du.BaseTime.TimeDuration)
 
-	du.SetStartEndTimesTz(startTime, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		panic(fmt.Errorf(ePrefix+
+			"Error returned by 2nd du.SetStartEndTimesTz(...). Error='%v' ",
+			err.Error()))
+	}
+
 	outStr = du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Total Elapsed Time For All Operations: ", outStr)
 	fmt.Println()

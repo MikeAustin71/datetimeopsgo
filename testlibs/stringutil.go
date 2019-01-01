@@ -114,6 +114,7 @@ func (su StringUtility) TrimEndMultiple(targetStr string, trimChar rune) (rStr s
 
 }
 
+//SwapRune
 func (su StringUtility) SwapRune(currentStr string, oldRune rune, newRune rune) (string, error) {
 
 	if currentStr == "" {

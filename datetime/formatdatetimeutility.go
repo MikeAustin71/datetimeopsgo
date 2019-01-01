@@ -173,7 +173,16 @@ func (dtf *FormatDateTimeUtility) CreateAllFormatsInMemory() (err error) {
 	dtf.FormatMap = make(map[int]map[string]int)
 	dtf.NumOfFormatsGenerated = 0
 	dtf.assemblePreDefinedFormats()
-	dtf.assembleMthDayYearFmts()
+	err2 := dtf.assembleMthDayYearFmts()
+
+	if err2 != nil {
+		ePrefix := "FormatDateTimeUtility.CreateAllFormatsInMemory() "
+		err = fmt.Errorf(ePrefix+
+			"Error returned by dtf.assembleMthDayYearFmts(). Error='%v' ",
+			err2.Error())
+		return err
+	}
+
 	dtf.assembleEdgeCaseFormats()
 
 	dtf.FormatSearchReplaceStrs.PreTrimSearchStrs = dtf.getPreTrimSearchStrings()
@@ -203,8 +212,7 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 		return frDto, fmt.Errorf("LoadAllFormatsFromFileIntoMemory- Error Opening File: %v - Error: %v", pathFileName, err.Error())
 	}
 
-	defer fmtFile.Close()
-	const bufLen  = 2000
+	const bufLen = 2000
 	lastBufIdx := 0
 	var buffer []byte
 	var outRecordBuff []byte
@@ -273,6 +281,7 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 			lFmt, err := strconv.Atoi(s)
 
 			if err != nil {
+				_ = fmtFile.Close()
 				return frDto, fmt.Errorf(
 					"LoadAllFormatsFromFileIntoMemory - Error converting Format Length field from file. Length = %v. Idx= %v. Format Count: %v",
 					s, idx, frDto.NumberOfFormatsGenerated)
@@ -281,6 +290,7 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 			fmtFieldLastIdx := 7 + lFmt
 
 			if lOutBuff < fmtFieldLastIdx+1 {
+				_ = fmtFile.Close()
 				return frDto, fmt.Errorf(
 					"LoadAllFormatsFromFileIntoMemory - Found corrupted Output Buffer. Buffer Length %v, Length Field = %v, Output Buffer= %s Format Count: %v",
 					lOutBuff, lFmt, string(outRecordBuff), frDto.NumberOfFormatsGenerated)
@@ -315,13 +325,22 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 	frDto.FileReadEndTime = time.Now()
 	frDto.NumberOfFormatMapKeysGenerated = len(dtf.FormatMap)
 	du := DurationTriad{}
-	err = du.SetStartEndTimesTz(frDto.FileReadStartTime, frDto.FileReadEndTime, "Local", FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(
+		frDto.FileReadStartTime,
+		frDto.FileReadEndTime,
+		"Local",
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		return ReadDateTimeFormatsFromFileDto{}, fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimesTz() - %v", err.Error())
+		_ = fmtFile.Close()
+		return ReadDateTimeFormatsFromFileDto{},
+			fmt.Errorf("LoadAllFormatsFromFileIntoMemory - Error SetStartEndTimesTz() - %v",
+				err.Error())
 	}
 
 	frDto.ElapsedTimeForFileReadOps = du.BaseTime.GetYearMthDaysTimeStr()
+
+	_ = fmtFile.Close()
 
 	return frDto, nil
 }
@@ -336,22 +355,27 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName 
 // first, before calling this method.
 func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileName string) (WriteDateTimeFormatsToFileDto, error) {
 
+	ePrefix := "FormatDateTimeUtility.WriteAllFormatsInMemoryToFile() "
+
 	fwDto := WriteDateTimeFormatsToFileDto{}
 
 	fwDto.FileWriteStartTime = time.Now()
 	lFmts := len(dtf.FormatMap)
 
 	if lFmts < 1 {
-		return fwDto, errors.New("WriteAllFormatsInMemoryToFile() Error - There are NO Formats in Memory -  FormatMap length == 0. You MUST call CreateAllFormatsInMemory() first!")
+		return fwDto, errors.New(ePrefix +
+			"Error - There are NO Formats in Memory -  FormatMap length == 0. " +
+			"You MUST call CreateAllFormatsInMemory() first!")
 	}
 
 	outF, err := os.Create(outputPathFileName)
 
 	if err != nil {
-		return fwDto, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error - Failed create output file %v. Error: %v", outputPathFileName, err.Error())
+		return fwDto,
+			fmt.Errorf(ePrefix+
+				"Error - Failed create output file %v. Error: %v",
+				outputPathFileName, err.Error())
 	}
-
-	defer outF.Close()
 
 	var keys []int
 	for k := range dtf.FormatMap {
@@ -369,12 +393,22 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 			_, err := outF.WriteString(fmt.Sprintf("%07d %s\n", k, keyFmt))
 
 			if err != nil {
-				return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error writing Format data to output file %v. Error: %v", outputPathFileName, err.Error())
+				_ = outF.Close()
+				return WriteDateTimeFormatsToFileDto{},
+					fmt.Errorf(ePrefix+"Error writing Format "+
+						"data to output file %v. Error: %v", outputPathFileName, err.Error())
 			}
 		}
 	}
 
-	outF.Sync()
+	err = outF.Sync()
+
+	if err != nil {
+		_ = outF.Close()
+		return WriteDateTimeFormatsToFileDto{},
+			fmt.Errorf(ePrefix+"Error returned by  outF.Sync()"+
+				"Error: %v", err.Error())
+	}
 
 	fwDto.FileWriteEndTime = time.Now()
 
@@ -383,12 +417,25 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 	err = du.SetStartEndTimesTz(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		return WriteDateTimeFormatsToFileDto{}, fmt.Errorf("WriteAllFormatsInMemoryToFile() Error Setting Start End Times for Duration Calculation Error: %v", err.Error())
+		_ = outF.Close()
+		return WriteDateTimeFormatsToFileDto{},
+			fmt.Errorf(ePrefix+
+				"Error Setting Start End Times for Duration Calculation Error: %v",
+				err.Error())
 	}
 
 	fwDto.OutputPathFileName = outputPathFileName
 
 	fwDto.ElapsedTimeForFileWriteOps = du.BaseTime.GetYearMthDaysTimeStr()
+
+	err = outF.Close()
+
+	if err != nil {
+		return WriteDateTimeFormatsToFileDto{},
+			fmt.Errorf(ePrefix+
+				"Error returned by outF.Close(). Error: %v",
+				err.Error())
+	}
 
 	return fwDto, nil
 }
@@ -400,7 +447,10 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 // IMPORTANT! - Before you call this method, the Format Maps must
 // first be created in memory. Call FormatDateTimeUtility.CreateAllFormatsInMemory()
 // first, before calling this method.
-func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName string) (WriteDateTimeFormatsToFileDto, error) {
+func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(
+	outputPathFileName string) (WriteDateTimeFormatsToFileDto, error) {
+
+	ePrefix := "FormatDateTimeUtility.WriteFormatStatsToFile() "
 	outputDto := WriteDateTimeFormatsToFileDto{}
 	outputDto.OutputPathFileName = outputPathFileName
 	outputDto.FileWriteStartTime = time.Now()
@@ -409,16 +459,17 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName stri
 
 	if lFmts < 1 {
 		return outputDto,
-			errors.New("WriteFormatStatsToFile() Error - There are NO Formats in Memory -  FormatMap length == 0. You MUST call CreateAllFormatsInMemory() first!")
+			errors.New(ePrefix +
+				"Error - There are NO Formats in Memory -  FormatMap length == 0. " +
+				"You MUST call CreateAllFormatsInMemory() first!")
 	}
 
 	f, err := os.Create(outputPathFileName)
 
 	if err != nil {
-		return outputDto, errors.New("Output File Create Error:" + err.Error())
+		return outputDto,
+			fmt.Errorf(ePrefix+"Output File Create Error: %v ", err.Error())
 	}
-
-	defer f.Close()
 
 	var keys []int
 	for k := range dtf.FormatMap {
@@ -433,7 +484,10 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName stri
 	_, err = f.WriteString("Length - Number Of Formats\n")
 
 	if err != nil {
-		return outputDto, errors.New("Error Writing Header To Output File! Error: " + err.Error())
+		_ = f.Close()
+		return outputDto,
+			fmt.Errorf(ePrefix+
+				"Error Writing Header To Output File! Error: '%v'", err.Error())
 	}
 
 	for _, k := range keys {
@@ -445,7 +499,9 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName stri
 		_, err = f.WriteString(fmt.Sprintf("%06d%18d\n", k, mapLen))
 
 		if err != nil {
-			return outputDto, fmt.Errorf("Error Writing Stats to Output File! mapLen=%v Error: %v", mapLen, err.Error())
+			_ = f.Close()
+			return outputDto,
+				fmt.Errorf("Error Writing Stats to Output File! mapLen=%v Error: %v", mapLen, err.Error())
 		}
 
 	}
@@ -455,12 +511,21 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(outputPathFileName stri
 	err = du.SetStartEndTimesTz(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		return outputDto, fmt.Errorf("Error Calculating Duration with SetStartEndTimesTz() Error: %v", err.Error())
+		_ = f.Close()
+		return outputDto,
+			fmt.Errorf("Error Calculating Duration with SetStartEndTimesTz() Error: %v", err.Error())
 	}
 
 	outputDto.ElapsedTimeForFileWriteOps = du.BaseTime.GetYearMthDaysTimeStr()
 	outputDto.NumberOfFormatsGenerated = numOfFormats
 	outputDto.NumberOfFormatMapKeysGenerated = numOfKeys
+
+	err = f.Close()
+
+	if err != nil {
+		return outputDto,
+			fmt.Errorf(ePrefix + "Error returned by f.Close()")
+	}
 
 	return outputDto, nil
 }
@@ -487,6 +552,8 @@ func (dtf *FormatDateTimeUtility) Empty() {
 // string against 1.4-million possible date time string formats in an effort to
 // successfully convert the date time string into a valid time.Time value.
 func (dtf *FormatDateTimeUtility) ParseDateTimeString(dateTimeStr string, probableFormat string) (time.Time, error) {
+
+	ePrefix := "FormatDateTimeUtility.ParseDateTimeString() "
 
 	if dateTimeStr == "" {
 		return time.Time{}, errors.New("Empty Time String!")
@@ -525,10 +592,18 @@ func (dtf *FormatDateTimeUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	if len(dtf.FormatMap) == 0 {
 
-		dtf.CreateAllFormatsInMemory()
+		err = dtf.CreateAllFormatsInMemory()
+
+		if err != nil {
+			return time.Time{},
+				fmt.Errorf(ePrefix+"Error returned by dtf.CreateAllFormatsInMemory(). "+
+					"Error='%v' ", err.Error())
+		}
 
 		if len(dtf.FormatMap) == 0 {
-			return time.Time{}, errors.New("Format Map is EMPTY! Load Formats into FormatDateTimeUtility.FormatMap first!")
+			return time.Time{},
+				errors.New(ePrefix +
+					"Format Map is EMPTY! Load Formats into FormatDateTimeUtility.FormatMap first!")
 		}
 
 	}
@@ -596,7 +671,8 @@ func (dtf *FormatDateTimeUtility) ParseDateTimeString(dateTimeStr string, probab
 
 	}
 
-	return time.Time{}, errors.New("Failed to locate correct time format!")
+	return time.Time{},
+		errors.New(ePrefix + "Failed to locate correct time format!")
 }
 
 func (dtf *FormatDateTimeUtility) doParseRun(lenTests []int, ftimeStr string) bool {

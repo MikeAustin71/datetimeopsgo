@@ -16,7 +16,7 @@ import (
 // achieve a high degree of accuracy and uniformity when
 // dealing with fractional numbers containing digits to the
 // right of the decimal place.
-
+//
 type Decimal struct {
 	isValid               bool
 	signVal               int
@@ -214,6 +214,8 @@ func (dec *Decimal) CopyIn(d2 Decimal) {
 
 }
 
+// CopyOut - Returns a deep copy of this
+// Decimal instance.
 func (dec *Decimal) CopyOut() Decimal {
 	d2 := Decimal{}.New()
 	d2.isValid = dec.isValid
@@ -1035,7 +1037,6 @@ func (dec Decimal) NewNumStrPrecision(numStr string, precision uint, roundResult
 	return d2, nil
 }
 
-// TODO More testing required NumStrPrecisionToDecimal
 // NumStrPrecisionToDecimal - receives a number string and a
 // precision value as parameters. This method creates a Decimal
 // Type containing the converted numeric and returns it.
@@ -1200,12 +1201,19 @@ func (dec *Decimal) Pow(exponent int, maxPrecision int) (Decimal, error) {
 	d2, err := dec.NumStrPrecisionToDecimal(result.String(), newPrecision, true)
 
 	if err != nil {
-		return Decimal{}.New(), fmt.Errorf("Pow() Error from nDto.NumStrPrecisionToDecimal(result.String(), newPrecision). Error= %v.", err)
+		return Decimal{}.New(),
+			fmt.Errorf("Pow() Error from nDto.NumStrPrecisionToDecimal(result.String(), "+
+				"newPrecision). Error= %v.", err)
 	}
 
 	if expSign == 1 {
 		if maxPrecision > -1 {
-			d2.SetPrecisionRound(uint(maxPrecision))
+			err = d2.SetPrecisionRound(uint(maxPrecision))
+			if err != nil {
+				return Decimal{}.New(),
+					fmt.Errorf("Pow() Error from d2.SetPrecisionRound(uint(maxPrecision)) "+
+						"Error='%v' ", err.Error())
+			}
 		}
 
 		return d2, nil

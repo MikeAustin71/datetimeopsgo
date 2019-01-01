@@ -49,6 +49,7 @@ type NthRootOp struct {
 	Beta               *big.Int // Next Digit of the root
 }
 
+//Empty
 func (nthrt *NthRootOp) Empty() {
 	nthrt.NthRoot = 0
 	nthrt.OriginalNum = nil
@@ -481,7 +482,8 @@ func (nthrt *NthRootOp) SetNthRootIntAry(num *IntAry, nthRoot, maxPrecision uint
 	err := nthrt.initializeAndExtract(num, nthRoot, maxPrecision)
 
 	if err != nil {
-		return fmt.Errorf("NthRootOp.SetNthRootIntAry() Error returned from initializeAndExtract. Error= %v", err)
+		return fmt.Errorf("NthRootOp.SetNthRootIntAry() Error returned from "+
+			"initializeAndExtract. Error= %v", err)
 	}
 
 	return nil
@@ -490,20 +492,22 @@ func (nthrt *NthRootOp) SetNthRootIntAry(num *IntAry, nthRoot, maxPrecision uint
 func (nthrt *NthRootOp) initializeAndExtract(num *IntAry, nthRoot, maxPrecision uint) error {
 
 	if nthRoot == 0 {
-		nthrt.ResultAry.SetIntAryToOne(int(maxPrecision))
+		_ = nthrt.ResultAry.SetIntAryToOne(int(maxPrecision))
 		return nil
 	}
 
 	err := nthrt.initialize(num, nthRoot, maxPrecision)
 
 	if err != nil {
-		return fmt.Errorf("NthRootOp.initializeAndExtract() Error returned from initialization. Error= %v", err)
+		return fmt.Errorf("NthRootOp.initializeAndExtract() Error returned from "+
+			"initialization. Error= %v", err)
 	}
 
 	err = nthrt.doRootExtraction()
 
 	if err != nil {
-		return fmt.Errorf("NthRootOp.initializeAndExtract() - Error returned from nthrt.doRootExtraction() - %v", err)
+		return fmt.Errorf("NthRootOp.initializeAndExtract() - Error returned from "+
+			"nthrt.doRootExtraction() - %v", err)
 	}
 
 	return nil
@@ -564,8 +568,8 @@ func (nthrt *NthRootOp) initialize(originalNum *IntAry, nthRoot, maxPrecision ui
 	nthrt.Big10ToNthPower = nthrt.bigPower(nthrt.Big10, uint(nthrt.NthRoot))
 	nthrt.BigZero = big.NewInt(0)
 	nthrt.ResultAry = IntAry{}.New()
-	nthrt.ResultAry.SetPrecision(nthrt.RequestedPrecision, false)
-	nthrt.ResultAry.SetSign(originalNum.GetSign())
+	_ = nthrt.ResultAry.SetPrecision(nthrt.RequestedPrecision, false)
+	_ = nthrt.ResultAry.SetSign(originalNum.GetSign())
 	nthrt.Y = big.NewInt(0)
 	nthrt.YPrime = big.NewInt(0)
 	nthrt.R = big.NewInt(0)
@@ -727,7 +731,7 @@ func (nthrt *NthRootOp) doRootExtraction() error {
 
 	}
 
-	nthrt.ResultAry.SetSign(nthrt.OriginalNum.GetSign())
+	_ = nthrt.ResultAry.SetSign(nthrt.OriginalNum.GetSign())
 	nthrt.ResultAry.OptimizeIntArrayLen(false)
 	err := nthrt.ResultAry.RoundToPrecision(nthrt.RequestedPrecision - 1)
 
@@ -754,20 +758,20 @@ func (nthrt *NthRootOp) findNextRoot(bundleIdx int) {
 	// nthrt.Big10ToNthPower = BaseNum^n
 
 	itatr := big.NewInt(9)
-	term_1a := big.NewInt(0)
-	term_1b := big.NewInt(0)
+	term1a := big.NewInt(0)
+	term1b := big.NewInt(0)
 
-	term_2a1 := big.NewInt(0)
-	term_2a2 := big.NewInt(0)
-	term_2a := big.NewInt(0)
+	term2a1 := big.NewInt(0)
+	term2a2 := big.NewInt(0)
+	term2a := big.NewInt(0)
 
-	term_2b := big.NewInt(0)
-	term_2b1 := big.NewInt(0)
-	term_2b2 := big.NewInt(0)
+	term2b := big.NewInt(0)
+	term2b1 := big.NewInt(0)
+	term2b2 := big.NewInt(0)
 
-	term_1a = big.NewInt(0).Mul(nthrt.Big10ToNthPower, nthrt.R)
-	term_1b = big.NewInt(0).Set(nthrt.Alpha)
-	nthrt.Minuend = big.NewInt(0).Add(term_1a, term_1b)
+	term1a = big.NewInt(0).Mul(nthrt.Big10ToNthPower, nthrt.R)
+	term1b = big.NewInt(0).Set(nthrt.Alpha)
+	nthrt.Minuend = big.NewInt(0).Add(term1a, term1b)
 
 	for itatr.Cmp(nthrt.BigZero) > -1 &&
 		nthrt.RPrime.Cmp(nthrt.BigZero) == -1 {
@@ -776,15 +780,15 @@ func (nthrt *NthRootOp) findNextRoot(bundleIdx int) {
 		nthrt.YPrime = big.NewInt(0).Mul(nthrt.Y, nthrt.Big10)
 		nthrt.YPrime = big.NewInt(0).Add(nthrt.YPrime, nthrt.Beta)
 
-		term_2a1 = big.NewInt(0).Mul(nthrt.BaseNum, nthrt.Y)
-		term_2a2 = big.NewInt(0).Add(term_2a1, nthrt.Beta)
-		term_2a = nthrt.bigPower(term_2a2, uint(nthrt.NthRoot))
+		term2a1 = big.NewInt(0).Mul(nthrt.BaseNum, nthrt.Y)
+		term2a2 = big.NewInt(0).Add(term2a1, nthrt.Beta)
+		term2a = nthrt.bigPower(term2a2, uint(nthrt.NthRoot))
 
-		term_2b1 = big.NewInt(0).Set(nthrt.Big10ToNthPower)
-		term_2b2 = nthrt.bigPower(nthrt.Y, uint(nthrt.NthRoot))
-		term_2b = big.NewInt(0).Mul(term_2b1, term_2b2)
+		term2b1 = big.NewInt(0).Set(nthrt.Big10ToNthPower)
+		term2b2 = nthrt.bigPower(nthrt.Y, uint(nthrt.NthRoot))
+		term2b = big.NewInt(0).Mul(term2b1, term2b2)
 
-		nthrt.Subtrahend = big.NewInt(0).Sub(term_2a, term_2b)
+		nthrt.Subtrahend = big.NewInt(0).Sub(term2a, term2b)
 
 		nthrt.RPrime = big.NewInt(0).Sub(nthrt.Minuend, nthrt.Subtrahend)
 
