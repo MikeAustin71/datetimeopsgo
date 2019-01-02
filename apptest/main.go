@@ -638,13 +638,6 @@ func mainTest008() {
 	fmt.Println("Start Time: ", du.BaseTime.StartTimeDateTz.String())
 	fmt.Println("  End Time: ", du.BaseTime.EndTimeDateTz.String())
 
-	/*
-		if expected != dOut {
-			fmt.Printf("Expected: %v. \nError - got %v\n", expected, dOut)
-			return
-		}
-	*/
-
 }
 
 func mainTest007() {
