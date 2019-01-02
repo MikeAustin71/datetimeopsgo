@@ -1,7 +1,7 @@
 # Running Tests
 ## Open a command prompt in this directory and run the following command:
 
-### `go test -v > tests.txt`
+### `go test -v > xxtests.txt`
 
 This will generate a '.txt' in the current directory which contains all 
 test results.
