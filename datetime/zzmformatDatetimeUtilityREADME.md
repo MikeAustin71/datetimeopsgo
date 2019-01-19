@@ -1,10 +1,10 @@
 # Date Time Format Utility
 
 This utility is designed to convert date time strings into specific
-date time values; that is time.Time structures. The methods provided
+date time values; that is 'time.Time' structures. The methods provided
 address the problem of converting date time strings entered by
-users which may not follow a date time formatting standard. To
-address this issue, the utility generates about 1.5-million possible
+users which may not follow a single date time formatting standard. To
+address this issue, this utility generates about 1.5-million possible
 format patterns and applies these to date times submitted in unknown
 formats. 
 

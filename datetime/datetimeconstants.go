@@ -1,11 +1,22 @@
+/*
+package datetime provides a variety of types and associated methods designed
+to manage dates, times, timezones, date time string formats and time durations.
+In addition, associated methods perform date time addition and subtraction.
+
+All types in this package rely on the IANA Time Zone Database.
+
+Reference:
+
+	https://www.iana.org/time-zones
+
+*/
 package datetime
 
 import "time"
 
 /*
-
  Date Time Constants
- ===================
+
 
  This source file is located in source code repository:
  		'https://github.com/MikeAustin71/datetimeopsgo.git'
@@ -14,8 +25,10 @@ import "time"
 		'MikeAustin71\datetimeopsgo\datetime\datetimeconstants.go'
 
 
+
 Overview and General Usage
-==========================
+
+
 This source file contains a series of constants useful in managing
 date time.
 
@@ -25,9 +38,9 @@ Types of constants defined here include:
   3. Common Time conversion constants
 
 */
-
-// Date Time Format Constants
 const (
+	// Date Time Format Constants
+	// ================================================================================
 	// FmtDateTimeSecondStr - Date Time format used
 	// for file names and directory names
 	FmtDateTimeSecondStr = "20060102150405"
@@ -74,10 +87,11 @@ const (
 )
 
 const (
-
+	// Time Constants
+	// ================================================================================
 	// Note: A Nanosecond is equal to 1 one-billionth or
 	//       1/1,000,000,000 of a second.
-
+	//
 	// MilliSecondsPerSecond - Number of Milliseconds in a Second
 	MilliSecondsPerSecond = int64(1000)
 
@@ -112,29 +126,32 @@ const (
 	// WeekNanoSeconds - Number of Nanoseconds in a 7-day week
 	WeekNanoSeconds = int64(7) * DayNanoSeconds
 
-	/*
-		For the Gregorian calendar the average length of the calendar year
-		(the mean year) across the complete leap cycle of 400 Years is 365.2425 days.
-		The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
-		49 minutes and 12 seconds.
-		Sources:
-		https://en.wikipedia.org/wiki/Year
-		Source: https://en.wikipedia.org/wiki/Gregorian_calendar
-	*/
 
-	// GregorianYearNanoSeconds - Number of Nano Seconds in a
-	// Gregorian Year
-	GregorianYearNanoSeconds = int64(31556952000000000)
+
+
+// GregorianYearNanoSeconds - Number of Nano Seconds in a
+// Gregorian Year.
+//
+// For the Gregorian calendar the average length of the calendar year
+// (the mean year) across the complete leap cycle of 400 Years is 365.2425 days.
+// The Gregorian Average Year is therefore equivalent to 365 days, 5 hours,
+// 49 minutes and 12 seconds.
+//
+// Sources:
+//	https://en.wikipedia.org/wiki/Year
+//	https://en.wikipedia.org/wiki/Gregorian_calendar
+GregorianYearNanoSeconds = int64(31556952000000000)
 )
 
-// NOTE: See https://golang.org/pkg/time/#LoadLocation
-// and https://www.iana.org/time-zones to ensure that
-// the IANA Time Zone Database is properly configured
-// on your system. Note: IANA Time Zone Data base is
-// equivalent to 'tz database'.
-//
-// Reference: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 const (
+	// TimeZone Constants
+	// NOTE: See https://golang.org/pkg/time/#LoadLocation
+	// and https://www.iana.org/time-zones to ensure that
+	// the IANA Time Zone Database is properly configured
+	// on your system. Note: IANA Time Zone Data base is
+	// equivalent to 'tz database'.
+	//
+	// Reference: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 	TzIanaAfricaCairo         = "Africa/Cairo"
 	TzIanaAfricaJohannesburg  = "Africa/Johannesburg"
 	TzIanaAfricaTripoli       = "Africa/Tripoli"

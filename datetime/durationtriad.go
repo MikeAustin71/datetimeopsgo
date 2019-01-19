@@ -57,8 +57,8 @@ import (
 	stores date time duration calculations for a time zone location specified by
 	the calling function.
 
-	In addition to 'BaseTime', a DurationTriad instance automatically calculates date time duration for two
-	additional time zone locations.
+	In addition to 'BaseTime', a DurationTriad instance automatically calculates
+	date time duration for two additional time zone locations.
 
 	LocalTime
 	---------

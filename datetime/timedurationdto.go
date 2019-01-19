@@ -49,12 +49,12 @@ func (tDurCalcType TDurCalcType) String() string {
 	return TDurCalcTypeLabels[tDurCalcType]
 }
 
-// These Calculation types, 'TDurCalcType', are associated with the struct
-// 'TimeDurationDto'. They are used to control the calculation of time
-// duration and the allocation of time duration across subsidiary time
-// components.
 const (
-
+	// These Calculation types, 'TDurCalcType', are associated with the struct
+	// 'TimeDurationDto'. They are used to control the calculation of time
+	// duration and the allocation of time duration across subsidiary time
+	// components.
+	//
 	// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation. All data
 	// fields in the TimeDto are populated in the duration allocation.
 	//
