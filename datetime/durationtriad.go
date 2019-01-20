@@ -34,8 +34,8 @@ principally of three 'TimeDurationDto' types which perform and store
 time duration calculations for three Time Zone Locations.
 
 Calculations for time duration require the identification of a starting date
-time, an ending datetime and the time duration computed by subtracting starting
-date time from ending date time.
+time, an ending datetime. Thereafter the time duration computed by subtracting
+starting date time from ending date time.
 
 In time duration calculations, time zone location is important. If starting and
 ending date time use different time zones, it could create errors in the time
@@ -49,11 +49,12 @@ using the 'Local' Time Zone Location and the 'UTC' Time Zone Location.
 BaseTime -
 
 DurationTriad.BaseTime is an instance of 'TimeDurationDto' which performs and
-stores date time duration calculations for a time zone location specified by
-the calling function.
+stores starting date time duration calculations for a time zone location specified
+by the calling function.
 
 In addition to 'BaseTime', a DurationTriad instance automatically calculates
-date time duration for two additional time zone locations.
+date time duration for two additional time zone locations, 'Local' time and
+UTC time.
 
 LocalTime -
 
