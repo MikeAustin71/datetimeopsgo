@@ -8,87 +8,81 @@ import (
 )
 
 /*
-	DurationTriad
-	=============
 
-	This source file is located in source code repository:
-		'https://github.com/MikeAustin71/datetimeopsgo.git'
+The source file for this type is located in source code repository:
+	'https://github.com/MikeAustin71/datetimeopsgo.git'
 
-	The location of this source file is:
-			'MikeAustin71\datetimeopsgo\datetime\durationtriad.go'
+The location of this source file is:
+	'MikeAustin71\datetimeopsgo\datetime\durationtriad.go'
 
-	The principal type used here is 'DurationTriad'
 
-	Dependencies
-	============
+Dependencies
 
 	TimeDurationDto - Calculates and stores date time duration information
-										for a single Time Zone. This Type is defined in same
-										source code repository as 'DurationTriad' and is
-										located in source file:
+		          for a single Time Zone. This Type is defined in same
+		          source code repository as 'DurationTriad' and is
+		          located in source file:
 
-										'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
-
-
-
-	Overview and Usage
-	==================
-
-	The 'DurationTriad' is used to calculate date time duration. It consists
-	principally of three 'TimeDurationDto' types which perform and store
-	time duration calculations for three Time Zone Locations.
-
-	Calculations for time duration require the identification of a starting date
-	time, an ending datetime and the time duration computed by subtracting starting
-	date time from ending date time.
-
-	In time duration calculations, time zone location is important. If starting and
-	ending date time use different time zones, it could create errors in the time
-	duration result. Also, depending on daylight savings time, the same time duration
-	could produce differing ending date times depending on which time zone is used.
-
-	In order to ensure accuracy, the DurationTriad type first calculates date time duration
-	for the user specified time zone and then proceeds to calculate that same duration
-	using the 'Local' Time Zone Location and the 'UTC' Time Zone Location.
-
-	BaseTime
-	--------
-	DurationTriad.BaseTime is an instance of 'TimeDurationDto' which performs and
-	stores date time duration calculations for a time zone location specified by
-	the calling function.
-
-	In addition to 'BaseTime', a DurationTriad instance automatically calculates
-	date time duration for two additional time zone locations.
-
-	LocalTime
-	---------
-	DurationTriad.LocalTime is an instance of 'TimeDurationDto' which performs and
-	stores date time duration calculations for the 'Local' Time Zone.  This represents
-	the Time Zone configured for the host computer running this code.
-
-	UTCTime
-	-------
-	DurationTriad.LocalTime is an instance of 'TimeDurationDto' which performs and
-	stores date time duration calculations for the 'UTC' Time Zone.  'UTC' stands
-	for Coordinated Universal Time, a standardized and uniform methodology for computing
-	time across the globe. 'UTC' is sometimes referred to as 'Zulu', 'GMT' or Greenwich Mean
-	Time. Reference: https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+				'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
 
 
-	Time Duration Calculation Types
-	===============================
-	Some of the methods provided by the DurationTriad Type allow the user
-	to specify the format for time duration information. Examples include
-	the default, 'Year, month, day, time ... ', or alternative formats like,
-	'Cumulative Weeks', 'Cumulative Days', 'Cumulative Hours' etc.
 
-	 For details on type TDurCalcType see the source file:
+Overview and Usage
 
-		'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
+The 'DurationTriad' is used to calculate date time duration. It consists
+principally of three 'TimeDurationDto' types which perform and store
+time duration calculations for three Time Zone Locations.
+
+Calculations for time duration require the identification of a starting date
+time, an ending datetime and the time duration computed by subtracting starting
+date time from ending date time.
+
+In time duration calculations, time zone location is important. If starting and
+ending date time use different time zones, it could create errors in the time
+duration result. Also, depending on daylight savings time, the same time duration
+could produce differing ending date times depending on which time zone is used.
+
+In order to ensure accuracy, the DurationTriad type first calculates date time duration
+for the user specified time zone and then proceeds to calculate that same duration
+using the 'Local' Time Zone Location and the 'UTC' Time Zone Location.
+
+BaseTime -
+
+DurationTriad.BaseTime is an instance of 'TimeDurationDto' which performs and
+stores date time duration calculations for a time zone location specified by
+the calling function.
+
+In addition to 'BaseTime', a DurationTriad instance automatically calculates
+date time duration for two additional time zone locations.
+
+LocalTime -
+
+DurationTriad.LocalTime is an instance of 'TimeDurationDto' which performs and
+stores date time duration calculations for the 'Local' Time Zone.  This represents
+the Time Zone configured for the host computer running this code.
+
+UTCTime -
+
+DurationTriad.LocalTime is an instance of 'TimeDurationDto' which performs and
+stores date time duration calculations for the 'UTC' Time Zone.  'UTC' stands
+for Coordinated Universal Time, a standardized and uniform methodology for computing
+time across the globe. 'UTC' is sometimes referred to as 'Zulu', 'GMT' or Greenwich Mean
+Time. Reference: https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 
 
-	References
-	==========
+Time Duration Calculation Types -
+
+Some of the methods provided by the DurationTriad Type allow the user
+to specify the format for time duration information. Examples include
+the default, 'Year, month, day, time ... ', or alternative formats like,
+'Cumulative Weeks', 'Cumulative Days', 'Cumulative Hours' etc.
+
+For details on type TDurCalcType see the source file:
+
+	'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
+
+
+References -
 
 	'Local' Time Zone Location - Package Time, The Go Programming Language
 		https://golang.org/pkg/time/
@@ -96,29 +90,29 @@ import (
 	Coordinated Universal Time
 		Reference: https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 
-  Time Zone Location
+	Time Zone Location
 		Reference Package Time, The Go Programming Language
-															https://golang.org/pkg/time/
+		https://golang.org/pkg/time/
 
- 		Time Zone Location Designates the standard Time Zone location by which
+		Time Zone Location Designates the standard Time Zone location by which
 		time duration will be compared. This ensures that, "oranges are compared to oranges
 		and apples are compared to apples", with respect to start time and end time duration
- 		calculations.
+		calculations.
 
 		Time zone location must be designated as one of three values.
 
 		(1) the string 'Local' - signals the designation of the local time zone
-				location for the host computer. 'Local' is a creation of the
-				Go Programming Language. Reference Package Time, The Go Programming
-				Language:	https://golang.org/pkg/time/
+			location for the host computer. 'Local' is a creation of the
+			Go Programming Language. Reference Package Time, The Go Programming
+			Language:	https://golang.org/pkg/time/
 
 		(2) IANA Time Zone Location -
-				See https://golang.org/pkg/time/#LoadLocation
-				and https://www.iana.org/time-zones to ensure that
-				the IANA Time Zone Database is properly configured
-				on your system. Note: IANA Time Zone Data base is
-				equivalent to 'tz database'.
-				Examples:
+			See https://golang.org/pkg/time/#LoadLocation
+			and https://www.iana.org/time-zones to ensure that
+			the IANA Time Zone Database is properly configured
+			on your system. Note: IANA Time Zone Data base is
+			equivalent to 'tz database'.
+			Examples:
 					"America/New_York"
 					"America/Chicago"
 					"America/Denver"
@@ -126,10 +120,13 @@ import (
 					"Pacific/Honolulu"
 					"Etc/UTC" = ZULU, GMT or UTC - Default
 
-*/
 
-// DurationTriad - holds elements of
-// time duration
+
+DurationTriad Structure
+
+=========================================================================
+
+*/
 type DurationTriad struct {
 	BaseTime  TimeDurationDto
 	LocalTime TimeDurationDto
