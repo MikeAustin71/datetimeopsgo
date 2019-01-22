@@ -7,35 +7,6 @@ import (
 	"time"
 )
 
-/*
- TimeDurationDto
- ===============
-
-	This source file is located in source code repository:
-		https://github.com/MikeAustin71/datetimeopsgo.git
-
-	The location of this source file is:
-			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
-
- Overview and Usage
- ==================
- The 'TimeDurationDto' Type is used to calculate, store and transmit
- time duration information. The Type includes a starting date time,
- ending date time, a time duration value specifying the time span
- between starting and ending date time and a breakdown of time duration
- by a series of time components including years, months, weeks, days,
- hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
-
- Dependencies
- ============
-
- Starting and ending date times are stored as 'DateTzDto' types. The
- 'DateTzDto' type may be found in source code file:
-		MikeAustin71\datetimeopsgo\datetime\datetzdto.go
-
-
-*/
-
 // TDurCalcType - Time Duration Calculation Type.
 // Specifies how time duration is allocated by
 // Years, Months, Weeks, Days, Hours, Seconds,
@@ -406,7 +377,37 @@ const (
 var TDurCalcTypeLabels = [...]string{"StdYearMthCalc", "CumMonthsCalc", "CumWeeksCalc", "CumDaysCalc",
 	"CumHoursCalc", "CumMinutesCalc", "CumSecondsCalc", "GregorianYrsCalc"}
 
-// TimeDurationDto - Is designed to work with incremental time or duration.
+
+
+/*
+
+	This source file is located in source code repository:
+		https://github.com/MikeAustin71/datetimeopsgo.git
+
+	The location of this source file is:
+			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+
+Overview and Usage
+
+ The 'TimeDurationDto' Type is used to calculate, store and transmit
+ time duration information. It is therefore designed to work with
+ incremental time or time duration.
+
+ The Type includes a starting date time, ending date time, a time
+ duration value specifying the time span between starting and ending
+ date time and a breakdown of time duration by a series of time
+ components including years, months, weeks, days, hours, minutes,
+ seconds, milliseconds, microseconds and nanoseconds.
+
+ Dependencies -
+
+
+ Starting and ending date times are stored as 'DateTzDto' types. The
+ 'DateTzDto' type may be found in source code file:
+		MikeAustin71\datetimeopsgo\datetime\datetzdto.go
+
+
+*/
 type TimeDurationDto struct {
 	StartTimeDateTz DateTzDto     // Starting Date Time with Time Zone info
 	EndTimeDateTz   DateTzDto     // Ending Date Time with Time Zone info
