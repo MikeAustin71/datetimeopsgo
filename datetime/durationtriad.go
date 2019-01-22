@@ -135,8 +135,9 @@ type DurationTriad struct {
 }
 
 // CopyIn - Receives and incoming DurationTriad data
-// structure and copies the values to the current DurationTriad
-// data structure.
+// structure and copies the data values to the current
+// DurationTriad data structure. This method performs
+// a deep copy on all data elements.
 func (durT *DurationTriad) CopyIn(duIn DurationTriad) {
 	durT.Empty()
 	durT.BaseTime = duIn.BaseTime.CopyOut()
@@ -146,8 +147,11 @@ func (durT *DurationTriad) CopyIn(duIn DurationTriad) {
 	return
 }
 
-// CopyOut - Returns a deep copy of the current
-// DurationTriad data fields.
+// CopyOut - Creates and returns a new DurationTriad
+// instance. The deep copy operation copies all data
+// elements from the current DurationTriad instance to
+// the new DurationTriad instance which is returned to
+// the calling function.
 func (durT *DurationTriad) CopyOut() DurationTriad {
 	duOut := DurationTriad{}
 	duOut.BaseTime = durT.BaseTime.CopyOut()
@@ -155,6 +159,16 @@ func (durT *DurationTriad) CopyOut() DurationTriad {
 	duOut.UTCTime = durT.UTCTime.CopyOut()
 
 	return duOut
+}
+
+// Empty - This method initializes
+// all of the fields in the current
+// DurationTriad structure to their
+// zero values.
+func (durT *DurationTriad) Empty() {
+	durT.BaseTime.Empty()
+	durT.LocalTime.Empty()
+	durT.UTCTime.Empty()
 }
 
 // Equal - This method may be used to determine if two
@@ -172,55 +186,41 @@ func (durT *DurationTriad) Equal(duIn DurationTriad) bool {
 
 }
 
-// Empty - This method initializes
-// all of the fields in this
-// DurationTriad structure to their
-// zero values.
-func (durT *DurationTriad) Empty() {
-	durT.BaseTime.Empty()
-	durT.LocalTime.Empty()
-	durT.UTCTime.Empty()
+// IsValid - Validates the current DurationTriad instance.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//	error	- If the current DurationTriad instance is valid, the returned error
+//		Type is set equal to 'nil'. If the current DurationTriad instance is
+//		determined to be invalid, this error Type will encapsulate an appropriate
+//		error message.
+func (durT *DurationTriad) IsValid() error {
+
+	ePrefix := "DurationTriad.IsValid() "
+
+	err := durT.BaseTime.IsValid()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+"INVALID durT.BaseTime. Error='%v'", err.Error())
+	}
+
+	err = durT.LocalTime.IsValid()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+"INVALID durT.LocalTime. Error='%v'", err.Error())
+	}
+
+	err = durT.UTCTime.IsValid()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+"INVALID durT.UTCTime. Error='%v'", err.Error())
+	}
+
+	return nil
 }
 
-// GetDurationFromDays - returns a time Duration value
-// based on the number of days passed into this method.
-// No changes are made to or stored in the existing
-// DurationTriad data structures.
-func (durT DurationTriad) GetDurationFromDays(days int64) time.Duration {
-
-	return time.Duration(days*24) * time.Hour
-
-}
-
-// GetDurationFromHours - returns a time Duration value
-// based on the number of hours passed into this method.
-// No changes are made to or stored in the existing
-// DurationTriad data structures.
-func (durT DurationTriad) GetDurationFromHours(hours int64) time.Duration {
-
-	return time.Duration(hours) * time.Hour
-
-}
-
-// GetDurationFromMinutes - returns a time Duration value
-// based on the number of minutes passed to this method.
-// No changes are made to or stored in the existing
-// DurationTriad data structures.
-func (durT DurationTriad) GetDurationFromMinutes(minutes int64) time.Duration {
-
-	return time.Duration(minutes) * time.Minute
-
-}
-
-// GetDurationFromSeconds - returns a time Duration value
-// based on the number of seconds passed to this method.
-// No changes are made to or stored in the existing
-// DurationTriad data structures.
-func (durT DurationTriad) GetDurationFromSeconds(seconds int64) time.Duration {
-
-	return time.Duration(seconds) * time.Second
-
-}
 
 // New - Creates and returns a new DurationTriad based on time duration calculations
 // using input parameters 'startDateTime' and 'endDateTime'.
@@ -3563,33 +3563,6 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoTz(
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error returned by SetStartTimePlusTimeDtoCalcTz(). Error='%v'",
 			err.Error())
-	}
-
-	return nil
-}
-
-// IsValid - Validates the current DurationTriad instance.
-//
-func (durT *DurationTriad) IsValid() error {
-
-	ePrefix := "DurationTriad.IsValid() "
-
-	err := durT.BaseTime.IsValid()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"INVALID durT.BaseTime. Error='%v'", err.Error())
-	}
-
-	err = durT.LocalTime.IsValid()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"INVALID durT.LocalTime. Error='%v'", err.Error())
-	}
-
-	err = durT.UTCTime.IsValid()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"INVALID durT.UTCTime. Error='%v'", err.Error())
 	}
 
 	return nil
