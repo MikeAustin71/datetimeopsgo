@@ -2417,8 +2417,6 @@ func (dtz DateTzDto) NewTimeDto(
 //
 // Return Values
 //
-// Return Values
-//
 //	DateTzDto - If successful, this method returns a new DateTzDto instance.
 //	            The data fields of this new instance are initialized to zero
 //	            values.
@@ -2557,17 +2555,17 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 //	error	- If successful the returned error Type is set equal to 'nil'. If errors are
 //		encountered this error Type will encapsulate an error message.
 func (dtz *DateTzDto) SetFromDateTime(
-		year,
-		month,
-		day,
-		hour,
-		minute,
-		second,
-		millisecond,
-		microsecond,
-		nanosecond int,
-		timeZoneLocation,
-		dateTimeFmtStr string) error {
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	millisecond,
+	microsecond,
+	nanosecond int,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
 	ePrefix := "DateTzDto.SetFromDateTime() "
 
@@ -2672,15 +2670,15 @@ func (dtz *DateTzDto) SetFromDateTime(
 //	error	- If successful the returned error Type is set equal to 'nil'. If errors are
 //		encountered this error Type will encapsulate an error message.
 func (dtz *DateTzDto) SetFromDateTimeElements(
-			year,
-			month,
-			day,
-			hour,
-			minute,
-			second,
-			nanosecond int,
-			timeZoneLocation,
-			dateTimeFmtStr string) error {
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	nanosecond int,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
 	ePrefix := "DateTzDto.SetFromDateTimeElements() "
 
@@ -2959,8 +2957,10 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 //
 //	error	- If successful the returned error Type is set equal to 'nil'. If errors are
 //		encountered this error Type will encapsulate an error message.
-func (dtz *DateTzDto) SetFromTimeTz(dateTime time.Time, timeZoneLocation,
-dateTimeFmtStr string) error {
+func (dtz *DateTzDto) SetFromTimeTz(
+	dateTime time.Time,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
 	ePrefix := "DateTzDto.SetFromTimeTz() "
 
