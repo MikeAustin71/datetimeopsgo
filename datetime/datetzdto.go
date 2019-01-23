@@ -60,6 +60,31 @@ import (
 //																	"America/Denver"
 //																	"America/Los_Angeles"
 //																	"Pacific/Honolulu"
+//
+// A requirement for presentation of date time strings is a specific format
+// for displaying years, months, days, hours, minutes, seconds, milliseconds,
+// microseconds and nanoseconds. Many 'DateTzDto' methods require calling functions
+// to provide a date time format string, ('dateTimeFmtStr'). This format string
+// is used to configure date times for display purposes.
+//
+//	dateTimeFmtStr string	- A date time format string which will be used
+//				to format and display 'dateTime'. Example:
+//				"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
+//				If 'dateTimeFmtStr' is submitted as an 'empty string', a
+//				default date time format string will be applied. The default
+//				date time format string is:
+//						FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+// DateTzDto Structure
+//
+// ===========================
 type DateTzDto struct {
 	Description string         // Unused, available for classification, labeling or description
 	Time        TimeDto        // Associated Time Components
@@ -76,19 +101,22 @@ type DateTzDto struct {
 //
 // Input Parameters
 //
+//	years   int - Number of years to add to the current date.
+//	months  int - Number of months to add to the current date.
+//	days    int - Number of days to add to the current date.
 //
-//	years		int	- Number of years to add to the current date.
-//	months		int	- Number of months to add to the current date.
-//	days		int	- Number of days to add to the current date.
-//
-// Note: 	Date Component input parameters may be either negative
-// or positive. Negative values will subtract time from
-// the current DateTzDto instance.
-//
+//	        Note: Date Component input parameters may be either negative
+//	              or positive. Negative values will subtract time from
+//	              the current DateTzDto instance.
 //
 //	dateTimeFmtStr string	- A date time format string which will be used
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
 //
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
@@ -101,35 +129,56 @@ type DateTzDto struct {
 //
 // Return Values
 //
+//	DateTzDto - If successful the method returns a new, valid, fully populated
+//	            DateTzDto type updated to reflect the added input parameters,
+//	            years, months and days.
 //
-//  There are two return values: 	(1) a DateTzDto Type
-//				(2) an Error type
+//	            A DateTzDto structure is defined as follows:
 //
-//  DateTzDto	- If successful the method returns a valid, fully populated
-//		DateTzDto type defined as follows:
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
 //
-//	type DateTzDto struct {
-//		Description			string	// Unused, available for classification, labeling or description
-//		Year       			int	// Year Number
-//		Month      			int	// Month Number
-//		Day        			int	// Day Number
-//		Hour       			int	// Hour Number
-//		Minute     			int	// Minute Number
-//		Second     			int	// Second Number
-//		Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//		Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//		Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//							// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//		TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//		DateTime			time.Time	// DateTime value for this DateTzDto Type
-//		DateTimeFmt			string	// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//		TimeZone		TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//							// associated with this date time.
-//	}
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
-//	error 	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
-func (dtz *DateTzDto) AddDate(years, months, days int, dateTimeFormatStr string) (DateTzDto, error) {
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//
+//	du, err := dtz.AddDate(
+//	                years,
+//	                months,
+//	                days,
+//	                FmtDateTimeYrMDayFmtStr)
+//
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'FmtDateTimeYrMDayFmtStr' is a constant available in
+//	      source file 'datetimeconstants.go'.
+//
+func (dtz *DateTzDto) AddDate(
+	years,
+	months,
+	days int,
+	dateTimeFormatStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddDate() "
 
@@ -157,28 +206,32 @@ func (dtz *DateTzDto) AddDate(years, months, days int, dateTimeFormatStr string)
 // current DateTzDto instance. The updated date time value is returned to
 // the calling function as a new DateTzDto instance.
 //
-//
 // ------------------------------------------------------------------------
 //
 // Input Parameters:
 //
-//	years		int - Number of years to add.
-//	months		int - Number of months to add.
-//	days		int - Number of days to add.
-//	hours		int - Number of hours to add.
-//	minutes		int - Number of minutes to add.
-//	seconds		int - Number of seconds to add.
-//	milliseconds	int - Number of milliseconds to add.
-//	microseconds	int - Number of microseconds to add.
-//	nanoseconds	int - Number of nanoseconds to add.
+//	years         int - Number of years to add.
+//	months        int - Number of months to add.
+//	days          int - Number of days to add.
+//	hours         int - Number of hours to add.
+//	minutes       int - Number of minutes to add.
+//	seconds       int - Number of seconds to add.
+//	milliseconds  int - Number of milliseconds to add.
+//	microseconds  int - Number of microseconds to add.
+//	nanoseconds   int - Number of nanoseconds to add.
 //
-// Note: 	Date Time Component input parameters may be either negative
-// or positive. Negative values will subtract time from
-// the current DateTzDto instance.
+//	Note: Date Time Component input parameters may be either negative
+//	      or positive. Negative values will subtract time from
+//	      the current DateTzDto instance.
 //
 //	dateTimeFmtStr string - A date time format string which will be used
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
 //
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
@@ -186,43 +239,72 @@ func (dtz *DateTzDto) AddDate(years, months, days int, dateTimeFormatStr string)
 //				format string is:
 //					FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//	DateTzDto - If successful the method returns a new, valid, fully populated
+//	            DateTzDto type updated to reflect the addition of input
+//	            parameters to the date time value of the current DateTzDto.
+//
+//	            A DateTzDto structure is defined as follows:
+//
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
-// Return Values:
+// Usage
 //
-//	There are two returns	(1) A DateTzDto instance containing the
-//				updated date time values.
+//	dtz := DateTzDto{}
+//	... initialize to a value.
 //
-//				(2) An 'error' type.
+//	dtz, err := dtz.AddDateTime(
+//	                 years,
+//	                 months,
+//	                 days,
+//	                 hours,
+//	                 minutes,
+//	                 seconds,
+//	                 milliseconds,
+//	                 microseconds,
+//	                 nanoseconds,
+//	                 FmtDateTimeYrMDayFmtStr)
 //
-//	(1)  DateTzDto - If successful the method returns a valid, fully populated
-//			DateTzDto type defined as follows:
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//		type DateTzDto struct {
-//			Description	string	// Unused, available for classification, labeling or description
-//			Year		int	// Year Number
-//			Month		int	// Month Number
-//			Day		int	// Day Number
-//			Hour		int	// Hour Number
-//			Minute		int	// Minute Number
-//			Second		int	// Second Number
-//			Millisecond	int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond	int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond	int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//						// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs	int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime	time.Time // DateTime value for this DateTzDto Type
-//			DateTimeFmt	string	  // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone	TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//							// associated with this date time.
-//		}
+//	      'FmtDateTimeYrMDayFmtStr' is a constant available in source file
+//	      'datetimeconstants.go'.
 //
-//	(2) error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//			encountered this error Type will encapsulate an error message.
-//
-func (dtz *DateTzDto) AddDateTime(years, months, days, hours, minutes, seconds,
-milliseconds, microseconds, nanoseconds int,
+func (dtz *DateTzDto) AddDateTime(
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
 	dateTimeFormatStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddDateTime() "
@@ -256,31 +338,58 @@ milliseconds, microseconds, nanoseconds int,
 // ------------------------------------------------------------------------
 //
 // Input Parameters
-//	years		int - Number of years to add.
-//	months		int - Number of months to add.
-//	days		int - Number of days to add.
-//	hours		int - Number of hours to add.
-//	minutes		int - Number of minutes to add.
-//	seconds		int - Number of seconds to add.
-//	milliseconds	int - Number of milliseconds to add.
-//	microseconds	int - Number of microseconds to add.
-//	nanoseconds	int - Number of nanoseconds to add.
 //
-// Note: 	Date Time Component input parameters may be either negative
-// or positive. Negative values will subtract time from
-// the current DateTzDto instance.
+//	years        int - Number of years to add.
+//	months       int - Number of months to add.
+//	days         int - Number of days to add.
+//	hours        int - Number of hours to add.
+//	minutes      int - Number of minutes to add.
+//	seconds      int - Number of seconds to add.
+//	milliseconds int - Number of milliseconds to add.
+//	microseconds int - Number of microseconds to add.
+//	nanoseconds  int - Number of nanoseconds to add.
+//
+//	Note: Date Time Component input parameters may be either negative
+//	      or positive. Negative values will subtract time from
+//	      the current DateTzDto instance.
 //
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error - If successful the returned error Type is set equal to 'nil'. If errors are
+//	        encountered this error Type will encapsulate an error message.
 //
-func (dtz *DateTzDto) AddDateTimeToThis(years, months, days, hours, minutes, seconds,
-	milliseconds, microseconds, nanoseconds int) error {
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	err := dtz.AddDateTimeToThis(
+//	              years,
+//	              months,
+//	              days,
+//	              hours,
+//	              minutes,
+//	              seconds,
+//	              milliseconds,
+//	              microseconds,
+//	              nanoseconds)
+//
+func (dtz *DateTzDto) AddDateTimeToThis(
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int) error {
 
-	ePrefix := "DateTzDto.AddDateTime() "
+	ePrefix := "DateTzDto.AddDateTimeToThis() "
 
 	dtz2, err := dtz.AddDateTime(years, months, days, hours, minutes, seconds,
 		milliseconds, microseconds, nanoseconds, dtz.DateTimeFmt)
@@ -301,24 +410,40 @@ func (dtz *DateTzDto) AddDateTimeToThis(years, months, days, hours, minutes, sec
 // ------------------------------------------------------------------------
 //
 // Input Parameters
-//	years	int	- Number of years to add to the current date.
-//	months	int	- Number of months to add to the current date.
-//	days	int	- Number of days to add to the current date.
 //
-//		Note: Date Component input parameters may be either negative
-//		or positive. Negative values will subtract time from
-//		the current DateTzDto instance.
+//	years    int - Number of years to add to the current date.
+//	months   int - Number of months to add to the current date.
+//	days     int - Number of days to add to the current date.
+//
+//	         Note: Date Component input parameters may be either negative
+//	               or positive. Negative values will subtract time from
+//	               the current DateTzDto instance.
 //
 // ------------------------------------------------------------------------
 //
 // Return Values:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error - If successful the returned error Type is set equal to 'nil'. If errors are
+//	        encountered this error Type will encapsulate an error message.
 //
-func (dtz *DateTzDto) AddDateToThis(years, months, days int) error {
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	err := dtz.AddDateToThis(
+//	              years,
+//	              months,
+//	              days)
+//
+func (dtz *DateTzDto) AddDateToThis(
+	years,
+	months,
+	days int) error {
 
-	ePrefix := "DateTzDto.AddDate() "
+	ePrefix := "DateTzDto.AddDateToThis() "
 
 	err := dtz.IsValid()
 
@@ -350,17 +475,22 @@ func (dtz *DateTzDto) AddDateToThis(years, months, days int) error {
 //
 // Input Parameters
 //
-//	duration time.Duration	- A Time duration value which is added to the DateTime
-//				value of the current DateTzDto instance to produce and
-//				return a new, updated DateTzDto instance.
+//	duration time.Duration - A Time duration value which is added to the DateTime
+//	                         value of the current DateTzDto instance to produce and
+//	                         return a new, updated DateTzDto instance.
 //
-//				Note: 	The time.Duration input parameter may be either negative
-//				or positive. Negative values will subtract time from
-//				the current DateTzDto instance.
+//	          Note: The time.Duration input parameter may be either negative
+//	                or positive. Negative values will subtract time from
+//	                the current DateTzDto instance.
 //
 //	dateTimeFmtStr string	- A date time format string which will be used
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
 //
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
@@ -372,32 +502,53 @@ func (dtz *DateTzDto) AddDateToThis(years, months, days int) error {
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the added 'duration'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful the method returns a new, valid, fully populated
+//	            DateTzDto type updated to reflect the addition of input parameter
+//	            time duration to the date time value of the current DateTzDto
+//	            instance.
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	            A DateTzDto structure is defined as follows:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
-func (dtz *DateTzDto) AddDuration(duration time.Duration, dateTimeFmtStr string) (DateTzDto, error) {
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//  dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	dtz2, err := dtz.AddDuration(
+//	              duration,
+//	              FmtDateTimeYrMDayFmtStr)
+//
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'FmtDateTimeYrMDayFmtStr' is a constant available in source file
+//	      'datetimeconstants.go'.
+//
+func (dtz *DateTzDto) AddDuration(
+	duration time.Duration,
+	dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddDuration() "
 
@@ -421,24 +572,33 @@ func (dtz *DateTzDto) AddDuration(duration time.Duration, dateTimeFmtStr string)
 //
 // Input Parameter
 //
-//	duration time.Duration	- A Time duration value which is added to the DateTime
-//				value of the current DateTzDto instance to produce and
-//				return a new, updated DateTzDto instance.
+//	duration time.Duration - A Time duration value which is added to the DateTime
+//	                         value of the current DateTzDto instance to produce and
+//	                         return a new, updated DateTzDto instance.
 //
-//				Note: The time.Duration input parameter may be either negative
-//				or positive. Negative values will subtract time from
-//				the current DateTzDto instance.
+//	         Note: The time.Duration input parameter may be either negative
+//	               or positive. Negative values will subtract time from
+//	               the current DateTzDto instance.
 //
 // ------------------------------------------------------------------------
 //
 // Returns
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error - If successful the returned error Type is set equal to 'nil'. If errors are
+//	        encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	err := dtz.AddDurationToThis(duration)
 //
 func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 
-	ePrefix := "DateTzDto.AddDuration() "
+	ePrefix := "DateTzDto.AddDurationToThis() "
 
 	newDateTime := dtz.DateTime.Add(duration)
 
@@ -460,10 +620,10 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //
 // Input Parameters
 //
-//	minusTimeDto	TimeDto	- A TimeDto instance consisting of time components
-//			(years, months, weeks, days, hours, minutes etc.)
-//			which will be subtracted from the date time value
-//			of the current DateTzDto instance.
+//	minusTimeDto TimeDto - A TimeDto instance consisting of time components
+//	                       (years, months, weeks, days, hours, minutes etc.)
+//	                       which will be subtracted from the date time value
+//	                       of the current DateTzDto instance.
 //
 //				type TimeDto struct {
 //					Years          int // Number of Years
@@ -486,31 +646,41 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful the method returns a valid, fully populated
+//	            DateTzDto type updated to reflect the subtracted 'TimeDto'
+//	            input parameter. A DateTzDto structure is defined as follows:
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	dtz2, err := dtz.AddMinusTimeDto(minusTimeDto)
+//
 func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddMinusTimeDto() "
@@ -535,11 +705,10 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //
 // Input Parameters
 //
-//	minusTimeDto	TimeDto	- A TimeDto instance consisting of time components
-//			(years, months, weeks, days, hours, minutes etc.)
-//			which will be subtracted from the date time value
-//			of the current DateTzDto instance.
-//
+//	minusTimeDto TimeDto - A TimeDto instance consisting of time components
+//	                       (years, months, weeks, days, hours, minutes etc.)
+//	                       which will be subtracted from the date time value
+//	                       of the current DateTzDto instance.
 //
 //			type TimeDto struct {
 //				Years          int // Number of Years
@@ -561,11 +730,21 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //
 // Return Values
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error - If successful the returned error Type is set equal to 'nil'. If errors are
+//	        encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	err := dtz.AddMinusTimeDtoToThis(minusTimeDto)
+//
 func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 
-	ePrefix := "DateTzDto.AddMinusTimeDto() "
+	ePrefix := "DateTzDto.AddMinusTimeDtoToThis() "
 
 	tDto := minusTimeDto.CopyOut()
 
@@ -622,12 +801,12 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //
 // Input Parameters
 //
-//	plusTimeDto	TimeDto	- A TimeDto instance consisting of time components
-//			(years, months, weeks, days, hours, minutes etc.)
-//			which will be added to the date time value of the
-//			current DateTzDto instance and returned as an instance
-//			of type DateTzDto. Note: The value of the current DateTzDto
-//			will not be altered.
+//	plusTimeDto TimeDto - A TimeDto instance consisting of time components
+//	                      (years, months, weeks, days, hours, minutes etc.)
+//	                      which will be added to the date time value of the
+//	                      current DateTzDto instance and returned as an instance
+//	                      of type DateTzDto. Note: The value of the current DateTzDto
+//	                      will not be altered.
 //
 //			type TimeDto struct {
 //				Years		int // Number of Years
@@ -649,31 +828,41 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the added 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful the method returns a new, valid, fully populated
+//	            DateTzDto type updated to reflect the added input parameter
+//	            'plusTimeDto'. A DateTzDto structure is defined as follows:
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	dtz2, err := dtz.AddPlusTimeDto(plusTimeDto)
+//
 func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddPlusTimeDto() "
@@ -698,11 +887,11 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 //
 // Input Parameters
 //
-//	plusTimeDto	TimeDto	- A TimeDto instance consisting of time components
-//			(years, months, weeks, days, hours, minutes etc.)
-//			which will be added to the date time value of the
-//			current DateTzDto instance. Note: The value of the
-//			current DateTzDto will be modified.
+//	plusTimeDto TimeDto - A TimeDto instance consisting of time components
+//	                      (years, months, weeks, days, hours, minutes etc.)
+//	                      which will be added to the date time value of the
+//	                      current DateTzDto instance. Note: The value of the
+//	                      current DateTzDto will be modified.
 //
 //			type TimeDto struct {
 //				Years		int // Number of Years
@@ -724,11 +913,21 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 //
 // Return Values
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error - If successful the returned error Type is set equal to 'nil'. If errors are
+//	        encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	err := dtz.AddPlusTimeDtoToThis(plusTimeDto)
+//
 func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 
-	ePrefix := "DateTzDto.AddPlusTimeDto() "
+	ePrefix := "DateTzDto.AddPlusTimeDtoToThis() "
 	tDto := plusTimeDto.CopyOut()
 
 	err := tDto.NormalizeTimeElements()
@@ -784,12 +983,12 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 //
 // Input Parameters
 //
-//	hours		int - Number of hours to add.
-//	minutes		int - Number of minutes to add.
-//	seconds		int - Number of seconds to add.
-//	milliseconds	int - Number of milliseconds to add.
-//	microseconds	int - Number of microseconds to add.
-//	nanoseconds	int - Number of nanoseconds to add.
+//	hours         int - Number of hours to add.
+//	minutes       int - Number of minutes to add.
+//	seconds       int - Number of seconds to add.
+//	milliseconds  int - Number of milliseconds to add.
+//	microseconds  int - Number of microseconds to add.
+//	nanoseconds   int - Number of nanoseconds to add.
 //
 // 		Note: Time Component input parameters may be either negative
 //		or positive. Negative values will subtract time from
@@ -798,6 +997,11 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 //	dateTimeFmtStr string	- A date time format string which will be used
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
 //
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
@@ -809,34 +1013,61 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 //
 // Return Values
 //
+//	DateTzDto - If successful the method returns a valid, fully populated
+//	            DateTzDto type updated to reflect the added time value
+//	            input parameters. A DateTzDto structure is defined as follows:
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the added 'duration'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
-func (dtz *DateTzDto) AddTime(hours, minutes, seconds, milliseconds, microseconds,
-	nanoseconds int, dateTimeFormatStr string) (DateTzDto, error) {
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	dtz2, err := dtz.AddTime(
+//	              hours,
+//	              minutes,
+//	              seconds,
+//	              milliseconds,
+//	              microseconds,
+//	              nanoseconds,
+//	              FmtDateTimeYrMDayFmtStr)
+//
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'FmtDateTimeYrMDayFmtStr' is a constant available in source file
+//	      'datetimeconstants.go'.
+//
+func (dtz *DateTzDto) AddTime(
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
+	dateTimeFormatStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.AddTime() "
 
@@ -871,25 +1102,53 @@ func (dtz *DateTzDto) AddTime(hours, minutes, seconds, milliseconds, microsecond
 //
 // Input Parameters
 //
-//	hours		int - Number of hours to add.
-//	minutes		int - Number of minutes to add.
-//	seconds		int - Number of seconds to add.
-//	milliseconds	int - Number of milliseconds to add.
-//	microseconds	int - Number of microseconds to add.
-//	nanoseconds	int - Number of nanoseconds to add.
+//	hours        int - Number of hours to add.
+//	minutes      int - Number of minutes to add.
+//	seconds      int - Number of seconds to add.
+//	milliseconds int - Number of milliseconds to add.
+//	microseconds int - Number of microseconds to add.
+//	nanoseconds  int - Number of nanoseconds to add.
 //
-//		Note: Time Component input parameters may be either negative
-// 		or positive. Negative values will subtract time from
-//		the current DateTzDto instance.
+//	Note: Time Component input parameters may be either negative
+//	      or positive. Negative values will subtract time from
+//	      the current DateTzDto instance.
 //
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
-func (dtz *DateTzDto) AddTimeToThis(hours, minutes, seconds, milliseconds,
-	microseconds, nanoseconds int) error {
+//	error - If successful the returned error Type is set equal to 'nil'. If errors are
+//	        encountered this error Type will encapsulate an error message.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	err := dtz.AddTimeToThis(
+//	              hours,
+//	              minutes,
+//	              seconds,
+//	              milliseconds,
+//	              microseconds,
+//	              nanoseconds,
+//	              FmtDateTimeYrMDayFmtStr)
+//
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'FmtDateTimeYrMDayFmtStr' is a constant available in source file
+//	      'datetimeconstants.go'.
+//
+func (dtz *DateTzDto) AddTimeToThis(
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int) error {
 
 	ePrefix := "DateTzDto.AddTimeToThis() "
 
@@ -915,36 +1174,47 @@ func (dtz *DateTzDto) AddTimeToThis(hours, minutes, seconds, milliseconds,
 //
 // Input Parameter
 //
-//	dtz2	*DateTzDto - A pointer to a DateTzDto instance.
-//			This data will be copied into the
-//			data fields of the current DateTzDto
-//			instance.
+//	dtz2 *DateTzDto - A pointer to a DateTzDto instance.
+//	                  This data will be copied into the
+//	                  data fields of the current DateTzDto
+//	                  instance.
 //
-//		A DateTzDto struct is defined as follows:
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	   A DateTzDto struct is defined as follows:
+//
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
 //
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
 // 	None
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//	dtz.CopyIn(dtz2)
+//
+//	Note: dtz and dtz2 are now equivalent.
+//
 func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	dtz.Empty()
 
@@ -962,9 +1232,54 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 
 }
 
-// CopyOut - returns a DateTzDto  instance
+// CopyOut - returns a DateTzDto instance
 // which represents a deep copy of the current
 // DateTzDto object.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//	None
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//	DateTzDto - This method returns a new, valid, fully populated DateTzDto
+//	            which is a deep copy of the current DateTzDto instance.
+//	            A DateTzDto structure is defined as follows:
+//
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	dtz := DateTzDto{}
+//	... initialize to some value
+//
+//	dtz2 := dtz.CopyOut()
+//
+//	Note: dtz and dtz2 are now equivalent.
+//
 func (dtz *DateTzDto) CopyOut() DateTzDto {
 	dtz2 := DateTzDto{}
 
@@ -1000,6 +1315,7 @@ func (dtz *DateTzDto) Empty() {
 // in all respects to the current DateTzDto instance.
 //
 // Otherwise, the method returns 'false'.
+//
 func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 
 	if dtz.Description != dtz2.Description ||
@@ -1020,13 +1336,15 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 // ------------------------------------------------------------------------
 //
 //	EXAMPLE: Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
+//
 func (dtz *DateTzDto) GetDateTimeEverything() string {
 	return dtz.DateTime.Format(FmtDateTimeEverything)
 }
 
 // GetDateTimeNanoSecText - Returns formatted
 // date time string with nanoseconds
-// 2006-01-02 15:04:05.000000000.
+// 	EXAMPLE: 2006-01-02 15:04:05.000000000
+//
 func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
 	// Time Format down to the nanosecond
 	return dtz.DateTime.Format(FmtDateTimeNanoSecondStr)
@@ -1034,7 +1352,11 @@ func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
 
 // GetDateTimeSecText - Returns formatted
 // date time with seconds for display,
-// 2006-01-02 15:04:05.
+//
+// ------------------------------------------------------------------------
+//
+//	EXAMPLE: 2006-01-02 15:04:05
+//
 func (dtz *DateTzDto) GetDateTimeSecText() string {
 	// Time Display Format with seconds
 	return dtz.DateTime.Format(FmtDateTimeSecText)
@@ -1089,8 +1411,12 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
 // GetDateTimeTzNanoSecYMDText - Outputs date time in string format using
 // the FmtDateTimeTzNanoYMD format which incorporates date time to nano seconds
 // and the associated time zone. In this format, the date is expressed as
-// Year-Month-Day (Example: 2017-12-06)
-// EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
+// Year-Month-Day (2017-12-06)
+//
+// ------------------------------------------------------------------------
+//
+//	EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
+//
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
 	return dtz.DateTime.Format(FmtDateTimeTzNanoYMD)
 }
@@ -1123,7 +1449,6 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 // date time information into an instance of TimeDto
 // and returns that TimeDto to the caller.
 //
-//
 // ------------------------------------------------------------------------
 //
 // Input Parameters
@@ -1155,6 +1480,7 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 //
 //	error	- If successful the returned error Type is set equal to 'nil'. If errors are
 //		encountered this error Type will encapsulate an error message.
+//
 func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 
 	ePrefix := "DateTzDto.GetTimeDto() "
@@ -1218,7 +1544,7 @@ func (dtz *DateTzDto) IsEmpty() bool {
 	return false
 }
 
-// IsValidDateTime - Analyzes the current DateTzDto instance and returns
+// IsValid - Analyzes the current DateTzDto instance and returns
 // an error, populated with an appropriate error message, if the instance
 // is found to be INVALID.
 //
@@ -1269,56 +1595,67 @@ func (dtz *DateTzDto) IsValid() error {
 //
 // Input Parameter
 //
-//	dateTime   		time.Time - A date time value
+//	dateTime    time.Time - A date time value
 //
+//	dateTimeFmtStr string - A date time format string which will be used
+//	                       to format and display 'dateTime'. Example:
+//	                       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	dateTimeFmtStr string	- A date time format string which will be used
-//				to format and display 'dateTime'. Example:
-//				"2006-01-02 15:04:05.000000000 -0700 MST"
+//	                       Date time format constants are found in the source file
+//	                       'datetimeconstants.go'. These constants represent the more
+//	                       commonly used date time string formats. All Date Time format
+//	                       constants begin with the prefix 'FmtDateTime'.
 //
-//				If 'dateTimeFmtStr' is submitted as an
-//				'empty string', a default date time format
-//				string will be applied. The default date time
-//				format string is:
-//					FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//	                       If 'dateTimeFmtStr' is submitted as an 'empty string', a
+//	                       default date time format string will be applied. The default
+//	                       date time format string is:
+//	                         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	            A DateTzDto structure is defined as follows:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
+//
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
-//		fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-//		dtzDto, err := DateTzDto{}.New(dateTime, fmtString)
+//	dtzDto, err := DateTzDto{}.New(dateTime, FmtDateTimeYrMDayFmtStr)
+//
+//
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'FmtDateTimeYrMDayFmtStr' is a constant available in source file
+//	      'datetimeconstants.go'.
+//
 func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.New() "
@@ -1378,56 +1715,84 @@ func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string) (DateTzDto, 
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
 //
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
 //				string will be applied. The default date time
 //				format string is:
 //					FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
+//
+//	            A DateTzDto structure is defined as follows:
 //
 //		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
+//			Description      string  // Unused, available for classification, labeling or description
+//			Year                int  // Year Number
+//			Month               int  // Month Number
+//			Day                 int  // Day Number
+//			Hour                int  // Hour Number
+//			Minute              int  // Minute Number
+//			Second              int  // Second Number
+//			Millisecond         int  // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//			Microsecond         int  // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//			Nanosecond          int  // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//			                         //   Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//			TotalNanoSecs     int64  // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//			DateTime      time.Time  // DateTime value for this DateTzDto Type
+//			DateTimeFmt      string  // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//			TimeZone TimeZoneDefDto  // Contains a detailed description of the Time Zone and Time Zone Location
+//				                 //    associated with this date time.
 //		}
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	error - If successful the returned error Type is set equal to 'nil'. If errors are
+//	        encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
-//		fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-//		dtzDto, err := DateTzDto{}.New(year, month, day, hour, min, sec, nanosecond , timeZoneLocation, fmtStr)
+//		dtzDto, err := DateTzDto{}.New(
+//	                     year,
+//	                     month,
+//	                     day,
+//	                     hour,
+//	                     min,
+//	                     sec,
+//	                     nanosecond,
+//	                     TzIanaUsCentral,
+//	                     FmtDateTimeYrMDayFmtStr)
 //
+//	Note: TzIanaUsCentral = "America/Chicago"
+//	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-func (dtz DateTzDto) NewDateTime(year, month, day, hour, minute, second, millisecond, microsecond,
-nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
+//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      source file 'datetimeconstants.go'.
+//
+func (dtz DateTzDto) NewDateTime(
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	millisecond,
+	microsecond,
+	nanosecond int,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DateTzDto, error) {
 
-	ePrefix := "DateTzDto.New() "
+	ePrefix := "DateTzDto.NewDateTime() "
 
 	dtz2 := DateTzDto{}
 
@@ -1451,13 +1816,13 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 //
 // Input Parameter
 //
-//	year			int - year number
-//	month			int - month number 	1 - 12
-//	day			int - day number   	1 - 31
-//	hour			int - hour number  	0 - 24
-//	minute			int - minute number	0 - 59
-//	second			int - second number	0 - 59
-//	nanosecond		int - nanosecond number  0 - 999,999,999
+//	year        int - year number
+//	month       int - month number 	1 - 12
+//	day         int - day number   	1 - 31
+//	hour        int - hour number  	0 - 24
+//	minute      int - minute number	0 - 59
+//	second      int - second number	0 - 59
+//	nanosecond  int - nanosecond number  0 - 999,999,999
 //
 //
 //	timeZoneLocation	string - time zone location must be designated as one of two values.
@@ -1482,6 +1847,11 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
 //
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
 //				string will be applied. The default date time
@@ -1492,44 +1862,68 @@ nanosecond int, timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful, this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	            A DateTzDto structure is defined as follows:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
-//		fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-//		dtzDto, err := DateTzDto{}.NewDateTimeElements(year, month, day, hour, minute, second, nanosecond ,
-//			timeZoneLocation, fmtStr)
-func (dtz DateTzDto) NewDateTimeElements(year, month, day, hour, minute, second, nanosecond int,
-	timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
+//		dtzDto, err := DateTzDto{}.NewDateTimeElements(
+//			year,
+//			month,
+//			day,
+//			hour,
+//			minute,
+//			second,
+//			nanosecond ,
+//			TzIanaUsCentral,
+//			FmtDateTimeYrMDayFmtStr)
+//
+//	Note: TzIanaUsCentral = "America/Chicago"
+//	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      source file 'datetimeconstants.go'.
+//
+func (dtz DateTzDto) NewDateTimeElements(
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	nanosecond int,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DateTzDto, error) {
 
-	ePrefix := "DateTzDto.New() "
+	ePrefix := "DateTzDto.NewDateTimeElements() "
 
 	dtz2 := DateTzDto{}
 
@@ -1562,6 +1956,11 @@ func (dtz DateTzDto) NewDateTimeElements(year, month, day, hour, minute, second,
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
 //
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
 //				string will be applied. The default date time
@@ -1572,41 +1971,46 @@ func (dtz DateTzDto) NewDateTimeElements(year, month, day, hour, minute, second,
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful, this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	            A DateTzDto structure is defined as follows:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
-//		dtzDto, err := DateTzDto{}.NewNowLocal(FmtDateTimeYrMDayFmtStr)
+//	dtzDto, err := DateTzDto{}.NewNowLocal(FmtDateTimeYrMDayFmtStr)
 //
-//	Note:  'FmtDateTimeYrMDayFmtStr' is a constant defined in
-//		sourcefile 'datetimeconstants.go'.
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      FmtDateTimeYrMDayFmtStr' is a constants available in source file
+//	      'datetimeconstants.go'.
+//
 func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.NewNowLocal() "
@@ -1631,7 +2035,7 @@ func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 // clock.
 //
 // The user is required to provide an input parameter, 'timeZoneLocation',
-// which is used to configure the date time value. In essence, the curretn
+// which is used to configure the date time value. In essence, the current
 // local time is converted to the timezone specified by 'timeZoneLocation'.
 //
 // ------------------------------------------------------------------------
@@ -1660,54 +2064,64 @@ func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
 //
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
 //				string will be applied. The default date time
 //				format string is:
 //					FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful, this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	            A DateTzDto structure is defined as follows:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
 //		dtzDto, err := DateTzDto{}.NewNowTz(
 //			TzIanaUsCentral,
 //			FmtDateTimeYrMDayFmtStr)
 //
-//	Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-//		source file: 'datetimeconstants.go'.
+//	Note: TzIanaUsCentral = "America/Chicago"
+//	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      source file 'datetimeconstants.go'.
+//
 func (dtz DateTzDto) NewNowTz(timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
 	ePrefix := "DateTzDto.NewNowTz() "
 
@@ -1749,6 +2163,11 @@ func (dtz DateTzDto) NewNowTz(timeZoneLocation, dateTimeFmtStr string) (DateTzDt
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
 //
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
 //				string will be applied. The default date time
@@ -1759,42 +2178,47 @@ func (dtz DateTzDto) NewNowTz(timeZoneLocation, dateTimeFmtStr string) (DateTzDt
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful, this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	            A DateTzDto structure is defined as follows:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
-//		dtzDto, err := DateTzDto{}.NewNowUTC(
-//			FmtDateTimeYrMDayFmtStr)
+//	dtzDto, err := DateTzDto{}.NewNowUTC(
+//	                   FmtDateTimeYrMDayFmtStr)
 //
-//	Note:  'FmtDateTimeYrMDayFmtStr' is a constant defined in
-//		sourcefile 'datetimeconstants.go'.
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'FmtDateTimeYrMDayFmtStr' is a constant available in source file
+//	      'datetimeconstants.go'.
+//
 func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 	ePrefix := "DateTzDto.NewNowUTC() "
 
@@ -1860,6 +2284,11 @@ func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
 //
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
 //				string will be applied. The default date time
@@ -1871,45 +2300,54 @@ func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+//	DateTzDto - If successful, this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	            A DateTzDto structure is defined as follows:
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
-//		dtzDto, err := DateTzDto{}.NewTimeDto(
-//			timeDto,
-//			TzIanaUsCentral,
-//			FmtDateTimeYrMDayFmtStr)
+//	dtz, err := DateTzDto{}.NewTimeDto(
+//				tDto,
+//				TzIanaUsCentral,
+//				FmtDateTimeYrMDayFmtStr)
 //
-//	Note:  'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-//		source file: 'datetimeconstants.go'.
-func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeFormatStr string) (DateTzDto, error) {
+//	Note: TzIanaUsCentral = "America/Chicago"
+//	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      source file 'datetimeconstants.go'.
+//
+func (dtz DateTzDto) NewTimeDto(
+	tDto TimeDto,
+	timeZoneLocation string,
+	dateTimeFormatStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.NewTimeDto() "
 
@@ -1959,6 +2397,11 @@ func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeF
 //				to format and display 'dateTime'. Example:
 //				"2006-01-02 15:04:05.000000000 -0700 MST"
 //
+//				Date time format constants are found in the source file
+//				'datetimeconstants.go'. These constants represent the more
+//				commonly used date time string formats. All Date Time format
+//				constants begin with the prefix 'FmtDateTime'.
+//
 //				If 'dateTimeFmtStr' is submitted as an
 //				'empty string', a default date time format
 //				string will be applied. The default date time
@@ -1969,45 +2412,52 @@ func (dtz DateTzDto) NewTimeDto(tDto TimeDto, timeZoneLocation string, dateTimeF
 //
 // Return Values
 //
-//	DateTzDto	- If successful the method returns a valid, fully populated
-//			DateTzDto type updated to reflect the subtracted 'TimeDto'
-//			input parameter. A DateTzDto structure is defined as follows:
+// Return Values
 //
-//		type DateTzDto struct {
-//			Description			string	// Unused, available for classification, labeling or description
-//			Year       			int	// Year Number
-//			Month      			int	// Month Number
-//			Day        			int	// Day Number
-//			Hour       			int	// Hour Number
-//			Minute     			int	// Minute Number
-//			Second     			int	// Second Number
-//			Millisecond			int	// Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond			int	// Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond 			int	// Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//								// Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs			int64	// Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
-//			DateTime 			time.Time	// DateTime value for this DateTzDto Type
-//			DateTimeFmt			string		// Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone			TimeZoneDefDto	// Contains a detailed description of the Time Zone and Time Zone Location
-//								//    associated with this date time.
-//		}
+//	DateTzDto - If successful, this method returns a new DateTzDto instance.
+//	            The data fields of this new instance are initialized to zero
+//	            values.
 //
-//	error	- If successful the returned error Type is set equal to 'nil'. If errors are
-//		encountered this error Type will encapsulate an error message.
+//	            A DateTzDto structure is defined as follows:
+//
+//	      type DateTzDto struct {
+//	        Description      string // Unused, available for classification, labeling or description
+//	        Year                int // Year Number
+//	        Month               int // Month Number
+//	        Day                 int // Day Number
+//	        Hour                int // Hour Number
+//	        Minute              int // Minute Number
+//	        Second              int // Second Number
+//	        Millisecond         int // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
+//	        Microsecond         int // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
+//	        Nanosecond          int // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
+//	                                //    Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//	        TotalNanoSecs     int64 // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//	        DateTime      time.Time // DateTime value for this DateTzDto Type
+//	        DateTimeFmt      string // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//	        TimeZone TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
+//	                                //    associated with this date time.
+//	      }
+//
+//
+//	error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//	            encountered this error Type will encapsulate an error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	Example:
-//		fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-//		dtzDto, err := DateTzDto{}.NewTz(
+//	dtzDto, err := DateTzDto{}.NewTz(
 //			dateTime,
 //			TzIanaUsCentral,
 //			FmtDateTimeYrMDayFmtStr)
 //
-//	Note:  'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-//		source file: 'datetimeconstants.go'.
+//	Note: TzIanaUsCentral = "America/Chicago"
+//	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      source file 'datetimeconstants.go'.
+//
 func (dtz DateTzDto) NewTz(dateTime time.Time, timeZoneLocation,
 	dateTimeFmtStr string) (DateTzDto, error) {
 

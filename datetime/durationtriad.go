@@ -1902,7 +1902,10 @@ func (durT DurationTriad) NewStartTimeDurationCalcTz(
 //				TzIanaUsCentral,
 //				FmtDateTimeYrMDayFmtStr)
 //
-//	Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//	      TzIanaUsCentral = "America/Chicago"
+//
+//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartTimeDurationTz(
