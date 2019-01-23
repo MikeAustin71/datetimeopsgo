@@ -1656,7 +1656,9 @@ func (dtz *DateTzDto) IsValid() error {
 //	      'FmtDateTimeYrMDayFmtStr' is a constant available in source file
 //	      'datetimeconstants.go'.
 //
-func (dtz DateTzDto) New(dateTime time.Time, dateTimeFmtStr string) (DateTzDto, error) {
+func (dtz DateTzDto) New(
+	dateTime time.Time,
+	dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.New() "
 
@@ -2122,7 +2124,10 @@ func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 //	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
-func (dtz DateTzDto) NewNowTz(timeZoneLocation, dateTimeFmtStr string) (DateTzDto, error) {
+func (dtz DateTzDto) NewNowTz(
+	timeZoneLocation,
+	dateTimeFmtStr string) (DateTzDto, error) {
+
 	ePrefix := "DateTzDto.NewNowTz() "
 
 	dt := time.Now().Local()
@@ -2458,7 +2463,9 @@ func (dtz DateTzDto) NewTimeDto(
 //	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
-func (dtz DateTzDto) NewTz(dateTime time.Time, timeZoneLocation,
+func (dtz DateTzDto) NewTz(
+	dateTime time.Time,
+	timeZoneLocation,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.New() "
