@@ -18,44 +18,44 @@ godoc formatted doc statements
 //	timeZoneLocation string - time zone location must be designated as one of
 //	                          two values:
 //
-//	     (1) The string 'Local' - signals the designation of the local time zone
-//	         location for the host computer.
+//				(1) The string 'Local' - signals the designation of the local time zone
+//				    location for the host computer.
 //
-//	     (2) IANA Time Zone Location -
-//	         See https://golang.org/pkg/time/#LoadLocation
-//	         and https://www.iana.org/time-zones to ensure that
-//	         the IANA Time Zone Database is properly configured
-//	         on your system. Note: IANA Time Zone Data base is
-//	         equivalent to 'tz database'.
+//				(2) IANA Time Zone Location -
+//				    See https://golang.org/pkg/time/#LoadLocation
+//				    and https://www.iana.org/time-zones to ensure that
+//				    the IANA Time Zone Database is properly configured
+//				    on your system. Note: IANA Time Zone Data base is
+//				    equivalent to 'tz database'.
 //
-//	         Examples:
-//	           "America/New_York"
-//	           "America/Chicago"
-//	           "America/Denver"
-//	           "America/Los_Angeles"
-//	           "Pacific/Honolulu"
+//				    Examples:
+//				      "America/New_York"
+//				      "America/Chicago"
+//				      "America/Denver"
+//				      "America/Los_Angeles"
+//				      "Pacific/Honolulu"
 //
-//	         The source file 'datetimeconstants.go' contains a number of
-//	         constant declarations covering the more frequently used time
-//	         zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
-//	         time zone constants begin with the prefix 'TzIana'.
+//				     The source file 'datetimeconstants.go' contains a number of
+//				     constant declarations covering the more frequently used time
+//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     time zone constants begin with the prefix 'TzIana'.
 //
-//	dateTimeFmtStr string - A date time format string which will be used
-//	                        to format and display 'dateTime'. Example:
-//	                        "2006-01-02 15:04:05.000000000 -0700 MST"
+//	dateTimeFmtStr string   - A date time format string which will be used
+//	                          to format and display 'dateTime'. Example:
+//	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	                        Date time format constants are found in the source
-//	                        file 'datetimeconstants.go'. These constants represent
-//	                        the more commonly used date time string formats. All
-//	                        Date Time format constants begin with the prefix
-//	                        'FmtDateTime'.
+//	                          Date time format constants are found in the source
+//	                          file 'datetimeconstants.go'. These constants represent
+//	                          the more commonly used date time string formats. All
+//	                          Date Time format constants begin with the prefix
+//	                          'FmtDateTime'.
 //
-//	                        If 'dateTimeFmtStr' is submitted as an
-//	                        'empty string', a default date time format
-//	                        string will be applied. The default date time
-//	                        format string is:
-//	                        FmtDateTimeYrMDayFmtStr =
-//	                            "2006-01-02 15:04:05.000000000 -0700 MST"
+//	                          If 'dateTimeFmtStr' is submitted as an
+//	                          'empty string', a default date time format
+//	                          string will be applied. The default date time
+//	                          format string is:
+//	                            FmtDateTimeYrMDayFmtStr =
+//	                                "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -67,24 +67,36 @@ godoc formatted doc statements
 
 //	tDto            TimeDto - A populated TimeDto instance
 //	                          A TimeDto struct is defined as follows:
-//	  type TimeDto struct {
-//	    Years                int // Number of Years
-//	    Months               int // Number of Months
-//	    Weeks                int // Number of Weeks
-//	    WeekDays             int // Number of Week-WeekDays.
-//	                             //   Total WeekDays/7 + Remainder WeekDays
-//	    DateDays             int // Total Number of Days.
-//	                             //   Weeks x 7 plus WeekDays
-//	    Hours                int // Number of Hours.
-//	    Minutes              int // Number of Minutes
-//	    Seconds              int // Number of Seconds
-//	    Milliseconds         int // Number of Milliseconds
-//	    Microseconds         int // Number of Microseconds
-//	    Nanoseconds	         int // Remaining Nanoseconds after Milliseconds & Microseconds
-//	    TotSubSecNanoseconds int // Total Nanoseconds:
-//	                             //   Millisecond NanoSecs + Microsecond NanoSecs
-//	                             //   plus remaining Nanoseconds
-//	  }
+//
+
+//	minusTimeDto  TimeDto - Provides time values which will be subtracted from
+//	                        input parameter, 'endDateTime', in order to calculate
+//	                        start Date Time and time duration.
+//
+//	      A TimeDto structure is defined as follows:
+//
+//	      type TimeDto struct {
+//	        Years                int // Number of Years
+//	        Months               int // Number of Months
+//	        Weeks                int // Number of Weeks
+//	        WeekDays             int // Number of Week-WeekDays.
+//	                                 //   Total WeekDays/7 + Remainder WeekDays
+//	        DateDays             int // Total Number of Days.
+//	                                 //   Weeks x 7 plus WeekDays
+//	        Hours                int // Number of Hours.
+//	        Minutes              int // Number of Minutes
+//	        Seconds              int // Number of Seconds
+//	        Milliseconds         int // Number of Milliseconds
+//	        Microseconds         int // Number of Microseconds
+//	        Nanoseconds	         int // Remaining Nanoseconds after Milliseconds
+//	                                 //   and Microseconds
+//	        TotSubSecNanoseconds int // Total Nanoseconds:
+//	                                 //   Millisecond NanoSecs + Microsecond NanoSecs
+//	                                 //   plus remaining Nanoseconds
+//	      }
+//
+//	      Type 'TimeDto' is defined in source file:
+//	         datetimeopsgo\datetime\timedto.go
 //
 
 
@@ -94,25 +106,36 @@ godoc formatted doc statements
 //	            DateTzDto type updated to reflect the subtracted 'TimeDto'
 //	            input parameter. A DateTzDto structure is defined as follows:
 //
+//	  A DateTzDto structure is defined as follows:
+//
 //		type DateTzDto struct {
-//			Description      string  // Unused, available for classification, labeling or description
+//			Description      string  // Unused, available for classification, labeling or
+//			                         //    description
 //			Year                int  // Year Number
 //			Month               int  // Month Number
 //			Day                 int  // Day Number
 //			Hour                int  // Hour Number
 //			Minute              int  // Minute Number
 //			Second              int  // Second Number
-//			Millisecond         int  // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
-//			Microsecond         int  // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
-//			Nanosecond          int  // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//			                         //   Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
-//			TotalNanoSecs     int64  // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
+//			Millisecond         int  // Number of MilliSeconds - A Millisecond is
+//			                         //    1 one-thousandth or 1/1,000 of a second
+//			Microsecond         int  // Number of MicroSeconds - A Microsecond is
+//			                         //    1 one-millionth or 1/1,000,000 of a second
+//			Nanosecond          int  // Number of Nanoseconds - A Nanosecond is
+//			                         //    1 one-billionth or 1/1,000,000,000 of a second.
+//			                         //    Nanosecond = TotalNanoSecs
+//			                         //    - millisecond nanoseconds - microsecond nanoseconds
+//			TotalNanoSecs     int64  // Total Nanoseconds = MilliSecond Nanoseconds
+//			                         //    + MicroSeconds Nanoseconds + Nanoseconds
 //			DateTime      time.Time  // DateTime value for this DateTzDto Type
-//			DateTimeFmt      string  // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone TimeZoneDefDto  // Contains a detailed description of the Time Zone and Time Zone Location
-//			                         //    associated with this date time.
+//			DateTimeFmt      string  // Date Time Format String. Default is
+//			                         //    "2006-01-02 15:04:05.000000000 -0700 MST"
+//			TimeZone TimeZoneDefDto  // Contains a detailed description of the Time Zone
+//			                         //    and Time Zone Location associated with this
+//			                         //    date time.
 //		}
-
+//
+//
 //
 // ------------------------------------------------------------------------
 //
@@ -140,4 +163,66 @@ godoc formatted doc statements
 //			                         //    associated with this date time.
 //		}
 //
+
+//
+//	                     A DurationTriad Structure is defined as follows:
+//
+//	                     type DurationTriad struct {
+//	                       BaseTime  TimeDurationDto
+//	                       LocalTime TimeDurationDto
+//	                       UTCTime   TimeDurationDto
+//	                      }
+//
+
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//	DurationTriad - Upon successful completion, this method will return
+//	                a new, populated DurationTriad instance.
+//
+//	                 A DurationTriad Structure is defined as follows:
+//
+//	                 type DurationTriad struct {
+//	                   BaseTime  TimeDurationDto
+//	                   LocalTime TimeDurationDto
+//	                   UTCTime   TimeDurationDto
+//	                  }
+//
+//
+//	error         - If this method completes successfully, the returned error
+//	                Type is set equal to 'nil'. If an error condition is encountered,
+//	                this method will return an error Type which encapsulates an
+//	                appropriate error message.
+//
+// ------------------------------------------------------------------------
+//
+
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	du, err := DurationTriad{}.NewEndTimeMinusTimeDtoCalcTz(
+// 						startDateTime,
+// 						minusTimeDto,
+// 						TDurCalcTypeSTDYEARMTH,
+// 						TzIanaUsCentral,
+// 						FmtDateTimeYrMDayFmtStr)
+//
+//		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
+//						 standard year month day time duration allocation.
+//
+// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 						source file 'datetimeconstants.go'.
+//
+
+//
+//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//	      TzIanaUsCentral = "America/Chicago"
+//
+//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      source file 'datetimeconstants.go'.
 
