@@ -13,9 +13,66 @@ import (
 	"time"
 )
 
+// WriteDateTimeFormatsToFileDto - Used to output date time formats to
+// a file. Reference method FormatDateTimeUtility.WriteAllFormatsInMemoryToFile()
+//
+type WriteDateTimeFormatsToFileDto struct {
+	OutputPathFileName             string
+	NumberOfFormatsGenerated       int
+	NumberOfFormatMapKeysGenerated int
+	FileWriteStartTime             time.Time
+	FileWriteEndTime               time.Time
+	ElapsedTimeForFileWriteOps     string
+}
+
+// ReadDateTimeFormatsFromFileDto - Used to read Date Time Formats
+// from a file rather then generating those formats directly to memory.
+//
+// Reference method FormatDateTimeUtility.LoadAllFormatsFromFileIntoMemory()
+//
+type ReadDateTimeFormatsFromFileDto struct {
+	PathFileName                   string
+	NumberOfFormatsGenerated       int
+	NumberOfFormatMapKeysGenerated int
+	FileReadStartTime              time.Time
+	FileReadEndTime                time.Time
+	ElapsedTimeForFileReadOps      string
+}
+
+// formatDateTimeGenerator
+type formatDateTimeGenerator struct {
+	dayOfWeek            string
+	dayOfWeekSeparator   string
+	mthDay               string
+	mthDayYear           string
+	afterMthDaySeparator string
+	dateTimeSeparator    string
+	timeElement          string
+	offsetSeparator      string
+	offsetElement        string
+	timeZoneSeparator    string
+	timeZoneElement      string
+	year                 string
+}
+
+// SearchStrings - Used by FormatDateTimeUtility
+type SearchStrings struct {
+	PreTrimSearchStrs [][][]string
+	TimeFmtRegEx      [][][]string
+}
+
+// ParseDateTimeDto
+type ParseDateTimeDto struct {
+	IsSuccessful              bool
+	FormattedDateTimeStringIn string
+	SelectedMapIdx            int
+	SelectedFormat            string
+	TotalNoOfDictSearches     int
+	DateTimeOut               time.Time
+	err                       error
+}
+
 /*
-  FormatDateTimeUtility
-  =====================
 
 	'FormatDateTimeUtility' is part of the date time operations library. The source code repository
  	for this file is located at:
@@ -24,20 +81,29 @@ import (
 	The location of this source file is:
 					MikeAustin71\datetimeopsgo\datetime\formatdatetimeutility.go
 
-  Background
-  ==========
+Background
+
+==========================
+
 
 	This utility is designed to convert date time strings into specific
-	date time values; that is time.Time structures. The methods provided
-	address the problem of converting date time strings entered by
-	users which may not follow a date time formatting standard. To
-	address this issue, the utility generates about 1.5-million possible
-	format patterns and applies these to date times submitted in unknown
-	formats.
+	date time values; that is type 'time.Time' structures. The methods
+	provided address the problem of converting date time strings entered
+	by users which may not follow a single date time formatting standard.
 
-	On my machine, the 1.5-million format maps require about two seconds
-	for generation. Thereafter, date time strings are usually parsed in
-	under 35-milliseconds.
+	Users tend to key-enter dates and times using a variety of different
+	formats depending on their national or cultural norms and the their
+	personal preferences for configuring date-times. As a result users
+	don't tend to follow any consistent standards when key-entering dates
+	and times.
+
+	To address this issue, the 'FormatDateTimeUtility' generates about
+	1.5-million possible format patterns and applies these to date times
+	submitted by users in non-standard string formats.
+
+	On my machine, it requires about two seconds to generate and configure
+	in memory the 1.5-million format maps. Thereafter, date time strings
+	are usually parsed in under 35-milliseconds.
 
 	The utility methods are found in the file:
 
@@ -57,8 +123,9 @@ import (
 	format maps to a file. Conversely, one call also read format maps
 	into memory from a disk file.
 
-	Overview and General Usage
-  ==========================
+Overview and General Usage
+
+==========================
 
   Type 'FormatDateUtility' is designed for one purpose, to analyze date strings passed in
   by the user and convert these strings to valid numeric date time values. Given the number
@@ -82,69 +149,10 @@ import (
 
 			dateTime, err := dtf.ParseDateTimeString(dtString, "")
 
+FormatDateTimeUtility Structure
 
+===============================
 */
-
-// WriteDateTimeFormatsToFileDto
-type WriteDateTimeFormatsToFileDto struct {
-	OutputPathFileName             string
-	NumberOfFormatsGenerated       int
-	NumberOfFormatMapKeysGenerated int
-	FileWriteStartTime             time.Time
-	FileWriteEndTime               time.Time
-	ElapsedTimeForFileWriteOps     string
-}
-
-// ReadDateTimeFormatsFromFileDto
-type ReadDateTimeFormatsFromFileDto struct {
-	PathFileName                   string
-	NumberOfFormatsGenerated       int
-	NumberOfFormatMapKeysGenerated int
-	FileReadStartTime              time.Time
-	FileReadEndTime                time.Time
-	ElapsedTimeForFileReadOps      string
-}
-
-// FormatDateTimeRecord
-type FormatDateTimeRecord struct {
-	FmtLength int
-	FormatStr string
-}
-
-// FormatDateTimeGenerator
-type FormatDateTimeGenerator struct {
-	DayOfWeek            string
-	DayOfWeekSeparator   string
-	MthDay               string
-	MthDayYear           string
-	AfterMthDaySeparator string
-	DateTimeSeparator    string
-	TimeElement          string
-	OffsetSeparator      string
-	OffsetElement        string
-	TimeZoneSeparator    string
-	TimeZoneElement      string
-	Year                 string
-}
-
-// SearchStrings
-type SearchStrings struct {
-	PreTrimSearchStrs [][][]string
-	TimeFmtRegEx      [][][]string
-}
-
-// ParseDateTimeDto
-type ParseDateTimeDto struct {
-	IsSuccessful              bool
-	FormattedDateTimeStringIn string
-	SelectedMapIdx            int
-	SelectedFormat            string
-	TotalNoOfDictSearches     int
-	DateTimeOut               time.Time
-	err                       error
-}
-
-// FormatDateTimeUtility
 type FormatDateTimeUtility struct {
 	OriginalDateTimeStringIn  string
 	FormattedDateTimeStringIn string
@@ -198,7 +206,8 @@ func (dtf *FormatDateTimeUtility) CreateAllFormatsInMemory() (err error) {
 // the text file containing the format strings was originally created by method
 // FormatDateTimeUtility.WriteAllFormatsInMemoryToFile() which employs a specific
 // fixed length format which can then be read back into memory.
-func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(pathFileName string) (ReadDateTimeFormatsFromFileDto, error) {
+func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(
+	pathFileName string) (ReadDateTimeFormatsFromFileDto, error) {
 
 	frDto := ReadDateTimeFormatsFromFileDto{}
 	frDto.PathFileName = pathFileName
@@ -444,6 +453,7 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 // The text file is small, currently about 3-kilobytes in size.
 // The data output to the text file describes the size of the
 // slices contained in dtf.FormatMap.
+//
 // IMPORTANT! - Before you call this method, the Format Maps must
 // first be created in memory. Call FormatDateTimeUtility.CreateAllFormatsInMemory()
 // first, before calling this method.
@@ -816,16 +826,16 @@ func (dtf *FormatDateTimeUtility) assembleMthDayYearFmts() error {
 							for _, offFmt := range offsetFmts {
 								for _, stdSep := range tzSeparators {
 									for _, tzF := range timeZoneFmts {
-										fmtGen := FormatDateTimeGenerator{
-											DayOfWeek:          dowk,
-											DayOfWeekSeparator: dowkSep,
-											MthDayYear:         mmddyyyy,
-											DateTimeSeparator:  dtSep,
-											TimeElement:        t,
-											OffsetSeparator:    tOffsetSep,
-											OffsetElement:      offFmt,
-											TimeZoneSeparator:  stdSep,
-											TimeZoneElement:    tzF,
+										fmtGen := formatDateTimeGenerator{
+											dayOfWeek:          dowk,
+											dayOfWeekSeparator: dowkSep,
+											mthDayYear:         mmddyyyy,
+											dateTimeSeparator:  dtSep,
+											timeElement:        t,
+											offsetSeparator:    tOffsetSep,
+											offsetElement:      offFmt,
+											timeZoneSeparator:  stdSep,
+											timeZoneElement:    tzF,
 										}
 
 										dtf.analyzeDofWeekMMDDYYYYTimeOffsetTz(fmtGen)
@@ -878,17 +888,17 @@ func (dtf *FormatDateTimeUtility) assembleMthDayTimeOffsetTzYearFmts() error {
 									for _, tzF := range timeZoneFmts {
 										for _, yearEle := range yearElements {
 
-											fmtGen := FormatDateTimeGenerator{
-												DayOfWeek:            dowk,
-												DayOfWeekSeparator:   dowkSep,
-												MthDayYear:           mthDay,
-												AfterMthDaySeparator: afterMthDaySeparator,
-												TimeElement:          t,
-												OffsetSeparator:      tOffsetSep,
-												OffsetElement:        offFmt,
-												TimeZoneSeparator:    stdSep,
-												TimeZoneElement:      tzF,
-												Year:                 yearEle,
+											fmtGen := formatDateTimeGenerator{
+												dayOfWeek:            dowk,
+												dayOfWeekSeparator:   dowkSep,
+												mthDayYear:           mthDay,
+												afterMthDaySeparator: afterMthDaySeparator,
+												timeElement:          t,
+												offsetSeparator:      tOffsetSep,
+												offsetElement:        offFmt,
+												timeZoneSeparator:    stdSep,
+												timeZoneElement:      tzF,
+												year:                 yearEle,
 											}
 
 											dtf.analyzeDofWeekMMDDTimeOffsetTzYYYY(fmtGen)
@@ -910,54 +920,54 @@ func (dtf *FormatDateTimeUtility) assembleMthDayTimeOffsetTzYearFmts() error {
 	return nil
 }
 
-func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen FormatDateTimeGenerator) {
+func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen formatDateTimeGenerator) {
 
 	fmtStr := ""
 	fmtStr2 := ""
 
-	if dtfGen.MthDayYear == "" &&
-		dtfGen.TimeElement == "" {
+	if dtfGen.mthDayYear == "" &&
+		dtfGen.timeElement == "" {
 		return
 	}
 
-	if dtfGen.DayOfWeek != "" {
-		fmtStr += dtfGen.DayOfWeek
+	if dtfGen.dayOfWeek != "" {
+		fmtStr += dtfGen.dayOfWeek
 	}
 
-	if dtfGen.MthDayYear != "" {
+	if dtfGen.mthDayYear != "" {
 		if fmtStr == "" {
-			fmtStr = dtfGen.MthDayYear
+			fmtStr = dtfGen.mthDayYear
 		} else {
-			fmtStr += dtfGen.DayOfWeekSeparator
-			fmtStr += dtfGen.MthDayYear
+			fmtStr += dtfGen.dayOfWeekSeparator
+			fmtStr += dtfGen.mthDayYear
 		}
 	}
 
-	if dtfGen.TimeElement != "" {
+	if dtfGen.timeElement != "" {
 		if fmtStr == "" {
-			fmtStr = dtfGen.TimeElement
+			fmtStr = dtfGen.timeElement
 		} else {
-			fmtStr += dtfGen.DateTimeSeparator
-			fmtStr += dtfGen.TimeElement
+			fmtStr += dtfGen.dateTimeSeparator
+			fmtStr += dtfGen.timeElement
 		}
 	}
 
 	fmtStr2 = fmtStr
 
-	if dtfGen.OffsetElement != "" &&
+	if dtfGen.offsetElement != "" &&
 		fmtStr != "" &&
-		dtfGen.TimeElement != "" {
+		dtfGen.timeElement != "" {
 
-		fmtStr += dtfGen.OffsetSeparator
-		fmtStr += dtfGen.OffsetElement
+		fmtStr += dtfGen.offsetSeparator
+		fmtStr += dtfGen.offsetElement
 	}
 
-	if dtfGen.TimeZoneElement != "" &&
+	if dtfGen.timeZoneElement != "" &&
 		fmtStr != "" &&
-		dtfGen.TimeElement != "" {
+		dtfGen.timeElement != "" {
 
-		fmtStr += dtfGen.TimeZoneSeparator
-		fmtStr += dtfGen.TimeZoneElement
+		fmtStr += dtfGen.timeZoneSeparator
+		fmtStr += dtfGen.timeZoneElement
 	}
 
 	if fmtStr != "" {
@@ -967,15 +977,15 @@ func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDYYYYTimeOffsetTz(dtfGen Form
 	// Calculate variation of format string where
 	// Time Zone comes before Offset Element
 
-	if dtfGen.TimeZoneElement != "" &&
-		dtfGen.TimeElement != "" &&
+	if dtfGen.timeZoneElement != "" &&
+		dtfGen.timeElement != "" &&
 		fmtStr2 != "" &&
-		dtfGen.OffsetElement != "" {
+		dtfGen.offsetElement != "" {
 
-		fmtStr2 += dtfGen.TimeZoneSeparator
-		fmtStr2 += dtfGen.TimeZoneElement
-		fmtStr2 += dtfGen.OffsetSeparator
-		fmtStr2 += dtfGen.OffsetElement
+		fmtStr2 += dtfGen.timeZoneSeparator
+		fmtStr2 += dtfGen.timeZoneElement
+		fmtStr2 += dtfGen.offsetSeparator
+		fmtStr2 += dtfGen.offsetElement
 	}
 
 	if fmtStr2 != "" {
@@ -1006,48 +1016,48 @@ func (dtf *FormatDateTimeUtility) assembleEdgeCaseFormats() {
 	}
 }
 
-func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen FormatDateTimeGenerator) {
+func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen formatDateTimeGenerator) {
 
 	fmtStr := ""
 	fmtStr2 := ""
 
-	if dtfGen.DayOfWeek != "" {
-		fmtStr += dtfGen.DayOfWeek
+	if dtfGen.dayOfWeek != "" {
+		fmtStr += dtfGen.dayOfWeek
 	}
 
-	if dtfGen.MthDay != "" {
+	if dtfGen.mthDay != "" {
 		if fmtStr == "" {
-			fmtStr = dtfGen.MthDay
+			fmtStr = dtfGen.mthDay
 		} else {
-			fmtStr += dtfGen.DayOfWeekSeparator
-			fmtStr += dtfGen.MthDay
+			fmtStr += dtfGen.dayOfWeekSeparator
+			fmtStr += dtfGen.mthDay
 		}
 	}
 
-	if dtfGen.TimeElement != "" {
+	if dtfGen.timeElement != "" {
 		if fmtStr == "" {
-			fmtStr = dtfGen.TimeElement
+			fmtStr = dtfGen.timeElement
 		} else {
-			fmtStr += dtfGen.AfterMthDaySeparator
-			fmtStr += dtfGen.TimeElement
+			fmtStr += dtfGen.afterMthDaySeparator
+			fmtStr += dtfGen.timeElement
 		}
 	}
 
 	fmtStr2 = fmtStr
 
-	if dtfGen.OffsetElement != "" &&
+	if dtfGen.offsetElement != "" &&
 		fmtStr != "" &&
-		dtfGen.TimeElement != "" {
-		fmtStr += dtfGen.OffsetSeparator
-		fmtStr += dtfGen.OffsetElement
+		dtfGen.timeElement != "" {
+		fmtStr += dtfGen.offsetSeparator
+		fmtStr += dtfGen.offsetElement
 
 	}
 
-	if dtfGen.TimeZoneElement != "" &&
+	if dtfGen.timeZoneElement != "" &&
 		fmtStr != "" &&
-		dtfGen.TimeElement != "" {
-		fmtStr += dtfGen.TimeZoneSeparator
-		fmtStr += dtfGen.TimeZoneElement
+		dtfGen.timeElement != "" {
+		fmtStr += dtfGen.timeZoneSeparator
+		fmtStr += dtfGen.timeZoneElement
 	}
 
 	if fmtStr != "" {
@@ -1057,18 +1067,18 @@ func (dtf *FormatDateTimeUtility) analyzeDofWeekMMDDTimeOffsetTzYYYY(dtfGen Form
 	// Calculate variation of format string where
 	// Time Zone comes before Offset Element
 
-	if dtfGen.TimeZoneElement != "" &&
+	if dtfGen.timeZoneElement != "" &&
 		fmtStr2 != "" &&
-		dtfGen.TimeElement != "" {
-		fmtStr2 += dtfGen.TimeZoneSeparator
-		fmtStr2 += dtfGen.TimeZoneElement
+		dtfGen.timeElement != "" {
+		fmtStr2 += dtfGen.timeZoneSeparator
+		fmtStr2 += dtfGen.timeZoneElement
 	}
 
-	if dtfGen.OffsetElement != "" &&
+	if dtfGen.offsetElement != "" &&
 		fmtStr2 != "" &&
-		dtfGen.TimeElement != "" {
-		fmtStr2 += dtfGen.OffsetSeparator
-		fmtStr2 += dtfGen.OffsetElement
+		dtfGen.timeElement != "" {
+		fmtStr2 += dtfGen.offsetSeparator
+		fmtStr2 += dtfGen.offsetElement
 
 	}
 
