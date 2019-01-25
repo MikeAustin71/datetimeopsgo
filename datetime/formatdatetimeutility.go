@@ -61,14 +61,14 @@ type SearchStrings struct {
 	TimeFmtRegEx      [][][]string
 }
 
-// ParseDateTimeDto
-type ParseDateTimeDto struct {
-	IsSuccessful              bool
-	FormattedDateTimeStringIn string
-	SelectedMapIdx            int
-	SelectedFormat            string
-	TotalNoOfDictSearches     int
-	DateTimeOut               time.Time
+// parseDateTimeDto
+type parseDateTimeDto struct {
+	isSuccessful              bool
+	formattedDateTimeStringIn string
+	selectedMapIdx            int
+	selectedFormat            string
+	totalNoOfDictSearches     int
+	dateTimeOut               time.Time
 	err                       error
 }
 
@@ -688,7 +688,7 @@ func (dtf *FormatDateTimeUtility) ParseDateTimeString(dateTimeStr string, probab
 func (dtf *FormatDateTimeUtility) doParseRun(lenTests []int, ftimeStr string) bool {
 
 	lenLenTests := len(lenTests)
-	msg := make(chan ParseDateTimeDto)
+	msg := make(chan parseDateTimeDto)
 	done := uint64(0)
 
 	isSuccessfulParse := false
@@ -710,15 +710,15 @@ func (dtf *FormatDateTimeUtility) doParseRun(lenTests []int, ftimeStr string) bo
 		}
 
 		dtf.DictSearches =
-			append(dtf.DictSearches, [][]int{{m.SelectedMapIdx, m.TotalNoOfDictSearches}})
-		dtf.TotalNoOfDictSearches += m.TotalNoOfDictSearches
+			append(dtf.DictSearches, [][]int{{m.selectedMapIdx, m.totalNoOfDictSearches}})
+		dtf.TotalNoOfDictSearches += m.totalNoOfDictSearches
 
-		if m.IsSuccessful && !isSuccessfulParse {
+		if m.isSuccessful && !isSuccessfulParse {
 			isSuccessfulParse = true
-			dtf.SelectedFormat = m.SelectedFormat
+			dtf.SelectedFormat = m.selectedFormat
 			dtf.SelectedFormatSource = "Format Map Dictionary"
-			dtf.SelectedMapIdx = m.SelectedMapIdx
-			dtf.DateTimeOut = m.DateTimeOut
+			dtf.SelectedMapIdx = m.selectedMapIdx
+			dtf.DateTimeOut = m.dateTimeOut
 
 		}
 
@@ -728,18 +728,18 @@ func (dtf *FormatDateTimeUtility) doParseRun(lenTests []int, ftimeStr string) bo
 }
 
 func (dtf *FormatDateTimeUtility) parseFormatMap(
-	msg chan<- ParseDateTimeDto, done *uint64, timeStr string, idx int, fmtMap map[string]int) {
+	msg chan<- parseDateTimeDto, done *uint64, timeStr string, idx int, fmtMap map[string]int) {
 
 	var doneTest uint64
 
-	dto := ParseDateTimeDto{}
+	dto := parseDateTimeDto{}
 
-	dto.FormattedDateTimeStringIn = timeStr
-	dto.SelectedMapIdx = idx
+	dto.formattedDateTimeStringIn = timeStr
+	dto.selectedMapIdx = idx
 
 	for key := range fmtMap {
 
-		dto.TotalNoOfDictSearches++
+		dto.totalNoOfDictSearches++
 
 		t, err := time.Parse(key, timeStr)
 
@@ -752,9 +752,9 @@ func (dtf *FormatDateTimeUtility) parseFormatMap(
 
 		if err == nil {
 			atomic.AddUint64(done, 1)
-			dto.DateTimeOut = t
-			dto.SelectedFormat = key
-			dto.IsSuccessful = true
+			dto.dateTimeOut = t
+			dto.selectedFormat = key
+			dto.isSuccessful = true
 			msg <- dto
 			runtime.Gosched()
 			return
