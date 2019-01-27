@@ -195,6 +195,97 @@ func (dt DtMgr) GetDateTimeTzNanoSecYMDDowText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNanoYMDDow)
 }
 
+// GetDateTimeUsMilitary2DYear - Outputs date time string formatted for
+// standard U.S.A. Military date time. Time is always expressed as
+// UTC or Zulu time zone. There is no difference between Zulu and
+// UTC. Both have a UTC offset of zero.
+//
+//	Reference:
+//		https://www.timeanddate.com/time/zones/z
+//
+// Military Date Time with a 2-digit year is formatted as follows:
+//
+//	Military 2-digit year format: DDHHMMZ YY
+//
+//	EXAMPLE: "011815Z JAN 11" = 01/01/2011 18:15 +0000 Zulu
+//
+//	Date Time Group is traditionally formatted as DDHHMM(Z)MONYY
+//
+//An example is 630pm on January 6th, 2012 in Fayetteville NC would read 061830RJAN12
+//
+// http://blog.refactortactical.com/blog/military-date-time-group/
+//
+/*
+Military Time Code Letter Reference:
+
+UTC -12: Y- (e.g. Fiji)
+
+UTC-11: X (American Samoa)
+
+UTC-10: W (Honolulu, HI)
+
+UTC-9: V (Juneau, AK)
+
+UTC-8: U (PST, Los Angeles, CA)
+
+UTC-7: T (MST, Denver, CO)
+
+UTC-6: S (CST, Dallas, TX)
+
+UTC-5: R (EST, New York, NY)
+
+UTC-4: Q (Halifax, Nova Scotia
+
+UTC-3: P (Buenos Aires, Argentina)
+
+UTC-2: O (Godthab, Greenland)
+
+UTC-1: N (Azores)
+
+UTC+-0: Z (Zulu time)
+
+UTC+1: A (France)
+
+UTC+2: B (Athens, Greece)
+
+UTC+3: C (Arab Standard Time, Iraq, Bahrain, Kuwait, Saudi Arabia, Yemen, Qatar)
+
+UTC+4: D (Used for Moscow, Russia and Afghanistan, however, Afghanistan is technically +4:30 from UTC)
+
+UTC+5: E (Pakistan, Kazakhstan, Tajikistan, Uzbekistan and Turkmenistan)
+
+UTC+6: F (Bangladesh)
+
+UTC+7: G (Thailand)
+
+UTC+8: H (Beijing, China)
+
+UTC+9: I (Tokyo, Australia)
+
+UTC+10: K (Brisbane, Australia)
+
+UTC+11: L (Sydney, Australia)
+
+UTC+12: M (Wellington, New Zealand)
+
+func (dt DtMgr) GetDateTimeUsMilitary2DYear(t time.Time) (fmtDateTime string, err error) {
+
+	ePrefix := "DtMgr.GetDateTimeUsMilitary2DYear() "
+
+	fmtDateTime = ""
+	err = nil
+
+	tdefDto, err2 := TimeZoneDefDto{}.New(t)
+
+	if err2 != nil {
+		err = fmt.Errorf()
+	}
+
+
+}
+ */
+
+
 // GetTimeStampEverything - Generates and returns a time stamp as
 // type 'string'. The current time is computed using time.Now() for
 // the 'Local' timezone on the host computer. The time stamp is formatted

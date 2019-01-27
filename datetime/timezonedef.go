@@ -8,8 +8,8 @@ import (
 )
 
 /*
- TimeZoneDefDto
- ==============
+TimeZoneDefDto
+
  This source file is located in source code repository:
  		https://github.com/MikeAustin71/datetimeopsgo.git'
 
@@ -17,15 +17,15 @@ import (
 		MikeAustin71\datetimeopsgo\datetime\timezonedef.go
 
 
- Overview and General Usage
- ==========================
-	This structure is designed to store detailed information
-  on Time Zones. It used primarily as a 'helper' or subsidiary
-  structure for Type, 'TimeZoneDto'.
+Overview and General Usage
 
-	The TimeZoneDefDto method 'New' may be used to extract
-  detailed time zone information from a time.Time date time
-  value.
+ This structure is designed to store detailed information
+ on Time Zones. It used primarily as a 'helper' or subsidiary
+ structure for Type, 'TimeZoneDto'.
+
+ The TimeZoneDefDto method 'New' may be used to extract
+ detailed time zone information from a time.Time date time
+ value.
 
 */
 
