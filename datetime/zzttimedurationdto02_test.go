@@ -17,7 +17,7 @@ func TestTimeDurationDto_DaylightSavings_01(t *testing.T) {
 	hoursDur := int64(24) * HourNanoSeconds
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(t1USCentral, time.Duration(hoursDur),
-		TDurCalcTypeSTDYEARMTH, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+		TDurCalcType(0).StdYearMth(), TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). "+
@@ -71,7 +71,7 @@ func TestTimeDurationDto_GetCumSecondsTimeStr_01(t *testing.T) {
 	tDur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(
 		t1USCentral,
 		t2USCentral,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		FmtDateTimeYrMDayFmtStr)
 
@@ -111,7 +111,7 @@ func TestTimeDurationDto_GetCumSecondsDto_01(t *testing.T) {
 	tDur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(
 		t1USCentral,
 		t2USCentral,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		FmtDateTimeYrMDayFmtStr)
 
@@ -178,7 +178,7 @@ func TestTimeDurationDto_GetYearMthDaysTimeAbbrvStr(t *testing.T) {
 		tDto.SetStartEndTimesCalcTz(
 			t2,
 			t1,
-			TDurCalcTypeSTDYEARMTH,
+			TDurCalcType(0).StdYearMth(),
 			TzIanaUsCentral,
 			FmtDateTimeYrMDayFmtStr)
 
@@ -211,7 +211,7 @@ func TestTimeDurationDto_GetYearsMthsWeeksTimeAbbrvStr(t *testing.T) {
 	err := tDto.SetStartEndTimesCalcTz(
 		t2,
 		t1,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		FmtDateTimeYrMDayFmtStr)
 
@@ -242,7 +242,7 @@ func TestTimeDurationDto_NewStartTimeDuration_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 	tDto, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(t1, t12Dur,
-		TDurCalcTypeSTDYEARMTH, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+		TDurCalcType(0).StdYearMth(), TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeDurationCalcTz(t1, t12Dur). "+
@@ -286,7 +286,7 @@ func TestTimeDurationDto_NewStartEndTimes_01(t *testing.T) {
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
 
-	tDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(t1, t2, TDurCalcTypeSTDYEARMTH,
+	tDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(t1, t2, TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -401,7 +401,7 @@ func TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01(t *testing.T) {
 		t.Errorf("Error returned by DateTzDto{}.New(t2, fmtstr). Error='%v'", err.Error())
 	}
 
-	tDto, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalcTz(t1Dtz, t2Dtz, TDurCalcTypeSTDYEARMTH,
+	tDto, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalcTz(t1Dtz, t2Dtz, TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -835,7 +835,7 @@ func TestTimeDurationDto_SetStartEndTimes(t *testing.T) {
 	err := tDto.SetStartEndTimesCalcTz(
 		t1,
 		t2,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		FmtDateTimeYrMDayFmtStr)
 
@@ -954,7 +954,7 @@ func TestTimeDurationDto_SetStartEndTimes_02(t *testing.T) {
 	err := tDto.SetStartEndTimesCalcTz(
 		t1,
 		t2,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		FmtDateTimeYrMDayFmtStr)
 
@@ -988,7 +988,7 @@ func TestTimeDurationDto_SetStartEndTimes_03(t *testing.T) {
 	err := tDto.SetStartEndTimesCalcTz(
 		t2,
 		t1,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		FmtDateTimeYrMDayFmtStr)
 

@@ -27,7 +27,7 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 	tdurDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(
 		t1,
 		t2,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		fmtstr)
 

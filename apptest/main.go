@@ -37,7 +37,7 @@ func mainTest019() {
 	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(
 		t1USCentral,
 		t2USCentral,
-		dt.TDurCalcTypeSTDYEARMTH,
+		dt.TDurCalcType(0).StdYearMth(),
 		dt.TzIanaUsCentral,
 		dt.FmtDateTimeYrMDayFmtStr)
 
@@ -526,7 +526,7 @@ func mainTest011() {
 	t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
 
 	tDto, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1, t2,
-		dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+		dt.TDurCalcType(0).StdYearMth(), dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz() "+
@@ -587,7 +587,7 @@ func mainTest009() {
 
 	tDto, err :=
 		dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t2, t1,
-			dt.TDurCalcTypeSTDYEARMTH, dt.TzIanaUsCentral, fmtstr)
+			dt.TDurCalcType(0).StdYearMth(), dt.TzIanaUsCentral, fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). "+

@@ -577,7 +577,7 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 	dur, err := DurationTriad{}.NewStartEndDateTzDtoCalcTz(
 		dateTz1,
 		dateTz2,
-		TDurCalcTypeSTDYEARMTH,
+		TDurCalcType(0).StdYearMth(),
 		TzIanaUsCentral,
 		FmtDateTimeYrMDayFmtStr)
 
