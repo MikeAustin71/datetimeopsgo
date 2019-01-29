@@ -8,6 +8,7 @@ All types in this package rely on the IANA Time Zone Database.
 Reference:
 
 	https://www.iana.org/time-zones
+	https://en.wikipedia.org/wiki/Tz_database
 
 */
 package datetime

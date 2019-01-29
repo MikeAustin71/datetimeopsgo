@@ -815,7 +815,6 @@ func (c TDurCalcType) checkInitializeMaps(reInitialize bool) {
 		len(mTDurCalcTypeStringToInt) > 3 &&
 		mTDurCalcTypeLwrCaseStringToInt != nil &&
 		len(mTDurCalcTypeLwrCaseStringToInt) > 3 {
-		fmt.Println("checkInitializeMaps == OK!")
 		return
 	}
 
@@ -848,6 +847,5 @@ func (c TDurCalcType) checkInitializeMaps(reInitialize bool) {
 		mTDurCalcTypeLwrCaseStringToInt[strings.ToLower(f)] = x
 	}
 
-	fmt.Println("Initialized Maps")
 }
 
