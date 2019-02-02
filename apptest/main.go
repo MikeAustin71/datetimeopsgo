@@ -9,6 +9,15 @@ import (
 
 func main() {
 
+	str := dt.IanaTz.US.Central()
+	fmt.Println("  US Central Tz: ", str)
+	str = dt.IanaTz.Europe.London()
+	fmt.Println("Europe London Tz: ", str)
+
+}
+
+func mainTest020() {
+
 	tz1 := "Cuba"
 	tz2 := "America/Havana"
 
@@ -53,7 +62,6 @@ func main() {
 	fmt.Println("       Offset: ", tzDef2.ZoneOffset)
 	fmt.Println("Location Name: ", tzDef2.LocationName)
 	fmt.Println("    *Location: ", tzDef2.Location.String())
-
 }
 
 func mainTest019() {

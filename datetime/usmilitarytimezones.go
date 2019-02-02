@@ -3,7 +3,9 @@ package datetime
 
 
 // Time Zone Abbreviations – Military Time Zone Names
-// https://www.timeanddate.com/time/zones/military
+//	Reference:
+//		https://www.timeanddate.com/time/zones/military
+//		http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
 //
 // Military time zones are commonly used in aviation as well as at sea.
 // They are also known as nautical or maritime time zones. J (Juliet Time Zone)
@@ -99,4 +101,24 @@ func (umtz UsMilitaryTimeZones) Mike() string {return IanaTz.Etc.GMT_Minus_12()}
 // November - Military Time Zone 'N' equivalent to "Etc/GMT+1"
 // Offset from UTC is computed at -1 hours
 func (umtz UsMilitaryTimeZones) November() string {return IanaTz.Etc.GMT_Plus_1()}
+
+// Oscar - Military Time Zone 'O' equivalent to "Etc/GMT+2"
+// Offset from UTC is computed at -2 hours
+func (umtz UsMilitaryTimeZones) Oscar() string {return IanaTz.Etc.GMT_Plus_2()}
+
+// Papa - Military Time Zone 'P' equivalent to "Etc/GMT+3"
+// Offset from UTC is computed at -3 hours
+func (umtz UsMilitaryTimeZones) Papa() string {return IanaTz.Etc.GMT_Plus_3()}
+
+// Quebec - Military Time Zone 'Q' equivalent to "Etc/GMT+4"
+// Offset from UTC is computed at -4 hours
+func (umtz UsMilitaryTimeZones) Quebec() string {return IanaTz.Etc.GMT_Plus_4()}
+
+// Romeo - Military Time Zone 'R' equivalent to "Etc/GMT+5"
+// Offset from UTC is computed at -5 hours
+func (umtz UsMilitaryTimeZones) Romeo() string {return IanaTz.Etc.GMT_Plus_5()}
+
+// Sierra - Military Time Zone 'S' equivalent to "Etc/GMT+6"
+// Offset from UTC is computed at -6 hours
+func (umtz UsMilitaryTimeZones) Sierra() string {return IanaTz.Etc.GMT_Plus_6()}
 

@@ -242,7 +242,7 @@ var abbreviatedUsMilitaryTimeZones = [25]string{
 
 
 /*
-http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+
 
 UTC+12: M (Wellington, New Zealand)
 
