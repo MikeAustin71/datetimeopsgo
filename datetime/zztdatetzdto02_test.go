@@ -14,9 +14,18 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 	t1OutStr := t1.Format(fmtstr)
 
 	t1ExpectedZone, t1ExpectedZoneOffset := t1.Zone()
-	t1ExpectedLocationName := TzIanaUsCentral
+	t1ExpectedLocationName := IanaTz.US.Central()
 
-	dTzDto, err := DateTzDto{}.NewDateTimeElements(2014, 2, 15, 19, 54, 30, 158712300, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := DateTzDto{}.NewDateTimeElements(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		158712300,
+		IanaTz.US.Central(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.NewDateTimeElements(2014, 2,15,19,54,30,158712300, TzUsCentral). Error='%v'", err.Error())
@@ -108,9 +117,20 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 	t1OutStr := t1.Format(fmtstr)
 
 	t1ExpectedZone, t1ExpectedZoneOffset := t1.Zone()
-	t1ExpectedLocationName := TzIanaUsCentral
+	t1ExpectedLocationName := IanaTz.US.Central()
 
-	dTzDto, err := DateTzDto{}.NewDateTime(2014, 2, 15, 19, 54, 30, 38, 175, 584, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := DateTzDto{}.NewDateTime(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38,
+		175,
+		584,
+		IanaTz.US.Central(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.NewDateTime(2014, 2,15,19,54,30,38, 175, 584, TzUsCentral). Error='%v'", err.Error())
@@ -330,17 +350,17 @@ func TestDateTzDto_NewNowTz_01(t *testing.T) {
 
 	t0 := time.Now().Local()
 
-	dTz, err := DateTzDto{}.NewNowTz(TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dTz, err := DateTzDto{}.NewNowTz(IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned from DateTzDto{}.NewNowTz(TzIanaUsCentral, FmtDateTimeYrMDayFmtStr). "+
+		t.Errorf("Error returned from DateTzDto{}.NewNowTz(IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr). "+
 			"Error='%v'", err.Error())
 	}
 
-	loc, err := time.LoadLocation(TzIanaUsCentral)
+	loc, err := time.LoadLocation(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	t1 := t0.In(loc)
@@ -353,9 +373,9 @@ func TestDateTzDto_NewNowTz_01(t *testing.T) {
 		t.Error("Error: Actual Duration exceeded 2-seconds!")
 	}
 
-	if TzIanaUsCentral != dTz.TimeZone.LocationName {
+	if IanaTz.US.Central() != dTz.TimeZone.LocationName {
 		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
-			TzIanaUsCentral, dTz.TimeZone.LocationName)
+			IanaTz.US.Central(), dTz.TimeZone.LocationName)
 	}
 
 }
@@ -378,9 +398,9 @@ func TestDateTzDto_NewNowLocal_01(t *testing.T) {
 		t.Error("Error: Actual Duration exceeded 2-seconds!")
 	}
 
-	if TzGoLocal != dTz.TimeZone.LocationName {
+	if IanaTz.Local() != dTz.TimeZone.LocationName {
 		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
-			TzGoLocal, dTz.TimeZone.LocationName)
+			IanaTz.Local(), dTz.TimeZone.LocationName)
 	}
 
 }
@@ -389,10 +409,10 @@ func TestDateTzDto_NewNowUTC_01(t *testing.T) {
 
 	t0 := time.Now().Local()
 
-	loc, err := time.LoadLocation(TzIanaUTC)
+	loc, err := time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	t1 := t0.In(loc)
@@ -412,9 +432,9 @@ func TestDateTzDto_NewNowUTC_01(t *testing.T) {
 		t.Error("Error: Actual Duration exceeded 2-seconds!")
 	}
 
-	if TzIanaUTC != dTz.TimeZone.LocationName {
+	if IanaTz.UTC() != dTz.TimeZone.LocationName {
 		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
-			TzIanaUTC, dTz.TimeZone.LocationName)
+			IanaTz.UTC(), dTz.TimeZone.LocationName)
 	}
 
 }
@@ -436,10 +456,10 @@ func TestDateTzDto_NewTimeDto_01(t *testing.T) {
 		t.Errorf("Error returned from TimeDto{}.New(...)  Error='%v'", err.Error())
 	}
 
-	dTzDto, err := DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, fmtstr)
+	dTzDto, err := DateTzDto{}.NewTimeDto(tDto, IanaTz.US.Central(), fmtstr)
 
 	if !dTzDto.DateTime.Equal(t0) {
-		t.Errorf("Error returned from DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, fmtstr). Error='%v'", err.Error())
+		t.Errorf("Error returned from DateTzDto{}.NewTimeDto(tDto, IanaTz.US.Central(), fmtstr). Error='%v'", err.Error())
 	}
 
 	if t0str != dTzDto.String() {
@@ -450,16 +470,16 @@ func TestDateTzDto_NewTimeDto_01(t *testing.T) {
 
 func TestDateTzDto_NewTz_01(t *testing.T) {
 
-	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+	locUSCentral, err := time.LoadLocation(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
-	locTokyo, err := time.LoadLocation(TzIanaAsiaTokyo)
+	locTokyo, err := time.LoadLocation(IanaTz.Asia.Tokyo())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.Asia.Tokyo()). Error='%v'", err.Error())
 	}
 
 	t4USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
@@ -468,10 +488,10 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	dTz, err := DateTzDto{}.NewTz(t4AsiaTokyo, TzIanaUsCentral, fmtstr)
+	dTz, err := DateTzDto{}.NewTz(t4AsiaTokyo, IanaTz.US.Central(), fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.NewTz(t4AsiaTokyo, TzIanaUsCentral, fmtstr). Error='%v'",
+		t.Errorf("Error returned by DateTzDto{}.NewTz(t4AsiaTokyo, IanaTz.US.Central(), fmtstr). Error='%v'",
 			err.Error())
 	}
 
@@ -496,17 +516,17 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 			t4USCentral.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
-	expectedDt, err := tDto.GetDateTime(TzIanaUsCentral)
+	expectedDt, err := tDto.GetDateTime(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned from tDto.GetDateTime(TzIanaUsCentral). "+
+		t.Errorf("Error returned from tDto.GetDateTime(IanaTz.US.Central()). "+
 			"Error='%v'", err.Error())
 	}
 
-	actualDt, err := dTz.Time.GetDateTime(TzIanaUsCentral)
+	actualDt, err := dTz.Time.GetDateTime(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned from dTz.Time.GetDateTime(TzIanaUsCentral). "+
+		t.Errorf("Error returned from dTz.Time.GetDateTime(IanaTz.US.Central()). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -535,9 +555,9 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 	t1OutStr := t1.Format(fmtstr)
 
 	t1ExpectedZone, t1ExpectedZoneOffset := t1.Zone()
-	t1ExpectedLocationName := TzIanaUsCentral
+	t1ExpectedLocationName := IanaTz.US.Central()
 
-	err = dTzDto.SetFromDateTime(2014, 2, 15, 19, 54, 30, 38, 175, 584, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	err = dTzDto.SetFromDateTime(2014, 2, 15, 19, 54, 30, 38, 175, 584, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.NewDateTime(2014, 2,15,19,54,30,38, 175, 584, TzUsCentral). Error='%v'", err.Error())
@@ -607,16 +627,16 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 
 func TestDateTzDto_SetNewTimeZone_01(t *testing.T) {
 
-	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+	locUSCentral, err := time.LoadLocation(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
-	locTokyo, err := time.LoadLocation(TzIanaAsiaTokyo)
+	locTokyo, err := time.LoadLocation(IanaTz.Asia.Tokyo())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.Asia.Tokyo()). Error='%v'", err.Error())
 	}
 
 	t4USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
@@ -631,11 +651,11 @@ func TestDateTzDto_SetNewTimeZone_01(t *testing.T) {
 		t.Errorf("Error returned by DateTzDto{}.New(t4USCentral, fmtstr) Error='%v", err.Error())
 	}
 
-	err = dTz1.SetNewTimeZone(TzIanaAsiaTokyo)
+	err = dTz1.SetNewTimeZone(IanaTz.Asia.Tokyo())
 
 	if err != nil {
-		t.Errorf("Error returned by dTz1.SetNewTimeZone(TzIanaAsiaTokyo). "+
-			"TzIanaAsiaTokyo='%v' Error='%v' ", TzIanaAsiaTokyo, err.Error())
+		t.Errorf("Error returned by dTz1.SetNewTimeZone(IanaTz.Asia.Tokyo()). "+
+			"IanaTz.Asia.Tokyo()='%v' Error='%v' ", IanaTz.Asia.Tokyo(), err.Error())
 	}
 
 	if !t4AsiaTokyo.Equal(dTz1.DateTime) {
@@ -643,29 +663,29 @@ func TestDateTzDto_SetNewTimeZone_01(t *testing.T) {
 			t4AsiaTokyo.Format(FmtDateTimeYrMDayFmtStr), dTz1.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	if TzIanaAsiaTokyo != dTz1.TimeZone.LocationName {
+	if IanaTz.Asia.Tokyo() != dTz1.TimeZone.LocationName {
 		t.Errorf("Error: Expected dTz1 Time Zone Location Name ='%v'. "+
-			"Instead, Time Zone Location Name='%v'", TzIanaAsiaTokyo, dTz1.TimeZone.LocationName)
+			"Instead, Time Zone Location Name='%v'", IanaTz.Asia.Tokyo(), dTz1.TimeZone.LocationName)
 	}
 
 }
 
 func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 
-	locEuropeLondon, err := time.LoadLocation(TzIanaEuropeLondon)
+	locEuropeLondon, err := time.LoadLocation(IanaTz.Europe.London())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaEuropeLondon). Error='%v'",
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.Europe.London()). Error='%v'",
 			err.Error())
 	}
 
 	t1London := time.Date(2018, time.Month(1), 15, 8, 38, 29, 268154893,
 		locEuropeLondon)
 
-	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+	locUSCentral, err := time.LoadLocation(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	dTzDto, err := DateTzDto{}.New(t1London, FmtDateTimeEverything)
@@ -676,21 +696,21 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 			t1London.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
-	locTokyo, err := time.LoadLocation(TzIanaAsiaTokyo)
+	locTokyo, err := time.LoadLocation(IanaTz.Asia.Tokyo())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.Asia.Tokyo()). Error='%v'", err.Error())
 	}
 
 	t4USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
 
 	t4Tokyo := t4USCentral.In(locTokyo)
 
-	err = dTzDto.SetFromTimeTz(t4Tokyo, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	err = dTzDto.SetFromTimeTz(t4Tokyo, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by "+
-			"dTzDto.SetFromTimeTz(t4Tokyo, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr) "+
+			"dTzDto.SetFromTimeTz(t4Tokyo, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr) "+
 			"t4Tokyo='%v' Error='%v' ",
 			t4Tokyo.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
@@ -716,17 +736,17 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 			t4USCentral.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
-	expectedDt, err := tDto.GetDateTime(TzIanaUsCentral)
+	expectedDt, err := tDto.GetDateTime(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned from tDto.GetDateTime(TzIanaUsCentral). "+
+		t.Errorf("Error returned from tDto.GetDateTime(IanaTz.US.Central()). "+
 			"Error='%v'", err.Error())
 	}
 
-	actualDt, err := dTzDto.Time.GetDateTime(TzIanaUsCentral)
+	actualDt, err := dTzDto.Time.GetDateTime(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned from dTzDto.Time.GetDateTime(TzIanaUsCentral). "+
+		t.Errorf("Error returned from dTzDto.Time.GetDateTime(IanaTz.US.Central()). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -744,10 +764,10 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 
 func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 
-	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+	locUSCentral, err := time.LoadLocation(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	year := 2018
@@ -773,10 +793,10 @@ func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 		t.Errorf("Error returned by TimeZoneDefDto{}.New(t4USCentral). Error='%v'", err.Error())
 	}
 
-	locTokyo, err := time.LoadLocation(TzIanaAsiaTokyo)
+	locTokyo, err := time.LoadLocation(IanaTz.Asia.Tokyo())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.Asia.Tokyo()). Error='%v'", err.Error())
 	}
 
 	t5Tokyo := time.Date(2012, 9, 30, 11, 58, 48, 123456789, locTokyo)
@@ -804,10 +824,10 @@ func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 		t.Error("Expected t5TZoneDef == dTz1.TimeZone. It DID NOT!")
 	}
 
-	err = dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral)
+	err = dTz1.SetFromTimeDto(t4Dto, IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned from dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral). "+
+		t.Errorf("Error returned from dTz1.SetFromTimeDto(t4Dto, IanaTz.US.Central()). "+
 			"Error='%v'", err.Error())
 	}
 

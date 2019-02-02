@@ -18,7 +18,7 @@ func ExampleSetStartEndTimes() {
 
 	dur := dt.DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t2, dt.TzIanaUsCentral, fmtstr)
+	err := dur.SetStartEndTimesTz(t1, t2, dt.IanaTz.US.Central(), fmtstr)
 
 	if err != nil {
 		panic(fmt.Errorf("ExampleSetStartEndTimes() Error returned by "+
@@ -108,7 +108,7 @@ func ExampleNewstarttimeduration01() {
 	t12Dur := t2.Sub(t1)
 	t12UTCDur := t2Utc.Sub(t1Utc)
 
-	dur, err := dt.DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, dt.TzIanaUsCentral, fmtstr)
+	dur, err := dt.DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, dt.IanaTz.US.Central(), fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur). Error='%v'\n", err.Error())

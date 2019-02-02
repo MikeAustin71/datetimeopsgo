@@ -154,7 +154,7 @@ References -
 
 		The source file 'datetimeconstants.go' contains a number of
 		constant declarations covering the more frequently used time
-		zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+		zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 		time zone constants begin with the prefix 'TzIana'.
 
 
@@ -513,7 +513,7 @@ func (durT DurationTriad) New(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -560,13 +560,13 @@ func (durT DurationTriad) New(
 //
 //	du, err := DurationTriad{}.NewAutoEnd(
 // 			startDateTime,
-//			TzIanaUsCentral,
+//			IanaTz.US.Central(),
 //			FmtDateTimeYrMDayFmtStr)
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
@@ -645,7 +645,7 @@ func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -690,14 +690,14 @@ func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
 // Usage
 //
 //	tDurDto, err := DurationTriad{}.NewAutoStart(
-//			TzIanaUsCentral,
+//			IanaTz.US.Central(),
 //			FmtDateTimeYrMDayFmtStr)
 //
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewAutoStart(
@@ -951,7 +951,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -999,16 +999,16 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 // 						startDateTime,
 // 						minusTimeDto,
 // 						TDurCalcType(0).StdYearMth(),
-// 						TzIanaUsCentral,
+// 						IanaTz.US.Central(),
 // 						FmtDateTimeYrMDayFmtStr)
 //
 //	 Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //	        standard year month day time duration allocation.
 //
 //	         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	         TzIanaUsCentral = "America/Chicago"
+//	         IanaTz.US.Central() = "America/Chicago"
 //
-//	         'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	         'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	         source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
@@ -1110,7 +1110,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -1157,13 +1157,13 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
 //	du, err := DurationTriad{}.NewEndTimeMinusTimeDtoTz(
 //			startDateTime,
 //			minusTimeDto,
-//			TzIanaUsCentral,
+//			IanaTz.US.Central(),
 //			FmtDateTimeYrMDayFmtStr)
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
@@ -1483,7 +1483,7 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -1532,16 +1532,16 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 //				startDateTzDto,
 //				endDateTzDto,
 //				TDurCalcType(0).StdYearMth(),
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //	      standard year month day time duration allocation.
 //
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
@@ -1615,7 +1615,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -1663,13 +1663,13 @@ func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
 //	du, err := DurationTriad{}.NewStartEndDateTzDtoTz(
 //				        startDateTzDto,
 //				        endDateTzDto,
-//				        TzIanaUsCentral,
+//				        IanaTz.US.Central(),
 //				        FmtDateTimeYrMDayFmtStr)
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartEndDateTzDtoTz(
@@ -1770,7 +1770,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -1819,16 +1819,16 @@ func (durT DurationTriad) NewStartEndDateTzDtoTz(
 //				startTime,
 //				endTime,
 //				TDurCalcType(0).StdYearMth(),
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //	      standard year month day time duration allocation.
 //
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartEndTimesCalcTz(
@@ -1897,7 +1897,7 @@ func (durT DurationTriad) NewStartEndTimesCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -1945,13 +1945,13 @@ func (durT DurationTriad) NewStartEndTimesCalcTz(
 //	du, err := DurationTriad{}.NewStartEndTimesTz(
 //				startTime,
 //				endTime,
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartEndTimesTz(startDateTime,
@@ -2154,7 +2154,7 @@ func (durT DurationTriad) NewStartTimeDuration(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2203,16 +2203,16 @@ func (durT DurationTriad) NewStartTimeDuration(
 //				startTime,
 //				duration,
 //				TDurCalcType(0).StdYearMth(),
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //	      standard year month day time duration allocation.
 //
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartTimeDurationCalcTz(
@@ -2289,7 +2289,7 @@ func (durT DurationTriad) NewStartTimeDurationCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2337,13 +2337,13 @@ func (durT DurationTriad) NewStartTimeDurationCalcTz(
 //	du, err := DurationTriad{}.NewStartTimeDurationTz(
 //				startDateTime,
 //				duration,
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartTimeDurationTz(
@@ -2592,7 +2592,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2641,16 +2641,16 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 //				startDateTime,
 //				plusTimeDto,
 //				TDurCalcType(0).StdYearMth(),
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //	      standard year month day time duration allocation.
 //
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
@@ -2743,7 +2743,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2791,13 +2791,13 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
 //	du, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(
 //				startDateTime,
 //				plusTimeDto,
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT DurationTriad) NewStartTimePlusTimeDtoTz(
@@ -3095,12 +3095,12 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	         The source file 'datetimeconstants.go' contains a number of
 //	         constant declarations covering the more frequently used time
-//	         zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//	         zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //	         time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -3138,17 +3138,17 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 //	       startDateTime,
 //	       minusTimeDto,
 //	       TDurCalcType(0).StdYearMth(),
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
 //				source file 'timedurationdto.go'.
 //
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
@@ -3186,19 +3186,19 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 			endDateTime, err.Error())
 	}
 
-	_, err = time.LoadLocation(TzGoLocal)
+	_, err = time.LoadLocation(IanaTz.Local())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"Error: Local TimeZoneLocation input parameter is INVALID! "+
 			"timeZoneLocation='%v' Error='%v'",
-			TzGoLocal, err.Error())
+			IanaTz.Local(), err.Error())
 	}
 
 	localTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(endDateTime,
 		minusTimeDto,
 		tDurCalcType,
-		TzGoLocal,
+		IanaTz.Local(),
 		fmtStr)
 
 	if err != nil {
@@ -3208,20 +3208,20 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 			endDateTime, err.Error())
 	}
 
-	_, err = time.LoadLocation(TzIanaUTC)
+	_, err = time.LoadLocation(IanaTz.Local())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"Error: UTC TimeZoneLocation input parameter is INVALID! "+
 			"timeZoneLocation='%v' Error='%v'",
-			TzIanaUTC, err.Error())
+			IanaTz.Local(), err.Error())
 	}
 
 	utcTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
-		TzIanaUTC,
+		IanaTz.Local(),
 		fmtStr)
 
 	if err != nil {
@@ -3324,7 +3324,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -3361,13 +3361,13 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 //	err := dt.SetEndTimeMinusTimeDtoTz(
 //	       endDateTime,
 //	       minusTimeDto,
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
@@ -3464,7 +3464,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -3502,17 +3502,17 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 //	       startDateTime,
 //	       endDateTime,
 //	       TDurCalcType(0).StdYearMth(),
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
 //				source file 'timedurationdto.go'.
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetStartEndDateTzCalcTz(
@@ -3694,7 +3694,7 @@ func (durT *DurationTriad) SetStartEndTimes(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -3732,16 +3732,16 @@ func (durT *DurationTriad) SetStartEndTimes(
 //	       startDateTime,
 //	       endDateTime,
 //	       TDurCalcType(0).StdYearMth(),
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
 //				source file 'timedurationdto.go'.
 //
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetStartEndTimesCalcTz(
@@ -3781,7 +3781,7 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 	}
 
 	localTime, err := TimeDurationDto{}.NewStartEndTimesCalcTz(startDateTime,
-		endDateTime, tDurCalcType, TzGoLocal, fmtStr)
+		endDateTime, tDurCalcType, IanaTz.Local(), fmtStr)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -3790,7 +3790,7 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 	}
 
 	utcTime, err := TimeDurationDto{}.NewStartEndTimesCalcTz(startDateTime,
-		endDateTime, tDurCalcType, TzIanaUTC, fmtStr)
+		endDateTime, tDurCalcType, IanaTz.UTC(), fmtStr)
 
 	durT.Empty()
 	durT.BaseTime = baseTime.CopyOut()
@@ -3852,7 +3852,7 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -3889,13 +3889,13 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 //	err := dt.SetStartEndTimesTz(
 //	       startDateTime,
 //	       endDateTime
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetStartEndTimesTz(
@@ -4084,7 +4084,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -4122,17 +4122,17 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //	       startDateTime,
 //	       duration,
 //	       TDurCalcType(0).StdYearMth(),
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
 //				source file 'timedurationdto.go'.
 //
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetStartTimeDurationCalcTz(
@@ -4172,7 +4172,7 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 	}
 
 	localTime, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(startDateTime, duration,
-		tDurCalcType, TzGoLocal, fmtStr)
+		tDurCalcType, IanaTz.Local(), fmtStr)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -4183,7 +4183,7 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 	}
 
 	utcTime, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(startDateTime, duration,
-		tDurCalcType, TzGoLocal, fmtStr)
+		tDurCalcType, IanaTz.Local(), fmtStr)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -4251,7 +4251,7 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -4287,13 +4287,13 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 //	dt  := DurationTriad{}
 //	err := dt.SetStartTimeDurationTz(
 //	       startDateTime,
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetStartTimeDurationTz(
@@ -4532,7 +4532,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -4570,16 +4570,16 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //	       startDateTime,
 //	       plusTimeDto,
 //	       TDurCalcType(0).StdYearMth(),
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
 //				source file 'timedurationdto.go'.
 //
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
@@ -4614,19 +4614,19 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 			err.Error())
 	}
 
-	_, err = time.LoadLocation(TzGoLocal)
+	_, err = time.LoadLocation(IanaTz.Local())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error: Local TimeZoneLocation is INVALID! "+
 			"timeZoneLocation='%v' Error='%v'",
-			TzGoLocal, err.Error())
+			IanaTz.Local(), err.Error())
 	}
 
 	localTime, err := TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
-		TzGoLocal,
+		IanaTz.Local(),
 		dateTimeFmtStr)
 
 	if err != nil {
@@ -4635,19 +4635,19 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 			err.Error())
 	}
 
-	_, err = time.LoadLocation(TzIanaUTC)
+	_, err = time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error: UTC TimeZoneLocation is INVALID! "+
 			"timeZoneLocation='%v' Error='%v'",
-			TzIanaUTC, err.Error())
+			IanaTz.UTC(), err.Error())
 	}
 
 	utcTime, err := TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
-		TzIanaUTC,
+		IanaTz.UTC(),
 		dateTimeFmtStr)
 
 	if err != nil {
@@ -4739,7 +4739,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -4776,13 +4776,13 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 //	err := dt.SetStartTimePlusTimeDtoTz(
 //	       startDateTime,
 //	       plusTimeDto,
-//	       TzIanaUsCentral,
+//	       IanaTz.US.Central(),
 //	       FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDtoTz(
@@ -4820,7 +4820,7 @@ func (durT *DurationTriad) preProcessDateFormatStr(dateTimeFmtStr string) string
 func (durT *DurationTriad) preProcessTimeZoneLocation(timeZoneLocation string) string {
 
 	if len(timeZoneLocation) == 0 {
-		return TzIanaUTC
+		return IanaTz.UTC()
 	}
 
 	if strings.ToLower(timeZoneLocation) == "local" {

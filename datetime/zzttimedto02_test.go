@@ -177,14 +177,14 @@ func TestTimeDto_NormalizeDays_01(t *testing.T) {
 
 	expectedDateTime := "1956-04-03 01:13:06.002002001 +0000 UCT"
 
-	actualDateTime, err := t1Dto.GetDateTime(TzIanaUTC)
+	actualDateTime, err := t1Dto.GetDateTime(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned by t1Dto.GetDateTime(TzIanaUTC). Error='%v'", err.Error())
+		t.Errorf("Error returned by t1Dto.GetDateTime(IanaTz.UTC()). Error='%v'", err.Error())
 	}
 
 	if expectedDateTime != actualDateTime.Format(FmtDateTimeYrMDayFmtStr) {
-		t.Errorf("Error: Expected t1Dto.GetDateTime(TzIanaUTC)='%v'.  Instead datetime='%v'",
+		t.Errorf("Error: Expected t1Dto.GetDateTime(IanaTz.UTC())='%v'.  Instead datetime='%v'",
 			expectedDateTime, actualDateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 

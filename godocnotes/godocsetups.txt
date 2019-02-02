@@ -37,7 +37,7 @@ godoc formatted doc statements
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -209,20 +209,20 @@ godoc formatted doc statements
 // 						startDateTime,
 // 						minusTimeDto,
 // 						TDurCalcTypeSTDYEARMTH,
-// 						TzIanaUsCentral,
+// 						IanaTz.US.Central(),
 // 						FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcTypeSTDYEARMTH' is of type 'TDurCalcType' and signals
 //						 standard year month day time duration allocation.
 //
-// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 						'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 						source file 'datetimeconstants.go'.
 //
 
 //
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TzIanaUsCentral = "America/Chicago"
+//	      IanaTz.US.Central() = "America/Chicago"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 

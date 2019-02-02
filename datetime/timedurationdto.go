@@ -1479,10 +1479,10 @@ func (tDur TimeDurationDto) New(
 //
 // tDurDto, err := TimeDurationDto{}.NewAutoEnd(
 // 																		startTime,
-// 																		TzIanaUsCentral,
+// 																		IanaTz.US.Central(),
 // 																		FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+//		Note: 'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewAutoEnd(
@@ -1587,10 +1587,10 @@ func (tDur TimeDurationDto) NewAutoEnd(
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewAutoStart(
-// 																		TzIanaUsCentral,
+// 																		IanaTz.US.Central(),
 // 																		FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+//		Note: 'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
@@ -1796,13 +1796,13 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 // 											startDateTz,
 // 											endDateTz,
 // 											TDurCalcType(0).StdYearMth(),
-// 											TzIanaUsCentral,
+// 											IanaTz.US.Central(),
 // 											FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 						'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
@@ -1897,10 +1897,10 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
 // tDurDto, err := TimeDurationDto{}.NewStartEndDateTzDtoTz(
 // 											startDateTz,
 // 											endDateTz,
-// 											TzIanaUsCentral,
+// 											IanaTz.US.Central(),
 // 											FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//		Note: 'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
@@ -1988,9 +1988,9 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartEndTimesTz(startTime, endTime, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.NewStartEndTimesTz(startTime, endTime, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//		Note: 'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.Time,
@@ -2216,13 +2216,13 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 // 													startTime,
 // 													endTime,
 // 													TDurCalcType(0).StdYearMth(),
-// 													TzIanaUsCentral,
+// 													IanaTz.US.Central(),
 // 													FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 						'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
@@ -2518,13 +2518,13 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalc(startTime, endTime, TzIanaUsCentral,
+// tDurDto, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalc(startTime, endTime, IanaTz.US.Central(),
 // 									TDurCalcType(0).StdYearMth(), FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 					'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+// 					'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 						datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
@@ -2702,9 +2702,9 @@ func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewStartTimeDurationTz(startTime, duration,
-// 										TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+// 										IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+//		Note: 'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
@@ -2835,12 +2835,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(startTime, duration,
-// 										TzIanaUsCentral, TDurCalcType(0).StdYearMth(), FmtDateTimeYrMDayFmtStr)
+// 										IanaTz.US.Central(), TDurCalcType(0).StdYearMth(), FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 					'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+// 					'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 						datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
@@ -3126,9 +3126,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTz(startTime, duration,
-// 																		TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+// 																		IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+//		Note: 'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDto,
@@ -3267,12 +3267,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTzCalc(startTime, duration,
-// 										TzIanaUsCentral, TDurCalcType(0).StdYearMth(), FmtDateTimeYrMDayFmtStr)
+// 										IanaTz.US.Central(), TDurCalcType(0).StdYearMth(), FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 					'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
+// 					'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
 // 						datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime DateTzDto,
@@ -3629,13 +3629,13 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 // 																			startTime,
 // 																			plusTimeDto,
 // 																			TDurCalcType(0).StdYearMth(),
-// 																			TzIanaUsCentral,
+// 																			IanaTz.US.Central(),
 // 																			FmtDateTimeYrMDayFmtStr)
 //
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 						'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
@@ -3867,14 +3867,14 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 // tDurDto, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(endTime,
 // 																	  minusTimeDto,
 //																		TDurCalcType(0).StdYearMth(),
-//																		TzIanaUsCentral
+//																		IanaTz.US.Central()
 // 																		FmtDateTimeYrMDayFmtStr)
 //
 //
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 						'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+// 						'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 // 							datetimeconstants.go
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
@@ -5625,11 +5625,11 @@ func (tDur *TimeDurationDto) preProcessDateFormatStr(dateTimeFmtStr string) stri
 func (tDur *TimeDurationDto) preProcessTimeZoneLocation(timeZoneLocation string) string {
 
 	if len(timeZoneLocation) == 0 {
-		return TzIanaUTC
+		return IanaTz.UTC()
 	}
 
 	if strings.ToLower(timeZoneLocation) == "local" {
-		return "Local"
+		return IanaTz.Local()
 	}
 
 	return timeZoneLocation

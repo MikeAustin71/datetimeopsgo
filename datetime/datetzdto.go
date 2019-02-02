@@ -64,7 +64,7 @@ import (
 //
 //	         The source file 'datetimeconstants.go' contains a number of
 //	         constant declarations covering the more frequently used time
-//	         zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//	         zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //	         time zone constants begin with the prefix 'TzIana'.
 //
 //
@@ -1736,7 +1736,7 @@ func (dtz DateTzDto) New(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -1800,13 +1800,13 @@ func (dtz DateTzDto) New(
 //	                     min,
 //	                     sec,
 //	                     nanosecond,
-//	                     TzIanaUsCentral,
+//	                     IanaTz.US.Central(),
 //	                     FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (dtz DateTzDto) NewDateTime(
@@ -1876,7 +1876,7 @@ func (dtz DateTzDto) NewDateTime(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -1941,13 +1941,13 @@ func (dtz DateTzDto) NewDateTime(
 //			minute,
 //			second,
 //			nanosecond ,
-//			TzIanaUsCentral,
+//			IanaTz.US.Central(),
 //			FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (dtz DateTzDto) NewDateTimeElements(
@@ -2104,7 +2104,7 @@ func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2162,13 +2162,13 @@ func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 // Usage
 //
 //		dtzDto, err := DateTzDto{}.NewNowTz(
-//			TzIanaUsCentral,
+//			IanaTz.US.Central(),
 //			FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (dtz DateTzDto) NewNowTz(
@@ -2280,7 +2280,8 @@ func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 
 	dTz := DateTzDto{}
 
-	err := dTz.SetFromTimeTz(dt, TzIanaUTC, dateTimeFmtStr)
+	// IanaTz.UTC()
+	err := dTz.SetFromTimeTz(dt, IanaTz.UTC() , dateTimeFmtStr)
 
 	if err != nil {
 		return DateTzDto{},
@@ -2338,7 +2339,7 @@ func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2397,13 +2398,13 @@ func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 //
 //	dtz, err := DateTzDto{}.NewTimeDto(
 //				tDto,
-//				TzIanaUsCentral,
+//				IanaTz.US.Central(),
 //				FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (dtz DateTzDto) NewTimeDto(
@@ -2459,7 +2460,7 @@ func (dtz DateTzDto) NewTimeDto(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2518,13 +2519,13 @@ func (dtz DateTzDto) NewTimeDto(
 //
 //	dtzDto, err := DateTzDto{}.NewTz(
 //			dateTime,
-//			TzIanaUsCentral,
+//			IanaTz.US.Central(),
 //			FmtDateTimeYrMDayFmtStr)
 //
-//	Note: TzIanaUsCentral = "America/Chicago"
+//	Note: IanaTz.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TzIanaUsCentral' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//	      'IanaTz.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //	      source file 'datetimeconstants.go'.
 //
 func (dtz DateTzDto) NewTz(
@@ -2636,7 +2637,7 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2768,7 +2769,7 @@ func (dtz *DateTzDto) SetFromDateTime(
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -2985,7 +2986,7 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 // ------------------------------------------------------------------------
@@ -3089,7 +3090,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 //
 //				     The source file 'datetimeconstants.go' contains a number of
 //				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//				     zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
 //	dateTimeFmtStr string   - A date time format string which will be used
@@ -3198,7 +3199,7 @@ func (dtz *DateTzDto) SetFromTimeTz(
 //
 //	         The source file 'datetimeconstants.go' contains a number of
 //	         constant declarations covering the more frequently used time
-//	         zones. Example: 'TzIanaUsCentral' = "America/Chicago". All
+//	         zones. Example: 'IanaTz.US.Central()' = "America/Chicago". All
 //	         time zone constants begin with the prefix 'TzIana'.
 //
 //
@@ -3337,7 +3338,7 @@ func (dtz *DateTzDto) preProcessDateFormatStr(dateTimeFmtStr string) string {
 func (dtz *DateTzDto) preProcessTimeZoneLocation(timeZoneLocation string) string {
 
 	if len(timeZoneLocation) == 0 {
-		return TzIanaUTC
+		return IanaTz.UTC()
 	}
 
 	if strings.ToLower(timeZoneLocation) == "local" {

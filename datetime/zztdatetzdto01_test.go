@@ -477,10 +477,10 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 
 func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 
-	locUSCentral, err := time.LoadLocation(TzIanaUsCentral)
+	locUSCentral, err := time.LoadLocation(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	year := 2018
@@ -577,11 +577,11 @@ func TestDateTzDto_GetDateTimeTzNanoSecYMDDowText(t *testing.T) {
 			err.Error())
 	}
 
-	dTz, err := DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dTz, err := DateTzDto{}.NewTimeDto(tDto, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by "+
-			"DateTzDto{}.NewTimeDto(tDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr) "+
+			"DateTzDto{}.NewTimeDto(tDto, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr) "+
 			"Error='%v'", err.Error())
 	}
 

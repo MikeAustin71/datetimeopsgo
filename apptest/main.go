@@ -9,15 +9,58 @@ import (
 
 func main() {
 
-	mainTest019()
+	tz1 := "Cuba"
+	tz2 := "America/Havana"
+
+	dtz, err := dt.DateTzDto{}.NewNowTz(tz1, dt.FmtDateTimeYrMDayFmtStr )
+
+	if err != nil {
+		fmt.Printf("%v \n", err.Error())
+		return
+	}
+
+	tzDef, err := dt.TimeZoneDefDto{}.New(dtz.DateTime)
+
+	if err != nil {
+		fmt.Printf("%v \n", err.Error())
+		return
+	}
+
+	dtz2, err := dt.DateTzDto{}.NewNowTz(tz2, dt.FmtDateTimeYrMDayFmtStr )
+
+	if err != nil {
+		fmt.Printf("%v \n", err.Error())
+		return
+	}
+
+	tzDef2, err := dt.TimeZoneDefDto{}.New(dtz2.DateTime)
+	if err != nil {
+		fmt.Printf("%v \n", err.Error())
+		return
+	}
+
+	fmt.Println("Testing tz1", tz1)
+	fmt.Println("-------------------------------------")
+	fmt.Println("    Zone Name: ", tzDef.ZoneName)
+	fmt.Println("       Offset: ", tzDef.ZoneOffset)
+	fmt.Println("Location Name: ", tzDef.LocationName)
+	fmt.Println("    *Location: ", tzDef.Location.String())
+
+	fmt.Println()
+	fmt.Println("Testing tz2", tz2)
+	fmt.Println("-------------------------------------")
+	fmt.Println("    Zone Name: ", tzDef2.ZoneName)
+	fmt.Println("       Offset: ", tzDef2.ZoneOffset)
+	fmt.Println("Location Name: ", tzDef2.LocationName)
+	fmt.Println("    *Location: ", tzDef2.Location.String())
 
 }
 
 func mainTest019() {
-	locUSCentral, err := time.LoadLocation(dt.TzIanaUsCentral)
+	locUSCentral, err := time.LoadLocation(dt.IanaTz.US.Central())
 
 	if err != nil {
-		fmt.Printf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		fmt.Printf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	year := 2018
@@ -38,7 +81,7 @@ func mainTest019() {
 		t1USCentral,
 		t2USCentral,
 		dt.TDurCalcType(0).StdYearMth(),
-		dt.TzIanaUsCentral,
+		dt.IanaTz.US.Central(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	str, _ := tDur.GetCumSecondsTimeStr()
@@ -93,10 +136,10 @@ func mainTest018() {
 
 	fmt.Println("After ")
 	ex.PrintOutTimeDtoFields(t1Dto)
-	dateTime, err := t1Dto.GetDateTime(dt.TzIanaUTC)
+	dateTime, err := t1Dto.GetDateTime(dt.IanaTz.UTC())
 
 	if err != nil {
-		fmt.Printf("Error returned by t1Dto.GetDateTime(dt.TzIanaUTC). Error='%v'\n",
+		fmt.Printf("Error returned by t1Dto.GetDateTime(dt.IanaTz.UTC()). Error='%v'\n",
 			err.Error())
 		return
 	}
@@ -154,7 +197,7 @@ func mainTest017() {
 	fmt.Println("After Normalize Days")
 	ex.PrintOutTimeDtoFields(t1Dto)
 
-	utcLoc, _ := time.LoadLocation(dt.TzIanaUTC)
+	utcLoc, _ := time.LoadLocation(dt.IanaTz.UTC())
 
 	tDate := time.Date(1956, 3, 34, 1, 13, 6, 2002001, utcLoc)
 
@@ -224,10 +267,10 @@ func mainTest017() {
 }
 
 func mainTest016() {
-	locUSCentral, err := time.LoadLocation(dt.TzIanaUsCentral)
+	locUSCentral, err := time.LoadLocation(dt.IanaTz.US.Central())
 
 	if err != nil {
-		fmt.Printf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		fmt.Printf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	year := 2018
@@ -255,10 +298,10 @@ func mainTest016() {
 		return
 	}
 
-	locTokyo, err := time.LoadLocation(dt.TzIanaAsiaTokyo)
+	locTokyo, err := time.LoadLocation(dt.IanaTz.Asia.Tokyo())
 
 	if err != nil {
-		fmt.Printf("Error returned by time.LoadLocation(TzIanaAsiaTokyo). Error='%v'", err.Error())
+		fmt.Printf("Error returned by time.LoadLocation(IanaTz.Asia.Tokyo()). Error='%v'", err.Error())
 		return
 	}
 
@@ -295,10 +338,10 @@ func mainTest016() {
 		fmt.Print("Expected t5TZoneDef == dTz1.TimeZone. It DID NOT!")
 	}
 
-	err = dTz1.SetFromTimeDto(t4Dto, dt.TzIanaUsCentral)
+	err = dTz1.SetFromTimeDto(t4Dto, dt.IanaTz.US.Central())
 
 	if err != nil {
-		fmt.Printf("Error returned from dTz1.SetFromTimeDto(t4Dto, TzIanaUsCentral). "+
+		fmt.Printf("Error returned from dTz1.SetFromTimeDto(t4Dto, IanaTz.US.Central()). "+
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -402,7 +445,7 @@ func mainTest015() {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := dt.DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). "+
@@ -414,10 +457,10 @@ func mainTest015() {
 
 	tDto, err := dt.TimeDto{}.NewFromDateTime(dTzDto.DateTime)
 
-	dt2, err := tDto.GetDateTime(dt.TzIanaUsCentral)
+	dt2, err := tDto.GetDateTime(dt.IanaTz.US.Central())
 
 	if err != nil {
-		fmt.Printf("Error returned by tDto.GetDateTime(TzIanaUsCentral). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by tDto.GetDateTime(IanaTz.US.Central()). Error='%v'\n", err.Error())
 		return
 	}
 
@@ -452,7 +495,7 @@ func mainTest014() {
 		return
 	}
 
-	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). "+
@@ -526,7 +569,7 @@ func mainTest011() {
 	t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
 
 	tDto, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1, t2,
-		dt.TDurCalcType(0).StdYearMth(), dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+		dt.TDurCalcType(0).StdYearMth(), dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz() "+
@@ -587,7 +630,7 @@ func mainTest009() {
 
 	tDto, err :=
 		dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t2, t1,
-			dt.TDurCalcType(0).StdYearMth(), dt.TzIanaUsCentral, fmtstr)
+			dt.TDurCalcType(0).StdYearMth(), dt.IanaTz.US.Central(), fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). "+
@@ -598,7 +641,7 @@ func mainTest009() {
 	fmt.Println("TimeDurationDto")
 	ex.PrintTimeDurationDto(tDto)
 
-	durT, err := dt.DurationTriad{}.NewStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, fmtstr)
+	durT, err := dt.DurationTriad{}.NewStartEndTimesTz(t2, t1, dt.IanaTz.US.Central(), fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). "+
@@ -621,10 +664,10 @@ func mainTest008() {
 
 	du := dt.DurationTriad{}
 
-	err := du.SetStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err := du.SetStartEndTimesTz(t2, t1, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by du.SetStartEndTimesTz(t2, t1, dt.TzIanaUsCentral, "+
+		fmt.Printf("Error returned by du.SetStartEndTimesTz(t2, t1, dt.IanaTz.US.Central(), "+
 			"dt.FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
 		return
 	}
@@ -664,7 +707,7 @@ func mainTest007() {
 
 func mainTest006() {
 
-	locUTC, _ := time.LoadLocation(dt.TzIanaUTC)
+	locUTC, _ := time.LoadLocation(dt.IanaTz.UTC())
 
 	fmt.Println()
 	fmt.Println("2018-00")
@@ -742,7 +785,7 @@ func mainTest006() {
 
 func mainTest005() {
 
-	locUTC, _ := time.LoadLocation(dt.TzIanaUTC)
+	locUTC, _ := time.LoadLocation(dt.IanaTz.UTC())
 
 	tDateTime := time.Date(2018, 2, 0, 0, 0, 0, 0, locUTC)
 
@@ -769,12 +812,12 @@ func mainTest005() {
 
 func mainTest004() {
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-	locUSCentral, _ := time.LoadLocation(dt.TzIanaUsCentral)
-	locUSPacific, _ := time.LoadLocation(dt.TzIanaUsPacific)
-	locParis, _ := time.LoadLocation(dt.TzIanaEuropeParis)
-	locCairo, _ := time.LoadLocation(dt.TzIanaAfricaCairo)
-	locMoscow, _ := time.LoadLocation(dt.TzIanaEuropeMoscow)
-	locTokyo, _ := time.LoadLocation(dt.TzIanaAsiaTokyo)
+	locUSCentral, _ := time.LoadLocation(dt.IanaTz.US.Central())
+	locUSPacific, _ := time.LoadLocation(dt.IanaTz.US.Pacific())
+	locParis, _ := time.LoadLocation(dt.IanaTz.Europe.Paris())
+	locCairo, _ := time.LoadLocation(dt.IanaTz.Africa.Cairo())
+	locMoscow, _ := time.LoadLocation(dt.IanaTz.Europe.Moscow())
+	locTokyo, _ := time.LoadLocation(dt.IanaTz.Asia.Tokyo())
 
 	t1USCentral := time.Date(1948, time.Month(9), 7, 4, 32, 16, 8185431, locUSCentral)
 	t1USPacific := t1USCentral.In(locUSPacific)
@@ -795,7 +838,7 @@ func mainTest004() {
 }
 
 func mainTest003() {
-	loc, _ := time.LoadLocation(dt.TzIanaUsCentral)
+	loc, _ := time.LoadLocation(dt.IanaTz.US.Central())
 
 	t1 := time.Date(2014, time.Month(15), 67, 19, 54, 30, 158712300, loc)
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
@@ -843,7 +886,7 @@ func mainTest002() {
 
 func mainTest001() {
 
-	loc, _ := time.LoadLocation(dt.TzIanaUsCentral)
+	loc, _ := time.LoadLocation(dt.IanaTz.US.Central())
 	t1 := time.Date(2014, time.Month(2), 15, 19, 54, 30, 158712300, loc)
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
@@ -853,7 +896,7 @@ func mainTest001() {
 		fmt.Printf("Error returned by dt.TimeDto{}.New(year, month, ...). Error=%v \n", err.Error())
 	}
 
-	t2, err := tDto.GetDateTime(dt.TzIanaUsCentral)
+	t2, err := tDto.GetDateTime(dt.IanaTz.US.Central())
 
 	fmt.Println("t1: ", t1.Format(fmtstr))
 	fmt.Println("t2: ", t2.Format(fmtstr))

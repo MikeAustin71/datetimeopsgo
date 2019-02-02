@@ -27,7 +27,7 @@ func WriteAllFormatsToFile() {
 	}
 
 	endTimeGetFormats := time.Now()
-	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("WriteAllFormatsToFile(). Error returned by "+
@@ -54,7 +54,7 @@ func WriteAllFormatsToFile() {
 
 	endTime := time.Now()
 
-	err = du.SetStartEndTimesTz(endTimeGetFormats, endTime, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(endTimeGetFormats, endTime, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("Error returned by du.SetStartEndTimesTz(...). "+
@@ -65,7 +65,7 @@ func WriteAllFormatsToFile() {
 
 	d2 := dt.DurationTriad{}
 
-	err = d2.SetStartEndTimesTz(startTime, endTime, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = d2.SetStartEndTimesTz(startTime, endTime, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("Error returned by d2.SetStartEndTimesTz(...). "+
@@ -102,7 +102,7 @@ func WriteFormatStatsToFile() {
 
 	endTimeCreateFormats := time.Now()
 	du := dt.DurationTriad{}
-	err = du.SetStartEndTimesTz(startTime, endTimeCreateFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeCreateFormats, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("WriteFormatStatsToFile(): Error returned by "+
@@ -158,7 +158,7 @@ func HammerSampleDateTimes() {
 	endTimeGetFormats := time.Now()
 	du := dt.DurationTriad{}
 
-	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
@@ -195,7 +195,7 @@ func HammerSampleDateTimes() {
 		du.SetStartEndTimesTz(
 			hammerStartTime,
 			hammerEndTime,
-			dt.TzIanaUsCentral,
+			dt.IanaTz.US.Central(),
 			dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -234,7 +234,7 @@ func TestParseSampleDateTimes() {
 
 	endTimeGetFormats := time.Now()
 
-	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+"Error returned by du.SetStartEndTimesTz(). "+
@@ -282,7 +282,7 @@ func TestParseDateTime(dtf dt.FormatDateTimeUtility, dateTimeStr string, probabl
 		du.SetStartEndTimesTz(
 			startTimeParse,
 			endTimeParse,
-			dt.TzIanaUsCentral,
+			dt.IanaTz.US.Central(),
 			dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -331,7 +331,7 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	err = du.SetStartEndTimesTz(
 		startTime,
 		endTimeGetFormats,
-		dt.TzIanaUsCentral,
+		dt.IanaTz.US.Central(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -359,7 +359,7 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	endTimeParse := time.Now()
 	fmt.Println()
 
-	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
@@ -371,7 +371,7 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 	fmt.Println("Actual Duration Value: ", du.BaseTime.TimeDuration)
 
-	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
@@ -430,7 +430,7 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 	endTimeParse := time.Now()
 	fmt.Println()
 
-	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
@@ -443,7 +443,7 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 	fmt.Println("Actual Duration Value: ", du.BaseTime.TimeDuration)
 
-	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TzIanaUsCentral, dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.IanaTz.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+

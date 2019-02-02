@@ -16,10 +16,10 @@ func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 
 	du := DurationTriad{}
 
-	err := du.SetStartEndTimesTz(t2, t1, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	err := du.SetStartEndTimesTz(t2, t1, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by du.SetStartEndTimesTz(t2, t1, TzIanaUsCentral, "+
+		t.Errorf("Error returned by du.SetStartEndTimesTz(t2, t1, IanaTz.US.Central(), "+
 			"FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
 	}
 
@@ -44,10 +44,10 @@ func TestDurationTriad_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 	du := DurationTriad{}
 
-	err := du.SetStartEndTimesTz(t2, t1, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	err := du.SetStartEndTimesTz(t2, t1, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by du.SetStartEndTimesTz(t2, t1, TzIanaUsCentral, "+
+		t.Errorf("Error returned by du.SetStartEndTimesTz(t2, t1, IanaTz.US.Central(), "+
 			"FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
 	}
 
@@ -63,15 +63,15 @@ func TestDurationTriad_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
 
-	locCentral, err := time.LoadLocation(TzIanaUsCentral)
+	locCentral, err := time.LoadLocation(IanaTz.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(TzIanaUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
 	}
 
 	startDateTime := time.Now().In(locCentral)
 
-	durT, err := DurationTriad{}.NewAutoEnd(startDateTime, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	durT, err := DurationTriad{}.NewAutoEnd(startDateTime, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewAutoEnd() ")
@@ -87,7 +87,7 @@ func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
 
 func TestDurationTriad_NewAutoStart(t *testing.T) {
 
-	durT, err := DurationTriad{}.NewAutoStart(TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	durT, err := DurationTriad{}.NewAutoStart(IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewAutoStart() "+
@@ -120,7 +120,7 @@ func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur, err := DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur). Error='%v'", err.Error())
@@ -163,10 +163,10 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	t1DateTz, err := DateTzDto{}.NewTz(t1, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	t1DateTz, err := DateTzDto{}.NewTz(t1, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.NewTz(t1, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr) "+
+		t.Errorf("Error returned by DateTzDto{}.NewTz(t1, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr) "+
 			" Error ='%v' ", err.Error())
 	}
 
@@ -227,10 +227,10 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(TzIanaUTC)
+	loc, err = time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.UTC()). Error='%v'", err.Error())
 	}
 
 	t1UTC := t1.In(loc)
@@ -382,10 +382,10 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(TzIanaUTC)
+	loc, err = time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.UTC()). Error='%v'", err.Error())
 	}
 
 	t1UTC := t1.In(loc)
@@ -419,7 +419,7 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	dateTz2, err := DateTzDto{}.New(t2, FmtDateTimeYrMDayFmtStr)
 
-	dur, err := DurationTriad{}.NewStartEndDateTzDtoTz(dateTz1, dateTz2, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartEndDateTzDtoTz(dateTz1, dateTz2, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2). Error='%v'", err.Error())
@@ -537,10 +537,10 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(TzIanaUTC)
+	loc, err = time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.UTC()). Error='%v'", err.Error())
 	}
 
 	t1UTC := t1.In(loc)
@@ -578,7 +578,7 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 		dateTz1,
 		dateTz2,
 		TDurCalcType(0).StdYearMth(),
-		TzIanaUsCentral,
+		IanaTz.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -697,10 +697,10 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(TzIanaUTC)
+	loc, err = time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.UTC()). Error='%v'", err.Error())
 	}
 
 	t1UTC := t1.In(loc)
@@ -732,7 +732,7 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
 
-	dur, err := DurationTriad{}.NewStartEndTimesTz(t1, t2, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartEndTimesTz(t1, t2, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2). Error='%v'", err.Error())
@@ -850,10 +850,10 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(TzIanaUTC)
+	loc, err = time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.UTC()). Error='%v'", err.Error())
 	}
 
 	t1UTC := t1.In(loc)
@@ -887,7 +887,7 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur, err := DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). Error='%v'", err.Error())
@@ -929,7 +929,7 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto, TzIanaUsCentral, FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto). Error='%v'", err.Error())
@@ -987,10 +987,10 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(TzIanaUTC)
+	loc, err = time.LoadLocation(IanaTz.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned from time.LoadLocation(TzIanaUTC). Error='%v'", err.Error())
+		t.Errorf("Error returned from time.LoadLocation(IanaTz.UTC()). Error='%v'", err.Error())
 	}
 
 	t1UTC := t1.In(loc)
