@@ -147,16 +147,15 @@ const (
 GregorianYearNanoSeconds = int64(31556952000000000)
 )
 
-/*
- UTC Offsets
-*/
-var offsetsUTC = [25]int{-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12}
+
 
 /*
 Time Zone Abbreviations – Military Time Zone Names
 https://www.timeanddate.com/time/zones/military
 
-Military time zones are commonly used in aviation as well as at sea. They are also known as nautical or maritime time zones. J (Juliet Time Zone) is occasionally used to refer to the observer's local time.
+Military time zones are commonly used in aviation as well as at sea.
+They are also known as nautical or maritime time zones. J (Juliet Time Zone)
+is occasionally used to refer to the observer's local time.
 
 Abbreviation	Time zone name 	Other names 	Offset
 

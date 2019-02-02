@@ -1234,6 +1234,13 @@ func(chil ChileTimeZones) EasterIsland() string { return "Chile/EasterIsland"}
 // EtcTimeZones - IANA Time Zones in Etc
 // For documentation on IANA Time Zones, see type
 // 'IanaTimeZones'.
+//
+// Be advised that the 'Etc' area uses reverse signs.
+// For example, Time Zone "Etc/GMT-10" is calculated
+// as UTC +10-hours. For further explanation of the
+// 'reverse signs' procedure consult:
+//		https://en.wikipedia.org/wiki/Tz_database#Area
+//
 type EtcTimeZones  string
 
 // GMT - IANA Time Zone "Etc/GMT"
@@ -1786,14 +1793,16 @@ func(xyus USTimeZones) Samoa() string { return "Pacific/Pago_Pago"}
 // time zones.
 // 	Reference:
 //		https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+//		https://en.wikipedia.org/wiki/Tz_database
 //
 // The IANA Time Zone data base and reference information is located at:
 //	https://www.iana.org/time-zones.
 //
-// To most easily access the IANA Time Zones it is recommended that you use
-// the global variable IanaTz declared below. This variable instantiates the
-// IanaTimeZones type. It is therefore much easier to access any of the 590+
-// IANA time zones using dot operators:
+// For easy access to the IANA Time Zones it is recommended that you use the
+// global variable 'IanaTz' declared below. This variable instantiates the
+// 'IanaTimeZones' type. It is therefore much easier to access any of the 590+
+// IANA time zones using dot operators and intelliSense (a.k.a. intelligent code
+// completion).
 //	Examples:
 //		IanaTz.US.Central()    - US Central Time Zone
 //		IanaTz.US.Eastern()    - US Eastern Time Zone
