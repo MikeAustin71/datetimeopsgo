@@ -157,6 +157,464 @@ func TestTDurCalcTypeString_011(t *testing.T) {
 
 }
 
+func TestTDurCalcTypeString_012(t *testing.T) {
+
+	expectedStr := "StdYearMth"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_013(t *testing.T) {
+
+	expectedStr := "CumMonths"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_014(t *testing.T) {
+
+	expectedStr := "CumWeeks"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_015(t *testing.T) {
+
+	expectedStr := "CumDays"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_016(t *testing.T) {
+
+	expectedStr := "CumHours"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_017(t *testing.T) {
+
+	expectedStr := "CumMinutes"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_018(t *testing.T) {
+
+	expectedStr := "CumSeconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_019(t *testing.T) {
+
+	expectedStr := "CumMilliseconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_020(t *testing.T) {
+
+	expectedStr := "CumMicroseconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_021(t *testing.T) {
+
+	expectedStr := "CumNanoseconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_022(t *testing.T) {
+
+	expectedStr := "GregorianYears"
+
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			expectedStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_023(t *testing.T) {
+
+	expectedStr := "StdYearMth"
+	testStr := "stdyearmth"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_024(t *testing.T) {
+
+	expectedStr := "CumMonths"
+	testStr := "cummonths"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_025(t *testing.T) {
+
+	expectedStr := "CumWeeks"
+	testStr := "cumweeks"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_026(t *testing.T) {
+
+	expectedStr := "CumDays"
+	testStr := "cumdays"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_027(t *testing.T) {
+
+	expectedStr := "CumHours"
+	testStr := "cumhourS"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_028(t *testing.T) {
+
+	expectedStr := "CumMinutes"
+	testStr := "cumminUtes"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_029(t *testing.T) {
+
+	expectedStr := "CumSeconds"
+	testStr := "cumseconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_030(t *testing.T) {
+
+	expectedStr := "CumMilliseconds"
+	testStr := "cummiLLiseconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_031(t *testing.T) {
+
+	expectedStr := "CumMicroseconds"
+	testStr := "cuMMicroseconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_032(t *testing.T) {
+
+	expectedStr := "CumNanoseconds"
+	testStr := "cumnANoseconds"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_033(t *testing.T) {
+
+	expectedStr := "GregorianYears"
+	testStr := "grEGorianyears"
+
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationCalcType." +
+			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			testStr, err.Error())
+	}
+
+	if expectedStr != r.String() {
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+			"Instead, string='%v' ", expectedStr, r.String())
+	}
+
+}
+
+func TestTDurCalcTypeString_034(t *testing.T) {
+
+	expectedStr := "XRAYxxx"
+
+	_, err :=  TimeDurationCalcType.ParseString(expectedStr, false)
+
+	if err == nil {
+		t.Errorf("Error: Expected an 'error' return from " +
+			"TimeDurationCalcType.ParseString(expectedStr, false). " +
+			"expectedStr = '%v'. NO ERROR WAS RETURNED!!! ",expectedStr)
+	}
+
+}
+
+func TestTDurCalcTypeString_035(t *testing.T) {
+
+	expectedStr := "XRAYxxx"
+
+	_, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
+
+	if err == nil {
+		t.Errorf("Error: Expected an 'error' return from " +
+			"TimeDurationCalcType.ParseString(expectedStr, false). " +
+			"expectedStr = '%v'. NO ERROR WAS RETURNED!!! ",expectedStr)
+	}
+
+}
+
+
 func TestTDurCalcTypeValue_001(t *testing.T) {
 
 	var r TDurCalcType

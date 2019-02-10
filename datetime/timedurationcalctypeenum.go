@@ -19,7 +19,6 @@ var mTDurCalcTypeStringToInt = map[string]int{}
 // This map is used for case insensitive look ups.
 var mTDurCalcTypeLwrCaseStringToInt = map[string]int{}
 
-
 // TDurCalcType - An enumeration of time duration calculation types.
 // The time duration calculation can allocate elapsed time by multiple
 // combinations of Years, Months, Weeks, Days, Hours, Seconds, Milliseconds,
@@ -79,7 +78,6 @@ var mTDurCalcTypeLwrCaseStringToInt = map[string]int{}
 //
 type TDurCalcType int
 
-
 // StdYearMth - Allocates time duration by Standard Year, months, weeks,
 // weekdays, date days, hours, minutes, seconds, milliseconds, microseconds
 // and nanoseconds. For the 'StdYearMth' time duration calculation type, all
@@ -126,7 +124,7 @@ type TDurCalcType int
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).StdYearMth())
 //
 //
-func (TDurCalcType) StdYearMth() TDurCalcType {return TDurCalcType(0)}
+func (TDurCalcType) StdYearMth() TDurCalcType { return TDurCalcType(0) }
 
 // CumMonths - CumMonths - Cumulative Months Calculation. Years are ignored.
 // Years and Months are consolidated and counted as cumulative months. Years
@@ -179,7 +177,7 @@ func (TDurCalcType) StdYearMth() TDurCalcType {return TDurCalcType(0)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumMonths())
 //
-func (TDurCalcType) CumMonths() TDurCalcType {return TDurCalcType(1)}
+func (TDurCalcType) CumMonths() TDurCalcType { return TDurCalcType(1) }
 
 // CumWeeks - Cumulative Weeks calculation. Years and months are ignored. Instead,
 // years, months, weeks are consolidated and counted as cumulative weeks. Years and
@@ -229,7 +227,7 @@ func (TDurCalcType) CumMonths() TDurCalcType {return TDurCalcType(1)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumWeeks())
 //
-func (TDurCalcType) CumWeeks() TDurCalcType {return TDurCalcType(2)}
+func (TDurCalcType) CumWeeks() TDurCalcType { return TDurCalcType(2) }
 
 // CumDays - Cumulative Days calculation. Years, months and weeks are ignored.
 // Years, months, weeks and days are consolidated and counted as cumulative days.
@@ -280,7 +278,7 @@ func (TDurCalcType) CumWeeks() TDurCalcType {return TDurCalcType(2)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumDays())
 //
-func (TDurCalcType) CumDays() TDurCalcType {return TDurCalcType(3)}
+func (TDurCalcType) CumDays() TDurCalcType { return TDurCalcType(3) }
 
 // CumHours - Cumulative Hours calculation. Years, months, weeks, and days are
 // ignored. Years, months weeks, days and hours are consolidated as cumulative
@@ -333,7 +331,7 @@ func (TDurCalcType) CumDays() TDurCalcType {return TDurCalcType(3)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumHours())
 //
-func (TDurCalcType) CumHours() TDurCalcType {return TDurCalcType(4)}
+func (TDurCalcType) CumHours() TDurCalcType { return TDurCalcType(4) }
 
 // CumMinutes - Cumulative Minutes calculation. Years, months, weeks, days and hours
 // are ignored. Years, months weeks, days, hours and minutes are consolidated and
@@ -386,7 +384,7 @@ func (TDurCalcType) CumHours() TDurCalcType {return TDurCalcType(4)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumMinutes())
 //
-func (TDurCalcType) CumMinutes() TDurCalcType {return TDurCalcType(5)}
+func (TDurCalcType) CumMinutes() TDurCalcType { return TDurCalcType(5) }
 
 // CumSeconds - Cumulative Seconds calculation. Years, months, weeks, days, hours
 // and minutes are ignored. Years, months weeks, days, hours, minutes and seconds
@@ -439,7 +437,7 @@ func (TDurCalcType) CumMinutes() TDurCalcType {return TDurCalcType(5)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumSeconds())
 //
-func (TDurCalcType) CumSeconds() TDurCalcType {return TDurCalcType(6)}
+func (TDurCalcType) CumSeconds() TDurCalcType { return TDurCalcType(6) }
 
 // CumMilliseconds - Cumulative Milliseconds calculation. Years, months, weeks, days,
 // hours, minutes and seconds are ignored. Years, months, weeks, days, hours, minutes,
@@ -491,7 +489,7 @@ func (TDurCalcType) CumSeconds() TDurCalcType {return TDurCalcType(6)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumMilliseconds())
 //
-func (TDurCalcType) CumMilliseconds() TDurCalcType {return TDurCalcType(7)}
+func (TDurCalcType) CumMilliseconds() TDurCalcType { return TDurCalcType(7) }
 
 // CumMicroseconds - Cumulative Milliseconds calculation. Years, months, weeks, days,
 // hours, minutes, seconds and milliseconds are ignored. Years, months, weeks, days,
@@ -545,7 +543,7 @@ func (TDurCalcType) CumMilliseconds() TDurCalcType {return TDurCalcType(7)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumMicroseconds())
 //
-func (TDurCalcType) CumMicroseconds() TDurCalcType {return TDurCalcType(8)}
+func (TDurCalcType) CumMicroseconds() TDurCalcType { return TDurCalcType(8) }
 
 // CumNanoSeconds - Cumulative Nanoseconds calculation. Years, months, weeks, days,
 // hours, minutes, seconds milliseconds and microseconds are ignored. Years, months,
@@ -599,7 +597,7 @@ func (TDurCalcType) CumMicroseconds() TDurCalcType {return TDurCalcType(8)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).CumNanoseconds())
 //
-func (TDurCalcType) CumNanoseconds() TDurCalcType {return TDurCalcType(9)}
+func (TDurCalcType) CumNanoseconds() TDurCalcType { return TDurCalcType(9) }
 
 // GregorianYears - Gregorian Year calculation. Allocates time duration by Years,
 // Months, Weeks, WeekDays, Date Days, Hours, Minutes, Seconds, Milliseconds,
@@ -656,7 +654,7 @@ func (TDurCalcType) CumNanoseconds() TDurCalcType {return TDurCalcType(9)}
 //
 //	Example 2: SomeFuncRequiringTimeDurCalcType(TDurCalcType(0).GregorianYears())
 //
-func (TDurCalcType) GregorianYears() TDurCalcType {return TDurCalcType(10)}
+func (TDurCalcType) GregorianYears() TDurCalcType { return TDurCalcType(10) }
 
 // String - Returns a string with the name of the enumeration associated
 // with this instance of 'TDurCalcType'. This is a standard utility method
@@ -674,9 +672,8 @@ func (c TDurCalcType) String() string {
 
 	c.checkInitializeMaps(false)
 
-	return  mTDurCalcTypeIntToString[int(c)]
+	return mTDurCalcTypeIntToString[int(c)]
 }
-
 
 // ParseString - Receives a string and attempts to match it with
 // the string value of a supported enumeration. If successful, a
@@ -734,7 +731,7 @@ func (c TDurCalcType) ParseString(
 	result := TDurCalcType(0)
 	if len(valueString) < 3 {
 		return result,
-			fmt.Errorf(ePrefix +
+			fmt.Errorf(ePrefix+
 				"Input parameter 'valueString' is INVALID! valueString='%v' ", valueString)
 	}
 
@@ -747,13 +744,7 @@ func (c TDurCalcType) ParseString(
 
 		if !ok {
 			return TDurCalcType(0),
-				fmt.Errorf(ePrefix +
-					"'valueString' did NOT MATCH a TDurCalcType. valueString='%v' ", valueString)
-		}
-
-		if !ok {
-			return TDurCalcType(0),
-				fmt.Errorf(ePrefix +
+				fmt.Errorf(ePrefix+
 					"'valueString' did NOT MATCH a TDurCalcType. valueString='%v' ", valueString)
 		}
 
@@ -761,12 +752,11 @@ func (c TDurCalcType) ParseString(
 
 	} else {
 
-
 		idx, ok = mTDurCalcTypeLwrCaseStringToInt[strings.ToLower(valueString)]
 
 		if !ok {
 			return TDurCalcType(0),
-				fmt.Errorf(ePrefix +
+				fmt.Errorf(ePrefix+
 					"'valueString' did NOT MATCH a TDurCalcType. valueString='%v' ", valueString)
 		}
 
@@ -807,7 +797,6 @@ func (c TDurCalcType) Value() int {
 //
 func (c TDurCalcType) checkInitializeMaps(reInitialize bool) {
 
-
 	if !reInitialize &&
 		mTDurCalcTypeIntToString != nil &&
 		len(mTDurCalcTypeIntToString) > 3 &&
@@ -818,18 +807,18 @@ func (c TDurCalcType) checkInitializeMaps(reInitialize bool) {
 		return
 	}
 
-	var t  = TDurCalcType(0).StdYearMth()
+	var t = TDurCalcType(0).StdYearMth()
 
-	mTDurCalcTypeIntToString = make(map[int] string, 0)
-	mTDurCalcTypeStringToInt = make(map[string] int, 0)
-	mTDurCalcTypeLwrCaseStringToInt = make(map[string] int, 0)
+	mTDurCalcTypeIntToString = make(map[int]string, 0)
+	mTDurCalcTypeStringToInt = make(map[string]int, 0)
+	mTDurCalcTypeLwrCaseStringToInt = make(map[string]int, 0)
 
 	s := reflect.TypeOf(t)
 
 	r := reflect.TypeOf(int(0))
 	args := [1]reflect.Value{reflect.Zero(s)}
 
-	for i:= 0; i < s.NumMethod(); i ++ {
+	for i := 0; i < s.NumMethod(); i++ {
 
 		f := s.Method(i).Name
 
@@ -840,7 +829,7 @@ func (c TDurCalcType) checkInitializeMaps(reInitialize bool) {
 			continue
 		}
 
-		value:= s.Method(i).Func.Call(args[:])[0].Convert(r).Int()
+		value := s.Method(i).Func.Call(args[:])[0].Convert(r).Int()
 		x := int(value)
 		mTDurCalcTypeIntToString[x] = f
 		mTDurCalcTypeStringToInt[f] = x
@@ -848,4 +837,12 @@ func (c TDurCalcType) checkInitializeMaps(reInitialize bool) {
 	}
 
 }
+
+// TimeDurationCalcType - Public Global Variable of type 'TDurCalcType'.
+// Used to access the 'TDurCalcType' enumeration by dot operator.
+//
+//   Example:
+//      TimeDurationCalcType.StdYearMth()
+//
+var TimeDurationCalcType TDurCalcType
 

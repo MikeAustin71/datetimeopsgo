@@ -19,11 +19,11 @@ package datetime
 //	    D        Delta Time Zone                   UTC +4
 //	    E        Echo Time Zone                    UTC +5
 //	    F        Foxtrot Time Zone                 UTC +6
-//      G        Golf Time Zone                    UTC +7
+//	    G        Golf Time Zone                    UTC +7
 //	    H        Hotel Time Zone                   UTC +8
 //	    I        India Time Zone                   UTC +9
-//      K        Kilo Time Zone                    UTC +10
-//      L        Lima Time Zone                    UTC +11
+//	    K        Kilo Time Zone                    UTC +10
+//	    L        Lima Time Zone                    UTC +11
 //	    M        Mike Time Zone                    UTC +12
 //	    N        November Time Zone                UTC -1
 //	    O        Oscar Time Zone                   UTC -2
@@ -33,8 +33,8 @@ package datetime
 //	    S        Sierra Time Zone                  UTC -6
 //	    T        Tango Time Zone                   UTC -7
 //	    U        Uniform Time Zone                 UTC -8
-//      V        Victor Time Zone                  UTC -9
-//      W        Whiskey Time Zone                 UTC -10
+//	    V        Victor Time Zone                  UTC -9
+//	    W        Whiskey Time Zone                 UTC -10
 //	    X        X-ray Time Zone                   UTC -11
 //	    Y        Yankee Time Zone                  UTC -12
 //	    Z        Zulu Time Zone                    UTC +0
