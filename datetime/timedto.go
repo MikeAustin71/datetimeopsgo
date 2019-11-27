@@ -636,12 +636,12 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 
 	t2Dto := tDto.CopyOut()
 
-	locUTC, err := time.LoadLocation(IanaTz.UTC())
+	locUTC, err := time.LoadLocation(TZones.UTC())
 
 	if err != nil {
 		return false,
 			fmt.Errorf(ePrefix+
-				"Error returned by time.LoadLocation(IanaTz.UTC()). Error='%v'",
+				"Error returned by time.LoadLocation(TZones.UTC()). Error='%v'",
 				err.Error())
 	}
 
@@ -993,11 +993,11 @@ func (tDto *TimeDto) allocateTotalNanoseconds(totalNanoSeconds int) error {
 func (tDto *TimeDto) preProcessTimeZoneLocation(timeZoneLocation string) string {
 
 	if len(timeZoneLocation) == 0 {
-		return IanaTz.UTC()
+		return TZones.UTC()
 	}
 
 	if strings.ToLower(timeZoneLocation) == "local" {
-		return IanaTz.Local()
+		return TZones.Local()
 	}
 
 	return timeZoneLocation

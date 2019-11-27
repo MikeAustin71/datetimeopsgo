@@ -23,7 +23,7 @@ func ExampleDateTzDto001() {
 		54,
 		30,
 		158712300,
-		dt.IanaTz.US.Central(),
+		dt.TZones.US.Central(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {

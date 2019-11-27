@@ -10,14 +10,14 @@ func TestTimeDurationDto_DaylightSavings_01(t *testing.T) {
 
 	// This test verifies duration over a daylight savings time threshold.
 
-	locUSCentral, _ := time.LoadLocation(IanaTz.US.Central())
+	locUSCentral, _ := time.LoadLocation(TZones.US.Central())
 
 	t1USCentral := time.Date(2018, time.Month(3), 10, 18, 0, 0, 0, locUSCentral)
 
 	hoursDur := int64(24) * HourNanoSeconds
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(t1USCentral, time.Duration(hoursDur),
-		TDurCalcType(0).StdYearMth(), IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+		TDurCalcType(0).StdYearMth(), TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). "+
@@ -48,10 +48,10 @@ func TestTimeDurationDto_DaylightSavings_01(t *testing.T) {
 
 func TestTimeDurationDto_GetCumSecondsTimeStr_01(t *testing.T) {
 
-	locUSCentral, err := time.LoadLocation(IanaTz.US.Central())
+	locUSCentral, err := time.LoadLocation(TZones.US.Central())
 
 	if err != nil {
-		fmt.Printf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
+		fmt.Printf("Error returned by time.LoadLocation(TZones.US.Central()). Error='%v'", err.Error())
 	}
 
 	year := 2018
@@ -72,7 +72,7 @@ func TestTimeDurationDto_GetCumSecondsTimeStr_01(t *testing.T) {
 		t1USCentral,
 		t2USCentral,
 		TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	actualStr, _ := tDur.GetCumSecondsTimeStr()
@@ -88,10 +88,10 @@ func TestTimeDurationDto_GetCumSecondsTimeStr_01(t *testing.T) {
 
 func TestTimeDurationDto_GetCumSecondsDto_01(t *testing.T) {
 
-	locUSCentral, err := time.LoadLocation(IanaTz.US.Central())
+	locUSCentral, err := time.LoadLocation(TZones.US.Central())
 
 	if err != nil {
-		fmt.Printf("Error returned by time.LoadLocation(IanaTz.US.Central()). Error='%v'", err.Error())
+		fmt.Printf("Error returned by time.LoadLocation(TZones.US.Central()). Error='%v'", err.Error())
 	}
 
 	year := 2018
@@ -112,7 +112,7 @@ func TestTimeDurationDto_GetCumSecondsDto_01(t *testing.T) {
 		t1USCentral,
 		t2USCentral,
 		TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	d2Dur, _ := tDur.GetCumSecondsCalcDto()
@@ -179,7 +179,7 @@ func TestTimeDurationDto_GetYearMthDaysTimeAbbrvStr(t *testing.T) {
 			t2,
 			t1,
 			TDurCalcType(0).StdYearMth(),
-			IanaTz.US.Central(),
+			TZones.US.Central(),
 			FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -212,7 +212,7 @@ func TestTimeDurationDto_GetYearsMthsWeeksTimeAbbrvStr(t *testing.T) {
 		t2,
 		t1,
 		TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -242,7 +242,7 @@ func TestTimeDurationDto_NewStartTimeDuration_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 	tDto, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(t1, t12Dur,
-		TDurCalcType(0).StdYearMth(), IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+		TDurCalcType(0).StdYearMth(), TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeDurationCalcTz(t1, t12Dur). "+
@@ -287,7 +287,7 @@ func TestTimeDurationDto_NewStartEndTimes_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 
 	tDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(t1, t2, TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+		TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesCalcTz(...). Error='%v'", err.Error())
@@ -402,7 +402,7 @@ func TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01(t *testing.T) {
 	}
 
 	tDto, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalcTz(t1Dtz, t2Dtz, TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+		TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesDateTzDtoCalcTz(...). "+
@@ -519,7 +519,7 @@ func TestTimeDurationDto_NewStartEndDateTzDtoTz_01(t *testing.T) {
 	}
 
 	tDto, err := TimeDurationDto{}.NewStartEndDateTzDtoTz(t1Dtz, t2Dtz,
-		IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+		TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesDateTzDtoCalcTz(...). "+
@@ -836,7 +836,7 @@ func TestTimeDurationDto_SetStartEndTimes(t *testing.T) {
 		t1,
 		t2,
 		TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -955,7 +955,7 @@ func TestTimeDurationDto_SetStartEndTimes_02(t *testing.T) {
 		t1,
 		t2,
 		TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -989,7 +989,7 @@ func TestTimeDurationDto_SetStartEndTimes_03(t *testing.T) {
 		t2,
 		t1,
 		TDurCalcType(0).StdYearMth(),
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -1015,7 +1015,7 @@ func TestTimeDurationDto_SetStartEndTimes_04(t *testing.T) {
 
 	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t1, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimesTz(t1, t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartEndTimesTz(...). "+""+
@@ -1050,7 +1050,7 @@ func TestTimeDurationDto_SetStartTimePlusTime(t *testing.T) {
 	err := dur.SetStartTimePlusTimeDtoTz(
 		t1,
 		timeDto,
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -1098,7 +1098,7 @@ func TestTimeDurationDto_SetStartTimeMinusTime(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	err := dur.SetEndTimeMinusTimeDtoTz(t2, timeDto, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := dur.SetEndTimeMinusTimeDtoTz(t2, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetEndTimeMinusTimeDtoTz(...). "+
@@ -1147,7 +1147,7 @@ func TestTimeDurationDto_SetStartTimeDuration(t *testing.T) {
 	err := dur.SetStartTimeDurationTz(
 		t1,
 		t12Dur,
-		IanaTz.US.Central(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {

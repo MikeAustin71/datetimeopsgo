@@ -7,7 +7,7 @@ import (
 
 func TestTimeZoneDefDto_New_01(t *testing.T) {
 
-	usPacificLoc, _ := time.LoadLocation(IanaTz.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific :=
 		time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
@@ -68,7 +68,7 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 }
 
 func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
-	usPacificLoc, _ := time.LoadLocation(IanaTz.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
@@ -131,7 +131,7 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 
 func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 
-	usPacificLoc, _ := time.LoadLocation(IanaTz.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
@@ -198,7 +198,7 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 
 func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 
-	usPacificLoc, _ := time.LoadLocation(IanaTz.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"

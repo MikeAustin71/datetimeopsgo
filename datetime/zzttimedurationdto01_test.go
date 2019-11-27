@@ -53,12 +53,12 @@ type timedurdtoTestSuite struct {
 func (suite *timedurdtoTestSuite) SetupSuite() {
 	suite.fmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	suite.locUSCentral, _ = time.LoadLocation(IanaTz.US.Central())
-	suite.locUSPacific, _ = time.LoadLocation(IanaTz.US.Pacific())
-	suite.locParis, _ = time.LoadLocation(IanaTz.Europe.Paris())
-	suite.locCairo, _ = time.LoadLocation(IanaTz.Africa.Cairo())
-	suite.locMoscow, _ = time.LoadLocation(IanaTz.Europe.Moscow())
-	suite.locTokyo, _ = time.LoadLocation(IanaTz.Asia.Tokyo())
+	suite.locUSCentral, _ = time.LoadLocation(TZones.US.Central())
+	suite.locUSPacific, _ = time.LoadLocation(TZones.US.Pacific())
+	suite.locParis, _ = time.LoadLocation(TZones.Europe.Paris())
+	suite.locCairo, _ = time.LoadLocation(TZones.Africa.Cairo())
+	suite.locMoscow, _ = time.LoadLocation(TZones.Europe.Moscow())
+	suite.locTokyo, _ = time.LoadLocation(TZones.Asia.Tokyo())
 }
 
 func (suite *timedurdtoTestSuite) TearDownSuite() {
@@ -265,17 +265,17 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_02() {
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 
-	t1Dur, err := TimeDurationDto{}.NewAutoEnd(suite.t1AsiaTokyo, IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewAutoEnd(suite.t1AsiaTokyo, TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewAutoEnd() :")
 
-	assert.Equal(suite.T(), IanaTz.US.Central(), t1Dur.StartTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), IanaTz.US.Central(), t1Dur.EndTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(), suite.t1USCentral.Equal(t1Dur.StartTimeDateTz.DateTime), "Error: Expected Starting Date Time NOT EQUAL to t1Dur.StartTimeDateTz!")
 
-	cLoc, _ := time.LoadLocation(IanaTz.US.Central())
+	cLoc, _ := time.LoadLocation(TZones.US.Central())
 
 	checkTime := time.Now().In(cLoc)
 
@@ -289,13 +289,13 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoStart_01() {
 
-	t1Dur, err := TimeDurationDto{}.NewAutoStart(IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewAutoStart(TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewAutoStart() :")
 
-	assert.Equal(suite.T(), IanaTz.US.Central(), t1Dur.StartTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), IanaTz.US.Central(), t1Dur.EndTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(),
 		suite.fmtStr == t1Dur.StartTimeDateTz.DateTimeFmt,
@@ -317,7 +317,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTz_01() {
 
 	// In this test, t2 is submitted as a Tokyo Time Zone and t3 is submitted as a Cairo
 	// Time Zone. However, a standard timezone of US Central is specified.
-	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t2AsiaTokyo, suite.t3AfricaCairo, IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t2AsiaTokyo, suite.t3AfricaCairo, TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error:")
 
@@ -369,7 +369,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTzCalc_01(
 	// Time Zone. However, a standard timezone of US Central is specified. Also,
 	// The calculation type is specified as "Standard".
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(suite.t2AsiaTokyo, suite.t3AfricaCairo,
-		TDurCalcType(0).StdYearMth(), IanaTz.US.Central(), suite.fmtStr)
+		TDurCalcType(0).StdYearMth(), TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error:")
 
@@ -534,7 +534,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzC
 	dTzEnd, err := DateTzDto{}.New(suite.t3AfricaCairo, suite.fmtStr)
 
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalcTz(dTzStart, dTzEnd,
-		TDurCalcType(0).StdYearMth(), IanaTz.US.Central(), suite.fmtStr)
+		TDurCalcType(0).StdYearMth(), TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error:")
 
@@ -675,7 +675,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01(
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationTz(suite.t1USCentral, actualTimeDuration, IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationTz(suite.t1USCentral, actualTimeDuration, TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
@@ -710,7 +710,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTzCalc
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationCalcTz(suite.t1USCentral, actualTimeDuration,
-		TDurCalcType(0).StdYearMth(), IanaTz.US.Central(), suite.fmtStr)
+		TDurCalcType(0).StdYearMth(), TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
@@ -820,7 +820,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTz(dTz, actualTimeDuration, IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTz(dTz, actualTimeDuration, TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationDateDtoTz:")
 
@@ -857,7 +857,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t1USCentral, suite.fmtStr):")
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTzCalc(dTz, actualTimeDuration, IanaTz.US.Central(), TDurCalcType(0).StdYearMth(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTzCalc(dTz, actualTimeDuration, TZones.US.Central(), TDurCalcType(0).StdYearMth(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
@@ -986,15 +986,15 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01(
 
 	s := fmt.Sprintf("Expected StartDateTime Time Zone='%v'. "+
 		"Instead StartDateTime TimeZone='%v'",
-		IanaTz.Asia.Tokyo(), tDur.StartTimeDateTz.TimeZone.LocationName)
+		TZones.Asia.Tokyo(), tDur.StartTimeDateTz.TimeZone.LocationName)
 
-	assert.Equal(suite.T(), IanaTz.Asia.Tokyo(), tDur.StartTimeDateTz.TimeZone.LocationName, s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.StartTimeDateTz.TimeZone.LocationName, s)
 
 	s = fmt.Sprintf("Expected EndDateTime Time Zone='%v'. "+
 		"Instead EndDateTime TimeZone='%v'",
-		IanaTz.Asia.Tokyo(), tDur.EndTimeDateTz.TimeZone.LocationName)
+		TZones.Asia.Tokyo(), tDur.EndTimeDateTz.TimeZone.LocationName)
 
-	assert.Equal(suite.T(), IanaTz.Asia.Tokyo(), tDur.EndTimeDateTz.TimeZone.LocationName, s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.EndTimeDateTz.TimeZone.LocationName, s)
 
 	assert.True(suite.T(), suite.t1AsiaTokyo.Equal(tDur.StartTimeDateTz.DateTime),
 		"Error: Expected StartDateTime (suite.t1AsiaTokyo) NOT EQUAL to t1Dur.StartTimeDateTz!")
@@ -1018,7 +1018,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 	// Time Zone. However, a standard timezone of US Central is specified. Note,
 	// The calculation type is specified as Cumulative Months.
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(suite.t4AsiaTokyo, suite.t5AfricaCairo,
-		TDurCalcType(0).CumMonths(), IanaTz.US.Central(), suite.fmtStr)
+		TDurCalcType(0).CumMonths(), TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error:")
 
@@ -1183,7 +1183,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_02() {
 	// In this test, t4 is submitted as a Tokyo Time Zone and t5 is submitted as a Cairo
 	// Time Zone. However, a standard timezone of US Central is specified. Note,
 	// The calculation type is specified as Cumulative Months.
-	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartEndTimesTz :")
 
@@ -1317,7 +1317,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
 	// Time Zone. However, a standard timezone of US Central is specified. Note,
 	// the calculation type is specified as Cumulative Months.
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(suite.t4AsiaTokyo, suite.t5AfricaCairo,
-		TDurCalcType(0).CumWeeks(), IanaTz.US.Central(), suite.fmtStr)
+		TDurCalcType(0).CumWeeks(), TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error:")
 
@@ -1503,7 +1503,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_02() {
 	// In this test, t4 is submitted as a Tokyo Time Zone and t5 is submitted as a Cairo
 	// Time Zone. However, a standard timezone of US Central is specified. Note,
 	// the calculation type is specified as Cumulative Months.
-	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartEndTimesTz:")
 
@@ -1651,7 +1651,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_01() {
 	// Time Zone. However, a standard timezone of US Central is specified. Note,
 	// the calculation type is specified as Cumulative Months.
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesCalcTz(suite.t4AsiaTokyo, suite.t5AfricaCairo,
-		TDurCalcType(0).CumDays(), IanaTz.US.Central(), suite.fmtStr)
+		TDurCalcType(0).CumDays(), TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartEndTimesCalcTz:")
 
@@ -1824,7 +1824,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_02() {
 	// In this test, t4 is submitted as a Tokyo Time Zone and t5 is submitted as a Cairo
 	// Time Zone. However, a standard timezone of US Central is specified. Note,
 	// the calculation type is specified as Cumulative Months.
-	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, IanaTz.US.Central(), suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimesTz(suite.t4AsiaTokyo, suite.t5AfricaCairo, TZones.US.Central(), suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error NewStartEndTimesTz:")
 

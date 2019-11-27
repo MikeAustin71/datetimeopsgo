@@ -662,17 +662,17 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	t1, err := tDto.GetDateTime(IanaTz.US.Central())
+	t1, err := tDto.GetDateTime(TZones.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by tDto.GetDateTime(IanaTz.US.Central()). Error='%v'", err.Error())
+		t.Errorf("Error returned by tDto.GetDateTime(TZones.US.Central()). Error='%v'", err.Error())
 	}
 
-	loc, err := time.LoadLocation(IanaTz.US.Central())
+	loc, err := time.LoadLocation(TZones.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(IanaTz.US.Central()). "+
-			"IanaTz.US.Central()='%v'  Error='%v'", IanaTz.US.Central(), err.Error())
+		t.Errorf("Error returned by time.LoadLocation(TZones.US.Central()). "+
+			"TZones.US.Central()='%v'  Error='%v'", TZones.US.Central(), err.Error())
 	}
 
 	t2 := time.Date(year, time.Month(month), dateDay, hour, minute, second, totNanoSecs, loc)
@@ -726,7 +726,7 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 	}
 
 	if !t1.Equal(t2) {
-		t.Errorf("Error: expected t1 to EQUAL t2. They are NOT Equal! t1='%v'   t2='%v'", t1.Format(IanaTz.US.Central()), t2.Format(IanaTz.US.Central()))
+		t.Errorf("Error: expected t1 to EQUAL t2. They are NOT Equal! t1='%v'   t2='%v'", t1.Format(TZones.US.Central()), t2.Format(TZones.US.Central()))
 	}
 
 }
@@ -935,7 +935,7 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). Error='%v'", err.Error())
@@ -943,10 +943,10 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 
 	tDto, err := TimeDto{}.NewFromDateTime(dTzDto.DateTime)
 
-	dt2, err := tDto.GetDateTime(IanaTz.US.Central())
+	dt2, err := tDto.GetDateTime(TZones.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by tDto.GetDateTime(IanaTz.US.Central()). Error='%v'", err.Error())
+		t.Errorf("Error returned by tDto.GetDateTime(TZones.US.Central()). Error='%v'", err.Error())
 	}
 
 	if !dt2.Equal(dTzDto.DateTime) {
@@ -960,7 +960,7 @@ func TestTimeDto_NewFromDateTzDto_01(t *testing.T) {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, IanaTz.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). Error='%v'", err.Error())
@@ -968,7 +968,7 @@ func TestTimeDto_NewFromDateTzDto_01(t *testing.T) {
 
 	tDto, err := TimeDto{}.NewFromDateTzDto(dTzDto)
 
-	t2, err := tDto.GetDateTime(IanaTz.US.Central())
+	t2, err := tDto.GetDateTime(TZones.US.Central())
 
 	if !dTzDto.DateTime.Equal(t2) {
 		t.Error("Error: Expected t2 to EQUAL dTzDto. It did NOT!")

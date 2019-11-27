@@ -52,73 +52,73 @@ type UsMilitaryTimeZones	string
 
 // Alpha - Military Time Zone 'A' equivalent to "Etc/GMT-1"
 // Offset from UTC is computed at +1 hours
-func (umtz UsMilitaryTimeZones) Alpha() string {return IanaTz.Etc.GMT_Minus_1()}
+func (umtz UsMilitaryTimeZones) Alpha() string {return TZones.Etc.GMT_Minus_1()}
 
 // Bravo - Military Time Zone 'B' equivalent to "Etc/GMT-2"
 // Offset from UTC is computed at +2 hours
-func (umtz UsMilitaryTimeZones) Bravo() string {return IanaTz.Etc.GMT_Minus_2()}
+func (umtz UsMilitaryTimeZones) Bravo() string {return TZones.Etc.GMT_Minus_2()}
 
 // Charlie - Military Time Zone 'C' equivalent to "Etc/GMT-3"
 // Offset from UTC is computed at +3 hours
-func (umtz UsMilitaryTimeZones) Charlie() string {return IanaTz.Etc.GMT_Minus_3()}
+func (umtz UsMilitaryTimeZones) Charlie() string {return TZones.Etc.GMT_Minus_3()}
 
 // Delta - Military Time Zone 'D' equivalent to "Etc/GMT-4"
 // Offset from UTC is computed at +4 hours
-func (umtz UsMilitaryTimeZones) Delta() string {return IanaTz.Etc.GMT_Minus_4()}
+func (umtz UsMilitaryTimeZones) Delta() string {return TZones.Etc.GMT_Minus_4()}
 
 // Echo - Military Time Zone 'E' equivalent to "Etc/GMT-5"
 // Offset from UTC is computed at +5 hours
-func (umtz UsMilitaryTimeZones) Echo() string {return IanaTz.Etc.GMT_Minus_5()}
+func (umtz UsMilitaryTimeZones) Echo() string {return TZones.Etc.GMT_Minus_5()}
 
 // Foxtrot - Military Time Zone 'F' equivalent to "Etc/GMT-6"
 // Offset from UTC is computed at +6 hours
-func (umtz UsMilitaryTimeZones) Foxtrot() string {return IanaTz.Etc.GMT_Minus_6()}
+func (umtz UsMilitaryTimeZones) Foxtrot() string {return TZones.Etc.GMT_Minus_6()}
 
 // Golf - Military Time Zone 'G' equivalent to "Etc/GMT-7"
 // Offset from UTC is computed at +7 hours
-func (umtz UsMilitaryTimeZones) Golf() string {return IanaTz.Etc.GMT_Minus_7()}
+func (umtz UsMilitaryTimeZones) Golf() string {return TZones.Etc.GMT_Minus_7()}
 
 // Hotel - Military Time Zone 'H' equivalent to "Etc/GMT-8"
 // Offset from UTC is computed at +8 hours
-func (umtz UsMilitaryTimeZones) Hotel() string {return IanaTz.Etc.GMT_Minus_8()}
+func (umtz UsMilitaryTimeZones) Hotel() string {return TZones.Etc.GMT_Minus_8()}
 
 // India - Military Time Zone 'I' equivalent to "Etc/GMT-9"
 // Offset from UTC is computed at +9 hours
-func (umtz UsMilitaryTimeZones) India() string {return IanaTz.Etc.GMT_Minus_9()}
+func (umtz UsMilitaryTimeZones) India() string {return TZones.Etc.GMT_Minus_9()}
 
 // Kilo - Military Time Zone 'K' equivalent to "Etc/GMT-10"
 // Offset from UTC is computed at +10 hours
-func (umtz UsMilitaryTimeZones) Kilo() string {return IanaTz.Etc.GMT_Minus_10()}
+func (umtz UsMilitaryTimeZones) Kilo() string {return TZones.Etc.GMT_Minus_10()}
 
 // Lima - Military Time Zone 'L' equivalent to "Etc/GMT-11"
 // Offset from UTC is computed at +11 hours
-func (umtz UsMilitaryTimeZones) Lima() string {return IanaTz.Etc.GMT_Minus_11()}
+func (umtz UsMilitaryTimeZones) Lima() string {return TZones.Etc.GMT_Minus_11()}
 
 // Mike - Military Time Zone 'M' equivalent to "Etc/GMT-12"
 // Offset from UTC is computed at +12 hours
-func (umtz UsMilitaryTimeZones) Mike() string {return IanaTz.Etc.GMT_Minus_12()}
+func (umtz UsMilitaryTimeZones) Mike() string {return TZones.Etc.GMT_Minus_12()}
 
 // November - Military Time Zone 'N' equivalent to "Etc/GMT+1"
 // Offset from UTC is computed at -1 hours
-func (umtz UsMilitaryTimeZones) November() string {return IanaTz.Etc.GMT_Plus_1()}
+func (umtz UsMilitaryTimeZones) November() string {return TZones.Etc.GMT_Plus_1()}
 
 // Oscar - Military Time Zone 'O' equivalent to "Etc/GMT+2"
 // Offset from UTC is computed at -2 hours
-func (umtz UsMilitaryTimeZones) Oscar() string {return IanaTz.Etc.GMT_Plus_2()}
+func (umtz UsMilitaryTimeZones) Oscar() string {return TZones.Etc.GMT_Plus_2()}
 
 // Papa - Military Time Zone 'P' equivalent to "Etc/GMT+3"
 // Offset from UTC is computed at -3 hours
-func (umtz UsMilitaryTimeZones) Papa() string {return IanaTz.Etc.GMT_Plus_3()}
+func (umtz UsMilitaryTimeZones) Papa() string {return TZones.Etc.GMT_Plus_3()}
 
 // Quebec - Military Time Zone 'Q' equivalent to "Etc/GMT+4"
 // Offset from UTC is computed at -4 hours
-func (umtz UsMilitaryTimeZones) Quebec() string {return IanaTz.Etc.GMT_Plus_4()}
+func (umtz UsMilitaryTimeZones) Quebec() string {return TZones.Etc.GMT_Plus_4()}
 
 // Romeo - Military Time Zone 'R' equivalent to "Etc/GMT+5"
 // Offset from UTC is computed at -5 hours
-func (umtz UsMilitaryTimeZones) Romeo() string {return IanaTz.Etc.GMT_Plus_5()}
+func (umtz UsMilitaryTimeZones) Romeo() string {return TZones.Etc.GMT_Plus_5()}
 
 // Sierra - Military Time Zone 'S' equivalent to "Etc/GMT+6"
 // Offset from UTC is computed at -6 hours
-func (umtz UsMilitaryTimeZones) Sierra() string {return IanaTz.Etc.GMT_Plus_6()}
+func (umtz UsMilitaryTimeZones) Sierra() string {return TZones.Etc.GMT_Plus_6()}
 

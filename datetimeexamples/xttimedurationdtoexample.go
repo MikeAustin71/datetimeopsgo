@@ -9,7 +9,7 @@ import (
 // ExampleTimeDuration001
 func ExampleTimeDuration001() {
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-	locUSCentral, _ := time.LoadLocation(dt.IanaTz.US.Central())
+	locUSCentral, _ := time.LoadLocation(dt.TZones.US.Central())
 
 	t1USCentral := time.Date(2018, time.Month(3), 10, 18, 0, 0, 0, locUSCentral)
 	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
@@ -19,7 +19,7 @@ func ExampleTimeDuration001() {
 	hoursDur := int64(24) * dt.HourNanoSeconds
 
 	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeDurationCalcTz(t1USCentral, time.Duration(hoursDur),
-		dt.TDurCalcType(0).StdYearMth(), dt.IanaTz.US.Central(), fmtStr)
+		dt.TDurCalcType(0).StdYearMth(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
@@ -37,7 +37,7 @@ func ExampleTimeDuration001() {
 func ExampleTimeDuration002() {
 
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-	locUSCentral, _ := time.LoadLocation(dt.IanaTz.US.Central())
+	locUSCentral, _ := time.LoadLocation(dt.TZones.US.Central())
 
 	t1USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
 	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
@@ -46,7 +46,7 @@ func ExampleTimeDuration002() {
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
 
 	t1Dur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
-		dt.TDurCalcType(0).CumDays(), dt.IanaTz.US.Central(), fmtStr)
+		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
@@ -79,7 +79,7 @@ func ExampleTimeDuration002() {
 // ExampleTimeDuration003
 func ExampleTimeDuration003() {
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
-	locUSCentral, _ := time.LoadLocation(dt.IanaTz.US.Central())
+	locUSCentral, _ := time.LoadLocation(dt.TZones.US.Central())
 
 	t1USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
 	//t1USCentral := time.Date(2018, time.Month(4),1,20,02,18,792489279, locUSCentral)
@@ -88,7 +88,7 @@ func ExampleTimeDuration003() {
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
 
 	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
-		dt.TDurCalcType(0).CumDays(), dt.IanaTz.US.Central(), fmtStr)
+		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())

@@ -415,7 +415,7 @@ func (dec *Decimal) GetFloat64() (float64, big.Accuracy, error) {
 	bf, status := big.NewFloat(0.0).SetString(dec.numStr)
 
 	if !status {
-		return float64(0.0), big.Accuracy(0), fmt.Errorf("SetString Failed. NumStr= %v", dec.numStr)
+		return 0.0, big.Accuracy(0), fmt.Errorf("SetString Failed. NumStr= %v", dec.numStr)
 	}
 
 	f64, accuracy := bf.Float64()
@@ -551,7 +551,7 @@ func (dec *Decimal) GetRelevantPrecision() uint {
 	}
 
 	isDecimal := false
-	decSep := rune('.')
+	decSep := '.'
 	decPos := -1
 	lastDecPos := -1
 	if dec.decimalSeparator != 0 {
@@ -1066,10 +1066,11 @@ func (dec *Decimal) NumStrPrecisionToDecimal(str string, precision uint, roundRe
 	n1.DecimalSeparator = dec.decimalSeparator
 	n1.CurrencySymbol = dec.currencySymbol
 
-	nDto, err := n1.ScaleAbsoluteValStr(str, precision, true)
+	nDto, err := n1.ScaleAbsoluteValStr(str, precision, roundResult)
 
 	if err != nil {
-		return Decimal{}, fmt.Errorf("NumStrPrecisionToDecimal() Error received from nDto.ScaleAbsoluteValStr(nDto.NumStrOut, precision, true). nDto.NumStrOut='%v' precision='%v' Error= %v", nDto.NumStrOut, precision, err)
+		return Decimal{}, fmt.Errorf("NumStrPrecisionToDecimal() Error received from nDto.ScaleAbsoluteValStr(nDto.NumStrOut, precision, true).\n" +
+			"precision='%v' Error= %v", precision, err)
 	}
 
 	d2, err := dec.MakeDecimalFromNumStrDto(nDto)

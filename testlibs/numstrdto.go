@@ -910,7 +910,7 @@ func (nDto *NumStrDto) GetZeroNumStr(numFracDigits uint) NumStrDto {
 			n2Dto.NumStrOut += "0"
 		}
 
-		n2Dto.Precision = uint(numFracDigits)
+		n2Dto.Precision = numFracDigits
 	}
 
 	n2Dto.IsValid = true
@@ -1105,11 +1105,11 @@ func (nDto *NumStrDto) MultiplyNumStrs(n1Dto NumStrDto, n2Dto NumStrDto) (NumStr
 			n1 = int(n1Setup.AbsAllNumRunes[j]) - 48
 			n2 = int(n2Setup.AbsAllNumRunes[i]) - 48
 			n3 = (n1 * n2) + carry
-			n4 = int(math.Mod(float64(n3), float64(10.00)))
+			n4 = int(math.Mod(float64(n3), 10.00))
 
 			intMAry[levels][place] = n4
 
-			carry = int(n3 / 10)
+			carry = n3 / 10
 
 			place--
 		}
@@ -1133,7 +1133,7 @@ func (nDto *NumStrDto) MultiplyNumStrs(n1Dto NumStrDto, n2Dto NumStrDto) (NumStr
 			n4 = 0
 
 			if n3 > 9 {
-				n4 = int(math.Mod(float64(n3), float64(10.0)))
+				n4 = int(math.Mod(float64(n3), 10.0))
 				carry = n3 / 10
 
 			} else {
@@ -1201,7 +1201,7 @@ func (nDto *NumStrDto) ParseSignedBigInt(signedBigInt *big.Int, precision uint) 
 	n2Dto.SignVal = signVal
 	n2Dto.Precision = precision
 
-	absAllNumRunes := []rune(string(absBigInt.String()))
+	absAllNumRunes := []rune(absBigInt.String())
 	lenAbsAllNumRunes := len(absAllNumRunes)
 	iSpecPrecision := int(precision)
 	if iSpecPrecision >= lenAbsAllNumRunes {
@@ -1430,7 +1430,7 @@ func (nDto *NumStrDto) ParseNumStr(str string) (NumStrDto, error) {
 }
 
 // ScaleNumStr
-func (nDto *NumStrDto) ScaleNumStr(signedNumStr string, precision int, roundResult bool) (NumStrDto, error) {
+func (nDto *NumStrDto) ScaleNumStr(signedNumStr string, precision int) (NumStrDto, error) {
 
 	if precision < 0 {
 		precision = precision * -1
@@ -1760,7 +1760,7 @@ func (nDto *NumStrDto) ScaleAbsoluteValStr(signedNumStr string, precision uint, 
 		n1.AbsAllNumRunes = []rune{}
 		n1.AbsIntRunes = []rune{}
 		n1.AbsFracRunes = []rune{}
-		n1.AbsAllNumRunes = []rune(string(actualAbsAllNums.String()))
+		n1.AbsAllNumRunes = []rune(actualAbsAllNums.String())
 		lenN1AbsAllNumRunes = len(n1.AbsAllNumRunes)
 
 		for i := 0; i < lenN1AbsAllNumRunes; i++ {
@@ -1916,7 +1916,7 @@ func (nDto *NumStrDto) SetPrecision(signedNumStr string, precision uint, roundRe
 		n1.AbsAllNumRunes = []rune{}
 		n1.AbsIntRunes = []rune{}
 		n1.AbsFracRunes = []rune{}
-		n1.AbsAllNumRunes = []rune(string(actualAbsAllNums.String()))
+		n1.AbsAllNumRunes = []rune(actualAbsAllNums.String())
 		lenN1AbsAllNumRunes = len(n1.AbsAllNumRunes)
 
 		for i := 0; i < lenN1AbsAllNumRunes; i++ {

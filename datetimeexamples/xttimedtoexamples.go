@@ -56,7 +56,7 @@ func ExampleTimeDto002() {
 // ExampleTimeDto003
 func ExampleTimeDto003() {
 
-	locUTC, _ := time.LoadLocation(dt.IanaTz.UTC())
+	locUTC, _ := time.LoadLocation(dt.TZones.UTC())
 
 	realT0 := time.Time{}.In(locUTC).AddDate(-1, 0, 0)
 
@@ -84,7 +84,7 @@ func ExampleTimeDto003() {
 	fmt.Println("------------------------------------")
 	PrintOutTimeDtoFields(tDto)
 
-	startDate, _ := tDto.GetDateTime(dt.IanaTz.UTC())
+	startDate, _ := tDto.GetDateTime(dt.TZones.UTC())
 
 	fmt.Println("Calculated Start Date: ", startDate.Format(dt.FmtDateTimeYrMDayFmtStr))
 
@@ -196,7 +196,7 @@ func ExampleTimeDto005() {
 		return
 	}
 
-	locUSCentral, _ := time.LoadLocation(dt.IanaTz.US.Central())
+	locUSCentral, _ := time.LoadLocation(dt.TZones.US.Central())
 
 	t1USCentral := time.Date(1948, time.Month(9), 7, 4, 32, 16, 8185431, locUSCentral)
 	tDur, err := dt.TimeDurationDto{}.NewStartTimePlusTimeDto(t1USCentral, tDto, dt.FmtDateTimeYrMDayFmtStr)
@@ -277,7 +277,7 @@ func ExampleTimeDto007() {
 
 	err = t0Dto.AddTimeDto(t2Dto)
 	if err != nil {
-		fmt.Printf("Error returned by t0Dto.AddTimeDto(t2Dto, dt.IanaTz.US.Central()). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by t0Dto.AddTimeDto(t2Dto, dt.TZones.US.Central()). Error='%v'\n", err.Error())
 		return
 	}
 

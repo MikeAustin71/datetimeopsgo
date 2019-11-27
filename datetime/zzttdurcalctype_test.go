@@ -539,9 +539,9 @@ func TestTDurCalcTypeString_031(t *testing.T) {
 			testStr, err.Error())
 	}
 
-	if expectedStr != r.String() {
+	if expectedStr != string(r) {
 		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
-			"Instead, string='%v' ", expectedStr, r.String())
+			"Instead, string='%v' ", expectedStr, string(r))
 	}
 
 }
