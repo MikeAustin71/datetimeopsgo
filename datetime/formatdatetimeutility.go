@@ -280,9 +280,10 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(
 
 			lenField := make([]byte, 7)
 
-			for j := 0; j < 7; j++ {
+			for j := 0; j < len(outRecordBuff); j++ {
 
 				lenField[j] = outRecordBuff[j]
+
 			}
 
 			s := string(lenField)
@@ -307,7 +308,7 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(
 
 			fmtField := make([]byte, lFmt)
 
-			for k := 8; k <= fmtFieldLastIdx; k++ {
+			for k := 8; k <= fmtFieldLastIdx && k < len(outRecordBuff); k++ {
 				fmtField[k-8] = outRecordBuff[k]
 			}
 

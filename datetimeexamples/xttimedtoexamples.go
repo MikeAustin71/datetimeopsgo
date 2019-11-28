@@ -1,8 +1,8 @@
 package datetimeexamples
 
 import (
-	dt "../datetime"
 	"fmt"
+	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
 	"time"
 )
 

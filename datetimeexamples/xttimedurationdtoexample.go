@@ -1,8 +1,8 @@
 package datetimeexamples
 
 import (
-	dt "../datetime"
 	"fmt"
+	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
 	"time"
 )
 
@@ -22,7 +22,9 @@ func ExampleTimeDuration001() {
 		dt.TDurCalcType(0).StdYearMth(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	fmt.Println("Add Date Results - Cumulative Days")
@@ -49,7 +51,9 @@ func ExampleTimeDuration002() {
 		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	tx1 := t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
@@ -91,7 +95,9 @@ func ExampleTimeDuration003() {
 		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	fmt.Println("Results Cumulative Days:")

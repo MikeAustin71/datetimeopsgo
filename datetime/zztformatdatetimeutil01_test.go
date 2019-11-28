@@ -23,10 +23,13 @@ func TestDateTimeFormatUtility_ParseDateTimeStrings(t *testing.T) {
 	for i := 0; i < ls; i++ {
 
 		fmt.Printf("Item: %v  Date Time String : %v \n", i, dtSamples[i][0][0])
+
 		ti, err := dtf.ParseDateTimeString(dtSamples[i][0][0], "")
 
 		if err != nil {
-			t.Errorf("Error on dtf.ParseDateTimeString() - Sample Format: %v  Error: %v", dtSamples[i][0][0], err.Error())
+			t.Errorf("Error on dtf.ParseDateTimeString()\nSample Format: %v\n" +
+				"Error: %v\n", dtSamples[i][0][0], err.Error())
+			return
 		}
 
 		tiStr := ti.Format(fmtDateTimeEverything)

@@ -24,7 +24,9 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 	tzDef, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)")
+		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	tzDef.Description = descStr
@@ -84,7 +86,9 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)")
+		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	tzDef0.Description = descStr
@@ -147,7 +151,9 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)")
+		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	tzDef0.Description = descStr
@@ -214,7 +220,9 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)")
+		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	tzDef0.Description = descStr

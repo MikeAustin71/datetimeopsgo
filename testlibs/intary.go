@@ -985,10 +985,10 @@ func (ia *IntAry) Ceiling() (IntAry, error) {
 
 		} else {
 
-			if int(n1)+carry < 0 {
+			if n1+carry < 0 {
 				n2 = 10 + n1
 				carry = -1
-			} else if int(n1)+carry > 9 {
+			} else if n1+carry > 9 {
 				n2 = n1 - 10
 				carry = 1
 			} else {
@@ -2039,13 +2039,17 @@ func (ia *IntAry) GetInt() (int, error) {
 	compare := result.Cmp(maxInt)
 
 	if compare == 1 {
-		return int(0), errors.New("error: the value of this intAry object exceeds the maximum allowable value for the int type")
+		return 0,
+		errors.New("Error: the value of this intAry object exceeds the maximum\n" +
+			"allowable value for the int type.\n")
 	}
 
 	compare = result.Cmp(minInt)
 
 	if compare == -1 {
-		return int(0), errors.New("error: the value of this intAry object is less than the minimum allowable value for the int type")
+		return 0,
+		errors.New("Error: the value of this intAry object is less than the\n" +
+			"minimum allowable value for the int type.\n")
 	}
 
 	return int(result.Int64()), nil
@@ -3914,7 +3918,7 @@ func (ia *IntAry) SetIntAryWithFloat32(floatNum float32, precision int) error {
 
 	if precision > -1 {
 
-		_ = ia.SetPrecision(precision, true)
+		err = ia.SetPrecision(precision, true)
 
 		if err != nil {
 			return fmt.Errorf("SetIntAryWithFloat32() - Error returned from "+
@@ -4064,7 +4068,7 @@ func (ia *IntAry) SetIntAryWithUint8Ary(iAry2 []uint8, precision uint, signVal i
 	ia.intAry = make([]uint8, lIAry2)
 
 	for i := 0; i < lIAry2; i++ {
-		ia.intAry[i] = uint8(iAry2[i])
+		ia.intAry[i] = iAry2[i]
 	}
 
 	ia.intAryLen = lIAry2

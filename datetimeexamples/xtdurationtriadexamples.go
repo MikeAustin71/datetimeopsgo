@@ -1,8 +1,8 @@
 package datetimeexamples
 
 import (
-	dt "../datetime"
 	"fmt"
+	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
 	"time"
 )
 
@@ -112,6 +112,7 @@ func ExampleNewstarttimeduration01() {
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur). Error='%v'\n", err.Error())
+		return
 	}
 
 	// dur.SetStartTimeDurationTz(t1, t12Dur)

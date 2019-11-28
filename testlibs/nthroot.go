@@ -585,13 +585,17 @@ func (nthrt *NthRootOp) initialize(originalNum *IntAry, nthRoot, maxPrecision ui
 // digits in the original number.
 func (nthrt *NthRootOp) bundleInts() error {
 
+	ePrefix := "NthRootOp.bundleInts() "
+
 	intNums, err := nthrt.OriginalNum.GetIntegerDigits()
 
-	intNumsStats := intNums.GetIntAryStats()
-
 	if err != nil {
-		return fmt.Errorf("NthRootOp.bundleInts() - Error= %v", err)
+		return fmt.Errorf(ePrefix +
+			"Error returned by nthrt.OriginalNum.GetIntegerDigits()\n" +
+			"Error='%v'\n", err.Error())
 	}
+
+	intNumsStats := intNums.GetIntAryStats()
 
 	if intNumsStats.IntAryLen < 1 {
 		return errors.New("NthRootOp.bundleInts() intNums array length less than 1")
@@ -651,12 +655,13 @@ func (nthrt *NthRootOp) bundleFracs() error {
 
 	fracNums, err := nthrt.OriginalNum.GetFractionalDigits()
 
+	if err != nil {
+		return fmt.Errorf("NthRootOp.bundleFracs() Error Returned from nthrt.OriginalNum.GetFractionalDigits()\n" +
+			"Error= %v\n", err)
+	}
+
 	iFracNumStats := fracNums.GetIntAryStats()
 	iFAry, _ := fracNums.GetIntAry()
-
-	if err != nil {
-		return fmt.Errorf("NthRootOp.bundleFracs() Error Returned from nthrt.OriginalNum.GetFractionalDigits() - Error= %v", err)
-	}
 
 	for i := 1; i < iFracNumStats.IntAryLen; i += nthrt.NthRoot {
 

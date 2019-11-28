@@ -1,9 +1,9 @@
 package main
 
 import (
-  dt "../datetime"
-  ex "../datetimeexamples"
   "fmt"
+  dt "github.com/MikeAustin71/datetimeopsgo/datetime"
+  ex "github.com/MikeAustin71/datetimeopsgo/datetimeexamples"
   "time"
 )
 

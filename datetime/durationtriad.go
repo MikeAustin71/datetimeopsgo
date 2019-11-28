@@ -3792,6 +3792,13 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 	utcTime, err := TimeDurationDto{}.NewStartEndTimesCalcTz(startDateTime,
 		endDateTime, tDurCalcType, TZones.UTC(), fmtStr)
 
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError returned by TimeDurationDto{}.NewStartEndTimesCalcTz(startDateTime," +
+			" endDateTime, tDurCalcType, TZones.UTC(), fmtStr)\n" +
+			"Error='%v'\n", err.Error())
+	}
+
 	durT.Empty()
 	durT.BaseTime = baseTime.CopyOut()
 	durT.LocalTime = localTime.CopyOut()

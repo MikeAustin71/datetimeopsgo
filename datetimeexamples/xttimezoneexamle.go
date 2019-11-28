@@ -1,8 +1,8 @@
 package datetimeexamples
 
 import (
-	dt "../datetime"
 	"fmt"
+	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
 	"time"
 )
 
@@ -282,6 +282,12 @@ func ReclassifyTimeAsLocal() {
 
 	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, "Local")
 
+	if err != nil {
+		fmt.Printf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, \"Local\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
 	tstrOut := tOut.Format(fmtstr)
 	fmt.Println("Example Method: ReclassifyTimeWithNewTz()")
 	fmt.Println("Input Time : ", tPacific)
@@ -519,6 +525,12 @@ func TestExampleNewAddDate023() {
 	t2OutStr := t2.Format(fmtstr)
 
 	tzu2, err := dt.TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
 
 	tzu2OutStrTIn := tzu2.TimeIn.DateTime.Format(fmtstr)
 

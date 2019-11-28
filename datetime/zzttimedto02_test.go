@@ -180,7 +180,9 @@ func TestTimeDto_NormalizeDays_01(t *testing.T) {
 	actualDateTime, err := t1Dto.GetDateTime(TZones.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned by t1Dto.GetDateTime(TZones.UTC()). Error='%v'", err.Error())
+		t.Errorf("Error returned by t1Dto.GetDateTime(TZones.UTC()).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if expectedDateTime != actualDateTime.Format(FmtDateTimeYrMDayFmtStr) {

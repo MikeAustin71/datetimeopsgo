@@ -167,6 +167,7 @@ func TestTDurCalcTypeString_012(t *testing.T) {
 		t.Errorf("Error returned by TimeDurationCalcType." +
 			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -186,6 +187,7 @@ func TestTDurCalcTypeString_013(t *testing.T) {
 		t.Errorf("Error returned by TimeDurationCalcType." +
 			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -205,6 +207,7 @@ func TestTDurCalcTypeString_014(t *testing.T) {
 		t.Errorf("Error returned by TimeDurationCalcType." +
 			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -222,8 +225,10 @@ func TestTDurCalcTypeString_015(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			"ParseString(expectedStr, true).\n" +
+			"expectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -241,13 +246,14 @@ func TestTDurCalcTypeString_016(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			"ParseString(expectedStr, true).\nexpectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
-		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
-			"Instead, string='%v' ", expectedStr, r.String())
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds()\nstring='%v'.\n" +
+			"Instead, string='%v'\n", expectedStr, r.String())
 	}
 
 }
@@ -259,14 +265,15 @@ func TestTDurCalcTypeString_017(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(expectedStr, true).\nexpectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
-		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
-			"Instead, string='%v' ", expectedStr, r.String())
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds()\nstring='%v'.\n" +
+			"Instead, string='%v'\n", expectedStr, r.String())
 	}
 
 }
@@ -279,13 +286,14 @@ func TestTDurCalcTypeString_018(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+			"ParseString(expectedStr, true).\nexpectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
-		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
-			"Instead, string='%v' ", expectedStr, r.String())
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'.\n" +
+			"Instead, string='%v'\n", expectedStr, r.String())
 	}
 
 }
@@ -297,9 +305,10 @@ func TestTDurCalcTypeString_019(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(expectedStr, true).\nexpectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -316,9 +325,10 @@ func TestTDurCalcTypeString_020(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(expectedStr, true).\nexpectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -335,9 +345,10 @@ func TestTDurCalcTypeString_021(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(expectedStr, true).\nexpectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -354,9 +365,10 @@ func TestTDurCalcTypeString_022(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(expectedStr, true). expectedStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(expectedStr, true).\nexpectedStr='%v'\nError='%v'\n",
 			expectedStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -374,14 +386,15 @@ func TestTDurCalcTypeString_023(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(testStr, true).\ntestStr='%v'\nError='%v'\n",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
-		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
-			"Instead, string='%v' ", expectedStr, r.String())
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds()\nstring='%v'.\n" +
+			"Instead, string='%v'\n", expectedStr, r.String())
 	}
 
 }
@@ -394,9 +407,10 @@ func TestTDurCalcTypeString_024(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(testStr, true).\ntestStr='%v'\nError='%v'\n",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -414,13 +428,14 @@ func TestTDurCalcTypeString_025(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(testStr, true).\ntestStr='%v'\nError='%v'\n",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
-		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'\n" +
 			"Instead, string='%v' ", expectedStr, r.String())
 	}
 
@@ -435,8 +450,10 @@ func TestTDurCalcTypeString_026(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			"ParseString(testStr, true).\n" +
+			"testStr='%v'\nError='%v' ",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -455,12 +472,15 @@ func TestTDurCalcTypeString_027(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			"ParseString(testStr, true).\n" +
+			"testStr='%v'\n" +
+			"Error='%v'\n",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
-		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
+		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'.\n" +
 			"Instead, string='%v' ", expectedStr, r.String())
 	}
 
@@ -475,8 +495,11 @@ func TestTDurCalcTypeString_028(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+			"ParseString(testStr, true).\n" +
+			"testStr='%v'\nError='%v'\n",
 			testStr, err.Error())
+
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -494,9 +517,10 @@ func TestTDurCalcTypeString_029(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(testStr, true). testStr='%v'\nError='%v'\n",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -514,9 +538,11 @@ func TestTDurCalcTypeString_030(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(testStr, true). testStr='%v'\n" +
+			"Error='%v'\n",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -554,9 +580,11 @@ func TestTDurCalcTypeString_032(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(testStr, true). testStr='%v'\nError='%v'\n",
 			testStr, err.Error())
+
+		return
 	}
 
 	if expectedStr != r.String() {
@@ -574,9 +602,10 @@ func TestTDurCalcTypeString_033(t *testing.T) {
 	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationCalcType." +
-			"ParseString(testStr, true). testStr='%v' Error='%v' ",
+		t.Errorf("Error returned by TimeDurationCalcType.\n" +
+			"ParseString(testStr, true). testStr='%v'\nError='%v'\n",
 			testStr, err.Error())
+		return
 	}
 
 	if expectedStr != r.String() {

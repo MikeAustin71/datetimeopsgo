@@ -74,7 +74,9 @@ func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
 	durT, err := DurationTriad{}.NewAutoEnd(startDateTime, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewAutoEnd() ")
+		t.Errorf("Error returned by DurationTriad{}.NewAutoEnd().\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	expectedDur := time.Duration(int64(2) * int64(time.Second))
@@ -90,8 +92,9 @@ func TestDurationTriad_NewAutoStart(t *testing.T) {
 	durT, err := DurationTriad{}.NewAutoStart(TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewAutoStart() "+
-			"Error='%v' ", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewAutoStart().\n"+
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	err = durT.SetAutoEnd()
@@ -123,7 +126,9 @@ func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 	dur, err := DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	// dur.SetStartTimeDurationTz(t1, t12Dur)
@@ -173,8 +178,9 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 	dur, err := DurationTriad{}.NewStartDateTzDuration(t1DateTz, t12Dur)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartDateTzDuration(t1DateTz, t12Dur). "+
-			"Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartDateTzDuration(t1DateTz, t12Dur).\n"+
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
@@ -267,7 +273,9 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 	dur, err := DurationTriad{}.NewStartEndDateTzDto(dateTz1, dateTz2)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
@@ -422,11 +430,14 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 	dur, err := DurationTriad{}.NewStartEndDateTzDtoTz(dateTz1, dateTz2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
+		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v.\n" +
+			"Instead, got %v ",
 			t1OutStr, dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr))
 	}
 
@@ -582,11 +593,14 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
-		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
+		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v.\n" +
+			"Instead, got %v\n" ,
 			t1OutStr, dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr))
 	}
 
@@ -735,7 +749,9 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 	dur, err := DurationTriad{}.NewStartEndTimesTz(t1, t2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
@@ -890,7 +906,9 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 	dur, err := DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
@@ -932,7 +950,9 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 	dur, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto). Error='%v'", err.Error())
+		t.Errorf("Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto).\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {

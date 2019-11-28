@@ -476,6 +476,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDto_01
 
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateDto(dTzStart, dTzEnd, suite.fmtStr)
 
+	assert.Nil(suite.T(), err,
+		"Error TimeDurationDto{}.NewStartEndTimesDateDto(dTzStart, dTzEnd, suite.fmtStr): " )
+
 	expectedTimeDur := suite.t3USCentral.Sub(suite.t2USCentral)
 
 	assert.Equal(suite.T(), expectedTimeDur, t1Dur.TimeDuration, "Expected Time Duration NOT EQUAL To Actual Time Duration!")

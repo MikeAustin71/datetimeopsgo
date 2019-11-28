@@ -1,10 +1,10 @@
 package datetimeexamples
 
 import (
-	dt "../datetime"
-	"../testlibs"
 	"errors"
 	"fmt"
+	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
+	"github.com/MikeAustin71/datetimeopsgo/testlibs"
 	"time"
 )
 
@@ -124,7 +124,7 @@ func WriteFormatStatsToFile() {
 
 	if err != nil {
 		fmt.Println("*** ERROR ***")
-		fmt.Println("Output File: ", outputDto.OutputPathFileName)
+		fmt.Println("Output File: ./formats/fmtStats.txt")
 		fmt.Println("Error: ", err.Error())
 		return
 	}
@@ -293,15 +293,6 @@ func TestParseDateTime(dtf dt.FormatDateTimeUtility, dateTimeStr string, probabl
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 
-	if err != nil {
-		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-		fmt.Printf("Failure attempting to format date time: %v/n", dateTimeStr)
-		fmt.Printf("Formatted date time string: %v/n", dtf.FormattedDateTimeStringIn)
-		fmt.Println("Time Parse Failed - Error: ", err.Error())
-		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-		return
-	}
-
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 
 	printSuccessfulTimeParseResults(dtf)
@@ -383,11 +374,6 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	fmt.Println("Total Elapsed Time For All Operations: ", outStr)
 	fmt.Println()
 
-	if err != nil {
-		printTimeParseErrorResults(dtf, err)
-		return
-	}
-
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 
 	printSuccessfulTimeParseResults(dtf)
@@ -454,11 +440,6 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 	outStr = du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Total Elapsed Time For All Operations: ", outStr)
 	fmt.Println()
-
-	if err != nil {
-		printTimeParseErrorResults(dtf, err)
-		return
-	}
 
 	dtf.OriginalDateTimeStringIn = dateTimeStr
 
