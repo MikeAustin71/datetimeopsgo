@@ -312,7 +312,7 @@ func (fh FileHelper) DoesFileInfoExist(pathFileName string) (doesFInfoExist bool
 }
 
 // Equal - Compares a second FileHelper data structure
-// to the current FileHelpter data structure and returns
+// to the current FileHelper data structure and returns
 // a boolean value indicating whether they are equal
 // in all respects.
 func (fh *FileHelper) Equal(fh2 FileHelper) bool {
@@ -389,7 +389,7 @@ func (fh FileHelper) GetExecutablePathFileName() (string, error) {
 // GetFileInfoFromPath - Wrapper function for os.Stat(). This method
 // can be used to return FileInfo data on a specific file. If the file
 // does NOT exist, an error will be triggered. This method is similar to
-// FileHelpter.DoesFileInfoExist().
+// FileHelper.DoesFileInfoExist().
 //
 // type FileInfo interface {
 // 	Name() string       // base name of the file

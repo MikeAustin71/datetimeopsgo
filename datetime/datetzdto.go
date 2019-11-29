@@ -34,7 +34,6 @@ import (
 //		'github.com/MikeAustin71/datetimeopsgo/datetime/timedurationdto.go'
 //		'github.com/MikeAustin71/datetimeopsgo/datetime/durationtriad.go'
 //
-//
 // As previously stated, 'DateTzDto' defines a specific point in time using
 // a variety of descriptors including year, month, day hour, minute, second,
 // millisecond, microsecond and nanosecond. In addition this Type specifies a

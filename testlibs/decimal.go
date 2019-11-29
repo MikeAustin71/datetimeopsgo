@@ -75,7 +75,7 @@ func (dec *Decimal) Add(d2 Decimal) (Decimal, error) {
 
 	}
 
-	// must be nDto.precison > d2.precision
+	// must be nDto.precision > d2.precision
 	idp := int(dec.precision) - int(d2.precision)
 	i64DeltaPrecision := int64(idp)
 	deltaPrecision := big.NewInt(i64DeltaPrecision)
@@ -1080,93 +1080,6 @@ func (dec *Decimal) NumStrPrecisionToDecimal(str string, precision uint, roundRe
 	}
 
 	return d2, nil
-
-	/*
-		lAbsAllRunes := len(nDto.AbsAllNumRunes)
-
-		if lAbsAllRunes == 0 {
-
-			outStr := "0"
-
-			d2, err := dec.MakeDecimalFromNumStrDto(nDto, precision)
-
-			if err != nil {
-				return Decimal{}.New(), fmt.Errorf("NumStrPrecisionToDecimal() received error from d2.SetNumStr(outStr). outStr='%v' Error= %v", outStr, err)
-			}
-
-			return d2, nil
-		}
-
-		absAllRunes := []rune{}
-		lAbsFracRunes := len(nDto.AbsFracRunes)
-		deltaPrecision := 0
-
-		if lAbsFracRunes > 0 {
-			// This number string includes fractional digits to the right of the
-			// decimal place.
-			if int(precision) > lAbsFracRunes {
-
-				deltaPrecision = int(precision) - lAbsFracRunes
-
-				for j := 0; j < lAbsAllRunes; j++ {
-					absAllRunes = append(absAllRunes, nDto.AbsAllNumRunes[j])
-				}
-
-				for i := 0; i < deltaPrecision; i++ {
-					absAllRunes = append(absAllRunes, '0')
-				}
-
-			} else if int(precision) < lAbsFracRunes {
-
-				deltaPrecision = lAbsFracRunes - int(precision)
-				nDto.AbsFracRunes = nDto.AbsFracRunes[0:precision]
-				lAbsAllRunes = lAbsAllRunes - deltaPrecision
-
-				for j := 0; j < lAbsAllRunes; j++ {
-					absAllRunes = append(absAllRunes, nDto.AbsAllNumRunes[j])
-				}
-
-			} else {
-				// precision == lAbsFracRunes
-				for j := 0; j < lAbsAllRunes; j++ {
-					absAllRunes = append(absAllRunes, nDto.AbsAllNumRunes[j])
-				}
-			}
-
-		} else {
-			// There are no fractional digits. This is a pure, integer number string.
-			if int(precision) > lAbsAllRunes {
-
-				deltaPrecision = (int(precision) - lAbsAllRunes) + 1
-
-				for i := 0; i < deltaPrecision; i++ {
-					absAllRunes = append(absAllRunes, '0')
-				}
-
-				for j := 0; j < lAbsAllRunes; j++ {
-					absAllRunes = append(absAllRunes, nDto.AbsAllNumRunes[j])
-				}
-
-			} else {
-
-				for j := 0; j < lAbsAllRunes; j++ {
-					absAllRunes = append(absAllRunes, nDto.AbsAllNumRunes[j])
-				}
-
-			}
-
-		}
-
-		nDto := NumStrDto{}.NewPtr().MakeAllNums(nDto.SignVal, precision, absAllRunes, dec.decimalSeparator)
-
-		d2, err := dec.MakeDecimalFromNumStrDto(nDto, precision)
-
-		if err != nil {
-			return Decimal{}, fmt.Errorf("NumStrPrecisionToDecimal() error received from err:= d2.MakeDecimalFromNumStrDto(nDto, precision). nDto='%v' Error= %v", nDto, err)
-		}
-
-		return d2, nil
-	*/
 }
 
 // Pow - raises the current Decimal to the power of
@@ -1713,7 +1626,7 @@ func (dec *Decimal) Subtract(d2 Decimal) (Decimal, error) {
 
 	}
 
-	// must be nDto.precison > d2.precision
+	// must be nDto.precision > d2.precision
 
 	deltaPrecision := big.NewInt(int64(dec.precision - d2.precision))
 	deltaPrecisionScale := big.NewInt(0).Exp(base10, deltaPrecision, nil)

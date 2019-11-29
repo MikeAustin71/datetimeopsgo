@@ -815,7 +815,7 @@ func (c TDurCalcType) checkInitializeMaps(reInitialize bool) {
 
 	s := reflect.TypeOf(t)
 
-	r := reflect.TypeOf(int(0))
+	r := reflect.TypeOf(0)
 	args := [1]reflect.Value{reflect.Zero(s)}
 
 	for i := 0; i < s.NumMethod(); i++ {

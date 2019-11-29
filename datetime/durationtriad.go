@@ -301,7 +301,7 @@ func (durT *DurationTriad) Empty() {
 //	       DurationTriad and the current DurationTriad instance have equivalent
 //	       data values.
 //
-//	       If the method returns 'false' the two DurationTriad instnaces are NOT
+//	       If the method returns 'false' the two DurationTriad instances are NOT
 //	       equal.
 //
 func (durT *DurationTriad) Equal(duIn DurationTriad) bool {
