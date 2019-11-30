@@ -175,7 +175,7 @@ func TestTimeDto_NormalizeDays_01(t *testing.T) {
 		t.Error("Expected t1Dto to EQUAL t2Dto. IT DID NOT!")
 	}
 
-	expectedDateTime := "1956-04-03 01:13:06.002002001 +0000 UCT"
+	expectedDateTime := "1956-04-03 01:13:06.002002001 +0000 UTC"
 
 	actualDateTime, err := t1Dto.GetDateTime(TZones.UTC())
 

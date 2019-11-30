@@ -672,7 +672,13 @@ func (c TDurCalcType) String() string {
 
 	c.checkInitializeMaps(false)
 
-	return mTDurCalcTypeIntToString[int(c)]
+	result, ok := mTDurCalcTypeIntToString[int(c)]
+
+	if !ok {
+		return ""
+	}
+
+	return result
 }
 
 // ParseString - Receives a string and attempts to match it with

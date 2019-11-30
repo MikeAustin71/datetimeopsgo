@@ -563,11 +563,12 @@ func TestTDurCalcTypeString_031(t *testing.T) {
 		t.Errorf("Error returned by TimeDurationCalcType." +
 			"ParseString(testStr, true). testStr='%v' Error='%v' ",
 			testStr, err.Error())
+		return
 	}
 
-	if expectedStr != string(r) {
+	if expectedStr != r.String() {
 		t.Errorf("Expected TDurCalcType(0).CumNanoseconds() string='%v'. " +
-			"Instead, string='%v' ", expectedStr, string(r))
+			"Instead, string='%v' ", expectedStr, r.String())
 	}
 
 }
