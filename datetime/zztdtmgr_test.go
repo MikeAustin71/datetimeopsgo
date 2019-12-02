@@ -35,7 +35,7 @@ func TestGetDateTimeSecText(t *testing.T) {
 
 }
 
-func TestDtMgr_GetDateTimeUsMilitary2DYear_01(t *testing.T) {
+func TestDtMgr_GetMilitaryCompactDateTimeGroup_01(t *testing.T) {
 
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
@@ -74,7 +74,7 @@ func TestDtMgr_GetDateTimeUsMilitary2DYear_01(t *testing.T) {
 
 }
 
-func TestDtMgr_GetDateTimeUsMilitary2DYear_02(t *testing.T) {
+func TestDtMgr_GetMilitaryCompactDateTimeGroup_02(t *testing.T) {
 
 	tstr := "11/29/2017 19:54:30 -0600 CST"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"

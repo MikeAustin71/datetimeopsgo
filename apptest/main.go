@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest022()
+	mainTest{}.mainTest023()
 
 }
 
@@ -18,9 +18,53 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest023() {
+	ePrefix := "mainTest.mainTest023() "
+
+	fmt.Println(ePrefix)
+	tstr := "11/29/2017 19:54:30 -0600 CST"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+
+	expected := "291954SNOV17"
+	var testTime time.Time
+	var err error
+	var result string
+	var milDatTzDto dt.MilitaryDateTzDto
+
+	testTime, err = time.Parse(fmtstr, tstr)
+
+	milDatTzDto, err = dt.MilitaryDateTzDto{}.New(testTime, "S")
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by MilitaryDateTzDto{}.New(testTime, \"S\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	result, err = milDatTzDto.GetCompactDateTimeGroup()
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by milDatTzDto.GetCompactDateTimeGroup()\n")
+		return
+	}
+
+	if result != expected {
+		fmt.Printf(ePrefix +
+			"\nError: Expected result='%v'.\n" +
+			"Instead, result='%v'.\n", expected, result)
+		return
+	}
+
+	fmt.Println("  Result= ", result)
+	fmt.Println("Expected= ", expected)
+
+}
+
 func (mt mainTest) mainTest022() {
 
-	ePrefix := "mainTest022"
+	ePrefix := "mainTest.mainTest022() "
 
 	fmt.Println(ePrefix)
 
