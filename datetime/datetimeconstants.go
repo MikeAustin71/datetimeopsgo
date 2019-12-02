@@ -52,11 +52,14 @@ const (
   // FmtDateTimeSecText - Custom Date Time Format
   FmtDateTimeSecText = "2006-01-02 15:04:05"
 
-  // FmtDateTimeTzNano - Outputs date time to nano seconds with associated time zone
-  FmtDateTimeTzNano = "01/02/2006 15:04:05.000000000 -0700 MST"
+  // FmtDateTimeDMYNanoTz - Outputs date time to nano seconds with associated time zone
+  FmtDateTimeDMYNanoTz = "01/02/2006 15:04:05.000000000 -0700 MST"
 
   // FmtDateTimeTzNanoYMD - Outputs date time to nano seconds with Year-Month-Date
   FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
+
+  // FmtDateTimeYMDHMSTz - Outputs Date time to seconds with Year-Month-Date and Time Zone.
+  FmtDateTimeYMDHMSTz = "2006-01-02 15:04:05 -0700 MST"
 
   // FmtDateTimeTzNanoDowYMD - Output date time to nano seconds with Year-Month-Date
   // prefixed by day of the week
@@ -147,7 +150,144 @@ const (
   GregorianYearNanoSeconds = int64(31556952000000000)
 )
 
+var MilitaryTzNameToTxtNameMap = map[string]string {
+  "A" : "Alpha",
+  "B" : "Bravo",
+  "C" : "Charlie",
+  "D" : "Delta",
+  "E" : "Echo",
+  "F" : "Foxtrot",
+  "G" : "Golf",
+  "H" : "Hotel",
+  "I" : "India",
+  "K" : "Kilo",
+  "L" : "Lima",
+  "M" : "Mike",
+  "N" : "November",
+  "O" : "Oscar",
+  "P" : "Papa",
+  "Q" : "Quebec",
+  "R" : "Romeo",
+  "S" : "Sierra",
+  "T" : "Tango",
+  "U" : "Uniform",
+  "V" : "Victor",
+  "W" : "Whiskey",
+  "X" : "Xray",
+  "Y" : "Yankee",
+  "Z" : "Zulu" }
 
+var MilitaryTzToIanaTzMap = map[string]string {
+  "Alpha":    TZones.Military.Alpha(),
+  "Bravo":    TZones.Military.Bravo(),
+  "Charlie":  TZones.Military.Charlie(),
+  "Delta":    TZones.Military.Delta(),
+  "Echo":     TZones.Military.Echo(),
+  "Foxtrot":  TZones.Military.Foxtrot(),
+  "Golf":     TZones.Military.Golf(),
+  "Hotel":    TZones.Military.Hotel(),
+  "India":    TZones.Military.India(),
+  "Kilo":     TZones.Military.Kilo(),
+  "Lima":     TZones.Military.Lima(),
+  "Mike":     TZones.Military.Mike(),
+  "November": TZones.Military.November(),
+  "Oscar":    TZones.Military.Oscar(),
+  "Papa":     TZones.Military.Papa(),
+  "Quebec":   TZones.Military.Quebec(),
+  "Romeo":    TZones.Military.Romeo(),
+  "Sierra":   TZones.Military.Sierra(),
+  "Tango":    TZones.Military.Tango(),
+  "Uniform":  TZones.Military.Uniform(),
+  "Victor":   TZones.Military.Victor(),
+  "Whiskey":  TZones.Military.Whiskey(),
+  "Xray":     TZones.Military.Xray(),
+  "Yankee":   TZones.Military.Yankee(),
+  "Zulu":     TZones.Military.Zulu()}
+
+var MilitaryUTCToTzMap = map[string]string{
+  "+0100":    "Alpha",
+  "+0200":    "Bravo",
+  "+0300":    "Charlie",
+  "+0400":    "Delta",
+  "+0500":    "Echo",
+  "+0600":    "Foxtrot",
+  "+0700":    "Golf",
+  "+0800":    "Hotel",
+  "+0900":    "India",
+  "+1000":    "Kilo",
+  "+1100":    "Lima",
+  "+1200":    "Mike",
+  "-0100":    "November",
+  "-0200":    "Oscar",
+  "-0300":    "Papa",
+  "-0400":    "Quebec",
+  "-0430":    "Quebec",
+  "-0500":    "Romeo",
+  "-0600":    "Sierra",
+  "-0700":    "Tango",
+  "-0800":    "Uniform",
+  "-0900":    "Victor",
+  "-1000":    "Whiskey",
+  "-1100":    "Xray",
+  "-1200":    "Yankee",
+  "+0000":    "Zulu" }
+
+
+var MilitaryTzToUTCMap = map[string]string{
+  "Alpha":    "+0100",
+  "Bravo":    "+0200",
+  "Charlie":  "+0300",
+  "Delta":    "+0400",
+  "Echo":     "+0500",
+  "Foxtrot":  "+0600",
+  "Golf":     "+0700",
+  "Hotel":    "+0800",
+  "India":    "+0900",
+  "Kilo":     "+1000",
+  "Lima":     "+1100",
+  "Mike":     "+1200",
+  "November": "-0100",
+  "Oscar":    "-0200",
+  "Papa":     "-0300",
+  "Quebec":   "-0400",
+  "Romeo":    "-0500",
+  "Sierra":   "-0600",
+  "Tango":    "-0700",
+  "Uniform":  "-0800",
+  "Victor":   "-0900",
+  "Whiskey":  "-1000",
+  "Xray":     "-1100",
+  "Yankee":   "-1200",
+  "Zulu":     "+0000"}
+
+
+var MilitaryTzLocationMap = map[string]string{
+  "Alpha"    :  "France",
+  "Bravo"    :  "Athens, Greece",
+  "Charlie"  :  "Arab Standard Time, Iraq, Bahrain, Kuwait, Saudi Arabia, Yemen, Qatar",
+  "Delta"    :  "Moscow, Russia and Afghanistan, however, Afghanistan is technically +4:30 from UTC",
+  "Echo"     :  "Pakistan, Kazakhstan, Tajikistan, Uzbekistan and Turkmenistan",
+  "Foxtrot"  :  "Bangladesh",
+  "Golf"     :  "Thailand",
+  "Hotel"    :  "Beijing, China",
+  "India"    :  "Tokyo, Australia",
+  "Kilo"     :  "Brisbane, Australia",
+  "Lima"     :  "Sydney, Australia",
+  "Mike"     :  "Wellington, New Zealand",
+  "November" :  "Azores",
+  "Oscar"    :  "Godthab, Greenland",
+  "Papa"     :  "Buenos Aires, Argentina",
+  "Quebec"   :  "Halifax, Nova Scotia",
+  "Romeo"    :  "EST, New York, NY",
+  "Sierra"   :  "CST, Dallas, TX",
+  "Tango"    :  "MST, Denver, CO",
+  "Uniform"  :  "PST, Los Angeles, CA",
+  "Victor"   :  "Juneau, AK",
+  "Whiskey"  :  "Honolulu, HI",
+  "Xray"     :  "American Samoa",
+  "Yankee"   :  "e.g. Fiji",
+  "Zulu"     :  "Zulu time",
+}
 
 /*
 Time Zone Abbreviations – Military Time Zone Names

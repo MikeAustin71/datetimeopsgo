@@ -1,6 +1,8 @@
 package datetime
 
 import (
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -149,14 +151,14 @@ func (dt DtMgr) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
 }
 
 // GetDateTimeTzNanoSecText - Receives input parameter 't' as a type 'time.Time'.
-// This date time is then returned as a string formatted with the 'FmtDateTimeTzNano'
+// This date time is then returned as a string formatted with the 'FmtDateTimeDMYNanoTz'
 // format. This format presents date time down to nanoseconds in addition to the
 // associated time zone.
 //
 //	EXAMPLE: "01/02/2006 15:04:05.000000000 -0700 MST"
 //
 func (dt DtMgr) GetDateTimeTzNanoSecText(t time.Time) string {
-	return t.Format(FmtDateTimeTzNano)
+	return t.Format(FmtDateTimeDMYNanoTz)
 }
 
 // GetDateTimeTzNanoSecYMDText - Receives input parameter 't' as a type 'time.Time'.
@@ -195,95 +197,142 @@ func (dt DtMgr) GetDateTimeTzNanoSecYMDDowText(t time.Time) string {
 	return t.Format(FmtDateTimeTzNanoYMDDow)
 }
 
-// GetDateTimeUsMilitary2DYear - Outputs date time string formatted for
-// standard U.S.A. Military date time. Time is always expressed as
-// UTC or Zulu time zone. There is no difference between Zulu and
-// UTC. Both have a UTC offset of zero.
+// GetMilitaryCompactDateTimeGroup - Outputs date time string formatted for
+// standard U.S.A. Military date time also referred to as the Military
+// Date Time Group (DTG). This form of the Date Time Group is configured
+// as the 'Compact' Date Time Group because there are no spaces between the
+// date time elements.
 //
-//	Reference:
-//		https://www.timeanddate.com/time/zones/z
+// The Military time zone is computed from the UTC offset associated
+// with the input parameter 't' (time.Time).
 //
-// Military Date Time with a 2-digit year is formatted as follows:
+// Reference:
+//    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//    https://www.timeanddate.com/time/zones/z
+//    http://blog.refactortactical.com/blog/military-date-time-group/
 //
-//	Military 2-digit year format: DDHHMMZ YY
+// Military 2-digit year format or  Date Time Group is traditionally
+// formatted as DDHHMM(Z)MONYY, where 'Z' is the Military Time Zone.
 //
-//	EXAMPLE: "011815Z JAN 11" = 01/01/2011 18:15 +0000 Zulu
+// EXAMPLES:
 //
-//	Date Time Group is traditionally formatted as DDHHMM(Z)MONYY
+//    "011815ZJAN11" = 01/01/2011 18:15 +0000 Zulu
 //
-//An example is 630pm on January 6th, 2012 in Fayetteville NC would read 061830RJAN12
+//     630pm on January 6th, 2012 in Fayetteville NC would read '061830RJAN12'
 //
-// http://blog.refactortactical.com/blog/military-date-time-group/
+// Note: For more granular management of Military Date Times, use the
+// MilitaryDateTzDto type located in source file 'militarydatetzdto.go'.
 //
-/*
-Military Time Code Letter Reference:
+func (dt DtMgr) GetMilitaryCompactDateTimeGroup(t time.Time) (fmtDateTime string, err error) {
 
-UTC -12: Y- (e.g. Fiji)
-
-UTC-11: X (American Samoa)
-
-UTC-10: W (Honolulu, HI)
-
-UTC-9: V (Juneau, AK)
-
-UTC-8: U (PST, Los Angeles, CA)
-
-UTC-7: T (MST, Denver, CO)
-
-UTC-6: S (CST, Dallas, TX)
-
-UTC-5: R (EST, New York, NY)
-
-UTC-4: Q (Halifax, Nova Scotia
-
-UTC-3: P (Buenos Aires, Argentina)
-
-UTC-2: O (Godthab, Greenland)
-
-UTC-1: N (Azores)
-
-UTC+-0: Z (Zulu time)
-
-UTC+1: A (France)
-
-UTC+2: B (Athens, Greece)
-
-UTC+3: C (Arab Standard Time, Iraq, Bahrain, Kuwait, Saudi Arabia, Yemen, Qatar)
-
-UTC+4: D (Used for Moscow, Russia and Afghanistan, however, Afghanistan is technically +4:30 from UTC)
-
-UTC+5: E (Pakistan, Kazakhstan, Tajikistan, Uzbekistan and Turkmenistan)
-
-UTC+6: F (Bangladesh)
-
-UTC+7: G (Thailand)
-
-UTC+8: H (Beijing, China)
-
-UTC+9: I (Tokyo, Australia)
-
-UTC+10: K (Brisbane, Australia)
-
-UTC+11: L (Sydney, Australia)
-
-UTC+12: M (Wellington, New Zealand)
-
-func (dt DtMgr) GetDateTimeUsMilitary2DYear(t time.Time) (fmtDateTime string, err error) {
-
-	ePrefix := "DtMgr.GetDateTimeUsMilitary2DYear() "
+	ePrefix := "DtMgr.GetMilitaryCompactDateTimeGroup() "
 
 	fmtDateTime = ""
 	err = nil
 
-	tdefDto, err2 := TimeZoneDefDto{}.New(t)
+	// FmtDateTimeYMDHMSTz= "2006-01-02 15:04:05 -0700 MST"
+	tempStr := t.Format(FmtDateTimeYMDHMSTz)
 
-	if err2 != nil {
-		err = fmt.Errorf()
+	dateElementArray := strings.Split(tempStr," ")
+
+	if len(dateElementArray) != 4 {
+		err = fmt.Errorf(ePrefix +
+			"Error: Expected Date Element Array length='4'.\n" +
+			"Instead, Date Element Array length='%v'.", len(dateElementArray))
 	}
 
+	utcOffset := dateElementArray[2][0:3] + "00"
 
-}
- */
+	militaryTzName, ok := MilitaryUTCToTzMap[utcOffset]
+
+	if !ok {
+		err = fmt.Errorf(ePrefix +
+			"Error: Could not find Military Time Zone for UTC Offset %v.", utcOffset)
+		return fmtDateTime, err
+	}
+
+	militaryTimeZoneLetter := militaryTzName[0:1]
+
+	// Military 2-digit year format: DDHHMMZMONYY
+	// 630pm on January 6th, 2012 in Fayetteville NC = 061830RJAN12
+
+	// FmtDateTimeYMDHMSTz= "2006-01-02 15:04:05 -0700 MST
+
+	fmtDateTime = t.Format("021504" + militaryTimeZoneLetter + "Jan06")
+
+	fmtDateTime = strings.ToUpper(fmtDateTime)
+
+		return fmtDateTime, err
+	}
+
+// GetMilitaryOpenDateTimeGroup - Outputs date time string formatted for
+// standard U.S.A. Military date time also referred to as the Military
+// Date Time Group (DTG). This form of the Date Time Group is configured
+// as the 'Open' or easy to read Date Time Group because spaces are inserted
+// between the date time elements.
+//
+// The Military time zone is computed from the UTC offset associated
+// with the input parameter 't' (time.Time).
+//
+// Reference:
+//    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//    https://www.timeanddate.com/time/zones/z
+//    http://blog.refactortactical.com/blog/military-date-time-group/
+//
+// Military 2-digit year format or  Date Time Group is traditionally
+// formatted as DD HHMM(Z) MON YY, where 'Z' is the Military Time Zone.
+//
+// EXAMPLES:
+//
+//    "01 1815Z JAN 11" = 01/01/2011 18:15 +0000 Zulu
+//
+//     630pm on January 6th, 2012 in Fayetteville NC would read '06 1830R JAN 12'
+//
+// Note: For more granular management of Military Date Times, use the
+// MilitaryDateTzDto type located in source file 'militarydatetzdto.go'.
+//
+func (dt DtMgr) GetMilitaryOpenDateTimeGroup(t time.Time) (fmtDateTime string, err error) {
+
+	ePrefix := "DtMgr.GetMilitaryCompactDateTimeGroup() "
+
+	fmtDateTime = ""
+	err = nil
+
+	// FmtDateTimeYMDHMSTz= "2006-01-02 15:04:05 -0700 MST"
+	tempStr := t.Format(FmtDateTimeYMDHMSTz)
+
+	dateElementArray := strings.Split(tempStr," ")
+
+	if len(dateElementArray) != 4 {
+		err = fmt.Errorf(ePrefix +
+			"Error: Expected Date Element Array length='4'.\n" +
+			"Instead, Date Element Array length='%v'.", len(dateElementArray))
+	}
+
+	utcOffset := dateElementArray[2][0:3] + "00"
+
+	militaryTzName, ok := MilitaryUTCToTzMap[utcOffset]
+
+	if !ok {
+		err = fmt.Errorf(ePrefix +
+			"Error: Could not find Military Time Zone for UTC Offset %v.", utcOffset)
+		return fmtDateTime, err
+	}
+
+	militaryTimeZoneLetter := militaryTzName[0:1]
+
+	// Military 2-digit year format: DD HHMMZ MON YY
+	// 630pm on January 6th, 2012 in Fayetteville NC = 06 1830R JAN 12
+
+	// FmtDateTimeYMDHMSTz= "2006-01-02 15:04:05 -0700 MST
+
+	fmtDateTime = t.Format("02 1504" + militaryTimeZoneLetter + " Jan 06")
+
+	fmtDateTime = strings.ToUpper(fmtDateTime)
+
+		return fmtDateTime, err
+	}
+
 
 
 // GetTimeStampEverything - Generates and returns a time stamp as

@@ -1405,14 +1405,14 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 }
 
 // GetDateTimeTzNanoSecText - Outputs date time in string format using
-// the FmtDateTimeTzNano format which incorporates date time to nano seconds
+// the FmtDateTimeDMYNanoTz format which incorporates date time to nano seconds
 // and the associated time zone.
 //
 // ------------------------------------------------------------------------
 //
 //	EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
 func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
-	return dtz.DateTime.Format(FmtDateTimeTzNano)
+	return dtz.DateTime.Format(FmtDateTimeDMYNanoTz)
 }
 
 // GetDateTimeTzNanoSecYMDDowText - Outputs date time in string format using
@@ -2528,8 +2528,9 @@ func (dtz DateTzDto) NewTimeDto(
 //	Note: TZones.US.Central() = "America/Chicago"
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants.
+//	      'TZones.US.Central() is located in 'timezonedata.dto'. 'FmtDateTimeYrMDayFmtStr'
+//	      is located in source file 'datetimeconstants.go'.
 //
 func (dtz DateTzDto) NewTz(
 	dateTime time.Time,

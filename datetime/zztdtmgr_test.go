@@ -35,6 +35,84 @@ func TestGetDateTimeSecText(t *testing.T) {
 
 }
 
+func TestDtMgr_GetDateTimeUsMilitary2DYear_01(t *testing.T) {
+
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+
+	expected := "291954RAPR17"
+	var testTime time.Time
+	var err error
+	var result string
+
+	testTime, err = time.Parse(fmtstr, tstr)
+
+	if err != nil {
+		t.Errorf("Error returned by time.Parse(fmtstr, tstr).\n" +
+			"fmtstr='%v'  tstr='%v'\n" +
+			"Error='%v'\n",
+			fmtstr, tstr, err.Error())
+		return
+	}
+
+
+	result, err = DtMgr{}.GetMilitaryCompactDateTimeGroup(testTime)
+
+	if err != nil {
+		t.Errorf("Error returned by DtMgr{}.GetMilitaryCompactDateTimeGroup(testTime).\n" +
+			"testTime='%v'\n" +
+			"Error='%v'\n",
+			testTime.Format(FmtDateTimeYMDHMSTz), err.Error())
+		return
+	}
+
+	if result != expected {
+		t.Errorf("Error: Expected result='%v'.\n" +
+			"Instead, result='%v'\n" +
+			"Actual Time='%v'", expected, result, testTime.Format(fmtstr))
+	}
+
+}
+
+func TestDtMgr_GetDateTimeUsMilitary2DYear_02(t *testing.T) {
+
+	tstr := "11/29/2017 19:54:30 -0600 CST"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+
+	expected := "291954SNOV17"
+	var testTime time.Time
+	var err error
+	var result string
+
+	testTime, err = time.Parse(fmtstr, tstr)
+
+	if err != nil {
+		t.Errorf("Error returned by time.Parse(fmtstr, tstr).\n" +
+			"fmtstr='%v'  tstr='%v'\n" +
+			"Error='%v'\n",
+			fmtstr, tstr, err.Error())
+		return
+	}
+
+
+	result, err = DtMgr{}.GetMilitaryCompactDateTimeGroup(testTime)
+
+	if err != nil {
+		t.Errorf("Error returned by DtMgr{}.GetMilitaryCompactDateTimeGroup(testTime).\n" +
+			"testTime='%v'\n" +
+			"Error='%v'\n",
+			testTime.Format(FmtDateTimeYMDHMSTz), err.Error())
+		return
+	}
+
+	if result != expected {
+		t.Errorf("Error: Expected result='%v'.\n" +
+			"Instead, result='%v'\n" +
+			"Actual Time='%v'", expected, result, testTime.Format(fmtstr))
+	}
+
+}
+
 func TestGetDateTimeNanoSecText(t *testing.T) {
 	tstr := "04/29/2017 19:54:30.123456489 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"

@@ -36,9 +36,9 @@ type TimeZoneDefDto struct {
 	ZoneName          string
 	ZoneOffsetSeconds int            // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
 	ZoneSign          int            // -1 == West of UTC  +1 == East of UTC
-	OffsetHours       int            // Hours offset from UTC. Always a positive number, refer to ZoneSign
-	OffsetMinutes     int            // Minutes offset from UTC. Always a positive number, refer to ZoneSign
-	OffsetSeconds     int            // Seconds offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetHours       int            // Normalized Offset Hours from UTC. Always a positive number, refer to ZoneSign
+	OffsetMinutes     int            // Normalized Offset Minutes offset from UTC. Always a positive number, refer to ZoneSign
+	OffsetSeconds     int            // Normalized Offset Seconds offset from UTC. Always a positive number, refer to ZoneSign
 	ZoneOffset        string         // A text string representing the time zone. Example "-0500 CDT"
 	Location          *time.Location // Pointer to a Time Zone Location
 	LocationName      string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"

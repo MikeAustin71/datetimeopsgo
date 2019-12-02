@@ -75,7 +75,7 @@ func ExamplesDateTimeGetEverythingFormat() {
 	fmt.Println("Everything Format: ", str)
 	// Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
 
-	testTime2, _ := time.Parse(dt.FmtDateTimeTzNano, tstr)
+	testTime2, _ := time.Parse(dt.FmtDateTimeDMYNanoTz, tstr)
 
 	str2 := dateT.GetDateTimeEverything(testTime2)
 
@@ -88,7 +88,7 @@ func ExamplesDateTimeGetCurrentTimeAsString() {
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 
 	dateT := dt.DtMgr{}
-	t, err := time.Parse(dt.FmtDateTimeTzNano, tstr)
+	t, err := time.Parse(dt.FmtDateTimeDMYNanoTz, tstr)
 
 	if err != nil {
 		fmt.Println("Error:", err)
