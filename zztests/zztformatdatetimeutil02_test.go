@@ -1,7 +1,8 @@
-package datetime
+package zztests
 
 import (
 	"fmt"
+	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"
@@ -10,11 +11,11 @@ import (
 
 type dtfmtTestSuite struct {
 	suite.Suite
-	DtFmt FormatDateTimeUtility
+	DtFmt datetime.FormatDateTimeUtility
 }
 
 func (suite *dtfmtTestSuite) SetupSuite() {
-	suite.DtFmt = FormatDateTimeUtility{}
+	suite.DtFmt = datetime.FormatDateTimeUtility{}
 	err := suite.DtFmt.CreateAllFormatsInMemory()
 
 	if err != nil {
@@ -26,7 +27,7 @@ func (suite *dtfmtTestSuite) SetupSuite() {
 }
 
 func (suite *dtfmtTestSuite) TearDownSuite() {
-	suite.DtFmt = FormatDateTimeUtility{}
+	suite.DtFmt = datetime.FormatDateTimeUtility{}
 }
 
 func (suite *dtfmtTestSuite) SetupTest() {
@@ -110,7 +111,7 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString04() {
 
 	assert.Nil(suite.T(), err, "Error from suite.DtFmt.ParseDateTimeString(expectedStr, \"\")")
 
-	dtz, err := DateTzDto{}.NewDateTimeElements(
+	dtz, err := datetime.DateTzDto{}.NewDateTimeElements(
 		2018,
 		02,
 		25,
@@ -118,12 +119,12 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString04() {
 		28,
 		52,
 		515539300,
-		TZones.Asia.Vladivostok(),
+		datetime.TZones.Asia.Vladivostok(),
 		fmtstr)
 
 	assert.Nil(suite.T(), err, "Error from DateTzDto{}.NewDateTimeElements")
 
-	t2, err := TimeZoneDto{}.New(t1, TZones.Asia.Vladivostok(), fmtstr)
+	t2, err := datetime.TimeZoneDto{}.New(t1, datetime.TZones.Asia.Vladivostok(), fmtstr)
 
 	assert.Nil(suite.T(), err, "Error from TimeZoneDto{}.New(t1, TZones.Asia.Vladivostok(), fmtstr)")
 

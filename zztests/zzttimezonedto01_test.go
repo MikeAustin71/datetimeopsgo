@@ -1,6 +1,7 @@
-package datetime
+package zztests
 
 import (
+	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 	"time"
 )
@@ -13,7 +14,7 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
+	tzu1, err := datetime.TimeZoneDto{}.New(t1, datetime.TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned from TimeZoneDto{}.New(t1, TzUsPacific ). Error='%v'", err.Error())
@@ -24,11 +25,11 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 
 	t12Dur := t2.Sub(t1)
 
-	tdurDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(
+	tdurDto, err := datetime.TimeDurationDto{}.NewStartEndTimesCalcTz(
 		t1,
 		t2,
-		TDurCalcType(0).StdYearMth(),
-		TZones.US.Central(),
+		datetime.TDurCalcType(0).StdYearMth(),
+		datetime.TZones.US.Central(),
 		fmtstr)
 
 	if err != nil {
@@ -83,14 +84,14 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 
 	actualTimeOutLoc := tzu1.TimeOut.TimeZone.LocationName
 
-	if TZones.US.Pacific() != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
+	if datetime.TZones.US.Pacific() != actualTimeOutLoc {
+		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.", datetime.TZones.US.Pacific(), actualTimeOutLoc)
 	}
 
 	actualTimeOutLoc = tzu2.TimeOut.TimeZone.LocationName
 
-	if TZones.US.Pacific() != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
+	if datetime.TZones.US.Pacific() != actualTimeOutLoc {
+		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.", datetime.TZones.US.Pacific(), actualTimeOutLoc)
 	}
 
 }
@@ -109,7 +110,7 @@ func TestTimeZoneDto_AddMinusTimeDto(t *testing.T) {
 
 	t12Dur := t2.Sub(t1)
 
-	tzu1, err := TimeZoneDto{}.New(t2, TZones.US.Eastern(), fmtstr)
+	tzu1, err := datetime.TimeZoneDto{}.New(t2, datetime.TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
@@ -117,7 +118,7 @@ func TestTimeZoneDto_AddMinusTimeDto(t *testing.T) {
 		return
 	}
 
-	tDto := TimeDto{Years: 3, Months: 2, DateDays: 15, Hours: 3, Minutes: 4, Seconds: 2}
+	tDto := datetime.TimeDto{Years: 3, Months: 2, DateDays: 15, Hours: 3, Minutes: 4, Seconds: 2}
 
 	tzu2 := tzu1.CopyOut()
 
@@ -160,7 +161,7 @@ func TestTimeZoneDto_AddPlusTimeDto(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Eastern(), fmtstr)
+	tzu1, err := datetime.TimeZoneDto{}.New(t1, datetime.TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
@@ -168,7 +169,7 @@ func TestTimeZoneDto_AddPlusTimeDto(t *testing.T) {
 		return
 	}
 
-	tDto := TimeDto{Years: 3, Months: 2, DateDays: 15, Hours: 3, Minutes: 4, Seconds: 2}
+	tDto := datetime.TimeDto{Years: 3, Months: 2, DateDays: 15, Hours: 3, Minutes: 4, Seconds: 2}
 
 	tzu2 := tzu1.CopyOut()
 
@@ -212,8 +213,8 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 		t.Errorf("Received error from time parse tPacificIn: %v", err.Error())
 	}
 
-	tzu := TimeZoneDto{}
-	tzuCentral, err := tzu.ConvertTz(tPacificIn, ianaCentralTz, FmtDateTimeYrMDayFmtStr)
+	tzu := datetime.TimeZoneDto{}
+	tzuCentral, err := tzu.ConvertTz(tPacificIn, ianaCentralTz, datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error from TimeZoneDto.ConvertTz().\n" +
@@ -227,7 +228,7 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 		t.Errorf("Expected tzuCentral.TimeOut %v, got %v", centralTime, centralTOut)
 	}
 
-	tzuMountain, err := tzu.ConvertTz(tzuCentral.TimeOut.DateTime, ianaMountainTz, FmtDateTimeYrMDayFmtStr)
+	tzuMountain, err := tzu.ConvertTz(tzuCentral.TimeOut.DateTime, ianaMountainTz, datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error from  tzuMountain TimeZoneDto.ConvertTz().\n" +
@@ -241,7 +242,7 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 		t.Errorf("Expected tzuMountain.TimeOut %v, got %v", mountainTime, mountainTOut)
 	}
 
-	tzuPacific, err := tzu.ConvertTz(tzuMountain.TimeOut.DateTime, ianaPacificTz, FmtDateTimeYrMDayFmtStr)
+	tzuPacific, err := tzu.ConvertTz(tzuMountain.TimeOut.DateTime, ianaPacificTz, datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error from tzuMountain TimeZoneDto.ConvertTz().\n" +
@@ -259,7 +260,7 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 	exTOutLoc := "America/Los_Angeles"
 
 	if exTOutLoc != tzuPacific.TimeOut.TimeZone.LocationName {
-		t.Errorf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'", exTOutLoc, tzuPacific.TimeOut.TimeZone.LocationName, tzuPacific.TimeOut.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+		t.Errorf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'", exTOutLoc, tzuPacific.TimeOut.TimeZone.LocationName, tzuPacific.TimeOut.DateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
 	}
 
 	pacificUtcOut := tzuPacific.TimeUTC.DateTime.Format(fmtstr)
@@ -297,7 +298,7 @@ func TestTimeZoneUtility_ConvertTz_02(t *testing.T) {
 		t.Errorf("Error from time.Parse. centralTime = %v. Error= %v", centralTime, err.Error())
 	}
 
-	tzuMoscow, err := TimeZoneDto{}.ConvertTz(tCentral, moscowTz, FmtDateTimeYrMDayFmtStr)
+	tzuMoscow, err := datetime.TimeZoneDto{}.ConvertTz(tCentral, moscowTz, datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error from TimeZoneDto{}.ConvertTz.\nCentral Time = %v.\n" +
@@ -311,7 +312,7 @@ func TestTimeZoneUtility_ConvertTz_02(t *testing.T) {
 		t.Errorf("Error. Moscow Time zone conversion failed! Expected %v. Instead, got %v.", moscowTime, moscowTOut)
 	}
 
-	tzuBeijing, err := tzuMoscow.ConvertTz(tCentral, beijingTz, FmtDateTimeYrMDayFmtStr)
+	tzuBeijing, err := tzuMoscow.ConvertTz(tCentral, beijingTz, datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error from tzuMoscow.ConvertTz.\n" +
@@ -343,7 +344,7 @@ func TestTimeZoneUtility_ConvertTz_03(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1UTCStr)
 
-	tz := TimeZoneDto{}
+	tz := datetime.TimeZoneDto{}
 
 	tzLocal, _ := tz.ConvertTz(t1, localTzStr, fmtstr)
 	t1OutStr := tzLocal.TimeIn.DateTime.Format(fmtstr)
@@ -371,7 +372,7 @@ func TestTimeZoneUtility_ConvertTz_04(t *testing.T) {
 		t.Errorf("Error from time.Parse. pacificTime = %v. Error= %v", pacificTime, err.Error())
 	}
 
-	tzuCentral, err := TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)
+	tzuCentral, err := datetime.TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)\n" +
@@ -414,7 +415,7 @@ func TestTimeZoneUtility_ConvertTz_05(t *testing.T) {
 		t.Errorf("Error from time.Parse. pacificTime = %v. Error= %v", pacificTime, err.Error())
 	}
 
-	tzuCentral, err := TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)
+	tzuCentral, err := datetime.TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)\n" +
@@ -436,7 +437,7 @@ func TestInvalidTargetTzInConversion(t *testing.T) {
 	// Invalid Target Iana Time Zone
 	invalidTz := "XUZ Time Zone"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu := TimeZoneDto{}
+	tzu := datetime.TimeZoneDto{}
 	_, err := tzu.ConvertTz(tIn, invalidTz, fmtstr)
 
 	if err == nil {
@@ -450,7 +451,7 @@ func TestTimeZoneUtility_GetLocationIn01(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+	tzu, _ := datetime.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedLocation := "Local"
 
@@ -468,7 +469,7 @@ func TestTimeZoneUtility_GetLocationOut_01(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+	tzu, _ := datetime.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedLocation := "America/Los_Angeles"
 
@@ -484,7 +485,7 @@ func TestTimeZoneUtility_GetZoneIn_01(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+	tzu, _ := datetime.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedZone := "CDT"
 	actualZone := tzu.TimeIn.TimeZone.ZoneName
@@ -500,7 +501,7 @@ func TestTimeZoneUtility_GetZoneOut_01(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+	tzu, _ := datetime.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedZone := "PDT"
 	actualZone := tzu.TimeOut.TimeZone.ZoneName
@@ -514,7 +515,7 @@ func TestTimeZoneUtility_GetZoneOut_01(t *testing.T) {
 func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 	tIn := time.Now()
 
-	tzu := TimeZoneDto{}
+	tzu := datetime.TimeZoneDto{}
 
 	isValidTz, isValidIanaTz, isValidLocalTz := tzu.IsValidTimeZone(tIn.Location().String())
 
@@ -538,7 +539,7 @@ func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 
 func TestTimeZoneUtility_IsValidTimeZone02(t *testing.T) {
 
-	tzu := TimeZoneDto{}
+	tzu := datetime.TimeZoneDto{}
 
 	isValidTz, isValidIanaTz, isValidLocalTz := tzu.IsValidTimeZone("America/Chicago")
 
@@ -563,7 +564,7 @@ func TestTimeZoneUtility_Location_01(t *testing.T) {
 
 	tUtc, _ := time.Parse(fmtstr, utcTime)
 
-	tzu := TimeZoneDto{}
+	tzu := datetime.TimeZoneDto{}
 
 	tzuPacific, err := tzu.ConvertTz(tUtc, ianaPacificTz, fmtstr)
 
@@ -587,7 +588,7 @@ func TestTimeZoneUtility_Location_02(t *testing.T) {
 	fmtstr := "2006-01-02 15:04:05 -0700 MST"
 	tPacific, _ := time.Parse(fmtstr, pacificTime)
 
-	tzu := TimeZoneDto{}
+	tzu := datetime.TimeZoneDto{}
 
 	tzuLocal, err := tzu.ConvertTz(tPacific, "Local", fmtstr)
 
@@ -612,7 +613,7 @@ func TestTimeZoneUtility_New_01(t *testing.T) {
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
 
-	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, FmtDateTimeYrMDayFmtStr)
+	tzu, _ := datetime.TimeZoneDto{}.New(tIn, ianaPacificTz, datetime.FmtDateTimeYrMDayFmtStr)
 	expectedTimeIn := "2017-04-29 19:54:30.000000000 -0500 CDT"
 	if expectedTimeIn != tzu.TimeIn.String() {
 		t.Errorf("Expected Time In='%v'. Instead, Time In='%v'", expectedTimeIn, tzu.TimeIn.String())
@@ -633,7 +634,7 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
+	tzu1, err := datetime.TimeZoneDto{}.New(t1, datetime.TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned from TimeZoneDto{}.New(t1, TzUsPacific ). Error='%v'", err.Error())
@@ -644,7 +645,7 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 
 	t12Dur := t2.Sub(t1)
 
-	tzu2, err := TimeZoneDto{}.NewAddDuration(tzu1, t12Dur, fmtstr)
+	tzu2, err := datetime.TimeZoneDto{}.NewAddDuration(tzu1, t12Dur, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewAddDuration(tzu1, t12Dur).\n" +
@@ -692,14 +693,14 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 
 	actualTimeOutLoc := tzu1.TimeOut.TimeZone.LocationName
 
-	if TZones.US.Pacific() != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
+	if datetime.TZones.US.Pacific() != actualTimeOutLoc {
+		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.", datetime.TZones.US.Pacific(), actualTimeOutLoc)
 	}
 
 	actualTimeOutLoc = tzu2.TimeOut.TimeZone.LocationName
 
-	if TZones.US.Pacific() != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
+	if datetime.TZones.US.Pacific() != actualTimeOutLoc {
+		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.", datetime.TZones.US.Pacific(), actualTimeOutLoc)
 	}
 
 }
@@ -710,7 +711,7 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
+	tzu1, err := datetime.TimeZoneDto{}.New(t1, datetime.TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
@@ -727,7 +728,7 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 	t2 := t1.AddDate(3, 2, 15)
 	t2OutStr := t2.Format(fmtstr)
 
-	tzu2, err := TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)
+	tzu2, err := datetime.TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)\n" +
@@ -766,13 +767,13 @@ func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Eastern(), fmtstr)
+	tzu1, err := datetime.TimeZoneDto{}.New(t1, datetime.TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast). Error='%v'", err.Error())
 	}
 
-	tzu2, err := TimeZoneDto{}.NewAddDateTime(tzu1, 3, 2, 15, 3,
+	tzu2, err := datetime.TimeZoneDto{}.NewAddDateTime(tzu1, 3, 2, 15, 3,
 		4, 2, 0, 0, 0, fmtstr)
 
 	if err != nil {
@@ -805,7 +806,7 @@ func TestTimeZoneUtility_NewAddTime_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
+	tzu1, err := datetime.TimeZoneDto{}.New(t1, datetime.TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
@@ -831,7 +832,7 @@ func TestTimeZoneUtility_NewAddTime_01(t *testing.T) {
 	t2 := t1.Add(time.Duration(dNanSecs))
 	t2OutStr := t2.Format(fmtstr)
 
-	tzu2, err := TimeZoneDto{}.NewAddTime(tzu1, 3, 32, 18,
+	tzu2, err := datetime.TimeZoneDto{}.NewAddTime(tzu1, 3, 32, 18,
 		122, 58, 615, fmtstr)
 
 	if err != nil {

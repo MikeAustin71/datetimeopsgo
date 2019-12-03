@@ -1,12 +1,13 @@
-package datetime
+package zztests
 
 import (
+	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 )
 
 func TestTimeDto_NormalizeTimeElements_01(t *testing.T) {
 
-	t1Dto := TimeDto{}
+	t1Dto := datetime.TimeDto{}
 
 	t1Dto.Years = 1955
 	t1Dto.Months = 15
@@ -24,7 +25,7 @@ func TestTimeDto_NormalizeTimeElements_01(t *testing.T) {
 		t.Errorf("Error returned by t1Dto.NormalizeTimeElements(). Error='%v'", err.Error())
 	}
 
-	t2Dto := TimeDto{}
+	t2Dto := datetime.TimeDto{}
 
 	t2Dto.Years = 1956
 	t2Dto.Months = 3
@@ -69,7 +70,7 @@ func TestTimeDto_NormalizeTimeElements_01(t *testing.T) {
 
 func TestTimeDto_NormalizeTimeElements_02(t *testing.T) {
 
-	t1Dto := TimeDto{}
+	t1Dto := datetime.TimeDto{}
 
 	t1Dto.Years = 1955
 	t1Dto.Months = 15
@@ -87,7 +88,7 @@ func TestTimeDto_NormalizeTimeElements_02(t *testing.T) {
 		t.Errorf("Error returned by t1Dto.NormalizeTimeElements(). Error='%v'", err.Error())
 	}
 
-	t2Dto := TimeDto{}
+	t2Dto := datetime.TimeDto{}
 
 	t2Dto.Years = 1956
 	t2Dto.Months = 3
@@ -129,7 +130,7 @@ func TestTimeDto_NormalizeTimeElements_02(t *testing.T) {
 }
 func TestTimeDto_NormalizeDays_01(t *testing.T) {
 
-	t1Dto := TimeDto{}
+	t1Dto := datetime.TimeDto{}
 
 	t1Dto.Years = 1955
 	t1Dto.Months = 15
@@ -155,7 +156,7 @@ func TestTimeDto_NormalizeDays_01(t *testing.T) {
 		t.Errorf("Error returned by t1Dto.NormalizeDays(). Error='%v'", err.Error())
 	}
 
-	t2Dto := TimeDto{}
+	t2Dto := datetime.TimeDto{}
 
 	t2Dto.Years = 1956
 	t2Dto.Months = 4
@@ -177,7 +178,7 @@ func TestTimeDto_NormalizeDays_01(t *testing.T) {
 
 	expectedDateTime := "1956-04-03 01:13:06.002002001 +0000 UTC"
 
-	actualDateTime, err := t1Dto.GetDateTime(TZones.UTC())
+	actualDateTime, err := t1Dto.GetDateTime(datetime.TZones.UTC())
 
 	if err != nil {
 		t.Errorf("Error returned by t1Dto.GetDateTime(TZones.UTC()).\n" +
@@ -185,9 +186,9 @@ func TestTimeDto_NormalizeDays_01(t *testing.T) {
 		return
 	}
 
-	if expectedDateTime != actualDateTime.Format(FmtDateTimeYrMDayFmtStr) {
+	if expectedDateTime != actualDateTime.Format(datetime.FmtDateTimeYrMDayFmtStr) {
 		t.Errorf("Error: Expected t1Dto.GetDateTime(TZones.UTC())='%v'.  Instead datetime='%v'",
-			expectedDateTime, actualDateTime.Format(FmtDateTimeYrMDayFmtStr))
+			expectedDateTime, actualDateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
 	}
 
 }

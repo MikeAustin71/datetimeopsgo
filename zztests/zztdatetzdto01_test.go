@@ -1,6 +1,7 @@
-package datetime
+package zztests
 
 import (
+	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 	"time"
 )
@@ -14,7 +15,7 @@ func TestDateTzDto_AddDate_01(t *testing.T) {
 
 	expectedOutDate := t1.Format(fmtstr)
 
-	dtz1, err := DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
@@ -50,7 +51,7 @@ func TestDateTzDto_AddDateToThis_01(t *testing.T) {
 
 	expectedOutDate := t1.Format(fmtstr)
 
-	dtz1, err := DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
@@ -89,7 +90,7 @@ func TestDateTzDto_AddDuration_01(t *testing.T) {
 
 	duration := t2.Sub(t1)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
@@ -128,7 +129,7 @@ func TestDateTzDto_AddDurationToThis_01(t *testing.T) {
 
 	duration := t2.Sub(t1)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
@@ -176,7 +177,7 @@ func TestDateTzDto_AddTime_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v' ", err.Error())
@@ -231,7 +232,7 @@ func TestDateTzDto_AddTimeToThis_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
@@ -285,7 +286,7 @@ func TestDateTzDto_AddDateTime(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
@@ -344,7 +345,7 @@ func TestDateTzDto_AddDateTimeToThis_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\nError='%v'\n", err.Error())
@@ -389,7 +390,7 @@ func TestDateTzDto_CopyIn_01(t *testing.T) {
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
 
-	dtz1, err := DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := datetime.DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\nError='%v'\n", err.Error())
@@ -402,7 +403,7 @@ func TestDateTzDto_CopyIn_01(t *testing.T) {
 		t.Errorf("Expected dtz1.String()='%v'. Instead, dtz1.String()='%v'", actualOutStr, t1OutStr)
 	}
 
-	dtz2, err := DateTzDto{}.New(t2, fmtstr)
+	dtz2, err := datetime.DateTzDto{}.New(t2, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
@@ -432,7 +433,7 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 	t1ExpectedZone, t1ExpectedZoneOffset := t1.Zone()
 	t1ExpectedLocationName := t1.Location().String()
 
-	dTzDtoInitial, err := DateTzDto{}.New(t1, FmtDateTimeYrMDayFmtStr)
+	dTzDtoInitial, err := datetime.DateTzDto{}.New(t1, datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t1).\nError='%v'\n", err.Error())
@@ -503,7 +504,7 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 
 func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 
-	locUSCentral, err := time.LoadLocation(TZones.US.Central())
+	locUSCentral, err := time.LoadLocation(datetime.TZones.US.Central())
 
 	if err != nil {
 		t.Errorf("Error returned by time.LoadLocation(TZones.US.Central()). Error='%v'", err.Error())
@@ -519,7 +520,7 @@ func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 
 	t4USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
-	dTz1, err := DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)
+	dTz1, err := datetime.DateTzDto{}.New(t4USCentral, datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)")
@@ -588,7 +589,7 @@ func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 
 func TestDateTzDto_GetDateTimeTzNanoSecYMDDowText(t *testing.T) {
 
-	tDto := TimeDto{
+	tDto := datetime.TimeDto{
 		Years:       2018,
 		Months:      2,
 		DateDays:    6,
@@ -605,7 +606,7 @@ func TestDateTzDto_GetDateTimeTzNanoSecYMDDowText(t *testing.T) {
 			err.Error())
 	}
 
-	dTz, err := DateTzDto{}.NewTimeDto(tDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dTz, err := datetime.DateTzDto{}.NewTimeDto(tDto, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by "+

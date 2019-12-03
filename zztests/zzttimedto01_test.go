@@ -1,6 +1,7 @@
-package datetime
+package zztests
 
 import (
+	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 
 	"time"
@@ -22,13 +23,13 @@ func TestTimeDto_AddTimeDto(t *testing.T) {
 	TotSubSecNanoseconds := 515539300
 	TotalTimeNanoseconds := int64(82712515539300)
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	t2Dto, err := TimeDto{}.New(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
+	t2Dto, err := datetime.TimeDto{}.New(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
 
 	err = tDto.AddTimeDto(t2Dto)
 
@@ -105,7 +106,7 @@ func TestTimeDto_AddTimeDto(t *testing.T) {
 
 func TestTimeDto_CopyOut_01(t *testing.T) {
 
-	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	t0Dto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
@@ -167,13 +168,13 @@ func TestTimeDto_CopyOut_01(t *testing.T) {
 
 func TestTimeDto_CopyIn_01(t *testing.T) {
 
-	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	t0Dto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	tDto, err := TimeDto{}.New(2014, 9, 0, 14, 5, 5, 19, 850, 850, 850)
+	tDto, err := datetime.TimeDto{}.New(2014, 9, 0, 14, 5, 5, 19, 850, 850, 850)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2014, 9, 0, 14, 5, 5,19,850,850,850).\n" +
@@ -235,7 +236,7 @@ func TestTimeDto_CopyIn_01(t *testing.T) {
 
 func TestTimeDto_ConvertToNegativeValues(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
@@ -296,7 +297,7 @@ func TestTimeDto_ConvertToNegativeValues(t *testing.T) {
 }
 
 func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
@@ -408,7 +409,7 @@ func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
 
 func TestTimeDto_Empty(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
@@ -518,7 +519,7 @@ func TestTimeDto_Empty(t *testing.T) {
 
 func TestTimeDto_Equal_01(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
@@ -583,7 +584,7 @@ func TestTimeDto_Equal_01(t *testing.T) {
 
 func TestTimeDto_Equal_02(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
@@ -662,7 +663,7 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 	microsecond := 0
 	totNanoSecs := 515539300
 
-	tDto, err := TimeDto{}.New(year, month, 0, dateDay, hour, minute, second, millisecond, microsecond, totNanoSecs)
+	tDto, err := datetime.TimeDto{}.New(year, month, 0, dateDay, hour, minute, second, millisecond, microsecond, totNanoSecs)
 
 	millisecond = 515
 	microsecond = 539
@@ -674,17 +675,17 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 		return
 	}
 
-	t1, err := tDto.GetDateTime(TZones.US.Central())
+	t1, err := tDto.GetDateTime(datetime.TZones.US.Central())
 
 	if err != nil {
 		t.Errorf("Error returned by tDto.GetDateTime(TZones.US.Central()). Error='%v'", err.Error())
 	}
 
-	loc, err := time.LoadLocation(TZones.US.Central())
+	loc, err := time.LoadLocation(datetime.TZones.US.Central())
 
 	if err != nil {
 		t.Errorf("Error returned by time.LoadLocation(TZones.US.Central()). "+
-			"TZones.US.Central()='%v'  Error='%v'", TZones.US.Central(), err.Error())
+			"TZones.US.Central()='%v'  Error='%v'", datetime.TZones.US.Central(), err.Error())
 	}
 
 	t2 := time.Date(year, time.Month(month), dateDay, hour, minute, second, totNanoSecs, loc)
@@ -738,7 +739,7 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 	}
 
 	if !t1.Equal(t2) {
-		t.Errorf("Error: expected t1 to EQUAL t2. They are NOT Equal! t1='%v'   t2='%v'", t1.Format(TZones.US.Central()), t2.Format(TZones.US.Central()))
+		t.Errorf("Error: expected t1 to EQUAL t2. They are NOT Equal! t1='%v'   t2='%v'", t1.Format(datetime.TZones.US.Central()), t2.Format(datetime.TZones.US.Central()))
 	}
 
 }
@@ -764,7 +765,7 @@ func TestTimeDto_New_01(t *testing.T) {
 		Total Nanoseconds:  515539300
 		========================================
 	*/
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := datetime.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
@@ -824,7 +825,7 @@ func TestTimeDto_New_01(t *testing.T) {
 
 func TestTimeDto_New_02(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
+	tDto, err := datetime.TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
 
 	if err != nil {
 		t.Errorf("Error returned from TimeDto{}.New()\nWeeks=-8.\nError='%v'\n", err.Error())
@@ -950,7 +951,7 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := datetime.DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...).\n" +
@@ -958,7 +959,7 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 		return
 	}
 
-	tDto, err := TimeDto{}.NewFromDateTime(dTzDto.DateTime)
+	tDto, err := datetime.TimeDto{}.NewFromDateTime(dTzDto.DateTime)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.NewFromDateTime(dTzDto.DateTime)\n" +
@@ -966,7 +967,7 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 		return
 	}
 
-	dt2, err := tDto.GetDateTime(TZones.US.Central())
+	dt2, err := tDto.GetDateTime(datetime.TZones.US.Central())
 
 	if err != nil {
 		t.Errorf("Error returned by tDto.GetDateTime(TZones.US.Central()).\n" +
@@ -985,13 +986,13 @@ func TestTimeDto_NewFromDateTzDto_01(t *testing.T) {
 	// t1str :="2017-04-30 22:58:32.515539300 -0500 CDT"
 	// t1, err := time.Parse(FmtDateTimeYrMDayFmtStr, t1str)
 
-	dTzDto, err := DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dTzDto, err := datetime.DateTzDto{}.NewDateTimeElements(2017, 04, 30, 22, 58, 32, 515539300, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned from DateTzDto{}.NewDateTimeElements(year, month, day,...). Error='%v'", err.Error())
 	}
 
-	tDto, err := TimeDto{}.NewFromDateTzDto(dTzDto)
+	tDto, err := datetime.TimeDto{}.NewFromDateTzDto(dTzDto)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.NewFromDateTzDto(dTzDto)\n" +
@@ -999,7 +1000,7 @@ func TestTimeDto_NewFromDateTzDto_01(t *testing.T) {
 		return
 	}
 
-	t2, err := tDto.GetDateTime(TZones.US.Central())
+	t2, err := tDto.GetDateTime(datetime.TZones.US.Central())
 
 	if err != nil {
 		t.Errorf("Error returned by tDto.GetDateTime(TZones.US.Central())\n" +
@@ -1025,7 +1026,7 @@ func TestTimeDto_NewTimeElements_01(t *testing.T) {
 	nanosecond := 848
 	totNanosecs := 784303848
 
-	tDto, err := TimeDto{}.NewTimeElements(year, month, day, hour, minute, second, totNanosecs)
+	tDto, err := datetime.TimeDto{}.NewTimeElements(year, month, day, hour, minute, second, totNanosecs)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.NewTimeElements(...).\n"+

@@ -1,6 +1,7 @@
-package datetime
+package zztests
 
 import (
+	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 	"time"
 )
@@ -14,7 +15,7 @@ func TestTimeZoneUtility_NewTimeAddDate_01(t *testing.T) {
 	t2 := t1.AddDate(3, 2, 15)
 	t2OutStr := t2.Format(fmtstr)
 
-	tzu2, err := TimeZoneDto{}.NewTimeAddDate(t1, TZones.US.Pacific(), 3, 2, 15, fmtstr)
+	tzu2, err := datetime.TimeZoneDto{}.NewTimeAddDate(t1, datetime.TZones.US.Pacific(), 3, 2, 15, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewTimeAddDate(t1,TzUsPacific , 3, 2, 15).\n" +
@@ -56,7 +57,7 @@ func TestTimeZoneUtility_NewTimeAddTime_01(t *testing.T) {
 	t2 := t1.Add(time.Duration(dNanSecs))
 	t2OutStr := t2.Format(fmtstr)
 
-	tzu2, err := TimeZoneDto{}.NewTimeAddTime(t1, TZones.US.Pacific(), 3, 32, 18, 122, 58, 615, fmtstr)
+	tzu2, err := datetime.TimeZoneDto{}.NewTimeAddTime(t1, datetime.TZones.US.Pacific(), 3, 32, 18, 122, 58, 615, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewTimeAddTime(t1, TzUsPacific, 3, 32, 18,122,58,615 ).\n" +
@@ -92,7 +93,7 @@ func TestTimeZoneUtility_NewTimeAddDateTime_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	tzu2, err := TimeZoneDto{}.NewTimeAddDateTime(t1, TZones.US.Eastern(), 3, 2, 15, 3, 4, 2, 0, 0, 0, fmtstr)
+	tzu2, err := datetime.TimeZoneDto{}.NewTimeAddDateTime(t1, datetime.TZones.US.Eastern(), 3, 2, 15, 3, 4, 2, 0, 0, 0, fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewAddDateTime(tzu1, 3,2, 15, 3, 4, 2,0, 0, 0).\n" +
@@ -132,7 +133,7 @@ func TestTimeZoneUtility_NewTimeAddDuration_01(t *testing.T) {
 	t2 := t1.Add(time.Duration(dNanSecs))
 	t2OutStr := t2.Format(fmtstr)
 
-	tzu2, err := TimeZoneDto{}.NewTimeAddDuration(t1, TZones.US.Pacific(), time.Duration(dNanSecs), fmtstr)
+	tzu2, err := datetime.TimeZoneDto{}.NewTimeAddDuration(t1, datetime.TZones.US.Pacific(), time.Duration(dNanSecs), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewTimeAddTime(t1, TzUsPacific, 3, 32, 18,122,58,615 ).\n" +
@@ -165,13 +166,13 @@ func TestTimeZoneUtility_ReclassifyTimeWithTzLocal(t *testing.T) {
 
 	tPacific := "2017-04-29 17:54:30 -0700 PDT"
 	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tz := TimeZoneDto{}
+	tz := datetime.TimeZoneDto{}
 	tIn, err := time.Parse(fmtstr, tPacific)
 	if err != nil {
 		t.Errorf("Error returned from time.Parse: %v", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TZones.Local())
+	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, datetime.TZones.Local())
 
 	if err != nil {
 		t.Errorf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, TZones.Local())\n" +
@@ -191,13 +192,13 @@ func TestTimeZoneUtility_ReclassifyTimeWithNewTz(t *testing.T) {
 
 	tPacific := "2017-04-29 17:54:30 -0700 PDT"
 	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tz := TimeZoneDto{}
+	tz := datetime.TimeZoneDto{}
 	tIn, err := time.Parse(fmtstr, tPacific)
 	if err != nil {
 		t.Errorf("Error returned from time.Parse: %v", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Hawaii())
+	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, datetime.TZones.US.Hawaii())
 
 	if err != nil {
 		t.Errorf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Hawaii())\n" +
@@ -207,8 +208,8 @@ func TestTimeZoneUtility_ReclassifyTimeWithNewTz(t *testing.T) {
 
 	tOutLoc := tOut.Location()
 
-	if tOutLoc.String() != TZones.US.Hawaii() {
-		t.Errorf("Expected tOutLocation == '%v', instead tOutLocation == '%v'", TZones.US.Hawaii(), tOutLoc.String())
+	if tOutLoc.String() != datetime.TZones.US.Hawaii() {
+		t.Errorf("Expected tOutLocation == '%v', instead tOutLocation == '%v'", datetime.TZones.US.Hawaii(), tOutLoc.String())
 	}
 
 }
@@ -217,13 +218,13 @@ func TestTimeZoneUtility_ReclassifyTimeAsMountain(t *testing.T) {
 
 	tPacific := "2017-04-29 17:54:30 -0700 PDT"
 	fmtstr := "2006-01-02 15:04:05 -0700 MST"
-	tz := TimeZoneDto{}
+	tz := datetime.TimeZoneDto{}
 	tIn, err := time.Parse(fmtstr, tPacific)
 	if err != nil {
 		t.Errorf("Error returned from time.Parse: %v", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Mountain())
+	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, datetime.TZones.US.Mountain())
 
 	if err != nil {
 		t.Errorf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Mountain())\n" +
@@ -233,8 +234,8 @@ func TestTimeZoneUtility_ReclassifyTimeAsMountain(t *testing.T) {
 
 	tOutLoc := tOut.Location()
 
-	if tOutLoc.String() != TZones.US.Mountain() {
-		t.Errorf("Expected tOutLocation == '%v', instead tOutLocation == '%v'", TZones.US.Hawaii(), tOutLoc.String())
+	if tOutLoc.String() != datetime.TZones.US.Mountain() {
+		t.Errorf("Expected tOutLocation == '%v', instead tOutLocation == '%v'", datetime.TZones.US.Hawaii(), tOutLoc.String())
 	}
 
 }

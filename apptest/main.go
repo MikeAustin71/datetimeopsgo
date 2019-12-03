@@ -9,13 +9,81 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest023()
+	mainTest{}.mainTest024()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest024() {
+	ePrefix := "mainTest.mainTest024() "
+	fmt.Println(ePrefix)
+	tstr := "12/02/2019 22:05:00 -0600 CST"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	var testTime, expectedMilTime time.Time
+	var err error
+	var actualMilDateTimeGroup, expectedMilDateTimeGroup string
+	var milDatTzDto dt.MilitaryDateTzDto
+	var expectedMilTimeLoc *time.Location
+
+	testTime, err = time.Parse(fmtstr, tstr)
+
+	expectedMilTimeLoc, err = time.LoadLocation(dt.TZones.Military.Quebec())
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(dt.TZones.Military.Quebec())\n" +
+			"dt.TZones.Military.Quebec()='%v'\n" +
+			"Error='%v'\n", dt.TZones.Military.Quebec(), err.Error())
+	}
+
+	expectedMilTime = testTime.In(expectedMilTimeLoc)
+
+	milDatTzDto, err = dt.MilitaryDateTzDto{}.New(testTime, "Q")
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by MilitaryDateTzDto{}.New(testTime, \"Q\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedMilDateTimeGroup, err = dt.DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)\n" +
+			"expectedMilTime='%v'\n" +
+			"Error='%v'\n",
+			expectedMilTime.Format(fmtstr) ,err.Error())
+		return
+	}
+
+	actualMilDateTimeGroup, err = milDatTzDto.GetOpenDateTimeGroup()
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by milDatTzDto.GetOpenDateTimeGroup()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if expectedMilDateTimeGroup != actualMilDateTimeGroup {
+		fmt.Printf(ePrefix +
+			"\nError: Expected Military Date Time Group='%v'.\n" +
+			"Actual Military Date Time Group='%v'\n" +
+			"Military Time='%v'",
+			expectedMilDateTimeGroup, actualMilDateTimeGroup, expectedMilTime.Format(fmtstr))
+	}
+
+	fmt.Println("***** Success *****")
+	fmt.Printf("Expected Military Date Time Group: %v\n", expectedMilDateTimeGroup)
+	fmt.Printf("  Actual Military Date Time Group: %v\n", actualMilDateTimeGroup)
+	fmt.Printf("              Original Start Time: %v\n", testTime.Format(fmtstr))
+	fmt.Printf("      Military Time in Quebect Tz: %v\n", milDatTzDto.DateTime.Format(fmtstr))
 }
 
 func (mt mainTest) mainTest023() {
