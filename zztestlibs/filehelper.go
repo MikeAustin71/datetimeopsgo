@@ -1,4 +1,4 @@
-package testlibs
+package zztestlibs
 
 import (
 	"errors"
