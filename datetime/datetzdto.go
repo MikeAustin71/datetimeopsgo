@@ -10,10 +10,10 @@ import (
 // DateTzDto
 //
 // This source file is located in source code repository:
-// 		'https://github.com/MikeAustin71/datetimeopsgo.git'
+//    'https://github.com/MikeAustin71/datetimeopsgo.git'
 //
 // This source code file is located at:
-//		MikeAustin71\datetimeopsgo\datetime\datetzdto.go
+//    MikeAustin71\datetimeopsgo\datetime\datetzdto.go
 //
 // ------------------------------------------------------------------------
 //
@@ -26,13 +26,21 @@ import (
 // Time elements includes years, months, weeks, days, hours, minutes, seconds,
 // milliseconds, microseconds and nanoseconds.
 //
-// This Type is NOT used to define time duration; that is, the
-// difference or time span between two points in time. For time
-// duration calculations refer to types, 'TimeDurationDto' and
-// 'DurationTriad' located in source files:
+// 'DateTzDto' is used primarily conjunction with IANA Time Zones. For more information
+// on IANA Time Zones, see type 'TimeZones', located in source file:
 //
-//		'github.com/MikeAustin71/datetimeopsgo/datetime/timedurationdto.go'
-//		'github.com/MikeAustin71/datetimeopsgo/datetime/durationtriad.go'
+//    Source Repository: 'https://github.com/MikeAustin71/datetimeopsgo.git'
+//     Source Code File:  MikeAustin71\datetimeopsgo\datetime\timezonedata.go
+//
+//
+//For Military Time Zones use type, 'MilitaryDateTzDto'.
+//
+// This Type is NOT used to define time duration; that is, the difference or time
+// span between two points in time. For time duration calculations refer to types,
+// 'TimeDurationDto' and 'DurationTriad' located in source files:
+//
+//    'github.com/MikeAustin71/datetimeopsgo/datetime/timedurationdto.go'
+//    'github.com/MikeAustin71/datetimeopsgo/datetime/durationtriad.go'
 //
 // As previously stated, 'DateTzDto' defines a specific point in time using
 // a variety of descriptors including year, month, day hour, minute, second,
@@ -44,27 +52,27 @@ import (
 // and several of the 'DateTzDto' methods use Time Zone Location. Time Zone location
 // must be designated as one of two values.
 //
-//	     (1) The string 'Local' - signals the designation of the local time zone
-//	         location for the host computer.
+//      (1) The string 'Local' - signals the designation of the local time zone
+//          location for the host computer.
 //
-//	     (2) IANA Time Zone Location -
-//	         See https://golang.org/pkg/time/#LoadLocation
-//	         and https://www.iana.org/time-zones to ensure that
-//	         the IANA Time Zone Database is properly configured
-//	         on your system. Note: IANA Time Zone Data base is
-//	         equivalent to 'tz database'.
+//      (2) IANA Time Zone Location -
+//          See https://golang.org/pkg/time/#LoadLocation
+//          and https://www.iana.org/time-zones to ensure that
+//          the IANA Time Zone Database is properly configured
+//          on your system. Note: IANA Time Zone Data base is
+//          equivalent to 'tz database'.
 //
-//	         Examples:
-//	           "America/New_York"
-//	           "America/Chicago"
-//	           "America/Denver"
-//	           "America/Los_Angeles"
-//	           "Pacific/Honolulu"
+//          Examples:
+//            "America/New_York"
+//            "America/Chicago"
+//            "America/Denver"
+//            "America/Los_Angeles"
+//            "Pacific/Honolulu"
 //
-//	         The source file 'datetimeconstants.go' contains a number of
-//	         constant declarations covering the more frequently used time
-//	         zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//	         time zone constants begin with the prefix 'TzIana'.
+//          The source file 'datetimeconstants.go' contains a number of
+//          constant declarations covering the more frequently used time
+//          zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//          time zone constants begin with the prefix 'TzIana'.
 //
 //
 // A requirement for presentation of date time strings is a specific format
@@ -73,22 +81,22 @@ import (
 // to provide a date time format string, ('dateTimeFmtStr'). This format string
 // is used to configure date times for display purposes.
 //
-//	dateTimeFmtStr string   - A date time format string which will be used
-//	                          to format and display 'dateTime'. Example:
-//	                          "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr string   - A date time format string which will be used
+//                           to format and display 'dateTime'. Example:
+//                           "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
-//	                          the more commonly used date time string formats. All
-//	                          Date Time format constants begin with the prefix
-//	                          'FmtDateTime'.
+//                           Date time format constants are found in the source
+//                           file 'datetimeconstants.go'. These constants represent
+//                           the more commonly used date time string formats. All
+//                           Date Time format constants begin with the prefix
+//                           'FmtDateTime'.
 //
-//	                          If 'dateTimeFmtStr' is submitted as an
-//	                          'empty string', a default date time format
-//	                          string will be applied. The default date time
-//	                          format string is:
-//	                            FmtDateTimeYrMDayFmtStr =
-//	                                "2006-01-02 15:04:05.000000000 -0700 MST"
+//                           If 'dateTimeFmtStr' is submitted as an
+//                           'empty string', a default date time format
+//                           string will be applied. The default date time
+//                           format string is:
+//                             FmtDateTimeYrMDayFmtStr =
+//                                 "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // DateTzDto Structure
 //

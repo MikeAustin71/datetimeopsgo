@@ -7,6 +7,61 @@ import (
 	"time"
 )
 
+// MilitaryDateTzDto - This type is used to define date times associated with
+// Military Time Zones.
+//
+// Military time zones are commonly used in aviation as well as at sea.
+// They are also known as nautical or maritime time zones.
+//
+// For easy access to Military Time Zones and their IANA equivalents see the
+// enumeration type, 'TimeZones'.
+//
+// Type 'TimeZones', is located in source file:
+//
+//    Source Repository: 'https://github.com/MikeAustin71/datetimeopsgo.git'
+//    Source Code File:  MikeAustin71\datetimeopsgo\datetime\timezonedata.go
+//
+// For background information on Military Time Zones reference:
+//
+//     https://en.wikipedia.org/wiki/List_of_military_time_zones
+//     http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//     https://www.timeanddate.com/time/zones/military
+//     https://www.timeanddate.com/worldclock/timezone/alpha
+//
+// The following list details Military Time Zones, 'A' to 'Z'.  The 'J' (Juliet)
+// Time Zone is occasionally used to refer to the observer's local time. Note that
+// Time Zone 'J' (Juliet) is not listed below.
+///
+//    Time Zone       Time Zone        Equivalent IANA          UTC
+//   Abbreviation       Name              Time Zone            Offset
+//   ------------     --------          ---------------        ------
+//
+//       A        Alpha Time Zone         Etc/GMT-1            UTC +1
+//       B        Bravo Time Zone         Etc/GMT-2            UTC +2
+//       C        Charlie Time Zone       Etc/GMT-3            UTC +3
+//       D        Delta Time Zone         Etc/GMT-4            UTC +4
+//       E        Echo Time Zone          Etc/GMT-5            UTC +5
+//       F        Foxtrot Time Zone       Etc/GMT-6            UTC +6
+//       G        Golf Time Zone          Etc/GMT-7            UTC +7
+//       H        Hotel Time Zone         Etc/GMT-8            UTC +8
+//       I        India Time Zone         Etc/GMT-9            UTC +9
+//       K        Kilo Time Zone          Etc/GMT-10           UTC +10
+//       L        Lima Time Zone          Etc/GMT-11           UTC +11
+//       M        Mike Time Zone          Etc/GMT-12           UTC +12
+//       N        November Time Zone      Etc/GMT+1            UTC -1
+//       O        Oscar Time Zone         Etc/GMT+2            UTC -2
+//       P        Papa Time Zone          Etc/GMT+3            UTC -3
+//       Q        Quebec Time Zone        Etc/GMT+4            UTC -4
+//       R        Romeo Time Zone         Etc/GMT+5            UTC -5
+//       S        Sierra Time Zone        Etc/GMT+6            UTC -6
+//       T        Tango Time Zone         Etc/GMT+7            UTC -7
+//       U        Uniform Time Zone       Etc/GMT+8            UTC -8
+//       V        Victor Time Zone        Etc/GMT+9            UTC -9
+//       W        Whiskey Time Zone       Etc/GMT+10           UTC -10
+//       X        X-ray Time Zone         Etc/GMT+11           UTC -11
+//       Y        Yankee Time Zone        Etc/GMT+12           UTC -12
+//       Z        Zulu Time Zone          UTC                  UTC +0
+//
 type MilitaryDateTzDto struct {
 	Time                       TimeDto
 	DateTime                   time.Time
