@@ -107,7 +107,7 @@ type DateTzDto struct {
 	DateTime    time.Time      // DateTime value for this DateTzDto Type
 	DateTimeFmt string         // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
 	TimeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
-	// 		associated with this date time.
+	                           //    associated with this date time.
 }
 
 // AddDate - Adds input parameters 'years, 'months' and 'days' to date time value of the
@@ -1357,6 +1357,47 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 	return true
 }
 
+
+// EqualUtcOffset - Compares a second instance of 'DateTzDto' to the
+// current 'DateTzDto' object and returns a boolean value signaling
+// whether the two objects have the same UTC offsets.
+//
+// If the return value is true, it signals that both 'DateTzDto'
+// instances have the same UTC offset value.
+//
+func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
+
+	ePrefix := "DateTzDto.EqualUtcOffset() "
+
+	dtzDateTimeStr := dtz.DateTime.Format(FmtDateTimeYMDHMSTz)
+
+	dtzUtcOffsetAry := strings.Split(dtzDateTimeStr, " ")
+
+	if len(dtzUtcOffsetAry) != 4 {
+		return false, fmt.Errorf(ePrefix +
+			"Error: Current DateTzDto is INVALID!\n" +
+			"Date Time String='%v'", dtzDateTimeStr)
+	}
+
+	dtzUtcOffset := dtzUtcOffsetAry[2]
+
+	dtz2DateTimeStr := dtz2.DateTime.Format(FmtDateTimeYMDHMSTz)
+
+	dtz2UtcOffsetAry := strings.Split(dtz2DateTimeStr, " ")
+
+	if len(dtz2UtcOffsetAry) != 4 {
+		return false, fmt.Errorf(ePrefix +
+			"\nError: Input parameter 'dtz2' is INVALID!\n" +
+			"dtz2 Time String='%v'\n", dtz2DateTimeStr)
+	}
+
+	dtz2UtcOffset := dtz2UtcOffsetAry[2]
+
+	return dtzUtcOffset == dtz2UtcOffset, nil
+}
+
+
+
 // GetDateTimeEverything - Receives a time value and formats as
 // a date time string in the format:
 //
@@ -1472,6 +1513,67 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 	return dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr)
 }
 
+// GetMilitaryDateTzDto - Returns an instance of 'MilitaryDateTzDto' which
+// is equivalent to the current date, time and time zone represented by the
+// current 'DateTzDto' object.
+//
+func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
+	// FmtDateTimeYMDHMSTz "2006-01-02 15:04:05 -0700 MST"
+	ePrefix := "DateTzDto.GetMilitaryDateTzDto() "
+
+	err := dtz.IsValid()
+
+	if err != nil {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nCurrent DateTzDto is INVALID!\n" +
+				"%v", err.Error())
+	}
+
+	dtzDateTimeStr := dtz.DateTime.Format(FmtDateTimeYMDHMSTz)
+
+	dtzDateTimeArray := strings.Split(dtzDateTimeStr, " ")
+
+	if len(dtzDateTimeArray) != 4 {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nError: Current DateTzDto is INVALID!\n" +
+				"Date Time String='%v'\n", dtzDateTimeStr)
+	}
+
+	utcOffset := dtzDateTimeArray[2]
+
+	utcPrefix := utcOffset[:3]
+
+	utcOffset = utcPrefix + "00"
+
+	militaryTz, ok := MilitaryUTCToTzMap[utcOffset]
+
+	if !ok {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nError: UTC Offset is INVALID!\n" +
+				"utcOffset='%v'\n", utcOffset)
+	}
+
+	var militaryTzDto MilitaryDateTzDto
+
+	militaryTzDto, err = MilitaryDateTzDto{}.New(dtz.DateTime, militaryTz)
+
+	if err != nil {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nError returned by MilitaryDateTzDto{}.New(dtz.DateTime," +
+				" militaryTz)\n" +
+				"dtz.DateTime='%v'\n" +
+				"militaryTz='%v'\n" +
+				"Error='%v'\n",
+				dtz.DateTime.Format(FmtDateTimeYMDHMSTz),militaryTz, err.Error() )
+	}
+
+	return militaryTzDto, nil
+}
+
 // GetTimeDto - Converts the current DateTzDto instance
 // date time information into an instance of TimeDto
 // and returns that TimeDto to the caller.
@@ -1487,27 +1589,26 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 //
 // Return Values
 //
-//	TimeDto - A TimeDto structure is defined as follows:
+// TimeDto - A TimeDto structure is defined as follows:
 //
-//			type TimeDto struct {
-//				Years		int // Number of Years
-//				Months		int // Number of Months
-//				Weeks		int // Number of Weeks
-//				WeekDays	int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//				DateDays	int // Total Number of Days. Weeks x 7 plus WeekDays
-//				Hours		int // Number of Hours.
-//				Minutes		int // Number of Minutes
-//				Seconds		int // Number of Seconds
-//				Milliseconds	int // Number of Milliseconds
-//				Microseconds	int // Number of Microseconds
-//				Nanoseconds	int // Remaining Nanoseconds after Milliseconds & Microseconds
-//				TotSubSecNanoseconds	int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//							    //    plus remaining Nanoseconds
-//			}
+//   type TimeDto struct {
+//      Years                 int // Number of Years
+//      Months                int // Number of Months
+//      Weeks                 int // Number of Weeks
+//      WeekDays              int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//      DateDays              int // Total Number of Days. Weeks x 7 plus WeekDays
+//      Hours                 int // Number of Hours.
+//      Minutes               int // Number of Minutes
+//      Seconds               int // Number of Seconds
+//      Milliseconds          int // Number of Milliseconds
+//      Microseconds          int // Number of Microseconds
+//      Nanoseconds           int // Remaining Nanoseconds after Milliseconds & Microseconds
+//      TotSubSecNanoseconds  int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //    plus remaining Nanoseconds
+//   }
 //
-//
-//	error - If successful the returned error Type is set equal to 'nil'. If errors are
-//	        encountered this error Type will encapsulate an error message.
+// error - If successful the returned error Type is set equal to 'nil'. If errors are
+//         encountered this error Type will encapsulate an error message.
 //
 func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 

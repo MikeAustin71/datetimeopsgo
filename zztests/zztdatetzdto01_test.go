@@ -624,3 +624,94 @@ func TestDateTzDto_GetDateTimeTzNanoSecYMDDowText(t *testing.T) {
 			expectedStr, actualStr)
 	}
 }
+
+func TestDateTzDto_GetMilitaryDateTzDto_01(t *testing.T) {
+	tstr := "12/02/2019 22:05:00 -0600 CST"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	var testTime time.Time
+	var err error
+	var dateTzDto datetime.DateTzDto
+	var milDatTzDto datetime.MilitaryDateTzDto
+	expectedMilTimeZone := "Sierra"
+
+	testTime, err = time.Parse(fmtStr, tstr)
+
+	if err != nil {
+		t.Errorf("Error returned by time.Parse(fmtStr, tstr\n" +
+			"fmtStr='%v'\n" +
+			"tstr='%v'\n" +
+			"Error='%v'\n",fmtStr, tstr, err.Error())
+		return
+	}
+
+	dateTzDto, err = datetime.DateTzDto{}.New(testTime, fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by datetime.DateTzDto{}.New(testTime, fmtStr)\n" +
+			"testTime='%v'\n" +
+			"fmtStr='%v'\nError='%v'\n", testTime.Format(fmtStr), fmtStr, err.Error())
+		return
+	}
+
+	milDatTzDto, err = dateTzDto.GetMilitaryDateTzDto()
+
+	if err != nil {
+		t.Errorf("Error returned by dateTzDto.GetMilitaryDateTzDto()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if expectedMilTimeZone != milDatTzDto.MilitaryTzTextName {
+		t.Errorf("Error: Expected Military Time Zone='%v'.\n" +
+			"Instead, Military Time Zone='%v'.\n",
+			expectedMilTimeZone, milDatTzDto.MilitaryTzTextName)
+	}
+}
+
+func TestDateTzDto_GetMilitaryDateTzDto_02(t *testing.T) {
+	tstr := "12/02/2019 22:05:00 -0600 CST"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	var testTime time.Time
+	var err error
+	var afganLoc *time.Location
+	var dateTzDto datetime.DateTzDto
+	var milDatTzDto datetime.MilitaryDateTzDto
+	expectedMilTimeZone := "Quebec"
+
+	testTime, err = time.Parse(fmtStr, tstr)
+
+	if err != nil {
+		t.Errorf("Error returned by time.Parse(fmtStr, tstr\n" +
+			"fmtStr='%v'\n" +
+			"tstr='%v'\n" +
+			"Error='%v'\n",fmtStr, tstr, err.Error())
+		return
+	}
+
+	afganLoc, err = time.LoadLocation(datetime.TZones.Asia.Kabul())
+
+	afghanistanTime := testTime.In(afganLoc)
+
+	dateTzDto, err = datetime.DateTzDto{}.New(afghanistanTime, fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by datetime.DateTzDto{}.New(testTime, fmtStr)\n" +
+			"testTime='%v'\n" +
+			"fmtStr='%v'\nError='%v'\n", testTime.Format(fmtStr), fmtStr, err.Error())
+		return
+	}
+
+	milDatTzDto, err = dateTzDto.GetMilitaryDateTzDto()
+
+	if err != nil {
+		t.Errorf("Error returned by dateTzDto.GetMilitaryDateTzDto()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if expectedMilTimeZone != milDatTzDto.MilitaryTzTextName {
+		t.Errorf("Error: Expected Military Time Zone='%v'.\n" +
+			"Instead, Military Time Zone='%v'.\n",
+			expectedMilTimeZone, milDatTzDto.MilitaryTzTextName)
+	}
+}
