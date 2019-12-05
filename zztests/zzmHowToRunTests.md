@@ -10,13 +10,14 @@ This will generate a '.txt' in the current directory which contains all
 test results.
 
 ## Resources
-http://codesamplez.com/development/golang-unit-testing
+ ##### `http://codesamplez.com/development/golang-unit-testing`
 
 ## Dependencies
 
 ### testify package
 These tests make use of the 'testify' package. The package
 can be installed from:
+
    `https://github.com/stretchr/testify`
 
 ## Running Tests with code coverage
