@@ -360,6 +360,48 @@ func TestDateTzDto_New_02(t *testing.T) {
 
 }
 
+func TestDateTzDto_NewFromMilitaryDateTz_01(t *testing.T) {
+	tstr := "12/06/2019 03:12:00 -0600 CST"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	testTime, err := time.Parse(fmtStr, tstr)
+
+	if err != nil {
+		t.Errorf("Error returned by time.Parse(fmtStr, tstr)\n" +
+			"fmtStr='%v'\n" +
+			"tstr='%v'\n" +
+			"Error='%v'\n",fmtStr, tstr, err.Error())
+	}
+
+	var milTzDto datetime.MilitaryDateTzDto
+	var dateTzDto datetime.DateTzDto
+
+	milTzDto, err = datetime.MilitaryDateTzDto{}.New(testTime, "Sierra")
+
+	if err != nil {
+		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Sierra\")\n" +
+			"testTime='%v'\n" +
+			"Error='%v'\n", testTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	dateTzDto, err = datetime.DateTzDto{}.NewFromMilitaryDateTz(milTzDto, fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewFromMilitaryDateTz(milTzDto, fmtStr)\n" +
+			"milTzDto.DateTime='%v'\n" +
+			"Error='%v'\n", milTzDto.DateTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	if !testTime.Equal(dateTzDto.DateTime) {
+		t.Errorf("Error: Expected dateTzDto.DateTime='%v'\n" +
+			"Instead, dateTzDto.DateTime='%v'\n",
+			testTime.Format(datetime.FmtDateTimeTzNanoYMDDow),
+			dateTzDto.DateTime.Format(datetime.FmtDateTimeTzNanoYMDDow))
+	}
+}
+
 func TestDateTzDto_NewNowTz_01(t *testing.T) {
 
 	t0 := time.Now().Local()

@@ -2018,6 +2018,23 @@ func (dtz DateTzDto) NewDateTimeElements(
 //                                      which is converted to and returned as
 //                                      a type 'DateTzDto'.
 //
+//   dateTimeFmtStr string   - A date time format string which will be used
+//                             to format and display 'dateTime'. Example:
+//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//                             Date time format constants are found in the source
+//                             file 'datetimeconstants.go'. These constants represent
+//                             the more commonly used date time string formats. All
+//                             Date Time format constants begin with the prefix
+//                             'FmtDateTime'.
+//
+//                             If 'dateTimeFmtStr' is submitted as an
+//                             'empty string', a default date time format
+//                             string will be applied. The default date time
+//                             format string is:
+//                               FmtDateTimeYrMDayFmtStr =
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
 // ------------------------------------------------------------------------
 //
 // Return Values
@@ -2048,7 +2065,8 @@ func (dtz DateTzDto) NewDateTimeElements(
 // Usage
 //
 func (dtz DateTzDto) NewFromMilitaryDateTz(
-		militaryDtDto MilitaryDateTzDto) (DateTzDto, error) {
+		militaryDtDto MilitaryDateTzDto,
+		dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.NewFromMilitaryDateTz() "
 
@@ -2066,7 +2084,7 @@ func (dtz DateTzDto) NewFromMilitaryDateTz(
 	err = newDateTz.SetFromTimeTz(
 		militaryDtDto.DateTime,
 		militaryDtDto.EquivalentIanaTimeZone.LocationName,
-		"")
+		dateTimeFmtStr)
 
 	if err != nil {
 		return DateTzDto{},
