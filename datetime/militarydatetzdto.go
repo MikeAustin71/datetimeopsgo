@@ -64,6 +64,8 @@ import (
 //       Z        Zulu Time Zone          UTC                  UTC +0
 //
 type MilitaryDateTzDto struct {
+	Description                string          // Unused, available for classification, labeling
+	                                           //   or description.
 	Time                       TimeDto         // Associated Time Components
 	DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
 	MilitaryTzLetterName       string          // A single letter/character designating the military
@@ -93,6 +95,8 @@ type MilitaryDateTzDto struct {
 //      A MilitaryDateTzDto struct is defined as follows:
 //
 //      type MilitaryDateTzDto struct {
+//        Description                string          // Unused, available for classification, labeling
+//                                                   //   or description.
 //        Time                       TimeDto         // Associated Time Components
 //        DateTime                   time.Time       // DateTime value for this
 //                                                   //   MilitaryDateTzDto Type
@@ -127,6 +131,7 @@ type MilitaryDateTzDto struct {
 func (milDtDto *MilitaryDateTzDto) CopyIn(milDtDto2 MilitaryDateTzDto) {
 
 	milDtDto.Empty()
+	milDtDto.Description = milDtDto2.Description
 	milDtDto.Time = milDtDto2.Time.CopyOut()
 
 	if !milDtDto2.DateTime.IsZero() {
@@ -159,6 +164,8 @@ func (milDtDto *MilitaryDateTzDto) CopyIn(milDtDto2 MilitaryDateTzDto) {
 //                      A DateTzDto structure is defined as follows:
 //
 //      type MilitaryDateTzDto struct {
+//        Description                string          // Unused, available for classification, labeling
+//                                                   //   or description.
 //        Time                       TimeDto         // Associated Time Components
 //        DateTime                   time.Time       // DateTime value for this
 //                                                   //   MilitaryDateTzDto Type
@@ -190,6 +197,7 @@ func (milDtDto *MilitaryDateTzDto) CopyOut() MilitaryDateTzDto {
 
 	milDtz2 := MilitaryDateTzDto{}
 
+	milDtz2.Description = milDtDto.Description
 	milDtz2.Time = milDtDto.Time.CopyOut()
 	milDtz2.DateTime = milDtDto.DateTime
 	milDtz2.MilitaryTzTextName = milDtDto.MilitaryTzTextName
@@ -206,6 +214,7 @@ func (milDtDto *MilitaryDateTzDto) CopyOut() MilitaryDateTzDto {
 // instance to their uninitialized or zero state.
 func (milDtDto *MilitaryDateTzDto) Empty() {
 
+	milDtDto.Description = ""
 	milDtDto.Time.Empty()
 	milDtDto.DateTime = time.Time{}
 	milDtDto.MilitaryTzLetterName = ""
@@ -352,6 +361,8 @@ func (milDtDto *MilitaryDateTzDto) GetOpenDateTimeGroup() (string, error) {
 //                     from input parameters 't' and 'militaryTz'.
 //
 //    type MilitaryDateTzDto struct {
+//      Description                string          // Unused, available for classification, labeling
+//                                                 //   or description.
 //      Time                       TimeDto         // Associated Time Components
 //      DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
 //      MilitaryTzLetterName       string          // A single letter/character designating the
@@ -441,10 +452,60 @@ func (milDtDto MilitaryDateTzDto) New(
 	return newMilDateDto, nil
 }
 
-
 // NewFromDateTzDto - Creates and returns a new instance of 'MilitaryDateTzDto'.
 // This new instance is initialized from the 'DateTzDto' instance passed as an
 // input parameter.
+//
+// ----------------------------------------------------------
+//
+// Input Parameters
+//
+//  DateTzDto - A valid, fully populated 'DateTzDto' instance.
+//
+//              A DateTzDto structure is defined as follows:
+//
+//      type DateTzDto struct {
+//           Description  string         // Unused, available for classification,
+//                                       //  labeling or description
+//           Time         TimeDto        // Associated Time Components
+//           DateTime     time.Time      // DateTime value for this DateTzDto Type
+//           DateTimeFmt  string         // Date Time Format String.
+//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//                                       //  and Time Zone Location
+//                                       // associated with this date time.
+//      }
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  MilitaryDateTzDto - An instance of type 'MilitaryDateTzDto' initialized
+//                     from input parameters 't' and 'militaryTz'.
+//
+//    type MilitaryDateTzDto struct {
+//      Description                string          // Unused, available for classification, labeling
+//                                                 //   or description.
+//      Time                       TimeDto         // Associated Time Components
+//      DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
+//      MilitaryTzLetterName       string          // A single letter/character designating the
+//                                                 //   military time zone
+//      MilitaryTzTextName         string          // A Text String containing the Military Time
+//                                                 //   Zone Name
+//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//                                                 //   Military Time Zone
+//      UtcOffset                  string          // UTC Offset for this Military Time Zone
+//      GeoLocationDesc            string          // Military Time Zone Geographic Location
+//    }
+//
+//  error - If successful the returned error Type is set equal to 'nil'. If errors are
+//         encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  milDtTzDto, err := MilitaryDateTzDto{}.NewFromDateTzDto(dtzDto)
 //
 func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 	dtzDto DateTzDto) (MilitaryDateTzDto, error) {
@@ -552,6 +613,8 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 //                     from input parameters 't' and 'militaryTz'.
 //
 //    type MilitaryDateTzDto struct {
+//      Description                string          // Unused, available for classification, labeling
+//                                                 //   or description.
 //      Time                       TimeDto         // Associated Time Components
 //      DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
 //      MilitaryTzLetterName       string          // A single letter/character designating the
@@ -654,6 +717,8 @@ func (milDtDto MilitaryDateTzDto) NewNow(
 //                      with the current time in Time Zone 'Zulu' (UTC Offset +0000).
 //
 //    type MilitaryDateTzDto struct {
+//      Description                string          // Unused, available for classification, labeling
+//                                                 //   or description.
 //      Time                       TimeDto         // Associated Time Components
 //      DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
 //      MilitaryTzLetterName       string          // A single letter/character designating the

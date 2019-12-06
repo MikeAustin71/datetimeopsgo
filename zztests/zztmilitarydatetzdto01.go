@@ -219,6 +219,129 @@ func TestMilitaryDateTzDto_New_01(t *testing.T) {
 	}
 }
 
+func TestMilitaryDateTzDto_NewNow_01(t *testing.T) {
+
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	tNow := time.Now().Local()
+
+	tNowStr := tNow.Format(fmtStr)
+
+	tNowArray := strings.Split(tNowStr, " ")
+
+	if len(tNowArray) != 4 {
+		t.Errorf("Error: Expected length of tNowArray=='4'.\n" +
+			"Instead, length of tNowArray='%v'\n", len(tNowArray))
+		return
+	}
+
+	militaryTz, ok := dt.MilitaryUTCToTzMap[tNowArray[2]]
+
+	if !ok {
+		t.Errorf("Error: dt.MilitaryUTCToTzMap[tNowArray[2]] FAILED!\n" +
+			"tNowArray[2]='%v'\n", tNowArray[2])
+		return
+	}
+
+	tNow = time.Now().Local()
+
+	milDatTzDto, err := dt.MilitaryDateTzDto{}.NewNow(militaryTz)
+
+	if err != nil {
+		t.Errorf("Error returned by dt.MilitaryDateTzDto{}.NewNow(militaryTz)\n" +
+			"militaryTz='%v'\n" +
+			"Error='%v'\n", militaryTz, err.Error())
+		return
+	}
+
+	tDuration := milDatTzDto.DateTime.Sub(tNow)
+
+	if int64(tDuration) > (dt.SecondNanoseconds * 3) {
+		t.Errorf("Error: Duration from Local Now is greater than 3-seconds.\n" +
+			"Duration='%v'\n", tDuration)
+	}
+
+}
+
+func TestMilitaryDateTzDto_NewNowZulu_01(t *testing.T) {
+
+	// fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	tNow := time.Now().UTC()
+
+	milDatTzDto, err := dt.MilitaryDateTzDto{}.NewNowZulu()
+
+	if err != nil {
+		t.Errorf("Error returned by dt.MilitaryDateTzDto{}.NewNow(militaryTz)\n" +
+			"militaryTz='ZULU'\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	tDuration := milDatTzDto.DateTime.Sub(tNow)
+
+	if int64(tDuration) > (dt.SecondNanoseconds * 3) {
+		t.Errorf("Error: Duration from Local Now is greater than 3-seconds.\n" +
+			"Duration='%v'\n", tDuration)
+	}
+
+}
+
+func TestMilitaryDateTzDto_NewFromDateTzDto_01(t *testing.T) {
+
+	tstr := "12/06/2019 03:12:00 -0600 CST"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	testTime, err := time.Parse(fmtStr, tstr)
+
+	if err != nil {
+		t.Errorf("Error returned by time.Parse(fmtStr, tstr)\n" +
+			"fmtStr='%v'\n" +
+			"tstr='%v'\n" +
+			"Error='%v'\n",fmtStr, tstr, err.Error())
+	}
+
+	var dateTzDto dt.DateTzDto
+
+	dateTzDto, err = dt.DateTzDto{}.New(testTime, fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by dt.DateTzDto{}.New(testTime, fmtStr)\n" +
+			"testTime='%v'\n" +
+			"Error='%v'\n", testTime.Format(fmtStr), err.Error())
+	}
+
+	var milTzDto dt.MilitaryDateTzDto
+
+	milTzDto, err = dt.MilitaryDateTzDto{}.NewFromDateTzDto(dateTzDto)
+
+	if err != nil {
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewFromDateTzDto(dateTzDto)\n" +
+			"dateTzDto.DateTime='%v'\n" +
+			"Error='%v'\n", dateTzDto.DateTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	// 630pm on January 6th, 2012 in Fayetteville NC would read '061830RJAN12'
+	// "12/06/2019 03:12:00 -0600 CST"
+	expectedCompactDateGroup := "061512SDEC19"
+
+	var actualCompactDateGroup string
+
+	actualCompactDateGroup, err = milTzDto.GetCompactDateTimeGroup()
+
+	if err != nil {
+		t.Errorf("Error returned by milTzDto.GetCompactDateTimeGroup()\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	if expectedCompactDateGroup != actualCompactDateGroup {
+		t.Errorf("Error: Expected Compact Date Group='%v'.\n" +
+			"Instead, Compact Date Group='%v'\n", expectedCompactDateGroup, actualCompactDateGroup)
+	}
+
+}
+
 func TestMilitaryDateTzDto_GeoLocation_01(t *testing.T) {
 
 	tstr := "12/04/2019 03:12:00 -0600 CST"
@@ -227,7 +350,7 @@ func TestMilitaryDateTzDto_GeoLocation_01(t *testing.T) {
 	testTime, err := time.Parse(fmtStr, tstr)
 
 	if err != nil {
-		t.Errorf("Error returned by time.Parse(fmtStr, tstr\n" +
+		t.Errorf("Error returned by time.Parse(fmtStr, tstr)\n" +
 			"fmtStr='%v'\n" +
 			"tstr='%v'\n" +
 			"Error='%v'\n",fmtStr, tstr, err.Error())
