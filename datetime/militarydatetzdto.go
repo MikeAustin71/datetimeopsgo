@@ -66,9 +66,11 @@ import (
 type MilitaryDateTzDto struct {
 	Time                       TimeDto         // Associated Time Components
 	DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
-	MilitaryTzLetterName       string          // A single letter/character designating the military time zone
+	MilitaryTzLetterName       string          // A single letter/character designating the military
+	                                           //   time zone
 	MilitaryTzTextName         string          // A Text String containing the Military Time Zone Name
-	EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to the Military Time Zone
+	EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+	                                           //   Military Time Zone
 	UtcOffset                  string          // UTC Offset for this Military Time Zone
 	GeoLocationDesc            string          // Military Time Zone Geographic Location
 }
@@ -244,86 +246,6 @@ func (milDtDto *MilitaryDateTzDto) IsValid() error {
 	return nil
 }
 
-// New - Creates and returns a instance of MilitaryDateTzDto.
-//
-// ----------------------------------------------------------
-//
-// Input Parameters
-//
-//   t        time.Time - This time value is used to initialize the new
-//                        instance of MilitaryDateTzDto returned by this
-//                        method.
-//
-//   militaryTz  string - This string designates the Military Time Zone
-//                        used to initialized the new instance of
-//                        MilitaryDateTzDto returned by this method.
-//
-//                        This input parameter is also used to convert
-//                        input parameter 't' to the time value in the
-//                        the designated Military Time Zone.
-//
-//                        'militaryTz' may be submitted as either a single
-//                        character Military Time Zone Letter Name or as
-//                        the Military Time Zone Text Name. For example,
-//                        Military Time Zone 'Lima' may be submitted as the
-//                        letter, 'L', or as the text string 'Lima'.
-//
-func (milDtDto MilitaryDateTzDto) New(
-	t time.Time, militaryTz string) (MilitaryDateTzDto, error) {
-
-	ePrefix := "MilitaryDateTzDto.New() "
-
-	newMilDateDto := MilitaryDateTzDto{}
-
-	if len(militaryTz) == 0 {
-		return newMilDateDto, errors.New(ePrefix +
-			"Error: Input parameter 'militaryTz' is EMPTY!\n")
-	}
-
-	var err error
-
-	newMilDateDto.MilitaryTzLetterName,
-	newMilDateDto.MilitaryTzTextName,
-	newMilDateDto.EquivalentIanaTimeZone,
-	err = milDtDto.parseMilitaryTzNameAndLetter(militaryTz)
-
-
-	newMilDateDto.DateTime = t.In(newMilDateDto.EquivalentIanaTimeZone.Location)
-
-	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
-
-	if err != nil {
-		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
-			"Error returned by TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)\n" +
-			"newMilDateDto.DateTime='%v'\n" +
-			"Error='%v'\n",
-			newMilDateDto.DateTime.Format(FmtDateTimeTzNanoYMDDow), err.Error())
-	}
-
-	var ok bool
-
-	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
-
-	if !ok {
-		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
-			"Error: Military Time Zone Text Name is INVALID!\n" +
-			"Could NOT map geographical location description.\n" +
-			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
-	}
-
-	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
-
-	if !ok {
-		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
-			"Error: Military Time Zone Text Name is INVALID!\n" +
-			"Could NOT map UTC Offset.\n" +
-			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
-	}
-
-
-	return newMilDateDto, nil
-}
-
 // GetCompactDateTimeGroup - Outputs date time string formatted for
 // standard U.S.A. Military date time also referred to as the Military
 // Date Time Group (DTG). This form of the Date Time Group is configured
@@ -394,6 +316,489 @@ func (milDtDto *MilitaryDateTzDto) GetOpenDateTimeGroup() (string, error) {
 	fmtDateTime = strings.ToUpper(fmtDateTime)
 
 	return fmtDateTime, nil
+}
+
+// New - Creates and returns a new instance of MilitaryDateTzDto.
+// The values for the new returned instance are calculated from
+// the two input parameters 't' and 'militaryTz'.
+//
+// ----------------------------------------------------------
+//
+// Input Parameters
+//
+//   t        time.Time - This time value is used to initialize the new
+//                        instance of MilitaryDateTzDto returned by this
+//                        method.
+//
+//   militaryTz  string - This string designates the Military Time Zone
+//                        used to initialized the new instance of
+//                        MilitaryDateTzDto returned by this method.
+//
+//                        This input parameter is also used to convert
+//                        input parameter 't' to the time value in the
+//                        the designated Military Time Zone.
+//
+//                        'militaryTz' may be submitted as either a single
+//                        character Military Time Zone Letter Name or as
+//                        the Military Time Zone Text Name. For example,
+//                        Military Time Zone 'Lima' may be submitted as the
+//                        letter, 'L', or as the text string 'Lima'.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  MilitaryDateTzDto - An instance of type 'MilitaryDateTzDto' initialized
+//                     from input parameters 't' and 'militaryTz'.
+//
+//    type MilitaryDateTzDto struct {
+//      Time                       TimeDto         // Associated Time Components
+//      DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
+//      MilitaryTzLetterName       string          // A single letter/character designating the
+//                                                 //   military time zone
+//      MilitaryTzTextName         string          // A Text String containing the Military Time
+//                                                 //   Zone Name
+//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//                                                 //   Military Time Zone
+//      UtcOffset                  string          // UTC Offset for this Military Time Zone
+//      GeoLocationDesc            string          // Military Time Zone Geographic Location
+//    }
+//
+//  error - If successful the returned error Type is set equal to 'nil'. If errors are
+//         encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  milDtTzDto, err := MilitaryDateTzDto{}.New(t, militaryTz)
+//
+func (milDtDto MilitaryDateTzDto) New(
+	t time.Time, militaryTz string) (MilitaryDateTzDto, error) {
+
+	ePrefix := "MilitaryDateTzDto.New() "
+
+	newMilDateDto := MilitaryDateTzDto{}
+
+	if t.IsZero() {
+		return newMilDateDto,
+			errors.New(ePrefix +
+				"\nError: Input parameter t tim.Time is ZERO!\n")
+	}
+
+
+	if len(militaryTz) == 0 {
+		return newMilDateDto, errors.New(ePrefix +
+			"Error: Input parameter 'militaryTz' is EMPTY!\n")
+	}
+
+	var err error
+
+	newMilDateDto.MilitaryTzLetterName,
+	newMilDateDto.MilitaryTzTextName,
+	newMilDateDto.EquivalentIanaTimeZone,
+	err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter(militaryTz)
+
+	if err != nil {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nError: '%v'\n", err.Error())
+	}
+
+	newMilDateDto.DateTime = t.In(newMilDateDto.EquivalentIanaTimeZone.Location)
+
+	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
+
+	if err != nil {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error returned by TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)\n" +
+			"newMilDateDto.DateTime='%v'\n" +
+			"Error='%v'\n",
+			newMilDateDto.DateTime.Format(FmtDateTimeTzNanoYMDDow), err.Error())
+	}
+
+	var ok bool
+
+	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map geographical location description.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map UTC Offset.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+
+	return newMilDateDto, nil
+}
+
+
+// NewFromDateTzDto - Creates and returns a new instance of 'MilitaryDateTzDto'.
+// This new instance is initialized from the 'DateTzDto' instance passed as an
+// input parameter.
+//
+func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
+	dtzDto DateTzDto) (MilitaryDateTzDto, error) {
+
+	ePrefix := "MilitaryDateTzDto.NewFromDateTzDto() "
+	newMilDateDto := MilitaryDateTzDto{}
+
+	err := dtzDto.IsValid()
+
+	if err != nil {
+		return newMilDateDto,
+			fmt.Errorf(ePrefix +
+				"\nInput Parameter 'dtzDto' is INVALID!\n" +
+				"Error='%v'\n", err.Error())
+	}
+
+	// FmtDateTimeTzSec = "01/02/2006 15:04:05 -0700 MST"
+	dateTimeArray := strings.Split(dtzDto.DateTime.Format(FmtDateTimeTzSec), " ")
+
+	if len(dateTimeArray) != 4 {
+		return newMilDateDto,
+			fmt.Errorf(ePrefix +
+				"\nError: dtzDto.DateTime resolves to an INVALID date time string!\n" +
+				"dtzDto.DateTime='%v'\n" +
+				"dtzDto.DateTime Array Length='%v'\n",
+				dtzDto.DateTime.Format(FmtDateTimeTzSec),
+				len(dateTimeArray))
+	}
+
+	militaryTz, ok := MilitaryUTCToTzMap[dateTimeArray[2]]
+
+	if !ok {
+		return newMilDateDto,
+			fmt.Errorf(ePrefix +
+				"\nError: Could not locate Military Time Zone from UTC offset.\n" +
+				"UTC Offset='%v'\n", dateTimeArray[2])
+	}
+
+	newMilDateDto.MilitaryTzLetterName,
+		newMilDateDto.MilitaryTzTextName,
+		newMilDateDto.EquivalentIanaTimeZone,
+		err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter(militaryTz)
+
+	newMilDateDto.DateTime =
+		dtzDto.DateTime.In(newMilDateDto.EquivalentIanaTimeZone.Location)
+
+	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
+
+	if err != nil {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error returned by TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)\n" +
+			"newMilDateDto.DateTime='%v'\n" +
+			"Error='%v'\n",
+			newMilDateDto.DateTime.Format(FmtDateTimeTzNanoYMDDow), err.Error())
+	}
+
+	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map geographical location description.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map UTC Offset.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	return newMilDateDto, nil
+}
+
+// NewNow() - Calculates the current date time and converts that time to
+// military time zone contained in parameter 'militaryTz'. The resulting
+// military date time value is returned in a new instance of type,
+// 'MilitaryDateTzDto'.
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//   militaryTz  string - This string designates the Military Time Zone
+//                        used to initialized the new instance of
+//                        MilitaryDateTzDto returned by this method.
+//
+//                        This input parameter is also used to convert
+//                        input parameter 't' to the time value in the
+//                        the designated Military Time Zone.
+//
+//                        'militaryTz' may be submitted as either a single
+//                        character Military Time Zone Letter Name or as
+//                        the Military Time Zone Text Name. For example,
+//                        Military Time Zone 'Lima' may be submitted as the
+//                        letter, 'L', or as the text string 'Lima'.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  MilitaryDateTzDto - An instance of type 'MilitaryDateTzDto' initialized
+//                     from input parameters 't' and 'militaryTz'.
+//
+//    type MilitaryDateTzDto struct {
+//      Time                       TimeDto         // Associated Time Components
+//      DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
+//      MilitaryTzLetterName       string          // A single letter/character designating the
+//                                                 //   military time zone
+//      MilitaryTzTextName         string          // A Text String containing the Military Time
+//                                                 //   Zone Name
+//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//                                                 //   Military Time Zone
+//      UtcOffset                  string          // UTC Offset for this Military Time Zone
+//      GeoLocationDesc            string          // Military Time Zone Geographic Location
+//    }
+//
+//  error - If successful the returned error Type is set equal to 'nil'. If errors are
+//         encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  milDtTzDto, err := MilitaryDateTzDto{}.NewNow(militaryTz)
+//
+func (milDtDto MilitaryDateTzDto) NewNow(
+	militaryTz string) (MilitaryDateTzDto, error) {
+
+	ePrefix := "MilitaryDateTzDto.NewNow() "
+
+	newMilDateDto := MilitaryDateTzDto{}
+
+	if len(militaryTz) == 0 {
+		return newMilDateDto,
+			errors.New(ePrefix +
+				"\nError: Input parameter 'militaryTz' is EMPTY!\n")
+	}
+
+	var err error
+
+	newMilDateDto.MilitaryTzLetterName,
+	newMilDateDto.MilitaryTzLetterName,
+	newMilDateDto.EquivalentIanaTimeZone,
+	err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter(militaryTz)
+
+	if err != nil {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nInvalid Military Time Zone!\n" +
+				"'%v'\n", err.Error())
+	}
+
+	t := time.Now().UTC()
+	newMilDateDto.DateTime = t.In(newMilDateDto.EquivalentIanaTimeZone.Location)
+
+	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
+
+	if err != nil {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nError returned by TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)\n" +
+				"newMilDateDto.DateTime='%v'\n" +
+				"Error='%v'\n", newMilDateDto.DateTime.Format( "2006-01-02 15:04:05.000000000 -0700"),
+				err.Error())
+	}
+	var ok bool
+
+	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map geographical location description.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map UTC Offset.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	return newMilDateDto, nil
+}
+
+// NewNowZulu() - Calculates the current date time and converts that
+// time to military time zone Zulu (UTC offset +0000). The resulting
+// military date time value is returned in a new instance of type,
+// 'MilitaryDateTzDto'.
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+// None
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  MilitaryDateTzDto - An instance of type 'MilitaryDateTzDto' initialized
+//                      with the current time in Time Zone 'Zulu' (UTC Offset +0000).
+//
+//    type MilitaryDateTzDto struct {
+//      Time                       TimeDto         // Associated Time Components
+//      DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
+//      MilitaryTzLetterName       string          // A single letter/character designating the
+//                                                 //   military time zone
+//      MilitaryTzTextName         string          // A Text String containing the Military Time
+//                                                 //   Zone Name
+//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//                                                 //   Military Time Zone
+//      UtcOffset                  string          // UTC Offset for this Military Time Zone
+//      GeoLocationDesc            string          // Military Time Zone Geographic Location
+//    }
+//
+//  error - If successful the returned error Type is set equal to 'nil'. If errors are
+//         encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  milDtTzDto, err := MilitaryDateTzDto{}.NewNowZulu(militaryTz)
+//
+func (milDtDto MilitaryDateTzDto) NewNowZulu() (MilitaryDateTzDto, error) {
+
+	ePrefix := "MilitaryDateTzDto.NewNow() "
+
+	newMilDateDto := MilitaryDateTzDto{}
+
+	var err error
+
+	newMilDateDto.MilitaryTzLetterName,
+	newMilDateDto.MilitaryTzLetterName,
+	newMilDateDto.EquivalentIanaTimeZone,
+	err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter("Zulu")
+
+	if err != nil {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nInvalid Military Time Zone, 'Zulu' !\n" +
+				"'%v'\n", err.Error())
+	}
+
+	newMilDateDto.DateTime = time.Now().UTC()
+
+	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
+
+	if err != nil {
+		return MilitaryDateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nError returned by TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)\n" +
+				"newMilDateDto.DateTime='%v'\n" +
+				"Error='%v'\n", newMilDateDto.DateTime.Format( "2006-01-02 15:04:05.000000000 -0700"),
+				err.Error())
+	}
+	var ok bool
+
+	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map geographical location description.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map UTC Offset.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	return newMilDateDto, nil
+}
+
+// SetFromTimeTz - Resets the data field values for the
+// current 'MilitaryDateTzDto' instance with values created
+// from the input parameters, 'dateTime' and 'militaryTz'.
+//
+func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
+	dateTime time.Time,
+	militaryTz string) error {
+
+	ePrefix := "MilitaryDateTzDto.SetFromTimeTz() "
+
+	if dateTime.IsZero() {
+		return errors.New( ePrefix +
+			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
+	}
+
+	if len(militaryTz) == 0 {
+		return errors.New( ePrefix +
+			"\nError: Input parameter 'militaryTz' is an empty string!\n")
+	}
+
+	newMilDateDto := MilitaryDateTzDto{}
+
+	var err error
+
+	newMilDateDto.MilitaryTzLetterName,
+	newMilDateDto.MilitaryTzTextName,
+	newMilDateDto.EquivalentIanaTimeZone,
+	err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter(militaryTz)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError: '%v'\n", err.Error())
+	}
+
+	newMilDateDto.DateTime = dateTime.In(newMilDateDto.EquivalentIanaTimeZone.Location)
+
+	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error returned by TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)\n" +
+			"newMilDateDto.DateTime='%v'\n" +
+			"Error='%v'\n",
+			newMilDateDto.DateTime.Format(FmtDateTimeTzNanoYMDDow), err.Error())
+	}
+
+	var ok bool
+
+	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map geographical location description.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+
+	if !ok {
+		return fmt.Errorf(ePrefix +
+			"Error: Military Time Zone Text Name is INVALID!\n" +
+			"Could NOT map UTC Offset.\n" +
+			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
+	}
+
+	milDtDto.CopyIn(newMilDateDto)
+
+	return nil
 }
 
 // parseMilitaryTzNameAndLetter - Parses a text string which

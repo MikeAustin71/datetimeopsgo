@@ -1687,8 +1687,6 @@ func (dtz *DateTzDto) IsValid() error {
 // Return Values
 //
 //  DateTzDto - If successful this method returns a new DateTzDto instance.
-//              The data fields of this new instance are initialized to zero
-//              values.
 //
 //              A DateTzDto structure is defined as follows:
 //
@@ -1805,8 +1803,6 @@ func (dtz DateTzDto) New(
 // Return Values
 //
 //   DateTzDto - If successful this method returns a new DateTzDto instance.
-//               The data fields of this new instance are initialized to zero
-//               values.
 //
 //               A DateTzDto structure is defined as follows:
 //
@@ -1937,9 +1933,8 @@ func (dtz DateTzDto) NewDateTime(
 //
 // Return Values
 //
-//   DateTzDto - If successful, this method returns a new DateTzDto instance.
-//               The data fields of this new instance are initialized to zero
-//               values.
+//   DateTzDto - If successful, this method returns a new, populated 'DateTzDto'
+//               instance.
 //
 //               A DateTzDto structure is defined as follows:
 //
@@ -2010,9 +2005,84 @@ func (dtz DateTzDto) NewDateTimeElements(
 	return dtz2, nil
 }
 
-// NewNowLocal - returns a new DateTzDto instance based on a date time value
-// which is automatically assigned by time.Now(). Effectively, this means that
-// the time selected is equal to the current value of the host computer clock.
+
+// NewFromMilitaryDateTz - Creates and returns a new DateTzDto initialized from an
+// instance of type 'MilitaryDateTzDto' passed as an input parameter.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameter
+//
+//   militaryDtDto  MilitaryDateTzDto - A valid instance of type 'MilitaryDateTzDto'
+//                                      which is converted to and returned as
+//                                      a type 'DateTzDto'.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//   DateTzDto - If successful, this method returns a new DateTzDto instance.
+//
+//               A DateTzDto structure is defined as follows:
+//
+//      type DateTzDto struct {
+//           Description  string         // Unused, available for classification,
+//                                       //  labeling or description
+//           Time         TimeDto        // Associated Time Components
+//           DateTime     time.Time      // DateTime value for this DateTzDto Type
+//           DateTimeFmt  string         // Date Time Format String.
+//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
+//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//                                       //  and Time Zone Location
+//                                       // associated with this date time.
+//      }
+//
+//
+//   error     - If successful the returned error Type is set equal to 'nil'.
+//               If errors are encountered this error Type will encapsulate
+//               an appropriate error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+func (dtz DateTzDto) NewFromMilitaryDateTz(
+		militaryDtDto MilitaryDateTzDto) (DateTzDto, error) {
+
+	ePrefix := "DateTzDto.NewFromMilitaryDateTz() "
+
+	newDateTz := DateTzDto{}
+
+	err := militaryDtDto.IsValid()
+
+	if err != nil {
+		return newDateTz,
+			fmt.Errorf(ePrefix +
+				"\nInput parameter 'militaryDtDto' is INVALID!\n" +
+				"Error='%v'\n", err.Error())
+	}
+
+	err = newDateTz.SetFromTimeTz(
+		militaryDtDto.DateTime,
+		militaryDtDto.EquivalentIanaTimeZone.LocationName,
+		"")
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix +
+				"\nError returned by newDateTz.SetFromTimeTz(dateTime, timeZone).\n" +
+				"Error='%v'\n", err.Error())
+	}
+
+	return newDateTz, nil
+}
+
+// NewNowLocal - Creates and returns a new DateTzDto instance based on a date
+// time value which is automatically assigned by time.Now(). The time zone 'Local'
+// is used by the Go Programming Language to assign the time zone configured
+// on the host computer executing this code. Effectively, this means that the
+// time selected is equal to the current value of the host computer clock.
 //
 // The Time Zone Location is automatically set to 'Local'.
 //
