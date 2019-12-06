@@ -676,7 +676,7 @@ func TestDateTzDto_GetMilitaryDateTzDto_02(t *testing.T) {
 	var afganLoc *time.Location
 	var dateTzDto datetime.DateTzDto
 	var milDatTzDto datetime.MilitaryDateTzDto
-	expectedMilTimeZone := "Quebec"
+	expectedMilTimeZone := "Delta"
 
 	testTime, err = time.Parse(fmtStr, tstr)
 

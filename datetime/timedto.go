@@ -269,26 +269,26 @@ func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 // Input Parameter
 // ===============
 //
-// timeZoneLocation	string	- time zone location must be designated as one of two values.
-// 														(1) the string 'Local' - signals the designation of the local time zone
-//																location for the host computer.
+// timeZoneLocation string - time zone location must be designated as one of two values.
+//              (1) The string 'Local' - signals the designation of the local time zone
+//                  location for the host computer.
 //
-//														(2) IANA Time Zone Location -
-// 																See https://golang.org/pkg/time/#LoadLocation
-// 																and https://www.iana.org/time-zones to ensure that
-// 																the IANA Time Zone Database is properly configured
-// 																on your system. Note: IANA Time Zone Data base is
-// 																equivalent to 'tz database'.
-//																Examples:
-//																	"America/New_York"
-//																	"America/Chicago"
-//																	"America/Denver"
-//																	"America/Los_Angeles"
-//																	"Pacific/Honolulu"
-//																	"Etc/UTC" = ZULU, GMT or UTC
+//              (2) IANA Time Zone Location -
+//                 See https://golang.org/pkg/time/#LoadLocation
+//                 and https://www.iana.org/time-zones to ensure that
+//                 the IANA Time Zone Database is properly configured
+//                 on your system. Note: IANA Time Zone Data base is
+//                 equivalent to 'tz database'.
+//                Examples:
+//                 "America/New_York"
+//                 "America/Chicago"
+//                 "America/Denver"
+//                 "America/Los_Angeles"
+//                 "Pacific/Honolulu"
+//                 "Etc/UTC" = ZULU, GMT or UTC
 //
-//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
-//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//               (3) If 'timeZoneLocation' is submitted as an empty string,
+//                   it will default to "Etc/UTC" = ZULU, GMT, UTC
 //
 func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
 	ePrefix := "TimeDto.GetDateTime() "

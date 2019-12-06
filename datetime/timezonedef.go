@@ -275,35 +275,35 @@ func (tzdef *TimeZoneDefDto) IsValidFromDateTime(dateTime time.Time) bool {
 // Input Parameter
 // ===============
 //
-//	dateTime 	time.Time	- A date time value which will be used to construct the
-//													elements of a Time Zone Definition Dto instance.
+//  dateTime   time.Time  - A date time value which will be used to construct the
+//                          elements of a Time Zone Definition Dto instance.
 //
 // Returns
 // =======
 //
 // This method will return two Types:
-//			(1) A Time Zone Definition Dto
-//			(2) An 'error' type
+//      (1) A Time Zone Definition Dto
+//      (2) An 'error' type
 //
-// (1) If successful, this method will return a valid, populated TimeZoneDefDto instance.
-//		 A TimeZoneDefDto is defined as follows:
-//			type TimeZoneDefDto struct {
-//				ZoneName						string
-//				ZoneOffsetSeconds		int			// Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
-//				ZoneSign						int 		// -1 == West of UTC  +1 == East of UTC
-//				OffsetHours					int			// Hours offset from UTC. Always a positive number, refer to ZoneSign
-//				OffsetMinutes				int			// Minutes offset from UTC. Always a positive number, refer to ZoneSign
-//				OffsetSeconds				int			// Seconds offset from UTC. Always a positive number, refer to ZoneSign
-//				ZoneOffset					string	// A text string representing the time zone. Example "-0500 CDT"
-//				Location						*time.Location	// Pointer to a Time Zone Location
-//				LocationName				string					// Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
-//				Description					string	// Unused - Available for classification, labeling or description by user.
-//			}
+//  (1) If successful, this method will return a valid, populated TimeZoneDefDto instance.
+//      A TimeZoneDefDto is defined as follows:
+//      type TimeZoneDefDto struct {
+//        ZoneName            string
+//        ZoneOffsetSeconds    int     // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
+//        ZoneSign             int     // -1 == West of UTC  +1 == East of UTC
+//        OffsetHours          int     // Hours offset from UTC. Always a positive number, refer to ZoneSign
+//        OffsetMinutes        int     // Minutes offset from UTC. Always a positive number, refer to ZoneSign
+//        OffsetSeconds        int     // Seconds offset from UTC. Always a positive number, refer to ZoneSign
+//        ZoneOffset           string  // A text string representing the time zone. Example "-0500 CDT"
+//        Location             *time.Location  // Pointer to a Time Zone Location
+//        LocationName         string          // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+//        Description          string          // Unused - Available for classification, labeling or description by user.
+//      }
 //
 //
-// (2) 	If successful, this method will set the returned error instance to 'nil.
-//			If errors are encountered a valid error message will be returned in the
-//			error instance.
+//  (2)   If successful, this method will set the returned error instance to 'nil.
+//        If errors are encountered a valid error message will be returned in the
+//        error instance.
 //
 func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 
@@ -325,6 +325,84 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 	}
 
 	return tzDef2, nil
+}
+
+// NewFromTimeZoneName - Creates and returns a new instance 'TimeZoneDefDto'.
+// The new instance is based on input parameter 'timeZoneName', the text
+// name of a valid IANA Time Zone.
+//
+func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
+	tzLocPtr *time.Location) (tzDefDto TimeZoneDefDto, err error) {
+
+	ePrefix := "TimeZoneDefDto.NewFromTimeZoneLocationPtr() "
+
+	err = nil
+	tzDefDto = TimeZoneDefDto{}
+
+	var err2 error
+
+	if tzLocPtr == nil {
+		err = errors.New(ePrefix +
+			"\nError: Input parameter 'tzLocPtr' is 'nil'!\n")
+		return tzDefDto, err
+	}
+
+	err2 = tzDefDto.SetFromDateTime(time.Now().In(tzLocPtr))
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix +
+			"\nError returned by tzDefDto.SetFromDateTime(time.Now().In(tzLoc)).\n" +
+			"Error='%v'\n", err2.Error())
+		return tzDefDto, err
+	}
+
+	err = nil
+
+	return tzDefDto, err
+}
+
+// NewFromTimeZoneName - Creates and returns a new instance 'TimeZoneDefDto'.
+// The new instance is based on input parameter 'timeZoneName', the text
+// name of a valid IANA Time Zone.
+func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
+	timeZoneName string) (tzDefDto TimeZoneDefDto, err error) {
+
+	ePrefix := "TimeZoneDefDto.NewFromTimeZoneName() "
+
+	var tzLoc *time.Location
+	err = nil
+	tzDefDto = TimeZoneDefDto{}
+
+	var err2 error
+
+	if len(timeZoneName) == 0 {
+		err = errors.New(ePrefix +
+			"\nError: Input parameter 'timeZoneName' is EMPTY!\n")
+		return tzDefDto, err
+	}
+
+	tzLoc, err2 = time.LoadLocation(timeZoneName)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix +
+			"\nError returned by time.LoadLocation(timeZoneName).\n" +
+			"timeZoneName='%v'\n" +
+			"Error='%v'\n", timeZoneName, err2.Error())
+		return tzDefDto, err
+	}
+
+	err2 = tzDefDto.SetFromDateTime(time.Now().In(tzLoc))
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix +
+			"\nError returned by tzDefDto.SetFromDateTime(time.Now().In(tzLoc)).\n" +
+			"Error='%v'\n", err2.Error())
+		return tzDefDto, err
+	}
+
+	err = nil
+
+	return tzDefDto, err
 }
 
 // SetFromDateTime - Re-initializes the values of the current

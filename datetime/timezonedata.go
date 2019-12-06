@@ -116,7 +116,7 @@ package datetime
 // 
 //            Primary Time Zone Groups:  17
 // 
-// Type Creation Date: 2019-11-30 Saturday 00:29:12 -0600 CST
+// Type Creation Date: 2019-12-05 Thursday 18:01:27 -0600 CST
 // ----------------------------------------------------------------------------
 // 
 type TimeZones struct {
@@ -2556,6 +2556,7 @@ func (mexic mexicoTimeZones) General() string {return "Mexico/General" }
 //     http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
 //     https://www.timeanddate.com/time/zones/military
 //     https://www.timeanddate.com/worldclock/timezone/alpha
+//     https://www.timeanddate.com/time/map/
 //  
 // Military time zones are commonly used in aviation as well as at sea.
 // They are also known as nautical or maritime time zones.
@@ -2651,7 +2652,12 @@ type militaryTimeZones  string
 //  
 // Time Zone Location: France
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/alpha
 //  
 // If the reversal of signs necessary to generate UTC+1 hour is
@@ -2670,7 +2676,12 @@ func (milTz militaryTimeZones) Alpha() string {return "Etc/GMT-1" }
 //  
 // Time Zone Location: Athens, Greece
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/bravo
 //  
 // If the reversal of signs necessary to generate UTC+2 hours is
@@ -2690,7 +2701,12 @@ func (milTz militaryTimeZones) Bravo() string {return "Etc/GMT-2" }
 // Time Zone Location: Arab Standard Time, Iraq, Bahrain,
 // Kuwait, Saudi Arabia, Yemen, Qatar
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/charlie
 //  
 // If the reversal of signs necessary to generate UTC+3 hours is
@@ -2710,7 +2726,12 @@ func (milTz militaryTimeZones) Charlie() string {return "Etc/GMT-3" }
 // Time Zone Location: Moscow, Russia and Afghanistan,
 // however, Afghanistan is technically +4:30 from UTC
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/delta
 //  
 // If the reversal of signs necessary to generate UTC+4 hours is
@@ -2730,7 +2751,12 @@ func (milTz militaryTimeZones) Delta() string {return "Etc/GMT-4" }
 // Time Zone Location: Pakistan, Kazakhstan, Tajikistan,
 // Uzbekistan and Turkmenistan
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/echo
 //  
 // If the reversal of signs necessary to generate UTC+5 hours is
@@ -2749,7 +2775,12 @@ func (milTz militaryTimeZones) Echo() string {return "Etc/GMT-5" }
 //  
 // Time Zone Location: Bangladesh
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/foxtrot
 //  
 // If the reversal of signs necessary to generate UTC+6 hours is
@@ -2768,7 +2799,12 @@ func (milTz militaryTimeZones) Foxtrot() string {return "Etc/GMT-6" }
 //  
 // Time Zone Location: Thailand
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/golf
 //  
 // If the reversal of signs necessary to generate UTC+7 hours is
@@ -2787,7 +2823,12 @@ func (milTz militaryTimeZones) Golf() string {return "Etc/GMT-7" }
 //  
 // Time Zone Location: Beijing, China
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/hotel
 //  
 // If the reversal of signs necessary to generate UTC+8 hours is
@@ -2806,7 +2847,12 @@ func (milTz militaryTimeZones) Hotel() string {return "Etc/GMT-8" }
 //  
 // Time Zone Location: Tokyo, Australia
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/india
 //  
 // If the reversal of signs necessary to generate UTC+9 hours is
@@ -2825,7 +2871,12 @@ func (milTz militaryTimeZones) India() string {return "Etc/GMT-9" }
 //  
 // Time Zone Location: Brisbane, Australia
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/kilo
 //  
 // If the reversal of signs necessary to generate UTC+10 hours is
@@ -2844,7 +2895,12 @@ func (milTz militaryTimeZones) Kilo() string {return "Etc/GMT-10" }
 //  
 // Time Zone Location: Sydney, Australia
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/lima
 //  
 // If the reversal of signs necessary to generate UTC+11 hours is
@@ -2863,7 +2919,12 @@ func (milTz militaryTimeZones) Lima() string {return "Etc/GMT-11" }
 //  
 // Time Zone Location: Wellington, New Zealand
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/mike
 //  
 // If the reversal of signs necessary to generate UTC+12 hours is
@@ -2882,7 +2943,12 @@ func (milTz militaryTimeZones) Mike() string {return "Etc/GMT-12" }
 //  
 // Time Zone Location: Azores
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/november
 //  
 // If the reversal of signs necessary to generate UTC-1 hour is
@@ -2901,7 +2967,12 @@ func (milTz militaryTimeZones) November() string {return "Etc/GMT+1" }
 //  
 // Time Zone Location: Godthab, Greenland
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/oscar
 //  
 // If the reversal of signs necessary to generate UTC-2 hours is
@@ -2920,7 +2991,12 @@ func (milTz militaryTimeZones) Oscar() string {return "Etc/GMT+2" }
 //  
 // Time Zone Location: Buenos Aires, Argentina
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/papa
 //  
 // If the reversal of signs necessary to generate UTC-3 hours is
@@ -2939,7 +3015,12 @@ func (milTz militaryTimeZones) Papa() string {return "Etc/GMT+3" }
 //  
 // Time Zone Location: Halifax, Nova Scotia
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/quebec
 //  
 // If the reversal of signs necessary to generate UTC-4 hours is
@@ -2958,7 +3039,12 @@ func (milTz militaryTimeZones) Quebec() string {return "Etc/GMT+4" }
 //  
 // Time Zone Location: EST, New York, NY
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/romeo
 //  
 // If the reversal of signs necessary to generate UTC-5 hours is
@@ -2977,7 +3063,12 @@ func (milTz militaryTimeZones) Romeo() string {return "Etc/GMT+5" }
 //  
 // Time Zone Location: CST, Dallas, TX
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/sierra
 //  
 // If the reversal of signs necessary to generate UTC-6 hours is
@@ -2996,7 +3087,12 @@ func (milTz militaryTimeZones) Sierra() string {return "Etc/GMT+6" }
 //  
 // Time Zone Location: MST, Denver, CO
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/tango
 //  
 // If the reversal of signs necessary to generate UTC-7 hours is
@@ -3015,7 +3111,12 @@ func (milTz militaryTimeZones) Tango() string {return "Etc/GMT+7" }
 //  
 // Time Zone Location: PST, Los Angeles, CA
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/uniform
 //  
 // If the reversal of signs necessary to generate UTC-8 hours is
@@ -3034,7 +3135,12 @@ func (milTz militaryTimeZones) Uniform() string {return "Etc/GMT+8" }
 //  
 // Time Zone Location: Juneau, AK
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/victor
 //  
 // If the reversal of signs necessary to generate UTC-9 hours is
@@ -3053,7 +3159,12 @@ func (milTz militaryTimeZones) Victor() string {return "Etc/GMT+9" }
 //  
 // Time Zone Location: Honolulu, HI
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/whiskey
 //  
 // If the reversal of signs necessary to generate UTC-10 hours is
@@ -3072,7 +3183,12 @@ func (milTz militaryTimeZones) Whiskey() string {return "Etc/GMT+10" }
 //  
 // Time Zone Location: American Samoa
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/x-ray
 //  
 // If the reversal of signs necessary to generate UTC-11 hours is
@@ -3091,7 +3207,12 @@ func (milTz militaryTimeZones) Xray() string {return "Etc/GMT+11" }
 //  
 // Time Zone Location: e.g. Fiji
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/yankee
 //  
 // If the reversal of signs necessary to generate UTC-12 hours is
@@ -3110,7 +3231,12 @@ func (milTz militaryTimeZones) Yankee() string {return "Etc/GMT+12" }
 //  
 // Time Zone Location: Zulu time
 // 
+// For a map of Military Time Zone Locations reference:
+//  
+//      https://www.timeanddate.com/time/map/
+//  
 // For additional information on this military time zone reference:
+//  
 //     https://www.timeanddate.com/worldclock/timezone/zulu
 //  
 func (milTz militaryTimeZones) Zulu() string {return "UTC" }
