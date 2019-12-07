@@ -1,14 +1,13 @@
-package zztests
+package datetime
 
 import (
-	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 	"time"
 )
 
 func TestTimeZoneDefDto_New_01(t *testing.T) {
 
-	usPacificLoc, _ := time.LoadLocation(datetime.TZones.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific :=
 		time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
@@ -22,7 +21,7 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef, err := datetime.TimeZoneDefDto{}.New(tUsPacific)
+	tzDef, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
@@ -71,7 +70,7 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 }
 
 func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
-	usPacificLoc, _ := time.LoadLocation(datetime.TZones.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
@@ -84,7 +83,7 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := datetime.TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
@@ -135,7 +134,7 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 }
 
 func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
-	americaLALoc, _ := time.LoadLocation(datetime.TZones.America.Los_Angeles())
+	americaLALoc, _ := time.LoadLocation(TZones.America.Los_Angeles())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, americaLALoc)
 	zoneName := "PST"
@@ -148,7 +147,7 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 	locationName := "America/Los_Angeles"
 	descStr := "America-Los_Angeles"
 
-	tzDef0, err := datetime.TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
@@ -200,7 +199,7 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 
 func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 
-	usPacificLoc, _ := time.LoadLocation(datetime.TZones.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
@@ -213,7 +212,7 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := datetime.TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific).\n" +
@@ -269,7 +268,7 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 
 func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 
-	usPacificLoc, _ := time.LoadLocation(datetime.TZones.US.Pacific())
+	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
@@ -282,7 +281,7 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := datetime.TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific).\n" +
@@ -340,7 +339,7 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 
 func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 
-	americaLALoc, _ := time.LoadLocation(datetime.TZones.America.Los_Angeles())
+	americaLALoc, _ := time.LoadLocation(TZones.America.Los_Angeles())
 
 	tamericaLA := time.Date(2014, 2, 15, 19, 54, 30, 38175584, americaLALoc)
 	zoneName := "PST"
@@ -353,7 +352,7 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 	locationName := "America/Los_Angeles"
 	descStr := "America-Los_Angeles"
 
-	tzDef0, err := datetime.TimeZoneDefDto{}.New(tamericaLA)
+	tzDef0, err := TimeZoneDefDto{}.New(tamericaLA)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDefDto{}.New(tamericaLA).\n" +

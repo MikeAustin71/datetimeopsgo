@@ -1,7 +1,6 @@
-package zztests
+package datetime
 
 import (
-	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 	"time"
 )
@@ -18,9 +17,9 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t2, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), "+
@@ -144,11 +143,11 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 
 	if !t2Local.Equal(dur.LocalTime.EndTimeDateTz.DateTime) {
 		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
-			t2Local.Format(datetime.FmtDateTimeYrMDayFmtStr),
-			dur.LocalTime.EndTimeDateTz.DateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
+			t2Local.Format(FmtDateTimeYrMDayFmtStr),
+			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(datetime.TZones.UTC())
+	loc, err = time.LoadLocation(TZones.UTC())
 
 	if err != nil {
 		t.Errorf("Error returned from time.LoadLocation(TZones.UTC()). Error='%v'", err.Error())
@@ -158,16 +157,16 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 
 	if !t1UTC.Equal(dur.UTCTime.StartTimeDateTz.DateTime) {
 		t.Errorf("Expected UTC Start Time='%v'. Actual UTC Start Time='%v'. ",
-			t1UTC.Format(datetime.FmtDateTimeYrMDayFmtStr),
-			dur.UTCTime.StartTimeDateTz.DateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
+			t1UTC.Format(FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.StartTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 	t2UTC := dur.UTCTime.StartTimeDateTz.DateTime.Add(dur.UTCTime.TimeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.EndTimeDateTz.DateTime) {
 		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
-			t2UTC.Format(datetime.FmtDateTimeYrMDayFmtStr),
-			dur.UTCTime.EndTimeDateTz.DateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
+			t2UTC.Format(FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 }
@@ -182,9 +181,9 @@ func TestDurationTriad_SetStartEndTimes_02(t *testing.T) {
 
 	t2, _ := time.Parse(fmtstr, t2str)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t2, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), "+
@@ -224,11 +223,11 @@ func TestDurationTriad_SetStartEndTimes_02(t *testing.T) {
 
 	if !t2Local.Equal(dur.LocalTime.EndTimeDateTz.DateTime) {
 		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
-			t2Local.Format(datetime.FmtDateTimeYrMDayFmtStr),
-			dur.LocalTime.EndTimeDateTz.DateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
+			t2Local.Format(FmtDateTimeYrMDayFmtStr),
+			dur.LocalTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	loc, err = time.LoadLocation(datetime.TZones.UTC())
+	loc, err = time.LoadLocation(TZones.UTC())
 
 	if err != nil {
 		t.Errorf("Error returned from time.LoadLocation(TZones.UTC()). Error='%v'", err.Error())
@@ -238,16 +237,16 @@ func TestDurationTriad_SetStartEndTimes_02(t *testing.T) {
 
 	if !t1UTC.Equal(dur.UTCTime.StartTimeDateTz.DateTime) {
 		t.Errorf("Expected UTC Start Time='%v'. Actual UTC Start Time='%v'. ",
-			t1UTC.Format(datetime.FmtDateTimeYrMDayFmtStr),
-			dur.UTCTime.StartTimeDateTz.DateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
+			t1UTC.Format(FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.StartTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 	t2UTC := dur.UTCTime.StartTimeDateTz.DateTime.Add(dur.UTCTime.TimeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.EndTimeDateTz.DateTime) {
 		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
-			t2UTC.Format(datetime.FmtDateTimeYrMDayFmtStr),
-			dur.UTCTime.EndTimeDateTz.DateTime.Format(datetime.FmtDateTimeYrMDayFmtStr))
+			t2UTC.Format(FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.EndTimeDateTz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 }
@@ -261,9 +260,9 @@ func TestDurationTriad_SetStartEndTimes_03(t *testing.T) {
 
 	t2, _ := time.Parse(fmtstr, t2str)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t2, t1, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimesTz(t2, t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartEndTimesTz(t2, t1, TZones.US.Central(), "+
@@ -286,9 +285,9 @@ func TestDurationTriad_SetStartEndTimes_04(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t1, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimesTz(t1, t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartEndTimesTz(t1, t1, TZones.US.Central(), "+
@@ -316,11 +315,11 @@ func TestDurationTriad_SetStartTimePlusTime(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	timeDto := datetime.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	err := dur.SetStartTimePlusTimeDtoTz(t1, timeDto, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartTimePlusTimeDtoTz(t1, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartTimePlusTimeDtoTz(t1, timeDto, "+
@@ -363,11 +362,11 @@ func TestDurationTriad_SetStartTimeMinusTime(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	timeDto := datetime.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	err := dur.SetEndTimeMinusTimeDtoTz(t2, timeDto, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetEndTimeMinusTimeDtoTz(t2, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetEndTimeMinusTimeDtoTz(t2, timeDto, "+
@@ -411,9 +410,9 @@ func TestDurationTriad_SetStartTimeDuration(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	err := dur.SetStartTimeDurationTz(t1, t12Dur, datetime.TZones.US.Central(), datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartTimeDurationTz(t1, t12Dur, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartTimeDurationTz(t1, t12Dur, "+
@@ -456,11 +455,11 @@ func TestDurationTriad_SetStartTimePlusTimeDto_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur := datetime.DurationTriad{}
+	dur := DurationTriad{}
 
-	timeDto := datetime.TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	err := dur.SetStartTimePlusTimeDto(t1, timeDto, datetime.FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartTimePlusTimeDto(t1, timeDto, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartTimePlusTimeDto(t1, timeDto, "+

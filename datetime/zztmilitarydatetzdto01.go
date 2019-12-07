@@ -1,7 +1,6 @@
-package zztests
+package datetime
 
 import (
-	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
 	"strings"
 	"testing"
 	"time"
@@ -14,7 +13,7 @@ func TestMilitaryDateTzDto_01(t *testing.T) {
 	var testTime, expectedMilTime time.Time
 	var err error
 	var actualMilDateTimeGroup, expectedMilDateTimeGroup string
-	var milDatTzDto dt.MilitaryDateTzDto
+	var milDatTzDto MilitaryDateTzDto
 	var expectedMilTimeLoc *time.Location
 
 	testTime, err = time.Parse(fmtStr, tstr)
@@ -27,17 +26,17 @@ func TestMilitaryDateTzDto_01(t *testing.T) {
 		return
 	}
 
-	expectedMilTimeLoc, err = time.LoadLocation(dt.TZones.Military.Quebec())
+	expectedMilTimeLoc, err = time.LoadLocation(TZones.Military.Quebec())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(dt.TZones.Military.Quebec())\n" +
-			"dt.TZones.Military.Quebec()='%v'\n" +
-			"Error='%v'\n", dt.TZones.Military.Quebec(), err.Error())
+		t.Errorf("Error returned by time.LoadLocation(TZones.Military.Quebec())\n" +
+			"TZones.Military.Quebec()='%v'\n" +
+			"Error='%v'\n", TZones.Military.Quebec(), err.Error())
 	}
 
 	expectedMilTime = testTime.In(expectedMilTimeLoc)
 
-	milDatTzDto, err = dt.MilitaryDateTzDto{}.New(testTime, "Q")
+	milDatTzDto, err = MilitaryDateTzDto{}.New(testTime, "Q")
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Q\")\n" +
@@ -45,7 +44,7 @@ func TestMilitaryDateTzDto_01(t *testing.T) {
 		return
 	}
 
-	expectedMilDateTimeGroup, err = dt.DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)
+	expectedMilDateTimeGroup, err = DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)
 
 	if err != nil {
 		t.Errorf("Error returned by DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)\n" +
@@ -79,7 +78,7 @@ func TestMilitaryDateTzDto_02(t *testing.T) {
 	var testTime, expectedMilTime time.Time
 	var err error
 	var actualMilDateTimeGroup, expectedMilDateTimeGroup string
-	var milDatTzDto dt.MilitaryDateTzDto
+	var milDatTzDto MilitaryDateTzDto
 	var expectedMilTimeLoc *time.Location
 
 	testTime, err = time.Parse(fmtStr, tstr)
@@ -92,18 +91,18 @@ func TestMilitaryDateTzDto_02(t *testing.T) {
 		return
 	}
 
-	expectedMilTimeLoc, err = time.LoadLocation(dt.TZones.Military.Quebec())
+	expectedMilTimeLoc, err = time.LoadLocation(TZones.Military.Quebec())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(dt.TZones.Military.Quebec())\n" +
-			"dt.TZones.Military.Quebec()='%v'\n" +
-			"Error='%v'\n", dt.TZones.Military.Quebec(), err.Error())
+		t.Errorf("Error returned by time.LoadLocation(TZones.Military.Quebec())\n" +
+			"TZones.Military.Quebec()='%v'\n" +
+			"Error='%v'\n", TZones.Military.Quebec(), err.Error())
 		return
 	}
 
 	expectedMilTime = testTime.In(expectedMilTimeLoc)
 
-	milDatTzDto, err = dt.MilitaryDateTzDto{}.New(testTime, "Q")
+	milDatTzDto, err = MilitaryDateTzDto{}.New(testTime, "Q")
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Q\")\n" +
@@ -111,7 +110,7 @@ func TestMilitaryDateTzDto_02(t *testing.T) {
 		return
 	}
 
-	expectedMilDateTimeGroup, err = dt.DtMgr{}.GetMilitaryCompactDateTimeGroup(expectedMilTime)
+	expectedMilDateTimeGroup, err = DtMgr{}.GetMilitaryCompactDateTimeGroup(expectedMilTime)
 
 	if err != nil {
 		t.Errorf("Error returned by DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)\n" +
@@ -144,7 +143,7 @@ func TestMilitaryDateTzDto_New_01(t *testing.T) {
 	var testTime, utcTime, expectedMilTime time.Time
 	var err error
 	var actualMilDateTimeGroup, expectedMilDateTimeGroup string
-	var milDatTzDto dt.MilitaryDateTzDto
+	var milDatTzDto MilitaryDateTzDto
 	var expectedMilTimeLoc, utcLoc *time.Location
 
 	testTime, err = time.Parse(fmtStr, tstr)
@@ -156,27 +155,27 @@ func TestMilitaryDateTzDto_New_01(t *testing.T) {
 			"Error='%v'\n",fmtStr, tstr, err.Error())
 	}
 
-	utcLoc, err = time.LoadLocation(dt.TZones.UTC())
+	utcLoc, err = time.LoadLocation(TZones.UTC())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(time.LoadLocation(dt.TZones.UTC()))\n" +
-			"dt.TZones.Military.Quebec()='%v'\n" +
-			"Error='%v'\n", dt.TZones.Military.Quebec(), err.Error())
+		t.Errorf("Error returned by time.LoadLocation(time.LoadLocation(TZones.UTC()))\n" +
+			"TZones.Military.Quebec()='%v'\n" +
+			"Error='%v'\n", TZones.Military.Quebec(), err.Error())
 	}
 
 	utcTime = testTime.In(utcLoc)
 	
-	expectedMilTimeLoc, err = time.LoadLocation(dt.TZones.Military.Zulu())
+	expectedMilTimeLoc, err = time.LoadLocation(TZones.Military.Zulu())
 	
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(time.LoadLocation(dt.TZones.Military.Zulu())\n" +
-			"dt.TZones.Military.Zulu()='%v'\n" +
-			"Error='%v'\n", dt.TZones.Military.Zulu(), err.Error())
+		t.Errorf("Error returned by time.LoadLocation(time.LoadLocation(TZones.Military.Zulu())\n" +
+			"TZones.Military.Zulu()='%v'\n" +
+			"Error='%v'\n", TZones.Military.Zulu(), err.Error())
 	}
 
 	expectedMilTime = testTime.In(expectedMilTimeLoc)
 
-	milDatTzDto, err = dt.MilitaryDateTzDto{}.New(utcTime, "Z")
+	milDatTzDto, err = MilitaryDateTzDto{}.New(utcTime, "Z")
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Z\")\n" +
@@ -184,7 +183,7 @@ func TestMilitaryDateTzDto_New_01(t *testing.T) {
 		return
 	}
 
-	expectedMilDateTimeGroup, err = dt.DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)
+	expectedMilDateTimeGroup, err = DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)
 
 	if err != nil {
 		t.Errorf("Error returned by DtMgr{}.GetMilitaryOpenDateTimeGroup(expectedMilTime)\n" +
@@ -235,20 +234,20 @@ func TestMilitaryDateTzDto_NewNow_01(t *testing.T) {
 		return
 	}
 
-	militaryTz, ok := dt.MilitaryUTCToTzMap[tNowArray[2]]
+	militaryTz, ok := MilitaryUTCToTzMap[tNowArray[2]]
 
 	if !ok {
-		t.Errorf("Error: dt.MilitaryUTCToTzMap[tNowArray[2]] FAILED!\n" +
+		t.Errorf("Error: MilitaryUTCToTzMap[tNowArray[2]] FAILED!\n" +
 			"tNowArray[2]='%v'\n", tNowArray[2])
 		return
 	}
 
 	tNow = time.Now().Local()
 
-	milDatTzDto, err := dt.MilitaryDateTzDto{}.NewNow(militaryTz)
+	milDatTzDto, err := MilitaryDateTzDto{}.NewNow(militaryTz)
 
 	if err != nil {
-		t.Errorf("Error returned by dt.MilitaryDateTzDto{}.NewNow(militaryTz)\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewNow(militaryTz)\n" +
 			"militaryTz='%v'\n" +
 			"Error='%v'\n", militaryTz, err.Error())
 		return
@@ -256,7 +255,7 @@ func TestMilitaryDateTzDto_NewNow_01(t *testing.T) {
 
 	tDuration := milDatTzDto.DateTime.Sub(tNow)
 
-	if int64(tDuration) > (dt.SecondNanoseconds * 3) {
+	if int64(tDuration) > (SecondNanoseconds * 3) {
 		t.Errorf("Error: Duration from Local Now is greater than 3-seconds.\n" +
 			"Duration='%v'\n", tDuration)
 	}
@@ -269,10 +268,10 @@ func TestMilitaryDateTzDto_NewNowZulu_01(t *testing.T) {
 
 	tNow := time.Now().UTC()
 
-	milDatTzDto, err := dt.MilitaryDateTzDto{}.NewNowZulu()
+	milDatTzDto, err := MilitaryDateTzDto{}.NewNowZulu()
 
 	if err != nil {
-		t.Errorf("Error returned by dt.MilitaryDateTzDto{}.NewNow(militaryTz)\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewNow(militaryTz)\n" +
 			"militaryTz='ZULU'\n" +
 			"Error='%v'\n", err.Error())
 		return
@@ -280,7 +279,7 @@ func TestMilitaryDateTzDto_NewNowZulu_01(t *testing.T) {
 
 	tDuration := milDatTzDto.DateTime.Sub(tNow)
 
-	if int64(tDuration) > (dt.SecondNanoseconds * 3) {
+	if int64(tDuration) > (SecondNanoseconds * 3) {
 		t.Errorf("Error: Duration from Local Now is greater than 3-seconds.\n" +
 			"Duration='%v'\n", tDuration)
 	}
@@ -301,19 +300,19 @@ func TestMilitaryDateTzDto_NewFromDateTzDto_01(t *testing.T) {
 			"Error='%v'\n",fmtStr, tstr, err.Error())
 	}
 
-	var dateTzDto dt.DateTzDto
+	var dateTzDto DateTzDto
 
-	dateTzDto, err = dt.DateTzDto{}.New(testTime, fmtStr)
+	dateTzDto, err = DateTzDto{}.New(testTime, fmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dt.DateTzDto{}.New(testTime, fmtStr)\n" +
+		t.Errorf("Error returned by DateTzDto{}.New(testTime, fmtStr)\n" +
 			"testTime='%v'\n" +
 			"Error='%v'\n", testTime.Format(fmtStr), err.Error())
 	}
 
-	var milTzDto dt.MilitaryDateTzDto
+	var milTzDto MilitaryDateTzDto
 
-	milTzDto, err = dt.MilitaryDateTzDto{}.NewFromDateTzDto(dateTzDto)
+	milTzDto, err = MilitaryDateTzDto{}.NewFromDateTzDto(dateTzDto)
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.NewFromDateTzDto(dateTzDto)\n" +
@@ -356,7 +355,7 @@ func TestMilitaryDateTzDto_GeoLocation_01(t *testing.T) {
 			"Error='%v'\n",fmtStr, tstr, err.Error())
 	}
 
-	milDatTzDto, err := dt.MilitaryDateTzDto{}.New(testTime, "Bravo")
+	milDatTzDto, err := MilitaryDateTzDto{}.New(testTime, "Bravo")
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"B\")\n" +
@@ -364,7 +363,7 @@ func TestMilitaryDateTzDto_GeoLocation_01(t *testing.T) {
 		return
 	}
 
-	geoLoc := dt.MilitaryTzLocationMap["Bravo"]
+	geoLoc := MilitaryTzLocationMap["Bravo"]
 
 	if geoLoc != milDatTzDto.GeoLocationDesc {
 		t.Errorf("Error: Expected that Bravo Time Zone Geographic Location='%v'\n." +
@@ -393,7 +392,7 @@ func TestMilitaryDateTzDto_UtcOffset_01(t *testing.T) {
 
 	expectedUtcOffset := testTimeStrAry[2]
 
-	milDatTzDto, err := dt.MilitaryDateTzDto{}.New(testTime, "Sierra")
+	milDatTzDto, err := MilitaryDateTzDto{}.New(testTime, "Sierra")
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Sierra\")\n" +
@@ -423,18 +422,18 @@ func TestMilitaryDateTzDto_EquivalentIanaTime_01(t *testing.T) {
 		return
 	}
 
-	eastTzLoc, err:= time.LoadLocation(dt.TZones.America.New_York())
+	eastTzLoc, err:= time.LoadLocation(TZones.America.New_York())
 
 	if err != nil {
-		t.Errorf("Error returned by time.LoadLocation(time.LoadLocation(dt.TZones.America.New_York())\n" +
-			"dt.TZones.Military.Quebec()='%v'\n" +
-			"Error='%v'\n", dt.TZones.Military.Quebec(), err.Error())
+		t.Errorf("Error returned by time.LoadLocation(time.LoadLocation(TZones.America.New_York())\n" +
+			"TZones.Military.Quebec()='%v'\n" +
+			"Error='%v'\n", TZones.Military.Quebec(), err.Error())
 		return
 	}
 
 	testTime = testTime.In(eastTzLoc)
 
-	milDatTzDto, err := dt.MilitaryDateTzDto{}.New(testTime, "Romeo")
+	milDatTzDto, err := MilitaryDateTzDto{}.New(testTime, "Romeo")
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Romeo\")\n" +
@@ -442,10 +441,10 @@ func TestMilitaryDateTzDto_EquivalentIanaTime_01(t *testing.T) {
 		return
 	}
 
-	if milDatTzDto.EquivalentIanaTimeZone.LocationName != dt.TZones.Etc.GMTPlus05() {
+	if milDatTzDto.EquivalentIanaTimeZone.LocationName != TZones.Etc.GMTPlus05() {
 		t.Errorf("Error: Expected Military Sierra Time Zone UTC Offset='%v'.\n" +
 			"Instead, milDatTzDto.UtcOffset='%v'\n",
-			milDatTzDto.EquivalentIanaTimeZone.LocationName, dt.TZones.Etc.GMTPlus05())
+			milDatTzDto.EquivalentIanaTimeZone.LocationName, TZones.Etc.GMTPlus05())
 	}
 }
 
@@ -456,7 +455,7 @@ func TestMilitaryDateTzDto_TimeZoneName01(t *testing.T) {
 	fmtStr := "01/02/2006 15:04:05 -0700 MST"
 	var testTime time.Time
 	var err error
-	var milDatTzDto dt.MilitaryDateTzDto
+	var milDatTzDto MilitaryDateTzDto
 
 	testTime, err = time.Parse(fmtStr, tstr)
 
@@ -468,7 +467,7 @@ func TestMilitaryDateTzDto_TimeZoneName01(t *testing.T) {
 		return
 	}
 
-	milDatTzDto, err = dt.MilitaryDateTzDto{}.New(testTime, "D")
+	milDatTzDto, err = MilitaryDateTzDto{}.New(testTime, "D")
 
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"D\")\n" +

@@ -4,7 +4,7 @@
 Open a command prompt in this directory (MikeAustin71\datetimeopsgo\zztests)
 and run the following command:
 
-### `go test -v > xxtests.txt`
+### `go test -v > zzz_tests.txt`
 
 This will generate a '.txt' in the current directory which contains all 
 test results.
@@ -30,17 +30,16 @@ Next, follow the test execution protocol.
   
 ### Test Execution with Code Coverage
 
-  `go test -cover -v > xx_tests.txt`  
+  `go test -cover -v > zzz_tests.txt`  
      
 
 ### Cover Profile
 
 Generate the code coverage detail:
 
-  `go test -coverprofile=xx_coverage.out`
-
+  `go test -coverprofile=zzz_coverage.out`
 
 The following provides for code coverage display in your
 browser. Run this on the command line:
 
-  `go tool cover -html=xx_coverage.out`
+  `go tool cover -html=zzz_coverage.out`

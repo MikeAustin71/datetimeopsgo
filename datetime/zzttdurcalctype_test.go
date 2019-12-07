@@ -1,13 +1,12 @@
-package zztests
+package datetime
 
 import (
-	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 )
 
 func TestTDurCalcTypeString_001(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).StdYearMth()
+	r := TDurCalcType(0).StdYearMth()
 
 	s := r.String()
 
@@ -20,7 +19,7 @@ func TestTDurCalcTypeString_001(t *testing.T) {
 
 func TestTDurCalcTypeString_002(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumMonths()
+	r := TDurCalcType(0).CumMonths()
 	expectedStr := "CumMonths"
 
 	s := r.String()
@@ -34,7 +33,7 @@ func TestTDurCalcTypeString_002(t *testing.T) {
 
 func TestTDurCalcTypeString_003(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumWeeks()
+	r := TDurCalcType(0).CumWeeks()
 	expectedStr := "CumWeeks"
 
 	s := r.String()
@@ -48,7 +47,7 @@ func TestTDurCalcTypeString_003(t *testing.T) {
 
 func TestTDurCalcTypeString_004(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumDays()
+	r := TDurCalcType(0).CumDays()
 	expectedStr := "CumDays"
 
 	s := r.String()
@@ -62,7 +61,7 @@ func TestTDurCalcTypeString_004(t *testing.T) {
 
 func TestTDurCalcTypeString_005(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumHours()
+	r := TDurCalcType(0).CumHours()
 	expectedStr := "CumHours"
 
 	s := r.String()
@@ -76,7 +75,7 @@ func TestTDurCalcTypeString_005(t *testing.T) {
 
 func TestTDurCalcTypeString_006(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumMinutes()
+	r := TDurCalcType(0).CumMinutes()
 	expectedStr := "CumMinutes"
 
 	s := r.String()
@@ -90,7 +89,7 @@ func TestTDurCalcTypeString_006(t *testing.T) {
 
 func TestTDurCalcTypeString_007(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumSeconds()
+	r := TDurCalcType(0).CumSeconds()
 	expectedStr := "CumSeconds"
 
 	s := r.String()
@@ -104,7 +103,7 @@ func TestTDurCalcTypeString_007(t *testing.T) {
 
 func TestTDurCalcTypeString_008(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).GregorianYears()
+	r := TDurCalcType(0).GregorianYears()
 	expectedStr := "GregorianYears"
 
 	s := r.String()
@@ -118,7 +117,7 @@ func TestTDurCalcTypeString_008(t *testing.T) {
 
 func TestTDurCalcTypeString_009(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumMilliseconds()
+	r := TDurCalcType(0).CumMilliseconds()
 	expectedStr := "CumMilliseconds"
 
 	s := r.String()
@@ -132,7 +131,7 @@ func TestTDurCalcTypeString_009(t *testing.T) {
 
 func TestTDurCalcTypeString_010(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumMicroseconds()
+	r := TDurCalcType(0).CumMicroseconds()
 	expectedStr := "CumMicroseconds"
 
 	s := r.String()
@@ -146,7 +145,7 @@ func TestTDurCalcTypeString_010(t *testing.T) {
 
 func TestTDurCalcTypeString_011(t *testing.T) {
 
-	r := datetime.TDurCalcType(0).CumNanoseconds()
+	r := TDurCalcType(0).CumNanoseconds()
 	expectedStr := "CumNanoseconds"
 
 	s := r.String()
@@ -162,7 +161,7 @@ func TestTDurCalcTypeString_012(t *testing.T) {
 
 	expectedStr := "StdYearMth"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -182,7 +181,7 @@ func TestTDurCalcTypeString_013(t *testing.T) {
 
 	expectedStr := "CumMonths"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -202,7 +201,7 @@ func TestTDurCalcTypeString_014(t *testing.T) {
 
 	expectedStr := "CumWeeks"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -222,7 +221,7 @@ func TestTDurCalcTypeString_015(t *testing.T) {
 
 	expectedStr := "CumDays"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -243,7 +242,7 @@ func TestTDurCalcTypeString_016(t *testing.T) {
 
 	expectedStr := "CumHours"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -263,7 +262,7 @@ func TestTDurCalcTypeString_017(t *testing.T) {
 
 	expectedStr := "CumMinutes"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -283,7 +282,7 @@ func TestTDurCalcTypeString_018(t *testing.T) {
 
 	expectedStr := "CumSeconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -303,7 +302,7 @@ func TestTDurCalcTypeString_019(t *testing.T) {
 
 	expectedStr := "CumMilliseconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -323,7 +322,7 @@ func TestTDurCalcTypeString_020(t *testing.T) {
 
 	expectedStr := "CumMicroseconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -343,7 +342,7 @@ func TestTDurCalcTypeString_021(t *testing.T) {
 
 	expectedStr := "CumNanoseconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -363,7 +362,7 @@ func TestTDurCalcTypeString_022(t *testing.T) {
 
 	expectedStr := "GregorianYears"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	r, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -384,7 +383,7 @@ func TestTDurCalcTypeString_023(t *testing.T) {
 	expectedStr := "StdYearMth"
 	testStr := "stdyearmth"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -405,7 +404,7 @@ func TestTDurCalcTypeString_024(t *testing.T) {
 	expectedStr := "CumMonths"
 	testStr := "cummonths"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -426,7 +425,7 @@ func TestTDurCalcTypeString_025(t *testing.T) {
 	expectedStr := "CumWeeks"
 	testStr := "cumweeks"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -447,7 +446,7 @@ func TestTDurCalcTypeString_026(t *testing.T) {
 	expectedStr := "CumDays"
 	testStr := "cumdays"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -469,7 +468,7 @@ func TestTDurCalcTypeString_027(t *testing.T) {
 	expectedStr := "CumHours"
 	testStr := "cumhourS"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -492,7 +491,7 @@ func TestTDurCalcTypeString_028(t *testing.T) {
 	expectedStr := "CumMinutes"
 	testStr := "cumminUtes"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -515,7 +514,7 @@ func TestTDurCalcTypeString_029(t *testing.T) {
 	expectedStr := "CumSeconds"
 	testStr := "cumseconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -536,7 +535,7 @@ func TestTDurCalcTypeString_030(t *testing.T) {
 	expectedStr := "CumMilliseconds"
 	testStr := "cummiLLiseconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -558,7 +557,7 @@ func TestTDurCalcTypeString_031(t *testing.T) {
 	expectedStr := "CumMicroseconds"
 	testStr := "cuMMicroseconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType." +
@@ -579,7 +578,7 @@ func TestTDurCalcTypeString_032(t *testing.T) {
 	expectedStr := "CumNanoseconds"
 	testStr := "cumnANoseconds"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -601,7 +600,7 @@ func TestTDurCalcTypeString_033(t *testing.T) {
 	expectedStr := "GregorianYears"
 	testStr := "grEGorianyears"
 
-	r, err :=  datetime.TimeDurationCalcType.ParseString(testStr, false)
+	r, err :=  TimeDurationCalcType.ParseString(testStr, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDurationCalcType.\n" +
@@ -621,7 +620,7 @@ func TestTDurCalcTypeString_034(t *testing.T) {
 
 	expectedStr := "XRAYxxx"
 
-	_, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, false)
+	_, err :=  TimeDurationCalcType.ParseString(expectedStr, false)
 
 	if err == nil {
 		t.Errorf("Error: Expected an 'error' return from " +
@@ -635,7 +634,7 @@ func TestTDurCalcTypeString_035(t *testing.T) {
 
 	expectedStr := "XRAYxxx"
 
-	_, err :=  datetime.TimeDurationCalcType.ParseString(expectedStr, true)
+	_, err :=  TimeDurationCalcType.ParseString(expectedStr, true)
 
 	if err == nil {
 		t.Errorf("Error: Expected an 'error' return from " +
@@ -648,11 +647,11 @@ func TestTDurCalcTypeString_035(t *testing.T) {
 
 func TestTDurCalcTypeValue_001(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).StdYearMth()
+	r = TDurCalcType(0).StdYearMth()
 
 	i = int(r)
 
@@ -664,11 +663,11 @@ func TestTDurCalcTypeValue_001(t *testing.T) {
 
 func TestTDurCalcTypeValue_002(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumMonths()
+	r = TDurCalcType(0).CumMonths()
 
 	i = int(r)
 
@@ -680,11 +679,11 @@ func TestTDurCalcTypeValue_002(t *testing.T) {
 
 func TestTDurCalcTypeValue_003(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumWeeks()
+	r = TDurCalcType(0).CumWeeks()
 
 	i = int(r)
 
@@ -696,11 +695,11 @@ func TestTDurCalcTypeValue_003(t *testing.T) {
 
 func TestTDurCalcTypeValue_004(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumDays()
+	r = TDurCalcType(0).CumDays()
 
 	i = int(r)
 
@@ -712,11 +711,11 @@ func TestTDurCalcTypeValue_004(t *testing.T) {
 
 func TestTDurCalcTypeValue_005(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumHours()
+	r = TDurCalcType(0).CumHours()
 
 	i = int(r)
 
@@ -728,11 +727,11 @@ func TestTDurCalcTypeValue_005(t *testing.T) {
 
 func TestTDurCalcTypeValue_006(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumMinutes()
+	r = TDurCalcType(0).CumMinutes()
 
 	i = int(r)
 
@@ -744,11 +743,11 @@ func TestTDurCalcTypeValue_006(t *testing.T) {
 
 func TestTDurCalcTypeValue_007(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumSeconds()
+	r = TDurCalcType(0).CumSeconds()
 
 	i = int(r)
 
@@ -760,11 +759,11 @@ func TestTDurCalcTypeValue_007(t *testing.T) {
 
 func TestTDurCalcTypeValue_008(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumMilliseconds()
+	r = TDurCalcType(0).CumMilliseconds()
 
 	i = int(r)
 
@@ -776,11 +775,11 @@ func TestTDurCalcTypeValue_008(t *testing.T) {
 
 func TestTDurCalcTypeValue_009(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumMicroseconds()
+	r = TDurCalcType(0).CumMicroseconds()
 
 	i = int(r)
 
@@ -792,11 +791,11 @@ func TestTDurCalcTypeValue_009(t *testing.T) {
 
 func TestTDurCalcTypeValue_010(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).CumNanoseconds()
+	r = TDurCalcType(0).CumNanoseconds()
 
 	i = int(r)
 
@@ -808,11 +807,11 @@ func TestTDurCalcTypeValue_010(t *testing.T) {
 
 func TestTDurCalcTypeValue_011(t *testing.T) {
 
-	var r datetime.TDurCalcType
+	var r TDurCalcType
 
 	var i int
 
-	r = datetime.TDurCalcType(0).GregorianYears()
+	r = TDurCalcType(0).GregorianYears()
 
 	i = int(r)
 

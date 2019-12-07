@@ -1,13 +1,12 @@
-package zztests
+package datetime
 
 import (
 	"fmt"
-	"github.com/MikeAustin71/datetimeopsgo/datetime"
 	"testing"
 )
 
 func TestDateTimeFormatUtility_ParseDateTimeStrings(t *testing.T) {
-	dtf := datetime.FormatDateTimeUtility{}
+	dtf := FormatDateTimeUtility{}
 
 	err := dtf.CreateAllFormatsInMemory()
 

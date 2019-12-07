@@ -2064,6 +2064,8 @@ func (dtz DateTzDto) NewDateTimeElements(
 //
 // Usage
 //
+//  dtTzDto, err := DateTzDto{}.NewFromMilitaryDateTz(milDtTzDto, dtTimeFmtStr)
+//
 func (dtz DateTzDto) NewFromMilitaryDateTz(
 		militaryDtDto MilitaryDateTzDto,
 		dateTimeFmtStr string) (DateTzDto, error) {
