@@ -430,7 +430,9 @@ func (milDtDto MilitaryDateTzDto) New(
 
 	var ok bool
 
-	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+	milTzDat := MilitaryTimeZoneData{}
+
+	newMilDateDto.GeoLocationDesc, ok = milTzDat.MilitaryTzToLocation(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -439,7 +441,7 @@ func (milDtDto MilitaryDateTzDto) New(
 			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
 	}
 
-	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+	newMilDateDto.UtcOffset, ok = milTzDat.MilitaryTzToUtc(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -536,7 +538,9 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 				len(dateTimeArray))
 	}
 
-	militaryTz, ok := MilitaryUTCToTzMap[dateTimeArray[2]]
+	milTzDat := MilitaryTimeZoneData{}
+
+	militaryTz, ok := milTzDat.UtcOffsetToMilitaryTimeZone(dateTimeArray[2])
 
 	if !ok {
 		return newMilDateDto,
@@ -563,7 +567,9 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 			newMilDateDto.DateTime.Format(FmtDateTimeTzNanoYMDDow), err.Error())
 	}
 
-	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+	milTzDat = MilitaryTimeZoneData{}
+
+	newMilDateDto.GeoLocationDesc, ok = milTzDat.MilitaryTzToLocation(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -572,7 +578,8 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
 	}
 
-	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+
+	newMilDateDto.UtcOffset, ok = milTzDat.MilitaryTzToUtc(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -679,7 +686,9 @@ func (milDtDto MilitaryDateTzDto) NewNow(
 	}
 	var ok bool
 
-	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+	milTzDat := MilitaryTimeZoneData{}
+
+	newMilDateDto.GeoLocationDesc, ok = milTzDat.MilitaryTzToLocation(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -688,7 +697,7 @@ func (milDtDto MilitaryDateTzDto) NewNow(
 			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
 	}
 
-	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+	newMilDateDto.UtcOffset, ok = milTzDat.MilitaryTzToUtc(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -775,7 +784,9 @@ func (milDtDto MilitaryDateTzDto) NewNowZulu() (MilitaryDateTzDto, error) {
 	}
 	var ok bool
 
-	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+	milTzDat := MilitaryTimeZoneData{}
+
+	newMilDateDto.GeoLocationDesc, ok = milTzDat.MilitaryTzToLocation(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -784,7 +795,7 @@ func (milDtDto MilitaryDateTzDto) NewNowZulu() (MilitaryDateTzDto, error) {
 			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
 	}
 
-	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+	newMilDateDto.UtcOffset, ok = milTzDat.MilitaryTzToUtc(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
@@ -844,7 +855,9 @@ func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
 
 	var ok bool
 
-	newMilDateDto.GeoLocationDesc, ok = MilitaryTzLocationMap[newMilDateDto.MilitaryTzTextName]
+	milTzDat := MilitaryTimeZoneData{}
+
+	newMilDateDto.GeoLocationDesc, ok = milTzDat.MilitaryTzToLocation(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return fmt.Errorf(ePrefix +
@@ -853,7 +866,7 @@ func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
 			"newMilDateDto.MilitaryTzTextName='%v'\n", newMilDateDto.MilitaryTzTextName)
 	}
 
-	newMilDateDto.UtcOffset, ok = MilitaryTzToUTCMap[newMilDateDto.MilitaryTzTextName]
+	newMilDateDto.UtcOffset, ok = milTzDat.MilitaryTzToUtc(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return fmt.Errorf(ePrefix +
@@ -900,13 +913,14 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 
 	var ok bool
 	var equivalentTzStr string
+	milTzData := MilitaryTimeZoneData{}
 
 	if lMilTz == 1 {
 
 		milTzLetter = strings.ToUpper(rawTz)
 
 		milTzName , ok =
-			MilitaryTzNameToTxtNameMap[milTzLetter]
+			milTzData.MilTzLetterToTextName(milTzLetter)
 
 		if !ok {
 			err = fmt.Errorf(ePrefix +
@@ -916,7 +930,7 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 			return milTzLetter, milTzName, equivalentIanaTimeZone, err
 		}
 
-		equivalentTzStr, ok = MilitaryTzToIanaTzMap[milTzName]
+		equivalentTzStr, ok = milTzData.MilitaryTzToIanaTz(milTzName)
 
 		if !ok {
 			err = fmt.Errorf(ePrefix +
@@ -938,7 +952,7 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 		milTzLetter = temp1
 		milTzName = temp1 + temp2
 
-		equivalentTzStr, ok = MilitaryTzToIanaTzMap[milTzName]
+		equivalentTzStr, ok = milTzData.MilitaryTzToIanaTz(milTzName)
 
 		if !ok {
 			err = fmt.Errorf(ePrefix +

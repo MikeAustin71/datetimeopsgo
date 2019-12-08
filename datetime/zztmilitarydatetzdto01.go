@@ -234,10 +234,12 @@ func TestMilitaryDateTzDto_NewNow_01(t *testing.T) {
 		return
 	}
 
-	militaryTz, ok := MilitaryUTCToTzMap[tNowArray[2]]
+	milTzDat := MilitaryTimeZoneData{}
+
+	militaryTz, ok := milTzDat.UtcOffsetToMilitaryTimeZone(tNowArray[2])
 
 	if !ok {
-		t.Errorf("Error: MilitaryUTCToTzMap[tNowArray[2]] FAILED!\n" +
+		t.Errorf("Error: militaryUTCToTzMap[tNowArray[2]] FAILED!\n" +
 			"tNowArray[2]='%v'\n", tNowArray[2])
 		return
 	}
@@ -363,7 +365,14 @@ func TestMilitaryDateTzDto_GeoLocation_01(t *testing.T) {
 		return
 	}
 
-	geoLoc := MilitaryTzLocationMap["Bravo"]
+	milTzDat := MilitaryTimeZoneData{}
+
+	geoLoc, ok := milTzDat.MilitaryTzToLocation("Bravo")
+
+	if !ok {
+		t.Error("Error: Military Time Zone To Location Look-up Failed!\n" +
+			"Military Time Zone Text Name='Bravo'\n")
+	}
 
 	if geoLoc != milDatTzDto.GeoLocationDesc {
 		t.Errorf("Error: Expected that Bravo Time Zone Geographic Location='%v'\n." +

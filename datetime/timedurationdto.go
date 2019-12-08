@@ -1378,7 +1378,7 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 //
 // tDurDto, err := TimeDurationDto{}.New(startTime, endTime, FmtDateTimeYrMDayFmtStr)
 //
-//		Note: FmtDateTimeYrMDayFmtStr' is a constant available in datetimeconstants.go
+//		Note: FmtDateTimeYrMDayFmtStr' is a constant available in constantsdatetime.go
 //
 func (tDur TimeDurationDto) New(
 	startDateTime,
@@ -1483,7 +1483,7 @@ func (tDur TimeDurationDto) New(
 // 																		FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewAutoEnd(
 	startDateTime time.Time,
@@ -1591,7 +1591,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 // 																		FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -1675,7 +1675,7 @@ func (tDur TimeDurationDto) NewAutoStart(timeZoneLocation,
 // 											FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDto(
 	startDateTz,
@@ -1803,7 +1803,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 //						standard year month day time duration allocation.
 //
 // 						'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
 	startDateTz,
@@ -1901,7 +1901,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
 // 											FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
 	startDateTz,
@@ -1991,7 +1991,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
 // tDurDto, err := TimeDurationDto{}.NewStartEndTimesTz(startTime, endTime, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.Time,
 	timeZoneLocation, dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -2094,7 +2094,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(startDateTime, endDateTime time.T
 //		Note:	'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //						standard year month day time duration allocation.
 //
-// 						'FmtDateTimeYrMDayFmtStr' is a constant defined in datetimeconstants.go
+// 						'FmtDateTimeYrMDayFmtStr' is a constant defined in constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 	endDateTime time.Time,
@@ -2223,7 +2223,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(startDateTime,
 //						standard year month day time duration allocation.
 //
 // 						'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
 	startDateTime,
@@ -2300,7 +2300,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
 //
 // tDurDto, err := TimeDurationDto{}.NewStartEndTimesDateDto(startTime, endTime, FmtDateTimeYrMDayFmtStr)
 //
-// NOTE:		FmtDateTimeYrMDayFmtStr' is a constant defined in source file, datetimeconstants.go
+// NOTE:		FmtDateTimeYrMDayFmtStr' is a constant defined in source file, constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 	endDateTime DateTzDto,
@@ -2399,7 +2399,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 //						standard year month day time duration allocation.
 //
 // 					'FmtDateTimeYrMDayFmtStr' is a constant defined in source file
-// 						datetimeconstants.go.
+// 						constantsdatetime.go.
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 	endDateTime DateTzDto, tDurCalcType TDurCalcType,
@@ -2525,7 +2525,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 //						standard year month day time duration allocation.
 //
 // 					'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-// 						datetimeconstants.go
+// 						constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
 	endDateTime DateTzDto, tDurCalcType TDurCalcType, timeZoneLocation string,
@@ -2606,7 +2606,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
 //
 // tDurDto, err := TimeDurationDto{}.NewStartTimeDurationTz(startTime, duration, FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, datetimeconstants.go
+//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
 	duration time.Duration,
@@ -2705,7 +2705,7 @@ func (tDur TimeDurationDto) NewStartTimeDuration(startDateTime time.Time,
 // 										TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 	duration time.Duration, timeZoneLocation, dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -2841,7 +2841,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(startDateTime time.Time,
 //						standard year month day time duration allocation.
 //
 // 					'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-// 						datetimeconstants.go
+// 						constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
 	duration time.Duration, tDurCalcType TDurCalcType, timeZoneLocation string,
@@ -2958,7 +2958,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(startDateTime time.Time,
 //						standard year month day time duration allocation.
 //
 // 					'FmtDateTimeYrMDayFmtStr' is a constants defined in the source
-// 						file, datetimeconstants.go.
+// 						file, constantsdatetime.go.
 //
 func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 	duration time.Duration, tDurCalcType TDurCalcType,
@@ -3026,7 +3026,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 //
 // tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDto(startTime, duration, FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, datetimeconstants.go
+//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 	duration time.Duration, dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -3129,7 +3129,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 // 																		TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDto,
 	duration time.Duration, timeZoneLocation string,
@@ -3273,7 +3273,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 //						standard year month day time duration allocation.
 //
 // 					'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-// 						datetimeconstants.go
+// 						constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime DateTzDto,
 	duration time.Duration, timeZoneLocation string, tDurCalcType TDurCalcType,
@@ -3394,7 +3394,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 //						standard year month day time duration allocation.
 //
 // 					'FmtDateTimeYrMDayFmtStr' is a constants defined in the source
-// 						file, datetimeconstants.go.
+// 						file, constantsdatetime.go.
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTzDto,
 	duration time.Duration, tDurCalcType TDurCalcType,
@@ -3486,7 +3486,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 // 																			plusTimeDto,
 // 																				FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'FmtDateTimeYrMDayFmtStr' are constants available in datetimeconstants.go
+//		Note: 'FmtDateTimeYrMDayFmtStr' are constants available in constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 	plusTimeDto TimeDto, dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -3636,7 +3636,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
 //						standard year month day time duration allocation.
 //
 // 						'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 	startDateTime time.Time,
@@ -3731,7 +3731,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 // tDurDto, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(endTime, minusTimeDto, FmtDateTimeYrMDayFmtStr)
 //
 //		Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in source file,
-// 							datetimeconstants.go.
+// 							constantsdatetime.go.
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 	minusTimeDto TimeDto, dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -3875,7 +3875,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(endDateTime time.Time,
 //						standard year month day time duration allocation.
 //
 // 						'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-// 							datetimeconstants.go
+// 							constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 	endDateTime time.Time,

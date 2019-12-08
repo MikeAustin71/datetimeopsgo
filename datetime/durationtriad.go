@@ -109,7 +109,7 @@ References -
 	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 
 	                          Date time format constants are found in the source
-	                          file 'datetimeconstants.go'. These constants represent
+	                          file 'constantsdatetime.go'. These constants represent
 	                          the more commonly used date time string formats. All
 	                          Date Time format constants begin with the prefix
 	                          'FmtDateTime'.
@@ -152,7 +152,7 @@ References -
 					"Pacific/Honolulu"
 					"Etc/UTC" = ZULU, GMT or UTC - Default
 
-		The source file 'datetimeconstants.go' contains a number of
+		The source file 'constantsdatetime.go' contains a number of
 		constant declarations covering the more frequently used time
 		zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 		time zone constants begin with the prefix 'TzIana'.
@@ -390,7 +390,7 @@ func (durT *DurationTriad) IsValid() error {
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -433,7 +433,7 @@ func (durT *DurationTriad) IsValid() error {
 //			FmtDateTimeYrMDayFmtStr)
 //
 //	    Note: 'FmtDateTimeYrMDayFmtStr' is a date format constant defined in
-//	          source file 'datetimeconstants.go'.
+//	          source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) New(
 	startDateTime time.Time,
@@ -511,7 +511,7 @@ func (durT DurationTriad) New(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -521,7 +521,7 @@ func (durT DurationTriad) New(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -567,7 +567,7 @@ func (durT DurationTriad) New(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
 	timeZoneLocation string,
@@ -643,7 +643,7 @@ func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -653,7 +653,7 @@ func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -698,7 +698,7 @@ func (durT DurationTriad) NewAutoEnd(startDateTime time.Time,
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewAutoStart(
 	timeZoneLocation string,
@@ -786,7 +786,7 @@ func (durT DurationTriad) NewAutoStart(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -822,7 +822,7 @@ func (durT DurationTriad) NewAutoStart(
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'FmtDateTimeYrMDayFmtStr' is a date format constant defined in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDto(
 	endDateTime time.Time,
@@ -949,7 +949,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -959,7 +959,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -1009,7 +1009,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 //	         TZones.US.Central() = "America/Chicago"
 //
 //	         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	         source file 'datetimeconstants.go'.
+//	         source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
 	endDateTime time.Time,
@@ -1108,7 +1108,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -1118,7 +1118,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -1164,7 +1164,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 	endDateTime time.Time,
@@ -1481,7 +1481,7 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -1491,7 +1491,7 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -1542,7 +1542,7 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
 	startDateTime,
@@ -1613,7 +1613,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -1623,7 +1623,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -1670,7 +1670,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartEndDateTzDtoTz(
 	startDateTime,
@@ -1768,7 +1768,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -1778,7 +1778,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -1829,7 +1829,7 @@ func (durT DurationTriad) NewStartEndDateTzDtoTz(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartEndTimesCalcTz(
 	startDateTime,
@@ -1895,7 +1895,7 @@ func (durT DurationTriad) NewStartEndTimesCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -1905,7 +1905,7 @@ func (durT DurationTriad) NewStartEndTimesCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -1952,7 +1952,7 @@ func (durT DurationTriad) NewStartEndTimesCalcTz(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartEndTimesTz(startDateTime,
 	endDateTime time.Time, timeZoneLocation, dateTimeFmtStr string) (DurationTriad, error) {
@@ -2005,7 +2005,7 @@ func (durT DurationTriad) NewStartEndTimesTz(startDateTime,
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -2050,7 +2050,7 @@ func (durT DurationTriad) NewStartEndTimesTz(startDateTime,
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'FmtDateTimeYrMDayFmtStr' is a constant defined in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimeDuration(
 	startDateTime time.Time,
@@ -2152,7 +2152,7 @@ func (durT DurationTriad) NewStartTimeDuration(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -2162,7 +2162,7 @@ func (durT DurationTriad) NewStartTimeDuration(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -2213,7 +2213,7 @@ func (durT DurationTriad) NewStartTimeDuration(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimeDurationCalcTz(
 	startDateTime time.Time,
@@ -2287,7 +2287,7 @@ func (durT DurationTriad) NewStartTimeDurationCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -2297,7 +2297,7 @@ func (durT DurationTriad) NewStartTimeDurationCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -2344,7 +2344,7 @@ func (durT DurationTriad) NewStartTimeDurationCalcTz(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimeDurationTz(
 	startDateTime time.Time,
@@ -2424,7 +2424,7 @@ func (durT DurationTriad) NewStartTimeDurationTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -2466,7 +2466,7 @@ func (durT DurationTriad) NewStartTimeDurationTz(
 //					FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimePlusTimeDto(
 	startDateTime time.Time,
@@ -2590,7 +2590,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -2600,7 +2600,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -2651,7 +2651,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
 	startDateTime time.Time,
@@ -2741,7 +2741,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -2751,7 +2751,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -2798,7 +2798,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimePlusTimeDtoTz(
 	startDateTime time.Time,
@@ -2931,7 +2931,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -2963,7 +2963,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 //	       FmtDateTimeYrMDayFmtStr)
 //
 //	Note: 'FmtDateTimeYrMDayFmtStr' are constants defined in
-//	      source file 'datetimeconstants.go'
+//	      source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 	endDateTime time.Time,
@@ -3093,12 +3093,12 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
 //
-//	         The source file 'datetimeconstants.go' contains a number of
+//	         The source file 'constantsdatetime.go' contains a number of
 //	         constant declarations covering the more frequently used time
 //	         zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //	         time zone constants begin with the prefix 'TzIana'.
@@ -3108,7 +3108,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -3149,7 +3149,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 	endDateTime time.Time,
@@ -3322,7 +3322,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -3332,7 +3332,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -3368,7 +3368,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 	endDateTime time.Time,
@@ -3462,7 +3462,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -3472,7 +3472,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -3513,7 +3513,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartEndDateTzCalcTz(
 	startDateTime,
@@ -3566,7 +3566,7 @@ func (durT *DurationTriad) SetStartEndDateTzCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -3600,7 +3600,7 @@ func (durT *DurationTriad) SetStartEndDateTzCalcTz(
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'FmtDateTimeYrMDayFmtStr' are constants defined in
-//	      source file 'datetimeconstants.go'
+//	      source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartEndTimes(
 	startDateTime,
@@ -3692,7 +3692,7 @@ func (durT *DurationTriad) SetStartEndTimes(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -3702,7 +3702,7 @@ func (durT *DurationTriad) SetStartEndTimes(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -3742,7 +3742,7 @@ func (durT *DurationTriad) SetStartEndTimes(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartEndTimesCalcTz(
 		startDateTime,
@@ -3857,7 +3857,7 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -3867,7 +3867,7 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -3903,7 +3903,7 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartEndTimesTz(
 	startDateTime,
@@ -3960,7 +3960,7 @@ func (durT *DurationTriad) SetStartEndTimesTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -3993,7 +3993,7 @@ func (durT *DurationTriad) SetStartEndTimesTz(
 //
 //
 //	Note: 'FmtDateTimeYrMDayFmtStr' are constants defined in
-//	      source file 'datetimeconstants.go'
+//	      source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartTimeDuration(
 	startDateTime time.Time,
@@ -4089,7 +4089,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -4099,7 +4099,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -4140,7 +4140,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 	startDateTime time.Time,
@@ -4256,7 +4256,7 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -4266,7 +4266,7 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -4301,7 +4301,7 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 //	      TZones.US.Central() = "America/Chicago"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartTimeDurationTz(
 	startDateTime time.Time,
@@ -4377,7 +4377,7 @@ func (durT *DurationTriad) SetStartTimeDurationTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -4411,7 +4411,7 @@ func (durT *DurationTriad) SetStartTimeDurationTz(
 //	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'FmtDateTimeYrMDayFmtStr' are constants defined in
-//	      source file 'datetimeconstants.go'
+//	      source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDto(
 	startDateTime time.Time,
@@ -4537,7 +4537,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -4547,7 +4547,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -4587,7 +4587,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 	startDateTime time.Time,
@@ -4744,7 +4744,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 //				      "America/Los_Angeles"
 //				      "Pacific/Honolulu"
 //
-//				     The source file 'datetimeconstants.go' contains a number of
+//				     The source file 'constantsdatetime.go' contains a number of
 //				     constant declarations covering the more frequently used time
 //				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //				     time zone constants begin with the prefix 'TzIana'.
@@ -4754,7 +4754,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 //	                          "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                          Date time format constants are found in the source
-//	                          file 'datetimeconstants.go'. These constants represent
+//	                          file 'constantsdatetime.go'. These constants represent
 //	                          the more commonly used date time string formats. All
 //	                          Date Time format constants begin with the prefix
 //	                          'FmtDateTime'.
@@ -4790,7 +4790,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 //	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'datetimeconstants.go'.
+//	      source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDtoTz(
 	startDateTime time.Time,

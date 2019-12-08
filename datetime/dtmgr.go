@@ -57,7 +57,7 @@ type DtMgr struct {
 //	                        "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //	                        Date time format constants are found in the source
-//	                        file 'datetimeconstants.go'. These constants represent
+//	                        file 'constantsdatetime.go'. These constants represent
 //	                        the more commonly used date time string formats. All
 //	                        Date Time format constants begin with the prefix
 //	                        'FmtDateTime'.
@@ -243,7 +243,9 @@ func (dt DtMgr) GetMilitaryCompactDateTimeGroup(t time.Time) (fmtDateTime string
 
 	utcOffset := dateElementArray[2][0:3] + "00"
 
-	militaryTzName, ok := MilitaryUTCToTzMap[utcOffset]
+	milTzDat := MilitaryTimeZoneData{}
+
+	militaryTzName, ok := milTzDat.UtcOffsetToMilitaryTimeZone(utcOffset)
 
 	if !ok {
 		err = fmt.Errorf(ePrefix +
@@ -311,7 +313,9 @@ func (dt DtMgr) GetMilitaryOpenDateTimeGroup(t time.Time) (fmtDateTime string, e
 
 	utcOffset := dateElementArray[2][0:3] + "00"
 
-	militaryTzName, ok := MilitaryUTCToTzMap[utcOffset]
+	milTzDat := MilitaryTimeZoneData{}
+
+	militaryTzName, ok := milTzDat.UtcOffsetToMilitaryTimeZone(utcOffset)
 
 	if !ok {
 		err = fmt.Errorf(ePrefix +
