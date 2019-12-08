@@ -2,6 +2,7 @@ package datetime
 
 import (
   "errors"
+  "sync"
 )
 
 
@@ -13,11 +14,11 @@ import (
 // Example: CST-0600 - Central Standard time with offset UTC-0600.
 // 
 type TimeZoneAbbreviationDto struct {
-  Id         string
-  Abbrv      string
-  TzName     string
-  Location   string
-  UtcOffset  string
+  Id                 string  // Example: "CST-0600"
+  Abbrv              string  // Example: "CST"
+  AbbrvDescription   string  // Example: "Central Standard Time"
+  Location           string  // Example: "North America"
+  UtcOffset          string  // Example: "-0600"
 }
 
 
@@ -29,7 +30,7 @@ func (TzAbbrv *TimeZoneAbbreviationDto) CopyOut() TimeZoneAbbreviationDto {
   newDto := TimeZoneAbbreviationDto{}
   newDto.Id = TzAbbrv.Id
   newDto.Abbrv = TzAbbrv.Abbrv
-  newDto.TzName = TzAbbrv.TzName
+  newDto.AbbrvDescription = TzAbbrv.AbbrvDescription
   newDto.Location = TzAbbrv.Location
   newDto.UtcOffset = TzAbbrv.UtcOffset
   
@@ -50,17 +51,128 @@ func (TzAbbrv *TimeZoneAbbreviationDto) CopyIn(inComing *TimeZoneAbbreviationDto
   
   TzAbbrv.Id = inComing.Id
   TzAbbrv.Abbrv = inComing.Abbrv
-  TzAbbrv.TzName = inComing.TzName
+  TzAbbrv.AbbrvDescription = inComing.AbbrvDescription
   TzAbbrv.Location = inComing.Location
   TzAbbrv.UtcOffset = inComing.UtcOffset
   return nil
 }  
 
 
-// MapTzAbbreviationReference - A reference map including all valid
+// StdTZoneAbbreviations - Provides thread safe access to
+// standard IANA Time Zone abbreviations, abbreviation
+// descriptions and UTC Offsets.
+//  
+type StdTZoneAbbreviations struct {
+  Input                  TimeZoneAbbreviationDto
+  Output                 TimeZoneAbbreviationDto
+  lock                   sync.Mutex
+}
+
+
+// AbbrvOffsetToTzReference - This method returns a type
+// 'TimeZoneAbbreviation' describing a specific time zone
+// abbreviation based on an input parameter consisting of
+// an alphabetic time zone abbreviation and an UTC offset
+// parameter.
+//  
+// The Time Zone Abbreviation Offset parameter, 'abbrvOffset',
+// must be formatted with a time zone abbreviation in all
+// upper case characters followed by the UTC Offset expressed
+// in hours and minutes.
+
+// For example, to return a 'TimeZoneAbbreviationDto' describing
+// North America Central Standard Time, the 'abbrvOffset' input
+// parameter must be formatted as 'CST-0600'. Note: the UTC
+// offset for North America Central Standard Time is 'UTC-0600'.
+
+// If the Abbreviation Offset parameter is invalid or if no
+// 'TimeZoneAbbreviationDto' exists for the Abbreviation Offset
+// parameter, this method will return a boolean value of 'false'.
+//  
+func (stdTzAbbrvs *StdTZoneAbbreviations) AbbrvOffsetToTzReference(
+		abbrvOffset string) (TimeZoneAbbreviationDto, bool) {
+
+	stdTzAbbrvs.lock.Lock()
+
+	defer stdTzAbbrvs.lock.Unlock()
+
+	result, ok := mapTzAbbreviationReference[abbrvOffset]
+
+	return result, ok
+}
+
+// AbbrvOffsetToTimeZones - Returns a string array consisting of
+// all standard time zones associated with a specific time zone
+// abbreviation based on an input parameter consisting of an
+// alphabetic time zone abbreviation and an UTC offset parameter.
+// 
+// The Time Zone Abbreviation Offset parameter, 'abbrvOffset'
+// must be formatted with a time zone abbreviation in all
+// upper case characters followed by the UTC Offset expressed
+// in hours and minutes.
+// 
+// For example, to return a string array containing all standard
+// time zones associated with North America Central Standard
+// Time, the 'abbrvOffset' input parameter must be formatted as
+// 'CST-0600'. Note: the UTC offset for North America Central
+// Standard Time is 'UTC-0600'.
+// 
+// If the Time Zone Abbreviation Offset parameter is invalid or
+// if no string array exists for the Abbreviation Offset
+// parameter, this method will return a boolean value of 'false'.
+// 
+func (stdTzAbbrvs *StdTZoneAbbreviations) AbbrvOffsetToTimeZones(
+		abbrvOffset string) ([]string, bool) {
+
+	stdTzAbbrvs.lock.Lock()
+
+	defer stdTzAbbrvs.lock.Unlock()
+
+	result, ok :=  mapTzAbbrvsToTimeZones[abbrvOffset]
+
+	return result, ok
+}
+
+// TimeZonesToAbbrvs - Returns a string array consisting of
+// all time zone abbreviations associated with a standard,
+// IANA time zone name passed as an input parameter.  This
+// input parameter, 'timeZone', must be formatted as a
+// standard IANA time zone name using upper and lower case
+// characters as specified in the IANA Time Zone Database.
+// 
+// The returned string array actually contains Time Zone
+// Abbreviation and UTC Offset pairs.
+// 
+// For example, the standard IANA Time Zone, 'America/Chicago'
+// will return a string array consisting of two strings:
+// "CDT-0500" and "CST-0600". These two strings describe the
+// two time zone abbreviations associated with 'America/Chicago'
+// (a.k.a. North America Central Time). "CDT-0500" stands for
+// 'Central Daylight Time' and UTC-0500 (a UTC offset of
+// -5 hours). Likewise, "CST-0600" identifies 'Central Standard
+// Time' with an UTC offset of -6 hours (UTC-0600).
+// 
+// If the Time Zone input parameter is invalid or if no string
+// array exists for the Time Zone input parameter, this method
+// will return a boolean value of 'false'.
+// 
+func (stdTzAbbrvs *StdTZoneAbbreviations) TimeZonesToAbbrvs(
+		timeZone string) ([]string, bool) {
+
+	stdTzAbbrvs.lock.Lock()
+
+	defer stdTzAbbrvs.lock.Unlock()
+
+	result, ok := mapTimeZonesToTzAbbrvs[timeZone]
+
+	return result, ok
+}
+
+
+// mapTzAbbreviationReference - A reference map including all valid
 // alphabetic Time Zone abbreviations.
 //
-var MapTzAbbreviationReference = map[string]TimeZoneAbbreviationDto{
+var mapTzAbbreviationReference = map[string]TimeZoneAbbreviationDto{
 "ACDT+1030"     :{"ACDT+1030","ACDT","Australian Central Daylight Time","Australia","+1030"},
 "ACST+0930"     :{"ACST+0930","ACST","Australian Central Standard Time","Australia","+0930"},
 "ADT-0300"     :{"ADT-0300","ADT","Atlantic Daylight Time","North America","-0300"},
@@ -120,10 +232,10 @@ var MapTzAbbreviationReference = map[string]TimeZoneAbbreviationDto{
 }
 
 
-// MapTzAbbrvsToTimeZones - A cross reference that maps
+// mapTzAbbrvsToTimeZones - A cross reference that maps
 // Time Zone Abbreviations to Time Zone Canonical Values.
 // 
-var MapTzAbbrvsToTimeZones = map[string][]string {
+var mapTzAbbrvsToTimeZones = map[string][]string {
 "ACDT+1030"     :{ "Australia/Adelaide","Australia/Broken_Hill","Australia/South","Australia/Yancowinna"},
 "ACST+0930"     :{ "Australia/Adelaide","Australia/Broken_Hill","Australia/Darwin","Australia/North","Australia/South","Australia/Yancowinna"},
 "ADT-0300"     :{ "America/Glace_Bay","America/Goose_Bay","America/Halifax","America/Moncton","America/Thule","Atlantic/Bermuda","Canada/Atlantic"},
@@ -183,10 +295,10 @@ var MapTzAbbrvsToTimeZones = map[string][]string {
 }
 
 
-// MapTimeZonesToTzAbbrvs - A cross reference that maps
+// mapTimeZonesToTzAbbrvs - A cross reference that maps
 // Time Zone Canonical Values to Time Zone Abbreviations.
 // 
-var MapTimeZonesToTzAbbrvs = map[string][]string {
+var mapTimeZonesToTzAbbrvs = map[string][]string {
 "Africa/Abidjan"     :{ "GMT+0000"},
 "Africa/Accra"     :{ "GMT+0000"},
 "Africa/Addis_Ababa"     :{ "EAT+0300"},

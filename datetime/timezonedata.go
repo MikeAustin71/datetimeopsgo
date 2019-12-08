@@ -116,7 +116,7 @@ package datetime
 // 
 //            Primary Time Zone Groups:  17
 // 
-// Type Creation Date: 2019-12-05 Thursday 18:01:27 -0600 CST
+// Type Creation Date: 2019-12-08 Sunday 00:27:33 -0600 CST
 // ----------------------------------------------------------------------------
 // 
 type TimeZones struct {
