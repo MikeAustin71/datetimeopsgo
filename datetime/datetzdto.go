@@ -1772,15 +1772,20 @@ func (dtz DateTzDto) New(
 	ePrefix := "DateTzDto.New() "
 
 	if dateTime.IsZero() {
-		return DateTzDto{}, errors.New(ePrefix + "Error: Input parameter dateTime is Zero value!")
+		return DateTzDto{}, errors.New(ePrefix +
+			"\nError: Input parameter dateTime is Zero value!\n")
 	}
+
+	dTzUtil := dateTzDtoUtility{}
 
 	dtz2 := DateTzDto{}
 
-	err := dtz2.SetFromTime(dateTime, dateTimeFmtStr)
+	err := dTzUtil.setFromDateTime( &dtz2, dateTime, dateTimeFmtStr, ePrefix)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"Error returned from dtz2.SetFromTime(dateTime). dateTime='%v'  Error='%v'", dateTime, err.Error())
+		return DateTzDto{}, fmt.Errorf(ePrefix+
+			"\nError returned from dTzUtil.setFromDateTime( &dtz2, dateTime, dateTimeFmtStr, ePrefix).\n" +
+			"dateTime='%v'\nError='%v'\n", dateTime, err.Error())
 	}
 
 	return dtz2, nil
