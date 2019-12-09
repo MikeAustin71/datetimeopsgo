@@ -356,7 +356,7 @@ func (tzDto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 
 	timeZoneLocation := tzDto.TimeOut.TimeZone.LocationName
 
-	fmtStr := tzDto.TimeOut.DateTimeFmt
+	fmtStr := tzDto.TimeOut.GetDateTimeFmt()
 
 	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
 
@@ -423,7 +423,7 @@ func (tzDto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 
 	timeZoneLocation := tzDto.TimeOut.TimeZone.LocationName
 
-	fmtStr := tzDto.TimeOut.DateTimeFmt
+	fmtStr := tzDto.TimeOut.GetDateTimeFmt()
 
 	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
 

@@ -611,9 +611,9 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 			expectedDt.Format(FmtDateTimeYrMDayFmtStr), actualDt.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	if FmtDateTimeYrMDayFmtStr != dTz.DateTimeFmt {
-		t.Errorf("Expected dTz.DateTimeFmt='%v' Instead, dTz.DateTimeFmt='%v' ",
-			FmtDateTimeYrMDayFmtStr, dTz.DateTimeFmt)
+	if FmtDateTimeYrMDayFmtStr != dTz.GetDateTimeFmt() {
+		t.Errorf("Expected dTz.GetDateTimeFmt()='%v' Instead, dTz.GetDateTimeFmt()='%v' ",
+			FmtDateTimeYrMDayFmtStr, dTz.GetDateTimeFmt())
 	}
 
 }
@@ -856,9 +856,9 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 			expectedDt.Format(FmtDateTimeYrMDayFmtStr), actualDt.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	if FmtDateTimeYrMDayFmtStr != dTzDto.DateTimeFmt {
-		t.Errorf("Expected dTzDto.DateTimeFmt='%v' Instead, dTzDto.DateTimeFmt='%v' ",
-			FmtDateTimeYrMDayFmtStr, dTzDto.DateTimeFmt)
+	if FmtDateTimeYrMDayFmtStr != dTzDto.GetDateTimeFmt() {
+		t.Errorf("Expected dTzDto.GetDateTimeFmt()='%v' Instead, dTzDto.GetDateTimeFmt()='%v' ",
+			FmtDateTimeYrMDayFmtStr, dTzDto.GetDateTimeFmt())
 	}
 
 }

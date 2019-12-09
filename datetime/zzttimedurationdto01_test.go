@@ -298,7 +298,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoStart_01() {
 	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(),
-		suite.fmtStr == t1Dur.StartTimeDateTz.DateTimeFmt,
+		suite.fmtStr == t1Dur.StartTimeDateTz.GetDateTimeFmt(),
 		"Error: Expected suite.fmtSTr to EQUAL t1Dur.StartTimeDateTz.DateTimeFmt. THEY ARE NOT EQUAL!")
 
 	err = t1Dur.SetAutoEnd()

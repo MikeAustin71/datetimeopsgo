@@ -3973,7 +3973,7 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 			eTime,
 			calcType,
 			tDur.StartTimeDateTz.TimeZone.LocationName,
-			tDur.StartTimeDateTz.DateTimeFmt)
+			tDur.StartTimeDateTz.GetDateTimeFmt())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz: Error='%v'", err.Error())
@@ -4017,7 +4017,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 
 	startDateTime := tDur.StartTimeDateTz.GetDateTimeValue()
 
-	fmtStr := tDur.StartTimeDateTz.DateTimeFmt
+	fmtStr := tDur.StartTimeDateTz.GetDateTimeFmt()
 
 	calcType := tDur.CalcType
 
