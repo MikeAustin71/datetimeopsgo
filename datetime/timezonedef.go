@@ -319,7 +319,7 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 
 	if err != nil {
 		return TimeZoneDefDto{}, fmt.Errorf(ePrefix+
-			"Error returned by tzDef2.SetFromDateTime(dateTime). "+
+			"Error returned by tzDef2.SetFromDateTimeComponents(dateTime). "+
 			"dateTime='%v'  Error='%v'",
 			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
@@ -351,7 +351,7 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix +
-			"\nError returned by tzDefDto.SetFromDateTime(time.Now().In(tzLoc)).\n" +
+			"\nError returned by tzDefDto.SetFromDateTimeComponents(time.Now().In(tzLoc)).\n" +
 			"Error='%v'\n", err2.Error())
 		return tzDefDto, err
 	}
@@ -395,7 +395,7 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix +
-			"\nError returned by tzDefDto.SetFromDateTime(time.Now().In(tzLoc)).\n" +
+			"\nError returned by tzDefDto.SetFromDateTimeComponents(time.Now().In(tzLoc)).\n" +
 			"Error='%v'\n", err2.Error())
 		return tzDefDto, err
 	}
@@ -405,10 +405,10 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 	return tzDefDto, err
 }
 
-// SetFromDateTime - Re-initializes the values of the current
+// SetFromDateTimeComponents - Re-initializes the values of the current
 // TimeZoneDefDto instance based on input parameter, 'dateTime'.
 func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
-	ePrefix := "TimeZoneDefDto.SetFromDateTime() "
+	ePrefix := "TimeZoneDefDto.SetFromDateTimeComponents() "
 
 	if dateTime.IsZero() {
 		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")

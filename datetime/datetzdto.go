@@ -1791,8 +1791,8 @@ func (dtz DateTzDto) New(
 	return dtz2, nil
 }
 
-// NewDateTime - creates a new DateTzDto object and populates the data fields based on
-// input parameters.
+// NewDateTimeComponents - creates a new DateTzDto object and populates the
+// data fields based on input parameters.
 //
 // ------------------------------------------------------------------------
 //
@@ -1894,7 +1894,7 @@ func (dtz DateTzDto) New(
 //         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //         source file 'constantsdatetime.go'.
 //
-func (dtz DateTzDto) NewDateTime(
+func (dtz DateTzDto) NewDateTimeComponents(
 	year,
 	month,
 	day,
@@ -1907,15 +1907,15 @@ func (dtz DateTzDto) NewDateTime(
 	timeZoneLocation,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
-	ePrefix := "DateTzDto.NewDateTime() "
+	ePrefix := "DateTzDto.NewDateTimeComponents() "
 
 	dtz2 := DateTzDto{}
 
-	err := dtz2.SetFromDateTime(year, month, day, hour, minute, second,
+	err := dtz2.SetFromDateTimeComponents(year, month, day, hour, minute, second,
 		millisecond, microsecond, nanosecond, timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"Error returned by dtz2.SetFromDateTime(...) "+
+		return DateTzDto{}, fmt.Errorf(ePrefix+"Error returned by dtz2.SetFromDateTimeComponents(...) "+
 			"year='%v', month='%v', day='%v', hour='%v', minute='%v', second='%v', millisecond='%v', microsecond='%v' nanosecond='%v', timeZoneLocation='%v' Error='%v'",
 			year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZoneLocation, err.Error())
 	}
@@ -2733,7 +2733,7 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 
 }
 
-// SetFromDateTime - Sets the values of the Date Time fields
+// SetFromDateTimeComponents - Sets the values of the Date Time fields
 // for the current DateTzDto instance based on time components
 // and a Time Zone Location.
 //
@@ -2806,7 +2806,7 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 //   error - If successful the returned error Type is set equal to 'nil'. If errors are
 //           encountered this error Type will encapsulate an error message.
 //
-func (dtz *DateTzDto) SetFromDateTime(
+func (dtz *DateTzDto) SetFromDateTimeComponents(
 	year,
 	month,
 	day,
@@ -2819,56 +2819,27 @@ func (dtz *DateTzDto) SetFromDateTime(
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
-	ePrefix := "DateTzDto.SetFromDateTime() "
+	ePrefix := "DateTzDto.SetFromDateTimeComponents() "
 
-	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute,
-		second, millisecond, microsecond, nanosecond)
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by TimeDto{}.New(year, month,...).  "+
-			"Error='%v'", err.Error())
-	}
+	dTzUtil := dateTzDtoUtility{}
 
-	fmtStr := dtz.preProcessDateFormatStr(dateTimeFmtStr)
+	err := dTzUtil.setFromDateTimeComponents(
+						dtz,
+						year,
+						month,
+						day,
+						hour,
+						minute,
+						second,
+						millisecond,
+						microsecond,
+						nanosecond,
+						timeZoneLocation,
+						dateTimeFmtStr,
+						ePrefix)
 
-	tzl := dtz.preProcessTimeZoneLocation(timeZoneLocation)
-
-	_, err = time.LoadLocation(tzl)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by time.LoadLocation(tzl). INVALID 'timeZoneLocation'! "+
-			"tzl='%v' timeZoneLocation='%v' Error='%v' ",
-			tzl, timeZoneLocation, err.Error())
-	}
-
-	dt, err := tDto.GetDateTime(tzl)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.GetDateTime(tzl). "+
-			"timeZoneLocation='%v' tzl='%v'  Error='%v'",
-			timeZoneLocation, tzl, err.Error())
-	}
-
-	timeZone, err := TimeZoneDefDto{}.New(dt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by TimeZoneDefDto{}.New(dt). "+
-			"dt='%v'  Error=%v",
-			dt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	dtz.Empty()
-
-	dtz.dateTimeValue = dt
-	dtz.timeZone = timeZone.CopyOut()
-	dtz.timeComponents = tDto.CopyOut()
-	dtz.dateTimeFmt = fmtStr
-
-	return nil
+	return err
 }
 
 // SetFromDateTimeElements - Sets the values of the current DateTzDto

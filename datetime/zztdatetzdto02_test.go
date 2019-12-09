@@ -123,7 +123,7 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 	t1ExpectedZone, t1ExpectedZoneOffset := t1.Zone()
 	t1ExpectedLocationName := TZones.US.Central()
 
-	dTzDto, err := DateTzDto{}.NewDateTime(
+	dTzDto, err := DateTzDto{}.NewDateTimeComponents(
 		2014,
 		2,
 		15,
@@ -137,7 +137,7 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.NewDateTime(2014," +
+		t.Errorf("Error returned by DateTzDto{}.NewDateTimeComponents(2014," +
 			"2,15,19,54,30,38, 175, 584, TzUsCentral).\nError='%v'\n", err.Error())
 		return
 	}
@@ -640,10 +640,10 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 	t1ExpectedZone, t1ExpectedZoneOffset := t1.Zone()
 	t1ExpectedLocationName := TZones.US.Central()
 
-	err = dTzDto.SetFromDateTime(2014, 2, 15, 19, 54, 30, 38, 175, 584, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err = dTzDto.SetFromDateTimeComponents(2014, 2, 15, 19, 54, 30, 38, 175, 584, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.NewDateTime(2014, 2,15,19,54,30,38, 175, 584, TzUsCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewDateTimeComponents(2014, 2,15,19,54,30,38, 175, 584, TzUsCentral). Error='%v'", err.Error())
 	}
 
 	actualTimeStr := dTzDto.GetDateTimeValue().Format(fmtstr)

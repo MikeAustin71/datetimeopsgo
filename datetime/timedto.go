@@ -500,7 +500,7 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 	err := t2Dto.SetFromDateTime(dateTime)
 
 	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned from t2Dto.SetFromDateTime(dateTime). Error='%v'", err.Error())
+		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned from t2Dto.SetFromDateTimeComponents(dateTime). Error='%v'", err.Error())
 	}
 
 	err = t2Dto.IsValidDateTime()
@@ -782,11 +782,11 @@ func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
 	return nil
 }
 
-// SetFromDateTime - Sets the current TimeDto instance to new
+// SetFromDateTimeComponents - Sets the current TimeDto instance to new
 // data field values based on input parameter 'dateTime' (time.Time)
 func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 
-	ePrefix := "TimeDto.SetFromDateTime() "
+	ePrefix := "TimeDto.SetFromDateTimeComponents() "
 
 	if dateTime.IsZero() {
 		return errors.New(ePrefix + "Error: Input Parameter 'dateTime' has a ZERO Value!")

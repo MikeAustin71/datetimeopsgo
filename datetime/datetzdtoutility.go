@@ -182,3 +182,83 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 
 	return nil
 }
+
+// SetFromDateTimeComponents - Sets the values of the Date Time fields
+// for the current DateTzDto instance based on time components
+// and a Time Zone Location.
+//
+// Note that this variation of time elements breaks time down by
+// hour, minute, second, millisecond, microsecond and nanosecond.
+//
+func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
+	dTz *DateTzDto,
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	millisecond,
+	microsecond,
+	nanosecond int,
+	timeZoneLocation,
+	dateTimeFmtStr,
+	ePrefix string) error {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.setFromDateTimeComponents() "
+
+	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute,
+		second, millisecond, microsecond, nanosecond)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by TimeDto{}.New(year, month,...).  "+
+			"Error='%v'", err.Error())
+	}
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	fmtStr := dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+
+	tzl := dTzUtil2.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err = time.LoadLocation(tzl)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned by time.LoadLocation(tzl).\nINVALID 'timeZoneLocation'!\n"+
+			"tzl='%v'\ntimeZoneLocation='%v'\nError='%v'\n",
+			tzl, timeZoneLocation, err.Error())
+	}
+
+	dt, err := tDto.GetDateTime(tzl)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned by tDto.GetDateTime(tzl).\n"+
+			"\ntimeZoneLocation='%v'\ntzl='%v'\nError='%v'\n",
+			timeZoneLocation, tzl, err.Error())
+	}
+
+	timeZone, err := TimeZoneDefDto{}.New(dt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError returned by TimeZoneDefDto{}.New(dt).\n"+
+			"dt='%v'\nError=%v\n",
+			dt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	dTzUtil2.empty(dTz)
+
+	dTz.dateTimeValue = dt
+	dTz.timeZone = timeZone.CopyOut()
+	dTz.timeComponents = tDto.CopyOut()
+	dTz.dateTimeFmt = fmtStr
+
+	return nil
+}
