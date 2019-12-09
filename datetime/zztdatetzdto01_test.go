@@ -441,7 +441,7 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 
 	dTzDto := dTzDtoInitial.CopyOut()
 
-	actualTimeStr := dTzDto.DateTime.Format(fmtstr)
+	actualTimeStr := dTzDto.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != actualTimeStr {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)

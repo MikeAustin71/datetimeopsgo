@@ -526,7 +526,7 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 	}
 
 	// FmtDateTimeTzSec = "01/02/2006 15:04:05 -0700 MST"
-	dateTimeArray := strings.Split(dtzDto.DateTime.Format(FmtDateTimeTzSec), " ")
+	dateTimeArray := strings.Split(dtzDto.GetDateTimeValue().Format(FmtDateTimeTzSec), " ")
 
 	if len(dateTimeArray) != 4 {
 		return newMilDateDto,
@@ -534,7 +534,7 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 				"\nError: dtzDto.DateTime resolves to an INVALID date time string!\n" +
 				"dtzDto.DateTime='%v'\n" +
 				"dtzDto.DateTime Array Length='%v'\n",
-				dtzDto.DateTime.Format(FmtDateTimeTzSec),
+				dtzDto.GetDateTimeValue().Format(FmtDateTimeTzSec),
 				len(dateTimeArray))
 	}
 
@@ -555,7 +555,7 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 		err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter(militaryTz)
 
 	newMilDateDto.DateTime =
-		dtzDto.DateTime.In(newMilDateDto.EquivalentIanaTimeZone.Location)
+		dtzDto.GetDateTimeValue().In(newMilDateDto.EquivalentIanaTimeZone.Location)
 
 	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
 

@@ -299,14 +299,14 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 func (tDur *TimeDurationDto) IsValid() error {
 	ePrefix := "TimeDurationDto.IsValid() "
 
-	if tDur.StartTimeDateTz.DateTime.IsZero() &&
-		tDur.EndTimeDateTz.DateTime.IsZero() {
+	if tDur.StartTimeDateTz.GetDateTimeValue().IsZero() &&
+		tDur.EndTimeDateTz.GetDateTimeValue().IsZero() {
 
 		return fmt.Errorf(ePrefix + "Error: Both Start and End Times are Zero!")
 
 	}
 
-	if tDur.EndTimeDateTz.DateTime.Before(tDur.StartTimeDateTz.DateTime) {
+	if tDur.EndTimeDateTz.GetDateTimeValue().Before(tDur.StartTimeDateTz.GetDateTimeValue()) {
 		return fmt.Errorf(ePrefix + "Error: End Time is Before Start Time! ")
 	}
 
@@ -1689,8 +1689,8 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartEndTimesCalcTz(
-		startDateTz.DateTime,
-		endDateTz.DateTime,
+		startDateTz.GetDateTimeValue(),
+		endDateTz.GetDateTimeValue(),
 		TDurCalcType(0).StdYearMth(),
 		timeZoneLocation,
 		dateTimeFmtStr)
@@ -1817,8 +1817,8 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartEndTimesCalcTz(
-		startDateTz.DateTime,
-		endDateTz.DateTime,
+		startDateTz.GetDateTimeValue(),
+		endDateTz.GetDateTimeValue(),
 		tDurCalcType,
 		timeZoneLocation,
 		dateTimeFmtStr)
@@ -1914,8 +1914,8 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
 	t2Dur := TimeDurationDto{}
 
 	err := t2Dur.SetStartEndTimesCalcTz(
-		startDateTz.DateTime,
-		endDateTz.DateTime,
+		startDateTz.GetDateTimeValue(),
+		endDateTz.GetDateTimeValue(),
 		TDurCalcType(0).StdYearMth(),
 		timeZoneLocation,
 		dateTimeFmtStr)
@@ -2308,7 +2308,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesDateDto() "
 
-	if startDateTime.DateTime.IsZero() && endDateTime.DateTime.IsZero() {
+	if startDateTime.GetDateTimeValue().IsZero() && endDateTime.GetDateTimeValue().IsZero() {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
 				"input parameters are ZERO!")
@@ -2407,7 +2407,8 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesDateDtoCalc() "
 
-	if startDateTime.DateTime.IsZero() && endDateTime.DateTime.IsZero() {
+	if startDateTime.GetDateTimeValue().IsZero() &&
+			endDateTime.GetDateTimeValue().IsZero() {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
 				"input parameters are ZERO!")
@@ -2533,7 +2534,8 @@ func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(startDateTime,
 
 	ePrefix := "TimeDurationDto.NewStartEndTimesDateTzDtoCalcTz() "
 
-	if startDateTime.DateTime.IsZero() && endDateTime.DateTime.IsZero() {
+	if startDateTime.GetDateTimeValue().IsZero() &&
+		endDateTime.GetDateTimeValue().IsZero() {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
 				"input parameters are ZERO!")
@@ -3033,7 +3035,8 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
 
-	if startDateTime.DateTime.IsZero() && duration == 0 {
+	if startDateTime.GetDateTimeValue().IsZero() &&
+		duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3137,7 +3140,8 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(startDateTime DateTzDt
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationDateDtoTz() "
 
-	if startDateTime.DateTime.IsZero() && duration == 0 {
+	if startDateTime.GetDateTimeValue().IsZero() &&
+		duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3281,7 +3285,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(startDateTime Date
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationDateDtoTzCalc() "
 
-	if startDateTime.DateTime.IsZero() && duration == 0 {
+	if startDateTime.GetDateTimeValue().IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3402,7 +3406,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationDateDtoCalc() "
 
-	if startDateTime.DateTime.IsZero() && duration == 0 {
+	if startDateTime.GetDateTimeValue().IsZero() && duration == 0 {
 		return TimeDurationDto{},
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
 				"input parameters are ZERO!")
@@ -3965,8 +3969,11 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 
 	calcType := tDur.CalcType
 
-	err := tDur.SetStartEndTimesCalcTz(tDur.StartTimeDateTz.DateTime, eTime, calcType,
-		tDur.StartTimeDateTz.TimeZone.LocationName, tDur.StartTimeDateTz.DateTimeFmt)
+	err := tDur.SetStartEndTimesCalcTz(tDur.StartTimeDateTz.GetDateTimeValue(),
+			eTime,
+			calcType,
+			tDur.StartTimeDateTz.TimeZone.LocationName,
+			tDur.StartTimeDateTz.DateTimeFmt)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz: Error='%v'", err.Error())
@@ -4008,7 +4015,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 			locName, err.Error())
 	}
 
-	startDateTime := tDur.StartTimeDateTz.DateTime
+	startDateTime := tDur.StartTimeDateTz.GetDateTimeValue()
 
 	fmtStr := tDur.StartTimeDateTz.DateTimeFmt
 
@@ -4161,7 +4168,8 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(endDateTime time.Time,
 
 	tDur.StartTimeDateTz, err = eDateTime.TimeOut.AddMinusTimeDto(minusTimeDto)
 
-	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
+	tDur.TimeDuration =
+		tDur.EndTimeDateTz.GetDateTimeValue().Sub(tDur.StartTimeDateTz.GetDateTimeValue())
 
 	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 
@@ -4267,8 +4275,11 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
 
 	ePrefix := "TimeDurationDto.SetStartEndTimesDateDtoCalcTz() "
 
-	err := tDur.SetStartEndTimesCalcTz(startDateTime.DateTime, endDateTime.DateTime,
-		tDurCalcType, timeZoneLocation, dateTimeFmtStr)
+	err := tDur.SetStartEndTimesCalcTz(startDateTime.GetDateTimeValue(),
+			endDateTime.GetDateTimeValue(),
+			tDurCalcType,
+			timeZoneLocation,
+			dateTimeFmtStr)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz- "+
@@ -4395,7 +4406,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(startDateTime,
 			"Error='%v'", err.Error())
 	}
 
-	if eTime.TimeOut.DateTime.Before(sTime.TimeOut.DateTime) {
+	if eTime.TimeOut.GetDateTimeValue().Before(sTime.TimeOut.GetDateTimeValue()) {
 		s2 := sTime.CopyOut()
 		sTime = eTime.CopyOut()
 		eTime = s2.CopyOut()
@@ -4404,7 +4415,8 @@ func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(startDateTime,
 	tDur.Empty()
 	tDur.StartTimeDateTz = sTime.TimeOut.CopyOut()
 	tDur.EndTimeDateTz = eTime.TimeOut.CopyOut()
-	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
+	tDur.TimeDuration =
+		tDur.EndTimeDateTz.GetDateTimeValue().Sub(tDur.StartTimeDateTz.GetDateTimeValue())
 
 	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 
@@ -4681,7 +4693,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(startDateTime Dat
 			timeZoneLocation, tzLoc, err.Error())
 	}
 
-	err = tDur.SetStartTimeDurationCalcTz(startDateTime.DateTime,
+	err = tDur.SetStartTimeDurationCalcTz(startDateTime.GetDateTimeValue(),
 		duration,
 		tDurCalcType,
 		timeZoneLocation,
@@ -4824,7 +4836,8 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(startDateTime time.Ti
 
 	tDur.EndTimeDateTz, err = sDateTime.TimeOut.AddPlusTimeDto(plusTimeDto)
 
-	tDur.TimeDuration = tDur.EndTimeDateTz.DateTime.Sub(tDur.StartTimeDateTz.DateTime)
+	tDur.TimeDuration =
+		tDur.EndTimeDateTz.GetDateTimeValue().Sub(tDur.StartTimeDateTz.GetDateTimeValue())
 
 	err = tDur.calcTimeDurationAllocations(tDurCalcType)
 
@@ -5274,8 +5287,8 @@ func (tDur *TimeDurationDto) calcYearsFromDuration() error {
 
 	years := int64(0)
 	yearNanosecs := int64(0)
-	startTime := tDur.StartTimeDateTz.DateTime
-	endTime := tDur.EndTimeDateTz.DateTime
+	startTime := tDur.StartTimeDateTz.GetDateTimeValue()
+	endTime := tDur.EndTimeDateTz.GetDateTimeValue()
 
 	if endTime.Before(startTime) {
 		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")
@@ -5339,8 +5352,8 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 
 	ePrefix := "TimeDurationDto.calcMonthsFromDuration() "
 
-	startTime := tDur.StartTimeDateTz.DateTime
-	endTime := tDur.EndTimeDateTz.DateTime
+	startTime := tDur.StartTimeDateTz.GetDateTimeValue()
+	endTime := tDur.EndTimeDateTz.GetDateTimeValue()
 
 	if endTime.Before(startTime) {
 		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")

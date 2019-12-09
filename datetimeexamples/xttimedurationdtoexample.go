@@ -30,7 +30,7 @@ func ExampleTimeDuration001() {
 	fmt.Println("Add Date Results - Cumulative Days")
 	fmt.Println("            Start Date Time: ", t1USCentral.Format(dt.FmtDateTimeYrMDayFmtStr))
 	fmt.Println("      -- Duration = 24-Hours --")
-	fmt.Println("       Actual End Date Time: ", t1Dur.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println("       Actual End Date Time: ", t1Dur.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 	//fmt.Println("             Add Date 1 Day: ", t2AddDate.Format(dt.FmtDateTimeYrMDayFmtStr))
 
 }
@@ -70,7 +70,7 @@ func ExampleTimeDuration002() {
 	fmt.Println("Add Date Results - Cumulative Days")
 	fmt.Println("            Start Date Time: ", t1USCentral.Format(dt.FmtDateTimeYrMDayFmtStr))
 	fmt.Println("     Expected End Date Time: ", tx2.Format(dt.FmtDateTimeYrMDayFmtStr))
-	fmt.Println("       Actual End Date Time: ", t1Dur.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println("       Actual End Date Time: ", t1Dur.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 
 	totDur := dur
 	totDur += t1Dur.DateDays * int64(time.Hour) * int64(24)

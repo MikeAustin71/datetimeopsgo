@@ -839,21 +839,21 @@ func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 
 	tDto.Empty()
 
-	tDto.Years = dTzDto.DateTime.Year()
-	tDto.Months = int(dTzDto.DateTime.Month())
-	err := tDto.allocateWeeksAndDays(dTzDto.DateTime.Day())
+	tDto.Years = dTzDto.GetDateTimeValue().Year()
+	tDto.Months = int(dTzDto.GetDateTimeValue().Month())
+	err := tDto.allocateWeeksAndDays(dTzDto.GetDateTimeValue().Day())
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"tDto.allocateWeeksAndDays(dTzDto.DateTime.Day()). Error= '%v'", err.Error())
 	}
 
-	tDto.Hours = dTzDto.DateTime.Hour()
-	tDto.Minutes = dTzDto.DateTime.Minute()
-	tDto.Seconds = dTzDto.DateTime.Second()
+	tDto.Hours = dTzDto.GetDateTimeValue().Hour()
+	tDto.Minutes = dTzDto.GetDateTimeValue().Minute()
+	tDto.Seconds = dTzDto.GetDateTimeValue().Second()
 
-	if err := tDto.allocateTotalNanoseconds(dTzDto.DateTime.Nanosecond()); err != nil {
+	if err := tDto.allocateTotalNanoseconds(dTzDto.GetDateTimeValue().Nanosecond()); err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.allocateTotalNanoseconds(int64(dateTime.Nanosecond())). "+
+			"\nError returned by tDto.allocateTotalNanoseconds(dTzDto.GetDateTimeValue().Nanosecond()).\n"+
 			"Error='%v'", err.Error())
 	}
 

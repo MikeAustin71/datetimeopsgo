@@ -117,22 +117,24 @@ func ExampleNewstarttimeduration01() {
 
 	// dur.SetStartTimeDurationTz(t1, t12Dur)
 
-	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr) {
+	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
 		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n", t1OutStr,
-			dur.BaseTime.StartTimeDateTz.DateTime.Format(fmtstr))
+			dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t2OutStr != dur.BaseTime.EndTimeDateTz.DateTime.Format(fmtstr) {
+	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
 		fmt.Printf("Error- Expected End Time %v. Instead, got %v.\n",
-			t2OutStr, dur.BaseTime.EndTimeDateTz.DateTime.Format(fmtstr))
+			t2OutStr, dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t12Dur != dur.BaseTime.TimeDuration {
-		fmt.Printf("Error- Expected Time Duration %v. Instead, got %v\n", t12Dur, dur.BaseTime.TimeDuration)
+		fmt.Printf("Error- Expected Time Duration %v.\n" +
+			"Instead, got %v\n", t12Dur, dur.BaseTime.TimeDuration)
 	}
 
 	if t12Dur != t12UTCDur {
-		fmt.Printf("Time In Duration different from Time UTC Duration. t12Dur='%v'  t12UTCDur='%v'", t12Dur, t12UTCDur)
+		fmt.Printf("Time In Duration different from Time UTC Duration.\n" +
+			"t12Dur='%v'  t12UTCDur='%v'", t12Dur, t12UTCDur)
 	}
 
 	fmt.Println("Time  In Duration: ", t12Dur)

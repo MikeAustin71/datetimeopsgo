@@ -319,7 +319,7 @@ func TestMilitaryDateTzDto_NewFromDateTzDto_01(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error returned by MilitaryDateTzDto{}.NewFromDateTzDto(dateTzDto)\n" +
 			"dateTzDto.DateTime='%v'\n" +
-			"Error='%v'\n", dateTzDto.DateTime.Format(fmtStr), err.Error())
+			"Error='%v'\n", dateTzDto.GetDateTimeValue().Format(fmtStr), err.Error())
 		return
 	}
 

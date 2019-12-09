@@ -106,7 +106,7 @@ type DateTzDto struct {
 	tagDescription string      // Available for tags, classification, labeling or description
 	timeComponents TimeDto     // Associated Time Components (years, months, days, hours, minutes,
 	                           //    seconds etc.)
-	DateTime    time.Time      // DateTime value for this DateTzDto Type
+	dateTimeValue  time.Time   // DateTime value for this DateTzDto Type
 	DateTimeFmt string         // Date Time Format String. Default is
 	                           //    "2006-01-02 15:04:05.000000000 -0700 MST"
 	TimeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone
@@ -198,10 +198,10 @@ func (dtz *DateTzDto) AddDate(
 	err := dtz.IsValid()
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"The current DateTzDto is INVALID! dtz.DateTime='%v'", dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+		return DateTzDto{}, fmt.Errorf(ePrefix+"The current DateTzDto is INVALID! dtz.dateTimeValue='%v'", dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	newDt1 := dtz.DateTime.AddDate(years, months, 0)
+	newDt1 := dtz.dateTimeValue.AddDate(years, months, 0)
 
 	dur := DayNanoSeconds * int64(days)
 	newDt2 := newDt1.Add(time.Duration(dur))
@@ -321,7 +321,7 @@ func (dtz *DateTzDto) AddDateTime(
 
 	ePrefix := "DateTzDto.AddDateTime() "
 
-	newDate := dtz.DateTime.AddDate(years, months, 0)
+	newDate := dtz.dateTimeValue.AddDate(years, months, 0)
 
 	totNanoSecs := int64(days) * DayNanoSeconds
 	totNanoSecs += int64(hours) * int64(time.Hour)
@@ -460,17 +460,20 @@ func (dtz *DateTzDto) AddDateToThis(
 	err := dtz.IsValid()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"The current DateTzDto is INVALID! dtz.DateTime='%v'", dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+		return fmt.Errorf(ePrefix+
+			"\nThe current DateTzDto is INVALID!\ndtz.dateTimeValue='%v'\n",
+			dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	newDt1 := dtz.DateTime.AddDate(years, months, 0)
+	newDt1 := dtz.dateTimeValue.AddDate(years, months, 0)
 	dur := int64(days) * DayNanoSeconds
 	newDt2 := newDt1.Add(time.Duration(dur))
 
 	dtz2, err := DateTzDto{}.New(newDt2, dtz.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by DateTzDto{}.New(newDt2, dtz.DateTimeFmt). newDt='%v'  Error='%v'", newDt2.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix+"Error returned by DateTzDto{}.New(newDt2, dtz.DateTimeFmt). newDt='%v'  Error='%v'",
+			newDt2.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	dtz.CopyIn(dtz2)
@@ -559,12 +562,15 @@ func (dtz *DateTzDto) AddDuration(
 
 	ePrefix := "DateTzDto.AddDuration() "
 
-	newDateTime := dtz.DateTime.Add(duration)
+	newDateTime := dtz.dateTimeValue.Add(duration)
 
 	dtz2, err := DateTzDto{}.New(newDateTime, dateTimeFmtStr)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"Error returned by DateTzDto{}.New(newDateTime, dateTimeFmtStr). newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return DateTzDto{}, fmt.Errorf(ePrefix+
+			"\nError returned by DateTzDto{}.New(newDateTime, dateTimeFmtStr).\n" +
+			"newDateTime='%v'\nError='%v'\n",
+			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	return dtz2, nil
@@ -607,12 +613,15 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 
 	ePrefix := "DateTzDto.AddDurationToThis() "
 
-	newDateTime := dtz.DateTime.Add(duration)
+	newDateTime := dtz.dateTimeValue.Add(duration)
 
 	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt). newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix+
+			"\nError returned by DateTzDto{}.New(newDateTime, dtz.DateTimeFmt).\n" +
+			"newDateTime='%v'\nError='%v'\n",
+			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	dtz.CopyIn(dtz2)
@@ -766,7 +775,7 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 
 	tDto.ConvertToNegativeValues()
 
-	dt1 := dtz.DateTime.AddDate(tDto.Years,
+	dt1 := dtz.dateTimeValue.AddDate(tDto.Years,
 		tDto.Months,
 		0)
 
@@ -941,7 +950,7 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 
 	tDto.ConvertToAbsoluteValues()
 
-	dt1 := dtz.DateTime.AddDate(tDto.Years,
+	dt1 := dtz.dateTimeValue.AddDate(tDto.Years,
 		tDto.Months,
 		0)
 
@@ -1066,7 +1075,7 @@ func (dtz *DateTzDto) AddTime(
 	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
 	totNanoSecs += int64(nanoseconds)
 
-	newDateTime := dtz.DateTime.Add(time.Duration(totNanoSecs))
+	newDateTime := dtz.dateTimeValue.Add(time.Duration(totNanoSecs))
 
 	dtz2, err := DateTzDto{}.New(newDateTime, dtz.DateTimeFmt)
 
@@ -1202,12 +1211,12 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	dtz.timeComponents = dtz2.timeComponents.CopyOut()
 	dtz.DateTimeFmt = dtz2.DateTimeFmt
 
-	if !dtz2.DateTime.IsZero() {
-		dtz.DateTime = dtz2.DateTime
+	if !dtz2.dateTimeValue.IsZero() {
+		dtz.dateTimeValue = dtz2.dateTimeValue
 		dtz.TimeZone = dtz2.TimeZone.CopyOut()
 	} else {
 		dtz.TimeZone = TimeZoneDefDto{}
-		dtz.DateTime = time.Time{}
+		dtz.dateTimeValue = time.Time{}
 	}
 
 }
@@ -1260,12 +1269,12 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 	dtz2.timeComponents = dtz.timeComponents.CopyOut()
 	dtz2.DateTimeFmt = dtz.DateTimeFmt
 
-	if !dtz.DateTime.IsZero() {
-		dtz2.DateTime = dtz.DateTime
+	if !dtz.dateTimeValue.IsZero() {
+		dtz2.dateTimeValue = dtz.dateTimeValue
 		dtz2.TimeZone = dtz.TimeZone.CopyOut()
 	} else {
 		dtz2.TimeZone = TimeZoneDefDto{}
-		dtz2.DateTime = time.Time{}
+		dtz2.dateTimeValue = time.Time{}
 	}
 
 	return dtz2
@@ -1278,7 +1287,7 @@ func (dtz *DateTzDto) Empty() {
 	dtz.tagDescription = ""
 	dtz.timeComponents.Empty()
 	dtz.TimeZone = TimeZoneDefDto{}
-	dtz.DateTime = time.Time{}
+	dtz.dateTimeValue = time.Time{}
 	dtz.DateTimeFmt = ""
 
 	return
@@ -1293,7 +1302,7 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 
 	if dtz.tagDescription != dtz2.tagDescription ||
 		!dtz.timeComponents.Equal(dtz2.timeComponents) ||
-		!dtz.DateTime.Equal(dtz2.DateTime) ||
+		!dtz.dateTimeValue.Equal(dtz2.dateTimeValue) ||
 		dtz.DateTimeFmt != dtz2.DateTimeFmt ||
 		!dtz.TimeZone.Equal(dtz2.TimeZone) {
 
@@ -1315,7 +1324,7 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 
 	ePrefix := "DateTzDto.EqualUtcOffset() "
 
-	dtzDateTimeStr := dtz.DateTime.Format(FmtDateTimeYMDHMSTz)
+	dtzDateTimeStr := dtz.dateTimeValue.Format(FmtDateTimeYMDHMSTz)
 
 	dtzUtcOffsetAry := strings.Split(dtzDateTimeStr, " ")
 
@@ -1327,7 +1336,7 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 
 	dtzUtcOffset := dtzUtcOffsetAry[2]
 
-	dtz2DateTimeStr := dtz2.DateTime.Format(FmtDateTimeYMDHMSTz)
+	dtz2DateTimeStr := dtz2.dateTimeValue.Format(FmtDateTimeYMDHMSTz)
 
 	dtz2UtcOffsetAry := strings.Split(dtz2DateTimeStr, " ")
 
@@ -1342,7 +1351,12 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 	return dtzUtcOffset == dtz2UtcOffset, nil
 }
 
-
+// GetDateTimeValue - Returns DateTzDto private member variable
+// 'dateTimeValue' as a type time.Time.
+//
+func (dtz *DateTzDto) GetDateTimeValue() time.Time {
+	return dtz.dateTimeValue
+}
 
 // GetDateTimeEverything - Receives a time value and formats as
 // a date time string in the format:
@@ -1352,7 +1366,7 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 //  EXAMPLE: Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
 //
 func (dtz *DateTzDto) GetDateTimeEverything() string {
-	return dtz.DateTime.Format(FmtDateTimeEverything)
+	return dtz.dateTimeValue.Format(FmtDateTimeEverything)
 }
 
 // GetDateTimeNanoSecText - Returns formatted
@@ -1361,7 +1375,7 @@ func (dtz *DateTzDto) GetDateTimeEverything() string {
 //
 func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
 	// Time Format down to the nanosecond
-	return dtz.DateTime.Format(FmtDateTimeNanoSecondStr)
+	return dtz.dateTimeValue.Format(FmtDateTimeNanoSecondStr)
 }
 
 // GetDateTimeSecText - Returns formatted
@@ -1373,7 +1387,7 @@ func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
 //
 func (dtz *DateTzDto) GetDateTimeSecText() string {
 	// Time Display Format with seconds
-	return dtz.DateTime.Format(FmtDateTimeSecText)
+	return dtz.dateTimeValue.Format(FmtDateTimeSecText)
 }
 
 // GetDateTimeStr - Returns a date time string
@@ -1382,7 +1396,7 @@ func (dtz *DateTzDto) GetDateTimeSecText() string {
 func (dtz *DateTzDto) GetDateTimeStr() string {
 
 	// Time Format down to the second
-	return dtz.DateTime.Format(FmtDateTimeSecondStr)
+	return dtz.dateTimeValue.Format(FmtDateTimeSecondStr)
 
 }
 
@@ -1396,7 +1410,7 @@ func (dtz *DateTzDto) GetDateTimeStr() string {
 //
 //  EXAMPLE: Monday 2006-01-02 15:04:05.000000000 -0700 MST
 func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
-	return dtz.DateTime.Format(FmtDateTimeTzNanoDowYMD)
+	return dtz.dateTimeValue.Format(FmtDateTimeTzNanoDowYMD)
 }
 
 // GetDateTimeTzNanoSecText - Outputs date time in string format using
@@ -1407,7 +1421,7 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 //
 //  EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
 func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
-	return dtz.DateTime.Format(FmtDateTimeDMYNanoTz)
+	return dtz.dateTimeValue.Format(FmtDateTimeDMYNanoTz)
 }
 
 // GetDateTimeTzNanoSecYMDDowText - Outputs date time in string format using
@@ -1419,7 +1433,7 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
 //
 //  EXAMPLE: 2006-01-02 Monday 15:04:05.000000000 -0700 MST
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
-	return dtz.DateTime.Format(FmtDateTimeTzNanoYMDDow)
+	return dtz.dateTimeValue.Format(FmtDateTimeTzNanoYMDDow)
 }
 
 // GetDateTimeTzNanoSecYMDText - Outputs date time in string format using
@@ -1432,7 +1446,7 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
 //  EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
 //
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
-	return dtz.DateTime.Format(FmtDateTimeTzNanoYMD)
+	return dtz.dateTimeValue.Format(FmtDateTimeTzNanoYMD)
 }
 
 // GetDateTimeYMDAbbrvDowNano - Outputs date time in string format using
@@ -1445,7 +1459,7 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
 //
 //  EXAMPLE: "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
-	return dtz.DateTime.Format(FmtDateTimeYMDAbbrvDowNano)
+	return dtz.dateTimeValue.Format(FmtDateTimeYMDAbbrvDowNano)
 }
 
 // GetDateTimeYrMDayTzFmtStr - Returns a date time string
@@ -1456,7 +1470,7 @@ func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
 //
 //  EXAMPLE: "2006-01-02 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
-	return dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr)
+	return dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr)
 }
 
 // GetDescription - Returns DateTzDto private member
@@ -1486,7 +1500,7 @@ func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
 				"%v", err.Error())
 	}
 
-	dtzDateTimeStr := dtz.DateTime.Format(FmtDateTimeYMDHMSTz)
+	dtzDateTimeStr := dtz.dateTimeValue.Format(FmtDateTimeYMDHMSTz)
 
 	dtzDateTimeArray := strings.Split(dtzDateTimeStr, " ")
 
@@ -1516,7 +1530,7 @@ func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
 
 	var militaryTzDto MilitaryDateTzDto
 
-	militaryTzDto, err = MilitaryDateTzDto{}.New(dtz.DateTime, militaryTz)
+	militaryTzDto, err = MilitaryDateTzDto{}.New(dtz.dateTimeValue, militaryTz)
 
 	if err != nil {
 		return MilitaryDateTzDto{},
@@ -1526,7 +1540,7 @@ func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
 				"dtz.DateTime='%v'\n" +
 				"militaryTz='%v'\n" +
 				"Error='%v'\n",
-				dtz.DateTime.Format(FmtDateTimeYMDHMSTz),militaryTz, err.Error() )
+				dtz.dateTimeValue.Format(FmtDateTimeYMDHMSTz),militaryTz, err.Error() )
 	}
 
 	return militaryTzDto, nil
@@ -1577,13 +1591,13 @@ func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 
 	ePrefix := "DateTzDto.GetTimeDto() "
 
-	tDto, err := TimeDto{}.NewFromDateTime(dtz.DateTime)
+	tDto, err := TimeDto{}.NewFromDateTime(dtz.dateTimeValue)
 
 	if err != nil {
 		return TimeDto{}, fmt.Errorf(ePrefix+
 			"Error returned by TimeDto{}.NewFromDateTime(dtz.DateTime) "+
 			"dtz.DateTime ='%v'  Error='%v'",
-			dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+			dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	return tDto, nil
@@ -1598,7 +1612,7 @@ func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 //  Example output:
 //    "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
 func (dtz *DateTzDto) GetTimeStampEverything() string {
-	return dtz.DateTime.Format(FmtDateTimeEverything)
+	return dtz.dateTimeValue.Format(FmtDateTimeEverything)
 }
 
 // GetTimeStampYMDAbbrvDowNano - Generates and returns a time stamp as
@@ -1611,7 +1625,7 @@ func (dtz *DateTzDto) GetTimeStampEverything() string {
 //  "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 
-	return dtz.DateTime.Format(FmtDateTimeYMDAbbrvDowNano)
+	return dtz.dateTimeValue.Format(FmtDateTimeYMDAbbrvDowNano)
 
 }
 
@@ -1625,7 +1639,7 @@ func (dtz *DateTzDto) IsEmpty() bool {
 
 	if dtz.tagDescription == "" &&
 		dtz.timeComponents.IsEmpty() &&
-		dtz.DateTime.IsZero() &&
+		dtz.dateTimeValue.IsZero() &&
 		dtz.DateTimeFmt == "" &&
 		dtz.TimeZone.IsEmpty() {
 
@@ -1650,7 +1664,7 @@ func (dtz *DateTzDto) IsValid() error {
 		return errors.New(ePrefix + "Error: This DateTzDto instance is EMPTY!")
 	}
 
-	if dtz.DateTime.IsZero() {
+	if dtz.dateTimeValue.IsZero() {
 		return errors.New(ePrefix + "Error: DateTzDto.DateTime is ZERO!")
 	}
 
@@ -1662,11 +1676,11 @@ func (dtz *DateTzDto) IsValid() error {
 		return fmt.Errorf(ePrefix+"Error: dtz.timeComponents is INVALID. Error='%v'", err.Error())
 	}
 
-	if !dtz.TimeZone.IsValidFromDateTime(dtz.DateTime) {
+	if !dtz.TimeZone.IsValidFromDateTime(dtz.dateTimeValue) {
 		return errors.New(ePrefix + "Error: dtz.TimeZone is INVALID!")
 	}
 
-	dtz2, err := DateTzDto{}.New(dtz.DateTime, dtz.DateTimeFmt)
+	dtz2, err := DateTzDto{}.New(dtz.dateTimeValue, dtz.DateTimeFmt)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error creating check DateTzDto - Error='%v'", err.Error())
@@ -2831,7 +2845,7 @@ func (dtz *DateTzDto) SetFromDateTime(
 
 	dtz.Empty()
 
-	dtz.DateTime = dt
+	dtz.dateTimeValue = dt
 	dtz.TimeZone = timeZone.CopyOut()
 	dtz.timeComponents = tDto.CopyOut()
 	dtz.DateTimeFmt = fmtStr
@@ -2961,7 +2975,7 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 
 	dtz.Empty()
 
-	dtz.DateTime = dt
+	dtz.dateTimeValue = dt
 	dtz.TimeZone = timeZone.CopyOut()
 	dtz.timeComponents = tDto.CopyOut()
 	dtz.DateTimeFmt = fmtStr
@@ -3034,7 +3048,7 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 
 	dtz.Empty()
 
-	dtz.DateTime = dateTime
+	dtz.dateTimeValue = dateTime
 	dtz.timeComponents = tDto.CopyOut()
 	dtz.TimeZone = timeZone.CopyOut()
 	dtz.DateTimeFmt = fmtStr
@@ -3160,7 +3174,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	fmtStr := dtz.DateTimeFmt
 
 	dtz.Empty()
-	dtz.DateTime = dateTime
+	dtz.dateTimeValue = dateTime
 	dtz.TimeZone = timeZoneDef.CopyOut()
 	dtz.timeComponents = t2Dto.CopyOut()
 	dtz.DateTimeFmt = fmtStr
@@ -3266,7 +3280,7 @@ func (dtz *DateTzDto) SetFromTimeTz(
 	}
 
 	dtz.Empty()
-	dtz.DateTime = targetDateTime
+	dtz.dateTimeValue = targetDateTime
 	dtz.TimeZone = tZone.CopyOut()
 	dtz.timeComponents = tDto.CopyOut()
 	dtz.DateTimeFmt = dateTimeFmtStr
@@ -3333,7 +3347,7 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 			tzl, newTimeZoneLocation, err.Error())
 	}
 
-	newDateTime := dtz.DateTime.In(loc)
+	newDateTime := dtz.dateTimeValue.In(loc)
 	newFmtStr := dtz.DateTimeFmt
 
 	err = dtz.SetFromTime(newDateTime, newFmtStr)
@@ -3346,6 +3360,16 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 	}
 
 	return nil
+}
+
+// SetTagDescription - Sets DateTzDto private member variable
+// DateTzDto.tagDescription to the value passed in 'tagDesc'.
+//
+// DateTzDto.tagDescription is available to users for use as
+// a tag, label, classification or description.
+//
+func (dtz *DateTzDto) SetTagDescription(tagDesc string) {
+	dtz.tagDescription = tagDesc
 }
 
 // String - This method returns the DateTzDto DateTime field value
@@ -3367,7 +3391,7 @@ func (dtz *DateTzDto) String() string {
 		fmtStr = FmtDateTimeYrMDayFmtStr
 	}
 
-	return dtz.DateTime.Format(fmtStr)
+	return dtz.dateTimeValue.Format(fmtStr)
 }
 
 // Sub - Subtracts the DateTime value of the incoming DateTzDto
@@ -3403,7 +3427,7 @@ func (dtz *DateTzDto) String() string {
 //
 func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 
-	return dtz.DateTime.Sub(dtz2.DateTime)
+	return dtz.dateTimeValue.Sub(dtz2.dateTimeValue)
 
 }
 
@@ -3427,7 +3451,7 @@ func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 //                   current DateTzDto time value.
 //
 func (dtz *DateTzDto) SubDateTime(t2 time.Time) time.Duration {
-	return dtz.DateTime.Sub(t2)
+	return dtz.dateTimeValue.Sub(t2)
 }
 
 func (dtz *DateTzDto) preProcessDateFormatStr(dateTimeFmtStr string) string {

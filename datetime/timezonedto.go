@@ -110,25 +110,38 @@ func (tzDto *TimeZoneDto) AddDate(years, months, days int) error {
 	tzDto.TimeIn, err = tzDto.TimeIn.AddDate(years, months, days, tzDto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tzDto.TimeIn.AddDate(years, months, days). TimeIn.DateTime='%v' years='%v  months='%v' days='%v'  Error='%v'", tzDto.TimeIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+
+			"\nError returned by tzDto.TimeIn.AddDate(years, months, days).\n" +
+			"TimeIn.DateTime='%v' years='%v  months='%v' days='%v'\nError='%v'\n",
+			tzDto.TimeIn.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
 
 	tzDto.TimeOut, err = tzDto.TimeOut.AddDate(years, months, days, tzDto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tzDto.TimeOut.AddDate(years, months, days). tzDto.TimeOut='%v' years='%v' months='%v' days='%v'  Error='%v'", tzDto.TimeOut.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+
+			"\nError returned by tzDto.TimeOut.AddDate(years, months, days).\n" +
+			"tzDto.TimeOut='%v' years='%v' months='%v' days='%v'\nError='%v'\n",
+			tzDto.TimeOut.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
 
 	tzDto.TimeUTC, err = tzDto.TimeUTC.AddDate(years, months, days, tzDto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tzDto.TimeUTC.AddDate(years, months, days). tzDto.TimeUTC='%v' years='%v' months='%v' days='%v'  Error='%v'", tzDto.TimeUTC.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+
+			"\nError returned by tzDto.TimeUTC.AddDate(years, months, days).\n" +
+			"tzDto.TimeUTC='%v' years='%v' months='%v' days='%v'\n" +
+			"Error='%v'\n",
+			tzDto.TimeUTC.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
 
 	tzDto.TimeLocal, err = tzDto.TimeLocal.AddDate(years, months, days, tzDto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tzDto.TimeLocal.AddDate(years, months, days). tzDto.TimeLocal='%v' years='%v' months='%v' days='%v'  Error='%v'", tzDto.TimeLocal.DateTime.Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
+		return fmt.Errorf(ePrefix+
+			"\nError returned by tzDto.TimeLocal.AddDate(years, months, days).\n" +
+			"tzDto.TimeLocal='%v' years='%v' months='%v' days='%v'\nError='%v'\n",
+			tzDto.TimeLocal.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), years, months, days, err.Error())
 	}
 
 	return nil
@@ -257,16 +270,16 @@ func (tzDto *TimeZoneDto) AddDuration(duration time.Duration) error {
 		return fmt.Errorf(ePrefix+
 			"Error returned from tzDto.TimeIn.AddDuration(duration). "+
 			"tzDto.TimeIn.DateTime='%v'  Error='%v'",
-			tzDto.TimeIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+			tzDto.TimeIn.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	tzDto.TimeOut, err = tzDto.TimeOut.AddDuration(duration, tzDto.DateTimeFmt)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned from tzDto.TimeOut.AddDuration(duration). "+
-			"tzDto.TimeOut.DateTime='%v'  Error='%v'",
-			tzDto.TimeOut.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+			"Error returned from tzDto.TimeOut.AddDuration(duration).\n"+
+			"tzDto.TimeOut.DateTime='%v'\nError='%v'\n",
+			tzDto.TimeOut.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	tzDto.TimeUTC, err = tzDto.TimeUTC.AddDuration(duration, tzDto.DateTimeFmt)
@@ -275,16 +288,16 @@ func (tzDto *TimeZoneDto) AddDuration(duration time.Duration) error {
 		return fmt.Errorf(ePrefix+
 			"Error returned from tzDto.TimeUTC.AddDuration(duration). "+
 			"tzDto.TimeUTC.DateTime='%v'  Error='%v'",
-			tzDto.TimeUTC.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+			tzDto.TimeUTC.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	tzDto.TimeLocal, err = tzDto.TimeLocal.AddDuration(duration, tzDto.DateTimeFmt)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned from tzDto.TimeLocal.AddDuration(duration). "+
-			"tzDto.TimeLocal.DateTime='%v'  Error='%v'",
-			tzDto.TimeLocal.DateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+			"\nError returned from tzDto.TimeLocal.AddDuration(duration).\n"+
+			"tzDto.TimeLocal.DateTime='%v'\nError='%v'\n",
+			tzDto.TimeLocal.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	return nil
@@ -1352,13 +1365,13 @@ func (tzDto TimeZoneDto) NewDateTz(dateTzDtoIn DateTzDto, tZoneOutLocation, date
 
 	ePrefix := "TimeZoneDto.NewDateTz() "
 
-	tzuOut, err := tzDto.ConvertTz(dateTzDtoIn.DateTime, tZoneOutLocation, dateTimeFmtStr)
+	tzuOut, err := tzDto.ConvertTz(dateTzDtoIn.GetDateTimeValue(), tZoneOutLocation, dateTimeFmtStr)
 
 	if err != nil {
 		return TimeZoneDto{},
-			fmt.Errorf(ePrefix+"Error returned by tzDto.ConvertTz(dateTzDtoIn, tZoneOutLocation). "+
-				"dateTzDtoIn.DateTime='%v' tZoneOutLocation='%v'  Error='%v'",
-				dateTzDtoIn.DateTime.Format(FmtDateTimeYrMDayFmtStr), tZoneOutLocation, err.Error())
+			fmt.Errorf(ePrefix+"Error returned by tzDto.ConvertTz(dateTzDtoIn, tZoneOutLocation).\n"+
+				"dateTzDtoIn.DateTime='%v' tZoneOutLocation='%v'\nError='%v'",
+				dateTzDtoIn.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), tZoneOutLocation, err.Error())
 	}
 
 	return tzuOut, nil

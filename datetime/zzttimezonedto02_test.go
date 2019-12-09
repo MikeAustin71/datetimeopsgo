@@ -22,7 +22,7 @@ func TestTimeZoneUtility_NewTimeAddDate_01(t *testing.T) {
 		return
 	}
 
-	tzu2OutStrTIn := tzu2.TimeIn.DateTime.Format(fmtstr)
+	tzu2OutStrTIn := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t2OutStr != tzu2OutStrTIn {
 		t.Errorf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
@@ -64,7 +64,7 @@ func TestTimeZoneUtility_NewTimeAddTime_01(t *testing.T) {
 		return
 	}
 
-	tzu2OutStrTIn := tzu2.TimeIn.DateTime.Format(fmtstr)
+	tzu2OutStrTIn := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t2OutStr != tzu2OutStrTIn {
 		t.Errorf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
@@ -100,7 +100,7 @@ func TestTimeZoneUtility_NewTimeAddDateTime_01(t *testing.T) {
 		return
 	}
 
-	tzu2TimeInStr := tzu2.TimeIn.DateTime.Format(fmtstr)
+	tzu2TimeInStr := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t2OutStr != tzu2TimeInStr {
 		t.Errorf("Error: Expected tzu2.TimeIn='%v'.  Instead, tzu2.TimeIn='%v'. ", t2OutStr, tzu2TimeInStr)
@@ -140,7 +140,7 @@ func TestTimeZoneUtility_NewTimeAddDuration_01(t *testing.T) {
 		return
 	}
 
-	tzu2OutStrTIn := tzu2.TimeIn.DateTime.Format(fmtstr)
+	tzu2OutStrTIn := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t2OutStr != tzu2OutStrTIn {
 		t.Errorf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)

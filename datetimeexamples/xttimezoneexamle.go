@@ -316,7 +316,7 @@ func Tex011() {
 	tzuEast.Description = "CDT to Eastern Time Zone Conversion"
 	PrintOutTimeZoneFields(tzuEast)
 
-	tzuLocal, err := tz.ConvertTz(tzuEast.TimeOut.DateTime, "Local", fmtstr)
+	tzuLocal, err := tz.ConvertTz(tzuEast.TimeOut.GetDateTimeValue(), "Local", fmtstr)
 
 	if err != nil {
 		fmt.Println("TimeZoneDto:ConverTz(tzuEast.TimeOut,'Local') returned Error: " + err.Error())
@@ -455,35 +455,35 @@ func TestExample022() {
 		return
 	}
 
-	centralTOut := tzuCentral.TimeOut.DateTime.Format(fmtstr)
+	centralTOut := tzuCentral.TimeOut.GetDateTimeValue().Format(fmtstr)
 
 	if centralTime != centralTOut {
 		fmt.Printf("Expected tzuCentral.TimeOut %v, got %v\n", centralTime, centralTOut)
 		return
 	}
 
-	tzuMountain, err := tzu.ConvertTz(tzuCentral.TimeOut.DateTime, ianaMountainTz, fmtstr)
+	tzuMountain, err := tzu.ConvertTz(tzuCentral.TimeOut.GetDateTimeValue(), ianaMountainTz, fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error from  tzuMountain TimeZoneDto.ConvertTz(). Error: %v\n", err.Error())
 		return
 	}
 
-	mountainTOut := tzuMountain.TimeOut.DateTime.Format(fmtstr)
+	mountainTOut := tzuMountain.TimeOut.GetDateTimeValue().Format(fmtstr)
 
 	if mountainTime != mountainTOut {
 		fmt.Printf("Expected tzuMountain.TimeOut %v, got %v\n", mountainTime, mountainTOut)
 		return
 	}
 
-	tzuPacific, err := tzu.ConvertTz(tzuMountain.TimeOut.DateTime, ianaPacificTz, fmtstr)
+	tzuPacific, err := tzu.ConvertTz(tzuMountain.TimeOut.GetDateTimeValue(), ianaPacificTz, fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error from  tzuMountain TimeZoneDto.ConvertTz(). Error: %v\n", err.Error())
 		return
 	}
 
-	pacificTOut := tzuPacific.TimeOut.DateTime.Format(fmtstr)
+	pacificTOut := tzuPacific.TimeOut.GetDateTimeValue().Format(fmtstr)
 
 	if pacificTime != pacificTOut {
 
@@ -494,7 +494,7 @@ func TestExample022() {
 	exTOutLoc := "America/Los_Angeles"
 
 	if exTOutLoc != tzuPacific.TimeOut.TimeZone.LocationName {
-		fmt.Printf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'\n", exTOutLoc, tzuPacific.TimeOut.TimeZone.LocationName, tzuPacific.TimeOut.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+		fmt.Printf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'\n", exTOutLoc, tzuPacific.TimeOut.TimeZone.LocationName, tzuPacific.TimeOut.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 
@@ -514,7 +514,7 @@ func TestExampleNewAddDate023() {
 		return
 	}
 
-	tzu1OutStrTIn := tzu1.TimeIn.DateTime.Format(fmtstr)
+	tzu1OutStrTIn := tzu1.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != tzu1OutStrTIn {
 		fmt.Printf("Error: Expected tzu1OutStrTIn='%v'.  Instead, tzu1OutStrTIn='%v'", t1OutStr, tzu1OutStrTIn)
@@ -532,7 +532,7 @@ func TestExampleNewAddDate023() {
 		return
 	}
 
-	tzu2OutStrTIn := tzu2.TimeIn.DateTime.Format(fmtstr)
+	tzu2OutStrTIn := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t2OutStr != tzu2OutStrTIn {
 		fmt.Printf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
@@ -575,7 +575,7 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 	fmt.Println("  Microsecond: ", dtz.GetTimeComponents().Microseconds)
 	fmt.Println("   Nanosecond: ", dtz.GetTimeComponents().Nanoseconds)
 	fmt.Println("TotalNanoSecs: ", dtz.GetTimeComponents().Nanoseconds)
-	fmt.Println("     DateTime: ", dtz.DateTime.Format(dtz.DateTimeFmt))
+	fmt.Println("     DateTime: ", dtz.GetDateTimeValue().Format(dtz.DateTimeFmt))
 	fmt.Println("  DateTimeFmt: ", dtz.DateTimeFmt)
 	fmt.Println("----------------------------------")
 	fmt.Println("         Time Zone Info")
@@ -659,7 +659,7 @@ func ExampleDurationLocalUTCTime() {
 
 	tzLocal, _ := tz.ConvertTz(t1, localTzStr, fmtstr)
 	t1OutStr := t1.Format(fmtstr)
-	t2OutStr := tzLocal.TimeOut.DateTime.Format(fmtstr)
+	t2OutStr := tzLocal.TimeOut.GetDateTimeValue().Format(fmtstr)
 
 	fmt.Println("  t1UTCStr: ", t1UTCStr)
 	fmt.Println("  t1OutStr: ", t1OutStr)

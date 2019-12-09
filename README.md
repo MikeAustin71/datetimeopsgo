@@ -48,7 +48,7 @@ files identified below.
 
  1. DtMgr - The DtMgr structure provides generalized methods for managing
      the formatting and display of time.Time, date time values.
-     Location: MikeAustin71\datetimeopsgo\datetime\datetimeutility.go 
+     Location: MikeAustin71\datetimeopsgo\datetime\dtmgr.go 
 
  2. Date Time Constants - This file contains various time constants used
      in other libraries. 

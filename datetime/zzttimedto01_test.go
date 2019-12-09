@@ -958,7 +958,7 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 		return
 	}
 
-	tDto, err := TimeDto{}.NewFromDateTime(dTzDto.DateTime)
+	tDto, err := TimeDto{}.NewFromDateTime(dTzDto.GetDateTimeValue())
 
 	if err != nil {
 		t.Errorf("Error returned by TimeDto{}.NewFromDateTime(dTzDto.DateTime)\n" +
@@ -974,7 +974,7 @@ func TestTimeDto_NewFromDateTime_01(t *testing.T) {
 		return
 	}
 
-	if !dt2.Equal(dTzDto.DateTime) {
+	if !dt2.Equal(dTzDto.GetDateTimeValue()) {
 		t.Error("Error: Expected dt2 datetime to EQUAL dTzDto.DateTime. It did NOT!")
 	}
 
@@ -1007,7 +1007,7 @@ func TestTimeDto_NewFromDateTzDto_01(t *testing.T) {
 		return
 	}
 
-	if !dTzDto.DateTime.Equal(t2) {
+	if !dTzDto.GetDateTimeValue().Equal(t2) {
 		t.Error("Error: Expected t2 to EQUAL dTzDto. It did NOT!")
 	}
 

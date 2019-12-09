@@ -210,9 +210,10 @@ func ExampleTimeDto005() {
 
 	t4USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
 
-	if !t4USCentral.Equal(tDur.EndTimeDateTz.DateTime) {
+	if !t4USCentral.Equal(tDur.EndTimeDateTz.GetDateTimeValue()) {
 		fmt.Printf("Error: expected EndDateTime='%v'. Instead, EndDateTime='%v'  \n"+
-			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr), tDur.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr),
+			tDur.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 

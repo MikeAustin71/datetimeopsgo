@@ -33,7 +33,7 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 		return
 	}
 
-	actualTimeStr := dTzDto.DateTime.Format(fmtstr)
+	actualTimeStr := dTzDto.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != actualTimeStr {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.\nInstead, dTzDto.DateTime='%v'\n",
@@ -142,7 +142,7 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 		return
 	}
 
-	actualTimeStr := dTzDto.DateTime.Format(fmtstr)
+	actualTimeStr := dTzDto.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != actualTimeStr {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
@@ -225,7 +225,7 @@ func TestDateTzDto_New_01(t *testing.T) {
 		return
 	}
 
-	actualTimeStr := dTzDto.DateTime.Format(fmtstr)
+	actualTimeStr := dTzDto.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != actualTimeStr {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
@@ -302,7 +302,7 @@ func TestDateTzDto_New_02(t *testing.T) {
 		return
 	}
 
-	actualTimeStr := dTzDto.DateTime.Format(fmtstr)
+	actualTimeStr := dTzDto.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != actualTimeStr {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
@@ -393,11 +393,11 @@ func TestDateTzDto_NewFromMilitaryDateTz_01(t *testing.T) {
 		return
 	}
 
-	if !testTime.Equal(dateTzDto.DateTime) {
+	if !testTime.Equal(dateTzDto.GetDateTimeValue()) {
 		t.Errorf("Error: Expected dateTzDto.DateTime='%v'\n" +
 			"Instead, dateTzDto.DateTime='%v'\n",
 			testTime.Format(FmtDateTimeTzNanoYMDDow),
-			dateTzDto.DateTime.Format(FmtDateTimeTzNanoYMDDow))
+			dateTzDto.GetDateTimeValue().Format(FmtDateTimeTzNanoYMDDow))
 	}
 }
 
@@ -420,7 +420,7 @@ func TestDateTzDto_NewNowTz_01(t *testing.T) {
 
 	t1 := t0.In(loc)
 
-	actualDur := t1.Sub(dTz.DateTime)
+	actualDur := t1.Sub(dTz.GetDateTimeValue())
 
 	expectedDur := time.Duration(int64(2) * int64(time.Second))
 
@@ -446,7 +446,7 @@ func TestDateTzDto_NewNowLocal_01(t *testing.T) {
 		return
 	}
 
-	actualDur := t0.Sub(dTz.DateTime)
+	actualDur := t0.Sub(dTz.GetDateTimeValue())
 
 	expectedDur := time.Duration(int64(2) * int64(time.Second))
 
@@ -481,7 +481,7 @@ func TestDateTzDto_NewNowUTC_01(t *testing.T) {
 		return
 	}
 
-	actualDur := t1.Sub(dTz.DateTime)
+	actualDur := t1.Sub(dTz.GetDateTimeValue())
 
 	expectedDur := time.Duration(int64(2) * int64(time.Second))
 
@@ -521,7 +521,7 @@ func TestDateTzDto_NewTimeDto_01(t *testing.T) {
 		return
 	}
 
-	if !dTzDto.DateTime.Equal(t0) {
+	if !dTzDto.GetDateTimeValue().Equal(t0) {
 		t.Error("Error: Expected dTzDto.DateTime==t0.\n" +
 			"Instead, they are NOT Equal!\n")
 	}
@@ -561,9 +561,9 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 		return
 	}
 
-	if !t4USCentral.Equal(dTz.DateTime) {
+	if !t4USCentral.Equal(dTz.GetDateTimeValue()) {
 		t.Errorf("Error: Expected DateTime='%v'. Instead DateTime='%v'",
-			t4USCentral.Format(fmtstr), dTz.DateTime.Format(fmtstr))
+			t4USCentral.Format(fmtstr), dTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	eTimeZoneDef, err := TimeZoneDefDto{}.New(t4USCentral)
@@ -646,7 +646,7 @@ func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
 		t.Errorf("Error returned by DateTzDto{}.NewDateTime(2014, 2,15,19,54,30,38, 175, 584, TzUsCentral). Error='%v'", err.Error())
 	}
 
-	actualTimeStr := dTzDto.DateTime.Format(fmtstr)
+	actualTimeStr := dTzDto.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != actualTimeStr {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
@@ -744,9 +744,10 @@ func TestDateTzDto_SetNewTimeZone_01(t *testing.T) {
 			"TZones.Asia.Tokyo()='%v' Error='%v' ", TZones.Asia.Tokyo(), err.Error())
 	}
 
-	if !t4AsiaTokyo.Equal(dTz1.DateTime) {
+	if !t4AsiaTokyo.Equal(dTz1.GetDateTimeValue()) {
 		t.Errorf("Error: Expected converted dTz1 date time = '%v'.  Instead, dTz1 date time='%v'",
-			t4AsiaTokyo.Format(FmtDateTimeYrMDayFmtStr), dTz1.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+			t4AsiaTokyo.Format(FmtDateTimeYrMDayFmtStr),
+			dTz1.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 	if TZones.Asia.Tokyo() != dTz1.TimeZone.LocationName {
@@ -801,9 +802,10 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 			t4Tokyo.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
-	if !t4USCentral.Equal(dTzDto.DateTime) {
+	if !t4USCentral.Equal(dTzDto.GetDateTimeValue()) {
 		t.Errorf("Expected dTzDto.DateTime='%v'.  Instead dTzDto.DateTime='%v'",
-			t4USCentral.Format(FmtDateTimeYrMDayFmtStr), dTzDto.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+			t4USCentral.Format(FmtDateTimeYrMDayFmtStr),
+			dTzDto.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 	eTimeZoneDef, err := TimeZoneDefDto{}.New(t4USCentral)
@@ -932,10 +934,10 @@ func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 			"Error='%v'", err.Error())
 	}
 
-	if !t4USCentral.Equal(dTz1.DateTime) {
+	if !t4USCentral.Equal(dTz1.GetDateTimeValue()) {
 		t.Errorf("Expected dTz1.DateTime='%v'.  Instead, dTz1.DateTime='%v'.",
 			t4USCentral.Format(FmtDateTimeYrMDayFmtStr),
-			dTz1.DateTime.Format(FmtDateTimeYrMDayFmtStr))
+			dTz1.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 	if !t4Dto.Equal(dTz1.GetTimeComponents()) {

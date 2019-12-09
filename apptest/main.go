@@ -163,7 +163,7 @@ func (mt mainTest) mainTest021() {
 		return
 	}
 
-	tzDef2, err := dt.TimeZoneDefDto{}.New(dtz.DateTime)
+	tzDef2, err := dt.TimeZoneDefDto{}.New(dtz.GetDateTimeValue())
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
 		return
@@ -191,7 +191,7 @@ func (mt mainTest) mainTest020() {
 		return
 	}
 
-	tzDef, err := dt.TimeZoneDefDto{}.New(dtz.DateTime)
+	tzDef, err := dt.TimeZoneDefDto{}.New(dtz.GetDateTimeValue())
 
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
@@ -205,7 +205,7 @@ func (mt mainTest) mainTest020() {
 		return
 	}
 
-	tzDef2, err := dt.TimeZoneDefDto{}.New(dtz2.DateTime)
+	tzDef2, err := dt.TimeZoneDefDto{}.New(dtz2.GetDateTimeValue())
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
 		return
@@ -525,10 +525,11 @@ func (mt mainTest) mainTest016() {
 		return
 	}
 
-	if !t4USCentral.Equal(dTz1.DateTime) {
-		fmt.Printf("Expected dTz1.DateTime='%v'.  Instead, dTz1.DateTime='%v'.\n",
+	if !t4USCentral.Equal(dTz1.GetDateTimeValue()) {
+		fmt.Printf("Expected dTz1.DateTime='%v'.\n" +
+			"Instead, dTz1.DateTime='%v'.\n",
 			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr),
-			dTz1.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+			dTz1.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 	
@@ -641,9 +642,9 @@ func (mt mainTest) mainTest015() {
 		return
 	}
 
-	fmt.Println("dTzDto.DateTime: ", dTzDto.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println("dTzDto.DateTime: ", dTzDto.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 
-	tDto, err := dt.TimeDto{}.NewFromDateTime(dTzDto.DateTime)
+	tDto, err := dt.TimeDto{}.NewFromDateTime(dTzDto.GetDateTimeValue())
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDto{}.NewFromDateTime(dTzDto.DateTime)\n" +
@@ -658,9 +659,10 @@ func (mt mainTest) mainTest015() {
 		return
 	}
 
-	if !dt2.Equal(dTzDto.DateTime) {
-		fmt.Printf("Error: Expected dTzDto.DateTime='%v'. It did NOT! dTzDto.DateTime='%v'",
-			dt2.Format(dt.FmtDateTimeYrMDayFmtStr), dTzDto.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+	if !dt2.Equal(dTzDto.GetDateTimeValue()) {
+		fmt.Printf("Error: Expected dTzDto.DateTime='%v'. It did NOT! dTzDto.DateTime='%v'\n",
+			dt2.Format(dt.FmtDateTimeYrMDayFmtStr),
+			dTzDto.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 
@@ -697,15 +699,15 @@ func (mt mainTest) mainTest014() {
 		return
 	}
 
-	if t1OutStr != dur.BaseTime.StartTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr) {
+	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr) {
 		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n",
-			t1OutStr, dur.BaseTime.StartTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+			t1OutStr, dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 
-	if t2OutStr != dur.BaseTime.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr) {
+	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr) {
 		fmt.Printf("Error- Expected End Time %v. Instead, got %v.\n",
-			t2OutStr, dur.BaseTime.EndTimeDateTz.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+			t2OutStr, dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 
