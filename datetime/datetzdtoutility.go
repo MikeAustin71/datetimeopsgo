@@ -23,12 +23,12 @@ func (dTzUtil dateTzDtoUtility) copyIn(
 	baseDtz.timeComponents = incomingDtz.timeComponents.CopyOut()
 	baseDtz.dateTimeFmt = incomingDtz.dateTimeFmt
 
-	if !baseDtz.dateTimeValue.IsZero() {
-		baseDtz.dateTimeValue = incomingDtz.dateTimeValue
-		baseDtz.timeZone = incomingDtz.timeZone.CopyOut()
-	} else {
+	if incomingDtz.dateTimeValue.IsZero() {
 		baseDtz.timeZone = TimeZoneDefDto{}
 		baseDtz.dateTimeValue = time.Time{}
+	} else {
+		baseDtz.dateTimeValue = incomingDtz.dateTimeValue
+		baseDtz.timeZone = incomingDtz.timeZone.CopyOut()
 	}
 
 }
@@ -44,12 +44,12 @@ func (dTzUtil dateTzDtoUtility) copyOut(
 	 dtz2.timeComponents = dTz.timeComponents.CopyOut()
 	 dtz2.dateTimeFmt = dTz.dateTimeFmt
 
-	 if !dTz.dateTimeValue.IsZero() {
-		 dtz2.dateTimeValue = dTz.dateTimeValue
-		 dtz2.timeZone = dTz.timeZone.CopyOut()
-	 } else {
+	 if dTz.dateTimeValue.IsZero() {
 		 dtz2.timeZone = TimeZoneDefDto{}
 		 dtz2.dateTimeValue = time.Time{}
+	 } else {
+		 dtz2.dateTimeValue = dTz.dateTimeValue
+		 dtz2.timeZone = dTz.timeZone.CopyOut()
 	 }
 
 	 return dtz2

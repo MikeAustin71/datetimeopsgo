@@ -9,13 +9,59 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest024()
+	mainTest{}.mainTest025()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+
+func (mt mainTest) mainTest025() {
+
+	// expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	fmt.Println("       mainTest025()     ")
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+
+	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Eastern(), fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	tDto := dt.TimeDto{Years: 3, Months: 2, DateDays: 15, Hours: 3, Minutes: 4, Seconds: 2}
+
+	tzu2 := tzu1.CopyOut()
+
+	err = tzu2.AddPlusTimeDto(tDto)
+
+	if err != nil {
+		fmt.Printf("Error returned by tzu2.AddPlusTimeDto(tDto). " +
+			"Error='%v' ", err.Error())
+		return
+	}
+
+	tzu2TimeInStr := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
+
+	if t2OutStr != tzu2TimeInStr {
+		fmt.Printf("Error: Expected tzu2.TimeIn='%v'.  Instead, tzu2.TimeIn='%v'. ", t2OutStr, tzu2TimeInStr)
+		return
+	}
+
+	fmt.Println("       Successful Completion!     ")
 }
 
 func (mt mainTest) mainTest024() {
