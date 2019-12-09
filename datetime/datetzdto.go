@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -111,6 +112,7 @@ type DateTzDto struct {
 	                           //    "2006-01-02 15:04:05.000000000 -0700 MST"
 	timeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone
 	                           //    Location associated with this date time.
+	lock        sync.Mutex     // Mutex used to ensure thread-safe operations.
 }
 
 // AddDate - Adds input parameters 'years, 'months' and 'days' to date time value of the
