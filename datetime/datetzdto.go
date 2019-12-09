@@ -1265,21 +1265,11 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 //  Note: dtz and dtz2 are now equivalent.
 //
 func (dtz *DateTzDto) CopyOut() DateTzDto {
-	dtz2 := DateTzDto{}
 
-	dtz2.tagDescription = dtz.tagDescription
-	dtz2.timeComponents = dtz.timeComponents.CopyOut()
-	dtz2.dateTimeFmt = dtz.dateTimeFmt
+	dtz.lock.Lock()
+	defer dtz.lock.Unlock()
 
-	if !dtz.dateTimeValue.IsZero() {
-		dtz2.dateTimeValue = dtz.dateTimeValue
-		dtz2.timeZone = dtz.timeZone.CopyOut()
-	} else {
-		dtz2.timeZone = TimeZoneDefDto{}
-		dtz2.dateTimeValue = time.Time{}
-	}
-
-	return dtz2
+	return dateTzDtoUtility{}.copyOut(dtz)
 }
 
 // Empty - sets all values of the current DateTzDto

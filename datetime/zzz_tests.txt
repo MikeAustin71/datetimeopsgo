@@ -51,7 +51,7 @@
 === RUN   TestDateTzDto_SetNewTimeZone_01
 --- PASS: TestDateTzDto_SetNewTimeZone_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeTz_01
---- PASS: TestDateTzDto_SetFromTimeTz_01 (0.00s)
+--- PASS: TestDateTzDto_SetFromTimeTz_01 (0.03s)
 === RUN   TestDateTzDto_SetFromTimeDto
 --- PASS: TestDateTzDto_SetFromTimeDto (0.00s)
 === RUN   TestDateTzDto_Sub_01
@@ -83,7 +83,7 @@
 === RUN   TestDurationTriad_GetYearMthDaysTimeAbbrv
 --- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_GetYearsMthsWeeksTimeAbbrv
---- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.00s)
+--- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.02s)
 === RUN   TestDurationTriad_NewAutoEnd_01
 --- PASS: TestDurationTriad_NewAutoEnd_01 (0.00s)
 === RUN   TestDurationTriad_NewAutoStart
@@ -107,9 +107,9 @@
 === RUN   TestDurationTriad_SetStartEndTimes
 --- PASS: TestDurationTriad_SetStartEndTimes (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_02
---- PASS: TestDurationTriad_SetStartEndTimes_02 (0.03s)
+--- PASS: TestDurationTriad_SetStartEndTimes_02 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_03
---- PASS: TestDurationTriad_SetStartEndTimes_03 (0.01s)
+--- PASS: TestDurationTriad_SetStartEndTimes_03 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_04
 --- PASS: TestDurationTriad_SetStartEndTimes_04 (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTime
@@ -189,15 +189,15 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.92s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.93s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.33s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.08s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.03s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.13s)
+--- PASS: TestDtfmtTestSuite (4.58s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.02s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.01s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.07s)
 === RUN   TestTDurCalcTypeString_001
 --- PASS: TestTDurCalcTypeString_001 (0.00s)
 === RUN   TestTDurCalcTypeString_002
@@ -352,7 +352,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.05s)
+--- PASS: TestTimeDuroTestSuite (0.07s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
@@ -490,4 +490,4 @@ Processed 67 sample dates successfully!
 --- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.00s)
 PASS
 coverage: 53.3% of statements
-ok  	github.com/MikeAustin71/datetimeopsgo/datetime	14.036s
+ok  	github.com/MikeAustin71/datetimeopsgo/datetime	13.292s
