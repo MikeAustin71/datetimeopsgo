@@ -1211,7 +1211,9 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	dtz.lock.Lock()
 	defer dtz.lock.Unlock()
 
-	dateTzDtoUtility{}.copyIn(dtz, &dtz2)
+	dTzUtil := dateTzDtoUtility{}
+
+	dTzUtil.copyIn(dtz, &dtz2)
 
 	return
 }
@@ -1262,7 +1264,9 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 	dtz.lock.Lock()
 	defer dtz.lock.Unlock()
 
-	return dateTzDtoUtility{}.copyOut(dtz)
+	dTzUtil := dateTzDtoUtility{}
+
+	return dTzUtil.copyOut(dtz)
 }
 
 // Empty - sets all values of the current DateTzDto
@@ -1271,7 +1275,10 @@ func (dtz *DateTzDto) Empty() {
 
 	dtz.lock.Lock()
 	defer dtz.lock.Unlock()
-	dateTzDtoUtility{}.empty(dtz)
+
+	dTzUtil := dateTzDtoUtility{}
+
+	dTzUtil.empty(dtz)
 
 	return
 }
@@ -3026,8 +3033,12 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 //
 func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) error {
 
+	dtz.lock.Lock()
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.SetFromTime() "
 
+	/*
 	if dateTime.IsZero() {
 		return errors.New(ePrefix + "Error: Input parameter dateTime is Zero value!")
 	}
@@ -3058,8 +3069,11 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 	dtz.timeComponents = tDto.CopyOut()
 	dtz.timeZone = timeZone.CopyOut()
 	dtz.dateTimeFmt = fmtStr
+*/
 
-	return nil
+	dTzUtility := dateTzDtoUtility{}
+
+	return dTzUtility.setFromDateTime(dtz, dateTime, dateTimeFmtStr, ePrefix)
 }
 
 // SetFromTimeDto - Receives data from a TimeDto input parameter
