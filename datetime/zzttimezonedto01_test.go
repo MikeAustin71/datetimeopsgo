@@ -81,13 +81,13 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 		t.Errorf("Error: Expected tzu2.TimeLocal.Sub(tzu1.TimeLocal)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
 	}
 
-	actualTimeOutLoc := tzu1.TimeOut.TimeZone.LocationName
+	actualTimeOutLoc := tzu1.TimeOut.GetTimeZone().LocationName
 
 	if TZones.US.Pacific() != actualTimeOutLoc {
 		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
 	}
 
-	actualTimeOutLoc = tzu2.TimeOut.TimeZone.LocationName
+	actualTimeOutLoc = tzu2.TimeOut.GetTimeZone().LocationName
 
 	if TZones.US.Pacific() != actualTimeOutLoc {
 		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
@@ -258,8 +258,8 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 
 	exTOutLoc := "America/Los_Angeles"
 
-	if exTOutLoc != tzuPacific.TimeOut.TimeZone.LocationName {
-		t.Errorf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'", exTOutLoc, tzuPacific.TimeOut.TimeZone.LocationName, tzuPacific.TimeOut.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
+	if exTOutLoc != tzuPacific.TimeOut.GetTimeZone().LocationName {
+		t.Errorf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'", exTOutLoc, tzuPacific.TimeOut.GetTimeZone().LocationName, tzuPacific.TimeOut.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
 	pacificUtcOut := tzuPacific.TimeUTC.GetDateTimeValue().Format(fmtstr)
@@ -454,7 +454,7 @@ func TestTimeZoneUtility_GetLocationIn01(t *testing.T) {
 
 	expectedLocation := "Local"
 
-	actualLocation := tzu.TimeIn.TimeZone.LocationName
+	actualLocation := tzu.TimeIn.GetTimeZone().LocationName
 
 	if expectedLocation != actualLocation {
 		t.Errorf("Expected Location='%v'. Instead, actual location='%v'", expectedLocation, actualLocation)
@@ -472,7 +472,7 @@ func TestTimeZoneUtility_GetLocationOut_01(t *testing.T) {
 
 	expectedLocation := "America/Los_Angeles"
 
-	actualLocation := tzu.TimeOut.TimeZone.LocationName
+	actualLocation := tzu.TimeOut.GetTimeZone().LocationName
 
 	if expectedLocation != actualLocation {
 		t.Errorf("Expected Location Out='%v'. Instead, actual location out='%v'", expectedLocation, actualLocation)
@@ -487,7 +487,7 @@ func TestTimeZoneUtility_GetZoneIn_01(t *testing.T) {
 	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedZone := "CDT"
-	actualZone := tzu.TimeIn.TimeZone.ZoneName
+	actualZone := tzu.TimeIn.GetTimeZone().ZoneName
 
 	if expectedZone != actualZone {
 		t.Errorf("Expected Zone In='%v'. Instead, actual Zone In='%v'", expectedZone, actualZone)
@@ -503,7 +503,7 @@ func TestTimeZoneUtility_GetZoneOut_01(t *testing.T) {
 	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedZone := "PDT"
-	actualZone := tzu.TimeOut.TimeZone.ZoneName
+	actualZone := tzu.TimeOut.GetTimeZone().ZoneName
 
 	if expectedZone != actualZone {
 		t.Errorf("Expected Zone Out='%v'. Instead, actual Zone Out='%v'", expectedZone, actualZone)
@@ -530,8 +530,10 @@ func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 		t.Error("Passed Time Zone was 'Local' Time Zone. Expected isValidLocalTz == true, got: ", isValidIanaTz)
 	}
 
-	if tzu.TimeIn.TimeZone.IsValid() {
-		t.Error("Expected tzu.TimeInZone.IsValidDateTime()=='false'.  Instead, the result was 'true'!")
+	tz := tzu.TimeIn.GetTimeZone()
+
+	if tz.IsValid() {
+		t.Error("Expected tzu.TimeInZone.IsValid()=='false'.  Instead, the result was 'true'!")
 	}
 
 }
@@ -573,7 +575,7 @@ func TestTimeZoneUtility_Location_01(t *testing.T) {
 		return
 	}
 
-	tzOutPacific := tzuPacific.TimeOut.TimeZone.LocationName
+	tzOutPacific := tzuPacific.TimeOut.GetTimeZone().LocationName
 
 	if tzOutPacific != ianaPacificTz {
 		t.Errorf("Error: Expected tzOutPacific %v. Instead, got %v", ianaPacificTz, tzOutPacific)
@@ -598,7 +600,7 @@ func TestTimeZoneUtility_Location_02(t *testing.T) {
 		return
 	}
 
-	tzOutLocal := tzuLocal.TimeOut.TimeZone.LocationName
+	tzOutLocal := tzuLocal.TimeOut.GetTimeZone().LocationName
 
 	if "Local" != tzOutLocal {
 		t.Errorf("Error: Expected tzOutLocal 'Local'. Instead, got %v", tzOutLocal)
@@ -690,13 +692,13 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 		t.Errorf("Error: Expected tzu2.TimeLocal.Sub(tzu1.TimeLocal)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
 	}
 
-	actualTimeOutLoc := tzu1.TimeOut.TimeZone.LocationName
+	actualTimeOutLoc := tzu1.TimeOut.GetTimeZone().LocationName
 
 	if TZones.US.Pacific() != actualTimeOutLoc {
 		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
 	}
 
-	actualTimeOutLoc = tzu2.TimeOut.TimeZone.LocationName
+	actualTimeOutLoc = tzu2.TimeOut.GetTimeZone().LocationName
 
 	if TZones.US.Pacific() != actualTimeOutLoc {
 		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)

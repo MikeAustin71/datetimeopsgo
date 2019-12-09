@@ -269,9 +269,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 
 	assert.Nil(suite.T(), err, "Error NewAutoEnd() :")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(), suite.t1USCentral.Equal(t1Dur.StartTimeDateTz.GetDateTimeValue()), "Error: Expected Starting Date Time NOT EQUAL to t1Dur.StartTimeDateTz!")
 
@@ -293,9 +293,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoStart_01() {
 
 	assert.Nil(suite.T(), err, "Error NewAutoStart() :")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.TimeZone.LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(),
 		suite.fmtStr == t1Dur.StartTimeDateTz.GetDateTimeFmt(),
@@ -989,15 +989,15 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01(
 
 	s := fmt.Sprintf("Expected StartDateTime Time Zone='%v'. "+
 		"Instead StartDateTime TimeZone='%v'",
-		TZones.Asia.Tokyo(), tDur.StartTimeDateTz.TimeZone.LocationName)
+		TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetTimeZone().LocationName)
 
-	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.StartTimeDateTz.TimeZone.LocationName, s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetTimeZone().LocationName, s)
 
 	s = fmt.Sprintf("Expected EndDateTime Time Zone='%v'. "+
 		"Instead EndDateTime TimeZone='%v'",
-		TZones.Asia.Tokyo(), tDur.EndTimeDateTz.TimeZone.LocationName)
+		TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetTimeZone().LocationName)
 
-	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.EndTimeDateTz.TimeZone.LocationName, s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetTimeZone().LocationName, s)
 
 	assert.True(suite.T(), suite.t1AsiaTokyo.Equal(tDur.StartTimeDateTz.GetDateTimeValue()),
 		"Error: Expected StartDateTime (suite.t1AsiaTokyo) NOT EQUAL to t1Dur.StartTimeDateTz!")

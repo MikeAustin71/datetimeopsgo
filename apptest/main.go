@@ -513,8 +513,8 @@ func (mt mainTest) mainTest016() {
 		return
 	}
 
-	if !t5TZoneDef.Equal(dTz1.TimeZone) {
-		fmt.Print("Expected t5TZoneDef == dTz1.TimeZone. It DID NOT!")
+	if !t5TZoneDef.Equal(dTz1.GetTimeZone()) {
+		fmt.Print("Expected t5TZoneDef == dTz1.GetTimeZone(). It DID NOT!")
 	}
 
 	err = dTz1.SetFromTimeDto(t4Dto, dt.TZones.US.Central())
@@ -543,14 +543,14 @@ func (mt mainTest) mainTest016() {
 		return
 	}
 
-	if !t4TZoneDef.Equal(dTz1.TimeZone) {
-		fmt.Print("Expected t4TZoneDef TimeZoneDef == dTz1.TimeZone TimeZoneDef. " +
+	if !t4TZoneDef.Equal(dTz1.GetTimeZone()) {
+		fmt.Print("Expected t4TZoneDef TimeZoneDef == dTz1.GetTimeZone() TimeZoneDef. " +
 			"THEY ARE NOT EQUAL!\n")
 
 		fmt.Println("t4TZoneDef")
 		ex.PrintOutTimeZoneDefDtoFields(t4TZoneDef)
-		fmt.Println("\n\ndTz1.TimeZone")
-		ex.PrintOutTimeZoneDefDtoFields(dTz1.TimeZone)
+		fmt.Println("\n\ndTz1.GetTimeZone()")
+		ex.PrintOutTimeZoneDefDtoFields(dTz1.GetTimeZone())
 
 		return
 	}
