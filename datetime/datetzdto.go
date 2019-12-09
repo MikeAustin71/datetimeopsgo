@@ -104,11 +104,13 @@ import (
 //
 type DateTzDto struct {
 	tagDescription string      // Available for tags, classification, labeling or description
-	Time        TimeDto        // Associated Time Components
+	timeComponents TimeDto     // Associated Time Components (years, months, days, hours, minutes,
+	                           //    seconds etc.)
 	DateTime    time.Time      // DateTime value for this DateTzDto Type
-	DateTimeFmt string         // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-	TimeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone Location
-	                           //    associated with this date time.
+	DateTimeFmt string         // Date Time Format String. Default is
+	                           //    "2006-01-02 15:04:05.000000000 -0700 MST"
+	TimeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone
+	                           //    Location associated with this date time.
 }
 
 // AddDate - Adds input parameters 'years, 'months' and 'days' to date time value of the
@@ -1197,7 +1199,7 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	dtz.Empty()
 
 	dtz.tagDescription = dtz2.tagDescription
-	dtz.Time = dtz2.Time.CopyOut()
+	dtz.timeComponents = dtz2.timeComponents.CopyOut()
 	dtz.DateTimeFmt = dtz2.DateTimeFmt
 
 	if !dtz2.DateTime.IsZero() {
@@ -1255,7 +1257,7 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 	dtz2 := DateTzDto{}
 
 	dtz2.tagDescription = dtz.tagDescription
-	dtz2.Time = dtz.Time.CopyOut()
+	dtz2.timeComponents = dtz.timeComponents.CopyOut()
 	dtz2.DateTimeFmt = dtz.DateTimeFmt
 
 	if !dtz.DateTime.IsZero() {
@@ -1274,7 +1276,7 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 func (dtz *DateTzDto) Empty() {
 
 	dtz.tagDescription = ""
-	dtz.Time.Empty()
+	dtz.timeComponents.Empty()
 	dtz.TimeZone = TimeZoneDefDto{}
 	dtz.DateTime = time.Time{}
 	dtz.DateTimeFmt = ""
@@ -1290,7 +1292,7 @@ func (dtz *DateTzDto) Empty() {
 func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 
 	if dtz.tagDescription != dtz2.tagDescription ||
-		!dtz.Time.Equal(dtz2.Time) ||
+		!dtz.timeComponents.Equal(dtz2.timeComponents) ||
 		!dtz.DateTime.Equal(dtz2.DateTime) ||
 		dtz.DateTimeFmt != dtz2.DateTimeFmt ||
 		!dtz.TimeZone.Equal(dtz2.TimeZone) {
@@ -1530,6 +1532,15 @@ func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
 	return militaryTzDto, nil
 }
 
+// GetTimeComponents - Returns a deep copy of DateTzDto
+// private member variable DateTzDto.timeComponents.
+// The private member variable is returned as a type
+// 'TimeDto'.
+//
+func (dtz *DateTzDto) GetTimeComponents() TimeDto {
+	return dtz.timeComponents.CopyOut()
+}
+
 // GetTimeDto - Converts the current DateTzDto instance
 // date time information into an instance of TimeDto
 // and returns that TimeDto to the caller.
@@ -1613,7 +1624,7 @@ func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 func (dtz *DateTzDto) IsEmpty() bool {
 
 	if dtz.tagDescription == "" &&
-		dtz.Time.IsEmpty() &&
+		dtz.timeComponents.IsEmpty() &&
 		dtz.DateTime.IsZero() &&
 		dtz.DateTimeFmt == "" &&
 		dtz.TimeZone.IsEmpty() {
@@ -1647,8 +1658,8 @@ func (dtz *DateTzDto) IsValid() error {
 		return errors.New(ePrefix + "Error: dtz.TimeZone is EMPTY!")
 	}
 
-	if err := dtz.Time.IsValidDateTime(); err != nil {
-		return fmt.Errorf(ePrefix+"Error: dtz.Time is INVALID. Error='%v'", err.Error())
+	if err := dtz.timeComponents.IsValidDateTime(); err != nil {
+		return fmt.Errorf(ePrefix+"Error: dtz.timeComponents is INVALID. Error='%v'", err.Error())
 	}
 
 	if !dtz.TimeZone.IsValidFromDateTime(dtz.DateTime) {
@@ -2822,7 +2833,7 @@ func (dtz *DateTzDto) SetFromDateTime(
 
 	dtz.DateTime = dt
 	dtz.TimeZone = timeZone.CopyOut()
-	dtz.Time = tDto.CopyOut()
+	dtz.timeComponents = tDto.CopyOut()
 	dtz.DateTimeFmt = fmtStr
 
 	return nil
@@ -2952,7 +2963,7 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 
 	dtz.DateTime = dt
 	dtz.TimeZone = timeZone.CopyOut()
-	dtz.Time = tDto.CopyOut()
+	dtz.timeComponents = tDto.CopyOut()
 	dtz.DateTimeFmt = fmtStr
 
 	return nil
@@ -3024,7 +3035,7 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 	dtz.Empty()
 
 	dtz.DateTime = dateTime
-	dtz.Time = tDto.CopyOut()
+	dtz.timeComponents = tDto.CopyOut()
 	dtz.TimeZone = timeZone.CopyOut()
 	dtz.DateTimeFmt = fmtStr
 
@@ -3151,7 +3162,7 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 	dtz.Empty()
 	dtz.DateTime = dateTime
 	dtz.TimeZone = timeZoneDef.CopyOut()
-	dtz.Time = t2Dto.CopyOut()
+	dtz.timeComponents = t2Dto.CopyOut()
 	dtz.DateTimeFmt = fmtStr
 
 	return nil
@@ -3257,7 +3268,7 @@ func (dtz *DateTzDto) SetFromTimeTz(
 	dtz.Empty()
 	dtz.DateTime = targetDateTime
 	dtz.TimeZone = tZone.CopyOut()
-	dtz.Time = tDto.CopyOut()
+	dtz.timeComponents = tDto.CopyOut()
 	dtz.DateTimeFmt = dateTimeFmtStr
 
 	return nil

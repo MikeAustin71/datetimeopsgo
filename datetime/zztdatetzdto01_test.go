@@ -459,44 +459,44 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 		t.Errorf("Error: Expected dTzDto.TimeZone.LocationName='%v'.  Instead, dTzDto.TimeZone.LocationName='%v'", t1ExpectedLocationName, dTzDto.TimeZone.LocationName)
 	}
 
-	if t1.Year() != dTzDto.Time.Years {
-		t.Errorf("Expected Year='%v'.  Instead Year='%v'", t1.Year(), dTzDto.Time.Years)
+	if t1.Year() != dTzDto.GetTimeComponents().Years {
+		t.Errorf("Expected Year='%v'.  Instead Year='%v'", t1.Year(), dTzDto.GetTimeComponents().Years)
 	}
 
-	if int(t1.Month()) != dTzDto.Time.Months {
-		t.Errorf("Expected Month Number='%v'.  Instead Month Number='%v'", int(t1.Month()), dTzDto.Time.Months)
+	if int(t1.Month()) != dTzDto.GetTimeComponents().Months {
+		t.Errorf("Expected Month Number='%v'.  Instead Month Number='%v'", int(t1.Month()), dTzDto.GetTimeComponents().Months)
 	}
 
-	if t1.Day() != dTzDto.Time.DateDays {
-		t.Errorf("Expected Date Day Number='%v'.  Instead Date Day Number='%v'", t1.Day(), dTzDto.Time.DateDays)
+	if t1.Day() != dTzDto.GetTimeComponents().DateDays {
+		t.Errorf("Expected Date Day Number='%v'.  Instead Date Day Number='%v'", t1.Day(), dTzDto.GetTimeComponents().DateDays)
 	}
 
-	if t1.Hour() != dTzDto.Time.Hours {
-		t.Errorf("Expected Hour Number='%v'.  Instead Hour Number='%v'", t1.Hour(), dTzDto.Time.Hours)
+	if t1.Hour() != dTzDto.GetTimeComponents().Hours {
+		t.Errorf("Expected Hour Number='%v'.  Instead Hour Number='%v'", t1.Hour(), dTzDto.GetTimeComponents().Hours)
 	}
 
-	if t1.Minute() != dTzDto.Time.Minutes {
-		t.Errorf("Expected Minute Number='%v'.  Instead Minute Number='%v'", t1.Minute(), dTzDto.Time.Minutes)
+	if t1.Minute() != dTzDto.GetTimeComponents().Minutes {
+		t.Errorf("Expected Minute Number='%v'.  Instead Minute Number='%v'", t1.Minute(), dTzDto.GetTimeComponents().Minutes)
 	}
 
-	if t1.Second() != dTzDto.Time.Seconds {
-		t.Errorf("Expected Second Number='%v'.  Instead Second Number='%v'", t1.Second(), dTzDto.Time.Seconds)
+	if t1.Second() != dTzDto.GetTimeComponents().Seconds {
+		t.Errorf("Expected Second Number='%v'.  Instead Second Number='%v'", t1.Second(), dTzDto.GetTimeComponents().Seconds)
 	}
 
-	if 38 != dTzDto.Time.Milliseconds {
-		t.Errorf("Expected Millisecond='38'.  Instead, Millisecond='%v'", dTzDto.Time.Milliseconds)
+	if 38 != dTzDto.GetTimeComponents().Milliseconds {
+		t.Errorf("Expected Millisecond='38'.  Instead, Millisecond='%v'", dTzDto.GetTimeComponents().Milliseconds)
 	}
 
-	if 175 != dTzDto.Time.Microseconds {
-		t.Errorf("Expected Microsecond='175'.  Instead, Microsecond='%v'", dTzDto.Time.Microseconds)
+	if 175 != dTzDto.GetTimeComponents().Microseconds {
+		t.Errorf("Expected Microsecond='175'.  Instead, Microsecond='%v'", dTzDto.GetTimeComponents().Microseconds)
 	}
 
-	if 584 != dTzDto.Time.Nanoseconds {
-		t.Errorf("Expected Nanosecond='584'.  Instead Nanosecond='%v' ", dTzDto.Time.Nanoseconds)
+	if 584 != dTzDto.GetTimeComponents().Nanoseconds {
+		t.Errorf("Expected Nanosecond='584'.  Instead Nanosecond='%v' ", dTzDto.GetTimeComponents().Nanoseconds)
 	}
 
-	if 38175584 != dTzDto.Time.TotSubSecNanoseconds {
-		t.Errorf("Expected Total Nanoseconds Number='38175584'.  Instead Total Nanoseconds Number='%v'", dTzDto.Time.TotSubSecNanoseconds)
+	if 38175584 != dTzDto.GetTimeComponents().TotSubSecNanoseconds {
+		t.Errorf("Expected Total Nanoseconds Number='38175584'.  Instead Total Nanoseconds Number='%v'", dTzDto.GetTimeComponents().TotSubSecNanoseconds)
 	}
 
 }

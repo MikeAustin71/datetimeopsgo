@@ -501,13 +501,15 @@ func (mt mainTest) mainTest016() {
 		return
 	}
 
-	if !t5Dto.Equal(dTz1.Time) {
-		fmt.Print("Expected t5Dto == dTz1.Time. It DID NOT!\n")
+	timeComponents := dTz1.GetTimeComponents()
+	
+	if !t5Dto.Equal(timeComponents) {
+		fmt.Print("Expected t5Dto == dTz1.timeComponents. It DID NOT!\n")
 
 		fmt.Println("t5Dto")
 		ex.PrintOutTimeDtoFields(t5Dto)
 		fmt.Println("\n\ndTz1.Time")
-		ex.PrintOutTimeDtoFields(dTz1.Time)
+		ex.PrintOutTimeDtoFields(timeComponents)
 		return
 	}
 
@@ -529,14 +531,14 @@ func (mt mainTest) mainTest016() {
 			dTz1.DateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
-
-	if !t4Dto.Equal(dTz1.Time) {
+	
+	if !t4Dto.Equal(timeComponents) {
 		fmt.Print("Expected t4Dto TimeDto == dTz1.Time Time Dto. THEY ARE NOT EQUAL!\n")
 		fmt.Println("t4Dto")
 
 		ex.PrintOutTimeDtoFields(t5Dto)
 		fmt.Println("\n\ndTz1.Time")
-		ex.PrintOutTimeDtoFields(dTz1.Time)
+		ex.PrintOutTimeDtoFields(timeComponents)
 		return
 	}
 
@@ -552,54 +554,63 @@ func (mt mainTest) mainTest016() {
 		return
 	}
 
-	if year != dTz1.Time.Years {
-		fmt.Printf("Error: Expected Years='%v'. Instead, Years='%v'\n", year, dTz1.Time.Years)
+	if year != dTz1.GetTimeComponents().Years {
+		fmt.Printf("Error: Expected Years='%v'.\n" +
+			"Instead, Years='%v'\n", year, dTz1.GetTimeComponents().Years)
 		return
 	}
 
-	if month != dTz1.Time.Months {
-		fmt.Printf("Error: Expected Months='%v'. Instead, Months='%v'\n", month, dTz1.Time.Months)
+	if month != dTz1.GetTimeComponents().Months {
+		fmt.Printf("Error: Expected Months='%v'.\n" +
+			"Instead, Months='%v'\n", month, dTz1.GetTimeComponents().Months)
 		return
 	}
 
-	if day != dTz1.Time.DateDays {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", day, dTz1.Time.DateDays)
+	if day != dTz1.GetTimeComponents().DateDays {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",
+			day, dTz1.GetTimeComponents().DateDays)
 		return
 	}
 
-	if hour != dTz1.Time.Hours {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", hour, dTz1.Time.Hours)
+	if hour != dTz1.GetTimeComponents().Hours {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 
+			hour, dTz1.GetTimeComponents().Hours)
 		return
 	}
 
-	if minute != dTz1.Time.Minutes {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", minute, dTz1.Time.Minutes)
+	if minute != dTz1.GetTimeComponents().Minutes {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 
+			minute, dTz1.GetTimeComponents().Minutes)
 		return
 	}
 
-	if second != dTz1.Time.Seconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", second, dTz1.Time.Seconds)
+	if second != dTz1.GetTimeComponents().Seconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 
+			second, dTz1.GetTimeComponents().Seconds)
 		return
 	}
 
-	if 792 != dTz1.Time.Milliseconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 792, dTz1.Time.Milliseconds)
+	if 792 != dTz1.GetTimeComponents().Milliseconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",
+			792, dTz1.GetTimeComponents().Milliseconds)
 		return
 	}
 
-	if 489 != dTz1.Time.Microseconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 489, dTz1.Time.Microseconds)
+	if 489 != dTz1.GetTimeComponents().Microseconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",
+			489, dTz1.GetTimeComponents().Microseconds)
 		return
 	}
 
-	if 279 != dTz1.Time.Nanoseconds {
-		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n", 279, dTz1.Time.Nanoseconds)
+	if 279 != dTz1.GetTimeComponents().Nanoseconds {
+		fmt.Printf("Error: Expected Days='%v'. Instead, Days='%v'\n",
+			279, dTz1.GetTimeComponents().Nanoseconds)
 		return
 	}
 
-	if nSecs != dTz1.Time.TotSubSecNanoseconds {
-		fmt.Printf("Error: Expected dTz1.Time.TotSubSecNanoseconds='%v'. "+
-			"Instead, dTz1.Time.TotSubSecNanoseconds='%v'\n", nSecs, dTz1.Time.TotSubSecNanoseconds)
+	if nSecs != dTz1.GetTimeComponents().TotSubSecNanoseconds {
+		fmt.Printf("Error: Expected dTz1.GetTimeComponents().TotSubSecNanoseconds='%v'. "+
+			"Instead, dTz1.GetTimeComponents().TotSubSecNanoseconds='%v'\n", nSecs, dTz1.GetTimeComponents().TotSubSecNanoseconds)
 		return
 	}
 
@@ -608,9 +619,9 @@ func (mt mainTest) mainTest016() {
 	totTime += int64(second) * int64(time.Second)
 	totTime += int64(nSecs)
 
-	if totTime != dTz1.Time.TotTimeNanoseconds {
+	if totTime != dTz1.GetTimeComponents().TotTimeNanoseconds {
 		fmt.Printf("Error: Expected tDto.TotTimeNanoseconds='%v'. "+
-			"Instead, tDto.TotTimeNanoseconds='%v'\n", totTime, dTz1.Time.TotTimeNanoseconds)
+			"Instead, tDto.TotTimeNanoseconds='%v'\n", totTime, dTz1.GetTimeComponents().TotTimeNanoseconds)
 		return
 	}
 
