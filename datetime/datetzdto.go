@@ -3038,39 +3038,6 @@ func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) err
 
 	ePrefix := "DateTzDto.SetFromTime() "
 
-	/*
-	if dateTime.IsZero() {
-		return errors.New(ePrefix + "Error: Input parameter dateTime is Zero value!")
-	}
-
-	tDto, err := TimeDto{}.NewFromDateTime(dateTime)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned from TimeDto{}.NewFromDateTime(dateTime). "+
-			" dateTime='%v' Error='%v'",
-			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	fmtStr := dtz.preProcessDateFormatStr(dateTimeFmtStr)
-
-	timeZone, err := TimeZoneDefDto{}.New(dateTime)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned from TimeZoneDefDto{}.New(dateTime). "+
-			"dateTime='%v'  Error='%v'",
-			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	dtz.Empty()
-
-	dtz.dateTimeValue = dateTime
-	dtz.timeComponents = tDto.CopyOut()
-	dtz.timeZone = timeZone.CopyOut()
-	dtz.dateTimeFmt = fmtStr
-*/
-
 	dTzUtility := dateTzDtoUtility{}
 
 	return dTzUtility.setFromDateTime(dtz, dateTime, dateTimeFmtStr, ePrefix)

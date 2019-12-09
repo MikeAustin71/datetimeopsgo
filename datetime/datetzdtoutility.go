@@ -88,9 +88,14 @@ func (dTzUtil *dateTzDtoUtility) empty(dTz *DateTzDto) {
 	return
 }
 
-
+// preProcessDateFormatStr - Provides a standardized method
+// for implementing a default date time format string.
+//
 func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
 		dateTimeFmtStr string) string {
+
+	dTzUtil.lock.Lock()
+	defer dTzUtil.lock.Unlock()
 
 	if len(dateTimeFmtStr) == 0 {
 		return FmtDateTimeYrMDayFmtStr
@@ -99,8 +104,13 @@ func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
 	return dateTimeFmtStr
 }
 
+// preProcessTimeZoneLocation - Provides a method for implementing
+// standardized processing of time zone location strings.
 func (dTzUtil *dateTzDtoUtility) preProcessTimeZoneLocation(
 		timeZoneLocation string) string {
+
+	dTzUtil.lock.Lock()
+	defer dTzUtil.lock.Unlock()
 
 	if len(timeZoneLocation) == 0 {
 		return TZones.Other.UTC()
@@ -140,9 +150,9 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 			"\nError: Input parameter 'dateTime' is ZERO!\n")
 	}
 
-	if len(dateTimeFmtStr) == 0 {
-		dateTimeFmtStr = FmtDateTimeYrMDayFmtStr
-	}
+	dTzUtil2 := dateTzDtoUtility{}
+
+	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
 	tDto, err := TimeDto{}.NewFromDateTime(dateTime)
 
@@ -157,14 +167,13 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned from TimeZoneDefDto{}.New(dateTime). "+
-			"dateTime='%v'  Error='%v'",
+			"\nError returned from TimeZoneDefDto{}.New(dateTime).\n"+
+			"dateTime='%v'\nError='%v'\n",
 			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
-	dateTzUtil := dateTzDtoUtility{}
 
-	dateTzUtil.empty(dTz)
+	dTzUtil2.empty(dTz)
 
 	dTz.dateTimeValue = dateTime
 	dTz.timeComponents = tDto.CopyOut()
