@@ -103,7 +103,7 @@ import (
 // ===============================
 //
 type DateTzDto struct {
-	Description string         // Unused, available for classification, labeling or description
+	tagDescription string      // Available for tags, classification, labeling or description
 	Time        TimeDto        // Associated Time Components
 	DateTime    time.Time      // DateTime value for this DateTzDto Type
 	DateTimeFmt string         // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
@@ -154,13 +154,13 @@ type DateTzDto struct {
 //              A DateTzDto structure is defined as follows:
 //
 //      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
+//        tagDescription  string         // Unused, available for classification,
 //                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
+//        Time            TimeDto        // Associated Time Components
+//        DateTime        time.Time      // DateTime value for this DateTzDto Type
+//        DateTimeFmt     string         // Date Time Format String.
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//        TimeZone        TimeZoneDefDto // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -267,13 +267,13 @@ func (dtz *DateTzDto) AddDate(
 //              A DateTzDto structure is defined as follows:
 //
 //      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
+//        tagDescription  string         // Unused, available for classification,
 //                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
+//        Time            TimeDto        // Associated Time Components
+//        DateTime        time.Time      // DateTime value for this DateTzDto Type
+//        DateTimeFmt     string         // Date Time Format String.
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//        TimeZone        TimeZoneDefDto // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -522,13 +522,13 @@ func (dtz *DateTzDto) AddDateToThis(
 //              A DateTzDto structure is defined as follows:
 //
 //      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
+//        tagDescription  string         // Unused, available for classification,
 //                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
+//        Time            TimeDto        // Associated Time Components
+//        DateTime        time.Time      // DateTime value for this DateTzDto Type
+//        DateTimeFmt     string         // Date Time Format String.
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//        TimeZone        TimeZoneDefDto // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -1196,7 +1196,7 @@ func (dtz *DateTzDto) AddTimeToThis(
 func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	dtz.Empty()
 
-	dtz.Description = dtz2.Description
+	dtz.tagDescription = dtz2.tagDescription
 	dtz.Time = dtz2.Time.CopyOut()
 	dtz.DateTimeFmt = dtz2.DateTimeFmt
 
@@ -1254,7 +1254,7 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 func (dtz *DateTzDto) CopyOut() DateTzDto {
 	dtz2 := DateTzDto{}
 
-	dtz2.Description = dtz.Description
+	dtz2.tagDescription = dtz.tagDescription
 	dtz2.Time = dtz.Time.CopyOut()
 	dtz2.DateTimeFmt = dtz.DateTimeFmt
 
@@ -1273,7 +1273,7 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 // instance to their uninitialized or zero state.
 func (dtz *DateTzDto) Empty() {
 
-	dtz.Description = ""
+	dtz.tagDescription = ""
 	dtz.Time.Empty()
 	dtz.TimeZone = TimeZoneDefDto{}
 	dtz.DateTime = time.Time{}
@@ -1289,7 +1289,7 @@ func (dtz *DateTzDto) Empty() {
 //
 func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 
-	if dtz.Description != dtz2.Description ||
+	if dtz.tagDescription != dtz2.tagDescription ||
 		!dtz.Time.Equal(dtz2.Time) ||
 		!dtz.DateTime.Equal(dtz2.DateTime) ||
 		dtz.DateTimeFmt != dtz2.DateTimeFmt ||
@@ -1457,6 +1457,16 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 	return dtz.DateTime.Format(FmtDateTimeYrMDayFmtStr)
 }
 
+// GetDescription - Returns DateTzDto private member
+// variable, DateTzDto.tagDescription.
+//
+// 'tagDescription' is available to users for use as
+// a tag, label, classification or text description.
+//
+func (dtz *DateTzDto) GetDescription() string {
+	return dtz.tagDescription
+}
+
 // GetMilitaryDateTzDto - Returns an instance of 'MilitaryDateTzDto' which
 // is equivalent to the current date, time and time zone represented by the
 // current 'DateTzDto' object.
@@ -1602,7 +1612,7 @@ func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 // this method returns 'false'.
 func (dtz *DateTzDto) IsEmpty() bool {
 
-	if dtz.Description == "" &&
+	if dtz.tagDescription == "" &&
 		dtz.Time.IsEmpty() &&
 		dtz.DateTime.IsZero() &&
 		dtz.DateTimeFmt == "" &&
