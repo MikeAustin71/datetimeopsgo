@@ -1207,20 +1207,13 @@ func (dtz *DateTzDto) AddTimeToThis(
 //  Note: dtz and dtz2 are now equivalent.
 //
 func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
-	dtz.Empty()
 
-	dtz.tagDescription = dtz2.tagDescription
-	dtz.timeComponents = dtz2.timeComponents.CopyOut()
-	dtz.dateTimeFmt = dtz2.dateTimeFmt
+	dtz.lock.Lock()
+	defer dtz.lock.Unlock()
 
-	if !dtz2.dateTimeValue.IsZero() {
-		dtz.dateTimeValue = dtz2.dateTimeValue
-		dtz.timeZone = dtz2.timeZone.CopyOut()
-	} else {
-		dtz.timeZone = TimeZoneDefDto{}
-		dtz.dateTimeValue = time.Time{}
-	}
+	dateTzDtoUtility{}.copyIn(dtz, &dtz2)
 
+	return
 }
 
 // CopyOut - returns a DateTzDto instance
@@ -1276,11 +1269,9 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 // instance to their uninitialized or zero state.
 func (dtz *DateTzDto) Empty() {
 
-	dtz.tagDescription = ""
-	dtz.timeComponents.Empty()
-	dtz.timeZone = TimeZoneDefDto{}
-	dtz.dateTimeValue = time.Time{}
-	dtz.dateTimeFmt = ""
+	dtz.lock.Lock()
+	defer dtz.lock.Unlock()
+	dateTzDtoUtility{}.empty(dtz)
 
 	return
 }
@@ -1291,6 +1282,9 @@ func (dtz *DateTzDto) Empty() {
 // Otherwise, the method returns 'false'.
 //
 func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
+
+	dtz.lock.Lock()
+	defer dtz.lock.Unlock()
 
 	if dtz.tagDescription != dtz2.tagDescription ||
 		!dtz.timeComponents.Equal(dtz2.timeComponents) ||
@@ -1304,7 +1298,6 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 	return true
 }
 
-
 // EqualUtcOffset - Compares a second instance of 'DateTzDto' to the
 // current 'DateTzDto' object and returns a boolean value signaling
 // whether the two objects have the same UTC offsets.
@@ -1313,6 +1306,9 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 // instances have the same UTC offset value.
 //
 func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
+
+	dtz.lock.Lock()
+	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.EqualUtcOffset() "
 

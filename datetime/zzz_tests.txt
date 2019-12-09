@@ -1,19 +1,23 @@
 === RUN   TestDateTzDto_AddDate_01
 --- PASS: TestDateTzDto_AddDate_01 (0.00s)
 === RUN   TestDateTzDto_AddDateToThis_01
---- PASS: TestDateTzDto_AddDateToThis_01 (0.00s)
+--- FAIL: TestDateTzDto_AddDateToThis_01 (0.00s)
+    zztdatetzdto01_test.go:75: Error: Expected updated dtz1.String()='2019-08-27 19:54:30.038175584 -0500 CDT'. Instead, dtz1.String()='0001-01-01 00:00:00.000000000 +0000 UTC' 
 === RUN   TestDateTzDto_AddDuration_01
 --- PASS: TestDateTzDto_AddDuration_01 (0.00s)
 === RUN   TestDateTzDto_AddDurationToThis_01
---- PASS: TestDateTzDto_AddDurationToThis_01 (0.00s)
+--- FAIL: TestDateTzDto_AddDurationToThis_01 (0.00s)
+    zztdatetzdto01_test.go:153: Error: Expected updated dTz1.String()='2018-02-15 20:54:30.038175584 -0600 CST'. Instead, updated dTz1.String()='0001-01-01 00:00:00.000000000 +0000 UTC'
 === RUN   TestDateTzDto_AddTime_01
 --- PASS: TestDateTzDto_AddTime_01 (0.00s)
 === RUN   TestDateTzDto_AddTimeToThis_01
---- PASS: TestDateTzDto_AddTimeToThis_01 (0.00s)
+--- FAIL: TestDateTzDto_AddTimeToThis_01 (0.00s)
+    zztdatetzdto01_test.go:259: Error: Expected updated dTz1.String()='2018-02-24 21:46:08.601568473 -0600 CST'. Instead, dTz1.String()='0001-01-01 00:00:00.000000000 +0000 UTC'. 
 === RUN   TestDateTzDto_AddDateTime
 --- PASS: TestDateTzDto_AddDateTime (0.00s)
 === RUN   TestDateTzDto_AddDateTimeToThis_01
---- PASS: TestDateTzDto_AddDateTimeToThis_01 (0.00s)
+--- FAIL: TestDateTzDto_AddDateTimeToThis_01 (0.00s)
+    zztdatetzdto01_test.go:375: Error: Expected updated dTz1.String()='2019-09-07 21:46:08.601568473 -0500 CDT'. Instead, dTz1.String()='0001-01-01 00:00:00.000000000 +0000 UTC'.
 === RUN   TestDateTzDto_CopyIn_01
 --- PASS: TestDateTzDto_CopyIn_01 (0.00s)
 === RUN   TestDateTzDto_CopyOut
@@ -51,7 +55,7 @@
 === RUN   TestDateTzDto_SetNewTimeZone_01
 --- PASS: TestDateTzDto_SetNewTimeZone_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeTz_01
---- PASS: TestDateTzDto_SetFromTimeTz_01 (0.03s)
+--- PASS: TestDateTzDto_SetFromTimeTz_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeDto
 --- PASS: TestDateTzDto_SetFromTimeDto (0.00s)
 === RUN   TestDateTzDto_Sub_01
@@ -81,13 +85,13 @@
 === RUN   TestCustomDateTimeFormat
 --- PASS: TestCustomDateTimeFormat (0.00s)
 === RUN   TestDurationTriad_GetYearMthDaysTimeAbbrv
---- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.00s)
+--- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.03s)
 === RUN   TestDurationTriad_GetYearsMthsWeeksTimeAbbrv
---- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.02s)
+--- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_NewAutoEnd_01
 --- PASS: TestDurationTriad_NewAutoEnd_01 (0.00s)
 === RUN   TestDurationTriad_NewAutoStart
---- PASS: TestDurationTriad_NewAutoStart (0.01s)
+--- PASS: TestDurationTriad_NewAutoStart (0.00s)
 === RUN   TestDurationTriad_NewStartTimeDuration_01
 --- PASS: TestDurationTriad_NewStartTimeDuration_01 (0.00s)
 === RUN   TestDurationTriad_NewStartDateTzDuration_01
@@ -101,9 +105,14 @@
 === RUN   TestDurationTriad_NewStartEndTimes_01
 --- PASS: TestDurationTriad_NewStartEndTimes_01 (0.00s)
 === RUN   TestDurationTriad_NewStartTimeMinusTime_01
---- PASS: TestDurationTriad_NewStartTimeMinusTime_01 (0.00s)
+--- FAIL: TestDurationTriad_NewStartTimeMinusTime_01 (0.00s)
+    zztdurationtriad01_test.go:909: Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto).
+        Error='DurationTriad.NewEndTimeMinusTimeDtoTz() Error returned from du2.SetEndTimeMinusTimeDtoCalcTz(endDateTime, minusTimeDto). Error='DurationTriad.SetEndTimeMinusTimeDtoCalcTz() Error computing baseTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). endDateTime='2017-04-30 22:58:32 -0500 CDT' Error='TimeDurationDto.NewEndTimeMinusTimeDtoTz() Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='TimeDurationDto.SetEndTimeMinusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'startTime' and 'endTime' Time Zone Location do NOT match! startTimeZoneLocation='UTC'  endTimeZoneLocation='US/Central'''''''
 === RUN   TestDurationTriad_NewStartTimePlusTime_01
---- PASS: TestDurationTriad_NewStartTimePlusTime_01 (0.00s)
+--- FAIL: TestDurationTriad_NewStartTimePlusTime_01 (0.00s)
+    zztdurationtriad01_test.go:953: Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto).
+        Error='DurationTriad.NewStartTimePlusTimeDtoTz() Error returned from du2.SetStartTimePlusTimeDtoTz(startDateTime, plusTimeDto).
+        Error='DurationTriad.SetStartTimePlusTimeDtoTz() baseTime calculation error returned by TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(). Error=TimeDurationDto.NewStartTimePlusTimeDto() Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'endTime' precedes, is less than, startTime!''''''
 === RUN   TestDurationTriad_SetStartEndTimes
 --- PASS: TestDurationTriad_SetStartEndTimes (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_02
@@ -113,13 +122,28 @@
 === RUN   TestDurationTriad_SetStartEndTimes_04
 --- PASS: TestDurationTriad_SetStartEndTimes_04 (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTime
---- PASS: TestDurationTriad_SetStartTimePlusTime (0.00s)
+--- FAIL: TestDurationTriad_SetStartTimePlusTime (0.00s)
+    zztdurationtriad02_test.go:325: Error returned by dur.SetStartTimePlusTimeDtoTz(t1, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr). Error='DurationTriad.SetStartTimePlusTimeDtoTz() Error returned by SetStartTimePlusTimeDtoCalcTz(). Error='DurationTriad.SetStartTimePlusTimeDtoTz() baseTime calculation error returned by TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(). Error=TimeDurationDto.NewStartTimePlusTimeDto() Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'endTime' precedes, is less than, startTime!'''''' 
+    zztdurationtriad02_test.go:330: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zztdurationtriad02_test.go:335: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zztdurationtriad02_test.go:340: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    zztdurationtriad02_test.go:349: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
 === RUN   TestDurationTriad_SetStartTimeMinusTime
---- PASS: TestDurationTriad_SetStartTimeMinusTime (0.00s)
+--- FAIL: TestDurationTriad_SetStartTimeMinusTime (0.00s)
+    zztdurationtriad02_test.go:372: Error returned by dur.SetEndTimeMinusTimeDtoTz(t2, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr) Error='DurationTriad.SetEndTimeMinusTimeDtoCalcTz() Error returned by SetEndTimeMinusTimeDtoCalcTz() Error='DurationTriad.SetEndTimeMinusTimeDtoCalcTz() Error computing baseTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). endDateTime='2017-04-30 22:58:32 -0500 CDT' Error='TimeDurationDto.NewEndTimeMinusTimeDtoTz() Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='TimeDurationDto.SetEndTimeMinusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'startTime' and 'endTime' Time Zone Location do NOT match! startTimeZoneLocation='UTC'  endTimeZoneLocation='US/Central''''''' 
+    zztdurationtriad02_test.go:377: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zztdurationtriad02_test.go:382: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zztdurationtriad02_test.go:387: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    zztdurationtriad02_test.go:396: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
 === RUN   TestDurationTriad_SetStartTimeDuration
 --- PASS: TestDurationTriad_SetStartTimeDuration (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTimeDto_01
---- PASS: TestDurationTriad_SetStartTimePlusTimeDto_01 (0.00s)
+--- FAIL: TestDurationTriad_SetStartTimePlusTimeDto_01 (0.00s)
+    zztdurationtriad02_test.go:465: Error returned by dur.SetStartTimePlusTimeDto(t1, timeDto, FmtDateTimeYrMDayFmtStr) Error='DurationTriad.SetStartTimePlusTimeDto() Error returned by SetStartTimePlusTimeDtoCalcTz().  Error='DurationTriad.SetStartTimePlusTimeDtoTz() baseTime calculation error returned by TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(). Error=TimeDurationDto.NewStartTimePlusTimeDto() Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'endTime' precedes, is less than, startTime!'''''' 
+    zztdurationtriad02_test.go:470: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zztdurationtriad02_test.go:475: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zztdurationtriad02_test.go:480: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    zztdurationtriad02_test.go:489: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
 === RUN   TestDateTimeFormatUtility_ParseDateTimeStrings
 Item: 0  Date Time String : Saturday 11/12/2016 4:26 PM 
 Item: 1  Date Time String : 7-6-16 9:30AM 
@@ -189,15 +213,15 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.93s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.62s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.58s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.02s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.01s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.07s)
+--- PASS: TestDtfmtTestSuite (4.18s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.01s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.02s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.02s)
 === RUN   TestTDurCalcTypeString_001
 --- PASS: TestTDurCalcTypeString_001 (0.00s)
 === RUN   TestTDurCalcTypeString_002
@@ -352,7 +376,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.07s)
+--- FAIL: TestTimeDuroTestSuite (0.05s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
@@ -369,8 +393,28 @@ Processed 67 sample dates successfully!
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTzCalc_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01 (0.00s)
+    --- FAIL: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01 (0.00s)
+        zzttimedurationdto01_test.go:974: 
+            	Error Trace:	zzttimedurationdto01_test.go:974
+            	Error:      	Expected nil, but got: &errors.errorString{s:"TimeDurationDto.NewEndTimeMinusTimeDtoTz() Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='TimeDurationDto.SetEndTimeMinusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'startTime' and 'endTime' Time Zone Location do NOT match! startTimeZoneLocation='UTC'  endTimeZoneLocation='US/Central''''"}
+            	Test:       	TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01
+            	Messages:   	Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):
+        zzttimedurationdto01_test.go:976: 
+            	Error Trace:	zzttimedurationdto01_test.go:976
+            	Error:      	Should be true
+            	Test:       	TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01
+            	Messages:   	Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.EndTimeDateTz!
+    --- FAIL: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01 (0.00s)
+        zzttimedurationdto01_test.go:949: 
+            	Error Trace:	zzttimedurationdto01_test.go:949
+            	Error:      	Expected nil, but got: &errors.errorString{s:"TimeDurationDto.NewStartTimePlusTimeDto() Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'endTime' precedes, is less than, startTime!'''"}
+            	Test:       	TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01
+            	Messages:   	Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):
+        zzttimedurationdto01_test.go:951: 
+            	Error Trace:	zzttimedurationdto01_test.go:951
+            	Error:      	Should be true
+            	Test:       	TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01
+            	Messages:   	Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.EndTimeDateTz!
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_New_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_New_02 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_ReCalcEndDateTimeToNow_01 (0.00s)
@@ -401,9 +445,13 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDurationDto_NewStartEndDateTzDto_01
 --- PASS: TestTimeDurationDto_NewStartEndDateTzDto_01 (0.00s)
 === RUN   TestTimeDurationDto_NewStartTimeMinusTime_01
---- PASS: TestTimeDurationDto_NewStartTimeMinusTime_01 (0.00s)
+--- FAIL: TestTimeDurationDto_NewStartTimeMinusTime_01 (0.00s)
+    zzttimedurationdto02_test.go:769: Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto).
+        Error='TimeDurationDto.NewEndTimeMinusTimeDtoTz() Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='TimeDurationDto.SetEndTimeMinusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'startTime' and 'endTime' Time Zone Location do NOT match! startTimeZoneLocation='UTC'  endTimeZoneLocation='Local'''''
 === RUN   TestTimeDurationDto_NewStartTimePlusTime_01
---- PASS: TestTimeDurationDto_NewStartTimePlusTime_01 (0.00s)
+--- FAIL: TestTimeDurationDto_NewStartTimePlusTime_01 (0.00s)
+    zzttimedurationdto02_test.go:813: Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto).
+        Error='TimeDurationDto.NewStartTimePlusTimeDto() Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'endTime' precedes, is less than, startTime!''''
 === RUN   TestTimeDurationDto_SetStartEndTimes
 --- PASS: TestTimeDurationDto_SetStartEndTimes (0.00s)
 === RUN   TestTimeDurationDto_SetStartEndTimes_02
@@ -413,9 +461,19 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDurationDto_SetStartEndTimes_04
 --- PASS: TestTimeDurationDto_SetStartEndTimes_04 (0.00s)
 === RUN   TestTimeDurationDto_SetStartTimePlusTime
---- PASS: TestTimeDurationDto_SetStartTimePlusTime (0.00s)
+--- FAIL: TestTimeDurationDto_SetStartTimePlusTime (0.00s)
+    zzttimedurationdto02_test.go:1080: Error returned by dur.SetStartTimePlusTimeDtoTz(...). Error='DurationTriad.SetStartTimePlusTimeDtoTz() Error returned by SetStartTimePlusTimeDtoCalcTz(). Error='DurationTriad.SetStartTimePlusTimeDtoTz() baseTime calculation error returned by TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(). Error=TimeDurationDto.NewStartTimePlusTimeDto() Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='TimeDurationDto.SetStartTimePlusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'endTime' precedes, is less than, startTime!''''''
+    zzttimedurationdto02_test.go:1085: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zzttimedurationdto02_test.go:1090: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zzttimedurationdto02_test.go:1095: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    zzttimedurationdto02_test.go:1104: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
 === RUN   TestTimeDurationDto_SetStartTimeMinusTime
---- PASS: TestTimeDurationDto_SetStartTimeMinusTime (0.00s)
+--- FAIL: TestTimeDurationDto_SetStartTimeMinusTime (0.00s)
+    zzttimedurationdto02_test.go:1127: Error returned by dur.SetEndTimeMinusTimeDtoTz(...). Error='DurationTriad.SetEndTimeMinusTimeDtoCalcTz() Error returned by SetEndTimeMinusTimeDtoCalcTz() Error='DurationTriad.SetEndTimeMinusTimeDtoCalcTz() Error computing baseTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). endDateTime='2017-04-30 22:58:32 -0500 CDT' Error='TimeDurationDto.NewEndTimeMinusTimeDtoTz() Error returned by t2Dur.SetEndTimeMinusTimeDtoCalcTz(...) Error='TimeDurationDto.SetEndTimeMinusTimeDtoCalcTz() Error returned by tDur.calcTypeSTDYEARMTH(). Error='TimeDurationDto.calcTypeSTDYEARMTH() Error returned by tDur.calcYearsFromDuration(). Error='TimeDurationDto.calcYearsFromDuration() Error: 'startTime' and 'endTime' Time Zone Location do NOT match! startTimeZoneLocation='UTC'  endTimeZoneLocation='US/Central'''''''
+    zzttimedurationdto02_test.go:1132: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zzttimedurationdto02_test.go:1137: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    zzttimedurationdto02_test.go:1142: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    zzttimedurationdto02_test.go:1151: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
 === RUN   TestTimeDurationDto_SetStartTimeDuration
 --- PASS: TestTimeDurationDto_SetStartTimeDuration (0.00s)
 === RUN   TestTimeZoneDefDto_New_01
@@ -433,9 +491,19 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneDto_AddTimeDurationDto_01
 --- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.00s)
 === RUN   TestTimeZoneDto_AddMinusTimeDto
---- PASS: TestTimeZoneDto_AddMinusTimeDto (0.00s)
+--- FAIL: TestTimeZoneDto_AddMinusTimeDto (0.00s)
+    zzttimezonedto01_test.go:127: Error returned by tzu2.AddMinusTimeDto(tDto). Error='TimeZoneDto.AddMinusTimeDto() Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) Error='TimeZoneDto.NewDateTz() Error returned by tzDto.ConvertTz(dateTzDtoIn, tZoneOutLocation).
+        dateTzDtoIn.DateTime='0001-01-01 00:00:00.000000000 +0000 UTC' tZoneOutLocation='US/Eastern'
+        Error='TimeZoneDto.ConvertTz() Error: Input parameter time, 'tIn' is zero and INVALID'''
+    zzttimezonedto01_test.go:134: Error: Expected tzu2.TimeIn='02/15/2014 19:54:30.000000000 -0600 CST'.  Instead, tzu2.TimeIn='04/30/2017 22:58:32.000000000 -0500 CDT'. 
+    zzttimezonedto01_test.go:144: Error expected tzu1-tzu2 Duration='28082h4m2s'.  Instead, Duration='0s'
 === RUN   TestTimeZoneDto_AddPlusTimeDto
---- PASS: TestTimeZoneDto_AddPlusTimeDto (0.00s)
+--- FAIL: TestTimeZoneDto_AddPlusTimeDto (0.00s)
+    zzttimezonedto01_test.go:178: Error returned by tzu2.AddPlusTimeDto(tDto). Error='TimeZoneDto.AddPlusTimeDto() Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) Error='TimeZoneDto.NewDateTz() Error returned by tzDto.ConvertTz(dateTzDtoIn, tZoneOutLocation).
+        dateTzDtoIn.DateTime='0001-01-01 00:00:00.000000000 +0000 UTC' tZoneOutLocation='US/Eastern'
+        Error='TimeZoneDto.ConvertTz() Error: Input parameter time, 'tIn' is zero and INVALID''' 
+    zzttimezonedto01_test.go:185: Error: Expected tzu2.TimeIn='04/30/2017 22:58:32.000000000 -0500 CDT'.  Instead, tzu2.TimeIn='02/15/2014 19:54:30.000000000 -0600 CST'. 
+    zzttimezonedto01_test.go:195: Error expected tzu1-tzu2 Duration='28082h4m2s'.  Instead, Duration='0s'
 === RUN   TestTimeZoneUtility_ConvertTz_01
 --- PASS: TestTimeZoneUtility_ConvertTz_01 (0.00s)
 === RUN   TestTimeZoneUtility_ConvertTz_02
@@ -488,6 +556,7 @@ Processed 67 sample dates successfully!
 --- PASS: TestTimeZoneUtility_ReclassifyTimeWithNewTz (0.00s)
 === RUN   TestTimeZoneUtility_ReclassifyTimeAsMountain
 --- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.00s)
-PASS
-coverage: 53.3% of statements
-ok  	github.com/MikeAustin71/datetimeopsgo/datetime	13.292s
+FAIL
+coverage: 52.6% of statements
+exit status 1
+FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	14.258s
