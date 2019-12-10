@@ -2581,13 +2581,18 @@ func (dtz DateTzDto) NewTimeDto(
 
 	dtz2 := DateTzDto{}
 
-	err := dtz2.SetFromTimeDto(tDto, timeZoneLocation)
+	dTzUtil := dateTzDtoUtility{}
+
+	err := dTzUtil.setFromTimeDto(
+		&dtz2,
+		tDto,
+		timeZoneLocation,
+		dateTimeFormatStr,
+		ePrefix)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"Error returned by dtz2.SetFromTimeDto(tDto, timeZoneLocation). Error='%v'", err.Error())
+		return DateTzDto{}, err
 	}
-
-	dtz2.SetDateTimeFmt(dateTimeFormatStr)
 
 	return dtz2, nil
 }
@@ -3082,62 +3087,18 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 
 	ePrefix := "DateTzDto.SetFromTimeDto() "
 
-	if tDto.IsEmpty() {
+	dtz.lock.Lock()
 
-		return fmt.Errorf(ePrefix + "Error: All input parameter date time elements equal ZERO!")
-	}
+	defer dtz.lock.Unlock()
 
-	t2Dto := tDto.CopyOut()
+	dTzUtil := dateTzDtoUtility{}
 
-	err := t2Dto.NormalizeTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by t2Dto.NormalizeTimeElements(). Error='%v' ",
-			err.Error())
-	}
-
-	t2Dto.ConvertToAbsoluteValues()
-
-	if err = t2Dto.IsValidDateTime(); err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error: Input Parameter tDto (TimeDto) is INVALID. Error='%v'",
-			err.Error())
-	}
-
-	tzl := dtz.preProcessTimeZoneLocation(timeZoneLocation)
-
-	_, err = time.LoadLocation(tzl)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by time.LoadLocation(tzl). "+
-			"timeZoneLocation='%v' tzl='%v'  Error='%v' ", timeZoneLocation, tzl, err.Error())
-	}
-
-	dateTime, err := tDto.GetDateTime(tzl)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.GetDateTime(tzl). "+
-			"timeZoneLocation='%v' tzl='%v' Error='%v'",
-			timeZoneLocation, tzl, err.Error())
-	}
-
-	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by TimeZoneDefDto{}.New(dateTime). dateTime='%v' Error='%v'", dateTime, err.Error())
-	}
-
-	fmtStr := dtz.dateTimeFmt
-
-	dtz.Empty()
-	dtz.dateTimeValue = dateTime
-	dtz.timeZone = timeZoneDef.CopyOut()
-	dtz.timeComponents = t2Dto.CopyOut()
-	dtz.dateTimeFmt = fmtStr
-
-	return nil
+	return dTzUtil.setFromTimeDto(
+					dtz,
+					tDto,
+					timeZoneLocation,
+					dtz.dateTimeFmt,
+					ePrefix)
 }
 
 // SetFromTimeTz - Sets the time values of the current DateTzDto instance
