@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest026()
+	mainTest{}.mainTest027()
 
 }
 
@@ -18,8 +18,55 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest027() {
 
-func (mt mainTest) mainTest026() {
+	fmt.Println("       mainTest027()         ")
+	fmt.Println("-----------------------------")
+	fmt.Println()
+
+	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	expectedOutDate := t1.Format(fmtstr)
+
+	dtz1, err := dt.DateTzDto{}.New(t1, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
+			"Error='%v'", err.Error())
+		return
+	}
+
+	if expectedOutDate != dtz1.String() {
+		fmt.Printf("Error: Expected dtz1.String()='%v'.\n" +
+			"Instead, dtz1.String()='%v'\n", expectedOutDate, dtz1.String())
+	}
+
+	t2 := t1.AddDate(5, 6, 12)
+
+	dtz2, err := dtz1.AddDate(5, 6, 12, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedOutDate = t2.Format(fmtstr)
+
+	if expectedOutDate != dtz2.String() {
+		fmt.Printf("Error: Expected dtz2.String()='%v'.\n" +
+			"Instead, dtz2.String()='%v'\n", expectedOutDate, dtz2.String())
+		return
+	}
+
+	fmt.Println("------ Success!!! ------")
+
+}
+
+	func (mt mainTest) mainTest026() {
 
 	fmt.Println("       mainTest026()         ")
 	fmt.Println("-----------------------------")

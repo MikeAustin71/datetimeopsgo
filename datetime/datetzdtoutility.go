@@ -100,6 +100,78 @@ func (dTzUtil *dateTzDtoUtility) empty(dTz *DateTzDto) {
 	return
 }
 
+// isEmptyDateTzDto - Analyzes an instanceof DateTzDto to
+// determine if all data fields are uninitialized or zero
+// values.
+//
+func (dTzUtil *dateTzDtoUtility) isEmptyDateTzDto(
+		dTz *DateTzDto) bool {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	if dTz == nil {
+		return true
+	}
+
+	if dTz.tagDescription == "" &&
+		dTz.timeComponents.IsEmpty() &&
+		dTz.dateTimeValue.IsZero() &&
+		dTz.dateTimeFmt == "" &&
+		dTz.timeZone.IsEmpty() {
+
+		return true
+	}
+
+	return false
+}
+
+// isValidDateTzDto - Analyzes an instance of 'DateTzDto' to
+// determine if is value. If the instance evaluates as invalid,
+// an error is returned.
+//
+func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
+		dTz *DateTzDto,
+		ePrefix string) error {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.isValidDateTzDto() "
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	if dTzUtil2.isEmptyDateTzDto(dTz) {
+		return errors.New(ePrefix +
+			"\nThis 'DateTzDto' instance is EMPTY!\n")
+	}
+
+	if dTz.dateTimeValue.IsZero() {
+		return errors.New(ePrefix +
+			"\nError: DateTzDto.DateTime is ZERO!\n")
+	}
+
+	if dTz.timeZone.IsEmpty() {
+		return errors.New(ePrefix +
+			"\nError: DateTzDto.TimeZone is EMPTY!\n")
+	}
+
+	if err := dTz.timeComponents.IsValidDateTime(); err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError: dTz.timeComponents is INVALID.\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	if !dTz.timeZone.IsValidFromDateTime(dTz.dateTimeValue) {
+		return errors.New(ePrefix +
+			"\nError: dTz.TimeZone is INVALID!\n")
+	}
+
+	return nil
+}
+
 // preProcessDateFormatStr - Provides a standardized method
 // for implementing a default date time format string.
 //

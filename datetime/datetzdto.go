@@ -195,12 +195,18 @@ func (dtz *DateTzDto) AddDate(
 	days int,
 	dateTimeFormatStr string) (DateTzDto, error) {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddDate() "
 
-	err := dtz.IsValid()
+	dTzUtil := dateTzDtoUtility{}
+
+	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"The current DateTzDto is INVALID! dtz.dateTimeValue='%v'", dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr))
+		return DateTzDto{}, err
 	}
 
 	newDt1 := dtz.dateTimeValue.AddDate(years, months, 0)
@@ -459,7 +465,9 @@ func (dtz *DateTzDto) AddDateToThis(
 
 	ePrefix := "DateTzDto.AddDateToThis() "
 
-	err := dtz.IsValid()
+	dTzUtil := dateTzDtoUtility{}
+
+	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -478,7 +486,7 @@ func (dtz *DateTzDto) AddDateToThis(
 			newDt2.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
-	dtz.CopyIn(dtz2)
+	dTzUtil.copyIn(dtz, &dtz2)
 
 	return nil
 
@@ -1512,7 +1520,9 @@ func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
 
 	ePrefix := "DateTzDto.GetMilitaryDateTzDto() "
 
-	err := dtz.IsValid()
+	dTzUtil := dateTzDtoUtility{}
+
+	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
 
 	if err != nil {
 		return MilitaryDateTzDto{},
@@ -1686,39 +1696,15 @@ func (dtz *DateTzDto) IsEmpty() bool {
 // nil.
 func (dtz *DateTzDto) IsValid() error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.IsValidDateTime() "
 
-	if dtz.IsEmpty() {
-		return errors.New(ePrefix + "Error: This DateTzDto instance is EMPTY!")
-	}
+	dTzUtil := dateTzDtoUtility{}
 
-	if dtz.dateTimeValue.IsZero() {
-		return errors.New(ePrefix + "Error: DateTzDto.DateTime is ZERO!")
-	}
-
-	if dtz.timeZone.IsEmpty() {
-		return errors.New(ePrefix + "Error: dtz.TimeZone is EMPTY!")
-	}
-
-	if err := dtz.timeComponents.IsValidDateTime(); err != nil {
-		return fmt.Errorf(ePrefix+"Error: dtz.timeComponents is INVALID. Error='%v'", err.Error())
-	}
-
-	if !dtz.timeZone.IsValidFromDateTime(dtz.dateTimeValue) {
-		return errors.New(ePrefix + "Error: dtz.TimeZone is INVALID!")
-	}
-
-	dtz2, err := DateTzDto{}.New(dtz.dateTimeValue, dtz.dateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error creating check DateTzDto - Error='%v'", err.Error())
-	}
-
-	if !dtz.Equal(dtz2) {
-		return errors.New(ePrefix + "Error: Current DateTzDto is NOT EQUAL to Check DateTzDto!")
-	}
-
-	return nil
+	return dTzUtil.isValidDateTzDto(dtz, ePrefix)
 }
 
 // New - returns a new DateTzDto instance based on a time.Time ('dateTime')

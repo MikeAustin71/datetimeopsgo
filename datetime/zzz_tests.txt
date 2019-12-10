@@ -19,9 +19,9 @@
 === RUN   TestDateTzDto_CopyOut
 --- PASS: TestDateTzDto_CopyOut (0.00s)
 === RUN   TestDateTzDto_GetTimeDto_01
---- PASS: TestDateTzDto_GetTimeDto_01 (0.01s)
+--- PASS: TestDateTzDto_GetTimeDto_01 (0.02s)
 === RUN   TestDateTzDto_GetDateTimeTzNanoSecYMDDowText
---- PASS: TestDateTzDto_GetDateTimeTzNanoSecYMDDowText (0.01s)
+--- PASS: TestDateTzDto_GetDateTimeTzNanoSecYMDDowText (0.00s)
 === RUN   TestDateTzDto_GetMilitaryDateTzDto_01
 --- PASS: TestDateTzDto_GetMilitaryDateTzDto_01 (0.00s)
 === RUN   TestDateTzDto_GetMilitaryDateTzDto_02
@@ -29,7 +29,7 @@
 === RUN   TestDateTzDto_NewDateTimeElements_01
 --- PASS: TestDateTzDto_NewDateTimeElements_01 (0.00s)
 === RUN   TestDateTzDto_NewDateTime_01
---- PASS: TestDateTzDto_NewDateTime_01 (0.00s)
+--- PASS: TestDateTzDto_NewDateTime_01 (0.01s)
 === RUN   TestDateTzDto_New_01
 --- PASS: TestDateTzDto_New_01 (0.00s)
 === RUN   TestDateTzDto_New_02
@@ -37,13 +37,13 @@
 === RUN   TestDateTzDto_NewFromMilitaryDateTz_01
 --- PASS: TestDateTzDto_NewFromMilitaryDateTz_01 (0.01s)
 === RUN   TestDateTzDto_NewNowTz_01
---- PASS: TestDateTzDto_NewNowTz_01 (0.00s)
+--- PASS: TestDateTzDto_NewNowTz_01 (0.01s)
 === RUN   TestDateTzDto_NewNowLocal_01
 --- PASS: TestDateTzDto_NewNowLocal_01 (0.00s)
 === RUN   TestDateTzDto_NewNowUTC_01
 --- PASS: TestDateTzDto_NewNowUTC_01 (0.00s)
 === RUN   TestDateTzDto_NewTimeDto_01
---- PASS: TestDateTzDto_NewTimeDto_01 (0.00s)
+--- PASS: TestDateTzDto_NewTimeDto_01 (0.01s)
 === RUN   TestDateTzDto_NewTz_01
 --- PASS: TestDateTzDto_NewTz_01 (0.00s)
 === RUN   TestDateTzDto_SetFromDateTimeComponents_01
@@ -81,11 +81,11 @@
 === RUN   TestCustomDateTimeFormat
 --- PASS: TestCustomDateTimeFormat (0.00s)
 === RUN   TestDurationTriad_GetYearMthDaysTimeAbbrv
---- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.02s)
+--- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.03s)
 === RUN   TestDurationTriad_GetYearsMthsWeeksTimeAbbrv
---- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.01s)
+--- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_NewAutoEnd_01
---- PASS: TestDurationTriad_NewAutoEnd_01 (0.00s)
+--- PASS: TestDurationTriad_NewAutoEnd_01 (0.01s)
 === RUN   TestDurationTriad_NewAutoStart
 --- PASS: TestDurationTriad_NewAutoStart (0.01s)
 === RUN   TestDurationTriad_NewStartTimeDuration_01
@@ -95,9 +95,9 @@
 === RUN   TestDurationTriad_NewStartEndDateTzDto_01
 --- PASS: TestDurationTriad_NewStartEndDateTzDto_01 (0.00s)
 === RUN   TestDurationTriad_NewStartEndDateTzDtoTz
---- PASS: TestDurationTriad_NewStartEndDateTzDtoTz (0.01s)
+--- PASS: TestDurationTriad_NewStartEndDateTzDtoTz (0.00s)
 === RUN   TestDurationTriad_NewStartEndDateTzDtoCalcTz
---- PASS: TestDurationTriad_NewStartEndDateTzDtoCalcTz (0.01s)
+--- PASS: TestDurationTriad_NewStartEndDateTzDtoCalcTz (0.00s)
 === RUN   TestDurationTriad_NewStartEndTimes_01
 --- PASS: TestDurationTriad_NewStartEndTimes_01 (0.00s)
 === RUN   TestDurationTriad_NewStartTimeMinusTime_01
@@ -109,13 +109,13 @@
 === RUN   TestDurationTriad_SetStartEndTimes_02
 --- PASS: TestDurationTriad_SetStartEndTimes_02 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_03
---- PASS: TestDurationTriad_SetStartEndTimes_03 (0.01s)
+--- PASS: TestDurationTriad_SetStartEndTimes_03 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_04
 --- PASS: TestDurationTriad_SetStartEndTimes_04 (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTime
 --- PASS: TestDurationTriad_SetStartTimePlusTime (0.00s)
 === RUN   TestDurationTriad_SetStartTimeMinusTime
---- PASS: TestDurationTriad_SetStartTimeMinusTime (0.01s)
+--- PASS: TestDurationTriad_SetStartTimeMinusTime (0.00s)
 === RUN   TestDurationTriad_SetStartTimeDuration
 --- PASS: TestDurationTriad_SetStartTimeDuration (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTimeDto_01
@@ -189,15 +189,15 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.88s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.91s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (5.01s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.04s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.03s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.04s)
+--- PASS: TestDtfmtTestSuite (4.69s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.02s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.05s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.07s)
 === RUN   TestTDurCalcTypeString_001
 --- PASS: TestTDurCalcTypeString_001 (0.00s)
 === RUN   TestTDurCalcTypeString_002
@@ -307,7 +307,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDto_Equal_02
 --- PASS: TestTimeDto_Equal_02 (0.00s)
 === RUN   TestTimeDto_GetDateTime_01
---- PASS: TestTimeDto_GetDateTime_01 (0.00s)
+--- PASS: TestTimeDto_GetDateTime_01 (0.01s)
 === RUN   TestTimeDto_New_01
 --- PASS: TestTimeDto_New_01 (0.00s)
 === RUN   TestTimeDto_New_02
@@ -352,7 +352,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.05s)
+--- PASS: TestTimeDuroTestSuite (0.13s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
@@ -490,4 +490,4 @@ Processed 67 sample dates successfully!
 --- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.00s)
 PASS
 coverage: 53.7% of statements
-ok  	github.com/MikeAustin71/datetimeopsgo/datetime	15.660s
+ok  	github.com/MikeAustin71/datetimeopsgo/datetime	16.072s
