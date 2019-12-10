@@ -618,7 +618,7 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 
 }
 
-func TestDateTzDto_SetFromDateTime_01(t *testing.T) {
+func TestDateTzDto_SetFromDateTimeComponents_01(t *testing.T) {
 	t0str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	t1str := "02/15/2014 19:54:30.038175584 -0600 CST"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"

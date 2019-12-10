@@ -2824,7 +2824,7 @@ func (dtz *DateTzDto) SetFromDateTimeComponents(
 
 	dTzUtil := dateTzDtoUtility{}
 
-	err := dTzUtil.setFromDateTimeComponents(
+	return dTzUtil.setFromDateTimeComponents(
 						dtz,
 						year,
 						month,
@@ -2838,13 +2838,14 @@ func (dtz *DateTzDto) SetFromDateTimeComponents(
 						timeZoneLocation,
 						dateTimeFmtStr,
 						ePrefix)
-
-	return err
 }
 
 // SetFromDateTimeElements - Sets the values of the current DateTzDto
 // data fields based on input parameters consisting of date time
-// components, a time zone location and a date time format string.
+// elements, a time zone location and a date time format string.
+//
+// Date Time elements include year, month, day, hour, minute,
+// second and nanosecond.
 //
 // ------------------------------------------------------------------------
 //
@@ -2920,56 +2921,26 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.SetFromDateTimeElements() "
 
-	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute, second,
-		0, 0, nanosecond)
+	dtUtil := dateTzDtoUtility{}
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned from TimeDto{}.New(year, month, ...). "+
-			" Error='%v'", err.Error())
-	}
-
-	fmtStr := dtz.preProcessDateFormatStr(dateTimeFmtStr)
-
-	tzl := dtz.preProcessTimeZoneLocation(timeZoneLocation)
-
-	_, err = time.LoadLocation(tzl)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by time.LoadLocation(tzl). INVALID 'timeZoneLocation'! "+
-			"tzl='%v' timeZoneLocation='%v' Error='%v' ",
-			tzl, timeZoneLocation, err.Error())
-	}
-
-	dt, err := tDto.GetDateTime(tzl)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.GetDateTime(tzl). "+
-			"timeZoneLocation='%v' tzl='%v' Error='%v'",
-			timeZoneLocation, tzl, err.Error())
-	}
-
-	timeZone, err := TimeZoneDefDto{}.New(dt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by TimeZoneDefDto{}.New(dt). "+
-			"tzl='%v' timeZonelocation='%v' dt='%v' Error='%v'",
-			tzl, timeZoneLocation, dt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	dtz.Empty()
-
-	dtz.dateTimeValue = dt
-	dtz.timeZone = timeZone.CopyOut()
-	dtz.timeComponents = tDto.CopyOut()
-	dtz.dateTimeFmt = fmtStr
-
-	return nil
+	return dtUtil.setFromDateTimeElements(
+			dtz,
+			year,
+			month,
+			day,
+			hour,
+			minute,
+			second,
+			nanosecond,
+			timeZoneLocation,
+			dateTimeFmtStr,
+			ePrefix)
 }
 
 // SetFromTime - Sets the values of the current DateTzDto fields

@@ -262,3 +262,89 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	return nil
 }
+
+
+// setFromDateTimeElements - Sets the values of input parameter
+// 'dTz' (type DateTzDto). 'dTz' data fields are set based on
+// input parameters consisting of date time elements,
+// a time zone location and a date time format string.
+//
+// Date Time elements include year, month, day, hour, minute,
+// second and nanosecond.
+//
+func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
+			dTz *DateTzDto,
+			year,
+			month,
+			day,
+			hour,
+			minute,
+			second,
+			nanosecond int,
+			timeZoneLocation,
+			dateTimeFmtStr,
+			ePrefix string) error {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.setFromDateTimeElements() "
+
+	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute, second,
+		0, 0, nanosecond)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned from TimeDto{}.New(year, month, ...).\n"+
+			"Error='%v'\n", err.Error())
+	}
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+
+	timeZoneLocation = dTzUtil2.preProcessTimeZoneLocation(timeZoneLocation)
+
+	_, err = time.LoadLocation(timeZoneLocation)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned by time.LoadLocation(tzl).\n" +
+			"INVALID 'timeZoneLocation'!\n"+
+			"tzl='%v'\ntimeZoneLocation='%v'\n" +
+			"Error='%v'\n",
+			timeZoneLocation, timeZoneLocation, err.Error())
+	}
+
+	dt, err := tDto.GetDateTime(timeZoneLocation)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned by tDto.GetDateTime(tzl).\n"+
+			"\ntimeZoneLocation='%v'\ntzl='%v'\n" +
+			"Error='%v'\n",
+			timeZoneLocation, timeZoneLocation, err.Error())
+	}
+
+	timeZone, err := TimeZoneDefDto{}.New(dt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned by TimeZoneDefDto{}.New(dt).\n"+
+			"tzl='%v'\ntimeZonelocation='%v'\ndt='%v'\n" +
+			"Error='%v'\n",
+			timeZoneLocation,
+			timeZoneLocation,
+			dt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	dTzUtil2.empty(dTz)
+
+	dTz.dateTimeValue = dt
+	dTz.timeZone = timeZone.CopyOut()
+	dTz.timeComponents = tDto.CopyOut()
+	dTz.dateTimeFmt = dateTimeFmtStr
+
+	return nil
+}
