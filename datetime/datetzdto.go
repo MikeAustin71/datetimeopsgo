@@ -479,6 +479,10 @@ func (dtz *DateTzDto) AddDateToThis(
 	months,
 	days int) error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddDateToThis() "
 
 	dTzUtil := dateTzDtoUtility{}
