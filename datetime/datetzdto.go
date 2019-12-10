@@ -1068,6 +1068,9 @@ func (dtz *DateTzDto) AddTime(
 	nanoseconds int,
 	dateTimeFormatStr string) (DateTzDto, error) {
 
+		dtz.lock.Lock()
+		defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddTime() "
 
 	totNanoSecs := int64(hours) * int64(time.Hour)
@@ -1079,15 +1082,15 @@ func (dtz *DateTzDto) AddTime(
 
 	newDateTime := dtz.dateTimeValue.Add(time.Duration(totNanoSecs))
 
-	dtz2, err := DateTzDto{}.New(newDateTime, dtz.dateTimeFmt)
+	dTzUtil := dateTzDtoUtility{}
+
+	dtz2 := DateTzDto{}
+
+	err := dTzUtil.setFromDateTime( &dtz2, newDateTime, dateTimeFormatStr, ePrefix)
 
 	if err != nil {
-		return DateTzDto{},
-			fmt.Errorf(ePrefix+"Error returned by DateTzDto{}.New(newDateTime, dtz.dateTimeFmt) "+
-				"newDateTime='%v'  Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return DateTzDto{}, err
 	}
-
-	dtz2.SetDateTimeFmt(dateTimeFormatStr)
 
 	return dtz2, nil
 }
@@ -1142,23 +1145,39 @@ func (dtz *DateTzDto) AddTime(
 //        'constantsdatetime.go'.
 //
 func (dtz *DateTzDto) AddTimeToThis(
-	hours,
-	minutes,
-	seconds,
-	milliseconds,
-	microseconds,
-	nanoseconds int) error {
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds int) error {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.AddTimeToThis() "
 
-	dtz2, err := dtz.AddTime(hours, minutes, seconds, milliseconds,
-		microseconds, nanoseconds, dtz.dateTimeFmt)
+	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	newDateTime := dtz.dateTimeValue.Add(time.Duration(totNanoSecs))
+
+	dTzUtil := dateTzDtoUtility{}
+
+	dtz2 := DateTzDto{}
+
+	err := dTzUtil.setFromDateTime( &dtz2, newDateTime, dtz.dateTimeFmt, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error: '%v'", err.Error())
+		return  err
 	}
 
-	dtz.CopyIn(dtz2)
+	dTzUtil.copyIn(dtz, &dtz2)
 
 	return nil
 }
@@ -1597,8 +1616,8 @@ func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 
 	if err != nil {
 		return TimeDto{}, fmt.Errorf(ePrefix+
-			"Error returned by TimeDto{}.NewFromDateTime(dtz.DateTime) "+
-			"dtz.DateTime ='%v'  Error='%v'",
+			"\nError returned by TimeDto{}.NewFromDateTime(dtz.DateTime)\n"+
+			"dtz.DateTime ='%v'\nError='%v'\n",
 			dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
