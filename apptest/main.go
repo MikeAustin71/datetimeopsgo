@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest025()
+	mainTest{}.mainTest026()
 
 }
 
@@ -18,6 +18,53 @@ type mainTest struct {
 	output string
 }
 
+
+func (mt mainTest) mainTest026() {
+
+	fmt.Println("       mainTest026()         ")
+	fmt.Println("-----------------------------")
+	fmt.Println()
+	
+	tstr := "12/06/2019 03:12:00 -0600 CST"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	testTime, err := time.Parse(fmtStr, tstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtStr, tstr)\n" +
+			"fmtStr='%v'\n" +
+			"tstr='%v'\n" +
+			"Error='%v'\n",fmtStr, tstr, err.Error())
+		return
+	}
+
+	var milTzDto dt.MilitaryDateTzDto
+	var dateTzDto dt.DateTzDto
+
+	milTzDto, err = dt.MilitaryDateTzDto{}.New(testTime, "Sierra")
+
+	if err != nil {
+		fmt.Printf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Sierra\")\n" +
+			"testTime='%v'\n" +
+			"Error='%v'\n", testTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	dateTzDto, err = dt.DateTzDto{}.NewFromMilitaryDateTz(milTzDto, fmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.NewFromMilitaryDateTz(milTzDto, fmtStr)\n" +
+			"milTzDto.DateTime='%v'\n" +
+			"Error='%v'\n", milTzDto.DateTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	fmt.Println("         Success!!           ")
+	fmt.Println("-----------------------------")
+	fmt.Println()
+	fmt.Printf("Military DateTime: %v", dateTzDto.GetDateTimeValue().Format(fmtStr))
+
+}
 
 func (mt mainTest) mainTest025() {
 

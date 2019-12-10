@@ -360,6 +360,7 @@ func TestDateTzDto_New_02(t *testing.T) {
 }
 
 func TestDateTzDto_NewFromMilitaryDateTz_01(t *testing.T) {
+
 	tstr := "12/06/2019 03:12:00 -0600 CST"
 	fmtStr := "01/02/2006 15:04:05 -0700 MST"
 

@@ -29,6 +29,10 @@ func (dTzUtil *dateTzDtoUtility) copyIn(
 
 	dTzUtil2 := dateTzDtoUtility{}
 
+	if baseDtz == nil {
+		return
+	}
+
 	dTzUtil2.empty(baseDtz)
 
 	baseDtz.tagDescription = incomingDtz.tagDescription
@@ -55,9 +59,13 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 
 	 dtz2 := DateTzDto{}
 
-	 dtz2.tagDescription = dTz.tagDescription
-	 dtz2.timeComponents = dTz.timeComponents.CopyOut()
-	 dtz2.dateTimeFmt = dTz.dateTimeFmt
+	if dTz == nil {
+		return dtz2
+	}
+
+	dtz2.tagDescription = dTz.tagDescription
+	dtz2.timeComponents = dTz.timeComponents.CopyOut()
+	dtz2.dateTimeFmt = dTz.dateTimeFmt
 
 	 if dTz.dateTimeValue.IsZero() {
 		 dtz2.timeZone = TimeZoneDefDto{}
@@ -78,6 +86,10 @@ func (dTzUtil *dateTzDtoUtility) empty(dTz *DateTzDto) {
 
 	dTzUtil.lock.Lock()
 	defer dTzUtil.lock.Unlock()
+
+	if dTz == nil {
+		return
+	}
 
 	dTz.tagDescription = ""
 	dTz.timeComponents.Empty()
@@ -211,6 +223,11 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	ePrefix += "dateTzDtoUtility.setFromDateTimeComponents() "
 
+	if dTz == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
 	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute,
 		second, millisecond, microsecond, nanosecond)
 
@@ -291,6 +308,11 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	ePrefix += "dateTzDtoUtility.setFromDateTimeElements() "
 
+	if dTz == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
 	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute, second,
 		0, 0, nanosecond)
 
@@ -343,6 +365,79 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	dTz.dateTimeValue = dt
 	dTz.timeZone = timeZone.CopyOut()
+	dTz.timeComponents = tDto.CopyOut()
+	dTz.dateTimeFmt = dateTimeFmtStr
+
+	return nil
+}
+
+// setFromTimeTz - Sets the time values for input parameter 'dTz' 
+// (type DateTzDto). The new values will be  based on input parameters
+// 'dateTime', 'timeZoneLocation' and a date time format string,
+// 'dateTimeFmtStr'.
+//
+func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
+			dTz *DateTzDto,
+			dateTime time.Time,
+			timeZoneLocation,
+			dateTimeFmtStr,
+			ePrefix string) error {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.setFromTimeTz() "
+
+	if dTz == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dateTime.IsZero() {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
+	}
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	timeZoneLocation = dTzUtil2.preProcessTimeZoneLocation(timeZoneLocation)
+
+	tLoc, err := time.LoadLocation(timeZoneLocation)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nINVALID timeZoneLocation. Error returned by time.LoadLocation(timeZoneLocation)\n"+
+			"timeZoneLocation='%v'\ntzl='%v'\nError='%v'\n",
+			timeZoneLocation, timeZoneLocation, err.Error())
+	}
+
+	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+
+	targetDateTime := dateTime.In(tLoc)
+
+	tZone, err := TimeZoneDefDto{}.New(targetDateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned by TimeZoneDefDto{}.New(targetDateTime)\n"+
+			"targetDateTime='%v'\nTarget Time Zone Location='%v'\nError='%v'\n",
+			targetDateTime.Format(FmtDateTimeYrMDayFmtStr), timeZoneLocation, err.Error())
+	}
+
+	tDto, err := TimeDto{}.NewFromDateTime(targetDateTime)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned from TimeDto{}.NewFromDateTime(targetDateTime).\n"+
+			"targetDateTime='%v'\nError='%v'\n",
+			targetDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	dTzUtil2.empty(dTz)
+
+	dTz.dateTimeValue = targetDateTime
+	dTz.timeZone = tZone.CopyOut()
 	dTz.timeComponents = tDto.CopyOut()
 	dTz.dateTimeFmt = dateTimeFmtStr
 
