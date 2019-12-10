@@ -2030,35 +2030,41 @@ func (dtz DateTzDto) NewDateTimeComponents(
 //         source file 'constantsdatetime.go'.
 //
 func (dtz DateTzDto) NewDateTimeElements(
-	year,
-	month,
-	day,
-	hour,
-	minute,
-	second,
-	nanosecond int,
-	timeZoneLocation,
-	dateTimeFmtStr string) (DateTzDto, error) {
+		year,
+		month,
+		day,
+		hour,
+		minute,
+		second,
+		nanosecond int,
+		timeZoneLocation,
+		dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.NewDateTimeElements() "
 
 	dtz2 := DateTzDto{}
 
-	err := dtz2.SetFromDateTimeElements(year, month, day, hour, minute, second,
-		nanosecond, timeZoneLocation, dateTimeFmtStr)
+	dtUtil := dateTzDtoUtility{}
+
+	err := dtUtil.setFromDateTimeElements(
+		&dtz2,
+		year,
+		month,
+		day,
+		hour,
+		minute,
+		second,
+		nanosecond,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return DateTzDto{},
-			fmt.Errorf(ePrefix+
-				"Error returned from dtz2.SetFromDateTimeElements(...) "+
-				"year='%v' month='%v' day='%v' hour='%v' minute='%v' second='%v' "+
-				"nanosecond='%v' timeZoneLocatin='%v'  Error='%v'",
-				year, month, day, hour, minute, second, nanosecond, timeZoneLocation, err.Error())
+		return DateTzDto{}, err
 	}
 
 	return dtz2, nil
 }
-
 
 // NewFromMilitaryDateTz - Creates and returns a new DateTzDto initialized from an
 // instance of type 'MilitaryDateTzDto' passed as an input parameter.
