@@ -14,6 +14,53 @@ type dateTzDtoUtility struct {
  	lock     sync.Mutex
  }
 
+ // addDateTime - Adds date time components to the date time value of the
+// current DateTzDto instance. The updated date time value is returned to
+// the calling function as a new DateTzDto instance.
+//
+ func (dTzUtil *dateTzDtoUtility) addDateTime(
+	dTz *DateTzDto,
+	 years,
+	 months,
+	 days,
+	 hours,
+	 minutes,
+	 seconds,
+	 milliseconds,
+	 microseconds,
+	 nanoseconds int,
+	 dateTimeFormatStr,
+	 ePrefix string) (DateTzDto, error) {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.addDateTime() "
+
+	newDate := dTz.dateTimeValue.AddDate(years, months, 0)
+
+	totNanoSecs := int64(days) * DayNanoSeconds
+	totNanoSecs += int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	newDateTime := newDate.Add(time.Duration(totNanoSecs))
+
+	dTz2, err := DateTzDto{}.New(newDateTime, dateTimeFormatStr)
+
+	if err != nil {
+		 return DateTzDto{},
+			 fmt.Errorf(ePrefix+
+			 	"\nError returned from DateTzDto{}.New(newDateTime, dateTimeFormatStr)\n"+
+				 "newDateTime='%v'\nError='%v'\n", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	return dTz2, nil
+ }
 
 // copyIn - Receives two parameters which are pointers
 // to types DateTzDto. The method then copies all of

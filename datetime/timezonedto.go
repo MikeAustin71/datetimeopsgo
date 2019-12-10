@@ -147,7 +147,7 @@ func (tzDto *TimeZoneDto) AddDate(years, months, days int) error {
 	return nil
 }
 
-// AddDateTime - Adds input time elements to the time
+// addDateTime - Adds input time elements to the time
 // value of the current TimeZoneDto instance.
 //
 // Input Parameters
@@ -177,7 +177,7 @@ func (tzDto *TimeZoneDto) AddDate(years, months, days int) error {
 func (tzDto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 	seconds, milliseconds, microseconds, nanoseconds int) error {
 
-	ePrefix := "TimeZoneDto.AddDateTime() "
+	ePrefix := "TimeZoneDto.addDateTime() "
 
 	err := tzDto.IsTimeZoneDtoValid()
 
@@ -190,7 +190,7 @@ func (tzDto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeIn.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"Error returned by tzDto.TimeIn.addDateTime(years, months, days, hours, minutes, seconds, "+
 			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
 			"Error='%v'", err.Error())
 	}
@@ -200,7 +200,7 @@ func (tzDto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeOut.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"Error returned by tzDto.TimeOut.addDateTime(years, months, days, hours, minutes, seconds, "+
 			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
 			"Error='%v'", err.Error())
 	}
@@ -210,7 +210,7 @@ func (tzDto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeUTC.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"Error returned by tzDto.TimeUTC.addDateTime(years, months, days, hours, minutes, seconds, "+
 			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
 			"Error='%v'", err.Error())
 	}
@@ -1109,7 +1109,7 @@ func (tzDto TimeZoneDto) NewAddDateTime(tzdtoIn TimeZoneDto, years, months, days
 
 	if err != nil {
 		return TimeZoneDto{},
-			fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDateTime(...). Error='%v'", err.Error())
+			fmt.Errorf(ePrefix+"Error returned by tzuOut.addDateTime(...). Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil
@@ -1592,7 +1592,7 @@ func (tzDto TimeZoneDto) NewTimeAddDateTime(tIn time.Time, tZoneLocation string,
 		microseconds, nanoseconds)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDateTime(...)  Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.addDateTime(...)  Error='%v'", err.Error())
 	}
 
 	return tzuOut, nil

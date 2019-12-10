@@ -298,7 +298,7 @@ func (dtz *DateTzDto) AddDate(
 //  dtz := DateTzDto{}
 //  ... initialize to a value.
 //
-//  dtz, err := dtz.AddDateTime(
+//  dtz, err := dtz.addDateTime(
 //                   years,
 //                   months,
 //                   days,
@@ -327,29 +327,28 @@ func (dtz *DateTzDto) AddDateTime(
 	nanoseconds int,
 	dateTimeFormatStr string) (DateTzDto, error) {
 
-	ePrefix := "DateTzDto.AddDateTime() "
+	dtz.lock.Lock()
 
-	newDate := dtz.dateTimeValue.AddDate(years, months, 0)
+	defer dtz.lock.Unlock()
 
-	totNanoSecs := int64(days) * DayNanoSeconds
-	totNanoSecs += int64(hours) * int64(time.Hour)
-	totNanoSecs += int64(minutes) * int64(time.Minute)
-	totNanoSecs += int64(seconds) * int64(time.Second)
-	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
-	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
-	totNanoSecs += int64(nanoseconds)
+	ePrefix := "DateTzDto.addDateTime() "
 
-	newDateTime := newDate.Add(time.Duration(totNanoSecs))
+	dTzUtil := dateTzDtoUtility{}
 
-	dtz2, err := DateTzDto{}.New(newDateTime, dateTimeFormatStr)
+	return dTzUtil.addDateTime(
+		dtz,
+		years,
+		months,
+		days,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds,
+		dateTimeFormatStr,
+		ePrefix)
 
-	if err != nil {
-		return DateTzDto{},
-			fmt.Errorf(ePrefix+"Error returned from DateTzDto{}.New(newDateTime, dateTimeFormatStr) "+
-				"newDateTime='%v' Error='%v'", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	return dtz2, nil
 }
 
 // AddDateTimeToThis - Adds date time components to the date time value of the current
@@ -409,16 +408,33 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 	microseconds,
 	nanoseconds int) error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddDateTimeToThis() "
 
-	dtz2, err := dtz.AddDateTime(years, months, days, hours, minutes, seconds,
-		milliseconds, microseconds, nanoseconds, dtz.dateTimeFmt)
+	dTzUtil := dateTzDtoUtility{}
+
+	dtz2, err :=dTzUtil.addDateTime(
+							dtz,
+							years,
+							months,
+							days,
+							hours,
+							minutes,
+							seconds,
+							milliseconds,
+							microseconds,
+							nanoseconds,
+							dtz.dateTimeFmt,
+							ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error='%v'", err.Error())
+		return fmt.Errorf(ePrefix + "Error='%v'", err.Error())
 	}
 
-	dtz.CopyIn(dtz2)
+	dTzUtil.copyIn(dtz, &dtz2)
 
 	return nil
 }

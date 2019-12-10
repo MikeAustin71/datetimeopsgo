@@ -306,7 +306,7 @@ func TestDateTzDto_AddDateTime(t *testing.T) {
 	dTz2, err := dTz1.AddDateTime(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by dTz1.AddDateTime(years, months, days, hours, minutes, ...)\n" +
+		t.Errorf("Error returned by dTz1.addDateTime(years, months, days, hours, minutes, ...)\n" +
 			"Error='%v'.\n", err.Error())
 		return
 	}
