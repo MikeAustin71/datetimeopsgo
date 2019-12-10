@@ -2972,7 +2972,7 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 			ePrefix)
 }
 
-// SetFromTime - Sets the values of the current DateTzDto fields
+// SetFromDateTime - Sets the values of the current DateTzDto fields
 // based on an input parameter 'dateTime' (Type time.time) and a
 // date time format string.
 //
@@ -3007,12 +3007,12 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 //   error - If successful the returned error Type is set equal to 'nil'. If errors are
 //           encountered this error Type will encapsulate an error message.
 //
-func (dtz *DateTzDto) SetFromTime(dateTime time.Time, dateTimeFmtStr string) error {
+func (dtz *DateTzDto) SetFromDateTime(dateTime time.Time, dateTimeFmtStr string) error {
 
 	dtz.lock.Lock()
 	defer dtz.lock.Unlock()
 
-	ePrefix := "DateTzDto.SetFromTime() "
+	ePrefix := "DateTzDto.SetFromDateTime() "
 
 	dTzUtility := dateTzDtoUtility{}
 
@@ -3243,11 +3243,11 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 	newDateTime := dtz.dateTimeValue.In(loc)
 	newFmtStr := dtz.dateTimeFmt
 
-	err = dtz.SetFromTime(newDateTime, newFmtStr)
+	err = dtz.SetFromDateTime(newDateTime, newFmtStr)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned by SetFromTime(newDateTime, newFmtStr). "+
+			"Error returned by SetFromDateTime(newDateTime, newFmtStr). "+
 			"newDateTime='%v' Error='%v'",
 			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
