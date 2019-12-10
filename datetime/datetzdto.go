@@ -3229,30 +3229,32 @@ func (dtz *DateTzDto) SetFromTimeTz(
 //
 func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.SetNewTimeZone() "
-	tzl := dtz.preProcessTimeZoneLocation(newTimeZoneLocation)
+
+	dTzUtil := dateTzDtoUtility{}
+
+	tzl := dTzUtil.preProcessTimeZoneLocation(newTimeZoneLocation)
 
 	loc, err := time.LoadLocation(tzl)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by time.LoadLocation(tzl). "+
-			"tzl='%v' newTimeZoneLocation='%v' Error='%v'",
+		return fmt.Errorf(ePrefix+
+			"\nError returned by time.LoadLocation(tzl).\n"+
+			"tzl='%v'\nnewTimeZoneLocation='%v'\nError='%v'\n",
 			tzl, newTimeZoneLocation, err.Error())
 	}
 
 	newDateTime := dtz.dateTimeValue.In(loc)
+
 	newFmtStr := dtz.dateTimeFmt
 
-	err = dtz.SetFromDateTime(newDateTime, newFmtStr)
+	err = dTzUtil.setFromDateTime(dtz, newDateTime, newFmtStr, ePrefix)
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by SetFromDateTime(newDateTime, newFmtStr). "+
-			"newDateTime='%v' Error='%v'",
-			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	return nil
+	return err
 }
 
 // SetTagDescription - Sets DateTzDto private member variable
