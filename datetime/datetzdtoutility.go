@@ -62,6 +62,36 @@ type dateTzDtoUtility struct {
 	return dTz2, nil
  }
 
+// addDuration - Adds Duration to the DateTime Value of the input
+// parameter 'dTz' (DateTzDto) and returns a new DateTzDto instance
+// with the updated Date Time value.
+//
+func (dTzUtil *dateTzDtoUtility) addDuration(
+	dTz *DateTzDto,
+	duration time.Duration,
+	dateTimeFmtStr,
+	ePrefix string) (DateTzDto, error) {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.addDuration() "
+
+	newDateTime := dTz.dateTimeValue.Add(duration)
+
+	dtz2, err := DateTzDto{}.New(newDateTime, dateTimeFmtStr)
+
+	if err != nil {
+		return DateTzDto{}, fmt.Errorf(ePrefix+
+			"\nError returned by DateTzDto{}.New(newDateTime, dateTimeFmtStr).\n" +
+			"newDateTime='%v'\nError='%v'\n",
+			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	return dtz2, nil
+}
+
 // copyIn - Receives two parameters which are pointers
 // to types DateTzDto. The method then copies all of
 // the data field values from 'incomingDtz' into

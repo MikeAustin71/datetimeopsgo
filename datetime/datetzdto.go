@@ -590,21 +590,19 @@ func (dtz *DateTzDto) AddDuration(
 	duration time.Duration,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddDuration() "
 
-	newDateTime := dtz.dateTimeValue.Add(duration)
+	dTzUtil := dateTzDtoUtility{}
 
-	dtz2, err := DateTzDto{}.New(newDateTime, dateTimeFmtStr)
-
-	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by DateTzDto{}.New(newDateTime, dateTimeFmtStr).\n" +
-			"newDateTime='%v'\nError='%v'\n",
-			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	return dtz2, nil
-
+	return dTzUtil.addDuration(
+					dtz,
+					duration,
+					dateTimeFmtStr,
+					ePrefix)
 }
 
 // AddDurationToThis - Receives a time.Duration input parameter and adds this
@@ -641,8 +639,30 @@ func (dtz *DateTzDto) AddDuration(
 //
 func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddDurationToThis() "
 
+	dTzUtil := dateTzDtoUtility{}
+
+	dtz2, err := dTzUtil.addDuration(
+						dtz,
+						duration,
+						dtz.dateTimeFmt,
+						ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	dTzUtil.copyIn(dtz, &dtz2)
+
+	return nil
+}
+
+/*
 	newDateTime := dtz.dateTimeValue.Add(duration)
 
 	dtz2, err := DateTzDto{}.New(newDateTime, dtz.dateTimeFmt)
@@ -658,6 +678,7 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 
 	return nil
 }
+*/
 
 // AddMinusTimeDto - Creates and returns a new DateTzDto by subtracting a TimeDto
 // from the value of the current DateTzDto Instance.
