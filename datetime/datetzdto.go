@@ -1911,7 +1911,33 @@ func (dtz DateTzDto) NewDateTimeComponents(
 
 	dtz2 := DateTzDto{}
 
-	err := dtz2.SetFromDateTimeComponents(year, month, day, hour, minute, second,
+	dTzUtil := dateTzDtoUtility{}
+
+	err := dTzUtil.setFromDateTimeComponents(
+		&dtz2,
+		year,
+		month,
+		day,
+		hour,
+		minute,
+		second,
+		millisecond,
+		microsecond,
+		nanosecond,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return DateTzDto{}, err
+	}
+
+	return dtz2, nil
+}
+
+/*
+
+err := dtz2.SetFromDateTimeComponents(year, month, day, hour, minute, second,
 		millisecond, microsecond, nanosecond, timeZoneLocation, dateTimeFmtStr)
 
 	if err != nil {
@@ -1922,6 +1948,7 @@ func (dtz DateTzDto) NewDateTimeComponents(
 
 	return dtz2, nil
 }
+*/
 
 // NewDateTimeElements - creates a new DateTzDto object and populates
 // the data fields based on date time elements.
@@ -2855,7 +2882,6 @@ func (dtz *DateTzDto) SetFromDateTimeComponents(
 	dateTimeFmtStr string) error {
 
 	ePrefix := "DateTzDto.SetFromDateTimeComponents() "
-
 
 	dTzUtil := dateTzDtoUtility{}
 
