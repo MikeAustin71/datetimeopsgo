@@ -662,26 +662,8 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 	return nil
 }
 
-/*
-	newDateTime := dtz.dateTimeValue.Add(duration)
-
-	dtz2, err := DateTzDto{}.New(newDateTime, dtz.dateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by DateTzDto{}.New(newDateTime, dtz.dateTimeFmt).\n" +
-			"newDateTime='%v'\nError='%v'\n",
-			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	dtz.CopyIn(dtz2)
-
-	return nil
-}
-*/
-
-// AddMinusTimeDto - Creates and returns a new DateTzDto by subtracting a TimeDto
-// from the value of the current DateTzDto Instance.
+// AddMinusTimeDto - Creates and returns a new DateTzDto by subtracting a
+// TimeDto from the value of the current DateTzDto instance.
 //
 // ------------------------------------------------------------------------
 //
@@ -743,7 +725,21 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //
 func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddMinusTimeDto() "
+
+	dTzUtil := dateTzDtoUtility{}
+
+	return dTzUtil.addMinusTimeDto(
+								dtz,
+								minusTimeDto,
+								ePrefix)
+}
+
+	/*
 	dtz2 := dtz.CopyOut()
 
 	err := dtz2.AddMinusTimeDtoToThis(minusTimeDto)
@@ -757,6 +753,7 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 
 	return dtz2, nil
 }
+*/
 
 // AddMinusTimeDtoToThis - Modifies the current DateTzDto instance by subtracting a TimeDto
 // from the value of the current DateTzDto Instance.
@@ -804,8 +801,29 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //
 func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddMinusTimeDtoToThis() "
 
+	dTzUtil := dateTzDtoUtility{}
+
+	dtz2, err := dTzUtil.addMinusTimeDto(
+		dtz,
+		minusTimeDto,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	dTzUtil.copyIn(dtz, &dtz2)
+
+	return nil
+}
+
+	/*
 	tDto := minusTimeDto.CopyOut()
 
 	err := tDto.NormalizeTimeElements()
@@ -851,6 +869,7 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 
 	return nil
 }
+*/
 
 // AddPlusTimeDto - Creates and returns a new DateTzDto by adding a TimeDto
 // to the value of the current DateTzDto instance and returning that new

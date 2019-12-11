@@ -92,6 +92,70 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 	return dtz2, nil
 }
 
+// addMinusTimeDto - Creates and returns a new DateTzDto by
+// subtracting a TimeDto from the value of the input
+// parameter 'dTz' (DateTzDto) instance.
+//
+func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
+	dTz *DateTzDto,
+	minusTimeDto TimeDto,
+	ePrefix string) (DateTzDto, error) {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.addMinusTimeDto() "
+
+	tDto := minusTimeDto.CopyOut()
+
+	err := tDto.NormalizeTimeElements()
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix+
+				"\nError returned by tDto.NormalizeTimeElements().\n"+
+				"Error='%v'\n", err.Error())
+	}
+
+	_, err = tDto.NormalizeDays()
+
+	if err != nil {
+		return  DateTzDto{},
+			fmt.Errorf(ePrefix+
+			"\nError returned by tDto.NormalizeDays().\n"+
+			"\nError='%v'\n", err.Error())
+	}
+
+	tDto.ConvertToNegativeValues()
+
+	dt1 := dTz.dateTimeValue.AddDate(tDto.Years,
+		tDto.Months,
+		0)
+
+	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
+	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
+	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
+	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
+	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
+	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
+	totNanosecs += int64(tDto.Nanoseconds)
+
+	dt2 := dt1.Add(time.Duration(totNanosecs))
+
+	dtz2, err := DateTzDto{}.NewTz(dt2, dTz.timeZone.LocationName, dTz.dateTimeFmt)
+
+	if err != nil {
+		return DateTzDto{},
+		fmt.Errorf(ePrefix+
+			"\nError returned from DateTzDto{}.New(dt2, dTz.timeZone.LocationName, dTz.dateTimeFmt).\n" +
+			"dTz.timeZone.LocationName='%v'\n"+
+			" Error='%v'\n", dTz.timeZone.LocationName, err.Error())
+	}
+
+	return dtz2, nil
+}
+
 // copyIn - Receives two parameters which are pointers
 // to types DateTzDto. The method then copies all of
 // the data field values from 'incomingDtz' into
