@@ -1428,6 +1428,11 @@ func (dtz *DateTzDto) GetDateTimeStr() string {
 //
 //  EXAMPLE: Monday 2006-01-02 15:04:05.000000000 -0700 MST
 func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeTzNanoDowYMD)
 }
 
@@ -1439,6 +1444,11 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 //
 //  EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
 func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeDMYNanoTz)
 }
 
@@ -1451,6 +1461,11 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
 //
 //  EXAMPLE: 2006-01-02 Monday 15:04:05.000000000 -0700 MST
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeTzNanoYMDDow)
 }
 
@@ -1464,6 +1479,11 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
 //  EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
 //
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeTzNanoYMD)
 }
 
@@ -1477,6 +1497,11 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
 //
 //  EXAMPLE: "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeYMDAbbrvDowNano)
 }
 
@@ -1488,6 +1513,11 @@ func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
 //
 //  EXAMPLE: "2006-01-02 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr)
 }
 
@@ -1498,6 +1528,11 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 // a tag, label, classification or text description.
 //
 func (dtz *DateTzDto) GetDescription() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.tagDescription
 }
 
@@ -1506,6 +1541,10 @@ func (dtz *DateTzDto) GetDescription() string {
 // current 'DateTzDto' object.
 //
 func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.GetMilitaryDateTzDto() "
 
