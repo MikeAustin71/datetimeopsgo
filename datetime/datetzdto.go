@@ -1366,6 +1366,11 @@ func (dtz *DateTzDto) GetDateTimeEverything() string {
 // 	EXAMPLE: 2006-01-02 15:04:05.000000000
 //
 func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	// Time Format down to the nanosecond
 	return dtz.dateTimeValue.Format(FmtDateTimeNanoSecondStr)
 }
@@ -1374,6 +1379,11 @@ func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
 // variable, DateTzDto.dateTimeFmt.
 //
 func (dtz *DateTzDto) GetDateTimeFmt() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeFmt
 }
 
@@ -1385,6 +1395,11 @@ func (dtz *DateTzDto) GetDateTimeFmt() string {
 //  EXAMPLE: 2006-01-02 15:04:05
 //
 func (dtz *DateTzDto) GetDateTimeSecText() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	// Time Display Format with seconds
 	return dtz.dateTimeValue.Format(FmtDateTimeSecText)
 }
@@ -1393,6 +1408,10 @@ func (dtz *DateTzDto) GetDateTimeSecText() string {
 // in the format 20170427211307. Useful in naming
 // files.
 func (dtz *DateTzDto) GetDateTimeStr() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	// Time Format down to the second
 	return dtz.dateTimeValue.Format(FmtDateTimeSecondStr)
