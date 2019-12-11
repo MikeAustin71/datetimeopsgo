@@ -1653,6 +1653,10 @@ func (dtz *DateTzDto) GetTimeComponents() TimeDto {
 //
 func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.GetTimeDto() "
 
 	tDto, err := TimeDto{}.NewFromDateTime(dtz.dateTimeValue)
@@ -1676,6 +1680,11 @@ func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 //  Example output:
 //    "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
 func (dtz *DateTzDto) GetTimeStampEverything() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeEverything)
 }
 
@@ -1689,14 +1698,22 @@ func (dtz *DateTzDto) GetTimeStampEverything() string {
 //  "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 
-	return dtz.dateTimeValue.Format(FmtDateTimeYMDAbbrvDowNano)
+	dtz.lock.Lock()
 
+	defer dtz.lock.Unlock()
+
+	return dtz.dateTimeValue.Format(FmtDateTimeYMDAbbrvDowNano)
 }
 
 // GetTimeZone - Returns a deep copy of the 'DateTzDto' private
 // member variable, 'timeZone', of type TimeZoneDefDto.
 //
 func (dtz *DateTzDto) GetTimeZone() TimeZoneDefDto {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.timeZone.CopyOut()
 }
 
@@ -1707,6 +1724,10 @@ func (dtz *DateTzDto) GetTimeZone() TimeZoneDefDto {
 // method returns 'true'. Otherwise, if the instance is 'NOT EMPTY',
 // this method returns 'false'.
 func (dtz *DateTzDto) IsEmpty() bool {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	if dtz.tagDescription == "" &&
 		dtz.timeComponents.IsEmpty() &&
