@@ -1723,6 +1723,7 @@ func (dtz *DateTzDto) GetTimeZone() TimeZoneDefDto {
 // If the current DateTzDto instance is found to be 'EMPTY', this
 // method returns 'true'. Otherwise, if the instance is 'NOT EMPTY',
 // this method returns 'false'.
+//
 func (dtz *DateTzDto) IsEmpty() bool {
 
 	dtz.lock.Lock()
@@ -1993,21 +1994,6 @@ func (dtz DateTzDto) NewDateTimeComponents(
 
 	return dtz2, nil
 }
-
-/*
-
-err := dtz2.SetFromDateTimeComponents(year, month, day, hour, minute, second,
-		millisecond, microsecond, nanosecond, timeZoneLocation, dateTimeFmtStr)
-
-	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"Error returned by dtz2.SetFromDateTimeComponents(...) "+
-			"year='%v', month='%v', day='%v', hour='%v', minute='%v', second='%v', millisecond='%v', microsecond='%v' nanosecond='%v', timeZoneLocation='%v' Error='%v'",
-			year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZoneLocation, err.Error())
-	}
-
-	return dtz2, nil
-}
-*/
 
 // NewDateTimeElements - creates a new DateTzDto object and populates
 // the data fields based on date time elements.
@@ -2846,6 +2832,10 @@ func (dtz DateTzDto) NewTz(
 //
 func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	if len(dateTimeFmtStr) == 0 {
 		dateTimeFmtStr = FmtDateTimeYrMDayFmtStr
 	}
@@ -2928,17 +2918,21 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 //           encountered this error Type will encapsulate an error message.
 //
 func (dtz *DateTzDto) SetFromDateTimeComponents(
-	year,
-	month,
-	day,
-	hour,
-	minute,
-	second,
-	millisecond,
-	microsecond,
-	nanosecond int,
-	timeZoneLocation,
-	dateTimeFmtStr string) error {
+			year,
+			month,
+			day,
+			hour,
+			minute,
+			second,
+			millisecond,
+			microsecond,
+			nanosecond int,
+			timeZoneLocation,
+			dateTimeFmtStr string) error {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.SetFromDateTimeComponents() "
 
