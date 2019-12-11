@@ -246,6 +246,52 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 	return dTz2, nil
 }
 
+// addTime - Adds input parameter time components (hours, minutes, seconds etc.)
+// to the date time value of the input parameter 'dTz' (DateTzDto). The resulting
+// updated date time value is returned to the calling function in the form of a
+// new DateTzDto instance.
+//
+// The value of the input parameter 'dTz' (DateTzDto) instance is NOT altered.
+//
+func (dTzUtil *dateTzDtoUtility) addTime(
+				dTz *DateTzDto,
+				hours,
+				minutes,
+				seconds,
+				milliseconds,
+				microseconds,
+				nanoseconds int,
+				dateTimeFormatStr,
+				ePrefix string) (DateTzDto, error) {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.addTime() "
+
+	totNanoSecs := int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	newDateTime := dTz.dateTimeValue.Add(time.Duration(totNanoSecs))
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	dtz2 := DateTzDto{}
+
+	err := dTzUtil2.setFromDateTime( &dtz2, newDateTime, dateTimeFormatStr, ePrefix)
+
+	if err != nil {
+		return DateTzDto{}, err
+	}
+
+	return dtz2, nil
+}
+
 // copyIn - Receives two parameters which are pointers
 // to types DateTzDto. The method then copies all of
 // the data field values from 'incomingDtz' into

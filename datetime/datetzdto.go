@@ -1051,26 +1051,18 @@ func (dtz *DateTzDto) AddTime(
 
 	ePrefix := "DateTzDto.AddTime() "
 
-	totNanoSecs := int64(hours) * int64(time.Hour)
-	totNanoSecs += int64(minutes) * int64(time.Minute)
-	totNanoSecs += int64(seconds) * int64(time.Second)
-	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
-	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
-	totNanoSecs += int64(nanoseconds)
-
-	newDateTime := dtz.dateTimeValue.Add(time.Duration(totNanoSecs))
-
 	dTzUtil := dateTzDtoUtility{}
 
-	dtz2 := DateTzDto{}
-
-	err := dTzUtil.setFromDateTime( &dtz2, newDateTime, dateTimeFormatStr, ePrefix)
-
-	if err != nil {
-		return DateTzDto{}, err
-	}
-
-	return dtz2, nil
+	return dTzUtil.addTime(
+					dtz,
+					hours,
+					minutes,
+					seconds,
+					milliseconds,
+					microseconds,
+					nanoseconds,
+					dateTimeFormatStr,
+					ePrefix)
 }
 
 // AddTimeToThis - Modifies the current DateTzTdo instance by adding input parameter
