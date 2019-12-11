@@ -1611,6 +1611,11 @@ func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
 // 'TimeDto'.
 //
 func (dtz *DateTzDto) GetTimeComponents() TimeDto {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.timeComponents.CopyOut()
 }
 
