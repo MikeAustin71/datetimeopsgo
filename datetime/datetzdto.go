@@ -1128,6 +1128,30 @@ func (dtz *DateTzDto) AddTimeToThis(
 
 	ePrefix := "DateTzDto.AddTimeToThis() "
 
+	dTzUtil := dateTzDtoUtility{}
+
+	dtz2, err := dTzUtil.addTime(
+					dtz,
+					hours,
+					minutes,
+					seconds,
+					milliseconds,
+					microseconds,
+					nanoseconds,
+					dtz.dateTimeFmt,
+					ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	dTzUtil.copyIn(dtz, &dtz2)
+
+	return nil
+}
+
+
+	/*
 	totNanoSecs := int64(hours) * int64(time.Hour)
 	totNanoSecs += int64(minutes) * int64(time.Minute)
 	totNanoSecs += int64(seconds) * int64(time.Second)
@@ -1151,6 +1175,7 @@ func (dtz *DateTzDto) AddTimeToThis(
 
 	return nil
 }
+*/
 
 // CopyIn - Receives an incoming DateTzDto and copies those data
 // fields to the current DateTzDto instance.
