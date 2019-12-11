@@ -1150,33 +1150,6 @@ func (dtz *DateTzDto) AddTimeToThis(
 	return nil
 }
 
-
-	/*
-	totNanoSecs := int64(hours) * int64(time.Hour)
-	totNanoSecs += int64(minutes) * int64(time.Minute)
-	totNanoSecs += int64(seconds) * int64(time.Second)
-	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
-	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
-	totNanoSecs += int64(nanoseconds)
-
-	newDateTime := dtz.dateTimeValue.Add(time.Duration(totNanoSecs))
-
-	dTzUtil := dateTzDtoUtility{}
-
-	dtz2 := DateTzDto{}
-
-	err := dTzUtil.setFromDateTime( &dtz2, newDateTime, dtz.dateTimeFmt, ePrefix)
-
-	if err != nil {
-		return  err
-	}
-
-	dTzUtil.copyIn(dtz, &dtz2)
-
-	return nil
-}
-*/
-
 // CopyIn - Receives an incoming DateTzDto and copies those data
 // fields to the current DateTzDto instance.
 //
@@ -1364,6 +1337,11 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 // 'dateTimeValue' as a type time.Time.
 //
 func (dtz *DateTzDto) GetDateTimeValue() time.Time {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue
 }
 
@@ -1375,6 +1353,11 @@ func (dtz *DateTzDto) GetDateTimeValue() time.Time {
 //  EXAMPLE: Saturday April 29, 2017 19:54:30.123456489 -0500 CDT
 //
 func (dtz *DateTzDto) GetDateTimeEverything() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Format(FmtDateTimeEverything)
 }
 
