@@ -3444,27 +3444,10 @@ func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 //                   current DateTzDto time value.
 //
 func (dtz *DateTzDto) SubDateTime(t2 time.Time) time.Duration {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	return dtz.dateTimeValue.Sub(t2)
-}
-
-func (dtz *DateTzDto) preProcessDateFormatStr(dateTimeFmtStr string) string {
-
-	if len(dateTimeFmtStr) == 0 {
-		return FmtDateTimeYrMDayFmtStr
-	}
-
-	return dateTimeFmtStr
-}
-
-func (dtz *DateTzDto) preProcessTimeZoneLocation(timeZoneLocation string) string {
-
-	if len(timeZoneLocation) == 0 {
-		return TZones.Other.UTC()
-	}
-
-	if strings.ToLower(timeZoneLocation) == "local" {
-		return "Local"
-	}
-
-	return timeZoneLocation
 }
