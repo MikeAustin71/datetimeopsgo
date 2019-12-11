@@ -38,6 +38,12 @@ type dateTzDtoUtility struct {
 
 	ePrefix += "dateTzDtoUtility.addDateTime() "
 
+	if dTz == nil {
+		return DateTzDto{},
+				errors.New(ePrefix +
+					"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
 	newDate := dTz.dateTimeValue.AddDate(years, months, 0)
 
 	totNanoSecs := int64(days) * DayNanoSeconds
@@ -50,17 +56,18 @@ type dateTzDtoUtility struct {
 
 	newDateTime := newDate.Add(time.Duration(totNanoSecs))
 
-	dTz2, err := DateTzDto{}.New(newDateTime, dateTimeFormatStr)
+	dTzUtil2 := dateTzDtoUtility{}
+
+	dTz2 := DateTzDto{}
+
+	err := dTzUtil2.setFromDateTime(&dTz2, newDateTime, dateTimeFormatStr, ePrefix)
 
 	if err != nil {
-		 return DateTzDto{},
-			 fmt.Errorf(ePrefix+
-			 	"\nError returned from DateTzDto{}.New(newDateTime, dateTimeFormatStr)\n"+
-				 "newDateTime='%v'\nError='%v'\n", newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return DateTzDto{}, err
 	}
 
 	return dTz2, nil
- }
+}
 
 // addDuration - Adds Duration to the DateTime Value of the input
 // parameter 'dTz' (DateTzDto) and returns a new DateTzDto instance
@@ -77,6 +84,12 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 	defer dTzUtil.lock.Unlock()
 
 	ePrefix += "dateTzDtoUtility.addDuration() "
+
+	if dTz == nil {
+		return DateTzDto{},
+			errors.New(ePrefix +
+				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
 
 	newDateTime := dTz.dateTimeValue.Add(duration)
 
@@ -106,6 +119,12 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	defer dTzUtil.lock.Unlock()
 
 	ePrefix += "dateTzDtoUtility.addMinusTimeDto() "
+
+	if dTz == nil {
+		return DateTzDto{},
+			errors.New(ePrefix +
+				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
 
 	tDto := minusTimeDto.CopyOut()
 
@@ -143,14 +162,83 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 
 	dt2 := dt1.Add(time.Duration(totNanosecs))
 
-	dtz2, err := DateTzDto{}.NewTz(dt2, dTz.timeZone.LocationName, dTz.dateTimeFmt)
+	dtz2 := DateTzDto{}
+	dTzUtil2 := dateTzDtoUtility{}
+
+	err = dTzUtil2.setFromTimeTz(&dtz2, dt2, dTz.timeZone.LocationName, dTz.dateTimeFmt, ePrefix)
+
+	if err != nil {
+		return DateTzDto{}, err
+	}
+
+	return dtz2, nil
+}
+
+// addPlusTimeDto - Creates and returns a new DateTzDto by adding a TimeDto
+// to the value of theDateTzDto instance passed as an input parameter.
+//
+// The value of the input parameter DateTzDto instance is not be altered.
+//
+func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
+	dTz *DateTzDto,
+	plusTimeDto TimeDto,
+	ePrefix string) (DateTzDto, error) {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+		ePrefix += "dateTzDtoUtility.addPlusTimeDto() "
+
+	if dTz == nil {
+		return DateTzDto{},
+			errors.New(ePrefix +
+				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	tDto := plusTimeDto.CopyOut()
+
+	err := tDto.NormalizeTimeElements()
+
+	if err != nil {
+		return DateTzDto{},
+			fmt.Errorf(ePrefix+
+				"\nError returned by tDto.NormalizeTimeElements().\n"+
+				"\nError='%v'\n", err.Error())
+	}
+
+	_, err = tDto.NormalizeDays()
 
 	if err != nil {
 		return DateTzDto{},
 		fmt.Errorf(ePrefix+
-			"\nError returned from DateTzDto{}.New(dt2, dTz.timeZone.LocationName, dTz.dateTimeFmt).\n" +
-			"dTz.timeZone.LocationName='%v'\n"+
-			" Error='%v'\n", dTz.timeZone.LocationName, err.Error())
+				"\nError returned by tDto.NormalizeDays().\n"+
+				"\nError='%v'\n", err.Error())
+	}
+
+	tDto.ConvertToAbsoluteValues()
+
+	dt1 := dTz.dateTimeValue.AddDate(tDto.Years,
+		tDto.Months,
+		0)
+
+	incrementalDur := int64(tDto.DateDays) * DayNanoSeconds
+	incrementalDur += int64(tDto.Hours) * HourNanoSeconds
+	incrementalDur += int64(tDto.Minutes) * MinuteNanoSeconds
+	incrementalDur += int64(tDto.Seconds) * SecondNanoseconds
+	incrementalDur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
+	incrementalDur += int64(tDto.Microseconds) * MicroSecondNanoseconds
+	incrementalDur += int64(tDto.Nanoseconds)
+
+	dt2 := dt1.Add(time.Duration(incrementalDur))
+
+	dtz2, err := DateTzDto{}.New(dt2, dTz.dateTimeFmt)
+
+	if err != nil {
+		return  DateTzDto{},
+			fmt.Errorf(ePrefix+
+				"\nError returned from DateTzDto{}.New(dt2, dtz.dateTimeFmt).\n"+
+					"\nError='%v'\n", err.Error())
 	}
 
 	return dtz2, nil
@@ -170,7 +258,8 @@ func (dTzUtil *dateTzDtoUtility) copyIn(
 
 	dTzUtil2 := dateTzDtoUtility{}
 
-	if baseDtz == nil {
+	if baseDtz == nil ||
+		incomingDtz == nil {
 		return
 	}
 
@@ -281,6 +370,11 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 	defer dTzUtil.lock.Unlock()
 
 	ePrefix += "dateTzDtoUtility.isValidDateTzDto() "
+
+	if dTz == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
 
 	dTzUtil2 := dateTzDtoUtility{}
 
@@ -673,7 +767,12 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 	dTzUtil.lock.Lock()
 	
 	defer dTzUtil.lock.Unlock()
-	
+
+	if dTz == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
 	ePrefix += "dateTzDtoUtility.setFromTimeDto() "
 
 	if tDto.IsEmpty() {

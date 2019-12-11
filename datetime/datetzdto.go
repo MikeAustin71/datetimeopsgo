@@ -739,22 +739,6 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 								ePrefix)
 }
 
-	/*
-	dtz2 := dtz.CopyOut()
-
-	err := dtz2.AddMinusTimeDtoToThis(minusTimeDto)
-
-	if err != nil {
-		return DateTzDto{},
-			fmt.Errorf(ePrefix+
-				"Error returned from dtz2.AddMinusTimeDtoToThis(minusTimeDto). "+
-				" Error='%v'", err.Error())
-	}
-
-	return dtz2, nil
-}
-*/
-
 // AddMinusTimeDtoToThis - Modifies the current DateTzDto instance by subtracting a TimeDto
 // from the value of the current DateTzDto Instance.
 //
@@ -823,54 +807,6 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 	return nil
 }
 
-	/*
-	tDto := minusTimeDto.CopyOut()
-
-	err := tDto.NormalizeTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDto.NormalizeTimeElements(). "+
-			"Error='%v' ", err.Error())
-	}
-
-	_, err = tDto.NormalizeDays()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.NormalizeDays(). "+
-			"Error='%v' ", err.Error())
-
-	}
-
-	tDto.ConvertToNegativeValues()
-
-	dt1 := dtz.dateTimeValue.AddDate(tDto.Years,
-		tDto.Months,
-		0)
-
-	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
-	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
-	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
-	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
-	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	totNanosecs += int64(tDto.Nanoseconds)
-
-	dt2 := dt1.Add(time.Duration(totNanosecs))
-
-	dtz2, err := DateTzDto{}.NewTz(dt2, dtz.timeZone.LocationName, dtz.dateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned from DateTzDto{}.New(dt2, dtz.dateTimeFmt). "+
-			" Error='%v'", err.Error())
-	}
-
-	dtz.CopyIn(dtz2)
-
-	return nil
-}
-*/
-
 // AddPlusTimeDto - Creates and returns a new DateTzDto by adding a TimeDto
 // to the value of the current DateTzDto instance and returning that new
 // value as an of type DateTzDto. The value of the current DateTzDto instance
@@ -937,19 +873,18 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //
 func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddPlusTimeDto() "
 
-	dtz2 := dtz.CopyOut()
+	dTzUtil := dateTzDtoUtility{}
 
-	err := dtz2.AddPlusTimeDtoToThis(plusTimeDto)
-
-	if err != nil {
-		return DateTzDto{},
-			fmt.Errorf(ePrefix+"Error returned from dtz2.AddPlusTimeDtoToThis(plusTimeDto). "+
-				" Error='%v'", err.Error())
-	}
-
-	return dtz2, nil
+	return dTzUtil.addPlusTimeDto(
+								dtz,
+								plusTimeDto,
+								ePrefix)
 }
 
 // AddPlusTimeDtoToThis - Modifies the current DateTzDto instance by adding a TimeDto
@@ -999,49 +934,24 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 //
 func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddPlusTimeDtoToThis() "
-	tDto := plusTimeDto.CopyOut()
 
-	err := tDto.NormalizeTimeElements()
+	dTzUtil := dateTzDtoUtility{}
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.NormalizeTimeElements(). "+
-			"Error='%v' ", err.Error())
-	}
-
-	_, err = tDto.NormalizeDays()
+	dtz2, err := dTzUtil.addPlusTimeDto(
+		dtz,
+		plusTimeDto,
+		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.NormalizeDays(). "+
-			"Error='%v' ", err.Error())
+		return err
 	}
 
-	tDto.ConvertToAbsoluteValues()
-
-	dt1 := dtz.dateTimeValue.AddDate(tDto.Years,
-		tDto.Months,
-		0)
-
-	incrementalDur := int64(tDto.DateDays) * DayNanoSeconds
-	incrementalDur += int64(tDto.Hours) * HourNanoSeconds
-	incrementalDur += int64(tDto.Minutes) * MinuteNanoSeconds
-	incrementalDur += int64(tDto.Seconds) * SecondNanoseconds
-	incrementalDur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	incrementalDur += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	incrementalDur += int64(tDto.Nanoseconds)
-
-	dt2 := dt1.Add(time.Duration(incrementalDur))
-
-	dtz2, err := DateTzDto{}.New(dt2, dtz.dateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned from DateTzDto{}.New(dt2, dtz.dateTimeFmt). "+
-			" Error='%v'", err.Error())
-	}
-
-	dtz.CopyIn(dtz2)
+	dTzUtil.copyIn(dtz, &dtz2)
 
 	return nil
 }
