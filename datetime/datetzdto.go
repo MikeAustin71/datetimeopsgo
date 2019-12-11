@@ -3349,6 +3349,11 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 // a tag, label, classification or description.
 //
 func (dtz *DateTzDto) SetTagDescription(tagDesc string) {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	dtz.tagDescription = tagDesc
 }
 
@@ -3364,6 +3369,10 @@ func (dtz *DateTzDto) SetTagDescription(tagDesc string) {
 // method DateTzDto.SetDateTimeFmt(), above.
 //
 func (dtz *DateTzDto) String() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	fmtStr := dtz.dateTimeFmt
 
@@ -3406,6 +3415,10 @@ func (dtz *DateTzDto) String() string {
 //                   instance.
 //
 func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	return dtz.dateTimeValue.Sub(dtz2.dateTimeValue)
 
