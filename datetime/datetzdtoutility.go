@@ -233,16 +233,17 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 
 	dt2 := dt1.Add(time.Duration(incrementalDur))
 
-	dtz2, err := DateTzDto{}.New(dt2, dTz.dateTimeFmt)
+	dTz2 := DateTzDto{}
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	err = dTzUtil2.setFromDateTime(&dTz2, dt2, dTz.dateTimeFmt, ePrefix)
 
 	if err != nil {
-		return  DateTzDto{},
-			fmt.Errorf(ePrefix+
-				"\nError returned from DateTzDto{}.New(dt2, dtz.dateTimeFmt).\n"+
-					"\nError='%v'\n", err.Error())
+		return DateTzDto{}, err
 	}
 
-	return dtz2, nil
+	return dTz2, nil
 }
 
 // copyIn - Receives two parameters which are pointers
