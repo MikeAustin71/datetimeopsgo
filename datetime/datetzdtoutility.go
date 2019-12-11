@@ -93,13 +93,14 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 
 	newDateTime := dTz.dateTimeValue.Add(duration)
 
-	dtz2, err := DateTzDto{}.New(newDateTime, dateTimeFmtStr)
+	dTzUtil2 := dateTzDtoUtility{}
+
+	dtz2 := DateTzDto{}
+
+	err := dTzUtil2.setFromDateTime(&dtz2 ,newDateTime, dateTimeFmtStr, ePrefix)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by DateTzDto{}.New(newDateTime, dateTimeFmtStr).\n" +
-			"newDateTime='%v'\nError='%v'\n",
-			newDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return DateTzDto{}, err
 	}
 
 	return dtz2, nil
