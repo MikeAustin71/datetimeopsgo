@@ -187,6 +187,44 @@ func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
 
 }
 
+// GetOffsetHours - Returns TimeZoneDefDto member variable
+// ZoneOffset value.
+//
+// Normalized Offset Hours from UTC. Always a positive number,
+// refer to ZoneSign to determine East or West of UTC.
+//
+func (tzdef *TimeZoneDefDto) GetOffsetHours() int {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.GetOffsetHours()
+}
+
+// GetOffsetMinutes - Returns TimeZoneDefDto member variable
+// ZoneOffsetMinutes value.
+//
+// Normalized Offset Minutes offset from UTC. Always a
+// positive number, refer to ZoneSign to determine East or
+// West of UTC.
+//
+func (tzdef *TimeZoneDefDto) GetOffsetMinutes() int {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.GetOffsetMinutes()
+}
+
+// GetOffsetSeconds - Returns TimeZoneDefDto member variable
+// ZoneOffsetSeconds value.
+//
+// Normalized Offset Seconds offset from UTC. Always a
+// positive number, refer to ZoneSign to determine East or
+// West of UTC.
+//
+func (tzdef *TimeZoneDefDto) GetOffsetSeconds() int {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.GetOffsetSeconds()
+}
+
 // GetUtcOffset - Returns the offset from UTC as a string.
 // Examples of the UTC offset format are: "-0600" or "+0200".
 //
@@ -194,6 +232,42 @@ func (tzdef *TimeZoneDefDto) GetUtcOffset() string {
 	tzdef.lock.Lock()
 	defer tzdef.lock.Unlock()
 	return tzdef.utcOffset
+}
+
+// GetZoneName - Returns TimeZoneDefDto member variable
+// ZoneName value.
+func (tzdef *TimeZoneDefDto) GetZoneName() string {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.ZoneName
+}
+
+// GetZoneOffset - Returns TimeZoneDefDto member variable
+// ZoneOffset value.
+func (tzdef *TimeZoneDefDto) GetZoneOffset() string {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.ZoneOffset
+}
+
+// GetZoneOffsetSeconds - Returns TimeZoneDefDto member variable
+// ZoneOffsetSeconds value.
+//
+func (tzdef *TimeZoneDefDto) GetZoneOffsetSeconds() int {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.ZoneOffsetSeconds
+}
+
+// GetZoneSign - Returns TimeZoneDefDto member variable
+// ZoneSign value.
+//
+// -1 == West of UTC  +1 == East of UTC
+//
+func (tzdef *TimeZoneDefDto) GetZoneSign() int {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.ZoneSign
 }
 
 // IsEmpty - Determines whether the current TimeZoneDefDto

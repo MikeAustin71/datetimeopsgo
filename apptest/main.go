@@ -18,6 +18,53 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest028() {
+
+	fmt.Println("       mainTest027()         ")
+	fmt.Println("-----------------------------")
+	fmt.Println()
+
+	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	t1, err := time.Parse(fmtstr, t1str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtstr, t1str).\n" +
+			"Error='%v'", err.Error())
+		return
+	}
+
+	tzLocName := "America/Chicago"
+
+	tzLoc, err := time.LoadLocation(tzLocName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzLocName)\n" +
+			"tzLocName='%v'\n" +
+			"Error='%v'\n", tzLocName, err.Error())
+
+		return
+	}
+
+	t2 := t1.In(tzLoc)
+
+	dtz1, err := dt.DateTzDto{}.New(t2, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
+			"t2='%v'\n" +
+			"Error='%v'\n", t2.Format(fmtstr), err.Error())
+		return
+	}
+
+	tZoneDef := dtz1.GetTimeZone()
+
+
+	fmt.Println("------ Success!!! ------")
+
+}
+
 func (mt mainTest) mainTest027() {
 
 	fmt.Println("       mainTest027()         ")
