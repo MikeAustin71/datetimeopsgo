@@ -4,7 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 )
+
+var lockMapTimeZoneTypeStringToCode = sync.Mutex{}
 
 var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
 	"None":          TimeZoneType(0).None(),
@@ -14,6 +17,8 @@ var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
 	"UtcOffset":     TimeZoneType(0).UtcOffset(),
 }
 
+var lockMapTimeZoneTypeLwrCaseStringToCode = sync.Mutex{}
+
 var mTimeZoneTypeLwrCaseStringToCode = map[string]TimeZoneType{
 	"none":          TimeZoneType(0).None(),
 	"iana":          TimeZoneType(0).Iana(),
@@ -22,6 +27,8 @@ var mTimeZoneTypeLwrCaseStringToCode = map[string]TimeZoneType{
 	"utcoffset":     TimeZoneType(0).UtcOffset(),
 }
 
+var lockMapTimeZoneTypeCodeToString = sync.Mutex{}
+
 var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 	TimeZoneType(0).None():          "None",
 	TimeZoneType(0).Iana():          "Iana",
@@ -29,6 +36,8 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 	TimeZoneType(0).Local():         "Local",
 	TimeZoneType(0).UtcOffset():     "UtcOffset",
 }
+
+
 
 // PathFileTypeCode - This type is an enumeration describing the status
 // of a path or path/file name.
@@ -164,7 +173,7 @@ func (tzType TimeZoneType) XParseString(
 	valueString string,
 	caseSensitive bool) (TimeZoneType, error) {
 
-	ePrefix := "PathFileTypeCode.ParseString() "
+	ePrefix := "XPathFileTypeCode.ParseString() "
 
 	lenValueStr := len(valueString)
 
@@ -173,7 +182,7 @@ func (tzType TimeZoneType) XParseString(
 		lenValueStr -= 2
 	}
 
-	if lenValueStr < 3 {
+	if lenValueStr < 4 {
 		return TzType.None(),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n" +
@@ -187,6 +196,10 @@ func (tzType TimeZoneType) XParseString(
 
 	if caseSensitive {
 
+		lockMapTimeZoneTypeStringToCode.Lock()
+
+		defer lockMapTimeZoneTypeStringToCode.Unlock()
+
 		timeZoneType, ok = mTimeZoneTypeStringToCode[valueString]
 
 		if !ok {
@@ -197,6 +210,10 @@ func (tzType TimeZoneType) XParseString(
 	} else {
 
 		valueString = strings.ToLower(valueString)
+
+		lockMapTimeZoneTypeLwrCaseStringToCode.Lock()
+
+		defer lockMapTimeZoneTypeLwrCaseStringToCode.Unlock()
 
 		timeZoneType, ok = mTimeZoneTypeLwrCaseStringToCode[valueString]
 
@@ -233,6 +250,10 @@ func (tzType TimeZoneType) XParseString(
 //	    str is now equal to "Military"
 //
 func (tzType TimeZoneType) String() string {
+
+	lockMapTimeZoneTypeCodeToString.Lock()
+
+	defer lockMapTimeZoneTypeCodeToString.Unlock()
 
 	label, ok := mTimeZoneTypeCodeToString[tzType]
 

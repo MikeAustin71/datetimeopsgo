@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -39,10 +40,12 @@ type TimeZoneDefDto struct {
 	OffsetHours       int            // Normalized Offset Hours from UTC. Always a positive number, refer to ZoneSign
 	OffsetMinutes     int            // Normalized Offset Minutes offset from UTC. Always a positive number, refer to ZoneSign
 	OffsetSeconds     int            // Normalized Offset Seconds offset from UTC. Always a positive number, refer to ZoneSign
-	ZoneOffset        string         // A text string representing the time zone. Example "-0500 CDT"
+	ZoneOffset        string         // A text string representing the time zone. Example "-0600 CST" or "+0200 EET"
+	utcOffset         string         // A text string representing the offset for UTC. Example "-0600" or "+0200"
 	Location          *time.Location // Pointer to a Time Zone Location
 	LocationName      string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
 	Description       string         // Unused - Available for classification, labeling or description by user.
+	lock              sync.Mutex     // Used for implementing thread safe operations.
 }
 
 // CopyIn - Copies an incoming TimeZoneDefDto into the
@@ -182,6 +185,15 @@ func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
 
 	return false
 
+}
+
+// GetUtcOffset - Returns the offset from UTC as a string.
+// Examples of the UTC offset format are: "-0600" or "+0200".
+//
+func (tzdef *TimeZoneDefDto) GetUtcOffset() string {
+	tzdef.lock.Lock()
+	defer tzdef.lock.Unlock()
+	return tzdef.utcOffset
 }
 
 // IsEmpty - Determines whether the current TimeZoneDefDto
@@ -466,14 +478,18 @@ func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds i
 
 // setZoneString - assembles and assigns the composite zone
 // offset and zone name abbreviation in the TimeZoneDefDto.ZoneOffset
-// field. Example: "-0500 CST"
+// field. Example: "-0600 CST" or "+0200 EET"
 func (tzdef *TimeZoneDefDto) setZoneString() {
 
 	tzdef.ZoneOffset = ""
 
+// Generates an offset in the form of "+0330" or "-0330"
 	if tzdef.ZoneSign < 0 {
 		tzdef.ZoneOffset += "-"
+	} else {
+		tzdef.ZoneOffset += "+"
 	}
+
 
 	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d", tzdef.OffsetHours, tzdef.OffsetMinutes)
 
@@ -481,6 +497,8 @@ func (tzdef *TimeZoneDefDto) setZoneString() {
 		tzdef.ZoneOffset += fmt.Sprintf("%02d", tzdef.OffsetSeconds)
 	}
 
+	// Generates final ZoneOffset in the form
+	// "-0500 CST" or "+0200 EET"
 	tzdef.ZoneOffset += " " + tzdef.ZoneName
 
 	return
