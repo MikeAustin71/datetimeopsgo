@@ -9,7 +9,11 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest027()
+	mainTest{}.mainTest030()
+
+	mainTest{}.mainTest029()
+
+	mainTest{}.mainTest028()
 
 }
 
@@ -18,9 +22,9 @@ type mainTest struct {
 	output string
 }
 
-func (mt mainTest) mainTest028() {
+func (mt mainTest) mainTest030() {
 
-	fmt.Println("       mainTest027()         ")
+	fmt.Println("       mainTest030()         ")
 	fmt.Println("-----------------------------")
 	fmt.Println()
 
@@ -35,7 +39,8 @@ func (mt mainTest) mainTest028() {
 		return
 	}
 
-	tzLocName := "America/Chicago"
+	// tzLocName := "America/Chicago"
+	tzLocName := "Local"
 
 	tzLoc, err := time.LoadLocation(tzLocName)
 
@@ -60,9 +65,143 @@ func (mt mainTest) mainTest028() {
 
 	tZoneDef := dtz1.GetTimeZone()
 
+	fmt.Println("------ Success!!! ------")
+	fmt.Println()
+	fmt.Printf("   Time Zone Name: %v\n", tzLocName)
+	fmt.Println("  -- tZoneDef Values -- ")
+	fmt.Println()
+	fmt.Printf("         ZoneName: %v\n", tZoneDef.GetZoneName())
+	fmt.Printf("ZoneOffsetSeconds: %v\n", tZoneDef.GetZoneOffsetSeconds())
+	fmt.Printf("         ZoneSign: %v\n", tZoneDef.GetZoneSign())
+	fmt.Printf("      OffsetHours: %v\n", tZoneDef.GetOffsetHours())
+	fmt.Printf("    OffsetMinutes: %v\n", tZoneDef.GetOffsetMinutes())
+	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
+	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
+	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
+	fmt.Printf("    Location Name: %v\n", tZoneDef.GetLocationName())
+	fmt.Printf("      Description: %v\n", tZoneDef.GetDescription())
+	fmt.Println()
+	fmt.Println()
+}
+func (mt mainTest) mainTest029() {
+
+	fmt.Println("       mainTest029()         ")
+	fmt.Println("-----------------------------")
+	fmt.Println()
+
+	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	t1, err := time.Parse(fmtstr, t1str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtstr, t1str).\n" +
+			"Error='%v'", err.Error())
+		return
+	}
+
+	// tzLocName := "America/Chicago"
+	tzLocName := "Asia/Kabul"
+
+	tzLoc, err := time.LoadLocation(tzLocName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzLocName)\n" +
+			"tzLocName='%v'\n" +
+			"Error='%v'\n", tzLocName, err.Error())
+
+		return
+	}
+
+	t2 := t1.In(tzLoc)
+
+	dtz1, err := dt.DateTzDto{}.New(t2, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
+			"t2='%v'\n" +
+			"Error='%v'\n", t2.Format(fmtstr), err.Error())
+		return
+	}
+
+	tZoneDef := dtz1.GetTimeZone()
 
 	fmt.Println("------ Success!!! ------")
+	fmt.Println()
+	fmt.Printf("   Time Zone Name: %v\n", tzLocName)
+	fmt.Println("  -- tZoneDef Values -- ")
+	fmt.Println()
+	fmt.Printf("         ZoneName: %v\n", tZoneDef.GetZoneName())
+	fmt.Printf("ZoneOffsetSeconds: %v\n", tZoneDef.GetZoneOffsetSeconds())
+	fmt.Printf("         ZoneSign: %v\n", tZoneDef.GetZoneSign())
+	fmt.Printf("      OffsetHours: %v\n", tZoneDef.GetOffsetHours())
+	fmt.Printf("    OffsetMinutes: %v\n", tZoneDef.GetOffsetMinutes())
+	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
+	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
+	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
+	fmt.Printf("    Location Name: %v\n", tZoneDef.GetLocationName())
+	fmt.Printf("      Description: %v\n", tZoneDef.GetDescription())
+	fmt.Println()
+	fmt.Println()
+}
 
+func (mt mainTest) mainTest028() {
+
+	fmt.Println("       mainTest028()         ")
+	fmt.Println("-----------------------------")
+	fmt.Println()
+
+	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	t1, err := time.Parse(fmtstr, t1str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtstr, t1str).\n" +
+			"Error='%v'", err.Error())
+		return
+	}
+
+	tzLocName := "Asia/Ho_Chi_Minh"
+
+	tzLoc, err := time.LoadLocation(tzLocName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzLocName)\n" +
+			"tzLocName='%v'\n" +
+			"Error='%v'\n", tzLocName, err.Error())
+
+		return
+	}
+
+	t2 := t1.In(tzLoc)
+
+	dtz1, err := dt.DateTzDto{}.New(t2, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
+			"t2='%v'\n" +
+			"Error='%v'\n", t2.Format(fmtstr), err.Error())
+		return
+	}
+
+	tZoneDef := dtz1.GetTimeZone()
+
+	fmt.Println("------ Success!!! ------")
+	fmt.Println()
+	fmt.Printf("   Time Zone Name: %v\n", tzLocName)
+	fmt.Println("  -- tZoneDef Values -- ")
+	fmt.Println()
+	fmt.Printf("         ZoneName: %v\n", tZoneDef.GetZoneName())
+	fmt.Printf("ZoneOffsetSeconds: %v\n", tZoneDef.GetZoneOffsetSeconds())
+	fmt.Printf("         ZoneSign: %v\n", tZoneDef.GetZoneSign())
+	fmt.Printf("      OffsetHours: %v\n", tZoneDef.GetOffsetHours())
+	fmt.Printf("    OffsetMinutes: %v\n", tZoneDef.GetOffsetMinutes())
+	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
+	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
+	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
+	fmt.Printf("    Location Name: %v\n", tZoneDef.GetLocationName())
+	fmt.Printf("      Description: %v\n", tZoneDef.GetDescription())
 }
 
 func (mt mainTest) mainTest027() {
