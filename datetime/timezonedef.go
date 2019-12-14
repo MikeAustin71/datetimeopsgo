@@ -37,7 +37,7 @@ type TimeZoneDefDto struct {
 	zoneName          string         // The Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
 	zoneOffsetSeconds int            // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
 	zoneSign          int            // -1 == West of UTC  +1 == East of UTC
-	OffsetHours       int            // Normalized Offset Hours from UTC. Always a positive number, refer to ZoneSign
+	offsetHours       int            // Normalized Offset Hours from UTC. Always a positive number, refer to ZoneSign
 	OffsetMinutes     int            // Normalized Offset Minutes offset from UTC. Always a positive number, refer to ZoneSign
 	OffsetSeconds     int            // Normalized Offset Seconds offset from UTC. Always a positive number, refer to ZoneSign
 	ZoneOffset        string         // A text string representing the time zone. Example "-0600 CST" or "+0200 EET"
@@ -57,7 +57,7 @@ func (tzdef *TimeZoneDefDto) CopyIn(tzdef2 TimeZoneDefDto) {
 	tzdef.zoneName = tzdef2.zoneName
 	tzdef.zoneOffsetSeconds = tzdef2.zoneOffsetSeconds
 	tzdef.zoneSign = tzdef2.zoneSign
-	tzdef.OffsetHours = tzdef2.OffsetHours
+	tzdef.offsetHours = tzdef2.offsetHours
 	tzdef.OffsetMinutes = tzdef2.OffsetMinutes
 	tzdef.OffsetSeconds = tzdef2.OffsetSeconds
 	tzdef.ZoneOffset = tzdef2.ZoneOffset
@@ -77,7 +77,7 @@ func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
 	tzdef2.zoneName = tzdef.zoneName
 	tzdef2.zoneOffsetSeconds = tzdef.zoneOffsetSeconds
 	tzdef2.zoneSign = tzdef.zoneSign
-	tzdef2.OffsetHours = tzdef.OffsetHours
+	tzdef2.offsetHours = tzdef.offsetHours
 	tzdef2.OffsetMinutes = tzdef.OffsetMinutes
 	tzdef2.OffsetSeconds = tzdef.OffsetSeconds
 	tzdef2.ZoneOffset = tzdef.ZoneOffset
@@ -96,7 +96,7 @@ func (tzdef *TimeZoneDefDto) Empty() {
 	tzdef.zoneName = ""
 	tzdef.zoneOffsetSeconds = 0
 	tzdef.zoneSign = 0
-	tzdef.OffsetHours = 0
+	tzdef.offsetHours = 0
 	tzdef.OffsetMinutes = 0
 	tzdef.OffsetSeconds = 0
 	tzdef.ZoneOffset = ""
@@ -115,7 +115,7 @@ func (tzdef *TimeZoneDefDto) Equal(tzdef2 TimeZoneDefDto) bool {
 	if tzdef.zoneName != tzdef2.zoneName ||
 		tzdef.zoneOffsetSeconds != tzdef2.zoneOffsetSeconds ||
 		tzdef.zoneSign != tzdef2.zoneSign ||
-		tzdef.OffsetHours != tzdef2.OffsetHours ||
+		tzdef.offsetHours != tzdef2.offsetHours ||
 		tzdef.OffsetMinutes != tzdef2.OffsetMinutes ||
 		tzdef.OffsetSeconds != tzdef2.OffsetSeconds ||
 		tzdef.ZoneOffset != tzdef2.ZoneOffset ||
@@ -238,7 +238,7 @@ func (tzdef *TimeZoneDefDto) GetOffsetHours() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.OffsetHours
+	return tzdef.offsetHours
 }
 
 // GetOffsetMinutes - Returns TimeZoneDefDto member variable
@@ -351,7 +351,7 @@ func (tzdef *TimeZoneDefDto) IsEmpty() bool {
 	if tzdef.zoneName != "" ||
 		tzdef.zoneOffsetSeconds != 0 ||
 		tzdef.zoneSign != 0 ||
-		tzdef.OffsetHours != 0 ||
+		tzdef.offsetHours != 0 ||
 		tzdef.OffsetMinutes != 0 ||
 		tzdef.OffsetSeconds != 0 ||
 		tzdef.ZoneOffset != "" ||
@@ -619,7 +619,7 @@ func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds i
 
 	signedZoneOffsetSeconds *= tzdef.zoneSign
 
-	tzdef.OffsetHours = 0
+	tzdef.offsetHours = 0
 	tzdef.OffsetMinutes = 0
 	tzdef.OffsetSeconds = 0
 
@@ -627,8 +627,8 @@ func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds i
 		return
 	}
 
-	tzdef.OffsetHours = signedZoneOffsetSeconds / 3600 // compute hours
-	signedZoneOffsetSeconds -= tzdef.OffsetHours * 3600
+	tzdef.offsetHours = signedZoneOffsetSeconds / 3600 // compute hours
+	signedZoneOffsetSeconds -= tzdef.offsetHours * 3600
 
 	tzdef.OffsetMinutes = signedZoneOffsetSeconds / 60 // compute minutes
 	signedZoneOffsetSeconds -= tzdef.OffsetMinutes * 60
@@ -657,8 +657,7 @@ func (tzdef *TimeZoneDefDto) setZoneProfile() {
 		tzdef.ZoneOffset += "+"
 	}
 
-
-	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d", tzdef.OffsetHours, tzdef.OffsetMinutes)
+	tzdef.ZoneOffset += fmt.Sprintf("%02d%02d", tzdef.offsetHours, tzdef.OffsetMinutes)
 
 	tzdef.utcOffset = tzdef.ZoneOffset
 
