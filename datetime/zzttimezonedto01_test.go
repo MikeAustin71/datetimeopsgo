@@ -487,10 +487,12 @@ func TestTimeZoneUtility_GetZoneIn_01(t *testing.T) {
 	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedZone := "CDT"
-	actualZone := tzu.TimeIn.GetTimeZone().ZoneName
+
+	actualZone := tzu.TimeIn.GetTimeZoneAbbreviation()
 
 	if expectedZone != actualZone {
-		t.Errorf("Expected Zone In='%v'. Instead, actual Zone In='%v'", expectedZone, actualZone)
+		t.Errorf("Expected Zone In='%v'.\n" +
+			"Instead, actual Zone In='%v'\n", expectedZone, actualZone)
 	}
 
 }
@@ -503,10 +505,12 @@ func TestTimeZoneUtility_GetZoneOut_01(t *testing.T) {
 	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
 	expectedZone := "PDT"
-	actualZone := tzu.TimeOut.GetTimeZone().ZoneName
+
+	actualZone := tzu.TimeOut.GetTimeZoneAbbreviation()
 
 	if expectedZone != actualZone {
-		t.Errorf("Expected Zone Out='%v'. Instead, actual Zone Out='%v'", expectedZone, actualZone)
+		t.Errorf("Expected Zone Out='%v'.\n" +
+			"Instead, actual Zone Out='%v'\n", expectedZone, actualZone)
 	}
 
 }

@@ -447,8 +447,11 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
 	}
 
-	if t1ExpectedZone != dTzDto.GetTimeZone().ZoneName {
-		t.Errorf("Error: Expected dTzDto.GetTimeZone().ZoneName='%v'. Instead, dTzDto.GetTimeZone().ZoneName='%v'", t1ExpectedZone, dTzDto.GetTimeZone().ZoneName)
+	tz := dTzDto.GetTimeZone()
+
+	if t1ExpectedZone != tz.GetZoneName() {
+		t.Errorf("Error: Expected dTzDto.GetTimeZone().ZoneName='%v'.\n" +
+			"Instead, dTzDto.GetTimeZone().ZoneName='%v'", t1ExpectedZone, tz.GetZoneName())
 	}
 
 	if t1ExpectedZoneOffset != dTzDto.GetTimeZone().ZoneOffsetSeconds {

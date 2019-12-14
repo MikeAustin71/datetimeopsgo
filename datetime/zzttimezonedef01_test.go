@@ -29,42 +29,59 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 		return
 	}
 
-	tzDef.Description = descStr
+	tzDef.SetTagDescription(descStr)
 
-	if zoneName != tzDef.ZoneName {
-		t.Errorf("Error: Expected tzDef.ZoneName='%v'. Instead, tzDef.ZoneName='%v'", zoneName, tzDef.ZoneName)
+	if zoneName != tzDef.GetZoneName() {
+		t.Errorf("Error: Expected tzDef.GetZoneName()='%v'.\n" +
+			"Instead, tzDef.GetZoneName()='%v'\n",
+			zoneName, tzDef.GetZoneName())
 	}
 
-	if zoneOffset != tzDef.ZoneOffset {
-		t.Errorf("Error: Expected tzDef.ZoneOffset='%v'. Instead, tzDef.ZoneOffset='%v'", zoneOffset, tzDef.ZoneOffset)
+	if zoneOffset != tzDef.GetZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffset()='%v'\n", zoneOffset, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if zoneOffsetSecs != tzDef.ZoneOffsetSeconds {
-		t.Errorf("Error: Expected tzDef.ZoneOffsetSeconds='%v'. Instead, tzDef.ZoneOffsetSeconds='%v'", zoneOffsetSecs, tzDef.ZoneOffsetSeconds)
+	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if zoneSign != tzDef.ZoneSign {
-		t.Errorf("Error: Expected tzDef.ZoneSign='%v'. Instead, tzDef.ZoneSign='%v'", zoneSign, tzDef.ZoneSign)
+	if zoneSign != tzDef.GetZoneSign() {
+		t.Errorf("Error: Expected tzDef.GetZoneSign()='%v'.\n" +
+			"Instead, tzDef.GetZoneSign()='%v'",
+			zoneSign, tzDef.GetZoneSign())
 	}
 
-	if offsetHours != tzDef.OffsetHours {
-		t.Errorf("Error: Expected tzDef.OffsetHours='%v'. Instead, tzDef.OffsetHours='%v'", offsetHours, tzDef.OffsetHours)
+	if offsetHours != tzDef.GetOffsetHours() {
+		t.Errorf("Error: Expected tzDef.GetOffsetHours()='%v'.\n" +
+			"Instead, tzDef.GetOffsetHours()='%v'\n",
+			offsetHours, tzDef.GetOffsetHours())
 	}
 
-	if offsetMinutes != tzDef.OffsetMinutes {
-		t.Errorf("Error: Expected tzDef.OffsetMinutes='%v'. Instead, tzDef.OffsetMinutes='%v'", offsetMinutes, tzDef.OffsetMinutes)
+	if offsetMinutes != tzDef.GetOffsetMinutes() {
+		t.Errorf("Error: Expected tzDef.GetOffsetMinutes()='%v'.\n" +
+			"Instead, tzDef.OffsetMinutes='%v'\n",
+			offsetMinutes, tzDef.GetOffsetMinutes())
 	}
 
-	if offsetSeconds != tzDef.OffsetSeconds {
-		t.Errorf("Error: Expected tzDef.OffsetSeconds='%v'. Instead, tzDef.OffsetSeconds='%v'", offsetSeconds, tzDef.OffsetSeconds)
+	if offsetSeconds != tzDef.GetOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.OffsetSeconds='%v'\n",
+			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if locationName != tzDef.LocationName {
-		t.Errorf("Error: Expected tzDef.LocationName='%v'. Instead, tzDef.LocationName='%v'", locationName, tzDef.LocationName)
+	if locationName != tzDef.GetLocationName() {
+		t.Errorf("Error: Expected tzDef.GerLocationName()='%v'.\n" +
+			"Instead, tzDef.GetLocationName()='%v'\n",
+			locationName, tzDef.GetLocationName())
 	}
 
-	if descStr != tzDef.Description {
-		t.Errorf("Error: Expected tzDef.Description='%v'. Instead, tzDef.Description='%v'", descStr, tzDef.Description)
+	if descStr != tzDef.GetDescription() {
+		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
+			"Instead, tzDef.GetDescription()='%v'\n",
+			descStr, tzDef.GetDescription())
 	}
 
 }
@@ -75,6 +92,7 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
 	zoneOffset := "-0800 PST"
+	utcOffset := "-0800"
 	zoneOffsetSecs := -28800
 	zoneSign := -1
 	offsetHours := 8
@@ -91,43 +109,64 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 		return
 	}
 
-	tzDef0.Description = descStr
+	tzDef0.SetTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 
-	if zoneName != tzDef.ZoneName {
-		t.Errorf("Error: Expected tzDef.ZoneName='%v'. Instead, tzDef.ZoneName='%v'", zoneName, tzDef.ZoneName)
+	if zoneName != tzDef.GetZoneName() {
+		t.Errorf("Error: Expected tzDef.GetZoneName()='%v'.\n" +
+			"Instead, tzDef.GetZoneName()='%v'\n",
+			zoneName, tzDef.GetZoneName())
 	}
 
-	if zoneOffset != tzDef.ZoneOffset {
-		t.Errorf("Error: Expected tzDef.ZoneOffset='%v'. Instead, tzDef.ZoneOffset='%v'", zoneOffset, tzDef.ZoneOffset)
+	if zoneOffset != tzDef.GetZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetZoneOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.ZoneOffsetSeconds {
-		t.Errorf("Error: Expected tzDef.ZoneOffsetSeconds='%v'. Instead, tzDef.ZoneOffsetSeconds='%v'", zoneOffsetSecs, tzDef.ZoneOffsetSeconds)
+	if utcOffset != tzDef.GetUtcOffset() {
+		t.Errorf("Error: Expected tzDef.GetUtcOffset()='%v'.\n" +
+			"Instead, tzDef.GetUtcOffset()='%v'\n",
+			utcOffset, tzDef.GetUtcOffset())
 	}
 
-	if zoneSign != tzDef.ZoneSign {
-		t.Errorf("Error: Expected tzDef.ZoneSign='%v'. Instead, tzDef.ZoneSign='%v'", zoneSign, tzDef.ZoneSign)
+	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if offsetHours != tzDef.OffsetHours {
-		t.Errorf("Error: Expected tzDef.OffsetHours='%v'. Instead, tzDef.OffsetHours='%v'", offsetHours, tzDef.OffsetHours)
+	if zoneSign != tzDef.GetZoneSign() {
+		t.Errorf("Error: Expected tzDef.GetZoneSign()='%v'.\n" +
+			"Instead, tzDef.GetZoneSign()='%v'", zoneSign, tzDef.GetZoneSign())
 	}
 
-	if offsetMinutes != tzDef.OffsetMinutes {
-		t.Errorf("Error: Expected tzDef.OffsetMinutes='%v'. Instead, tzDef.OffsetMinutes='%v'", offsetMinutes, tzDef.OffsetMinutes)
+	if offsetHours != tzDef.GetOffsetHours() {
+		t.Errorf("Error: Expected tzDef.GetOffsetHours()='%v'.\n" +
+			"Instead, tzDef.GetOffsetHours() ='%v'\n",
+			offsetHours, tzDef.GetOffsetHours() )
 	}
 
-	if offsetSeconds != tzDef.OffsetSeconds {
-		t.Errorf("Error: Expected tzDef.OffsetSeconds='%v'. Instead, tzDef.OffsetSeconds='%v'", offsetSeconds, tzDef.OffsetSeconds)
+	if offsetMinutes != tzDef.GetOffsetMinutes() {
+		t.Errorf("Error: Expected tzDef.GetOffsetMinutes()='%v'.\n" +
+			"Instead, tzDef.GetOffsetMinutes()='%v'\n",
+			offsetMinutes, tzDef.GetOffsetMinutes())
 	}
 
-	if locationName != tzDef.LocationName {
-		t.Errorf("Error: Expected tzDef.LocationName='%v'. Instead, tzDef.LocationName='%v'", locationName, tzDef.LocationName)
+	if offsetSeconds != tzDef.GetOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOffsetSeconds()='%v'\n",
+			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if descStr != tzDef.Description {
+	if locationName != tzDef.GetLocationName() {
+		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
+			"Instead, tzDef.GetLocationName()='%v'\n",
+			locationName, tzDef.GetLocationName())
+	}
+
+	if descStr != tzDef.GetDescription() {
 		t.Errorf("Error: Expected tzDef.Description='%v'. Instead, tzDef.Description='%v'", descStr, tzDef.Description)
 	}
 
@@ -139,6 +178,7 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, americaLALoc)
 	zoneName := "PST"
 	zoneOffset := "-0800 PST"
+	utcOffset := "-0800"
 	zoneOffsetSecs := -28800
 	zoneSign := -1
 	offsetHours := 8
@@ -159,40 +199,64 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 
 	tzDef := tzDef0.CopyOut()
 
-	if zoneName != tzDef.ZoneName {
-		t.Errorf("Error: Expected tzDef.ZoneName='%v'. Instead, tzDef.ZoneName='%v'", zoneName, tzDef.ZoneName)
+	if zoneName != tzDef.GetZoneName() {
+		t.Errorf("Error: Expected tzDef.GetZoneName()='%v'.\n" +
+			"Instead, tzDef.GetZoneName()='%v'\n",
+			zoneName, tzDef.GetZoneName())
 	}
 
-	if zoneOffset != tzDef.ZoneOffset {
-		t.Errorf("Error: Expected tzDef.ZoneOffset='%v'. Instead, tzDef.ZoneOffset='%v'", zoneOffset, tzDef.ZoneOffset)
+	if zoneOffset != tzDef.GetZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetZoneOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.ZoneOffsetSeconds {
-		t.Errorf("Error: Expected tzDef.ZoneOffsetSeconds='%v'. Instead, tzDef.ZoneOffsetSeconds='%v'", zoneOffsetSecs, tzDef.ZoneOffsetSeconds)
+	if utcOffset != tzDef.GetUtcOffset() {
+		t.Errorf("Error: Expected tzDef.GetUtcOffset()='%v'.\n" +
+			"Instead, tzDef.GetUtcOffset()='%v'\n",
+			utcOffset, tzDef.GetUtcOffset())
 	}
 
-	if zoneSign != tzDef.ZoneSign {
-		t.Errorf("Error: Expected tzDef.ZoneSign='%v'. Instead, tzDef.ZoneSign='%v'", zoneSign, tzDef.ZoneSign)
+	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if offsetHours != tzDef.OffsetHours {
-		t.Errorf("Error: Expected tzDef.OffsetHours='%v'. Instead, tzDef.OffsetHours='%v'", offsetHours, tzDef.OffsetHours)
+	if zoneSign != tzDef.GetZoneSign() {
+		t.Errorf("Error: Expected tzDef.GetZoneSign()='%v'.\n" +
+			"Instead, tzDef.GetZoneSign()='%v'\n",
+			zoneSign, tzDef.GetZoneSign())
 	}
 
-	if offsetMinutes != tzDef.OffsetMinutes {
-		t.Errorf("Error: Expected tzDef.OffsetMinutes='%v'. Instead, tzDef.OffsetMinutes='%v'", offsetMinutes, tzDef.OffsetMinutes)
+	if offsetHours != tzDef.GetOffsetHours() {
+		t.Errorf("Error: Expected tzDef.GetOffsetHours()='%v'.\n" +
+			"Instead, tzDef.GetOffsetHours()='%v'\n",
+			offsetHours, tzDef.GetOffsetHours())
 	}
 
-	if offsetSeconds != tzDef.OffsetSeconds {
-		t.Errorf("Error: Expected tzDef.OffsetSeconds='%v'. Instead, tzDef.OffsetSeconds='%v'", offsetSeconds, tzDef.OffsetSeconds)
+	if offsetMinutes != tzDef.GetOffsetMinutes() {
+		t.Errorf("Error: Expected tzDef.GetOffsetMinutes()='%v'.\n" +
+			"Instead, tzDef.GetOffsetMinutes()='%v'\n",
+			offsetMinutes, tzDef.GetOffsetMinutes())
 	}
 
-	if locationName != tzDef.LocationName {
-		t.Errorf("Error: Expected tzDef.LocationName='%v'. Instead, tzDef.LocationName='%v'", locationName, tzDef.LocationName)
+	if offsetSeconds != tzDef.GetOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOffsetSeconds()='%v'\n",
+			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if descStr != tzDef.Description {
-		t.Errorf("Error: Expected tzDef.Description='%v'. Instead, tzDef.Description='%v'", descStr, tzDef.Description)
+	if locationName != tzDef.GetLocationName() {
+		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
+			"Instead, tzDef.GetLocationName()='%v'\n",
+			locationName, tzDef.GetLocationName())
+	}
+
+	if descStr != tzDef.GetDescription() {
+		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
+			"Instead, tzDef.GetDescription()='%v'\n",
+			descStr, tzDef.GetDescription())
 	}
 
 }
@@ -204,6 +268,7 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
 	zoneOffset := "-0800 PST"
+	utcOffset := "-0800"
 	zoneOffsetSecs := -28800
 	zoneSign := -1
 	offsetHours := 8
@@ -220,44 +285,68 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 		return
 	}
 
-	tzDef0.Description = descStr
+	tzDef0.SetTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 
-	if zoneName != tzDef.ZoneName {
-		t.Errorf("Error: Expected tzDef.ZoneName='%v'. Instead, tzDef.ZoneName='%v'", zoneName, tzDef.ZoneName)
+	if zoneName != tzDef.GetZoneName() {
+		t.Errorf("Error: Expected tzDef.GetZoneName()='%v'.\n" +
+			"Instead, tzDef.GetZoneName()='%v'\n",
+			zoneName, tzDef.GetZoneName())
 	}
 
-	if zoneOffset != tzDef.ZoneOffset {
-		t.Errorf("Error: Expected tzDef.ZoneOffset='%v'. Instead, tzDef.ZoneOffset='%v'", zoneOffset, tzDef.ZoneOffset)
+	if zoneOffset != tzDef.GetZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetZoneOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.ZoneOffsetSeconds {
-		t.Errorf("Error: Expected tzDef.ZoneOffsetSeconds='%v'. Instead, tzDef.ZoneOffsetSeconds='%v'", zoneOffsetSecs, tzDef.ZoneOffsetSeconds)
+	if utcOffset != tzDef.GetUtcOffset() {
+		t.Errorf("Error: Expected tzDef.GetUtcOffset()='%v'.\n" +
+			"Instead, tzDef.GetUtcOffset()='%v'\n",
+			utcOffset, tzDef.GetUtcOffset())
 	}
 
-	if zoneSign != tzDef.ZoneSign {
-		t.Errorf("Error: Expected tzDef.ZoneSign='%v'. Instead, tzDef.ZoneSign='%v'", zoneSign, tzDef.ZoneSign)
+	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if offsetHours != tzDef.OffsetHours {
-		t.Errorf("Error: Expected tzDef.OffsetHours='%v'. Instead, tzDef.OffsetHours='%v'", offsetHours, tzDef.OffsetHours)
+	if zoneSign != tzDef.GetZoneSign() {
+		t.Errorf("Error: Expected tzDef.GetZoneSign()='%v'.\n" +
+			"Instead, tzDef.GetZoneSign()='%v'\n",
+			zoneSign, tzDef.GetZoneSign())
 	}
 
-	if offsetMinutes != tzDef.OffsetMinutes {
-		t.Errorf("Error: Expected tzDef.OffsetMinutes='%v'. Instead, tzDef.OffsetMinutes='%v'", offsetMinutes, tzDef.OffsetMinutes)
+	if offsetHours != tzDef.GetOffsetHours() {
+		t.Errorf("Error: Expected tzDef.GetOffsetHours()='%v'.\n" +
+			"Instead, tzDef.GetOffsetHours()='%v'\n",
+			offsetHours, tzDef.GetOffsetHours())
 	}
 
-	if offsetSeconds != tzDef.OffsetSeconds {
-		t.Errorf("Error: Expected tzDef.OffsetSeconds='%v'. Instead, tzDef.OffsetSeconds='%v'", offsetSeconds, tzDef.OffsetSeconds)
+	if offsetMinutes != tzDef.GetOffsetMinutes() {
+		t.Errorf("Error: Expected tzDef.GetOffsetMinutes()='%v'.\n" +
+			"Instead, tzDef.GetOffsetMinutes()='%v'\n",
+			offsetMinutes, tzDef.GetOffsetMinutes())
 	}
 
-	if locationName != tzDef.LocationName {
-		t.Errorf("Error: Expected tzDef.LocationName='%v'. Instead, tzDef.LocationName='%v'", locationName, tzDef.LocationName)
+	if offsetSeconds != tzDef.GetOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOffsetSeconds()='%v'\n",
+			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if descStr != tzDef.Description {
-		t.Errorf("Error: Expected tzDef.Description='%v'. Instead, tzDef.Description='%v'", descStr, tzDef.Description)
+	if locationName != tzDef.GetLocationName() {
+		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
+			"Instead, tzDef.GetLocationName()='%v\n",
+			locationName, tzDef.GetLocationName())
+	}
+
+	if descStr != tzDef.GetDescription() {
+		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
+			"Instead, tzDef.GetDescription()='%v'",
+			descStr, tzDef.GetDescription())
 	}
 
 	if !tzDef0.Equal(tzDef) {
@@ -273,6 +362,7 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 	zoneName := "PST"
 	zoneOffset := "-0800 PST"
+	utcOffset := "-0800"
 	zoneOffsetSecs := -28800
 	zoneSign := -1
 	offsetHours := 8
@@ -289,44 +379,68 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 		return
 	}
 
-	tzDef0.Description = descStr
+	tzDef0.SetTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 
-	if zoneName != tzDef.ZoneName {
-		t.Errorf("Error: Expected tzDef.ZoneName='%v'. Instead, tzDef.ZoneName='%v'", zoneName, tzDef.ZoneName)
+	if zoneName != tzDef.GetZoneName() {
+		t.Errorf("Error: Expected tzDef.GetZoneName()='%v'.\n" +
+			"Instead, tzDef.GetZoneName()='%v'\n",
+			zoneName, tzDef.GetZoneName())
 	}
 
-	if zoneOffset != tzDef.ZoneOffset {
-		t.Errorf("Error: Expected tzDef.ZoneOffset='%v'. Instead, tzDef.ZoneOffset='%v'", zoneOffset, tzDef.ZoneOffset)
+	if zoneOffset != tzDef.GetZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetZoneOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.ZoneOffsetSeconds {
-		t.Errorf("Error: Expected tzDef.ZoneOffsetSeconds='%v'. Instead, tzDef.ZoneOffsetSeconds='%v'", zoneOffsetSecs, tzDef.ZoneOffsetSeconds)
+	if utcOffset != tzDef.GetUtcOffset() {
+		t.Errorf("Error: Expected tzDef.GetUtcOffset()='%v'.\n" +
+			"Instead, tzDef.GetUtcOffset()='%v'\n",
+			zoneOffset, tzDef.GetUtcOffset())
 	}
 
-	if zoneSign != tzDef.ZoneSign {
-		t.Errorf("Error: Expected tzDef.ZoneSign='%v'. Instead, tzDef.ZoneSign='%v'", zoneSign, tzDef.ZoneSign)
+	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if offsetHours != tzDef.OffsetHours {
-		t.Errorf("Error: Expected tzDef.OffsetHours='%v'. Instead, tzDef.OffsetHours='%v'", offsetHours, tzDef.OffsetHours)
+	if zoneSign != tzDef.GetZoneSign() {
+		t.Errorf("Error: Expected tzDef.GetZoneSign()='%v'.\n" +
+			"Instead, tzDef.GetZoneSign()='%v'\n",
+			zoneSign, tzDef.GetZoneSign())
 	}
 
-	if offsetMinutes != tzDef.OffsetMinutes {
-		t.Errorf("Error: Expected tzDef.OffsetMinutes='%v'. Instead, tzDef.OffsetMinutes='%v'", offsetMinutes, tzDef.OffsetMinutes)
+	if offsetHours != tzDef.GetOffsetHours() {
+		t.Errorf("Error: Expected tzDef.GetOffsetHours()='%v'.\n" +
+			"Instead, tzDef.GetOffsetHours()='%v'\n",
+			offsetHours, tzDef.GetOffsetHours())
 	}
 
-	if offsetSeconds != tzDef.OffsetSeconds {
-		t.Errorf("Error: Expected tzDef.OffsetSeconds='%v'. Instead, tzDef.OffsetSeconds='%v'", offsetSeconds, tzDef.OffsetSeconds)
+	if offsetMinutes != tzDef.GetOffsetMinutes() {
+		t.Errorf("Error: Expected tzDef.GetOffsetMinutes()='%v'.\n" +
+			"Instead, tzDef.GetOffsetMinutes()='%v'\n",
+			offsetMinutes, tzDef.GetOffsetMinutes())
 	}
 
-	if locationName != tzDef.LocationName {
-		t.Errorf("Error: Expected tzDef.LocationName='%v'. Instead, tzDef.LocationName='%v'", locationName, tzDef.LocationName)
+	if offsetSeconds != tzDef.GetOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOffsetSeconds()='%v'\n",
+			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if descStr != tzDef.Description {
-		t.Errorf("Error: Expected tzDef.Description='%v'. Instead, tzDef.Description='%v'", descStr, tzDef.Description)
+	if locationName != tzDef.GetLocationName() {
+		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
+			"Instead, tzDef.GetLocationName()='%v'\n",
+			locationName, tzDef.GetLocationName())
+	}
+
+	if descStr != tzDef.GetDescription() {
+		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
+			"Instead, tzDef.GetDescription()='%v'\n",
+			descStr, tzDef.GetDescription())
 	}
 
 	tzDef0.Location = nil
@@ -341,9 +455,10 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 
 	americaLALoc, _ := time.LoadLocation(TZones.America.Los_Angeles())
 
-	tamericaLA := time.Date(2014, 2, 15, 19, 54, 30, 38175584, americaLALoc)
+	tAmericaLA := time.Date(2014, 2, 15, 19, 54, 30, 38175584, americaLALoc)
 	zoneName := "PST"
 	zoneOffset := "-0800 PST"
+	utcOffset := "-0800"
 	zoneOffsetSecs := -28800
 	zoneSign := -1
 	offsetHours := 8
@@ -352,61 +467,74 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 	locationName := "America/Los_Angeles"
 	descStr := "America-Los_Angeles"
 
-	tzDef0, err := TimeZoneDefDto{}.New(tamericaLA)
+	tzDef0, err := TimeZoneDefDto{}.New(tAmericaLA)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tamericaLA).\n" +
+		t.Errorf("Error returned by TimeZoneDefDto{}.New(tAmericaLA).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
 
-	tzDef0.Description = descStr
+	tzDef0.SetTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 
-	if zoneName != tzDef.ZoneName {
-		t.Errorf("Error: Expected tzDef.ZoneName='%v'.\n" +
-			"Instead, tzDef.ZoneName='%v'\n", zoneName, tzDef.ZoneName)
+	if zoneName != tzDef.GetZoneName() {
+		t.Errorf("Error: Expected tzDef.GetZoneName()='%v'.\n" +
+			"Instead, tzDef.GetZoneName()='%v'\n", zoneName, tzDef.GetZoneName())
 	}
 
-	if zoneOffset != tzDef.ZoneOffset {
-		t.Errorf("Error: Expected tzDef.ZoneOffset='%v'.\n" +
-			"Instead, tzDef.ZoneOffset='%v'\n", zoneOffset, tzDef.ZoneOffset)
+	if zoneOffset != tzDef.GetZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetZoneOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.ZoneOffsetSeconds {
-		t.Errorf("Error: Expected tzDef.ZoneOffsetSeconds='%v'.\n" +
-			"Instead, tzDef.ZoneOffsetSeconds='%v'\n", zoneOffsetSecs, tzDef.ZoneOffsetSeconds)
+	if utcOffset != tzDef.GetUtcOffset() {
+		t.Errorf("Error: Expected tzDef.GetUtcOffset()='%v'.\n" +
+			"Instead, tzDef.GetUtcOffset()='%v'\n",
+			utcOffset, tzDef.GetUtcOffset())
 	}
 
-	if zoneSign != tzDef.ZoneSign {
-		t.Errorf("Error: Expected tzDef.ZoneSign='%v'.\n" +
-			"Instead, tzDef.ZoneSign='%v'\n", zoneSign, tzDef.ZoneSign)
+	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if offsetHours != tzDef.OffsetHours {
-		t.Errorf("Error: Expected tzDef.OffsetHours='%v'.\n" +
-			"Instead, tzDef.OffsetHours='%v'\n", offsetHours, tzDef.OffsetHours)
+	if zoneSign != tzDef.GetZoneSign() {
+		t.Errorf("Error: Expected tzDef.GetZoneSign()='%v'.\n" +
+			"Instead, tzDef.GetZoneSign()='%v'\n", zoneSign, tzDef.GetZoneSign())
 	}
 
-	if offsetMinutes != tzDef.OffsetMinutes {
-		t.Errorf("Error: Expected tzDef.OffsetMinutes='%v'.\n" +
-			"Instead, tzDef.OffsetMinutes='%v'\n", offsetMinutes, tzDef.OffsetMinutes)
+	if offsetHours != tzDef.GetOffsetHours() {
+		t.Errorf("Error: Expected tzDef.GetOffsetHours()='%v'.\n" +
+			"Instead, tzDef.GetOffsetHours()='%v'\n",
+			offsetHours, tzDef.GetOffsetHours())
 	}
 
-	if offsetSeconds != tzDef.OffsetSeconds {
-		t.Errorf("Error: Expected tzDef.OffsetSeconds='%v'.\n" +
-			"Instead, tzDef.OffsetSeconds='%v'\n", offsetSeconds, tzDef.OffsetSeconds)
+	if offsetMinutes != tzDef.GetOffsetMinutes() {
+		t.Errorf("Error: Expected tzDef.GetOffsetMinutes()='%v'.\n" +
+			"Instead, tzDef.GetOffsetMinutes()='%v'\n",
+			offsetMinutes, tzDef.GetOffsetMinutes())
 	}
 
-	if locationName != tzDef.LocationName {
-		t.Errorf("Error: Expected tzDef.LocationName='%v'.\n" +
-			"Instead, tzDef.LocationName='%v'\n", locationName, tzDef.LocationName)
+	if offsetSeconds != tzDef.GetOffsetSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOffsetSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOffsetSeconds()='%v'\n",
+			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if descStr != tzDef.Description {
-		t.Errorf("Error: Expected tzDef.Description='%v'.\n" +
-			"Instead, tzDef.Description='%v'\n", descStr, tzDef.Description)
+	if locationName != tzDef.GetLocationName() {
+		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
+			"Instead, tzDef.GetLocationName()='%v'\n",
+			locationName, tzDef.GetLocationName())
+	}
+
+	if descStr != tzDef.GetDescription() {
+		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
+			"Instead, tzDef.GetDescription()='%v'\n",
+			descStr, tzDef.GetDescription())
 	}
 
 	tzDef0.Location = nil

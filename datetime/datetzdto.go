@@ -1717,6 +1717,54 @@ func (dtz *DateTzDto) GetTimeZone() TimeZoneDefDto {
 	return dtz.timeZone.CopyOut()
 }
 
+// GetTimeZoneAbbreviation - Returns TimeZoneDefDto member variable
+// TimeZoneDefDto.zoneName value.
+//
+// Zone Name is the Time Zone abbreviation. This may
+// may be a series of characters, like "EST", "CST"
+// and "PDT" - or - if a time zone abbreviation does
+// not exist for this time zone, the time zone abbreviation
+// might be listed simply as the UTC offset ('-0430')
+//
+func (dtz *DateTzDto) GetTimeZoneAbbreviation() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+return dtz.timeZone.GetZoneName()
+}
+
+// GetTimeZoneName - Returns a string containing the
+// time zone location name. If this is an IANA time
+// zone, the full IANA Time Zone text name will be
+// returned.
+func (dtz *DateTzDto) GetTimeZoneName() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	return  dtz.timeZone.GetLocationName()
+
+}
+
+// GetTimeZoneUtcOffset - Returns the UTC Offset for
+// the associated time zone as a string. The UTC offset
+// is formatted in accordance with the following Examples:
+//   "+0600"
+//   "-0500"
+//   "-0430"
+//
+func (dtz *DateTzDto) GetTimeZoneUtcOffset() string {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	return dtz.timeZone.GetUtcOffset()
+}
+
 // IsEmpty - Analyzes the current DateTzDto instance to determine
 // if the instance is in an 'EMPTY' or uninitialized state.
 //
