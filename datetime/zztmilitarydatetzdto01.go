@@ -450,10 +450,10 @@ func TestMilitaryDateTzDto_EquivalentIanaTime_01(t *testing.T) {
 		return
 	}
 
-	if milDatTzDto.EquivalentIanaTimeZone.LocationName != TZones.Etc.GMTPlus05() {
+	if milDatTzDto.EquivalentIanaTimeZone.GetLocationName() != TZones.Etc.GMTPlus05() {
 		t.Errorf("Error: Expected Military Sierra Time Zone UTC Offset='%v'.\n" +
 			"Instead, milDatTzDto.UtcOffset='%v'\n",
-			milDatTzDto.EquivalentIanaTimeZone.LocationName, TZones.Etc.GMTPlus05())
+			milDatTzDto.EquivalentIanaTimeZone.GetLocationName(), TZones.Etc.GMTPlus05())
 	}
 }
 

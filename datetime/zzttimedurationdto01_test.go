@@ -170,7 +170,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_01() {
 
 	/*
 		3-Years 2-Months 15-Days 3-Hours 4-Minutes 1-Seconds 640-Milliseconds 495-Microseconds 332-Nanoseconds
-		Caclulated End Date:  2017-04-30 22:58:32.628149653 -0500 CDT
+		Calculated End Date:  2017-04-30 22:58:32.628149653 -0500 CDT
 			Expected End Date:  2017-04-30 22:58:32.628149653 -0500 CDT
 		Time Duration Dto
 				 StartTimeDateTz:  2014-02-15 19:54:30.987654321 -0600 CST
@@ -269,9 +269,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 
 	assert.Nil(suite.T(), err, "Error NewAutoEnd() :")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetTimeZoneName(),
+		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetTimeZoneName(),
+		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(), suite.t1USCentral.Equal(t1Dur.StartTimeDateTz.GetDateTimeValue()), "Error: Expected Starting Date Time NOT EQUAL to t1Dur.StartTimeDateTz!")
 
@@ -293,9 +295,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoStart_01() {
 
 	assert.Nil(suite.T(), err, "Error NewAutoStart() :")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetTimeZoneName(),
+		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetTimeZone().LocationName, "Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetTimeZoneName(),
+		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(),
 		suite.fmtStr == t1Dur.StartTimeDateTz.GetDateTimeFmt(),
@@ -989,18 +993,19 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01(
 
 	s := fmt.Sprintf("Expected StartDateTime Time Zone='%v'. "+
 		"Instead StartDateTime TimeZone='%v'",
-		TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetTimeZone().LocationName)
+		TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetTimeZoneName())
 
-	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetTimeZone().LocationName, s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetTimeZoneName(), s)
 
 	s = fmt.Sprintf("Expected EndDateTime Time Zone='%v'. "+
 		"Instead EndDateTime TimeZone='%v'",
-		TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetTimeZone().LocationName)
+		TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetTimeZoneName())
 
-	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetTimeZone().LocationName, s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetTimeZoneName(), s)
 
 	assert.True(suite.T(), suite.t1AsiaTokyo.Equal(tDur.StartTimeDateTz.GetDateTimeValue()),
-		"Error: Expected StartDateTime (suite.t1AsiaTokyo) NOT EQUAL to t1Dur.StartTimeDateTz!")
+		"Error: Expected StartDateTime (suite.t1AsiaTokyo) NOT EQUAL " +
+		"to t1Dur.StartTimeDateTz!")
 
 	testMax := time.Duration(int64(2) * int64(time.Second))
 

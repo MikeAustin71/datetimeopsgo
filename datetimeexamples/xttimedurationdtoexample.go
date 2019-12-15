@@ -76,7 +76,7 @@ func ExampleTimeDuration002() {
 	totDur += t1Dur.DateDays * int64(time.Hour) * int64(24)
 
 	tx3 := t1USCentral.Add(time.Duration(totDur))
-	fmt.Println("Acutal End Date by Duration: ", tx3.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println("Actual End Date by Duration: ", tx3.Format(dt.FmtDateTimeYrMDayFmtStr))
 
 }
 

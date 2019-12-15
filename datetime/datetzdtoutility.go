@@ -166,7 +166,10 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	dtz2 := DateTzDto{}
 	dTzUtil2 := dateTzDtoUtility{}
 
-	err = dTzUtil2.setFromTimeTz(&dtz2, dt2, dTz.timeZone.LocationName, dTz.dateTimeFmt, ePrefix)
+	err = dTzUtil2.setFromTimeTz(&dtz2,
+		dt2, dTz.timeZone.GetLocationName(),
+		dTz.dateTimeFmt,
+		ePrefix)
 
 	if err != nil {
 		return DateTzDto{}, err

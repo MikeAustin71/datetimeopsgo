@@ -59,12 +59,12 @@ func Tex003() {
 
 	fmt.Println("  Original Input Time: ", tCDT)
 	fmt.Println("           tzu.TimeIn: ", tzu.TimeIn)
-	fmt.Println("   tzu.TimeInLocation: ", tzu.TimeIn.GetTimeZone().LocationName)
+	fmt.Println("   tzu.TimeInLocation: ", tzu.TimeIn.GetTimeZoneName())
 	fmt.Println("          tzu.TimeOut: ", tzu.TimeOut)
-	fmt.Println("  tzu.TimeOutLocation: ", tzu.TimeOut.GetTimeZone().LocationName)
+	fmt.Println("  tzu.TimeOutLocation: ", tzu.TimeOut.GetTimeZoneName())
 	fmt.Println("          tzu.TimeUTC: ", tzu.TimeUTC)
 	fmt.Println("        tzu.TimeLocal: ", tzu.TimeLocal)
-	fmt.Println("tzu.TimeLocalLocation: ", tzu.TimeLocal.GetTimeZone().LocationName)
+	fmt.Println("tzu.TimeLocalLocation: ", tzu.TimeLocal.GetTimeZoneName())
 
 }
 
@@ -185,12 +185,12 @@ func Tex008() {
 
 	fmt.Println(" Original Time String: ", tstr)
 	fmt.Println("           tzu.TimeIn: ", tzu.TimeIn)
-	fmt.Println("   tzu.TimeInLocation: ", tzu.TimeIn.GetTimeZone().LocationName)
+	fmt.Println("   tzu.TimeInLocation: ", tzu.TimeIn.GetTimeZoneName())
 	fmt.Println("          tzu.TimeOut: ", tzu.TimeOut)
-	fmt.Println("  tzu.TimeOutLocation: ", tzu.TimeOut.GetTimeZone().LocationName)
+	fmt.Println("  tzu.TimeOutLocation: ", tzu.TimeOut.GetTimeZoneName())
 	fmt.Println("          tzu.TimeUTC: ", tzu.TimeUTC)
 	fmt.Println("        tzu.TimeLocal: ", tzu.TimeLocal)
-	fmt.Println("tzu.TimeLocalLocation: ", tzu.TimeLocal.GetTimeZone().LocationName)
+	fmt.Println("tzu.TimeLocalLocation: ", tzu.TimeLocal.GetTimeZoneName())
 	/*
 		Original Time String:  04/29/2017 19:54:30 -0500 CDT
 		tzu.TimeIn:  2017-04-29 19:54:30 -0500 CDT
@@ -216,12 +216,12 @@ func Tex009() {
 	fmt.Println("         Original Time: ", tIn.Format(dt.FmtDateTimeYrMDayFmtStr))
 	fmt.Println("Original Time Location: ", tIn.Location())
 	fmt.Println("            tzu.TimeIn: ", tzu.TimeIn)
-	fmt.Println("    tzu.TimeInLocation: ", tzu.TimeIn.GetTimeZone().LocationName)
+	fmt.Println("    tzu.TimeInLocation: ", tzu.TimeIn.GetTimeZoneName())
 	fmt.Println("           tzu.TimeOut: ", tzu.TimeOut)
-	fmt.Println("   tzu.TimeOutLocation: ", tzu.TimeOut.GetTimeZone().LocationName)
+	fmt.Println("   tzu.TimeOutLocation: ", tzu.TimeOut.GetTimeZoneName())
 	fmt.Println("           tzu.TimeUTC: ", tzu.TimeUTC)
 	fmt.Println("         tzu.TimeLocal: ", tzu.TimeLocal)
-	fmt.Println(" tzu.TimeLocalLocation: ", tzu.TimeLocal.GetTimeZone().LocationName)
+	fmt.Println(" tzu.TimeLocalLocation: ", tzu.TimeLocal.GetTimeZoneName())
 
 	/*
 		Original Time:  2017-05-13 22:44:08.5476396 -0500 CDT
@@ -311,7 +311,7 @@ func Tex011() {
 	tzuOut, err := tz.ConvertTz(tCDT, dt.TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
-		fmt.Println("TimeZoneDto:ConverTz(tCDT,TzUsEast) returned Error: " + err.Error())
+		fmt.Println("TimeZoneDto:ConvertTz(tCDT,TzUsEast) returned Error: " + err.Error())
 		return
 	}
 
@@ -400,7 +400,7 @@ func TimeZoneDefExample014() {
 	fmt.Println("      OffsetHours: ", tzDef.GetOffsetHours())
 	fmt.Println("    OffsetMinutes: ", tzDef.GetOffsetMinutes())
 	fmt.Println("    OffsetSeconds: ", tzDef.GetOffsetSeconds())
-	fmt.Println("  Location String: ", tzDef.Location.String())
+	fmt.Println("  Location String: ", tzDef.GetLocationPtr().String())
 	fmt.Println("    Location Name: ", tzDef.GetLocationName())
 
 }
@@ -501,8 +501,12 @@ func TestExample022() {
 
 	exTOutLoc := "America/Los_Angeles"
 
-	if exTOutLoc != tzuPacific.TimeOut.GetTimeZone().LocationName {
-		fmt.Printf("Expected tzu.TimeOutLoc %v, got %v.  tzuPacific.TimeOut='%v'\n", exTOutLoc, tzuPacific.TimeOut.GetTimeZone().LocationName, tzuPacific.TimeOut.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
+	if exTOutLoc != tzuPacific.TimeOut.GetTimeZoneName() {
+		fmt.Printf("Expected tzu.TimeOutLoc='%v'.\n" +
+			"Instead tzu.TimeOutLoc='%v'.\n" +
+			"tzuPacific.TimeOut='%v'\n",
+			exTOutLoc, tzuPacific.TimeOut.GetTimeZoneName(),
+			tzuPacific.TimeOut.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 
@@ -603,7 +607,7 @@ func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefDto) {
 	fmt.Println("        OffsetHours: ", tzDef.GetOffsetHours())
 	fmt.Println("      OffsetMinutes: ", tzDef.GetOffsetMinutes())
 	fmt.Println("      OffsetSeconds: ", tzDef.GetOffsetSeconds())
-	fmt.Println("    Location String: ", tzDef.Location.String())
+	fmt.Println("    Location String: ", tzDef.GetLocationPtr().String())
 	fmt.Println("      Location Name: ", tzDef.GetLocationName())
 	fmt.Println("-----------------------------------------------")
 }

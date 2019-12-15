@@ -94,7 +94,7 @@ func ExampleSetStartEndTimes() {
 }
 
 // Example_NewStartTimeDuration_01
-func ExampleNewstarttimeduration01() {
+func ExampleNewStartTimeDuration01() {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -148,15 +148,15 @@ func ExampleNewstarttimeduration01() {
 		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
 	}
 
-	tdatePlus := t1.AddDate(3, 2, 15)
-	tdatePlusDur := tdatePlus.Sub(t1)
+	tDatePlus := t1.AddDate(3, 2, 15)
+	tDatePlusDur := tDatePlus.Sub(t1)
 	ns := int64(0)
 
 	ns += 3 * dt.HourNanoSeconds
 	ns += 4 * dt.MinuteNanoSeconds
 	ns += 2 * dt.SecondNanoseconds
 
-	t3 := tdatePlus.Add(time.Duration(ns))
+	t3 := tDatePlus.Add(time.Duration(ns))
 	t3Output := t3.Format(fmtstr)
 	fmt.Println("Expected Output Date: ", t2OutStr)
 	fmt.Println("Computed Output Date: ", t3Output)
@@ -173,7 +173,7 @@ func ExampleNewstarttimeduration01() {
 	ans += dur.BaseTime.DateDaysNanosecs
 	fmt.Println()
 	fmt.Println("Actual Counted YearMonthDay Nanoseconds: ", ans)
-	fmt.Println("      Computed YearMonthDay NanoSeconds: ", int64(tdatePlusDur))
+	fmt.Println("      Computed YearMonthDay NanoSeconds: ", int64(tDatePlusDur))
 	fmt.Println("---------------------------------------------")
 	t3YearsMonths := t3Years.AddDate(0, 2, 0)
 	t3MonthsDur := t3YearsMonths.Sub(t3Years)

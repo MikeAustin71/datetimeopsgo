@@ -447,8 +447,8 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 
 }
 
-// TestLoadandWriteFileAllFormats
-func TestLoadandWriteFileAllFormats() {
+// TestLoadAndWriteFileAllFormats
+func TestLoadAndWriteFileAllFormats() {
 	dtf := dt.FormatDateTimeUtility{}
 	fmtFile := "./format-files/TestRead.txt"
 	dtoR, err := dtf.LoadAllFormatsFromFileIntoMemory(fmtFile)
@@ -548,7 +548,7 @@ func TestSingleDigitFormats() {
 		}
 
 		if !isSuccess {
-			fmt.Println("Failure - Could Not Locatate Format for Time String: ", tDateTimeStr)
+			fmt.Println("Failure - Could Not Locate Format for Time String: ", tDateTimeStr)
 		}
 
 	}

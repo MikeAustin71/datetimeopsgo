@@ -42,8 +42,8 @@ type TimeZoneDefDto struct {
 	offsetSeconds     int            // Normalized Offset Seconds offset from UTC. Always a positive number, refer to ZoneSign
 	zoneOffset        string         // A text string representing the time zone. Example "-0600 CST" or "+0200 EET"
 	utcOffset         string         // A text string representing the offset for UTC. Example "-0600" or "+0200"
-	Location          *time.Location // Pointer to a Time Zone Location
-	LocationName      string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+	location          *time.Location // Pointer to a Time Zone Location
+	locationName      string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
 	Description       string         // Unused - Available for classification, labeling or description by user.
 	lock              sync.Mutex     // Used for implementing thread safe operations.
 }
@@ -62,8 +62,8 @@ func (tzdef *TimeZoneDefDto) CopyIn(tzdef2 TimeZoneDefDto) {
 	tzdef.offsetSeconds = tzdef2.offsetSeconds
 	tzdef.zoneOffset = tzdef2.zoneOffset
 	tzdef.utcOffset = tzdef2.utcOffset
-	tzdef.Location = tzdef2.Location
-	tzdef.LocationName = tzdef2.LocationName
+	tzdef.location = tzdef2.location
+	tzdef.locationName = tzdef2.locationName
 	tzdef.Description = tzdef2.Description
 
 }
@@ -82,8 +82,11 @@ func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
 	tzdef2.offsetSeconds = tzdef.offsetSeconds
 	tzdef2.zoneOffset = tzdef.zoneOffset
 	tzdef2.utcOffset = tzdef.utcOffset
-	tzdef2.Location = tzdef.Location
-	tzdef2.LocationName = tzdef.LocationName
+
+	tzdef2.location = tzdef.location
+	tzdef2.locationName = tzdef.locationName
+
+
 	tzdef2.Description = tzdef.Description
 
 	return tzdef2
@@ -101,8 +104,8 @@ func (tzdef *TimeZoneDefDto) Empty() {
 	tzdef.offsetSeconds = 0
 	tzdef.zoneOffset = ""
 	tzdef.utcOffset = ""
-	tzdef.Location = nil
-	tzdef.LocationName = ""
+	tzdef.location = nil
+	tzdef.locationName = ""
 	tzdef.Description = ""
 
 }
@@ -120,14 +123,14 @@ func (tzdef *TimeZoneDefDto) Equal(tzdef2 TimeZoneDefDto) bool {
 		tzdef.offsetSeconds != tzdef2.offsetSeconds ||
 		tzdef.zoneOffset != tzdef2.zoneOffset ||
 		tzdef.utcOffset != tzdef2.utcOffset ||
-		tzdef.LocationName != tzdef2.LocationName ||
+		tzdef.locationName != tzdef2.locationName ||
 		tzdef.Description != tzdef2.Description {
 		return false
 	}
 
-	if tzdef.Location != nil && tzdef2.Location == nil ||
-	   tzdef.Location == nil && tzdef2.Location != nil ||
-		tzdef.Location.String() != tzdef2.Location.String() {
+	if tzdef.location != nil && tzdef2.location == nil ||
+	   tzdef.location == nil && tzdef2.location != nil ||
+		tzdef.location.String() != tzdef2.location.String() {
 		return false
 	}
 
@@ -176,7 +179,7 @@ func (tzdef *TimeZoneDefDto) EqualZones(tzdef2 TimeZoneDefDto) bool {
 //
 func (tzdef *TimeZoneDefDto) EqualLocations(tzdef2 TimeZoneDefDto) bool {
 
-	if tzdef.LocationName == tzdef2.LocationName {
+	if tzdef.locationName == tzdef2.locationName {
 		return true
 	}
 
@@ -211,6 +214,18 @@ func (tzdef *TimeZoneDefDto) GetDescription() string {
 	return tzdef.Description
 }
 
+// GetLocationPtr - Returns a pointer to a time.Location or
+// time zone location (TimeZoneDefDto.Location).
+//
+func (tzdef *TimeZoneDefDto) GetLocationPtr() *time.Location {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.location
+}
+
 // GetLocationName - Returns TimeZoneDefDto member variable
 // LocationName value.
 //
@@ -223,7 +238,7 @@ func (tzdef *TimeZoneDefDto) GetLocationName() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.LocationName
+	return tzdef.locationName
 }
 
 // GetOffsetHours - Returns TimeZoneDefDto member variable
@@ -356,7 +371,7 @@ func (tzdef *TimeZoneDefDto) IsEmpty() bool {
 		tzdef.offsetSeconds != 0 ||
 		tzdef.zoneOffset != "" ||
 		tzdef.utcOffset != "" ||
-		tzdef.LocationName != "" {
+		tzdef.locationName != "" {
 		return false
 	}
 
@@ -375,21 +390,21 @@ func (tzdef *TimeZoneDefDto) IsValid() bool {
 		return false
 	}
 
-	if strings.TrimLeft(strings.TrimRight(tzdef.LocationName, " "), " ") == "" {
+	if strings.TrimLeft(strings.TrimRight(tzdef.locationName, " "), " ") == "" {
 		return false
 	}
 
-	if tzdef.Location.String() != tzdef.LocationName {
+	if tzdef.location.String() != tzdef.locationName {
 		return false
 	}
 
-	loc, err := time.LoadLocation(tzdef.LocationName)
+	loc, err := time.LoadLocation(tzdef.locationName)
 
 	if err != nil {
 		return false
 	}
 
-	if loc != tzdef.Location {
+	if loc != tzdef.location {
 		return false
 	}
 
@@ -594,9 +609,10 @@ func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
 
 	tzdef.allocateZoneOffsetSeconds(tzdef.zoneOffsetSeconds)
 
-	tzdef.Location = dateTime.Location()
+	// If dateTime.Location() is nil, it returns UTC
+	tzdef.location = dateTime.Location()
 
-	tzdef.LocationName = dateTime.Location().String()
+	tzdef.locationName = dateTime.Location().String()
 
 	tzdef.setZoneProfile()
 

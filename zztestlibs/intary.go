@@ -12,7 +12,7 @@ import (
 /*
 	Source Code Repository
 	**********************
-	The source code file intary.go is located in the source code respository:
+	The source code file intary.go is located in the source code repository:
 
 		https://github.com/MikeAustin71/intary.git
 
@@ -469,7 +469,7 @@ type IntAry struct {
 // AddToThis - Adds the value of intAry parameter ia2 to the value
 // of the current intAry object.
 //
-// Paramters:
+// Parameters:
 //
 // ia2 *intAry - Incoming intAry object whose value will be subtracted
 // 								from this current intAry value.
@@ -655,7 +655,7 @@ func (ia *IntAry) AddBigIntToThis(num *big.Int, precision uint) error {
 // AddFloat32ToThis - Adds the value of input number (float32)
 // to the current value of this IntAry object.
 //
-// Intput Parameters:
+// Input Parameters:
 //
 // num float32 		- The number which will be added to the current
 //									IntAry object.
@@ -3828,7 +3828,7 @@ func (ia *IntAry) SetIntAryWithBigInt(intDigits *big.Int, precision uint) error 
 	quotient := big.NewInt(0)
 	mod := big.NewInt(0)
 	big10 := big.NewInt(10)
-	modx := big.NewInt(0)
+	modX := big.NewInt(0)
 
 	compare := bigZero.Cmp(intDigits)
 
@@ -3856,7 +3856,7 @@ func (ia *IntAry) SetIntAryWithBigInt(intDigits *big.Int, precision uint) error 
 			break
 		}
 
-		quotient, mod = big.NewInt(0).DivMod(intDigits, big10, modx)
+		quotient, mod = big.NewInt(0).DivMod(intDigits, big10, modX)
 
 		ia.intAry = append(ia.intAry, uint8(mod.Int64()))
 		ia.intAryLen++
@@ -4501,7 +4501,7 @@ func (ia *IntAry) SetThousandsSeparator(thousandsSeparator rune) {
 
 // SubtractFromThis - Subtracts the value of parameter
 // 'ia2' from the current intAry object.
-// Paramters:
+// Parameters:
 //
 // ia2 *intAry - Incoming intAry object whose value will be subtracted
 // 								from this current intAry value.

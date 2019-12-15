@@ -38,7 +38,7 @@ type NthRootOp struct {
 	Big10ToNthPower    *big.Int
 	BigZero            *big.Int
 	Big3               *big.Int
-	Y                  *big.Int // Root Extracted thusfar
+	Y                  *big.Int // Root Extracted thus far
 	YPrime             *big.Int // Next Value of Y
 	Minuend            *big.Int
 	Subtrahend         *big.Int

@@ -461,9 +461,9 @@ func TestDateTzDto_NewNowTz_01(t *testing.T) {
 		t.Error("Error: Actual Duration exceeded 2-seconds!")
 	}
 
-	if TZones.US.Central() != dTz.GetTimeZone().LocationName {
+	if TZones.US.Central() != dTz.GetTimeZoneName() {
 		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
-			TZones.US.Central(), dTz.GetTimeZone().LocationName)
+			TZones.US.Central(), dTz.GetTimeZoneName())
 	}
 
 }
@@ -487,9 +487,9 @@ func TestDateTzDto_NewNowLocal_01(t *testing.T) {
 		t.Error("Error: Actual Duration exceeded 2-seconds!")
 	}
 
-	if TZones.Local() != dTz.GetTimeZone().LocationName {
+	if TZones.Local() != dTz.GetTimeZoneName() {
 		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
-			TZones.Local(), dTz.GetTimeZone().LocationName)
+			TZones.Local(), dTz.GetTimeZoneName())
 	}
 
 }
@@ -522,9 +522,9 @@ func TestDateTzDto_NewNowUTC_01(t *testing.T) {
 		t.Error("Error: Actual Duration exceeded 2-seconds!")
 	}
 
-	if TZones.UTC() != dTz.GetTimeZone().LocationName {
+	if TZones.UTC() != dTz.GetTimeZoneName() {
 		t.Errorf("Error: Expected Time Zone='%v'.  Actual TimeZone='%v' ",
-			TZones.UTC(), dTz.GetTimeZone().LocationName)
+			TZones.UTC(), dTz.GetTimeZoneName())
 	}
 
 }
@@ -610,7 +610,7 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 	if !eTimeZoneDef.Equal(dTz.GetTimeZone()) {
 		t.Errorf("Expected dTz.GetTimeZone().LocationName='%v'. "+
 			"Instead, dTz.GetTimeZone().LocationName='%v'",
-			eTimeZoneDef.LocationName, dTz.GetTimeZone().LocationName)
+			eTimeZoneDef.GetLocationName(), dTz.GetTimeZoneName())
 	}
 
 	tDto, err := TimeDto{}.NewFromDateTime(t4USCentral)
@@ -791,9 +791,9 @@ func TestDateTzDto_SetNewTimeZone_01(t *testing.T) {
 			dTz1.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	if TZones.Asia.Tokyo() != dTz1.GetTimeZone().LocationName {
+	if TZones.Asia.Tokyo() != dTz1.GetTimeZoneName() {
 		t.Errorf("Error: Expected dTz1 Time Zone Location Name ='%v'. "+
-			"Instead, Time Zone Location Name='%v'", TZones.Asia.Tokyo(), dTz1.GetTimeZone().LocationName)
+			"Instead, Time Zone Location Name='%v'", TZones.Asia.Tokyo(), dTz1.GetTimeZoneName())
 	}
 
 }
@@ -860,7 +860,7 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 	if !eTimeZoneDef.Equal(dTzDto.GetTimeZone()) {
 		t.Errorf("Expected dTzDto.GetTimeZone().LocationName='%v'.\n"+
 			"Instead, dTzDto.GetTimeZone().LocationName='%v'\n",
-			eTimeZoneDef.LocationName, dTzDto.GetTimeZone().LocationName)
+			eTimeZoneDef.GetLocationName(), dTzDto.GetTimeZoneName())
 	}
 
 	tDto, err := TimeDto{}.NewFromDateTime(t4USCentral)

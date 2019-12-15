@@ -1735,6 +1735,18 @@ func (dtz *DateTzDto) GetTimeZoneAbbreviation() string {
 return dtz.timeZone.GetZoneName()
 }
 
+// GetTimeZoneLocationPtr - Returns the Time Zone Location pointer
+// in the form of a '*time.Location' type.
+//
+func (dtz *DateTzDto) GetTimeZoneLocationPtr() *time.Location {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	return dtz.timeZone.location
+}
+
 // GetTimeZoneName - Returns a string containing the
 // time zone location name. If this is an IANA time
 // zone, the full IANA Time Zone text name will be
@@ -2268,7 +2280,7 @@ func (dtz DateTzDto) NewFromMilitaryDateTz(
 	err = dTzUtil.setFromTimeTz(
 		&newDateTz,
 		militaryDtDto.DateTime,
-		militaryDtDto.EquivalentIanaTimeZone.LocationName,
+		militaryDtDto.EquivalentIanaTimeZone.GetLocationName(),
 		dateTimeFmtStr,
 		ePrefix)
 

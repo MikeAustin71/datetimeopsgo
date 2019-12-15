@@ -1279,7 +1279,9 @@ func (durT DurationTriad) NewStartDateTzDuration(
 
 	ePrefix := "DurationTriad.NewStartDateTzDuration() "
 
-	timeZoneLocation := startDateTime.GetTimeZone().LocationName
+	tz := startDateTime.GetTimeZone()
+
+	timeZoneLocation := tz.GetLocationName()
 	dateTimeFmtStr := startDateTime.GetDateTimeFmt()
 
 	du2 := DurationTriad{}
@@ -1361,7 +1363,9 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 
 	du2 := DurationTriad{}
 
-	timeZoneLocation := startDateTime.GetTimeZone().LocationName
+	tz := startDateTime.GetTimeZone()
+
+	timeZoneLocation := tz.GetLocationName()
 	dateTimeFmtStr := startDateTime.GetDateTimeFmt()
 
 	err := du2.SetStartEndDateTzCalcTz(
@@ -2855,7 +2859,8 @@ func (durT *DurationTriad) SetAutoEnd() error {
 
 	calcType := durT.BaseTime.CalcType
 	startDateTime := durT.BaseTime.StartTimeDateTz.GetDateTimeValue()
-	tzLocName := durT.BaseTime.StartTimeDateTz.GetTimeZone().LocationName
+
+	tzLocName := durT.BaseTime.StartTimeDateTz.GetTimeZoneName()
 	fmtStr := durT.BaseTime.StartTimeDateTz.GetDateTimeFmt()
 
 	err := durT.SetStartEndTimesCalcTz(startDateTime, endDateTime, calcType, tzLocName, fmtStr)

@@ -50,7 +50,7 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString01() {
 
 	actualStr := t1.Format(fmtstr)
 
-	assert.Equal(suite.T(), t1Str, actualStr, "Acutal Output NOT EQUAL To Expected!")
+	assert.Equal(suite.T(), t1Str, actualStr, "Actual Output NOT EQUAL To Expected!")
 
 }
 
@@ -89,7 +89,7 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString03() {
 
 	expectedStr := "2018-02-25 16:28:52.515539300 +1000 +10"
 	//"2018-02-25 16:28:52.515539300 +1000 +10"
-	assert.Equal(suite.T(), expectedStr, actualStr, "Acutal Output NOT EQUAL To Expected!")
+	assert.Equal(suite.T(), expectedStr, actualStr, "Actual Output NOT EQUAL To Expected!")
 
 	t1Expected, err := time.Parse("2006-01-02 15:04:05.000000000 -0700 -07", t1Str)
 
