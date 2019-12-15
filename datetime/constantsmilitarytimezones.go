@@ -7,10 +7,84 @@ import (
 // MilitaryTimeZoneData - Provides thread safe access to Military
 // Time Zone, location and nomenclature data.
 //
+// For information on Military Time Zones, reference:
+//
+//     https://en.wikipedia.org/wiki/List_of_military_time_zones
+//     http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//     https://www.timeanddate.com/time/zones/military
+//     https://www.timeanddate.com/worldclock/timezone/alpha
+//     https://www.timeanddate.com/time/map/
+//
+// Military time zones are commonly used in military operations and
+// aviation as well as at sea. They are also known as nautical or
+// maritime time zones.
+//
+// The 'J' (Juliet) Time Zone is occasionally used to refer to the observer's
+// local time. Note that Time Zone 'J' (Juliet) is not listed below.
+//
+//    Time Zone       Time Zone        Equivalent IANA          UTC
+//   Abbreviation       Name              Time Zone            Offset
+//   ------------     --------          ---------------        ------
+//
+//       A        Alpha Time Zone         Etc/GMT-1            UTC +1
+//       B        Bravo Time Zone         Etc/GMT-2            UTC +2
+//       C        Charlie Time Zone       Etc/GMT-3            UTC +3
+//       D        Delta Time Zone         Etc/GMT-4            UTC +4
+//       E        Echo Time Zone          Etc/GMT-5            UTC +5
+//       F        Foxtrot Time Zone       Etc/GMT-6            UTC +6
+//       G        Golf Time Zone          Etc/GMT-7            UTC +7
+//       H        Hotel Time Zone         Etc/GMT-8            UTC +8
+//       I        India Time Zone         Etc/GMT-9            UTC +9
+//       K        Kilo Time Zone          Etc/GMT-10           UTC +10
+//       L        Lima Time Zone          Etc/GMT-11           UTC +11
+//       M        Mike Time Zone          Etc/GMT-12           UTC +12
+//       N        November Time Zone      Etc/GMT+1            UTC -1
+//       O        Oscar Time Zone         Etc/GMT+2            UTC -2
+//       P        Papa Time Zone          Etc/GMT+3            UTC -3
+//       Q        Quebec Time Zone        Etc/GMT+4            UTC -4
+//       R        Romeo Time Zone         Etc/GMT+5            UTC -5
+//       S        Sierra Time Zone        Etc/GMT+6            UTC -6
+//       T        Tango Time Zone         Etc/GMT+7            UTC -7
+//       U        Uniform Time Zone       Etc/GMT+8            UTC -8
+//       V        Victor Time Zone        Etc/GMT+9            UTC -9
+//       W        Whiskey Time Zone       Etc/GMT+10           UTC -10
+//       X        X-ray Time Zone         Etc/GMT+11           UTC -11
+//       Y        Yankee Time Zone        Etc/GMT+12           UTC -12
+//       Z        Zulu Time Zone          UTC                  UTC +0
+//
+//  UTC     Time Zone     Time Zone
+// Offset  Abbreviation   Location
+// ------  ------------   -----------------------------------------------------------------------
+// UTC+1         A        (France)
+// UTC+2         B        (Athens, Greece)
+// UTC+3         C        (Arab Standard Time, Iraq, Bahrain, Kuwait, Saudi Arabia, Yemen, Qatar)
+// UTC+4         D        (Used for Moscow, Russia and Afghanistan, however, Afghanistan is
+//                           technically +4:30 from UTC)
+// UTC+5         E        (Pakistan, Kazakhstan, Tajikistan, Uzbekistan and Turkmenistan)
+// UTC+6         F        (Bangladesh)
+// UTC+7         G        (Thailand)
+// UTC+8         H        (Beijing, China)
+// UTC+9         I        (Tokyo, Australia)
+// UTC+10        K        (Brisbane, Australia)
+// UTC+11        L        (Sydney, Australia)
+// UTC+12        M        (Wellington, New Zealand)
+// UTC-1         N        (Azores)
+// UTC-2         O        (Godthab, Greenland)
+// UTC-3         P        (Buenos Aires, Argentina)
+// UTC-4         Q        (Halifax, Nova Scotia)
+// UTC-5         R        (EST, New York, NY)
+// UTC-6         S        (CST, Dallas, TX)
+// UTC-7         T        (MST, Denver, CO)
+// UTC-8         U        (PST, Los Angeles, CA)
+// UTC-9         V        (Juneau, AK)
+// UTC-10        W        (Honolulu, HI)
+// UTC-11        X        (American Samoa)
+// UTC -12       Y        (e.g. Fiji)
+// UTC+-0        Z        (Zulu time)
+//
 type MilitaryTimeZoneData struct{
 	Input   string
 	Output  string
-	lock    sync.Mutex
 }
 
 // MilTzLetterToTextName - Returns the Military Time Zone
@@ -18,67 +92,140 @@ type MilitaryTimeZoneData struct{
 // which contains a single alphabetic character identifying
 // the military time zone.
 //
-// Example "Z" returns military time zone "Zulu".
+// Example:
+//  "Z" returns military time zone name "Zulu".
+//  "A" returns military time zone name "Alpha".
+//  "B" returns military time zone name "Bravo".
+//
+// This method accesses map 'militaryTzLetterToTxtNameMap'.
+//
+// If the input parameter 'milTzLetter' is invalid, the boolean
+// value returned by this method will be set to 'false'.
 //
 func (milTzDat *MilitaryTimeZoneData) MilTzLetterToTextName(
 	milTzLetter string) (string, bool) {
 
-	milTzDat.lock.Lock()
+	lockMilitaryTzLetterToTxtNameMap.Lock()
 
-	defer milTzDat.lock.Unlock()
+	defer lockMilitaryTzLetterToTxtNameMap.Unlock()
 
 		result, ok := militaryTzLetterToTxtNameMap[milTzLetter]
 
 	return result, ok
 }
 
+// MilitaryTzToIanaTz - Returns an IANA Time Zone which
+// is equivalent to the military time zone identified by
+// the input parameter 'milTzTextName'.
+//
+// Example:
+//  Military Time Zone = "Charlie"
+//  Returns Equivalent IANA Time Zone = "Etc/GMT-3"
+//
+// This method accesses map 'militaryTzToIanaTzMap'.
+//
+// If successful, the equivalent IANA Time Zone will be
+// returned as a string.
+//
+// If input parameter 'milTzTextName' is invalid, the boolean
+// value returned by this method will be set to false.
+//
 func (milTzDat *MilitaryTimeZoneData) MilitaryTzToIanaTz(
 		milTzTextName string) (string, bool) {
 
-	milTzDat.lock.Lock()
+	lockMilitaryTzToIanaTzMap.Lock()
 
-	defer milTzDat.lock.Unlock()
+	defer lockMilitaryTzToIanaTzMap.Unlock()
 
 	result, ok := militaryTzToIanaTzMap[milTzTextName]
 
 	return result, ok
 }
 
+// UtcOffsetToMilitaryTimeZone - Returns the military time zone
+// associated with the UTC offset identified by the input parameter
+// 'utcOffset'.
+//
+// Input parameter 'utcOffset' should be formatted in accordance
+// with the following examples:
+//  "+0200"
+//  "-0700"
+//  "+1100"
+//
+// This method accesses map 'militaryUTCToTzMap'.
+//
+// If successful, this method will return a string containing the
+// full Military Time Zone name. Examples of full Military Time
+// Zone names are "Alpha", "Bravo", "Charlie", "Golf" etc.
+//
+// If the input parameter utcOffset is invalid, the boolean
+// value returned by this method is set to 'false'.
+//
 func (milTzDat *MilitaryTimeZoneData) UtcOffsetToMilitaryTimeZone(
 	utcOffset string) (string, bool) {
 
-	milTzDat.lock.Lock()
+	lockMilitaryUTCToTzMap.Lock()
 
-	defer milTzDat.lock.Unlock()
+	defer lockMilitaryUTCToTzMap.Unlock()
 
 	result, ok := militaryUTCToTzMap[utcOffset]
 
 	return result, ok
 }
 
+// MilitaryTzToUtc - Returns the UTC offset associated
+// with a Military Time Zone Name passed in by input
+// parameter 'milTzTextName'.
+//
+// Input parameter is a string containing the full
+// Military Time Zone Name. Examples: "Alpha", "Bravo"
+// "Charlie", "Delta", etc.
+//
+// This method accesses map 'militaryTzToUTCMap'.
+//
+// If successful, the returned string will contain an
+// UTC offset formatted like: "+0700", "-0100", "+0000"
+// etc.
+//
+// If the input parameter is invalid, the boolean value
+// returned by this method will be set to 'false'.
+//
 func (milTzDat *MilitaryTimeZoneData) MilitaryTzToUtc(
 	milTzTextName string) (string, bool) {
 
-	milTzDat.lock.Lock()
+	lockMilitaryTzToUTCMap.Lock()
 
-	defer milTzDat.lock.Unlock()
+	defer lockMilitaryTzToUTCMap.Unlock()
 
 	result, ok := militaryTzToUTCMap[milTzTextName]
 
 	return result, ok
 }
 
+// MilitaryTzToLocation - This method returns a brief geographical
+// location description associated Military Time Zone name passed
+// by input parameter 'milTzTextName'.
+//
+// Input parameter string 'milTzTextName' must contain a full and
+// valid Military Time Zone text name like, "Alpha", "Bravo",
+// "Charlie", "Zulu", etc.
+//
+// If input parameter 'milTzTextName' is invalid, the boolean value
+// returned by this method is set to 'false'.
+//
 func (milTzDat *MilitaryTimeZoneData) MilitaryTzToLocation(
 	milTzTextName string) (string, bool) {
 
-	milTzDat.lock.Lock()
+	lockMilitaryTzToLocationMap.Lock()
 
-	defer milTzDat.lock.Unlock()
+	defer lockMilitaryTzToLocationMap.Unlock()
 
 	result, ok := militaryTzToLocationMap[milTzTextName]
 
 	return result, ok
 }
+
+var lockMilitaryTzLetterToTxtNameMap sync.Mutex
 
 var militaryTzLetterToTxtNameMap = map[string]string {
 	"A" : "Alpha",
@@ -107,6 +254,8 @@ var militaryTzLetterToTxtNameMap = map[string]string {
 	"Y" : "Yankee",
 	"Z" : "Zulu" }
 
+var lockMilitaryTzToIanaTzMap sync.Mutex
+
 var militaryTzToIanaTzMap = map[string]string {
 	"Alpha":    TZones.Military.Alpha(),
 	"Bravo":    TZones.Military.Bravo(),
@@ -133,6 +282,9 @@ var militaryTzToIanaTzMap = map[string]string {
 	"Xray":     TZones.Military.Xray(),
 	"Yankee":   TZones.Military.Yankee(),
 	"Zulu":     TZones.Military.Zulu()}
+
+
+var lockMilitaryUTCToTzMap sync.Mutex
 
 var militaryUTCToTzMap = map[string]string{
 	"+0100":    "Alpha",
@@ -162,6 +314,7 @@ var militaryUTCToTzMap = map[string]string{
 	"-1200":    "Yankee",
 	"+0000":    "Zulu" }
 
+var lockMilitaryTzToUTCMap sync.Mutex
 
 var militaryTzToUTCMap = map[string]string{
 	"Alpha":    "+0100",
@@ -190,6 +343,7 @@ var militaryTzToUTCMap = map[string]string{
 	"Yankee":   "-1200",
 	"Zulu":     "+0000"}
 
+var lockMilitaryTzToLocationMap sync.Mutex
 
 var militaryTzToLocationMap = map[string]string{
 	"Alpha"    :  "France",

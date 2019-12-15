@@ -34,24 +34,26 @@ Overview and General Usage
 // Contains detailed parameters describing a specific
 // Time Zone and Time Zone Location
 type TimeZoneDefDto struct {
-	zoneName          string         // The Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
-	zoneOffsetSeconds int            // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
-	zoneSign          int            // -1 == West of UTC  +1 == East of UTC
-	offsetHours       int            // Normalized Offset Hours from UTC. Always a positive number, refer to ZoneSign
-	offsetMinutes     int            // Normalized Offset Minutes offset from UTC. Always a positive number, refer to ZoneSign
-	offsetSeconds     int            // Normalized Offset Seconds offset from UTC. Always a positive number, refer to ZoneSign
-	zoneOffset        string         // A text string representing the time zone. Example "-0600 CST" or "+0200 EET"
-	utcOffset         string         // A text string representing the offset for UTC. Example "-0600" or "+0200"
-	location          *time.Location // Pointer to a Time Zone Location
-	locationName      string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
-	tagDescription    string         // Unused - Available for classification, labeling or description by user.
-	timeZoneType      TimeZoneType   // Enumeration of Time Zone Type:
-	                                 //  TzType.None()
-	                                 //  TzType.Iana()
-	                                 //  TzType.Military()
-	                                 //  TzType.Local()
-	                                 //  TzType.UtcOffset()
-	lock              sync.Mutex     // Used for implementing thread safe operations.
+	zoneName               string         // The Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
+	zoneOffsetSeconds      int            // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
+	zoneSign               int            // -1 == West of UTC  +1 == East of UTC
+	offsetHours            int            // Normalized Offset Hours from UTC. Always a positive number, refer to ZoneSign
+	offsetMinutes          int            // Normalized Offset Minutes offset from UTC. Always a positive number, refer to ZoneSign
+	offsetSeconds          int            // Normalized Offset Seconds offset from UTC. Always a positive number, refer to ZoneSign
+	zoneOffset             string         // A text string representing the time zone. Example "-0600 CST" or "+0200 EET"
+	utcOffset              string         // A text string representing the offset for UTC. Example "-0600" or "+0200"
+	location               *time.Location // Pointer to a Time Zone Location
+	locationName           string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+	militaryTimeZoneName   string         // Full Military Time Zone text name. Examples: "Alpha", "Bravo", "Charlie", "Zulu"
+	militaryTimeZoneLetter string         // Single Alphabetic Character identifying a Military Time Zone.
+	tagDescription         string         // Unused - Available for classification, labeling or description by user.
+	timeZoneType           TimeZoneType   // Enumeration of Time Zone Type:
+	                                      //  TzType.None()
+	                                      //  TzType.Iana()
+	                                      //  TzType.Military()
+	                                      //  TzType.Local()
+	                                      //  TzType.UtcOffset()
+	lock                   sync.Mutex     // Used for implementing thread safe operations.
 }
 
 // CopyIn - Copies an incoming TimeZoneDefDto into the
@@ -208,8 +210,8 @@ func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
 // GetTagDescription - Returns TimeZoneDefDto member variable
 // Description value.
 //
-// Time Zone Location Name Examples: "Local", "America/Chicago",
-// "America/New_York".
+// Unused - Available to user. This string is typically used
+// classification, labeling or description text by user.
 //
 func (tzdef *TimeZoneDefDto) GetTagDescription() string {
 
