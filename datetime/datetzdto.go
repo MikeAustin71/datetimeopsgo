@@ -1521,7 +1521,7 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 	return dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr)
 }
 
-// GetDescription - Returns DateTzDto private member
+// GetTagDescription - Returns DateTzDto private member
 // variable, DateTzDto.tagDescription.
 //
 // 'tagDescription' is available to users for use as

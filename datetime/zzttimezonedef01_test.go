@@ -78,10 +78,10 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 			locationName, tzDef.GetLocationName())
 	}
 
-	if descStr != tzDef.GetDescription() {
-		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
-			"Instead, tzDef.GetDescription()='%v'\n",
-			descStr, tzDef.GetDescription())
+	if descStr != tzDef.GetTagDescription() {
+		t.Errorf("Error: Expected tzDef.GetTagDescription()='%v'.\n" +
+			"Instead, tzDef.GetTagDescription()='%v'\n",
+			descStr, tzDef.GetTagDescription())
 	}
 
 }
@@ -166,8 +166,10 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 			locationName, tzDef.GetLocationName())
 	}
 
-	if descStr != tzDef.GetDescription() {
-		t.Errorf("Error: Expected tzDef.Description='%v'. Instead, tzDef.Description='%v'", descStr, tzDef.Description)
+	if descStr != tzDef.GetTagDescription() {
+		t.Errorf("Error: Expected tzDef.Description='%v'.\n" +
+			"Instead, tzDef.Description='%v'\n",
+			descStr, tzDef.GetTagDescription())
 	}
 
 }
@@ -195,7 +197,7 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 		return
 	}
 
-	tzDef0.Description = descStr
+	tzDef0.tagDescription = descStr
 
 	tzDef := tzDef0.CopyOut()
 
@@ -253,10 +255,10 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 			locationName, tzDef.GetLocationName())
 	}
 
-	if descStr != tzDef.GetDescription() {
-		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
-			"Instead, tzDef.GetDescription()='%v'\n",
-			descStr, tzDef.GetDescription())
+	if descStr != tzDef.GetTagDescription() {
+		t.Errorf("Error: Expected tzDef.GetTagDescription()='%v'.\n" +
+			"Instead, tzDef.GetTagDescription()='%v'\n",
+			descStr, tzDef.GetTagDescription())
 	}
 
 }
@@ -343,10 +345,10 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 			locationName, tzDef.GetLocationName())
 	}
 
-	if descStr != tzDef.GetDescription() {
-		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
-			"Instead, tzDef.GetDescription()='%v'",
-			descStr, tzDef.GetDescription())
+	if descStr != tzDef.GetTagDescription() {
+		t.Errorf("Error: Expected tzDef.GetTagDescription()='%v'.\n" +
+			"Instead, tzDef.GetTagDescription()='%v'",
+			descStr, tzDef.GetTagDescription())
 	}
 
 	if !tzDef0.Equal(tzDef) {
@@ -437,10 +439,10 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 			locationName, tzDef.GetLocationName())
 	}
 
-	if descStr != tzDef.GetDescription() {
-		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
-			"Instead, tzDef.GetDescription()='%v'\n",
-			descStr, tzDef.GetDescription())
+	if descStr != tzDef.GetTagDescription() {
+		t.Errorf("Error: Expected tzDef.GetTagDescription()='%v'.\n" +
+			"Instead, tzDef.GetTagDescription()='%v'\n",
+			descStr, tzDef.GetTagDescription())
 	}
 
 	tzDef0.location = nil
@@ -531,10 +533,10 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 			locationName, tzDef.GetLocationName())
 	}
 
-	if descStr != tzDef.GetDescription() {
-		t.Errorf("Error: Expected tzDef.GetDescription()='%v'.\n" +
-			"Instead, tzDef.GetDescription()='%v'\n",
-			descStr, tzDef.GetDescription())
+	if descStr != tzDef.GetTagDescription() {
+		t.Errorf("Error: Expected tzDef.GetTagDescription()='%v'.\n" +
+			"Instead, tzDef.GetTagDescription()='%v'\n",
+			descStr, tzDef.GetTagDescription())
 	}
 
 	tzDef0.location = nil
