@@ -80,41 +80,22 @@ func (tzdef *TimeZoneDefDto) CopyIn(tzdef2 TimeZoneDefDto) {
 // TimeZoneDefDto instance.
 func (tzdef *TimeZoneDefDto) CopyOut() TimeZoneDefDto {
 
-	tzdef2 := TimeZoneDefDto{}
+	tzdef.lock.Lock()
 
-	tzdef2.zoneName = tzdef.zoneName
-	tzdef2.zoneOffsetSeconds = tzdef.zoneOffsetSeconds
-	tzdef2.zoneSign = tzdef.zoneSign
-	tzdef2.offsetHours = tzdef.offsetHours
-	tzdef2.offsetMinutes = tzdef.offsetMinutes
-	tzdef2.offsetSeconds = tzdef.offsetSeconds
-	tzdef2.zoneOffset = tzdef.zoneOffset
-	tzdef2.utcOffset = tzdef.utcOffset
+	defer tzdef.lock.Unlock()
 
-	tzdef2.location = tzdef.location
-	tzdef2.locationName = tzdef.locationName
+	tzDefUtil := timeZoneDefUtility{}
 
-
-	tzdef2.tagDescription = tzdef.tagDescription
-
-	return tzdef2
-
+	return tzDefUtil.CopyOut(tzdef)
 }
 
 // Empty - Resets all field values for the current TimeZoneDefDto
 // instance to their uninitialized or 'zero' states.
 func (tzdef *TimeZoneDefDto) Empty() {
-	tzdef.zoneName = ""
-	tzdef.zoneOffsetSeconds = 0
-	tzdef.zoneSign = 0
-	tzdef.offsetHours = 0
-	tzdef.offsetMinutes = 0
-	tzdef.offsetSeconds = 0
-	tzdef.zoneOffset = ""
-	tzdef.utcOffset = ""
-	tzdef.location = nil
-	tzdef.locationName = ""
-	tzdef.tagDescription = ""
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	tzDefUtil.empty(tzdef)
 
 }
 
@@ -508,21 +489,20 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 
 	tzDef2 := TimeZoneDefDto{}
 
-	err := tzDef2.SetFromDateTime(dateTime)
+	tzDefUtil := timeZoneDefUtility{}
+
+	err := tzDefUtil.setFromDateTime( &tzDef2, dateTime, ePrefix)
 
 	if err != nil {
-		return TimeZoneDefDto{}, fmt.Errorf(ePrefix+
-			"Error returned by tzDef2.SetFromDateTimeComponents(dateTime). "+
-			"dateTime='%v'  Error='%v'",
-			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return TimeZoneDefDto{},err
 	}
 
 	return tzDef2, nil
 }
 
 // NewFromTimeZoneName - Creates and returns a new instance 'TimeZoneDefDto'.
-// The new instance is based on input parameter 'timeZoneName', the text
-// name of a valid IANA Time Zone.
+// The new instance is based on input parameter 'tzLocPtr', a pointer to
+// and instance to time.Location.
 //
 func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
 	tzLocPtr *time.Location) (tzDefDto TimeZoneDefDto, err error) {
@@ -532,31 +512,38 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
 	err = nil
 	tzDefDto = TimeZoneDefDto{}
 
-	var err2 error
-
 	if tzLocPtr == nil {
 		err = errors.New(ePrefix +
 			"\nError: Input parameter 'tzLocPtr' is 'nil'!\n")
 		return tzDefDto, err
 	}
 
-	err2 = tzDefDto.SetFromDateTime(time.Now().In(tzLocPtr))
+	tzDefUtil := timeZoneDefUtility{}
 
-	if err2 != nil {
-		err = fmt.Errorf(ePrefix +
-			"\nError returned by tzDefDto.SetFromDateTimeComponents(time.Now().In(tzLoc)).\n" +
-			"Error='%v'\n", err2.Error())
+	err = tzDefUtil.setFromDateTime( &tzDefDto, time.Now().In(tzLocPtr), ePrefix)
+
+	if err != nil {
+		tzDefDto = TimeZoneDefDto{}
 		return tzDefDto, err
 	}
-
-	err = nil
 
 	return tzDefDto, err
 }
 
 // NewFromTimeZoneName - Creates and returns a new instance 'TimeZoneDefDto'.
-// The new instance is based on input parameter 'timeZoneName', the text
-// name of a valid IANA Time Zone.
+// The new instance is based on input parameter 'timeZoneName'.
+//
+// The 'timeZoneName' string must be set to one of three values:
+//
+//   1. A valid IANA Time Zone name.
+//
+//   2. The time zone "Local", which Golang accepts as the time
+//      zone currently configured on the host computer.
+//
+//   3. A valid Military Time Zone which can be submitted either as
+//      a single alphabetic character or as a full Military Time
+//      zone name.
+//
 func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 	timeZoneName string) (tzDefDto TimeZoneDefDto, err error) {
 
@@ -574,6 +561,8 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 		return tzDefDto, err
 	}
 
+	tzDefUtil := timeZoneDefUtility{}
+
 	tzLoc, err2 = time.LoadLocation(timeZoneName)
 
 	if err2 != nil {
@@ -584,16 +573,8 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 		return tzDefDto, err
 	}
 
-	err2 = tzDefDto.SetFromDateTime(time.Now().In(tzLoc))
 
-	if err2 != nil {
-		err = fmt.Errorf(ePrefix +
-			"\nError returned by tzDefDto.SetFromDateTimeComponents(time.Now().In(tzLoc)).\n" +
-			"Error='%v'\n", err2.Error())
-		return tzDefDto, err
-	}
-
-	err = nil
+	err = tzDefUtil.setFromDateTime(&tzDefDto, time.Now().In(tzLoc), ePrefix)
 
 	return tzDefDto, err
 }
@@ -618,32 +599,28 @@ func (tzdef *TimeZoneDefDto) SetTagDescription(tagDesc string) {
 // SetFromDateTimeComponents - Re-initializes the values of the current
 // TimeZoneDefDto instance based on input parameter, 'dateTime'.
 func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
 	ePrefix := "TimeZoneDefDto.SetFromDateTimeComponents() "
 
 	if dateTime.IsZero() {
 		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
 	}
 
-	tzdef.Empty()
+	tzDefUtil := timeZoneDefUtility{}
 
-	tzdef.zoneName, tzdef.zoneOffsetSeconds = dateTime.Zone()
+	return tzDefUtil.setFromDateTime(tzdef, dateTime, ePrefix)
 
-	tzdef.allocateZoneOffsetSeconds(tzdef.zoneOffsetSeconds)
-
-	// If dateTime.Location() is nil, it returns UTC
-	tzdef.location = dateTime.Location()
-
-	tzdef.locationName = dateTime.Location().String()
-
-	tzdef.setZoneProfile()
-
-	tzdef.tagDescription = ""
-
-	return nil
 }
+
 
 // allocateZoneOffsetSeconds - allocates a signed value of total offset seconds from
 // UTC to the associated fields in the current TimeZoneDefDto instance.
+/*
+
 func (tzdef *TimeZoneDefDto) allocateZoneOffsetSeconds(signedZoneOffsetSeconds int) {
 
 	if signedZoneOffsetSeconds < 0 {
@@ -708,3 +685,5 @@ func (tzdef *TimeZoneDefDto) setZoneProfile() {
 
 	return
 }
+
+*/

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"time"
 )
 
 type timeZoneDefUtility struct {
@@ -14,9 +15,13 @@ type timeZoneDefUtility struct {
 
 // allocateZoneOffsetSeconds - allocates a signed value of total offset seconds from
 // UTC to the associated fields in the current TimeZoneDefDto instance.
-func (tzDefUtil timeZoneDefUtility) allocateZoneOffsetSeconds(
+func (tzDefUtil *timeZoneDefUtility) allocateZoneOffsetSeconds(
   tzdef *TimeZoneDefDto,
 	signedZoneOffsetSeconds int) {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
 
 	if signedZoneOffsetSeconds < 0 {
 		tzdef.zoneSign = -1
@@ -47,6 +52,93 @@ func (tzDefUtil timeZoneDefUtility) allocateZoneOffsetSeconds(
 	return
 }
 
+// CopyOut - creates and returns a deep copy of the current
+// TimeZoneDefDto instance.
+//
+func (tzDefUtil *timeZoneDefUtility) CopyOut(
+	tzdef *TimeZoneDefDto) TimeZoneDefDto {
+
+
+	tzdef2 := TimeZoneDefDto{}
+
+	tzdef2.zoneName = tzdef.zoneName
+	tzdef2.zoneOffsetSeconds = tzdef.zoneOffsetSeconds
+	tzdef2.zoneSign = tzdef.zoneSign
+	tzdef2.offsetHours = tzdef.offsetHours
+	tzdef2.offsetMinutes = tzdef.offsetMinutes
+	tzdef2.offsetSeconds = tzdef.offsetSeconds
+	tzdef2.zoneOffset = tzdef.zoneOffset
+	tzdef2.utcOffset = tzdef.utcOffset
+
+	tzdef2.location = tzdef.location
+	tzdef2.locationName = tzdef.locationName
+
+
+	tzdef2.tagDescription = tzdef.tagDescription
+
+	return tzdef2
+
+}
+
+// Empty - Resets all field values for the input parameter
+// TimeZoneDefDto to their uninitialized or 'zero' states.
+//
+func (tzDefUtil *timeZoneDefUtility) empty(
+	tzdef *TimeZoneDefDto) {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	tzdef.zoneName = ""
+	tzdef.zoneOffsetSeconds = 0
+	tzdef.zoneSign = 0
+	tzdef.offsetHours = 0
+	tzdef.offsetMinutes = 0
+	tzdef.offsetSeconds = 0
+	tzdef.zoneOffset = ""
+	tzdef.utcOffset = ""
+	tzdef.location = nil
+	tzdef.locationName = ""
+	tzdef.tagDescription = ""
+
+	return
+}
+
+func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
+	tzdef *TimeZoneDefDto,
+	dateTime time.Time,
+	ePrefix string) error {
+
+	ePrefix += "timeZoneDefUtility.setFromDateTime()"
+
+
+	if dateTime.IsZero() {
+		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	tzDefUtil2.empty(tzdef)
+
+	tzdef.zoneName, tzdef.zoneOffsetSeconds = dateTime.Zone()
+
+
+	tzDefUtil2.allocateZoneOffsetSeconds(tzdef, tzdef.zoneOffsetSeconds)
+
+	// If dateTime.Location() is nil, it returns UTC
+	tzdef.location = dateTime.Location()
+
+	tzdef.locationName = dateTime.Location().String()
+
+	tzDefUtil2.setZoneProfile(tzdef)
+
+	tzdef.tagDescription = ""
+
+	return nil
+
+}
+
 // setZoneProfile - assembles and assigns the composite zone
 // offset, zone names, zone abbreviation and UTC offsets.
 //
@@ -55,7 +147,7 @@ func (tzDefUtil timeZoneDefUtility) allocateZoneOffsetSeconds(
 //      "-0600 CST"
 //      "+0200 EET"
 //
-func (tzDefUtil timeZoneDefUtility) setZoneProfile(
+func (tzDefUtil *timeZoneDefUtility) setZoneProfile(
 	tzdef *TimeZoneDefDto) {
 
 	tzDefUtil.lock.Lock()
@@ -100,7 +192,7 @@ func (tzDefUtil timeZoneDefUtility) setZoneProfile(
 // with an appropriate error message. Otherwise, 'err' is set
 // to 'nil' signaling no error was encountered.
 //
-func (tzDefUtil timeZoneDefUtility) parseMilitaryTzNameAndLetter(
+func (tzDefUtil *timeZoneDefUtility) parseMilitaryTzNameAndLetter(
 	rawTz,
 	ePrefix string) (milTzLetter, milTzName, equivalentIanaTimeZone string, err error) {
 
