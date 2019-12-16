@@ -120,7 +120,44 @@ func (tzType TimeZoneType) Local() TimeZoneType {return TimeZoneType(3)}
 //
 func (tzType TimeZoneType) UtcOffset() TimeZoneType {return TimeZoneType(4)}
 
+// =========================================================================
 
+// String - Returns a string with the name of the enumeration associated
+// with this instance of 'TimeZoneType'.
+//
+// This is a standard utility method and is not part of the valid enumerations
+// for this type.
+//
+// ------------------------------------------------------------------------
+//
+// Return Value:
+//
+//  string - The string label or description for the current enumeration
+//           value. If, the TimeZoneType value is invalid, this
+//           method will return an empty string.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//	t:= TimeZoneType(0).Military()
+//	str := t.String()
+//	    str is now equal to "Military"
+//
+func (tzType TimeZoneType) String() string {
+
+	lockMapTimeZoneTypeCodeToString.Lock()
+
+	defer lockMapTimeZoneTypeCodeToString.Unlock()
+
+	label, ok := mTimeZoneTypeCodeToString[tzType]
+
+	if !ok {
+		return ""
+	}
+
+	return label
+}
 
 // XParseString - Receives a string and attempts to match it with the string
 // value of the supported enumeration. If successful, a new instance of
@@ -133,53 +170,53 @@ func (tzType TimeZoneType) UtcOffset() TimeZoneType {return TimeZoneType(4)}
 //
 // Input Parameters:
 //
-//	valueString   string - A string which will be matched against the
-//	                       enumeration string values. If 'valueString'
-//	                       is equal to one of the enumeration names, this
-//	                       method will proceed to successful completion
+// valueString   string - A string which will be matched against the
+//                        enumeration string values. If 'valueString'
+//                        is equal to one of the enumeration names, this
+//                        method will proceed to successful completion
 //
-//	caseSensitive   bool - If 'true' the search for enumeration names
-//	                       will be case sensitive and will require an
-//	                       exact match. Therefore, 'valid' will NOT
-//	                       match the enumeration name, 'Valid'.
+// caseSensitive   bool - If 'true' the search for enumeration names
+//                        will be case sensitive and will require an
+//                        exact match. Therefore, 'valid' will NOT
+//                        match the enumeration name, 'Valid'.
 //
-//	                       If 'false' a case insensitive search is
-//	                       conducted for the enumeration name. In
-//	                       this case, 'valid' will match the
-//	                       enumeration name 'Valid'.
+//                        If 'false' a case insensitive search is
+//                        conducted for the enumeration name. In
+//                        this case, 'valid' will match the
+//                        enumeration name 'Valid'.
 //
 // ------------------------------------------------------------------------
 //
 // Return Values:
 //
-//	TimeZoneType        - Upon successful completion, this method will return a new
-//	                      instance of TimeZoneType set to the value of the
-//	                      enumeration matched by the string search performed on
-//	                      input parameter,'valueString'.
+// TimeZoneType        - Upon successful completion, this method will return a new
+//                       instance of TimeZoneType set to the value of the
+//                       enumeration matched by the string search performed on
+//                       input parameter,'valueString'.
 //
-//	error               - If this method completes successfully, the returned error
-//	                      Type is set equal to 'nil'. If an error condition is encountered,
-//	                      this method will return an error Type which encapsulates an
-//	                      appropriate error message.
+// error               - If this method completes successfully, the returned error
+//                       Type is set equal to 'nil'. If an error condition is encountered,
+//                       this method will return an error Type which encapsulates an
+//                       appropriate error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage:
 //
-//	t, err := TimeZoneType(0).ParseString("Iana", true)
+// t, err := TimeZoneType(0).ParseString("Iana", true)
 //                            OR
-//	t, err := TimeZoneType(0).ParseString("Iana()", true)
+// t, err := TimeZoneType(0).ParseString("Iana()", true)
 //                            OR
-//	t, err := TimeZoneType(0).ParseString("iana", false)
+// t, err := TimeZoneType(0).ParseString("iana", false)
 //
-//	For all of the cases shown above,
+// For all of the cases shown above,
 //  t is now equal to TimeZoneType(0).Iana()
 //
 func (tzType TimeZoneType) XParseString(
 	valueString string,
 	caseSensitive bool) (TimeZoneType, error) {
 
-	ePrefix := "XPathFileTypeCode.ParseString() "
+	ePrefix := "TimeZoneType.XParseString() "
 
 	lenValueStr := len(valueString)
 
@@ -192,7 +229,7 @@ func (tzType TimeZoneType) XParseString(
 		return TzType.None(),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n" +
-				"Length Less than 3-characters\n"+
+				"Length Less than 4-characters\n"+
 				"valueString='%v'\n", valueString)
 	}
 
@@ -231,43 +268,6 @@ func (tzType TimeZoneType) XParseString(
 	}
 
 	return timeZoneType, nil
-}
-
-// XString - Returns a string with the name of the enumeration associated
-// with this instance of 'TimeZoneType'.
-//
-// This is a standard utility method and is not part of the valid enumerations
-// for this type.
-//
-// ------------------------------------------------------------------------
-//
-// Return Value:
-//
-//  string - The string label or description for the current enumeration
-//           value. If, the TimeZoneType value is invalid, this
-//           method will return an empty string.
-//
-// ------------------------------------------------------------------------
-//
-// Usage
-//
-//	t:= TimeZoneType(0).Military()
-//	str := t.String()
-//	    str is now equal to "Military"
-//
-func (tzType TimeZoneType) String() string {
-
-	lockMapTimeZoneTypeCodeToString.Lock()
-
-	defer lockMapTimeZoneTypeCodeToString.Unlock()
-
-	label, ok := mTimeZoneTypeCodeToString[tzType]
-
-	if !ok {
-		return ""
-	}
-
-	return label
 }
 
 // XValue - Returns the value of the TimeZoneType instance
