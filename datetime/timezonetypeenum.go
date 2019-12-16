@@ -39,9 +39,12 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 
 
 
-// PathFileTypeCode - This type is an enumeration describing the status
-// of a path or path/file name.
+// TimeZoneType - This type is configured as a series of
+// constant integer values describing the valid types
+// of time zones processed by type 'TimeZoneDefDto'.
 //
+// Functionally, 'TimeZoneType' serves as enumeration of
+// valid time zone types.
 //
 //                      Time Zone
 //   Method             Type Code
@@ -67,6 +70,9 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 //                                        known time zone has been applied.
 //                                        Instead, the time zone is identified
 //                                        only by its UTC offset.
+//
+// For easy access to these enumeration values, use the global variable
+// 'TzType'.
 //
 // 'TimeZoneType' has been adapted to function as an enumeration
 // describing the type of time zone assigned to a date time. Since
