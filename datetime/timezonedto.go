@@ -674,7 +674,7 @@ func (tzDto TimeZoneDto) ConvertTz(tIn time.Time, targetTz, dateTimeFmtStr strin
 	return tzuOut, nil
 }
 
-// CopyOut - Creates and returns a deep copy of the
+// copyOut - Creates and returns a deep copy of the
 // current TimeZoneDto instance.
 //
 // Input Parameters

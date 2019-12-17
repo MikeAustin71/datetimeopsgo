@@ -351,7 +351,7 @@ func (nDto *NumStrDto) CompareAbsoluteVals(n1Dto, n2Dto *NumStrDto) int {
 	return 0
 }
 
-// CopyOut - Creates a copy of the current
+// copyOut - Creates a copy of the current
 // NumStrDto fields and returns a completely
 // new instance of NumStrDto
 func (nDto *NumStrDto) CopyOut() NumStrDto {

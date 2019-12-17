@@ -146,7 +146,7 @@ func (milDtDto *MilitaryDateTzDto) CopyIn(milDtDto2 MilitaryDateTzDto) {
 	milDtDto.GeoLocationDesc = milDtDto2.GeoLocationDesc
 }
 
-// CopyOut - Returns a deep copy of the current 'MilitaryDateTzDto'
+// copyOut - Returns a deep copy of the current 'MilitaryDateTzDto'
 // instance.
 //
 // ------------------------------------------------------------------------
@@ -189,7 +189,7 @@ func (milDtDto *MilitaryDateTzDto) CopyIn(milDtDto2 MilitaryDateTzDto) {
 //  milDtz1 := MilitaryDateTzDto{}
 //  ... initialize to some value
 //
-//  milDtz2 := milDtz1.CopyOut()
+//  milDtz2 := milDtz1.copyOut()
 //
 //  Note: milDtz1 and milDtz2 are now equivalent.
 //

@@ -214,7 +214,7 @@ func (dec *Decimal) CopyIn(d2 Decimal) {
 
 }
 
-// CopyOut - Returns a deep copy of this
+// copyOut - Returns a deep copy of this
 // Decimal instance.
 func (dec *Decimal) CopyOut() Decimal {
 	d2 := Decimal{}.New()

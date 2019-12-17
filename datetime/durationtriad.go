@@ -210,7 +210,7 @@ func (durT *DurationTriad) CopyIn(duIn DurationTriad) {
 	return
 }
 
-// CopyOut - Creates and returns a new DurationTriad instance. The deep
+// copyOut - Creates and returns a new DurationTriad instance. The deep
 // copy operation copies all data elements from the current
 // DurationTriad instance to the new DurationTriad instance which is
 // returned to the calling function.

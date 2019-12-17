@@ -215,7 +215,7 @@ func (iBa *BackUpIntAry) CopyIn(iBa2 *BackUpIntAry) {
 
 }
 
-// CopyOut
+// copyOut
 func (iBa *BackUpIntAry) CopyOut() BackUpIntAry {
 	iBa.SetInternalFlags()
 	iAry2 := BackUpIntAry{}.New()
@@ -1252,7 +1252,7 @@ func (ia *IntAry) CopyIn(iAry2 *IntAry, copyBackUp bool) {
 	}
 }
 
-//CopyOut
+//copyOut
 func (ia *IntAry) CopyOut() IntAry {
 	ia.SetInternalFlags()
 	iAry2 := IntAry{}.New()

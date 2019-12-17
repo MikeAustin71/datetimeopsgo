@@ -112,7 +112,7 @@ func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
 	tDur.TotTimeNanoseconds = t2Dur.TotTimeNanoseconds
 }
 
-// CopyOut - Returns a deep copy of the current
+// copyOut - Returns a deep copy of the current
 // TimeDurationDto instance.
 func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 

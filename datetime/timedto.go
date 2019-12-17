@@ -89,7 +89,7 @@ func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto) error {
 	return nil
 }
 
-// CopyOut - Creates a new TimeDto instance
+// copyOut - Creates a new TimeDto instance
 // which precisely duplicates the current TimeDto
 // instance, and returns it to the calling function.
 func (tDto *TimeDto) CopyOut() TimeDto {

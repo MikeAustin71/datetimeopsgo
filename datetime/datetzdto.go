@@ -1205,7 +1205,7 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 	return
 }
 
-// CopyOut - returns a DateTzDto instance
+// copyOut - returns a DateTzDto instance
 // which represents a deep copy of the current
 // DateTzDto object.
 //
@@ -1242,7 +1242,7 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 //  dtz := DateTzDto{}
 //  ... initialize to some value
 //
-//  dtz2 := dtz.CopyOut()
+//  dtz2 := dtz.copyOut()
 //
 //  Note: dtz and dtz2 are now equivalent.
 //

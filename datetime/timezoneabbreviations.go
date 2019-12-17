@@ -22,7 +22,7 @@ type TimeZoneAbbreviationDto struct {
 }
 
 
-// CopyOut() - Makes and returns a deep copy of the current TimeZoneAbbreviationDto
+// copyOut() - Makes and returns a deep copy of the current TimeZoneAbbreviationDto
 // object.
 // 
 func (TzAbbrv *TimeZoneAbbreviationDto) CopyOut() TimeZoneAbbreviationDto {

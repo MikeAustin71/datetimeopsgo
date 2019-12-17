@@ -52,12 +52,60 @@ func (tzDefUtil *timeZoneDefUtility) allocateZoneOffsetSeconds(
 	return
 }
 
-// CopyOut - creates and returns a deep copy of the current
+// CopyIn - Copies an incoming TimeZoneDefDto into the
+// data fields of the current TimeZoneDefDto instance.
+//
+func (tzDefUtil *timeZoneDefUtility) copyIn(
+	tzdef *TimeZoneDefDto,
+	tzdef2 *TimeZoneDefDto) {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.CopyIn()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef2 == nil {
+		panic("timeZoneDefUtility.CopyIn()\n" +
+			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	tzDefUtil2.empty(tzdef)
+
+	tzdef.zoneName = tzdef2.zoneName
+	tzdef.zoneOffsetSeconds = tzdef2.zoneOffsetSeconds
+	tzdef.zoneSign = tzdef2.zoneSign
+	tzdef.offsetHours = tzdef2.offsetHours
+	tzdef.offsetMinutes = tzdef2.offsetMinutes
+	tzdef.offsetSeconds = tzdef2.offsetSeconds
+	tzdef.zoneOffset = tzdef2.zoneOffset
+	tzdef.utcOffset = tzdef2.utcOffset
+	tzdef.location = tzdef2.location
+	tzdef.locationName = tzdef2.locationName
+	tzdef.tagDescription = tzdef2.tagDescription
+
+	return
+}
+
+// copyOut - creates and returns a deep copy of the current
 // TimeZoneDefDto instance.
 //
-func (tzDefUtil *timeZoneDefUtility) CopyOut(
+func (tzDefUtil *timeZoneDefUtility) copyOut(
 	tzdef *TimeZoneDefDto) TimeZoneDefDto {
 
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.copyOut()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
 
 	tzdef2 := TimeZoneDefDto{}
 
@@ -90,6 +138,11 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 
 	defer tzDefUtil.lock.Unlock()
 
+	if tzdef == nil {
+		panic("timeZoneDefUtility.empty()\n" +
+			"Error: 'tzdef' pointer is nil!")
+	}
+
 	tzdef.zoneName = ""
 	tzdef.zoneOffsetSeconds = 0
 	tzdef.zoneSign = 0
@@ -105,12 +158,313 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 	return
 }
 
+
+// Equal - Determines if two TimeZoneDefDto instances are
+// equivalent in value.
+//
+// This method returns 'true' of two TimeZoneDefDto's are
+// equal in all respects.
+//
+func (tzDefUtil *timeZoneDefUtility) equal(
+	tzdef *TimeZoneDefDto,
+	tzdef2 *TimeZoneDefDto) bool {
+
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.equal() " +
+			"\nError: Input parameter 'tzdef' is nil!\n")
+	}
+
+	if tzdef2 == nil {
+		panic("timeZoneDefUtility.equal() " +
+			"\nError: Input parameter 'tzdef2' is nil!")
+	}
+
+	if tzdef.zoneName != tzdef2.zoneName ||
+		tzdef.zoneOffsetSeconds != tzdef2.zoneOffsetSeconds ||
+		tzdef.zoneSign != tzdef2.zoneSign ||
+		tzdef.offsetHours != tzdef2.offsetHours ||
+		tzdef.offsetMinutes != tzdef2.offsetMinutes ||
+		tzdef.offsetSeconds != tzdef2.offsetSeconds ||
+		tzdef.zoneOffset != tzdef2.zoneOffset ||
+		tzdef.utcOffset != tzdef2.utcOffset ||
+		tzdef.locationName != tzdef2.locationName ||
+		tzdef.tagDescription != tzdef2.tagDescription {
+		return false
+	}
+
+	if tzdef.location != nil && tzdef2.location == nil ||
+		tzdef.location == nil && tzdef2.location != nil ||
+		tzdef.location.String() != tzdef2.location.String() {
+		return false
+	}
+
+	return true
+}
+
+func (tzDefUtil *timeZoneDefUtility) equalLocations(
+	tzdef *TimeZoneDefDto,
+	tzdef2 *TimeZoneDefDto) bool {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.equalZoneLocation()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef2 == nil {
+		panic("timeZoneDefUtility.equalZoneLocation()\n" +
+			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	return tzdef.locationName == tzdef2.locationName
+}
+
+// equalOffsetSeconds - Compares Zone Offset Seconds for two TimeZoneDefDto's and
+// returns 'true' if they are equal.
+//
+// ZoneOffsetSeconds is a signed number of seconds offset from UTC:
+//   + == East of UTC
+//   - == West of UTC
+//
+func (tzDefUtil *timeZoneDefUtility) equalOffsetSeconds(
+	tzdef *TimeZoneDefDto,
+	tzdef2 *TimeZoneDefDto) bool {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.equalZoneLocation()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef2 == nil {
+		panic("timeZoneDefUtility.equalZoneLocation()\n" +
+			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	return tzdef.zoneOffsetSeconds == tzdef2.zoneOffsetSeconds
+}
+
+// equalZoneLocation - Compares two TimeZoneDefDto's and returns
+// 'true' if both the TimeZoneLocations and Time Zones match.
+//
+// Time Zone Location Name Examples:
+//   "Local"
+//   "America/Chicago"
+//   "America/New_York"
+//
+func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
+	tzdef *TimeZoneDefDto,
+	tzdef2 *TimeZoneDefDto) bool {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.equalZoneLocation()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef2 == nil {
+		panic("timeZoneDefUtility.equalZoneLocation()\n" +
+			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	if !tzDefUtil2.equalLocations(tzdef, tzdef2){
+		return false
+	}
+
+	if !tzDefUtil2.equalZoneLocation(tzdef, tzdef2) {
+		return false
+	}
+
+	return true
+}
+
+// EqualZoneOffsets - Compares ZoneOffsets for two TimeZoneDefDto's and
+// returns 'true' if they are equal.
+//
+// Zone Offset is a text string representing the offset from UTC plus the
+// time zone abbreviation.
+//
+// Example "-0500 CDT"
+//
+func (tzDefUtil *timeZoneDefUtility) equalZoneOffsets(
+	tzdef *TimeZoneDefDto,
+	tzdef2 *TimeZoneDefDto) bool {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.equalZoneOffsets()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef2 == nil {
+		panic("timeZoneDefUtility.equalZoneOffsets()\n" +
+			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	return tzdef.zoneOffset == tzdef2.zoneOffset
+}
+
+// IsEmpty - Determines whether the current TimeZoneDefDto
+// instance is Empty.
+//
+// If the TimeZoneDefDto instance (tzdef) is NOT populated,
+// this method returns 'true'. Otherwise, it returns 'false'.
+//
+func (tzDefUtil *timeZoneDefUtility) isEmpty(
+	tzdef *TimeZoneDefDto ) bool {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.isValidFromDateTime()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef.zoneName != "" ||
+		tzdef.zoneOffsetSeconds != 0 ||
+		tzdef.zoneSign != 0 ||
+		tzdef.offsetHours != 0 ||
+		tzdef.offsetMinutes != 0 ||
+		tzdef.offsetSeconds != 0 ||
+		tzdef.zoneOffset != "" ||
+		tzdef.utcOffset != "" ||
+		tzdef.locationName != "" {
+		return false
+	}
+
+	return true
+}
+
+// isValidTimeZoneDefDto - Analyzes the TimeZoneDefDto
+// parameter, 'tzdef', instance to determine validity.
+//
+// This method returns 'true' if the TimeZoneDefDto
+// instance is valid.  Otherwise, it returns 'false'.
+//
+func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
+	tzdef *TimeZoneDefDto) bool {
+
+	tzDefUtil.lock.Lock()
+
+	tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.isValidTimeZoneDefDto() ")
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	if tzDefUtil2.isEmpty(tzdef) {
+		return false
+	}
+
+	if strings.TrimLeft(strings.TrimRight(tzdef.locationName, " "), " ") == "" {
+		return false
+	}
+
+	if tzdef.location.String() != tzdef.locationName {
+		return false
+	}
+
+	loc, err := time.LoadLocation(tzdef.locationName)
+
+	if err != nil {
+		return false
+	}
+
+	if loc != tzdef.location {
+		return false
+	}
+
+	return true
+}
+
+// isValidFromDateTime - Uses a time.Time input parameter, 'dateTime' to
+// analyze the specified TimeZoneDefDto instance (tzdef). If the zone and
+// location details of 'dateTime' are not perfectly matched to the current
+// TimeZoneDefDto instance, the instance is considered INVALID, and this
+// method returns 'false'.
+//
+// Otherwise, if all zone and location details are perfectly matched, this
+// method returns 'true', signaling that the TimeZoneDateDefDto instance
+// (tzdef) is VALID.
+//
+func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
+	tzdef *TimeZoneDefDto,
+	dateTime time.Time) bool {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.isValidFromDateTime()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if dateTime.IsZero() {
+		return false
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	if tzDefUtil2.isEmpty(tzdef) {
+		return false
+	}
+
+	tzDef2 := TimeZoneDefDto{}
+
+	err := tzDefUtil2.setFromDateTime( &tzDef2, dateTime, "timeZoneDefUtility.isValidFromDateTime() ")
+
+	if err != nil {
+		return false
+	}
+
+	tzDef2.tagDescription = tzdef.tagDescription
+
+	return tzDefUtil2.equal(tzdef, &tzDef2)
+}
+
+// SetFromDateTimeComponents - Re-initializes the values of the
+// 'TimeZoneDefDto' instance based on input parameter, 'dateTime'.
+//
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef *TimeZoneDefDto,
 	dateTime time.Time,
 	ePrefix string) error {
 
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
 	ePrefix += "timeZoneDefUtility.setFromDateTime()"
+
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
 
 
 	if dateTime.IsZero() {
@@ -154,6 +508,10 @@ func (tzDefUtil *timeZoneDefUtility) setZoneProfile(
 
 	defer tzDefUtil.lock.Unlock()
 
+	if tzdef == nil {
+		panic("Error: timeZoneDefUtility.setZoneProfile() - tzdef pointer is nil!")
+	}
+
 	tzdef.zoneOffset = ""
 
 	// Generates an offset in the form of "+0330" or "-0330"
@@ -177,7 +535,6 @@ func (tzDefUtil *timeZoneDefUtility) setZoneProfile(
 
 	return
 }
-
 
 // parseMilitaryTzNameAndLetter - Parses a text string which
 // contains either a single letter military time zone designation
