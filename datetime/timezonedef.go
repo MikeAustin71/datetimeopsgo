@@ -108,7 +108,6 @@ func (tzdef *TimeZoneDefDto) Equal(tzdef2 TimeZoneDefDto) bool {
 	tzDefUtil := timeZoneDefUtility{}
 
 	return tzDefUtil.equal(tzdef, &tzdef2)
-
 }
 
 // EqualOffsetSeconds - Compares Zone Offset Seconds for two TimeZoneDefDto's and
@@ -167,7 +166,25 @@ func (tzdef *TimeZoneDefDto) EqualLocations(tzdef2 TimeZoneDefDto) bool {
 }
 
 // EqualZoneLocation - Compares two TimeZoneDefDto's and returns
-// 'true' if both the TimeZoneLocations and Time Zones match.
+// 'true' if Time Zone Location Name, the Zone Name and Zone
+// Offsets match.
+//
+// Examples Of Time Zone Location Location Name:
+//
+//   "Local"
+//   "America/Chicago"
+//   "America/New_York"
+//
+// Examples of Zone Names:
+//   "EST"
+//   "CST"
+//   "PST"
+//
+// Examples of Zone Offsets:
+//   "-0600 CST"
+//   "-0500 EST"
+//   "+0200 EET"
+//
 func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
 
 	tzdef.lock.Lock()
@@ -175,10 +192,6 @@ func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
 	defer tzdef.lock.Unlock()
 
 	tzDefUtil := timeZoneDefUtility{}
-
-	if !tzDefUtil.equalLocations(tzdef, &tzdef2) {
-		return false
-	}
 
 	if !tzDefUtil.equalZoneLocation(tzdef, &tzdef2) {
 		return false
@@ -443,7 +456,7 @@ func (tzdef *TimeZoneDefDto) IsValidFromDateTime(dateTime time.Time) bool {
 //      }
 //
 //
-//  (2)   If successful, this method will set the returned error instance to 'nil.
+//  (2)   If successful, this method will set the returned 'error' instance to 'nil'.
 //        If errors are encountered a valid error message will be returned in the
 //        error instance.
 //
@@ -463,6 +476,10 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 
 	if err != nil {
 		return TimeZoneDefDto{},err
+	}
+
+	if !tzDefUtil.isValidTimeZoneDefDto(&tzDef2) {
+
 	}
 
 	return tzDef2, nil
@@ -530,6 +547,8 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 	}
 
 	tzDefUtil := timeZoneDefUtility{}
+
+
 
 	tzLoc, err2 = time.LoadLocation(timeZoneName)
 

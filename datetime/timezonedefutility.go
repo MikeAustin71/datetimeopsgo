@@ -23,6 +23,11 @@ func (tzDefUtil *timeZoneDefUtility) allocateZoneOffsetSeconds(
 
 	defer tzDefUtil.lock.Unlock()
 
+	if tzdef == nil {
+		panic("timeZoneDefUtility.allocateZoneOffsetSeconds()\n" +
+			"Error: Input parameter 'tzdef' is a 'nil' pointer!\n")
+	}
+
 	if signedZoneOffsetSeconds < 0 {
 		tzdef.zoneSign = -1
 	} else {
@@ -87,7 +92,10 @@ func (tzDefUtil *timeZoneDefUtility) copyIn(
 	tzdef.utcOffset = tzdef2.utcOffset
 	tzdef.location = tzdef2.location
 	tzdef.locationName = tzdef2.locationName
+	tzdef.militaryTimeZoneLetter = tzdef2.militaryTimeZoneLetter
+	tzdef.militaryTimeZoneName = tzdef2.militaryTimeZoneName
 	tzdef.tagDescription = tzdef2.tagDescription
+	tzdef.timeZoneType = tzdef2.timeZoneType
 
 	return
 }
@@ -120,12 +128,13 @@ func (tzDefUtil *timeZoneDefUtility) copyOut(
 
 	tzdef2.location = tzdef.location
 	tzdef2.locationName = tzdef.locationName
-
+	tzdef2.militaryTimeZoneLetter = tzdef.militaryTimeZoneLetter
+	tzdef2.militaryTimeZoneName = tzdef.militaryTimeZoneName
 
 	tzdef2.tagDescription = tzdef.tagDescription
+	tzdef2.timeZoneType = tzdef.timeZoneType
 
 	return tzdef2
-
 }
 
 // Empty - Resets all field values for the input parameter
@@ -140,7 +149,7 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 
 	if tzdef == nil {
 		panic("timeZoneDefUtility.empty()\n" +
-			"Error: 'tzdef' pointer is nil!")
+			"Error: 'tzdef' pointer is nil!\n")
 	}
 
 	tzdef.zoneName = ""
@@ -153,7 +162,10 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 	tzdef.utcOffset = ""
 	tzdef.location = nil
 	tzdef.locationName = ""
+	tzdef.militaryTimeZoneLetter = ""
+	tzdef.militaryTimeZoneName = ""
 	tzdef.tagDescription = ""
+	tzdef.timeZoneType = TzType.None()
 
 	return
 }
@@ -168,7 +180,6 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 func (tzDefUtil *timeZoneDefUtility) equal(
 	tzdef *TimeZoneDefDto,
 	tzdef2 *TimeZoneDefDto) bool {
-
 
 	tzDefUtil.lock.Lock()
 
@@ -193,7 +204,10 @@ func (tzDefUtil *timeZoneDefUtility) equal(
 		tzdef.zoneOffset != tzdef2.zoneOffset ||
 		tzdef.utcOffset != tzdef2.utcOffset ||
 		tzdef.locationName != tzdef2.locationName ||
-		tzdef.tagDescription != tzdef2.tagDescription {
+		tzdef.militaryTimeZoneLetter != tzdef2.militaryTimeZoneLetter ||
+		tzdef.militaryTimeZoneName != tzdef2.militaryTimeZoneName ||
+		tzdef.tagDescription != tzdef2.tagDescription ||
+		tzdef.timeZoneType != tzdef2.timeZoneType {
 		return false
 	}
 
@@ -206,6 +220,14 @@ func (tzDefUtil *timeZoneDefUtility) equal(
 	return true
 }
 
+// equalLocations - Compares the Time Zone Locations for two TimeZoneDefDto's
+// and returns 'true' if they are equal.
+//
+// Time Zone Location Name Examples:
+//   "Local"
+//   "America/Chicago"
+//   "America/New_York"
+//
 func (tzDefUtil *timeZoneDefUtility) equalLocations(
 	tzdef *TimeZoneDefDto,
 	tzdef2 *TimeZoneDefDto) bool {
@@ -256,12 +278,24 @@ func (tzDefUtil *timeZoneDefUtility) equalOffsetSeconds(
 }
 
 // equalZoneLocation - Compares two TimeZoneDefDto's and returns
-// 'true' if both the TimeZoneLocations and Time Zones match.
+// 'true' if Time Zone Location Name, the Zone Name and Zone
+// Offsets match.
 //
-// Time Zone Location Name Examples:
+// Examples Of Time Zone Location Location Name:
+//
 //   "Local"
 //   "America/Chicago"
 //   "America/New_York"
+//
+// Examples of Zone Names:
+//   "EST"
+//   "CST"
+//   "PST"
+//
+// Examples of Zone Offsets:
+//   "-0600 CST"
+//   "-0500 EST"
+//   "+0200 EET"
 //
 func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
 	tzdef *TimeZoneDefDto,
@@ -281,13 +315,9 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
 			"Error: Input parameter 'tzdef2' pointer is nil!\n")
 	}
 
-	tzDefUtil2 := timeZoneDefUtility{}
-
-	if !tzDefUtil2.equalLocations(tzdef, tzdef2){
-		return false
-	}
-
-	if !tzDefUtil2.equalZoneLocation(tzdef, tzdef2) {
+	if tzdef.locationName != tzdef2.locationName ||
+	 tzdef.zoneName != tzdef2.zoneName ||
+		tzdef.zoneOffset != tzdef2.zoneOffset {
 		return false
 	}
 
@@ -323,7 +353,7 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneOffsets(
 	return tzdef.zoneOffset == tzdef2.zoneOffset
 }
 
-// IsEmpty - Determines whether the current TimeZoneDefDto
+// isEmpty - Determines whether the current TimeZoneDefDto
 // instance is Empty.
 //
 // If the TimeZoneDefDto instance (tzdef) is NOT populated,
@@ -349,7 +379,10 @@ func (tzDefUtil *timeZoneDefUtility) isEmpty(
 		tzdef.offsetSeconds != 0 ||
 		tzdef.zoneOffset != "" ||
 		tzdef.utcOffset != "" ||
-		tzdef.locationName != "" {
+		tzdef.timeZoneType != TzType.None() ||
+		tzdef.locationName != "" ||
+		tzdef.militaryTimeZoneName != "" ||
+		tzdef.militaryTimeZoneLetter != "" {
 		return false
 	}
 
@@ -393,7 +426,13 @@ func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
 		return false
 	}
 
-	if loc != tzdef.location {
+	if loc.String() != tzdef.location.String() {
+		return false
+	}
+
+	if tzdef.timeZoneType == TzType.Military() &&
+		(tzdef.militaryTimeZoneLetter == "" ||
+			tzdef.militaryTimeZoneName == "") {
 		return false
 	}
 
@@ -477,7 +516,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	tzdef.zoneName, tzdef.zoneOffsetSeconds = dateTime.Zone()
 
-
 	tzDefUtil2.allocateZoneOffsetSeconds(tzdef, tzdef.zoneOffsetSeconds)
 
 	// If dateTime.Location() is nil, it returns UTC
@@ -490,7 +528,75 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef.tagDescription = ""
 
 	return nil
+}
 
+// setFromTimeZone - Sets the data fields of the specified
+// TimeZoneDefDto instance base on the time zone name.
+//
+func (tzDefUtil *timeZoneDefUtility) setFromTimeZone(
+	tzdef *TimeZoneDefDto,
+	timeZoneName,
+	ePrefix string) error {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.setFromTimeZone() "
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	if len(timeZoneName) == 0 {
+		return errors.New(ePrefix +
+			"\nInput parameter 'timeZoneName' is an empty string!\n")
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	loc, err := time.LoadLocation(timeZoneName)
+
+	if err != nil {
+		milTzLetter,
+		milTzName,
+		equivalentIanaTimeZone,
+		err2 := tzDefUtil2.parseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
+
+		if err2 != nil {
+			return fmt.Errorf(ePrefix +
+				"\nError: Input parameter 'timeZoneName' is an invalid time zone!\n" +
+				"timeZoneName='%v'\n", timeZoneName)
+		}
+
+		loc2, err3 := time.LoadLocation(equivalentIanaTimeZone)
+
+		if err3 != nil {
+			return fmt.Errorf(ePrefix +
+				"\nError: Input parameter 'timeZoneName' is an invalid time zone!\n" +
+				"\ntime.LoadLocation failed to load the equivalent IANA time zone.\n" +
+				"timeZoneName='%v'\n" +
+				"equivalentTimeZoneName", timeZoneName, equivalentIanaTimeZone)
+		}
+
+		dtime := time.Now().In(loc2)
+
+		err3 = tzDefUtil2.setFromDateTime(tzdef, dtime, ePrefix)
+
+		if err3 != nil {
+			return err3
+		}
+
+		tzdef.militaryTimeZoneLetter = milTzLetter
+		tzdef.militaryTimeZoneName = milTzName
+		tzdef.timeZoneType = TzType.Military()
+		return nil
+	}
+
+	dtime := time.Now().In(loc)
+
+	return tzDefUtil2.setFromDateTime(tzdef, dtime, ePrefix)
 }
 
 // setZoneProfile - assembles and assigns the composite zone
