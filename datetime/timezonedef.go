@@ -200,21 +200,6 @@ func (tzdef *TimeZoneDefDto) EqualZoneLocation(tzdef2 TimeZoneDefDto) bool {
 	return true
 }
 
-// GetTagDescription - Returns TimeZoneDefDto member variable
-// Description value.
-//
-// Unused - Available to user. This string is typically used
-// classification, labeling or description text by user.
-//
-func (tzdef *TimeZoneDefDto) GetTagDescription() string {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.tagDescription
-}
-
 // GetLocationPtr - Returns a pointer to a time.Location or
 // time zone location (TimeZoneDefDto.Location).
 //
@@ -223,6 +208,10 @@ func (tzdef *TimeZoneDefDto) GetLocationPtr() *time.Location {
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
+
+	if tzdef.location == nil {
+		panic("TimeZoneDefDto.GetLocationPtr()\ntzdef.location is nil!\n")
+	}
 
 	return tzdef.location
 }
@@ -240,6 +229,66 @@ func (tzdef *TimeZoneDefDto) GetLocationName() string {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.locationName
+}
+
+// GetMilitaryTimeZoneLetter - Returns the single character which represents
+// the Military Time Zone Letter designation.
+//
+// Examples:
+//   "A"                = Alpha Military Time Zone
+//   "B"                = Bravo Military Time Zone
+//   "C"                = Charlie Military Time Zone
+//   "Z"                = Zulu Military Time Zone
+//
+// If the current 'TimeZoneDefDto' instance is NOT configured as a Military
+// Time Zone, this method will return an error.
+//
+func (tzdef *TimeZoneDefDto) GetMilitaryTimeZoneLetter() (string, error) {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	ePrefix := "TimeZoneDefDto.GetMilitaryTimeZoneLetter() "
+
+	if tzdef.timeZoneType != TzType.Military() {
+		return "",
+			errors.New(ePrefix +
+				"\nError: This TimeZoneDefDto instance is NOT configured as a Military Time Zone!\n" +
+				"Therefore Military Time Zone Letter is invalid!\n")
+	}
+
+	return tzdef.militaryTimeZoneLetter, nil
+}
+
+// GetMilitaryTimeZoneName - Returns the a text name whic represents
+// the Military Time Zone designation.
+//
+// Examples:
+//   "Alpha"                = Military Time Zone 'A'
+//   "Bravo"                = Military Time Zone 'B'
+//   "Charlie"              = Military Time Zone 'C'
+//   "Zulu"                 = Military Time Zone 'Z'
+//
+// If the current 'TimeZoneDefDto' instance is NOT configured as a Military
+// Time Zone, this method will return an error.
+//
+func (tzdef *TimeZoneDefDto) GetMilitaryTimeZoneName() (string, error) {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	ePrefix := "TimeZoneDefDto.GetMilitaryTimeZoneLetter() "
+
+	if tzdef.timeZoneType != TzType.Military() {
+		return "",
+			errors.New(ePrefix +
+				"\nError: This TimeZoneDefDto instance is NOT configured as a Military Time Zone!\n" +
+				"Therefore Military Time Zone Name is invalid!\n")
+	}
+
+	return tzdef.militaryTimeZoneName, nil
 }
 
 // GetOffsetHours - Returns TimeZoneDefDto member variable
@@ -289,6 +338,21 @@ func (tzdef *TimeZoneDefDto) GetOffsetSeconds() int {
 	return tzdef.offsetSeconds
 }
 
+// GetTagDescription - Returns TimeZoneDefDto member variable
+// Description value.
+//
+// Unused - Available to user. This string is typically used
+// classification, labeling or description text by user.
+//
+func (tzdef *TimeZoneDefDto) GetTagDescription() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.tagDescription
+}
+
 // GetUtcOffset - Returns the offset from UTC as a string.
 // Examples of the UTC offset format are: "-0600" or "+0200".
 //
@@ -321,6 +385,10 @@ func (tzdef *TimeZoneDefDto) GetZoneName() string {
 
 // GetZoneOffset - Returns TimeZoneDefDto member variable
 // ZoneOffset value.
+//
+// ZoneOffset is a text string representing the time zone.
+// Example "-0600 CST" or "+0200 EET"
+//
 func (tzdef *TimeZoneDefDto) GetZoneOffset() string {
 
 	tzdef.lock.Lock()
@@ -465,22 +533,27 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 	ePrefix := "TimeZoneDefDto.New() "
 
 	if dateTime.IsZero() {
-		return TimeZoneDefDto{}, errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+		return TimeZoneDefDto{}, errors.New(ePrefix +
+			"\nError: Input parameter 'dateTime' is a ZERO value!\n")
 	}
 
 	tzDef2 := TimeZoneDefDto{}
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	err := tzDefUtil.setFromDateTime( &tzDef2, dateTime, ePrefix)
+	err := tzDefUtil.setFromDateTime(&tzDef2, dateTime, ePrefix)
 
 	if err != nil {
 		return TimeZoneDefDto{},err
 	}
 
+	/*
 	if !tzDefUtil.isValidTimeZoneDefDto(&tzDef2) {
-
+		return TimeZoneDefDto{},
+			fmt.Errorf(ePrefix +
+				"\nNew tzDef2 is invalid!\n")
 	}
+	*/
 
 	return tzDef2, nil
 }
@@ -602,4 +675,21 @@ func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
 
 	return tzDefUtil.setFromDateTime(tzdef, dateTime, ePrefix)
 
+}
+
+// SetFromTimeZoneName - Sets the data fields of the current
+// TimeZoneDefDto instance based on the time zone text name
+// passed as an input parameter.
+//
+func (tzdef *TimeZoneDefDto) SetFromTimeZoneName(timeZoneName string) error {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	ePrefix := "TimeZoneDefDto.SetFromTimeZoneName() "
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	return tzDefUtil.setFromTimeZoneName(tzdef, timeZoneName, ePrefix)
 }

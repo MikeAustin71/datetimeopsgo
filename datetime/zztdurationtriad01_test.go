@@ -168,7 +168,11 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	t1DateTz, err := DateTzDto{}.NewTz(t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	t1DateTz, err := DateTzDto{}.NewTz(
+		t1,
+		TZones.US.Central(),
+		TzConvertType.Relative(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.NewTz(t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr) "+

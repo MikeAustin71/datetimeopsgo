@@ -195,6 +195,17 @@ func (tzDefUtil *timeZoneDefUtility) equal(
 			"\nError: Input parameter 'tzdef2' is nil!")
 	}
 
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	tzdefIsEmpty := tzDefUtil2.isEmpty(tzdef)
+
+	tzdef2IsEmpty := tzDefUtil2.isEmpty(tzdef2)
+
+	if tzdefIsEmpty == true &&
+		tzdef2IsEmpty == true {
+		return true
+	}
+
 	if tzdef.zoneName != tzdef2.zoneName ||
 		tzdef.zoneOffsetSeconds != tzdef2.zoneOffsetSeconds ||
 		tzdef.zoneSign != tzdef2.zoneSign ||
@@ -497,14 +508,12 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	defer tzDefUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDefUtility.setFromDateTime()"
-
+	ePrefix += "timeZoneDefUtility.setFromDateTime() "
 
 	if tzdef == nil {
 		return errors.New(ePrefix +
 			"\nInput parameter 'tzdef' is nil!\n")
 	}
-
 
 	if dateTime.IsZero() {
 		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
@@ -527,13 +536,23 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	tzdef.tagDescription = ""
 
+	testTzName := strings.ToLower(tzdef.locationName)
+
+	if testTzName == "local" {
+		tzdef.timeZoneType = TzType.Local()
+	} else if testTzName == "utc"  {
+		tzdef.timeZoneType = TzType.Utc()
+	} else {
+		tzdef.timeZoneType = TzType.Iana()
+	}
+
 	return nil
 }
 
-// setFromTimeZone - Sets the data fields of the specified
-// TimeZoneDefDto instance base on the time zone name.
+// setFromTimeZoneName - Sets the data fields of the specified
+// TimeZoneDefDto instance base on the time zone text name.
 //
-func (tzDefUtil *timeZoneDefUtility) setFromTimeZone(
+func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	tzdef *TimeZoneDefDto,
 	timeZoneName,
 	ePrefix string) error {
@@ -542,12 +561,14 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZone(
 
 	defer tzDefUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDefUtility.setFromTimeZone() "
+	ePrefix += "timeZoneDefUtility.setFromTimeZoneName() "
 
 	if tzdef == nil {
 		return errors.New(ePrefix +
 			"\nInput parameter 'tzdef' is nil!\n")
 	}
+
+	timeZoneName = strings.TrimLeft(strings.TrimRight(timeZoneName, " "), " ")
 
 	if len(timeZoneName) == 0 {
 		return errors.New(ePrefix +
@@ -556,47 +577,370 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZone(
 
 	tzDefUtil2 := timeZoneDefUtility{}
 
-	loc, err := time.LoadLocation(timeZoneName)
-
-	if err != nil {
-		milTzLetter,
-		milTzName,
-		equivalentIanaTimeZone,
-		err2 := tzDefUtil2.parseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
-
-		if err2 != nil {
-			return fmt.Errorf(ePrefix +
-				"\nError: Input parameter 'timeZoneName' is an invalid time zone!\n" +
-				"timeZoneName='%v'\n", timeZoneName)
-		}
-
-		loc2, err3 := time.LoadLocation(equivalentIanaTimeZone)
-
-		if err3 != nil {
-			return fmt.Errorf(ePrefix +
-				"\nError: Input parameter 'timeZoneName' is an invalid time zone!\n" +
-				"\ntime.LoadLocation failed to load the equivalent IANA time zone.\n" +
-				"timeZoneName='%v'\n" +
-				"equivalentTimeZoneName", timeZoneName, equivalentIanaTimeZone)
-		}
-
-		dtime := time.Now().In(loc2)
-
-		err3 = tzDefUtil2.setFromDateTime(tzdef, dtime, ePrefix)
-
-		if err3 != nil {
-			return err3
-		}
-
-		tzdef.militaryTimeZoneLetter = milTzLetter
-		tzdef.militaryTimeZoneName = milTzName
-		tzdef.timeZoneType = TzType.Military()
-		return nil
+	if len(timeZoneName) == 1 {
+		return tzDefUtil2.configureMilitaryTimeZone(tzdef, timeZoneName, ePrefix)
 	}
 
-	dtime := time.Now().In(loc)
+	testTzName := strings.ToLower(timeZoneName)
 
-	return tzDefUtil2.setFromDateTime(tzdef, dtime, ePrefix)
+	if testTzName == "utc" ||
+			testTzName == "uct" ||
+				testTzName == "gmt" {
+		return tzDefUtil2.configureUtcZone(tzdef, timeZoneName, ePrefix)
+	}
+
+	if testTzName == "local" {
+		return tzDefUtil2.configureLocalTimeZone(tzdef, timeZoneName, ePrefix)
+	}
+
+	_, err := time.LoadLocation(timeZoneName)
+
+	if err == nil {
+		return tzDefUtil2.configureIanaTimeZone(tzdef, timeZoneName, ePrefix)
+	}
+
+	return tzDefUtil2.configureMilitaryTimeZone(tzdef, timeZoneName, ePrefix)
+}
+
+
+// configureIanaTimeZone - Configures the specified 'TimeZoneDefDto'
+// instance, 'tzdef', as an IANA Time Zone.
+//
+// The Go Programming Language uses IANA Time Zones in date-time
+// calculations.
+//
+// Reference:
+//    https://golang.org/pkg/time/
+//    https://golang.org/pkg/time/#LoadLocation
+//
+// The IANA Time Zone database is widely recognized as a leading
+// authority on global time zones.
+//
+// Reference:
+//    https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+//    https://en.wikipedia.org/wiki/Tz_database
+//    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//
+// For additional information on the IANA Time Zone Database,
+// reference:
+//
+//    https://www.iana.org/time-zones
+//    https://data.iana.org/time-zones/releases/
+//
+// Also, for easy access to the 600+ time zones, see type
+// 'TimeZones' in source file: "datetime/timezonedata.go".
+//
+func (tzDefUtil *timeZoneDefUtility) configureIanaTimeZone(
+	tzdef *TimeZoneDefDto,
+	ianaTimeZoneName,
+	ePrefix string) error {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.configureLocalTimeZone() "
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	ianaTimeZoneName = strings.TrimLeft(strings.TrimRight(ianaTimeZoneName, " "), " ")
+
+	locPtr, err := time.LoadLocation(ianaTimeZoneName)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError returned by time.LoadLocation(ianaTimeZoneName)\n" +
+			"ianaTimeZoneName='%v'\n" +
+			"Error='%v'\n", ianaTimeZoneName, err.Error())
+	}
+
+	dateTimeNow := time.Now().In(locPtr)
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	err = tzDefUtil2.setFromDateTime(tzdef, dateTimeNow, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf("IANA Time Zone Name is invalid!\n" +
+			"ianaTimeZoneName='%v'\n" +
+			"Error='%v'\n", ianaTimeZoneName, err.Error())
+	}
+
+	tzdef.timeZoneType = TzType.Iana()
+
+	return nil
+}
+
+// configureLocalTimeZone - Configures the specified 'TimeZoneDefDto'
+// instance, 'tzdef', as a 'Local' Time Zone.
+//
+// The 'Local' time zone is a construct of the Go Programming
+// Language. As such, the 'Local' time zone is automatically
+// configured using the time zone applied by the host computer
+// running this code.
+//
+// Reference:
+//   https://golang.org/pkg/time/#Time.Local
+//
+func (tzDefUtil *timeZoneDefUtility) configureLocalTimeZone(
+	tzdef *TimeZoneDefDto,
+	localTimeZoneName,
+	ePrefix string) error {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.configureLocalTimeZone() "
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	tLocalZoneName := strings.TrimLeft(strings.TrimRight(localTimeZoneName, " "), " ")
+
+	if len(localTimeZoneName) == 0 {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'localTimeZoneName' is an empty string!\n")
+	}
+
+	tLocalZoneName = strings.ToLower(tLocalZoneName)
+
+	if tLocalZoneName != "local" {
+		return fmt.Errorf(ePrefix +
+			"\nError: Input prameter 'localTimeZoneName' is NOT a Local Time Zone!\n" +
+			"localTimeZoneName:='%v'\n", localTimeZoneName)
+	}
+
+	tLocalZoneName = "Local"
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	locPtr, err := time.LoadLocation(tLocalZoneName)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError returned by time.LoadLocation(\"Local\")\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	dateTime := time.Now().In(locPtr)
+
+	err = tzDefUtil2.setFromDateTime(tzdef, dateTime, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf("Time Zone Local is invalid!\n" +
+			"Input parameter localTimeZoneName='%v'\n" +
+			"Error='%v'", localTimeZoneName, err.Error())
+	}
+
+	tzdef.timeZoneType = TzType.Local()
+
+	return nil
+}
+
+// configureMilitaryTimeZone - Configures the specified 'TimeZoneDefDto'
+// instance, 'tzdef', as a Military Time Zone.
+//
+//
+// For information on Military Time Zones reference:
+//     https://en.wikipedia.org/wiki/List_of_military_time_zones
+//     http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//     https://www.timeanddate.com/time/zones/military
+//     https://www.timeanddate.com/worldclock/timezone/alpha
+//     https://www.timeanddate.com/time/map/
+//
+// Military time zones are commonly used in aviation as well as at sea.
+// They are also known as nautical or maritime time zones.
+//
+// The 'J' (Juliet) Time Zone is occasionally used to refer to the observer's
+// local time. Note that Time Zone 'J' (Juliet) is not listed below.
+//
+//
+//    Time Zone       Time Zone        Equivalent IANA          UTC
+//   Abbreviation       Name              Time Zone            Offset
+//   ------------     --------          ---------------        ------
+//
+//       A        Alpha Time Zone         Etc/GMT-1            UTC +1
+//       B        Bravo Time Zone         Etc/GMT-2            UTC +2
+//       C        Charlie Time Zone       Etc/GMT-3            UTC +3
+//       D        Delta Time Zone         Etc/GMT-4            UTC +4
+//       E        Echo Time Zone          Etc/GMT-5            UTC +5
+//       F        Foxtrot Time Zone       Etc/GMT-6            UTC +6
+//       G        Golf Time Zone          Etc/GMT-7            UTC +7
+//       H        Hotel Time Zone         Etc/GMT-8            UTC +8
+//       I        India Time Zone         Etc/GMT-9            UTC +9
+//       K        Kilo Time Zone          Etc/GMT-10           UTC +10
+//       L        Lima Time Zone          Etc/GMT-11           UTC +11
+//       M        Mike Time Zone          Etc/GMT-12           UTC +12
+//       N        November Time Zone      Etc/GMT+1            UTC -1
+//       O        Oscar Time Zone         Etc/GMT+2            UTC -2
+//       P        Papa Time Zone          Etc/GMT+3            UTC -3
+//       Q        Quebec Time Zone        Etc/GMT+4            UTC -4
+//       R        Romeo Time Zone         Etc/GMT+5            UTC -5
+//       S        Sierra Time Zone        Etc/GMT+6            UTC -6
+//       T        Tango Time Zone         Etc/GMT+7            UTC -7
+//       U        Uniform Time Zone       Etc/GMT+8            UTC -8
+//       V        Victor Time Zone        Etc/GMT+9            UTC -9
+//       W        Whiskey Time Zone       Etc/GMT+10           UTC -10
+//       X        X-ray Time Zone         Etc/GMT+11           UTC -11
+//       Y        Yankee Time Zone        Etc/GMT+12           UTC -12
+//       Z        Zulu Time Zone          UTC                  UTC +0
+//
+// For more information on Military Time Zones, reference the type,
+// 'TimeZones' and member variable 'TimeZones.militaryTimeZones' in source
+//  file, 'datetime/timezonedata.go'.
+//
+func (tzDefUtil *timeZoneDefUtility) configureMilitaryTimeZone(
+	tzdef *TimeZoneDefDto,
+	militaryTimeZoneName,
+	ePrefix string) error {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.configureMilitaryTimeZone() "
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	militaryTimeZoneName = strings.TrimLeft(strings.TrimRight(militaryTimeZoneName," "), " ")
+
+	if len(militaryTimeZoneName) == 0 {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'militaryTimeZoneName' is an empty string!\n")
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	milTzLetter,
+	milTzName,
+	equivalentIanaTimeZone,
+	err := tzDefUtil2.parseMilitaryTzNameAndLetter(
+		militaryTimeZoneName,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	var locPtr *time.Location
+
+	locPtr, err = time.LoadLocation(equivalentIanaTimeZone)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError return by time.LoadLocation(equivalentIanaTimeZone)\n" +
+			"\nMilitary Time Zone='%v'\n" +
+			"\nequivalentIanaTimeZone='%v'\n" +
+			"\nError='%v'\n",
+				militaryTimeZoneName,
+					equivalentIanaTimeZone,
+						err.Error())
+	}
+
+	dateTime := time.Now().In(locPtr)
+
+	err = tzDefUtil2.setFromDateTime(tzdef, dateTime, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf("Military Time Zone Name is invalid!\n" +
+			"\nMilitary Time Zone='%v'\n" +
+			"\nequivalentIanaTimeZone='%v'\n" +
+			"\nError='%v'\n",
+			militaryTimeZoneName,
+			equivalentIanaTimeZone,
+			err.Error())
+	}
+
+	tzdef.timeZoneType = TzType.Military()
+	tzdef.militaryTimeZoneLetter = milTzLetter
+	tzdef.militaryTimeZoneName = milTzName
+
+	return nil
+}
+
+
+// configureUtcZone - Configures the specified 'TimeZoneDefDto'
+// instance, 'tzdef', as a UTC Time Zone.
+//
+// Coordinated Universal Time (or UTC) is the primary time standard
+// by which the world regulates clocks and time. It is within about
+// 1-second of mean solar time at 0° longitude, and is not adjusted
+// for daylight saving time. In some countries, the term "Greenwich
+// Mean Time (GMT)" is used as an equivalent for 'UTC'.
+//
+// UTC is equivalent to a zero offset: UTC+0000. For additional
+// information, reference:
+//
+//     https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+// Equivalent time zones configured as 'UTC' are:
+//   "UTC"
+//   "UCT"
+//   "GMT"
+//
+func (tzDefUtil *timeZoneDefUtility) configureUtcZone(
+	tzdef *TimeZoneDefDto,
+	utcTimeZoneName,
+	ePrefix string) error {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.configureUtcZone() "
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	utcTzName := strings.TrimLeft(strings.TrimRight(utcTimeZoneName, " "), " ")
+
+	if len(utcTzName) == 0 {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'utcTimeZoneName' is an empty string!\n" )
+	}
+
+	utcTzName = strings.ToLower(utcTimeZoneName)
+
+	switch utcTzName {
+
+	case "utc":
+		utcTimeZoneName = "UTC"
+	case "uct":
+		utcTimeZoneName = "UTC"
+	case "gmt":
+		utcTimeZoneName = "UTC"
+	default:
+		return fmt.Errorf(ePrefix +
+			"\nError: Input parameter utcTimeZoneName is invalid!\n" +
+			"utcTimeZone='%v'\n", utcTimeZoneName)
+	}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	dateTime := time.Now().In(time.UTC)
+
+	err := tzDefUtil2.setFromDateTime(tzdef, dateTime, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf("Time Zone UTC is invalid!\n" +
+			"Input parameter utcTimeZoneName='%v'\n" +
+			"Error='%v'", utcTimeZoneName, err.Error())
+	}
+
+	tzdef.timeZoneType = TzType.Utc()
+
+	return nil
 }
 
 // setZoneProfile - assembles and assigns the composite zone

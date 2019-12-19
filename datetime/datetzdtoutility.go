@@ -166,8 +166,8 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	dtz2 := DateTzDto{}
 	dTzUtil2 := dateTzDtoUtility{}
 
-	err = dTzUtil2.setFromTimeTz(&dtz2,
-		dt2, dTz.timeZone.GetLocationName(),
+		err = dTzUtil2.setFromDateTime(&dtz2,
+		dt2,
 		dTz.dateTimeFmt,
 		ePrefix)
 
@@ -482,6 +482,8 @@ func (dTzUtil *dateTzDtoUtility) preProcessTimeZoneLocation(
 	dTzUtil.lock.Lock()
 	defer dTzUtil.lock.Unlock()
 
+	timeZoneLocation = strings.TrimLeft(strings.TrimRight(timeZoneLocation, " "), " ")
+
 	if len(timeZoneLocation) == 0 {
 		return TZones.Other.UTC()
 	}
@@ -524,6 +526,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 
 	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
+	// TODO - Don't Call New
 	tDto, err := TimeDto{}.NewFromDateTime(dateTime)
 
 	if err != nil {
@@ -533,6 +536,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
+	// TODO - Don't Call New
 	timeZone, err := TimeZoneDefDto{}.New(dateTime)
 
 	if err != nil {
@@ -729,6 +733,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 	return nil
 }
 
+
 // setFromTimeTz - Sets the time values for input parameter 'dTz' 
 // (type DateTzDto). The new values will be  based on input parameters
 // 'dateTime', 'timeZoneLocation' and a date time format string,
@@ -737,7 +742,8 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 			dTz *DateTzDto,
 			dateTime time.Time,
-			timeZoneLocation,
+			timeZoneLocationName string,
+			timeZoneConversionType TimeZoneConversionType,
 			dateTimeFmtStr,
 			ePrefix string) error {
 
@@ -757,31 +763,54 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
 	}
 
-	dTzUtil2 := dateTzDtoUtility{}
+	tZoneDefDto := TimeZoneDefDto{}
 
-	timeZoneLocation = dTzUtil2.preProcessTimeZoneLocation(timeZoneLocation)
+	tzDefUtil := timeZoneDefUtility{}
 
-	tLoc, err := time.LoadLocation(timeZoneLocation)
+	err := tzDefUtil.setFromTimeZoneName(&tZoneDefDto, timeZoneLocationName, ePrefix )
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nINVALID timeZoneLocation. Error returned by time.LoadLocation(timeZoneLocation)\n"+
-			"timeZoneLocation='%v'\ntzl='%v'\nError='%v'\n",
-			timeZoneLocation, timeZoneLocation, err.Error())
+			"\nError: Invalid Time Zone Location Name!\n"+
+			"timeZoneLocationName='%v'\nError='%v'\n",
+			timeZoneLocationName, err.Error())
+	}
+
+	var targetDateTime time.Time
+
+	if timeZoneConversionType == TzConvertType.Absolute() {
+		// FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
+		dtUtil := DTimeUtility{}
+		targetDateTime, err = dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime,tZoneDefDto)
+
+		if err != nil {
+			return fmt.Errorf(ePrefix +
+				"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime,tZoneDefDto)\n" +
+				"dateTime='%v'\ntZoneDefDto='%v'\nError='%v'\n",
+				dateTime.Format(FmtDateTimeTzNanoYMD), tZoneDefDto.GetLocationName(), err.Error())
+		}
+	} else {
+		// Must be TzConvertType.Relative() or TzConvertType.None()
+		// This the default.
+		targetDateTime = dateTime.In(tZoneDefDto.GetLocationPtr())
+	}
+
+	/*
+	timeZoneLocationName = dTzUtil2.preProcessTimeZoneLocation(timeZoneLocationName)
+
+	tLoc, err := time.LoadLocation(timeZoneLocationName)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nINVALID timeZoneLocationName. Error returned by time.LoadLocation(timeZoneLocationName)\n"+
+			"timeZoneLocationName='%v'\ntzl='%v'\nError='%v'\n",
+			timeZoneLocationName, timeZoneLocationName, err.Error())
 	}
 
 	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
 	targetDateTime := dateTime.In(tLoc)
-
-	tZone, err := TimeZoneDefDto{}.New(targetDateTime)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by TimeZoneDefDto{}.New(targetDateTime)\n"+
-			"targetDateTime='%v'\nTarget Time Zone Location='%v'\nError='%v'\n",
-			targetDateTime.Format(FmtDateTimeYrMDayFmtStr), timeZoneLocation, err.Error())
-	}
+*/
 
 	tDto, err := TimeDto{}.NewFromDateTime(targetDateTime)
 
@@ -792,11 +821,13 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 			targetDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
+	dTzUtil2 := dateTzDtoUtility{}
+
 	dTzUtil2.empty(dTz)
 
 	dTz.dateTimeValue = targetDateTime
-	dTz.timeZone = tZone.CopyOut()
-	dTz.timeComponents = tDto.CopyOut()
+	dTz.timeZone = tZoneDefDto
+	dTz.timeComponents = tDto
 	dTz.dateTimeFmt = dateTimeFmtStr
 
 	return nil

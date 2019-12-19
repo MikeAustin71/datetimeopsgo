@@ -1536,73 +1536,139 @@ func (dtz *DateTzDto) GetDescription() string {
 	return dtz.tagDescription
 }
 
-// GetMilitaryDateTzDto - Returns an instance of 'MilitaryDateTzDto' which
-// is equivalent to the current date, time and time zone represented by the
-// current 'DateTzDto' object.
+// GetMilitaryCompactDateTimeGroup - Outputs date time string formatted for
+// standard U.S.A. Military date time also referred to as the Military
+// Date Time Group (DTG). This form of the Date Time Group is configured
+// as the 'Compact' Date Time Group. This means there are no spaces between
+// the date time elements.
 //
-func (dtz *DateTzDto) GetMilitaryDateTzDto() (MilitaryDateTzDto, error) {
+// This "Compact Date Time Group" format differs from the "Open Date Time
+// Group" format returned by method DateTzDto.GetMilitaryOpenDateTimeGroup().
+// This "Compact Date Time Group" deletes spaces between critical time
+// components. The "Open Date Time Group" uses the same basic format but
+// inserts spaces between critical date time components.
+//
+// Note: The Compact Date Time Group is only applicable to Military Time Zones.
+// If the current time zone is not configured as a Military Time Zone,
+// an error will be returned.
+//
+// Reference:
+//    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//    https://www.timeanddate.com/time/zones/z
+//    http://blog.refactortactical.com/blog/military-date-time-group/
+//
+// Military 2-digit year format or "Date Time Group" is traditionally
+// formatted as DDHHMM(Z)MONYY, where 'Z' is the Military Time Zone.
+//
+// EXAMPLES:
+//
+//    "011815ZJAN11" = 01/01/2011 18:15 +0000 Zulu
+//
+//     630pm on January 6th, 2012 in Fayetteville NC would read '061830RJAN12'
+//
+func (dtz *DateTzDto) GetMilitaryCompactDateTimeGroup() (string, error) {
 
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
 
-	ePrefix := "DateTzDto.GetMilitaryDateTzDto() "
+	ePrefix := "TimeZoneDefDto.GetMilitaryCompactDateTimeGroup() "
 
-	dTzUtil := dateTzDtoUtility{}
+	tzType := dtz.timeZone.GetTimeZoneType()
 
-	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
+	if tzType != TzType.Military() {
+		return "",
+			fmt.Errorf(ePrefix +
+				"\nError: This Time Zone for this DateTzDto instance is NOT configured as a\n" +
+				"Military Time Zone. The Compact Date Time Group is only applicable to \n" +
+				"Military Time Zones. Therefore, this time zone is invaid as a Military\n" +
+				"Time Zone.\n" +
+				"TimeZoneDefDto Time Zone Type='%v'\n", tzType.String())
+	}
+
+	milTzLetter, err := dtz.timeZone.GetMilitaryTimeZoneLetter()
 
 	if err != nil {
-		return MilitaryDateTzDto{},
+		return "",
 			fmt.Errorf(ePrefix +
-				"\nCurrent DateTzDto is INVALID!\n" +
-				"%v", err.Error())
+				"Error returned by dtz.timeZone.GetMilitaryTimeZoneLetter()\n" +
+				"Error='%v'\n", err.Error())
 	}
 
-	dtzDateTimeStr := dtz.dateTimeValue.Format(FmtDateTimeYMDHMSTz)
+	fmtDateTime := dtz.dateTimeValue.Format("021504" + milTzLetter + "Jan06")
 
-	dtzDateTimeArray := strings.Split(dtzDateTimeStr, " ")
+	fmtDateTime = strings.ToUpper(fmtDateTime)
 
-	if len(dtzDateTimeArray) != 4 {
-		return MilitaryDateTzDto{},
+	return fmtDateTime, nil
+}
+
+// GetMilitaryOpenDateTimeGroup - Outputs date time string formatted for
+// standard U.S.A. Military date time also referred to as the Military
+// Date Time Group (DTG). This form of the Date Time Group is configured
+// as the 'Open', easy to read, Date Time Group. This means that spaces
+// are inserted between the critical date time components.
+//
+// This "Open Date Time Group" format differs from the "Compact Date Time
+// Group" format returned by method DateTzDto.GetMilitaryCompactDateTimeGroup().
+// This "Open Date Time Group" format inserts spaces between critical date
+// time components in order to improve overall readability. The "Compact
+// Date Time Group" uses the same basic format but removes all internal
+// spaces.
+//
+// Note: The Open Date Time Group is only applicable to Military Time Zones.
+// If the current time zone is not configured as a Military Time Zone,
+// an error will be returned.
+//
+// Reference:
+//    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//    https://www.timeanddate.com/time/zones/z
+//    http://blog.refactortactical.com/blog/military-date-time-group/
+//
+// The Military 2-digit year format or "Date Time Group" is traditionally
+// formatted as DDHHMM(Z)MONYY, where 'Z' is the Military Time Zone.
+// The "Open Date Time Group" format inserts spaces between critical
+// date time components as shown in the following examples.
+//
+// EXAMPLES:
+//
+//    "01 1815Z JAN 11" = 01/01/2011 18:15 +0000 Zulu
+//
+//     630pm on January 6th, 2012 in Fayetteville NC would read '06 1830R JAN 12'
+//
+func (dtz *DateTzDto) GetMilitaryOpenDateTimeGroup() (string, error) {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	ePrefix := "TimeZoneDefDto.GetMilitaryOpenDateTimeGroup() "
+
+	tzType := dtz.timeZone.GetTimeZoneType()
+
+	if tzType != TzType.Military() {
+		return "",
 			fmt.Errorf(ePrefix +
-				"\nError: Current DateTzDto is INVALID!\n" +
-				"Date Time String='%v'\n", dtzDateTimeStr)
+				"\nError: This Time Zone for this DateTzDto instance is NOT configured as a\n" +
+					"Military Time Zone. The Open Date Time Group is only applicable to \n" +
+					"Military Time Zones. Therefore, this time zone is invalid as a Military\n" +
+					"Time Zone.\n" +
+					"TimeZoneDefDto Time Zone Type='%v'\n", tzType.String())
 	}
 
-	utcOffset := dtzDateTimeArray[2]
-
-	utcPrefix := utcOffset[:3]
-
-	utcOffset = utcPrefix + "00"
-
-	milTzDat := MilitaryTimeZoneData{}
-
-	militaryTz, ok := milTzDat.UtcOffsetToMilitaryTimeZone(utcOffset)
-
-	if !ok {
-		return MilitaryDateTzDto{},
-			fmt.Errorf(ePrefix +
-				"\nError: UTC Offset is INVALID!\n" +
-				"utcOffset='%v'\n", utcOffset)
-	}
-
-	var militaryTzDto MilitaryDateTzDto
-
-	militaryTzDto, err = MilitaryDateTzDto{}.New(dtz.dateTimeValue, militaryTz)
+	milTzLetter, err := dtz.timeZone.GetMilitaryTimeZoneLetter()
 
 	if err != nil {
-		return MilitaryDateTzDto{},
+		return "",
 			fmt.Errorf(ePrefix +
-				"\nError returned by MilitaryDateTzDto{}.New(dtz.DateTime," +
-				" militaryTz)\n" +
-				"dtz.DateTime='%v'\n" +
-				"militaryTz='%v'\n" +
-				"Error='%v'\n",
-				dtz.dateTimeValue.Format(FmtDateTimeYMDHMSTz),militaryTz, err.Error() )
+				"Error returned by dtz.timeZone.GetMilitaryTimeZoneLetter()\n" +
+				"Error='%v'\n", err.Error())
 	}
 
-	return militaryTzDto, nil
+	fmtDateTime :=dtz.dateTimeValue.Format("02 1504" + milTzLetter + " Jan 06")
+
+	fmtDateTime = strings.ToUpper(fmtDateTime)
+
+	return fmtDateTime, nil
 }
 
 // GetTimeComponents - Returns a deep copy of DateTzDto
@@ -2198,99 +2264,6 @@ func (dtz DateTzDto) NewDateTimeElements(
 	return dtz2, nil
 }
 
-// NewFromMilitaryDateTz - Creates and returns a new DateTzDto initialized from an
-// instance of type 'MilitaryDateTzDto' passed as an input parameter.
-//
-//
-// ------------------------------------------------------------------------
-//
-// Input Parameter
-//
-//   militaryDtDto  MilitaryDateTzDto - A valid instance of type 'MilitaryDateTzDto'
-//                                      which is converted to and returned as
-//                                      a type 'DateTzDto'.
-//
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
-//
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-// ------------------------------------------------------------------------
-//
-// Return Values
-//
-//   DateTzDto - If successful, this method returns a new DateTzDto instance.
-//
-//               A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String.
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
-//
-//
-//   error     - If successful the returned error Type is set equal to 'nil'.
-//               If errors are encountered this error Type will encapsulate
-//               an appropriate error message.
-//
-// ------------------------------------------------------------------------
-//
-// Usage
-//
-//  dtTzDto, err := DateTzDto{}.NewFromMilitaryDateTz(milDtTzDto, dtTimeFmtStr)
-//
-func (dtz DateTzDto) NewFromMilitaryDateTz(
-		militaryDtDto MilitaryDateTzDto,
-		dateTimeFmtStr string) (DateTzDto, error) {
-
-	ePrefix := "DateTzDto.NewFromMilitaryDateTz() "
-
-	newDateTz := DateTzDto{}
-
-	err := militaryDtDto.IsValid()
-
-	if err != nil {
-		return newDateTz,
-			fmt.Errorf(ePrefix +
-				"\nInput parameter 'militaryDtDto' is INVALID!\n" +
-				"Error='%v'\n", err.Error())
-	}
-
-	dTzUtil := dateTzDtoUtility{}
-
-	err = dTzUtil.setFromTimeTz(
-		&newDateTz,
-		militaryDtDto.DateTime,
-		militaryDtDto.EquivalentIanaTimeZone.GetLocationName(),
-		dateTimeFmtStr,
-		ePrefix)
-
-	if err != nil {
-		return DateTzDto{}, err
-	}
-
-	return newDateTz, nil
-}
-
 // NewNowLocal - Creates and returns a new DateTzDto instance based on a date
 // time value which is automatically assigned by time.Now(). The time zone 'Local'
 // is used by the Go Programming Language to assign the time zone configured
@@ -2367,10 +2340,9 @@ func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 
 	dTzUtil := dateTzDtoUtility{}
 
-	err := dTzUtil.setFromTimeTz(
+	err := dTzUtil.setFromDateTime(
 		&dTz,
 		dt,
-		"Local",
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -2492,6 +2464,7 @@ func (dtz DateTzDto) NewNowTz(
 		&dTz,
 		dt,
 		timeZoneLocation,
+		TzConvertType.Relative(),
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -2581,16 +2554,15 @@ func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.NewNowUTC() "
 
-	dt := time.Now().Local()
+	dt := time.Now().In(time.UTC)
 
 	dTz := DateTzDto{}
 
 	dTzUtil := dateTzDtoUtility{}
 
-	err := dTzUtil.setFromTimeTz(
+	err := dTzUtil.setFromDateTime(
 		&dTz,
 		dt,
-		TZones.UTC(),
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -2832,7 +2804,8 @@ func (dtz DateTzDto) NewTimeDto(
 //
 func (dtz DateTzDto) NewTz(
 	dateTime time.Time,
-	timeZoneLocation,
+	timeZoneLocation string,
+	timeZoneConversionType TimeZoneConversionType,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
 	ePrefix := "DateTzDto.New() "
@@ -2849,6 +2822,7 @@ func (dtz DateTzDto) NewTz(
 		&dtz2,
 		dateTime,
 		timeZoneLocation,
+		timeZoneConversionType,
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -3092,7 +3066,7 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 	minute,
 	second,
 	nanosecond int,
-	timeZoneLocation,
+	timeZoneLocationName,
 	dateTimeFmtStr string) error {
 
 	dtz.lock.Lock()
@@ -3112,7 +3086,7 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 			minute,
 			second,
 			nanosecond,
-			timeZoneLocation,
+			timeZoneLocationName,
 			dateTimeFmtStr,
 			ePrefix)
 }
@@ -3307,7 +3281,8 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 //
 func (dtz *DateTzDto) SetFromTimeTz(
 	dateTime time.Time,
-	timeZoneLocation,
+	timeZoneLocation string,
+	timeZoneConversionType TimeZoneConversionType,
 	dateTimeFmtStr string) error {
 
 	dtz.lock.Lock()
@@ -3322,6 +3297,7 @@ func (dtz *DateTzDto) SetFromTimeTz(
 		dtz,
 		dateTime,
 		timeZoneLocation,
+		timeZoneConversionType,
 		dateTimeFmtStr,
 		ePrefix)
 }

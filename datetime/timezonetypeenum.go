@@ -14,6 +14,7 @@ var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
 	"Iana":          TimeZoneType(0).Iana(),
 	"Military":      TimeZoneType(0).Military(),
 	"Local":         TimeZoneType(0).Local(),
+	"Utc":           TimeZoneType(0).Utc(),
 	"UtcOffset":     TimeZoneType(0).UtcOffset(),
 }
 
@@ -24,6 +25,7 @@ var mTimeZoneTypeLwrCaseStringToCode = map[string]TimeZoneType{
 	"iana":          TimeZoneType(0).Iana(),
 	"military":      TimeZoneType(0).Military(),
 	"local":         TimeZoneType(0).Local(),
+	"utc":           TimeZoneType(0).Utc(),
 	"utcoffset":     TimeZoneType(0).UtcOffset(),
 }
 
@@ -34,6 +36,7 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 	TimeZoneType(0).Iana():          "Iana",
 	TimeZoneType(0).Military():      "Military",
 	TimeZoneType(0).Local():         "Local",
+	TimeZoneType(0).Utc():           "Utc",
 	TimeZoneType(0).UtcOffset():     "UtcOffset",
 }
 
@@ -66,7 +69,13 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 //                                        the time zone currently configured
 //                                        for the host computer.
 //
-//  UtcOffset()             4           Tests have established that no
+//  UtcOffset()             4           Tests have established that this
+//                                        Time Zone is Coordinated Universal
+//                                        Time or 'UTC'. In some countries,
+//                                        the term "Greenwich Mean Time (GMT)"
+//                                        is used as an equivalent for 'UTC'.
+//
+//  UtcOffset()             5           Tests have established that no
 //                                        known time zone has been applied.
 //                                        Instead, the time zone is identified
 //                                        only by its UTC offset.
@@ -112,13 +121,29 @@ func (tzType TimeZoneType) Military() TimeZoneType {return TimeZoneType(2)}
 //
 func (tzType TimeZoneType) Local() TimeZoneType {return TimeZoneType(3)}
 
+// Utc - Coordinated Universal Time (UTC or UTC) is the primary
+// time standard by which the world regulates clocks and time.
+// It is within about 1-second of mean solar time at 0° longitude,
+// and is not adjusted for daylight saving time. In some countries,
+// the term "Greenwich Mean Time (GMT)" is used as an equivalent
+// for 'UTC'.
+//
+// UTC is equivalent to a zero offset: UTC+0000. For additional
+// information, reference:
+//
+//     https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+// This method is part of the standard enumeration.
+//
+func (tzType TimeZoneType) Utc() TimeZoneType {return TimeZoneType(4)}
+
 // UtcOffset - This type indicates that no standard IANA, Military or
 // Local time zone applies. Instead, this time zone is identified only
 // by its UTC offset.
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) UtcOffset() TimeZoneType {return TimeZoneType(4)}
+func (tzType TimeZoneType) UtcOffset() TimeZoneType {return TimeZoneType(5)}
 
 // =========================================================================
 
@@ -225,11 +250,11 @@ func (tzType TimeZoneType) XParseString(
 		lenValueStr -= 2
 	}
 
-	if lenValueStr < 4 {
+	if lenValueStr < 3 {
 		return TzType.None(),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n" +
-				"Length Less than 4-characters\n"+
+				"Length Less than 3-characters\n"+
 				"valueString='%v'\n", valueString)
 	}
 
@@ -237,7 +262,15 @@ func (tzType TimeZoneType) XParseString(
 
 	var timeZoneType TimeZoneType
 
-	if caseSensitive {
+	testStr := strings.ToLower(valueString)
+
+	if testStr == "utc" ||
+			testStr == "uct"  ||
+				testStr == "gmt" {
+
+		return TzType.Utc(), nil
+
+	} else if caseSensitive {
 
 		lockMapTimeZoneTypeStringToCode.Lock()
 
@@ -251,7 +284,7 @@ func (tzType TimeZoneType) XParseString(
 		}
 
 	} else {
-
+		// caseSensitive must be 'false'
 		valueString = strings.ToLower(valueString)
 
 		lockMapTimeZoneTypeLwrCaseStringToCode.Lock()

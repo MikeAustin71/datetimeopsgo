@@ -4,22 +4,142 @@ import (
 	"fmt"
 	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
 	ex "github.com/MikeAustin71/datetimeopsgo/datetimeexamples"
+	"strings"
 	"time"
 )
 
 func main() {
 
-	mainTest{}.mainTest030()
-
-	mainTest{}.mainTest029()
-
-	mainTest{}.mainTest028()
+	mainTest{}.mainTest032()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest032() {
+
+	ePrefix := "mainTest032()"
+	title := fmt.Sprintf("       %v         ", ePrefix)
+	ln := strings.Repeat("-", len(title))
+	fmt.Println(ln)
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
+
+	t1Str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	expectedStr := "2014-02-15 19:54:30.038175584 -0500 EST"
+
+	dt1, err := time.Parse(fmtStr, t1Str)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, t1Str).\n" +
+			"t1Str='%v'\n", t1Str)
+		return
+	}
+
+	dtUtil := dt.DTimeUtility{}
+
+	dt2, err := dtUtil.AbsoluteTimeToTimeZoneNameConversion(dt1, dt.TZones.America.New_York())
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dt1, dt.TZones.America.New_York())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dt2Str := dt2.Format(fmtStr)
+
+	var result string
+
+	if dt2Str != expectedStr {
+		result = "*** FAILURE ***"
+	} else {
+		result = "!!! SUCCESS !!!"
+	}
+
+	title = fmt.Sprintf("       %v         ", result)
+	ln = strings.Repeat("=", len(title))
+
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
+
+	fmt.Printf("   Start Date Time: %v\n", t1Str)
+	fmt.Printf("  Actual Date Time: %v\n", dt2Str)
+	fmt.Printf("Expected Date Time: %v\n", expectedStr)
+	fmt.Println()
+}
+
+func (mt mainTest) mainTest031() {
+
+	ePrefix := "mainTest030()"
+	title := fmt.Sprintf("       %v         ", ePrefix)
+	ln := strings.Repeat("-", len(title))
+	fmt.Println(ln)
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
+
+	t1Str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	expectedStr := "2014-02-15 19:54:30.038175584 -0500 EST"
+
+	dt1, err := time.Parse(fmtStr, t1Str)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, t1Str).\n" +
+			"t1Str='%v'\n", t1Str)
+		return
+	}
+
+	tzDefDto, err := dt.TimeZoneDefDto{}.NewFromTimeZoneName(dt.TZones.America.New_York())
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(dt.TZones.America.New_York())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dtUtil := dt.DTimeUtility{}
+
+	dt2, err := dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dt1, tzDefDto)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dt1, tzDefDto)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dt2Str := dt2.Format(fmtStr)
+
+	var result string
+
+	if dt2Str != expectedStr {
+		result = "*** FAILURE ***"
+	} else {
+		result = "!!! SUCCESS !!!"
+	}
+
+	title = fmt.Sprintf("       %v         ", result)
+	ln = strings.Repeat("=", len(title))
+
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
+
+	fmt.Printf("   Start Date Time: %v\n", t1Str)
+	fmt.Printf("  Actual Date Time: %v\n", dt2Str)
+	fmt.Printf("Expected Date Time: %v\n", expectedStr)
+	fmt.Println()
 }
 
 func (mt mainTest) mainTest030() {
@@ -255,6 +375,7 @@ func (mt mainTest) mainTest027() {
 
 }
 
+/*
 	func (mt mainTest) mainTest026() {
 
 	fmt.Println("       mainTest026()         ")
@@ -301,6 +422,7 @@ func (mt mainTest) mainTest027() {
 	fmt.Printf("Military DateTime: %v", dateTzDto.GetDateTimeValue().Format(fmtStr))
 
 }
+*/
 
 func (mt mainTest) mainTest025() {
 

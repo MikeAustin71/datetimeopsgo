@@ -391,49 +391,6 @@ func TestDateTzDto_New_02(t *testing.T) {
 
 }
 
-func TestDateTzDto_NewFromMilitaryDateTz_01(t *testing.T) {
-
-	tstr := "12/06/2019 03:12:00 -0600 CST"
-	fmtStr := "01/02/2006 15:04:05 -0700 MST"
-
-	testTime, err := time.Parse(fmtStr, tstr)
-
-	if err != nil {
-		t.Errorf("Error returned by time.Parse(fmtStr, tstr)\n" +
-			"fmtStr='%v'\n" +
-			"tstr='%v'\n" +
-			"Error='%v'\n",fmtStr, tstr, err.Error())
-	}
-
-	var milTzDto MilitaryDateTzDto
-	var dateTzDto DateTzDto
-
-	milTzDto, err = MilitaryDateTzDto{}.New(testTime, "Sierra")
-
-	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Sierra\")\n" +
-			"testTime='%v'\n" +
-			"Error='%v'\n", testTime.Format(fmtStr), err.Error())
-		return
-	}
-
-	dateTzDto, err = DateTzDto{}.NewFromMilitaryDateTz(milTzDto, fmtStr)
-
-	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.NewFromMilitaryDateTz(milTzDto, fmtStr)\n" +
-			"milTzDto.DateTime='%v'\n" +
-			"Error='%v'\n", milTzDto.DateTime.Format(fmtStr), err.Error())
-		return
-	}
-
-	if !testTime.Equal(dateTzDto.GetDateTimeValue()) {
-		t.Errorf("Error: Expected dateTzDto.DateTime='%v'\n" +
-			"Instead, dateTzDto.DateTime='%v'\n",
-			testTime.Format(FmtDateTimeTzNanoYMDDow),
-			dateTzDto.GetDateTimeValue().Format(FmtDateTimeTzNanoYMDDow))
-	}
-}
-
 func TestDateTzDto_NewNowTz_01(t *testing.T) {
 
 	t0 := time.Now().Local()
@@ -585,7 +542,11 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	dTz, err := DateTzDto{}.NewTz(t4AsiaTokyo, TZones.US.Central(), fmtstr)
+	dTz, err := DateTzDto{}.NewTz(
+		t4AsiaTokyo,
+		TZones.US.Central(),
+		TzConvertType.Relative(),
+		fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.NewTz(t4AsiaTokyo, TZones.US.Central(), fmtstr).\n" +
@@ -608,8 +569,8 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 	}
 
 	if !eTimeZoneDef.Equal(dTz.GetTimeZone()) {
-		t.Errorf("Expected dTz.GetTimeZone().LocationName='%v'. "+
-			"Instead, dTz.GetTimeZone().LocationName='%v'",
+		t.Errorf("Expected dTz.GetTimeZone().LocationName='%v'.\n"+
+			"Instead, dTz.GetTimeZone().LocationName='%v'\n",
 			eTimeZoneDef.GetLocationName(), dTz.GetTimeZoneName())
 	}
 
@@ -834,7 +795,11 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 
 	t4Tokyo := t4USCentral.In(locTokyo)
 
-	err = dTzDto.SetFromTimeTz(t4Tokyo, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err = dTzDto.SetFromTimeTz(
+		t4Tokyo,
+		TZones.US.Central(),
+		TzConvertType.Relative(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by "+
