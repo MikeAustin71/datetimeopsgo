@@ -3,7 +3,6 @@ package datetime
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"sync"
 	"time"
 )
@@ -454,9 +453,9 @@ func (tDtoUtil *timeDtoUtility) isEmpty(
 	return false
 }
 
-// isValidDateTime - Returns an error if the current tDto instance is invalid.
+// isValidDateTimeDto - Returns an error if the current tDto instance is invalid.
 // Otherwise, if successful, this method returns 'nil'.
-func (tDtoUtil *timeDtoUtility) isValidDateTime(
+func (tDtoUtil *timeDtoUtility) isValidDateTimeDto(
 	tDto *TimeDto,
 	ePrefix string) error {
 
@@ -554,8 +553,8 @@ func (tDtoUtil *timeDtoUtility) isValidDateTime(
 // where the number of days is greater than the number of days
 // in a month.
 //
-// If the number of days needed to be normalized, the boolean
-// return value is set to true.
+// If the number of days did require normalization, the boolean
+// return value is set to 'true'.
 //
 func (tDtoUtil *timeDtoUtility) normalizeDays(
 	tDto *TimeDto,
@@ -662,7 +661,7 @@ func (tDtoUtil *timeDtoUtility) normalizeDays(
 			"Error='%v'\n", err.Error())
 	}
 
-	err = tDtoUtil2.isValidDateTime(&t2Dto, ePrefix)
+	err = tDtoUtil2.isValidDateTimeDto(&t2Dto, ePrefix)
 
 	if err != nil {
 		return false, err
@@ -764,27 +763,6 @@ func (tDtoUtil *timeDtoUtility) normalizeTimeElements(
 }
 
 
-// preProcessTimeZoneLocation - Scans time zone location
-// name strings and attempts to correct errors.
-func (tDtoUtil *timeDtoUtility) preProcessTimeZoneLocation(
-	timeZoneLocation string) string {
-
-	tDtoUtil.lock.Lock()
-
-	defer tDtoUtil.lock.Unlock()
-
-	if len(timeZoneLocation) == 0 {
-		return TZones.UTC()
-	}
-
-	if strings.ToLower(timeZoneLocation) == "local" {
-		return TZones.Local()
-	}
-
-	return timeZoneLocation
-}
-
-
 // SetFromDateTime - Populates the specified 'TimeDto' instance with new
 // data field values based on input parameter 'dateTime' (time.Time)
 //
@@ -827,79 +805,11 @@ func (tDtoUtil *timeDtoUtility) setFromDateTime(
 		return err
 	}
 
-	err = tDtoUtil2.isValidDateTime(tDto, ePrefix)
+	err = tDtoUtil2.isValidDateTimeDto(tDto, ePrefix)
 
 	if err != nil {
 		return err
 	}
-
-	return nil
-}
-
-
-// setTimeElements - Sets the value of date fields for the current TimeDto instance
-// based on time element input parameters.
-//
-func (tDtoUtil *timeDtoUtility) setTimeElements(
-	tDto *TimeDto,
-	years,
-	months,
-	weeks,
-	days,
-	hours,
-	minutes,
-	seconds,
-	milliseconds,
-	microseconds,
-	nanoseconds int,
-	ePrefix string) error {
-
-	ePrefix += "timeDtoUtility.setTimeElements(...) "
-
-	if years == 0 &&
-		months == 0 &&
-		weeks == 0 &&
-		days == 0 &&
-		hours == 0 &&
-		minutes == 0 &&
-		seconds == 0 &&
-		milliseconds == 0 &&
-		microseconds == 0 &&
-		nanoseconds == 0 {
-
-		return fmt.Errorf(ePrefix +
-			"\nError: All input parameters (years, months, weeks, days etc.) are ZERO Value!\n")
-	}
-
-	t1Dto := TimeDto{}
-
-	t1Dto.Years = years
-	t1Dto.Months = months
-	t1Dto.DateDays = (weeks * 7) + days
-
-	t1Dto.Hours = hours
-	t1Dto.Minutes = minutes
-	t1Dto.Seconds = seconds
-	t1Dto.Milliseconds = milliseconds
-	t1Dto.Microseconds = microseconds
-	t1Dto.Nanoseconds = nanoseconds
-
-	tDtoUtil2 := timeDtoUtility{}
-
-	err := tDtoUtil2.normalizeTimeElements(&t1Dto, ePrefix)
-
-	if err != nil {
-		return err
-	}
-
-	_, err = t1Dto.NormalizeDays()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by err := t1Dto.NormalizeDays() "+
-			"Error='%v'", err.Error())
-	}
-
-	tDto.CopyIn(t1Dto)
 
 	return nil
 }
@@ -960,7 +870,78 @@ func (tDtoUtil *timeDtoUtility) setFromDateTzDto(
 		return err
 	}
 
-	err = tDtoUtil2.isValidDateTime(tDto, ePrefix)
+	err = tDtoUtil2.isValidDateTimeDto(tDto, ePrefix)
 
 	return err
+}
+
+// setTimeElements - Sets the value of date fields for the current TimeDto instance
+// based on time element input parameters.
+//
+func (tDtoUtil *timeDtoUtility) setTimeElements(
+	tDto *TimeDto,
+	years,
+	months,
+	weeks,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
+	ePrefix string) error {
+
+	tDtoUtil.lock.Lock()
+
+	defer tDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDtoUtility.setTimeElements(...) "
+
+	if years == 0 &&
+		months == 0 &&
+		weeks == 0 &&
+		days == 0 &&
+		hours == 0 &&
+		minutes == 0 &&
+		seconds == 0 &&
+		milliseconds == 0 &&
+		microseconds == 0 &&
+		nanoseconds == 0 {
+
+		return fmt.Errorf(ePrefix +
+			"\nError: All input parameters (years, months, weeks, days etc.) are ZERO Value!\n")
+	}
+
+	t1Dto := TimeDto{}
+
+	t1Dto.Years = years
+	t1Dto.Months = months
+	t1Dto.DateDays = (weeks * 7) + days
+
+	t1Dto.Hours = hours
+	t1Dto.Minutes = minutes
+	t1Dto.Seconds = seconds
+	t1Dto.Milliseconds = milliseconds
+	t1Dto.Microseconds = microseconds
+	t1Dto.Nanoseconds = nanoseconds
+
+	tDtoUtil2 := timeDtoUtility{}
+
+	err := tDtoUtil2.normalizeTimeElements(&t1Dto, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = tDtoUtil2.normalizeDays(&t1Dto, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by err := t1Dto.NormalizeDays() "+
+			"Error='%v'", err.Error())
+	}
+
+	tDtoUtil2.copyIn(tDto, &t1Dto, ePrefix)
+
+	return nil
 }

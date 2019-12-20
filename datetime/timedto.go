@@ -619,7 +619,7 @@ func (tDto *TimeDto) NormalizeTimeElements() error {
 // where the number of days is greater than the number of days
 // in a month.
 //
-// If the number of days needed to be normalized, the boolean
+// If the number of days required normalization, the boolean
 // return value is set to true.
 //
 func (tDto *TimeDto) NormalizeDays() (bool, error) {

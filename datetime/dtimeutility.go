@@ -184,3 +184,41 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneNameConversion(
 
 	return resultDateTime, nil
 }
+
+// PreProcessTimeZoneLocation - Scans a time zone location
+// name string and attempts to correct errors. If input
+// parameter 'timeZoneLocation' is an empty string, this
+// method set 'timeZoneLocation' to 'UTC'.
+//
+func (dtUtil *DTimeUtility) PreProcessTimeZoneLocation(
+	timeZoneLocation string) string {
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	timeZoneLocation =
+		strings.TrimLeft(strings.TrimRight(timeZoneLocation, " "), " ")
+
+	if len(timeZoneLocation) == 0 {
+		return TZones.UTC()
+	}
+
+	testZone := strings.ToLower(timeZoneLocation)
+
+	if testZone == "utc" {
+
+		timeZoneLocation = TZones.UTC()
+
+	} else if testZone == "uct" {
+
+		timeZoneLocation = TZones.UCT()
+
+	} else if testZone == "local" {
+
+		return TZones.Local()
+	}
+
+	return timeZoneLocation
+
+}
