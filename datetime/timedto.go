@@ -9,14 +9,14 @@ import (
 )
 
 /*
-	TimeDto
+ TimeDto
   =======
 
  This source file is located in source code repository:
- 		https://github.com/MikeAustin71/datetimeopsgo.git'
+   https://github.com/MikeAustin71/datetimeopsgo.git'
 
  This source code file is located at:
-		MikeAustin71\datetimeopsgo\datetime\timedto.go
+   MikeAustin71\datetimeopsgo\datetime\timedto.go
 
 */
 
@@ -94,24 +94,6 @@ func (tDto *TimeDto) CopyOut() TimeDto {
 
 	ePrefix := "TimeDto.CopyOut() "
 
-	/*
-	t2Dto := TimeDto{}
-
-	t2Dto.Years = tDto.Years
-	t2Dto.Months = tDto.Months
-	t2Dto.Weeks = tDto.Weeks
-	t2Dto.WeekDays = tDto.WeekDays
-	t2Dto.DateDays = tDto.DateDays
-	t2Dto.Hours = tDto.Hours
-	t2Dto.Minutes = tDto.Minutes
-	t2Dto.Seconds = tDto.Seconds
-	t2Dto.Milliseconds = tDto.Milliseconds
-	t2Dto.Microseconds = tDto.Microseconds
-	t2Dto.Nanoseconds = tDto.Nanoseconds
-	t2Dto.TotSubSecNanoseconds = tDto.TotSubSecNanoseconds
-	t2Dto.TotTimeNanoseconds = tDto.TotTimeNanoseconds
-	*/
-
 	return tDtoUtil.copyOut(tDto, ePrefix)
 }
 
@@ -119,8 +101,20 @@ func (tDto *TimeDto) CopyOut() TimeDto {
 // and proceeds to copy all 'tDto2' data fields into
 // the current TimeDto data fields. When this method
 // completes, 'tDto' will be equivalent to 'tDto2'.
+//
 func (tDto *TimeDto) CopyIn(t2Dto TimeDto) {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.CopyIn() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	tDtoUtil.copyIn(tDto, &t2Dto, ePrefix)
+
+	/*
 	tDto.Empty()
 
 	tDto.Years = t2Dto.Years
@@ -136,6 +130,7 @@ func (tDto *TimeDto) CopyIn(t2Dto TimeDto) {
 	tDto.Nanoseconds = t2Dto.Nanoseconds
 	tDto.TotSubSecNanoseconds = t2Dto.TotSubSecNanoseconds
 	tDto.TotTimeNanoseconds = t2Dto.TotTimeNanoseconds
+	*/
 
 }
 
