@@ -30,10 +30,11 @@ import (
 //
 //    (1)  A specific point in time (date time).
 //                  or
-//    (2) Incremental time which is useful in adding or subtracting
-//          time values. Note that this structure does not track
-//          time location or time zone. For a fully supported date time
-//          structure, review the DateTzDto located in source file 'datetzdto.go'
+//    (2) Incremental time or time duration which is useful in
+//          adding or subtracting time values. Note that this
+//          structure does not track time location or time zone.
+//          For a fully supported date time structure, review
+//          type DateTzDto located in source file 'datetzdto.go'
 //          Note: TimeDto is part of the DateTzDto structure.
 //
 type TimeDto struct {
@@ -85,6 +86,15 @@ func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto) error {
 // instance, and returns it to the calling function.
 func (tDto *TimeDto) CopyOut() TimeDto {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	tDtoUtil := timeDtoUtility{}
+
+	ePrefix := "TimeDto.CopyOut() "
+
+	/*
 	t2Dto := TimeDto{}
 
 	t2Dto.Years = tDto.Years
@@ -100,8 +110,9 @@ func (tDto *TimeDto) CopyOut() TimeDto {
 	t2Dto.Nanoseconds = tDto.Nanoseconds
 	t2Dto.TotSubSecNanoseconds = tDto.TotSubSecNanoseconds
 	t2Dto.TotTimeNanoseconds = tDto.TotTimeNanoseconds
+	*/
 
-	return t2Dto
+	return tDtoUtil.copyOut(tDto, ePrefix)
 }
 
 // CopyIn - Receives a TimeDto input parameter, 'tDto2'
@@ -418,6 +429,29 @@ func (tDto TimeDto) New(years, months, weeks, days, hours, minutes,
 
 	t2Dto := TimeDto{}
 
+	tDtoUtil := timeDtoUtility{}
+
+	err := tDtoUtil.setTimeElements(
+				&t2Dto,
+				years,
+				months,
+				weeks,
+				days,
+				hours,
+				minutes,
+				seconds,
+				milliseconds,
+				microseconds,
+				nanoseconds,
+				ePrefix)
+
+	if err != nil {
+		return TimeDto{}, err
+	}
+
+	return t2Dto, nil
+
+	/*
 	err := t2Dto.SetTimeElements(years, months, weeks, days, hours, minutes,
 		seconds, milliseconds, microseconds,
 		nanoseconds)
@@ -427,6 +461,8 @@ func (tDto TimeDto) New(years, months, weeks, days, hours, minutes,
 	}
 
 	return t2Dto, nil
+
+	 */
 }
 
 // NewTimeElements - Creates and returns a new TimeDto using basic
@@ -438,6 +474,29 @@ func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
 
 	t2Dto := TimeDto{}
 
+	tDtoUtil := timeDtoUtility{}
+
+	err := tDtoUtil.setTimeElements(
+						&t2Dto,
+						years,
+						months,
+						0,
+						days,
+						hours,
+						minutes,
+						seconds,
+						0,
+						0,
+						nanoseconds,
+						ePrefix)
+
+	if err != nil {
+		return TimeDto{}, err
+	}
+
+	return t2Dto, nil
+
+	/*
 	err := t2Dto.SetTimeElements(years, months, 0, days, hours, minutes,
 		seconds, 0, 0, nanoseconds)
 
@@ -446,6 +505,7 @@ func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
 	}
 
 	return t2Dto, nil
+	*/
 
 }
 
@@ -637,8 +697,17 @@ func (tDto *TimeDto) NormalizeTimeElements() error {
 //
 func (tDto *TimeDto) NormalizeDays() (bool, error) {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
 	ePrefix := "TimeDto.NormalizeDays() "
 
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.normalizeDays(tDto, ePrefix)
+
+	/*
 	if tDto.Years == 0 && tDto.Months == 0 {
 		return false, nil
 	}
@@ -738,6 +807,8 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 	tDto.CopyIn(t2Dto)
 
 	return true, nil
+
+	 */
 }
 
 // SetTimeElements - Sets the value of date fields for the current TimeDto instance
@@ -749,6 +820,23 @@ func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
 
 	ePrefix := "TimeDto.SetTimeElements(...) "
 
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.setTimeElements(
+		tDto,
+		years,
+		months,
+		weeks,
+		days,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds,
+		ePrefix)
+
+	/*
 	if years == 0 &&
 		months == 0 &&
 		weeks == 0 &&
@@ -793,6 +881,8 @@ func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
 	tDto.CopyIn(t1Dto)
 
 	return nil
+
+	 */
 }
 
 // SetFromDateTime - Sets the current TimeDto instance to new

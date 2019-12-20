@@ -40,6 +40,16 @@ func (tDtoUtil *timeDtoUtility) addTimeDto(
 
 	ePrefix += "timeDtoUtility.addTimeDto() "
 
+	if tDto == nil {
+		panic(ePrefix +
+			"\nInput parameter 'tDto' is a nil pointer!")
+	}
+
+	if t2Dto == nil {
+		panic(ePrefix +
+			"\nInput parameter 't2Dto' is a nil pointer!")
+	}
+
 	tDtoUtil2 := timeDtoUtility{}
 
 	return tDtoUtil2.setTimeElements( tDto,
@@ -925,24 +935,29 @@ func (tDtoUtil *timeDtoUtility) setFromDateTzDto(
 // based on time element input parameters.
 //
 func (tDtoUtil *timeDtoUtility) setTimeElements(
-	tDto *TimeDto,
-	years,
-	months,
-	weeks,
-	days,
-	hours,
-	minutes,
-	seconds,
-	milliseconds,
-	microseconds,
-	nanoseconds int,
-	ePrefix string) error {
+					tDto *TimeDto,
+					years,
+					months,
+					weeks,
+					days,
+					hours,
+					minutes,
+					seconds,
+					milliseconds,
+					microseconds,
+					nanoseconds int,
+					ePrefix string) error {
 
 	tDtoUtil.lock.Lock()
 
 	defer tDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDtoUtility.setTimeElements(...) "
+
+	if tDto == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'tDto' is a 'nil' pointer!\n")
+	}
 
 	if years == 0 &&
 		months == 0 &&
