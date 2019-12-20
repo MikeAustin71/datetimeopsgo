@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -19,38 +20,39 @@ import (
 
 */
 
-// TimeDto - 	is a collection of time element values. Time
-//						element values are represented by Years, Months,
-//						Weeks, WeekDays, DateDays, Hours, Minutes, Seconds,
-//						Milliseconds, Microseconds and Nanoseconds.
+// TimeDto -   is a collection of time element values. Time
+//             element values are represented by Years, Months,
+//             Weeks, WeekDays, DateDays, Hours, Minutes, Seconds,
+//             Milliseconds, Microseconds and Nanoseconds.
 //
 // TimeDto data fields are designed to store one of two
 // types of time components:
 //
-//		(1)	A specific point in time (date time).
-//									or
-//		(2) Incremental time which is useful in adding or subtracting
-//					time values. Note that this structure does not track
-//					time location or time zone. For a fully supported date time
-//					structure, review the DateTzDto located in source file 'datetzdto.go'
-//					Note: TimeDto is part of the DateTzDto structure.
+//    (1)  A specific point in time (date time).
+//                  or
+//    (2) Incremental time which is useful in adding or subtracting
+//          time values. Note that this structure does not track
+//          time location or time zone. For a fully supported date time
+//          structure, review the DateTzDto located in source file 'datetzdto.go'
+//          Note: TimeDto is part of the DateTzDto structure.
 //
 type TimeDto struct {
-	Years                int //	Number of Years
-	Months               int //	Number of Months
-	Weeks                int //	Number of Weeks
-	WeekDays             int //	Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-	DateDays             int //	Total Number of Days. Weeks x 7 plus WeekDays
-	Hours                int //	Number of Hours.
-	Minutes              int //	Number of Minutes
-	Seconds              int //	Number of Seconds
-	Milliseconds         int //	Number of Milliseconds
-	Microseconds         int //	Number of Microseconds
-	Nanoseconds          int //	Remaining Nanoseconds after Milliseconds & Microseconds
-	TotSubSecNanoseconds int //	Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-	// 		plus remaining Nanoseconds
-	TotTimeNanoseconds int64 //	Total Number of equivalent Nanoseconds for Hours + Minutes
-	//			+ Seconds + Milliseconds + Nanoseconds
+	Years                int // Number of Years
+	Months               int // Number of Months
+	Weeks                int // Number of Weeks
+	WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+	DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+	Hours                int // Number of Hours.
+	Minutes              int // Number of Minutes
+	Seconds              int // Number of Seconds
+	Milliseconds         int // Number of Milliseconds
+	Microseconds         int // Number of Microseconds
+	Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+	TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+	                         //  plus remaining Nanoseconds
+	TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+	                         //  + Seconds + Milliseconds + Nanoseconds
+	lock          sync.Mutex // Used for coordinating thread safe operations.
 }
 
 // AddTimeDto - Adds time to the current TimeDto. The amount of time added
@@ -58,35 +60,24 @@ type TimeDto struct {
 //
 // Date time math uses timezone UTC.
 //
-//	Input Parameters
-//	================
+//  Input Parameters
+//  ================
 //
-//	t2Dto						TimeDto	- The amount of time to be added to the current TimeDto
-//															data fields.
+//  t2Dto     TimeDto  - The amount of time to be added to the current TimeDto
+//                       data fields.
 //
 //
 func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto) error {
 
+	tDto.lock.Lock()
+	
+	defer tDto.lock.Unlock()
+	
 	ePrefix := "TimeDto.AddTimeDto() "
 
-	years := tDto.Years + t2Dto.Years
-	months := tDto.Months + t2Dto.Months
-	days := tDto.DateDays + t2Dto.DateDays
-	hours := tDto.Hours + t2Dto.Hours
-	minutes := tDto.Minutes + t2Dto.Minutes
-	seconds := tDto.Seconds + t2Dto.Seconds
-	milliseconds := tDto.Milliseconds + t2Dto.Milliseconds
-	microseconds := tDto.Microseconds + t2Dto.Microseconds
-	nanoseconds := tDto.Nanoseconds + t2Dto.Nanoseconds
+	tDtoUtil := timeDtoUtility{}
 
-	err := tDto.SetTimeElements(years, months, 0, days, hours, minutes, seconds, milliseconds,
-		microseconds, nanoseconds)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDto.SetTimeElements(). Error='%v' ", err.Error())
-	}
-
-	return nil
+	return tDtoUtil.addTimeDto(tDto, &t2Dto, ePrefix)
 }
 
 // CopyOut - Creates a new TimeDto instance
@@ -461,25 +452,47 @@ func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
 // NewAddTimeDtos - Creates a new TimeDto which adds the values of the two TimeDto's
 // passed as input parameters. Date time math is performed using time zone 'UTC'.
 //
-//	Input Parameters
-//	================
+// Note: This method is called with a pointer.
 //
-//	t1Dto						TimeDto	- The value of this TimeDto will be added to the second
-//															input parameter to create and return a summary TimeDto.
+// Input Parameters
+// ================
 //
-//	t2Dto						TimeDto	- The value of this TimeDto will be added to the first
-//															input parameter to create and return a summary TimeDto.
+// t1Dto      TimeDto - The value of this TimeDto will be added to the second
+//                      input parameter to create and return a summary TimeDto.
 //
+// t2Dto      TimeDto - The value of this TimeDto will be added to the first
+//                      input parameter to create and return a summary TimeDto.
 //
-func (tDto TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto) (TimeDto, error) {
+// Return Values
+// =============
+//
+// TimeDto    - If successful, this method will return an instance of 'TimeDto'
+//              populated with the total time element values calculated by adding
+//              parameters 't1Dto' and 't2Dto'.
+//
+// Usage
+// =====
+//
+// Method 'NewAddTimeDtos' must be called with a pointer. Example:
+//  tDto := TimeDto{}
+// tResultDto, err := tDto.NewAddTimeDtos(t1Dto, t2Dto)
+//
+func (tDto *TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto) (TimeDto, error) {
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
 	ePrefix := "TimeDto.NewAddTimeDtos(...) "
 
-	tOutDto := t1Dto.CopyOut()
-
-	err := tOutDto.AddTimeDto(t2Dto)
+	tDtoUtil := timeDtoUtility{}
+	
+	tOutDto := tDtoUtil.copyOut(&t1Dto, ePrefix)
+	
+	err := tDtoUtil.addTimeDto(&tOutDto, &t2Dto, ePrefix)
 
 	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned by tOutDto.AddTimeDto(t2Dto, timeZoneLocation). Error='%v'", err.Error())
+		return TimeDto{}, err
 	}
 
 	return tOutDto, nil
