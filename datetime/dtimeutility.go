@@ -298,6 +298,72 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 		err
 }
 
+// RelativeTimeToTimeNameZoneConversion - Converts a time value
+// to its equivalent time in another time zone specified by input
+// parameter string, 'timeZoneName'.
+//
+// The 'timeZoneName' string must specify one of three types of
+// time zones:
+//
+//   (1) The string 'Local' - selects the local time zone
+//                            location for the host computer.
+//
+//   (2) IANA Time Zone Location -
+//      See https://golang.org/pkg/time/#LoadLocation
+//      and https://www.iana.org/time-zones to ensure that
+//      the IANA Time Zone Database is properly configured
+//      on your system. Note: IANA Time Zone Data base is
+//      equivalent to 'tz database'.
+//     Examples:
+//      "America/New_York"
+//      "America/Chicago"
+//      "America/Denver"
+//      "America/Los_Angeles"
+//      "Pacific/Honolulu"
+//      "Etc/UTC" = GMT or UTC
+//
+//    (3) A Military Time Zone
+//        Reference:
+//         https://en.wikipedia.org/wiki/List_of_military_time_zones
+//         http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//         https://www.timeanddate.com/time/zones/military
+//         https://www.timeanddate.com/worldclock/timezone/alpha
+//         https://www.timeanddate.com/time/map/
+//
+//        Examples:
+//          "Alpha"   or A
+//          "Bravo"   or B
+//          "Charlie" or C
+//          "Delta"   or D
+//          "Zulu"    or Z
+//
+func (dtUtil *DTimeUtility) RelativeTimeToTimeNameZoneConversion(
+	dateTime time.Time,
+	timeZoneName string,
+	ePrefix string) (time.Time, error) {
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.RelativeTimeToTimeNameZoneConversion() "
+
+	dt2Util := DTimeUtility{}
+
+	_,
+	_,
+	_,
+	tzLocPtr,
+	_,
+	err := dt2Util.GetTimeZoneFromName(timeZoneName, ePrefix)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return dateTime.In(tzLocPtr), nil
+}
+
 // PreProcessTimeZoneLocation - Scans a time zone location
 // name string and attempts to correct errors. If input
 // parameter 'timeZoneLocation' is an empty string, this
