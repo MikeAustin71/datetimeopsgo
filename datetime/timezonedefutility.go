@@ -540,8 +540,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	if testTzName == "local" {
 		tzdef.timeZoneType = TzType.Local()
-	} else if testTzName == "utc"  {
-		tzdef.timeZoneType = TzType.Utc()
+	} else if testTzName == "utc" ||
+			testTzName == "uct" ||
+			testTzName == "gmt" {
+		tzdef.timeZoneType = TzType.Iana()
 	} else {
 		tzdef.timeZoneType = TzType.Iana()
 	}
@@ -938,7 +940,7 @@ func (tzDefUtil *timeZoneDefUtility) configureUtcZone(
 			"Error='%v'", utcTimeZoneName, err.Error())
 	}
 
-	tzdef.timeZoneType = TzType.Utc()
+	tzdef.timeZoneType = TzType.Iana()
 
 	return nil
 }

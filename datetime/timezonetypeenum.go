@@ -10,37 +10,29 @@ import (
 var lockMapTimeZoneTypeStringToCode = sync.Mutex{}
 
 var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
-	"None":          TimeZoneType(0).None(),
-	"Iana":          TimeZoneType(0).Iana(),
-	"Military":      TimeZoneType(0).Military(),
-	"Local":         TimeZoneType(0).Local(),
-	"Utc":           TimeZoneType(0).Utc(),
-	"UtcOffset":     TimeZoneType(0).UtcOffset(),
+	"None":     TimeZoneType(0).None(),
+	"Iana":     TimeZoneType(0).Iana(),
+	"Military": TimeZoneType(0).Military(),
+	"Local":    TimeZoneType(0).Local(),
 }
 
 var lockMapTimeZoneTypeLwrCaseStringToCode = sync.Mutex{}
 
 var mTimeZoneTypeLwrCaseStringToCode = map[string]TimeZoneType{
-	"none":          TimeZoneType(0).None(),
-	"iana":          TimeZoneType(0).Iana(),
-	"military":      TimeZoneType(0).Military(),
-	"local":         TimeZoneType(0).Local(),
-	"utc":           TimeZoneType(0).Utc(),
-	"utcoffset":     TimeZoneType(0).UtcOffset(),
+	"none":     TimeZoneType(0).None(),
+	"iana":     TimeZoneType(0).Iana(),
+	"military": TimeZoneType(0).Military(),
+	"local":    TimeZoneType(0).Local(),
 }
 
 var lockMapTimeZoneTypeCodeToString = sync.Mutex{}
 
 var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
-	TimeZoneType(0).None():          "None",
-	TimeZoneType(0).Iana():          "Iana",
-	TimeZoneType(0).Military():      "Military",
-	TimeZoneType(0).Local():         "Local",
-	TimeZoneType(0).Utc():           "Utc",
-	TimeZoneType(0).UtcOffset():     "UtcOffset",
+	TimeZoneType(0).None():     "None",
+	TimeZoneType(0).Iana():     "Iana",
+	TimeZoneType(0).Military(): "Military",
+	TimeZoneType(0).Local():    "Local",
 }
-
-
 
 // TimeZoneType - This type is configured as a series of
 // constant integer values describing the valid types
@@ -69,17 +61,6 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 //                                        the time zone currently configured
 //                                        for the host computer.
 //
-//  Utc                     4           Tests have established that this
-//                                        Time Zone is Coordinated Universal
-//                                        Time or 'UTC'. In some countries,
-//                                        the term "Greenwich Mean Time (GMT)"
-//                                        is used as an equivalent for 'UTC'.
-//
-//  UtcOffset()             5           Tests have established that no
-//                                        known time zone has been applied.
-//                                        Instead, the time zone is identified
-//                                        only by its UTC offset.
-//
 // For easy access to these enumeration values, use the global variable
 // 'TzType'.
 //
@@ -105,13 +86,13 @@ func (tzType TimeZoneType) None() TimeZoneType { return TimeZoneType(0) }
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) Iana() TimeZoneType {return TimeZoneType(1)}
+func (tzType TimeZoneType) Iana() TimeZoneType { return TimeZoneType(1) }
 
 // Military - Classifies the time zone as a standard military time zone.
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) Military() TimeZoneType {return TimeZoneType(2)}
+func (tzType TimeZoneType) Military() TimeZoneType { return TimeZoneType(2) }
 
 // Local - The 'Local' time zone is construct of the Go programming language.
 // It signals that the time zone currently configured on the host computer
@@ -119,31 +100,7 @@ func (tzType TimeZoneType) Military() TimeZoneType {return TimeZoneType(2)}
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) Local() TimeZoneType {return TimeZoneType(3)}
-
-// Utc - Coordinated Universal Time (UTC or UTC) is the primary
-// time standard by which the world regulates clocks and time.
-// It is within about 1-second of mean solar time at 0° longitude,
-// and is not adjusted for daylight saving time. In some countries,
-// the term "Greenwich Mean Time (GMT)" is used as an equivalent
-// for 'UTC'.
-//
-// UTC is equivalent to a zero offset: UTC+0000. For additional
-// information, reference:
-//
-//     https://en.wikipedia.org/wiki/Coordinated_Universal_Time
-//
-// This method is part of the standard enumeration.
-//
-func (tzType TimeZoneType) Utc() TimeZoneType {return TimeZoneType(4)}
-
-// UtcOffset - This type indicates that no standard IANA, Military or
-// Local time zone applies. Instead, this time zone is identified only
-// by its UTC offset.
-//
-// This method is part of the standard enumeration.
-//
-func (tzType TimeZoneType) UtcOffset() TimeZoneType {return TimeZoneType(5)}
+func (tzType TimeZoneType) Local() TimeZoneType { return TimeZoneType(3) }
 
 // =========================================================================
 
@@ -253,7 +210,7 @@ func (tzType TimeZoneType) XParseString(
 	if lenValueStr < 3 {
 		return TzType.None(),
 			fmt.Errorf(ePrefix+
-				"\nInput parameter 'valueString' is INVALID!\n" +
+				"\nInput parameter 'valueString' is INVALID!\n"+
 				"Length Less than 3-characters\n"+
 				"valueString='%v'\n", valueString)
 	}
@@ -265,10 +222,10 @@ func (tzType TimeZoneType) XParseString(
 	testStr := strings.ToLower(valueString)
 
 	if testStr == "utc" ||
-			testStr == "uct"  ||
-				testStr == "gmt" {
+		testStr == "uct" ||
+		testStr == "gmt" {
 
-		return TzType.Utc(), nil
+		return TzType.Iana(), nil
 
 	} else if caseSensitive {
 
@@ -325,6 +282,5 @@ func (tzType TimeZoneType) XValue() TimeZoneType {
 //  TzType.Iana()
 //  TzType.Military()
 //  TzType.Local()
-//  TzType.UtcOffset()
 //
 var TzType TimeZoneType
