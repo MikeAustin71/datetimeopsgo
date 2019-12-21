@@ -235,12 +235,7 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 
 	defer tDto.lock.Unlock()
 
-
 	ePrefix := "TimeDto.GetDateTime() "
-
-	/*
-	tzLoc := tDto.preProcessTimeZoneLocation(timeZoneLocationName)
-	*/
 
 	dtUtil := DTimeUtility{}
 
@@ -254,7 +249,6 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 	if err != nil {
 		return time.Time{}, err
 	}
-
 
 return time.Date(tDto.Years,
 		time.Month(tDto.Months),
@@ -271,6 +265,17 @@ return time.Date(tDto.Years,
 // uninitialized values.
 func (tDto *TimeDto) IsEmpty() bool {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.GetDateTime() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.isEmpty(tDto, ePrefix)
+
+	/*
 	if tDto.Years == 0 &&
 		tDto.Months == 0 &&
 		tDto.Weeks == 0 &&
@@ -288,6 +293,8 @@ func (tDto *TimeDto) IsEmpty() bool {
 	}
 
 	return false
+
+	 */
 }
 
 // IsValidDateTime - Returns an error if the current tDto instance is invalid.
