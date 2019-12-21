@@ -516,9 +516,21 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 // SetTimeElements - Sets the value of date fields for the current TimeDto instance
 // based on time element input parameters.
 //
-func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
-	seconds, milliseconds, microseconds,
+func (tDto *TimeDto) SetTimeElements(
+	years,
+	months,
+	weeks,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
 	nanoseconds int) error {
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
 
 	ePrefix := "TimeDto.SetTimeElements(...) "
 
