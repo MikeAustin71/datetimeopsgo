@@ -57,7 +57,11 @@ type TimeDto struct {
 // AddTimeDto - Adds time to the current TimeDto. The amount of time added
 // is provided by the input parameter 't2Dto' of type TimeDto.
 //
-// Date time math uses timezone UTC.
+// Usually, the time element values contained in input parameter 't2Dto' are
+// positive.  However, if the values are negative, this method correctly handles
+// the the addition of negative values.
+//
+// Date time math uses timezone UTC for both 'tDto' and 't2Dto'.
 //
 //  Input Parameters
 //  ================
@@ -585,4 +589,34 @@ func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 	tDtoUtil := timeDtoUtility{}
 
 	return tDtoUtil.setFromDateTzDto(tDto, dTzDto, ePrefix)
+}
+
+
+// SubTimeDto - Subtracts time from the current TimeDto. The amount of time
+// subtracted is provided by the input parameter 't2Dto' of type TimeDto.
+//
+// Usually, the time element values contained in input parameter 't2Dto' are
+// positive.  However, if the values are negative, this method correctly handles
+// the the subtraction of negative values.
+//
+// Date time math uses timezone UTC for both 'tDto' and 't2Dto'.
+//
+//  Input Parameters
+//  ================
+//
+//  t2Dto     TimeDto  - The amount of time to be subtracted from the current
+//                       TimeDto data fields.
+//
+//
+func (tDto *TimeDto) SubTimeDto(t2Dto TimeDto) error {
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.SubTimeDto() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.subTimeDto(tDto, &t2Dto, ePrefix)
 }

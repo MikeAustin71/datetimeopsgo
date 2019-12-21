@@ -1056,3 +1056,61 @@ func (tDtoUtil *timeDtoUtility) setTimeElements(
 
 	return nil
 }
+
+
+// AddTimeDto - Adds time to the current TimeDto. The amount of time added
+// is provided by the input parameter 't2Dto' of type TimeDto.
+//
+// Date time math uses timezone UTC.
+//
+//  Input Parameters
+//  ================
+//
+//  tDto      TimeDto  - These time element or component values are add to those
+//                       encapsulated in 't2Dto' to generate a total. The total
+//                       time element values then replace those in 'tDto' and
+//                       comprise the new 'tDto' values.
+//
+//  t2Dto     TimeDto  - The amount of time to be added to parameter 'tDto'
+//                       data fields and generate a total.
+//
+//
+
+func (tDtoUtil *timeDtoUtility) subTimeDto(
+	tDto *TimeDto,
+	t2Dto *TimeDto,
+	ePrefix string) error {
+
+	tDtoUtil.lock.Lock()
+
+	defer tDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDtoUtility.subTimeDto() "
+
+	if tDto == nil {
+		panic(ePrefix +
+			"\nInput parameter 'tDto' is a nil pointer!")
+	}
+
+	if t2Dto == nil {
+		panic(ePrefix +
+			"\nInput parameter 't2Dto' is a nil pointer!")
+	}
+
+	tDtoUtil2 := timeDtoUtility{}
+
+	return tDtoUtil2.setTimeElements( tDto,
+		tDto.Years - t2Dto.Years,
+		tDto.Months - t2Dto.Months,
+		0,
+		tDto.DateDays - t2Dto.DateDays,
+		tDto.Hours - t2Dto.Hours,
+		tDto.Minutes - t2Dto.Minutes,
+		tDto.Seconds - t2Dto.Seconds,
+		tDto.Milliseconds - t2Dto.Milliseconds,
+		tDto.Microseconds - t2Dto.Microseconds,
+		tDto.Nanoseconds - t2Dto.Nanoseconds,
+		ePrefix)
+
+}
+
