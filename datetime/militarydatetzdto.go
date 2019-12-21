@@ -236,7 +236,7 @@ func (milDtDto *MilitaryDateTzDto) Empty() {
 //
 func (milDtDto *MilitaryDateTzDto) IsValid() error {
 
-	ePrefix := "DateTzDto.IsValidDateTime() "
+	ePrefix := "DateTzDto.IsValid() "
 
 	if milDtDto.DateTime.IsZero() {
 		return errors.New(ePrefix + "Error: milDtDto.DateTime is ZERO!")
@@ -247,7 +247,7 @@ func (milDtDto *MilitaryDateTzDto) IsValid() error {
 			"\nError: milDtDto.EquivalentIanaTimeZone is EMPTY!")
 	}
 
-	if err := milDtDto.Time.IsValidDateTime(); err != nil {
+	if err := milDtDto.Time.IsValid(); err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError: milDtDto.Time is INVALID. Error='%v'", err.Error())
 	}

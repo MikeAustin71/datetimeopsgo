@@ -444,7 +444,7 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 			"\nError: DateTzDto.TimeZone is EMPTY!\n")
 	}
 
-	if err := dTz.timeComponents.IsValidDateTime(); err != nil {
+	if err := dTz.timeComponents.IsValid(); err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError: dTz.timeComponents is INVALID.\n" +
 			"Error='%v'\n", err.Error())
@@ -874,7 +874,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 
 	t2Dto.ConvertToAbsoluteValues()
 
-	if err = t2Dto.IsValidDateTime(); err != nil {
+	if err = t2Dto.IsValid(); err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError: Input Parameter tDto (TimeDto) is INVALID.\nError='%v'\n",
 			err.Error())

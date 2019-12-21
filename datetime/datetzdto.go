@@ -1881,7 +1881,7 @@ func (dtz *DateTzDto) IsValid() error {
 
 	defer dtz.lock.Unlock()
 
-	ePrefix := "DateTzDto.IsValidDateTime() "
+	ePrefix := "DateTzDto.IsValid() "
 
 	dTzUtil := dateTzDtoUtility{}
 
