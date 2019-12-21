@@ -154,7 +154,20 @@ func (tDto *TimeDto) ConvertToNegativeValues() {
 
 // Empty - returns all TimeDto data fields to their
 // uninitialized or zero state.
+//
 func (tDto *TimeDto) Empty() {
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.Empty() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	tDtoUtil.empty(tDto, ePrefix)
+
+	/*
 	tDto.Years = 0
 	tDto.Months = 0
 	tDto.Weeks = 0
@@ -168,6 +181,8 @@ func (tDto *TimeDto) Empty() {
 	tDto.Nanoseconds = 0
 	tDto.TotSubSecNanoseconds = 0
 	tDto.TotTimeNanoseconds = 0
+	 */
+
 }
 
 // Equal - Compares the data fields of input parameter TimeDto, 'tDto2',
@@ -492,16 +507,29 @@ func (tDto *TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto) (TimeDto, error) {
 
 // NewFromDateTime - Creates and returns a new TimeDto based on
 // a date time (time.Time) input parameter.
+//
 func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 
 	ePrefix := "TimeDto.NewFromDateTime() "
 
 	if dateTime.IsZero() {
-		return TimeDto{}, errors.New(ePrefix + "Error: Input Parameter 'dateTime' has a ZERO Value!")
+		return TimeDto{}, errors.New(ePrefix +
+			"\nError: Input Parameter 'dateTime' has a ZERO Value!\n")
 	}
 
 	t2Dto := TimeDto{}
 
+	tDtoUtil := timeDtoUtility{}
+
+	err:=tDtoUtil.setFromDateTime(&t2Dto, dateTime, ePrefix)
+
+	if err != nil {
+		return TimeDto{}, err
+	}
+
+	return t2Dto, nil
+
+	/*
 	err := t2Dto.SetFromDateTime(dateTime)
 
 	if err != nil {
@@ -515,15 +543,29 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 	}
 
 	return t2Dto, nil
+
+	 */
 }
 
 // NewFromDateTzDto - Creates and returns a new TimeDto instance based on
 // a DateTzDto input parameter.
 func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
+
 	ePrefix := "TimeDto.NewFromDateTzDto() "
 
 	tDto2 := TimeDto{}
 
+	tDtoUtil := timeDtoUtility{}
+
+	err := tDtoUtil.setFromDateTzDto(&tDto2, dTzDto, ePrefix)
+
+	if err != nil {
+		return TimeDto{}, err
+	}
+
+	return tDto2, nil
+
+	/*
 	err := tDto2.SetFromDateTzDto(dTzDto)
 
 	if err != nil {
@@ -531,6 +573,8 @@ func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 	}
 
 	return tDto2, nil
+
+	 */
 }
 
 // NormalizeTimeElements - Surveys the time elements of the current
@@ -824,6 +868,20 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 
 	ePrefix := "TimeDto.SetFromDateTimeComponents() "
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	if dateTime.IsZero() {
+		return errors.New(ePrefix +
+			"\nError: Input Parameter 'dateTime' has a ZERO Value!\n")
+	}
+
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.setFromDateTime(tDto, dateTime, ePrefix)
+
+/*
 	if dateTime.IsZero() {
 		return errors.New(ePrefix + "Error: Input Parameter 'dateTime' has a ZERO Value!")
 	}
@@ -856,14 +914,26 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 	}
 
 	return nil
+*/
 
 }
 
 // SetFromDateTzDto - Sets the data field values of the current TimeDto
 // instance based on a DateTzDto input parameter.
+//
 func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
 	ePrefix := "TimeDto.SetFromDateTzDto() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.setFromDateTzDto(tDto, dTzDto, ePrefix)
+
+	/*
 
 	if dTzDto.IsEmpty() {
 		return errors.New(ePrefix + "Error: Input parameter 'dTzDto' (DateTzDto) is EMPTY!")
@@ -898,6 +968,8 @@ func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 	}
 
 	return nil
+
+	 */
 }
 
 // allocateWeeksAndDays - This method receives a total number of

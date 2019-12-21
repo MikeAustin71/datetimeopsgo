@@ -834,6 +834,11 @@ func (tDtoUtil *timeDtoUtility) setFromDateTime(
 
 	ePrefix += "timeDtoUtility.setFromDateTime() "
 
+	if tDto == nil {
+		return errors.New(ePrefix +
+			"Error: Input parameter 'tDto' is a 'nil' pointer!\n")
+	}
+
 	if dateTime.IsZero() {
 		return errors.New(ePrefix +
 			"\nError: Input Parameter 'dateTime' has a ZERO Value!\n")
@@ -874,6 +879,7 @@ func (tDtoUtil *timeDtoUtility) setFromDateTime(
 
 // SetFromDateTzDto - Sets the data field values of the current TimeDto
 // instance based on a DateTzDto input parameter.
+//
 func (tDtoUtil *timeDtoUtility) setFromDateTzDto(
 	tDto *TimeDto,
 	dTzDto DateTzDto,
