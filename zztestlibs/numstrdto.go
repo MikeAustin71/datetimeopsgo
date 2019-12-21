@@ -426,7 +426,7 @@ func (nDto *NumStrDto) Empty() {
 }
 
 // FindIntArraySignificantDigitLimits - Receives an array of integers and converts them
-// to a number string conisting of significant digits. Leading and trailing zeros are
+// to a number string consisting of significant digits. Leading and trailing zeros are
 // eliminated. See Method: FindNumStrSignificantDigitLimits()
 func (nDto *NumStrDto) FindIntArraySignificantDigitLimits(intArray []int, precision uint, signVal int) (NumStrDto, error) {
 

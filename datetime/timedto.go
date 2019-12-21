@@ -186,29 +186,6 @@ func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 	tDtoUtil := timeDtoUtility{}
 
 	return tDtoUtil.equalTimeDtos(tDto, &t2Dto, ePrefix)
-
-
-	/*
-	if tDto.Years != t2Dto.Years ||
-		tDto.Months != t2Dto.Months ||
-		tDto.Weeks != t2Dto.Weeks ||
-		tDto.WeekDays != t2Dto.WeekDays ||
-		tDto.DateDays != t2Dto.DateDays ||
-		tDto.Hours != t2Dto.Hours ||
-		tDto.Minutes != t2Dto.Minutes ||
-		tDto.Seconds != t2Dto.Seconds ||
-		tDto.Milliseconds != t2Dto.Milliseconds ||
-		tDto.Microseconds != t2Dto.Microseconds ||
-		tDto.Nanoseconds != t2Dto.Nanoseconds ||
-		tDto.TotSubSecNanoseconds != t2Dto.TotSubSecNanoseconds ||
-		tDto.TotTimeNanoseconds != t2Dto.TotTimeNanoseconds {
-
-		return false
-	}
-
-	return true
-
-	 */
 }
 
 // GetDateTime - Analyzes the current TimeDto instance and computes
@@ -218,50 +195,75 @@ func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 // Input Parameter
 // ===============
 //
-// timeZoneLocation string - time zone location must be designated as one of two values.
-//              (1) The string 'Local' - signals the designation of the local time zone
-//                  location for the host computer.
+// timeZoneLocation string - time zone location must be designated as one of three values.
 //
-//              (2) IANA Time Zone Location -
-//                 See https://golang.org/pkg/time/#LoadLocation
-//                 and https://www.iana.org/time-zones to ensure that
-//                 the IANA Time Zone Database is properly configured
-//                 on your system. Note: IANA Time Zone Data base is
-//                 equivalent to 'tz database'.
-//                Examples:
-//                 "America/New_York"
-//                 "America/Chicago"
-//                 "America/Denver"
-//                 "America/Los_Angeles"
-//                 "Pacific/Honolulu"
-//                 "Etc/UTC" = ZULU, GMT or UTC
+//   (1) The string 'Local' - selects the local time zone
+//                            location for the host computer.
 //
-//               (3) If 'timeZoneLocation' is submitted as an empty string,
-//                   it will default to "Etc/UTC" = ZULU, GMT, UTC
+//   (2) IANA Time Zone Location -
+//      See https://golang.org/pkg/time/#LoadLocation
+//      and https://www.iana.org/time-zones to ensure that
+//      the IANA Time Zone Database is properly configured
+//      on your system. Note: IANA Time Zone Data base is
+//      equivalent to 'tz database'.
+//     Examples:
+//      "America/New_York"
+//      "America/Chicago"
+//      "America/Denver"
+//      "America/Los_Angeles"
+//      "Pacific/Honolulu"
+//      "Etc/UTC" = GMT or UTC
 //
-func (tDto *TimeDto) GetDateTime(timeZoneLocation string) (time.Time, error) {
+//    (3) A Military Time Zone
+//        Reference:
+//         https://en.wikipedia.org/wiki/List_of_military_time_zones
+//         http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//         https://www.timeanddate.com/time/zones/military
+//         https://www.timeanddate.com/worldclock/timezone/alpha
+//         https://www.timeanddate.com/time/map/
+//
+//        Examples:
+//          "Alpha"   or A
+//          "Bravo"   or B
+//          "Charlie" or C
+//          "Delta"   or D
+//          "Zulu"    or Z
+//
+func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error) {
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+
 	ePrefix := "TimeDto.GetDateTime() "
 
-	tzLoc := tDto.preProcessTimeZoneLocation(timeZoneLocation)
+	/*
+	tzLoc := tDto.preProcessTimeZoneLocation(timeZoneLocationName)
+	*/
 
-	loc, err := time.LoadLocation(tzLoc)
+	dtUtil := DTimeUtility{}
+
+	_,
+	_,
+	_,
+	tzLocPtr,
+	_,
+	err := dtUtil.GetTimeZoneFromName(timeZoneLocationName, ePrefix)
 
 	if err != nil {
-		return time.Time{}, fmt.Errorf(ePrefix+
-			"Error returned from time.LoadLocation(timeZoneLocation). "+
-			"timeZoneLocation='%v'  Error='%v'", timeZoneLocation, err.Error())
+		return time.Time{}, err
 	}
 
-	dTime := time.Date(tDto.Years,
+
+return time.Date(tDto.Years,
 		time.Month(tDto.Months),
 		tDto.DateDays,
 		tDto.Hours,
 		tDto.Minutes,
 		tDto.Seconds,
 		tDto.TotSubSecNanoseconds,
-		loc)
-
-	return dTime, nil
+		tzLocPtr), nil
 }
 
 // IsEmpty - Returns 'true' if all data fields in the current

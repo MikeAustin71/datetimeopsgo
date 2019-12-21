@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest032()
+	mainTest{}.mainTest031()
 
 }
 
@@ -78,7 +78,7 @@ func (mt mainTest) mainTest032() {
 
 func (mt mainTest) mainTest031() {
 
-	ePrefix := "mainTest030()"
+	ePrefix := "mainTest031()"
 	title := fmt.Sprintf("       %v         ", ePrefix)
 	ln := strings.Repeat("-", len(title))
 	fmt.Println(ln)

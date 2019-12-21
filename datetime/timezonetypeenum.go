@@ -69,7 +69,7 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 //                                        the time zone currently configured
 //                                        for the host computer.
 //
-//  UtcOffset()             4           Tests have established that this
+//  Utc                     4           Tests have established that this
 //                                        Time Zone is Coordinated Universal
 //                                        Time or 'UTC'. In some countries,
 //                                        the term "Greenwich Mean Time (GMT)"

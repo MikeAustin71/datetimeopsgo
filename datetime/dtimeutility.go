@@ -9,7 +9,7 @@ import (
 )
 
 type DTimeUtility struct {
-	lock      sync.Mutex
+	lock sync.Mutex
 }
 
 // AbsoluteTimeToTimeZoneDtoConversion - Converts a given time to
@@ -54,9 +54,9 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneDtoConversion(
 	dateTime time.Time,
 	timeZoneDefDto TimeZoneDefDto) (time.Time, error) {
 
-		dtUtil.lock.Lock()
+	dtUtil.lock.Lock()
 
-		defer dtUtil.lock.Unlock()
+	defer dtUtil.lock.Unlock()
 
 	ePrefix := "DTimeUtility.AbsoluteTimeToTimeZoneDtoConversion() "
 
@@ -68,29 +68,18 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneDtoConversion(
 
 	if !timeZoneDefDto.IsValid() {
 		return time.Time{},
-		 errors.New(ePrefix +
-		 	"Input parameter 'timeZoneDefDto' is Invalid!\n")
+			errors.New(ePrefix +
+				"Input parameter 'timeZoneDefDto' is Invalid!\n")
 	}
 
-	zoneOffset := timeZoneDefDto.GetZoneOffset()
-
-	// FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
-	lenTimeElement := len("2006-01-02 15:04:05.000000000 ")
-	dtStr := dateTime.Format(FmtDateTimeTzNanoYMD)
-
-	dtStr = dtStr[:lenTimeElement] + zoneOffset
-
-	resultDateTime, err := time.Parse(FmtDateTimeTzNanoYMD, dtStr)
-
-	if err != nil {
-		return time.Time{},
-			fmt.Errorf(ePrefix +
-				"\nError returned by time.Parse(FmtDateTimeTzNanoYMD, dtStr)\n" +
-				"FmtDateTimeTzNanoYMD='%v'\ndtStr='%v'\nError='%v'\n",
-				FmtDateTimeTzNanoYMD, dtStr, err.Error())
-	}
-
-	return resultDateTime, nil
+	return time.Date(dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+		dateTime.Second(),
+		dateTime.Nanosecond(),
+		timeZoneDefDto.GetLocationPtr()), nil
 }
 
 // AbsoluteTimeToTimeZoneDtoConversion - Converts a given time to
@@ -146,43 +135,167 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneNameConversion(
 				"\nError: Input parameter 'dateTime' is zero!")
 	}
 
-	timeZoneName = strings.TrimLeft(strings.TrimRight(timeZoneName, " "), " ")
+	dt2Util := DTimeUtility{}
 
-	if len(timeZoneName) == 0  {
-		return time.Time{},
-		 errors.New(ePrefix +
-		 	"Input parameter 'timeZoneName' is an empty string!\n")
-	}
+	_,
+	_,
+	_,
+	tzLocPtr,
+	_,
+	err := dt2Util.GetTimeZoneFromName(timeZoneName, ePrefix)
 
-	timeZoneDefDto := TimeZoneDefDto{}
-
-	tzDefUtil := timeZoneDefUtility{}
-
-	err := tzDefUtil.setFromTimeZoneName(&timeZoneDefDto, timeZoneName, ePrefix)
 
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	zoneOffset := timeZoneDefDto.GetZoneOffset()
+	return time.Date(dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+		dateTime.Second(),
+		dateTime.Nanosecond(),
+		tzLocPtr), nil
+}
 
-	// FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
-	lenTimeElement := len("2006-01-02 15:04:05.000000000 ")
-	dtStr := dateTime.Format(FmtDateTimeTzNanoYMD)
+// GetTimeZoneFromName - Analyzes a time zone name passed
+// through input parameter,
+func (dtUtil *DTimeUtility) GetTimeZoneFromName(
+	timeZoneName string,
+	ePrefix string) (milTzLetter,
+	milTzName,
+	ianaTzName string,
+	ianaLocationPtr *time.Location,
+	tzType TimeZoneType,
+	err error) {
 
-	dtStr = dtStr[:lenTimeElement] + zoneOffset
+	dtUtil.lock.Lock()
 
-	resultDateTime, err := time.Parse(FmtDateTimeTzNanoYMD, dtStr)
+	defer dtUtil.lock.Unlock()
 
-	if err != nil {
-		return time.Time{},
-			fmt.Errorf(ePrefix +
-				"\nError returned by time.Parse(FmtDateTimeTzNanoYMD, dtStr)\n" +
-				"FmtDateTimeTzNanoYMD='%v'\ndtStr='%v'\nError='%v'\n",
-				FmtDateTimeTzNanoYMD, dtStr, err.Error())
+	ePrefix += "DTimeUtility.GetTimeZoneFromName() "
+
+	milTzLetter = ""
+	milTzName = ""
+	ianaTzName = ""
+	ianaLocationPtr = nil
+	tzType = TzType.None()
+	err = nil
+
+	var err2 error
+
+	timeZoneName =
+		strings.TrimLeft(strings.TrimRight(timeZoneName, " "), " ")
+
+	if len(timeZoneName) == 0 {
+		err = errors.New(ePrefix +
+			"\nError: Input parameter 'timeZoneName' is an empty string!\n")
+
+		return milTzLetter,
+			milTzName,
+			ianaTzName,
+			ianaLocationPtr,
+			tzType,
+			err
 	}
 
-	return resultDateTime, nil
+	if len(timeZoneName) == 1 {
+
+		timeZoneName = strings.ToUpper(timeZoneName)
+
+		dtUtil2 := DTimeUtility{}
+
+		milTzLetter,
+			milTzName,
+			ianaTzName,
+			ianaLocationPtr,
+			err =
+			dtUtil2.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
+
+		if err != nil {
+			return milTzLetter,
+				milTzName,
+				ianaTzName,
+				ianaLocationPtr,
+				tzType,
+				err
+		}
+
+		tzType = TzType.Military()
+
+		return milTzLetter,
+			milTzName,
+			ianaTzName,
+			ianaLocationPtr,
+			tzType,
+			err
+	}
+
+	testTzName := strings.ToLower(timeZoneName)
+	tzType = TzType.Iana()
+
+	if testTzName == "utc" {
+		timeZoneName = TZones.UTC()
+
+	} else if testTzName == "uct" {
+		timeZoneName = TZones.UCT()
+	} else if testTzName == "gmt" {
+		timeZoneName = TZones.Other.GMT()
+	} else if testTzName == "local" {
+		timeZoneName = TZones.Local()
+		tzType = TzType.Local()
+	}
+
+	ianaLocationPtr, err2 = time.LoadLocation(timeZoneName)
+
+	if err2 == nil {
+		milTzLetter = ""
+		milTzName = ""
+		ianaTzName = timeZoneName
+		err = nil
+
+		return milTzLetter,
+			milTzName,
+			ianaTzName,
+			ianaLocationPtr,
+			tzType,
+			err
+	}
+
+	tzType = TzType.Military()
+
+	err = nil
+
+	dtUtil3 := DTimeUtility{}
+
+	milTzLetter,
+		milTzName,
+		ianaTzName,
+		ianaLocationPtr,
+		err2 =
+		dtUtil3.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix+
+			"\nError: The input parameter 'timeZoneName' is invalid!\n"+
+			"It could NOT be classified as either an IANA, Local or\n"+
+			"Military time zone.\n"+
+			"timeZoneName='%v'\n", timeZoneName)
+
+		milTzLetter = ""
+		milTzName = ""
+		ianaTzName = ""
+		ianaLocationPtr = nil
+		tzType = TzType.None()
+	}
+
+	return milTzLetter,
+		milTzName,
+		ianaTzName,
+		ianaLocationPtr,
+		tzType,
+		err
 }
 
 // PreProcessTimeZoneLocation - Scans a time zone location
@@ -214,6 +327,10 @@ func (dtUtil *DTimeUtility) PreProcessTimeZoneLocation(
 
 		timeZoneLocation = TZones.UCT()
 
+	} else if testZone == "gmt" {
+
+		timeZoneLocation = TZones.UTC()
+
 	} else if testZone == "local" {
 
 		return TZones.Local()
@@ -221,4 +338,170 @@ func (dtUtil *DTimeUtility) PreProcessTimeZoneLocation(
 
 	return timeZoneLocation
 
+}
+
+// ParseMilitaryTzNameAndLetter - Parses a text string which
+// contains either a single letter military time zone designation
+// or a multi-character time zone text name.
+//
+// If successful, three populated strings are returned. The first
+// is the valid Military Time Zone Letter designation. The second
+// returned string contains the text name of the Military Time
+// Zone. The third string contains the name of the equivalent
+// IANA Time Zone. This is required because Golang does not
+// currently support Military Time Zones.
+//
+// In addition to the three strings, a successful method completion
+// will also return the equivalent IANA Time Zone Location pointer
+// (*time.Location).
+//
+// If an error is encountered, the return value, 'err' is populated
+// with an appropriate error message. Otherwise, 'err' is set
+// equal to 'nil' signaling no error was encountered.
+//
+func (dtUtil *DTimeUtility) ParseMilitaryTzNameAndLetter(
+	rawTz string,
+	ePrefix string) (milTzLetter,
+	milTzName,
+	equivalentIanaTimeZone string,
+	equivalentIanaLocationPtr *time.Location,
+	err error) {
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.ParseMilitaryTzNameAndLetter() "
+
+	milTzLetter = ""
+	milTzName = ""
+	equivalentIanaTimeZone = ""
+	equivalentIanaLocationPtr = nil
+	err = nil
+
+	rawTz =
+		strings.TrimLeft(strings.TrimLeft(rawTz, " "), " ")
+
+	lMilTz := len(rawTz)
+
+	if lMilTz == 0 {
+		err = errors.New(ePrefix +
+			"Error: Input Parameter 'rawTz' is EMPTY!\n")
+		return milTzLetter,
+			milTzName,
+			equivalentIanaTimeZone,
+			equivalentIanaLocationPtr,
+			err
+	}
+
+	var ok bool
+	milTzData := MilitaryTimeZoneData{}
+
+	if lMilTz == 1 {
+
+		milTzLetter = strings.ToUpper(rawTz)
+
+		milTzName, ok =
+			milTzData.MilTzLetterToTextName(milTzLetter)
+
+		if !ok {
+			err = fmt.Errorf(ePrefix+
+				"Error: Input Parameter Value 'militaryTz' is INVALID!\n"+
+				"'militaryTz' DOES NOT map to a valid Military Time Zone.\n"+
+				"militaryTz='%v'", milTzLetter)
+
+			milTzLetter = ""
+			milTzName = ""
+			equivalentIanaTimeZone = ""
+			equivalentIanaLocationPtr = nil
+
+			return milTzLetter,
+				milTzName,
+				equivalentIanaTimeZone,
+				equivalentIanaLocationPtr,
+				err
+		}
+
+		equivalentIanaTimeZone, ok = milTzData.MilitaryTzToIanaTz(milTzName)
+
+		if !ok {
+			err = fmt.Errorf(ePrefix+
+				"Error: Input Parameter Value 'rawTz' is INVALID!\n"+
+				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n"+
+				"rawTz='%v'", milTzName)
+
+			milTzLetter = ""
+			milTzName = ""
+			equivalentIanaTimeZone = ""
+			equivalentIanaLocationPtr = nil
+
+			return milTzLetter,
+				milTzName,
+				equivalentIanaTimeZone,
+				equivalentIanaLocationPtr,
+				err
+		}
+
+	} else {
+		// lMilTz > 1
+		temp1 := rawTz[:1]
+		temp2 := rawTz[1:]
+
+		temp1 = strings.ToUpper(temp1)
+		temp2 = strings.ToLower(temp2)
+
+		milTzLetter = temp1
+		milTzName = temp1 + temp2
+
+		equivalentIanaTimeZone, ok = milTzData.MilitaryTzToIanaTz(milTzName)
+
+		if !ok {
+			err = fmt.Errorf(ePrefix+
+				"Error: Input Parameter Value 'rawTz' is INVALID!\n"+
+				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n"+
+				"Military Time Zone Letter='%v'\n"+
+				"Military Time Zone Text Name='%v'", milTzLetter, milTzName)
+
+			milTzLetter = ""
+			milTzName = ""
+			equivalentIanaTimeZone = ""
+			equivalentIanaLocationPtr = nil
+
+			return milTzLetter,
+				milTzName,
+				equivalentIanaTimeZone,
+				equivalentIanaLocationPtr,
+				err
+		}
+	}
+
+	var err2 error
+	err = nil
+	equivalentIanaLocationPtr, err2 = time.LoadLocation(equivalentIanaTimeZone)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix+
+			"\nError: Input parameter 'timeZoneName' was classified as a Military Time Zone.\n"+
+			"However, the equivalent IANA Time Zone Name failed to return a Location Pointer.\n"+
+			"timeZoneName='%v'\n"+
+			"Military Time Zone Letter     ='%v'\n"+
+			"Military Time Zone Name       ='%v'\n"+
+			"Equivalent IANA Time Zone Name='%v'\n"+
+			"Load Location Error='%v'\n",
+			milTzLetter,
+			milTzName,
+			equivalentIanaTimeZone,
+			err2.Error())
+
+		milTzLetter = ""
+		milTzName = ""
+		equivalentIanaTimeZone = ""
+		equivalentIanaLocationPtr = nil
+	}
+
+	return milTzLetter,
+		milTzName,
+		equivalentIanaTimeZone,
+		equivalentIanaLocationPtr,
+		err
 }

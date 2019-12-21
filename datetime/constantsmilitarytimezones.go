@@ -85,6 +85,7 @@ import (
 type MilitaryTimeZoneData struct{
 	Input   string
 	Output  string
+	lock    sync.Mutex
 }
 
 // MilTzLetterToTextName - Returns the Military Time Zone
@@ -104,6 +105,10 @@ type MilitaryTimeZoneData struct{
 //
 func (milTzDat *MilitaryTimeZoneData) MilTzLetterToTextName(
 	milTzLetter string) (string, bool) {
+
+	milTzDat.lock.Lock()
+
+	defer milTzDat.lock.Unlock()
 
 	lockMilitaryTzLetterToTxtNameMap.Lock()
 
@@ -132,6 +137,10 @@ func (milTzDat *MilitaryTimeZoneData) MilTzLetterToTextName(
 //
 func (milTzDat *MilitaryTimeZoneData) MilitaryTzToIanaTz(
 		milTzTextName string) (string, bool) {
+
+	milTzDat.lock.Lock()
+
+	defer milTzDat.lock.Unlock()
 
 	lockMilitaryTzToIanaTzMap.Lock()
 
@@ -164,6 +173,10 @@ func (milTzDat *MilitaryTimeZoneData) MilitaryTzToIanaTz(
 func (milTzDat *MilitaryTimeZoneData) UtcOffsetToMilitaryTimeZone(
 	utcOffset string) (string, bool) {
 
+	milTzDat.lock.Lock()
+
+	defer milTzDat.lock.Unlock()
+
 	lockMilitaryUTCToTzMap.Lock()
 
 	defer lockMilitaryUTCToTzMap.Unlock()
@@ -193,6 +206,10 @@ func (milTzDat *MilitaryTimeZoneData) UtcOffsetToMilitaryTimeZone(
 func (milTzDat *MilitaryTimeZoneData) MilitaryTzToUtc(
 	milTzTextName string) (string, bool) {
 
+	milTzDat.lock.Lock()
+
+	defer milTzDat.lock.Unlock()
+
 	lockMilitaryTzToUTCMap.Lock()
 
 	defer lockMilitaryTzToUTCMap.Unlock()
@@ -215,6 +232,10 @@ func (milTzDat *MilitaryTimeZoneData) MilitaryTzToUtc(
 //
 func (milTzDat *MilitaryTimeZoneData) MilitaryTzToLocation(
 	milTzTextName string) (string, bool) {
+
+	milTzDat.lock.Lock()
+
+	defer milTzDat.lock.Unlock()
 
 	lockMilitaryTzToLocationMap.Lock()
 

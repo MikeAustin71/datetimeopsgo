@@ -261,7 +261,7 @@ func (tzdef *TimeZoneDefDto) GetMilitaryTimeZoneLetter() (string, error) {
 	return tzdef.militaryTimeZoneLetter, nil
 }
 
-// GetMilitaryTimeZoneName - Returns the a text name whic represents
+// GetMilitaryTimeZoneName - Returns the a text name which represents
 // the Military Time Zone designation.
 //
 // Examples:
