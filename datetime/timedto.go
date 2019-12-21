@@ -114,105 +114,42 @@ func (tDto *TimeDto) CopyIn(t2Dto TimeDto) {
 
 	tDtoUtil.copyIn(tDto, &t2Dto, ePrefix)
 
-	/*
-	tDto.Empty()
-
-	tDto.Years = t2Dto.Years
-	tDto.Months = t2Dto.Months
-	tDto.Weeks = t2Dto.Weeks
-	tDto.WeekDays = t2Dto.WeekDays
-	tDto.DateDays = t2Dto.DateDays
-	tDto.Hours = t2Dto.Hours
-	tDto.Minutes = t2Dto.Minutes
-	tDto.Seconds = t2Dto.Seconds
-	tDto.Milliseconds = t2Dto.Milliseconds
-	tDto.Microseconds = t2Dto.Microseconds
-	tDto.Nanoseconds = t2Dto.Nanoseconds
-	tDto.TotSubSecNanoseconds = t2Dto.TotSubSecNanoseconds
-	tDto.TotTimeNanoseconds = t2Dto.TotTimeNanoseconds
-	*/
-
+	return
 }
 
 // ConvertToAbsoluteValues - Converts time components
 // (Years, months, weeks days, hours, seconds, etc.)
 // to absolute values.
 func (tDto *TimeDto) ConvertToAbsoluteValues() {
-	if tDto.Years < 0 {
-		tDto.Years *= -1
-	}
 
-	if tDto.Months < 0 {
-		tDto.Months *= -1
-	}
+	tDto.lock.Lock()
 
-	if tDto.Weeks < 0 {
-		tDto.Weeks *= -1
-	}
+	defer tDto.lock.Unlock()
 
-	if tDto.WeekDays < 0 {
-		tDto.WeekDays *= -1
-	}
+	ePrefix := "TimeDto.ConvertToAbsoluteValues() "
 
-	if tDto.DateDays < 0 {
-		tDto.DateDays *= -1
-	}
+	tDtoUtil := timeDtoUtility{}
 
-	if tDto.Hours < 0 {
-		tDto.Hours *= -1
-	}
-
-	if tDto.Minutes < 0 {
-		tDto.Minutes *= -1
-	}
-
-	if tDto.Seconds < 0 {
-		tDto.Seconds *= -1
-	}
-
-	if tDto.Milliseconds < 0 {
-		tDto.Milliseconds *= -1
-	}
-
-	if tDto.Milliseconds < 0 {
-		tDto.Milliseconds *= -1
-	}
-
-	if tDto.Microseconds < 0 {
-		tDto.Microseconds *= -1
-	}
-
-	if tDto.Nanoseconds < 0 {
-		tDto.Nanoseconds *= -1
-	}
-
-	if tDto.TotSubSecNanoseconds < 0 {
-		tDto.TotSubSecNanoseconds *= -1
-	}
-
-	if tDto.TotTimeNanoseconds < 0 {
-		tDto.TotTimeNanoseconds *= -1
-	}
+	tDtoUtil.convertToAbsoluteValues(tDto, ePrefix)
 
 }
 
 // ConvertToNegativeValues - Multiplies time component
 // values by -1
+//
 func (tDto *TimeDto) ConvertToNegativeValues() {
-	tDto.ConvertToAbsoluteValues()
-	tDto.Years *= -1
-	tDto.Months *= -1
-	tDto.Weeks *= -1
-	tDto.WeekDays *= -1
-	tDto.DateDays *= -1
-	tDto.Hours *= -1
-	tDto.Minutes *= -1
-	tDto.Seconds *= -1
-	tDto.Milliseconds *= -1
-	tDto.Microseconds *= -1
-	tDto.Nanoseconds *= -1
-	tDto.TotSubSecNanoseconds *= -1
-	tDto.TotTimeNanoseconds *= -1
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.ConvertToNegativeValues() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	tDtoUtil.convertToAbsoluteValues(tDto, ePrefix)
+
+	tDtoUtil.convertToNegativeValues(tDto, ePrefix)
 }
 
 // Empty - returns all TimeDto data fields to their

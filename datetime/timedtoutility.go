@@ -241,6 +241,7 @@ func (tDtoUtil *timeDtoUtility) allocateTotalNanoseconds(
 // and proceeds to copy all 'tDto2' data fields into
 // the current TimeDto data fields. When this method
 // completes, 'tDto' will be equivalent to 'tDto2'.
+//
 func (tDtoUtil *timeDtoUtility) copyIn(
 	tDto *TimeDto,
 	t2Dto *TimeDto,
