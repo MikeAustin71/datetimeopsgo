@@ -167,30 +167,28 @@ func (tDto *TimeDto) Empty() {
 
 	tDtoUtil.empty(tDto, ePrefix)
 
-	/*
-	tDto.Years = 0
-	tDto.Months = 0
-	tDto.Weeks = 0
-	tDto.WeekDays = 0
-	tDto.DateDays = 0
-	tDto.Hours = 0
-	tDto.Minutes = 0
-	tDto.Seconds = 0
-	tDto.Milliseconds = 0
-	tDto.Microseconds = 0
-	tDto.Nanoseconds = 0
-	tDto.TotSubSecNanoseconds = 0
-	tDto.TotTimeNanoseconds = 0
-	 */
-
+	return
 }
 
 // Equal - Compares the data fields of input parameter TimeDto, 'tDto2',
-// to the data fields of the current TimeDto, 'tDto'. If all data fields
-// are equal, this method returns 'true'. Otherwise, the method returns
-// false.
+// to the data fields of the current TimeDto, 'tDto'. If the two sets of
+// data fields are equal in all respects, this method returns 'true'.
+// Otherwise, the method returns false.
+//
 func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.Equal() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.equalTimeDtos(tDto, &t2Dto, ePrefix)
+
+
+	/*
 	if tDto.Years != t2Dto.Years ||
 		tDto.Months != t2Dto.Months ||
 		tDto.Weeks != t2Dto.Weeks ||
@@ -209,6 +207,8 @@ func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 	}
 
 	return true
+
+	 */
 }
 
 // GetDateTime - Analyzes the current TimeDto instance and computes
@@ -397,19 +397,6 @@ func (tDto TimeDto) New(years, months, weeks, days, hours, minutes,
 	}
 
 	return t2Dto, nil
-
-	/*
-	err := t2Dto.SetTimeElements(years, months, weeks, days, hours, minutes,
-		seconds, milliseconds, microseconds,
-		nanoseconds)
-
-	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned by t2Dto.SetTimeElements(...)  Error='%v'", err.Error())
-	}
-
-	return t2Dto, nil
-
-	 */
 }
 
 // NewTimeElements - Creates and returns a new TimeDto using basic
@@ -442,18 +429,6 @@ func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
 	}
 
 	return t2Dto, nil
-
-	/*
-	err := t2Dto.SetTimeElements(years, months, 0, days, hours, minutes,
-		seconds, 0, 0, nanoseconds)
-
-	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned by t2Dto.SetTimeElements(...)  Error='%v'", err.Error())
-	}
-
-	return t2Dto, nil
-	*/
-
 }
 
 // NewAddTimeDtos - Creates a new TimeDto which adds the values of the two TimeDto's
@@ -528,23 +503,6 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 	}
 
 	return t2Dto, nil
-
-	/*
-	err := t2Dto.SetFromDateTime(dateTime)
-
-	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned from t2Dto.SetFromDateTimeComponents(dateTime). Error='%v'", err.Error())
-	}
-
-	err = t2Dto.IsValidDateTime()
-
-	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned by t2Dto.IsValidDateTime()! Error='%v'", err.Error())
-	}
-
-	return t2Dto, nil
-
-	 */
 }
 
 // NewFromDateTzDto - Creates and returns a new TimeDto instance based on
@@ -564,17 +522,6 @@ func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 	}
 
 	return tDto2, nil
-
-	/*
-	err := tDto2.SetFromDateTzDto(dTzDto)
-
-	if err != nil {
-		return TimeDto{}, fmt.Errorf(ePrefix+"Error returned by tDto2.SetFromDateTzDto(dTzDto). Error='%v'", err.Error())
-	}
-
-	return tDto2, nil
-
-	 */
 }
 
 // NormalizeTimeElements - Surveys the time elements of the current
@@ -682,109 +629,6 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 	tDtoUtil := timeDtoUtility{}
 
 	return tDtoUtil.normalizeDays(tDto, ePrefix)
-
-	/*
-	if tDto.Years == 0 && tDto.Months == 0 {
-		return false, nil
-	}
-
-	if tDto.Months < 0 {
-		return false, nil
-	}
-
-	t2Dto := tDto.CopyOut()
-
-	locUTC, err := time.LoadLocation(TZones.UTC())
-
-	if err != nil {
-		return false,
-			fmt.Errorf(ePrefix+
-				"Error returned by time.LoadLocation(TZones.UTC()). Error='%v'",
-				err.Error())
-	}
-
-	weekDays := (t2Dto.Weeks * 7) + t2Dto.WeekDays
-	dateDays := t2Dto.DateDays
-
-	if dateDays == weekDays {
-		weekDays = 0
-	} else if dateDays == 0 && weekDays != 0 {
-		dateDays = weekDays
-		weekDays = 0
-	} else if weekDays != 0 && dateDays != 0 &&
-		weekDays != dateDays {
-		dateDays += weekDays
-		weekDays = 0
-	}
-
-	// Date Days are already normalized!
-	if dateDays < 29 {
-		return false, nil
-	}
-
-	years := t2Dto.Years
-
-	months := t2Dto.Months
-
-	if months == 0 {
-		months = 1
-	}
-
-	dt1 := time.Date(years, time.Month(months), 0, 0, 0, 0, 0, locUTC)
-
-	dur := int64(dateDays) * DayNanoSeconds
-	dur += int64(t2Dto.Hours) * HourNanoSeconds
-	dur += int64(t2Dto.Minutes) * MinuteNanoSeconds
-	dur += int64(t2Dto.Seconds) * SecondNanoseconds
-	dur += int64(t2Dto.Milliseconds) * MilliSecondNanoseconds
-	dur += int64(t2Dto.Microseconds) * MicroSecondNanoseconds
-	dur += int64(t2Dto.Nanoseconds)
-
-	dateTime := dt1.Add(time.Duration(dur))
-
-	t2Dto.Empty()
-	t2Dto.Years = dateTime.Year()
-	t2Dto.Months = int(dateTime.Month())
-
-	err = t2Dto.allocateWeeksAndDays(dateTime.Day())
-
-	if err != nil {
-		return false, fmt.Errorf(ePrefix+
-			"Error returned by t2Dto.allocateWeeksAndDays(dateTime.Day()). "+
-			"Error='%v'", err.Error())
-	}
-
-	totSeconds := dateTime.Hour() * 3600
-	totSeconds += dateTime.Minute() * 60
-	totSeconds += dateTime.Second()
-
-	err = t2Dto.allocateSeconds(totSeconds)
-
-	if err != nil {
-		return false, fmt.Errorf(ePrefix+
-			"Error returned by t2Dto.allocateSeconds(totSeconds). "+
-			"Error='%v'", err.Error())
-	}
-
-	err = t2Dto.allocateTotalNanoseconds(dateTime.Nanosecond())
-
-	if err != nil {
-		return false, fmt.Errorf(ePrefix+
-			"Error returned by t2Dto.allocateTotalNanoseconds(dateTime.Nanosecond()). "+
-			"Error='%v'", err.Error())
-	}
-
-	err = t2Dto.IsValidDateTime()
-
-	if err != nil {
-		return false, fmt.Errorf(ePrefix+"Error returned by t2Dto.IsValidDateTime()! Error='%v'", err.Error())
-	}
-
-	tDto.CopyIn(t2Dto)
-
-	return true, nil
-
-	 */
 }
 
 // SetTimeElements - Sets the value of date fields for the current TimeDto instance
@@ -811,54 +655,6 @@ func (tDto *TimeDto) SetTimeElements(years, months, weeks, days, hours, minutes,
 		microseconds,
 		nanoseconds,
 		ePrefix)
-
-	/*
-	if years == 0 &&
-		months == 0 &&
-		weeks == 0 &&
-		days == 0 &&
-		hours == 0 &&
-		minutes == 0 &&
-		seconds == 0 &&
-		milliseconds == 0 &&
-		microseconds == 0 &&
-		nanoseconds == 0 {
-
-		return fmt.Errorf(ePrefix + "Error: All input parameters (years, months, weeks, days etc.) are ZERO Value!")
-	}
-
-	t1Dto := TimeDto{}
-
-	t1Dto.Years = years
-	t1Dto.Months = months
-	t1Dto.DateDays = (weeks * 7) + days
-
-	t1Dto.Hours = hours
-	t1Dto.Minutes = minutes
-	t1Dto.Seconds = seconds
-	t1Dto.Milliseconds = milliseconds
-	t1Dto.Microseconds = microseconds
-	t1Dto.Nanoseconds = nanoseconds
-
-	err := t1Dto.NormalizeTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by err := t1Dto.NormalizeTimeElements() "+
-			"Error='%v'", err.Error())
-	}
-
-	_, err = t1Dto.NormalizeDays()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by err := t1Dto.NormalizeDays() "+
-			"Error='%v'", err.Error())
-	}
-
-	tDto.CopyIn(t1Dto)
-
-	return nil
-
-	 */
 }
 
 // SetFromDateTime - Sets the current TimeDto instance to new
@@ -880,42 +676,6 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 	tDtoUtil := timeDtoUtility{}
 
 	return tDtoUtil.setFromDateTime(tDto, dateTime, ePrefix)
-
-/*
-	if dateTime.IsZero() {
-		return errors.New(ePrefix + "Error: Input Parameter 'dateTime' has a ZERO Value!")
-	}
-
-	tDto.Empty()
-	tDto.Years = dateTime.Year()
-	tDto.Months = int(dateTime.Month())
-	err := tDto.allocateWeeksAndDays(dateTime.Day())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"tDto.allocateWeeksAndDays(dTzDto.DateTime.Day()). Error= '%v'", err.Error())
-	}
-
-	tDto.Hours = dateTime.Hour()
-	tDto.Minutes = dateTime.Minute()
-	tDto.Seconds = dateTime.Second()
-
-	err = tDto.allocateTotalNanoseconds(dateTime.Nanosecond())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDto.allocateTotalNanoseconds(int64(dateTime.Nanosecond())). "+
-			"Error='%v'", err.Error())
-	}
-
-	err = tDto.IsValidDateTime()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDto.IsValidDateTime()! Error='%v'", err.Error())
-	}
-
-	return nil
-*/
-
 }
 
 // SetFromDateTzDto - Sets the data field values of the current TimeDto
@@ -932,44 +692,6 @@ func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 	tDtoUtil := timeDtoUtility{}
 
 	return tDtoUtil.setFromDateTzDto(tDto, dTzDto, ePrefix)
-
-	/*
-
-	if dTzDto.IsEmpty() {
-		return errors.New(ePrefix + "Error: Input parameter 'dTzDto' (DateTzDto) is EMPTY!")
-	}
-
-	if err := dTzDto.IsValid(); err != nil {
-		return fmt.Errorf(ePrefix+"Error: Input parameter 'dTzDto' (DateTzDto) is INVALID! Error='%v'", err.Error())
-	}
-
-	tDto.Empty()
-
-	tDto.Years = dTzDto.GetDateTimeValue().Year()
-	tDto.Months = int(dTzDto.GetDateTimeValue().Month())
-	err := tDto.allocateWeeksAndDays(dTzDto.GetDateTimeValue().Day())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"tDto.allocateWeeksAndDays(dTzDto.DateTime.Day()). Error= '%v'", err.Error())
-	}
-
-	tDto.Hours = dTzDto.GetDateTimeValue().Hour()
-	tDto.Minutes = dTzDto.GetDateTimeValue().Minute()
-	tDto.Seconds = dTzDto.GetDateTimeValue().Second()
-
-	if err := tDto.allocateTotalNanoseconds(dTzDto.GetDateTimeValue().Nanosecond()); err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by tDto.allocateTotalNanoseconds(dTzDto.GetDateTimeValue().Nanosecond()).\n"+
-			"Error='%v'", err.Error())
-	}
-
-	if err := tDto.IsValidDateTime(); err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDto.IsValidDateTime()! Error='%v'", err.Error())
-	}
-
-	return nil
-
-	 */
 }
 
 // allocateWeeksAndDays - This method receives a total number of

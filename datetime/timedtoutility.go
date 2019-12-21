@@ -472,6 +472,49 @@ func (tDtoUtil *timeDtoUtility) empty(
 	return
 }
 
+// Equal - Compares the data fields of TimeDto input parameters, 'tDto'
+// and 'tDto2'. If the data fields are equal in all respects,
+// this method returns 'true'.
+//
+func (tDtoUtil *timeDtoUtility) equalTimeDtos(
+	tDto *TimeDto,
+	t2Dto *TimeDto,
+	ePrefix string) bool {
+
+	tDtoUtil.lock.Lock()
+
+	defer tDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDtoUtility.equalTimeDtos() "
+
+	if tDto == nil {
+		panic(ePrefix +
+			"\nError: Input parameter 'tDto' is a 'nil' pointer!\n")
+	}
+	if t2Dto == nil {
+		panic(ePrefix +
+			"\nError: Input parameter 't2Dto' is a 'nil' pointer!\n")
+	}
+
+	if tDto.Years != t2Dto.Years ||
+		tDto.Months != t2Dto.Months ||
+		tDto.Weeks != t2Dto.Weeks ||
+		tDto.WeekDays != t2Dto.WeekDays ||
+		tDto.DateDays != t2Dto.DateDays ||
+		tDto.Hours != t2Dto.Hours ||
+		tDto.Minutes != t2Dto.Minutes ||
+		tDto.Seconds != t2Dto.Seconds ||
+		tDto.Milliseconds != t2Dto.Milliseconds ||
+		tDto.Microseconds != t2Dto.Microseconds ||
+		tDto.Nanoseconds != t2Dto.Nanoseconds ||
+		tDto.TotSubSecNanoseconds != t2Dto.TotSubSecNanoseconds ||
+		tDto.TotTimeNanoseconds != t2Dto.TotTimeNanoseconds {
+
+		return false
+	}
+
+	return true
+}
 
 // isEmpty - Returns 'true' if all data fields in the current
 // TimeDto instance are equal to zero or equal to their
