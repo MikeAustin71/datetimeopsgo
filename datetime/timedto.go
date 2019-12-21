@@ -2,7 +2,6 @@ package datetime
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -346,9 +345,16 @@ func (tDto TimeDto) New(years, months, weeks, days, hours, minutes,
 }
 
 // NewTimeElements - Creates and returns a new TimeDto using basic
-// time components as input parameters
-func (tDto TimeDto) NewTimeElements(years, months, days, hours, minutes,
-	seconds, nanoseconds int) (TimeDto, error) {
+// time components as input parameters.
+//
+func (tDto TimeDto) NewTimeElements(
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	nanoseconds int) (TimeDto, error) {
 
 	ePrefix := "TimeDto.NewTimeElements(...) "
 
@@ -476,85 +482,15 @@ func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 //
 func (tDto *TimeDto) NormalizeTimeElements() error {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
 	ePrefix := "TimeDto.NormalizeTimeElements() "
 
-	carry := tDto.Nanoseconds / 1000
-	tDto.Nanoseconds -= carry * 1000
+	tDtoUtil := timeDtoUtility{}
 
-	tDto.Microseconds += carry
-	carry = tDto.Microseconds / 1000
-	tDto.Microseconds -= carry * 1000
-
-	tDto.Milliseconds += carry
-	carry = tDto.Milliseconds / 1000
-	tDto.Milliseconds -= carry * 1000
-
-	tDto.Seconds += carry
-	carry = tDto.Seconds / 60
-	tDto.Seconds -= carry * 60
-
-	tDto.Minutes += carry
-	carry = tDto.Minutes / 60
-	tDto.Minutes -= carry * 60
-
-	tDto.Hours += carry
-	carry = tDto.Hours / 24
-	tDto.Hours -= carry * 24
-
-	weekDays := (tDto.Weeks * 7) + tDto.WeekDays
-	dateDays := tDto.DateDays
-
-	if dateDays == weekDays {
-		weekDays = 0
-	} else if dateDays == 0 && weekDays != 0 {
-		dateDays = weekDays
-	} else if weekDays != 0 && dateDays != 0 &&
-		weekDays != dateDays {
-		dateDays += weekDays
-	}
-
-	tDto.DateDays = dateDays
-
-	tDto.DateDays += carry
-
-	carry = tDto.Months / 12
-	tDto.Months -= carry * 12
-
-	tDto.Years += carry
-
-	err := tDto.allocateWeeksAndDays(tDto.DateDays)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDto.allocateWeeksAndDays(tDto.DateDays) "+
-			"tDto.DateDays='%v' Error='%v",
-			tDto.DateDays, err.Error())
-	}
-
-	totSeconds := tDto.Hours * 3600
-	totSeconds += tDto.Minutes * 60
-	totSeconds += tDto.Seconds
-
-	err = tDto.allocateSeconds(totSeconds)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDto.allocateSeconds(totSeconds) "+
-			"totSeconds='%v' Error='%v",
-			totSeconds, err.Error())
-	}
-
-	totSubNanoSecs := int(int64(tDto.Milliseconds) * MilliSecondNanoseconds)
-	totSubNanoSecs += int(int64(tDto.Microseconds) * MicroSecondNanoseconds)
-	totSubNanoSecs += tDto.Nanoseconds
-
-	err = tDto.allocateTotalNanoseconds(totSubNanoSecs)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDto.allocateTotalNanoseconds(totSubNanoSecs) "+
-			"totSubNanoSecs='%v' Error='%v",
-			totSubNanoSecs, err.Error())
-	}
-
-	return nil
+	return tDtoUtil.normalizeTimeElements(tDto, ePrefix)
 }
 
 // NormalizeDays - Attempts to normalize days. This handles cases
