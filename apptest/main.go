@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest031()
+	mainTest{}.mainTest033()
 
 }
 
@@ -18,6 +18,164 @@ type mainTest struct {
 	input  string
 	output string
 }
+
+
+func (mt mainTest) mainTest033() {
+
+	ePrefix := "mainTest033()"
+	title := fmt.Sprintf("       %v         ", ePrefix)
+	ln := strings.Repeat("-", len(title))
+	fmt.Println(ln)
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
+
+	locUSCentral, err := time.LoadLocation(dt.TZones.US.Central())
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(TZones.US.Central()). Error='%v'", err.Error())
+	}
+
+	locTokyo, err := time.LoadLocation(dt.TZones.Asia.Tokyo())
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(TZones.Asia.Tokyo()). Error='%v'", err.Error())
+		return
+	}
+
+	t4USCentral := time.Date(
+		2018,
+		time.Month(3),
+		06,
+		20,
+		02,
+		18,
+		792489279, locUSCentral)
+
+	t4AsiaTokyo := t4USCentral.In(locTokyo)
+
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	dTz, err := dt.DateTzDto{}.NewTz(
+		t4AsiaTokyo,
+		dt.TZones.US.Central(),
+		dt.TzConvertType.Relative(),
+		fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.NewTz(t4AsiaTokyo, TZones.US.Central(), fmtstr).\n" +
+			"Error='%v'\n",
+			err.Error())
+		return
+	}
+
+	if !t4USCentral.Equal(dTz.GetDateTimeValue()) {
+		fmt.Printf("Error: dTz Toyko to USA-Central\n" +
+			"Expected DateTime='%v'.\n" +
+			" Instead DateTime='%v'\n",
+			t4USCentral.Format(fmtstr), dTz.GetDateTimeValue().Format(fmtstr))
+		return
+	}
+
+	eTimeZoneDef, err := dt.TimeZoneDefDto{}.New(t4USCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDefDto{}.New(t4USCentral)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !eTimeZoneDef.Equal(dTz.GetTimeZone()) {
+		fmt.Printf("Expected dTz.GetTimeZone().LocationName='%v'.\n"+
+			"Instead, dTz.GetTimeZone().LocationName='%v'\n",
+			eTimeZoneDef.GetLocationName(), dTz.GetTimeZoneName())
+		return
+	}
+
+	tDto, err := dt.TimeDto{}.NewFromDateTime(t4USCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeDto{}.NewFromDateTime(t4USCentral)\n"+
+			"t4USCentral='%v'\nError='%v'\n",
+			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr), err.Error())
+		return
+	}
+
+	dTzTimeComponents := dTz.GetTimeComponents()
+
+	fmt.Println("tDto Comparison to dTz ")
+	fmt.Printf("               Years: %v  -  %v\n", tDto.Years, dTzTimeComponents.Years )
+	fmt.Printf("              Months: %v  -  %v\n", tDto.Months, dTzTimeComponents.Months )
+	fmt.Printf("                Days: %v  -  %v\n", tDto.DateDays, dTzTimeComponents.DateDays )
+	fmt.Printf("               Hours: %v  -  %v\n", tDto.Hours, dTzTimeComponents.Hours )
+	fmt.Printf("             Minutes: %v  -  %v\n", tDto.Minutes, dTzTimeComponents.Minutes )
+	fmt.Printf("             Seconds: %v  -  %v\n", tDto.Seconds, dTzTimeComponents.Seconds )
+	fmt.Printf("        Milliseconds: %v  -  %v\n", tDto.Milliseconds, dTzTimeComponents.Milliseconds )
+	fmt.Printf("        Microseconds: %v  -  %v\n", tDto.Microseconds, dTzTimeComponents.Microseconds )
+	fmt.Printf("         Nanoseconds: %v  -  %v\n", tDto.Nanoseconds, dTzTimeComponents.Nanoseconds )
+	fmt.Printf("TotSubSecNanoseconds: %v  -  %v\n", tDto.TotSubSecNanoseconds, dTzTimeComponents.TotSubSecNanoseconds )
+	fmt.Println()
+	fmt.Printf("                dTz Date Time: %v \n", dTz.GetDateTimeValue().Format(fmtstr))
+
+	dTzTimeDtoDateTime, err := dTzTimeComponents.GetDateTime(dt.TZones.US.Central())
+
+	if err != nil {
+		fmt.Printf("Error returned by dTzTimeComponents.GetDateTime(dt.TZones.US.Central()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("dTz Time Components Date Time: %v\n", dTzTimeDtoDateTime.Format(fmtstr))
+
+	tDtoDateTime, err := tDto.GetDateTime(dt.TZones.US.Central())
+
+	if err != nil {
+		fmt.Printf("Error returned by tDto.GetDateTime(dt.TZones.US.Central()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("             tDto USA Central: %v \n", tDtoDateTime.Format(fmtstr))
+	fmt.Println()
+
+	expectedDt, err := tDto.GetDateTime(dt.TZones.US.Central())
+
+	if err != nil {
+		fmt.Printf("Error returned from tDto.GetDateTime(TZones.US.Central()). "+
+			"Error='%v'", err.Error())
+		return
+	}
+
+	actualDt, err := dTzTimeComponents.GetDateTime(dt.TZones.US.Central())
+
+	if err != nil {
+		fmt.Printf("Error returned from dTz.GetTimeComponents().GetDateTime(TZones.US.Central()).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !tDto.Equal(dTz.GetTimeComponents()) {
+		fmt.Printf("Expected dTz.Time (TimeDto) == '%v'\n" +
+			"Instead, dTz.Time (TimeDto) == '%v'\n",
+			expectedDt.Format(dt.FmtDateTimeYrMDayFmtStr), actualDt.Format(dt.FmtDateTimeYrMDayFmtStr))
+		return
+	}
+
+	if dt.FmtDateTimeYrMDayFmtStr != dTz.GetDateTimeFmt() {
+		fmt.Printf("Expected dTz.GetDateTimeFmt()='%v' Instead, dTz.GetDateTimeFmt()='%v' ",
+			dt.FmtDateTimeYrMDayFmtStr, dTz.GetDateTimeFmt())
+		return
+	}
+
+	title = fmt.Sprintf("       %v         ", "!!! Success !!!")
+	ln = strings.Repeat("-", len(title))
+	fmt.Println(ln)
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
+
+}
+
 
 func (mt mainTest) mainTest032() {
 

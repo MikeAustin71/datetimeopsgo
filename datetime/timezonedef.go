@@ -47,12 +47,12 @@ type TimeZoneDefDto struct {
 	militaryTimeZoneLetter string         // Single Alphabetic Character identifying a Military Time Zone.
 	tagDescription         string         // Unused - Available for classification, labeling or description by user.
 	timeZoneType           TimeZoneType   // Enumeration of Time Zone Type:
-	                                      //  TzType.None()
-	                                      //  TzType.Iana()
-	                                      //  TzType.Military()
-	                                      //  TzType.Local()
-	                                      //  TzType.UtcOffset()
-	lock                   sync.Mutex     // Used for implementing thread safe operations.
+	//  TzType.None()
+	//  TzType.Iana()
+	//  TzType.Military()
+	//  TzType.Local()
+	//  TzType.UtcOffset()
+	lock sync.Mutex // Used for implementing thread safe operations.
 }
 
 // CopyIn - Copies an incoming TimeZoneDefDto into the
@@ -544,16 +544,8 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 	err := tzDefUtil.setFromDateTime(&tzDef2, dateTime, ePrefix)
 
 	if err != nil {
-		return TimeZoneDefDto{},err
+		return TimeZoneDefDto{}, err
 	}
-
-	/*
-	if !tzDefUtil.isValidTimeZoneDefDto(&tzDef2) {
-		return TimeZoneDefDto{},
-			fmt.Errorf(ePrefix +
-				"\nNew tzDef2 is invalid!\n")
-	}
-	*/
 
 	return tzDef2, nil
 }
@@ -578,7 +570,7 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	err = tzDefUtil.setFromDateTime( &tzDefDto, time.Now().In(tzLocPtr), ePrefix)
+	err = tzDefUtil.setFromDateTime(&tzDefDto, time.Now().In(tzLocPtr), ePrefix)
 
 	if err != nil {
 		tzDefDto = TimeZoneDefDto{}
@@ -621,24 +613,20 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 
 	tzDefUtil := timeZoneDefUtility{}
 
-
-
 	tzLoc, err2 = time.LoadLocation(timeZoneName)
 
 	if err2 != nil {
-		err = fmt.Errorf(ePrefix +
-			"\nError returned by time.LoadLocation(timeZoneName).\n" +
-			"timeZoneName='%v'\n" +
+		err = fmt.Errorf(ePrefix+
+			"\nError returned by time.LoadLocation(timeZoneName).\n"+
+			"timeZoneName='%v'\n"+
 			"Error='%v'\n", timeZoneName, err2.Error())
 		return tzDefDto, err
 	}
-
 
 	err = tzDefUtil.setFromDateTime(&tzDefDto, time.Now().In(tzLoc), ePrefix)
 
 	return tzDefDto, err
 }
-
 
 // SetTagDescription - Sets TimeZoneDefDto private member variable
 // TimeZoneDefDto.tagDescription to the value passed in 'tagDesc'.

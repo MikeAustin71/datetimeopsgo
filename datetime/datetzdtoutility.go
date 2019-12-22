@@ -9,28 +9,28 @@ import (
 )
 
 type dateTzDtoUtility struct {
- 	input    string
- 	output   string
- 	lock     sync.Mutex
- }
+	input  string
+	output string
+	lock   sync.Mutex
+}
 
- // addDateTime - Adds date time components to the date time value of the
+// addDateTime - Adds date time components to the date time value of the
 // current DateTzDto instance. The updated date time value is returned to
 // the calling function as a new DateTzDto instance.
 //
- func (dTzUtil *dateTzDtoUtility) addDateTime(
+func (dTzUtil *dateTzDtoUtility) addDateTime(
 	dTz *DateTzDto,
-	 years,
-	 months,
-	 days,
-	 hours,
-	 minutes,
-	 seconds,
-	 milliseconds,
-	 microseconds,
-	 nanoseconds int,
-	 dateTimeFormatStr,
-	 ePrefix string) (DateTzDto, error) {
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
+	dateTimeFormatStr,
+	ePrefix string) (DateTzDto, error) {
 
 	dTzUtil.lock.Lock()
 
@@ -40,8 +40,8 @@ type dateTzDtoUtility struct {
 
 	if dTz == nil {
 		return DateTzDto{},
-				errors.New(ePrefix +
-					"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+			errors.New(ePrefix +
+				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
 	newDate := dTz.dateTimeValue.AddDate(years, months, 0)
@@ -97,7 +97,7 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 
 	dtz2 := DateTzDto{}
 
-	err := dTzUtil2.setFromDateTime(&dtz2 ,newDateTime, dateTimeFmtStr, ePrefix)
+	err := dTzUtil2.setFromDateTime(&dtz2, newDateTime, dateTimeFmtStr, ePrefix)
 
 	if err != nil {
 		return DateTzDto{}, err
@@ -141,10 +141,10 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	_, err = tDto.NormalizeDays()
 
 	if err != nil {
-		return  DateTzDto{},
+		return DateTzDto{},
 			fmt.Errorf(ePrefix+
-			"\nError returned by tDto.NormalizeDays().\n"+
-			"\nError='%v'\n", err.Error())
+				"\nError returned by tDto.NormalizeDays().\n"+
+				"\nError='%v'\n", err.Error())
 	}
 
 	tDto.ConvertToNegativeValues()
@@ -166,7 +166,7 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	dtz2 := DateTzDto{}
 	dTzUtil2 := dateTzDtoUtility{}
 
-		err = dTzUtil2.setFromDateTime(&dtz2,
+	err = dTzUtil2.setFromDateTime(&dtz2,
 		dt2,
 		dTz.dateTimeFmt,
 		ePrefix)
@@ -192,7 +192,7 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 
 	defer dTzUtil.lock.Unlock()
 
-		ePrefix += "dateTzDtoUtility.addPlusTimeDto() "
+	ePrefix += "dateTzDtoUtility.addPlusTimeDto() "
 
 	if dTz == nil {
 		return DateTzDto{},
@@ -215,7 +215,7 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 
 	if err != nil {
 		return DateTzDto{},
-		fmt.Errorf(ePrefix+
+			fmt.Errorf(ePrefix+
 				"\nError returned by tDto.NormalizeDays().\n"+
 				"\nError='%v'\n", err.Error())
 	}
@@ -257,15 +257,15 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 // The value of the input parameter 'dTz' (DateTzDto) instance is NOT altered.
 //
 func (dTzUtil *dateTzDtoUtility) addTime(
-				dTz *DateTzDto,
-				hours,
-				minutes,
-				seconds,
-				milliseconds,
-				microseconds,
-				nanoseconds int,
-				dateTimeFormatStr,
-				ePrefix string) (DateTzDto, error) {
+	dTz *DateTzDto,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
+	dateTimeFormatStr,
+	ePrefix string) (DateTzDto, error) {
 
 	dTzUtil.lock.Lock()
 
@@ -286,7 +286,7 @@ func (dTzUtil *dateTzDtoUtility) addTime(
 
 	dtz2 := DateTzDto{}
 
-	err := dTzUtil2.setFromDateTime( &dtz2, newDateTime, dateTimeFormatStr, ePrefix)
+	err := dTzUtil2.setFromDateTime(&dtz2, newDateTime, dateTimeFormatStr, ePrefix)
 
 	if err != nil {
 		return DateTzDto{}, err
@@ -301,7 +301,7 @@ func (dTzUtil *dateTzDtoUtility) addTime(
 // 'baseDtz'.
 //
 func (dTzUtil *dateTzDtoUtility) copyIn(
-	baseDtz ,
+	baseDtz,
 	incomingDtz *DateTzDto) {
 
 	dTzUtil.lock.Lock()
@@ -338,7 +338,7 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 	dTzUtil.lock.Lock()
 	defer dTzUtil.lock.Unlock()
 
-	 dtz2 := DateTzDto{}
+	dtz2 := DateTzDto{}
 
 	if dTz == nil {
 		return dtz2
@@ -348,15 +348,15 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 	dtz2.timeComponents = dTz.timeComponents.CopyOut()
 	dtz2.dateTimeFmt = dTz.dateTimeFmt
 
-	 if dTz.dateTimeValue.IsZero() {
-		 dtz2.timeZone = TimeZoneDefDto{}
-		 dtz2.dateTimeValue = time.Time{}
-	 } else {
-		 dtz2.dateTimeValue = dTz.dateTimeValue
-		 dtz2.timeZone = dTz.timeZone.CopyOut()
-	 }
+	if dTz.dateTimeValue.IsZero() {
+		dtz2.timeZone = TimeZoneDefDto{}
+		dtz2.dateTimeValue = time.Time{}
+	} else {
+		dtz2.dateTimeValue = dTz.dateTimeValue
+		dtz2.timeZone = dTz.timeZone.CopyOut()
+	}
 
-	 return dtz2
+	return dtz2
 }
 
 // empty - Receives a pointer to a type 'DateTzDto' and
@@ -386,7 +386,7 @@ func (dTzUtil *dateTzDtoUtility) empty(dTz *DateTzDto) {
 // values.
 //
 func (dTzUtil *dateTzDtoUtility) isEmptyDateTzDto(
-		dTz *DateTzDto) bool {
+	dTz *DateTzDto) bool {
 
 	dTzUtil.lock.Lock()
 
@@ -413,8 +413,8 @@ func (dTzUtil *dateTzDtoUtility) isEmptyDateTzDto(
 // an error is returned.
 //
 func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
-		dTz *DateTzDto,
-		ePrefix string) error {
+	dTz *DateTzDto,
+	ePrefix string) error {
 
 	dTzUtil.lock.Lock()
 
@@ -446,7 +446,7 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 
 	if err := dTz.timeComponents.IsValid(); err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError: dTz.timeComponents is INVALID.\n" +
+			"\nError: dTz.timeComponents is INVALID.\n"+
 			"Error='%v'\n", err.Error())
 	}
 
@@ -462,10 +462,12 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 // for implementing a default date time format string.
 //
 func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
-		dateTimeFmtStr string) string {
+	dateTimeFmtStr string) string {
 
 	dTzUtil.lock.Lock()
 	defer dTzUtil.lock.Unlock()
+
+	dateTimeFmtStr = strings.TrimLeft(strings.TrimRight(dateTimeFmtStr, " "), " ")
 
 	if len(dateTimeFmtStr) == 0 {
 		return FmtDateTimeYrMDayFmtStr
@@ -473,28 +475,6 @@ func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
 
 	return dateTimeFmtStr
 }
-
-// preProcessTimeZoneLocation - Provides a method for implementing
-// standardized processing of time zone location strings.
-func (dTzUtil *dateTzDtoUtility) preProcessTimeZoneLocation(
-		timeZoneLocation string) string {
-
-	dTzUtil.lock.Lock()
-	defer dTzUtil.lock.Unlock()
-
-	timeZoneLocation = strings.TrimLeft(strings.TrimRight(timeZoneLocation, " "), " ")
-
-	if len(timeZoneLocation) == 0 {
-		return TZones.Other.UTC()
-	}
-
-	if strings.ToLower(timeZoneLocation) == "local" {
-		return "Local"
-	}
-
-	return timeZoneLocation
-}
-
 
 // setFromDateTime - Sets the values for DateTzDto fields encapsulated
 // in input parameter 'dTz'. The field values will be set
@@ -526,26 +506,25 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 
 	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
-	// TODO - Don't Call New
-	tDto, err := TimeDto{}.NewFromDateTime(dateTime)
+	tDto := TimeDto{}
+
+	tDtoUtil := timeDtoUtility{}
+
+	err := tDtoUtil.setFromDateTime(&tDto, dateTime, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned from TimeDto{}.NewFromDateTime(dateTime).\n"+
-			"dateTime='%v'\nError='%v'\n",
-			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return err
 	}
 
-	// TODO - Don't Call New
-	timeZone, err := TimeZoneDefDto{}.New(dateTime)
+	timeZone := TimeZoneDefDto{}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setFromDateTime(&timeZone, dateTime, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned from TimeZoneDefDto{}.New(dateTime).\n"+
-			"dateTime='%v'\nError='%v'\n",
-			dateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return err
 	}
-
 
 	dTzUtil2.empty(dTz)
 
@@ -603,7 +582,9 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	fmtStr := dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
-	tzl := dTzUtil2.preProcessTimeZoneLocation(timeZoneLocation)
+	dtUtil := DTimeUtility{}
+
+	tzl := dtUtil.PreProcessTimeZoneLocation(timeZoneLocation)
 
 	_, err = time.LoadLocation(tzl)
 
@@ -614,7 +595,9 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 			tzl, timeZoneLocation, err.Error())
 	}
 
-	dt, err := tDto.GetDateTime(tzl)
+	var dt time.Time
+
+	dt, err = tDto.GetDateTime(tzl)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -623,13 +606,14 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 			timeZoneLocation, tzl, err.Error())
 	}
 
-	timeZone, err := TimeZoneDefDto{}.New(dt)
+	timeZone := TimeZoneDefDto{}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setFromDateTime(&timeZone, dt, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"\nError returned by TimeZoneDefDto{}.New(dt).\n"+
-			"dt='%v'\nError=%v\n",
-			dt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return err
 	}
 
 	dTzUtil2.empty(dTz)
@@ -642,7 +626,6 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 	return nil
 }
 
-
 // setFromDateTimeElements - Sets the values of input parameter
 // 'dTz' (type DateTzDto). 'dTz' data fields are set based on
 // input parameters consisting of date time elements,
@@ -652,17 +635,17 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 // second and nanosecond.
 //
 func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
-			dTz *DateTzDto,
-			year,
-			month,
-			day,
-			hour,
-			minute,
-			second,
-			nanosecond int,
-			timeZoneLocation,
-			dateTimeFmtStr,
-			ePrefix string) error {
+	dTz *DateTzDto,
+	year,
+	month,
+	day,
+	hour,
+	minute,
+	second,
+	nanosecond int,
+	timeZoneLocation,
+	dateTimeFmtStr,
+	ePrefix string) error {
 
 	dTzUtil.lock.Lock()
 
@@ -688,39 +671,41 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
-	timeZoneLocation = dTzUtil2.preProcessTimeZoneLocation(timeZoneLocation)
+	dtUtil := DTimeUtility{}
+
+	timeZoneLocation = dtUtil.PreProcessTimeZoneLocation(timeZoneLocation)
 
 	_, err = time.LoadLocation(timeZoneLocation)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned by time.LoadLocation(tzl).\n" +
+			"\nError returned by time.LoadLocation(tzl).\n"+
 			"INVALID 'timeZoneLocation'!\n"+
-			"tzl='%v'\ntimeZoneLocation='%v'\n" +
+			"tzl='%v'\ntimeZoneLocation='%v'\n"+
 			"Error='%v'\n",
 			timeZoneLocation, timeZoneLocation, err.Error())
 	}
 
-	dt, err := tDto.GetDateTime(timeZoneLocation)
+	var dt time.Time
+
+	dt, err = tDto.GetDateTime(timeZoneLocation)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError returned by tDto.GetDateTime(tzl).\n"+
-			"\ntimeZoneLocation='%v'\ntzl='%v'\n" +
+			"\ntimeZoneLocation='%v'\ntzl='%v'\n"+
 			"Error='%v'\n",
 			timeZoneLocation, timeZoneLocation, err.Error())
 	}
 
-	timeZone, err := TimeZoneDefDto{}.New(dt)
+	timeZone := TimeZoneDefDto{}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setFromDateTime(&timeZone, dt, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by TimeZoneDefDto{}.New(dt).\n"+
-			"tzl='%v'\ntimeZonelocation='%v'\ndt='%v'\n" +
-			"Error='%v'\n",
-			timeZoneLocation,
-			timeZoneLocation,
-			dt.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return err
 	}
 
 	dTzUtil2.empty(dTz)
@@ -733,19 +718,18 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 	return nil
 }
 
-
-// setFromTimeTz - Sets the time values for input parameter 'dTz' 
+// setFromTimeTz - Sets the time values for input parameter 'dTz'
 // (type DateTzDto). The new values will be  based on input parameters
 // 'dateTime', 'timeZoneLocation' and a date time format string,
 // 'dateTimeFmtStr'.
 //
 func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
-			dTz *DateTzDto,
-			dateTime time.Time,
-			timeZoneLocationName string,
-			timeZoneConversionType TimeZoneConversionType,
-			dateTimeFmtStr,
-			ePrefix string) error {
+	dTz *DateTzDto,
+	dateTime time.Time,
+	timeZoneLocationName string,
+	timeZoneConversionType TimeZoneConversionType,
+	dateTimeFmtStr,
+	ePrefix string) error {
 
 	dTzUtil.lock.Lock()
 
@@ -767,7 +751,9 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	err := tzDefUtil.setFromTimeZoneName(&tZoneDefDto, timeZoneLocationName, ePrefix )
+	var err error
+
+	err = tzDefUtil.setFromTimeZoneName(&tZoneDefDto, timeZoneLocationName, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -781,11 +767,11 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 	if timeZoneConversionType == TzConvertType.Absolute() {
 		// FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
 		dtUtil := DTimeUtility{}
-		targetDateTime, err = dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime,tZoneDefDto)
+		targetDateTime, err = dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime, tZoneDefDto)
 
 		if err != nil {
-			return fmt.Errorf(ePrefix +
-				"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime,tZoneDefDto)\n" +
+			return fmt.Errorf(ePrefix+
+				"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime,tZoneDefDto)\n"+
 				"dateTime='%v'\ntZoneDefDto='%v'\nError='%v'\n",
 				dateTime.Format(FmtDateTimeTzNanoYMD), tZoneDefDto.GetLocationName(), err.Error())
 		}
@@ -795,30 +781,14 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 		targetDateTime = dateTime.In(tZoneDefDto.GetLocationPtr())
 	}
 
-	/*
-	timeZoneLocationName = dTzUtil2.preProcessTimeZoneLocation(timeZoneLocationName)
+	var tDto TimeDto
 
-	tLoc, err := time.LoadLocation(timeZoneLocationName)
+	tDtoUtil := timeDtoUtility{}
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nINVALID timeZoneLocationName. Error returned by time.LoadLocation(timeZoneLocationName)\n"+
-			"timeZoneLocationName='%v'\ntzl='%v'\nError='%v'\n",
-			timeZoneLocationName, timeZoneLocationName, err.Error())
-	}
-
-	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
-
-	targetDateTime := dateTime.In(tLoc)
-*/
-
-	tDto, err := TimeDto{}.NewFromDateTime(targetDateTime)
+	err =tDtoUtil.setFromDateTime(&tDto, targetDateTime, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned from TimeDto{}.NewFromDateTime(targetDateTime).\n"+
-			"targetDateTime='%v'\nError='%v'\n",
-			targetDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return  err
 	}
 
 	dTzUtil2 := dateTzDtoUtility{}
@@ -840,14 +810,14 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 // TimeDto instance.
 //
 func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
-			dTz *DateTzDto,
-			tDto TimeDto, 
-			timeZoneLocation,
-			dateTimeFmtStr,
-			ePrefix string) error {
+	dTz *DateTzDto,
+	tDto TimeDto,
+	timeZoneLocation,
+	dateTimeFmtStr,
+	ePrefix string) error {
 
 	dTzUtil.lock.Lock()
-	
+
 	defer dTzUtil.lock.Unlock()
 
 	if dTz == nil {
@@ -864,7 +834,9 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 
 	t2Dto := tDto.CopyOut()
 
-	err := t2Dto.NormalizeTimeElements()
+	var err error
+
+	err = t2Dto.NormalizeTimeElements()
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -880,21 +852,25 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 			err.Error())
 	}
 
-	dTzUtil2 := dateTzDtoUtility{}
+	dtUtil := DTimeUtility{}
 
-	timeZoneLocation = dTzUtil2.preProcessTimeZoneLocation(timeZoneLocation)
+	timeZoneLocation = dtUtil.PreProcessTimeZoneLocation(timeZoneLocation)
 
 	_, err = time.LoadLocation(timeZoneLocation)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError returned by time.LoadLocation(timeZoneLocation).\n"+
-			"timeZoneLocation='%v'\nError='%v'\n",  timeZoneLocation, err.Error())
+			"timeZoneLocation='%v'\nError='%v'\n", timeZoneLocation, err.Error())
 	}
+
+	dTzUtil2 := dateTzDtoUtility{}
 
 	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
-	dateTime, err := tDto.GetDateTime(timeZoneLocation)
+	var dateTime time.Time
+
+	dateTime, err = tDto.GetDateTime(timeZoneLocation)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -903,13 +879,14 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 			timeZoneLocation, err.Error())
 	}
 
-	timeZoneDef, err := TimeZoneDefDto{}.New(dateTime)
+	timeZoneDef := TimeZoneDefDto{}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setFromDateTime(&timeZoneDef, dateTime, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by TimeZoneDefDto{}.New(dateTime).\n" +
-			"dateTime='%v'\nError='%v'\n",
-			dateTime.Format(FmtDateTimeYrMDayFmtStr) , err.Error())
+		return err
 	}
 
 	dTzUtil2.empty(dTz)

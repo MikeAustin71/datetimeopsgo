@@ -3356,9 +3356,9 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 
 	ePrefix := "DateTzDto.SetNewTimeZone() "
 
-	dTzUtil := dateTzDtoUtility{}
+	dtUtil := DTimeUtility{}
 
-	tzl := dTzUtil.preProcessTimeZoneLocation(newTimeZoneLocation)
+	tzl := dtUtil.PreProcessTimeZoneLocation(newTimeZoneLocation)
 
 	loc, err := time.LoadLocation(tzl)
 
@@ -3372,6 +3372,8 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 	newDateTime := dtz.dateTimeValue.In(loc)
 
 	newFmtStr := dtz.dateTimeFmt
+
+	dTzUtil := dateTzDtoUtility{}
 
 	err = dTzUtil.setFromDateTime(dtz, newDateTime, newFmtStr, ePrefix)
 
