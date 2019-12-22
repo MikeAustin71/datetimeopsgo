@@ -542,8 +542,8 @@ func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 
 	tz := tzu.TimeIn.GetTimeZone()
 
-	if tz.IsValid() {
-		t.Error("Expected tzu.TimeInZone.IsValid()=='false'.  Instead, the result was 'true'!")
+	if err := tz.IsValid(); err == nil {
+		t.Error("Expected tzu.TimeInZone.IsValid() to yield an error.  Instead, NO error was returned!\n" )
 	}
 
 }

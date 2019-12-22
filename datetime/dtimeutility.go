@@ -66,10 +66,12 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneDtoConversion(
 				"\nError: Input parameter 'dateTime' is zero!")
 	}
 
-	if !timeZoneDefDto.IsValid() {
+
+	if err := timeZoneDefDto.IsValid(); err != nil {
 		return time.Time{},
-			errors.New(ePrefix +
-				"Input parameter 'timeZoneDefDto' is Invalid!\n")
+			fmt.Errorf(ePrefix +
+				"Input parameter 'timeZoneDefDto' is Invalid!\n" +
+				"Error='%v'\n", err.Error())
 	}
 
 	return time.Date(dateTime.Year(),

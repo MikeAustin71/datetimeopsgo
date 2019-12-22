@@ -407,47 +407,67 @@ func (tzDefUtil *timeZoneDefUtility) isEmpty(
 // instance is valid.  Otherwise, it returns 'false'.
 //
 func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
-	tzdef *TimeZoneDefDto) bool {
+	tzdef *TimeZoneDefDto,
+	ePrefix string) error {
 
 	tzDefUtil.lock.Lock()
 
 	tzDefUtil.lock.Unlock()
 
+	ePrefix += "timeZoneDefUtility.isValidTimeZoneDefDto() "
+
 	if tzdef == nil {
-		panic("timeZoneDefUtility.isValidTimeZoneDefDto() ")
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'tzdef' is a 'nil' pointer!\n")
 	}
 
 	tzDefUtil2 := timeZoneDefUtility{}
 
 	if tzDefUtil2.isEmpty(tzdef) {
-		return false
+		return errors.New(ePrefix +
+			"\nError: This TimeZoneDefDto instance is empty!\n")
 	}
 
 	if strings.TrimLeft(strings.TrimRight(tzdef.locationName, " "), " ") == "" {
-		return false
+		return errors.New(ePrefix +
+			"\nError: tzdef.locationName is an empty string!\n")
 	}
 
 	if tzdef.location.String() != tzdef.locationName {
-		return false
+		return fmt.Errorf(ePrefix +
+			"\nError: The Location Pointer is NOT equal to the Location Name!\n" +
+			"Location Pointer String='%v'\n" +
+			"Location Name = '%v'\n",
+			tzdef.location.String() , tzdef.locationName)
 	}
 
 	loc, err := time.LoadLocation(tzdef.locationName)
 
 	if err != nil {
-		return false
+		return fmt.Errorf(ePrefix +
+			"\nError: time.LoadLocation(tzdef.locationName) Failed!\n" +
+			"tzdef.locationName='%v'\n" +
+			"Returned Error='%v'\n", tzdef.locationName, err.Error())
 	}
 
 	if loc.String() != tzdef.location.String() {
-		return false
+		return fmt.Errorf(ePrefix +
+			"\nError: LoadLocation Pointer string NOT equal to tzdef.location.String() !\n" +
+			"tzdef.location.String()='%v'\n" +
+			"loc.String()='%v'\n", tzdef.location.String(), loc.String())
 	}
 
 	if tzdef.timeZoneType == TzType.Military() &&
 		(tzdef.militaryTimeZoneLetter == "" ||
 			tzdef.militaryTimeZoneName == "") {
-		return false
+		return fmt.Errorf(ePrefix +
+			"\nError: This time zone is classified as a 'Military' Time Zone.\n" +
+			"However, one or both of the Military Time Zone name strings is empty.\n" +
+			"tzdef.militaryTimeZoneLetter='%v'\n" +
+			"tzdef.militaryTimeZoneName='%v'\n", tzdef.militaryTimeZoneLetter ,tzdef.militaryTimeZoneName)
 	}
 
-	return true
+	return nil
 }
 
 // isValidFromDateTime - Uses a time.Time input parameter, 'dateTime' to

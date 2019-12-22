@@ -458,18 +458,20 @@ func (tzdef *TimeZoneDefDto) IsEmpty() bool {
 // IsValid - Analyzes the current TimeZoneDefDto instance
 // to determine validity.
 //
-// This method returns 'true' if the TimeZoneDefDto is
-// valid.  Otherwise, it returns 'false'.
+// This method returns an error if the TimeZoneDefDto instance
+// is INVALID.  Otherwise, it returns 'nil'.
 //
-func (tzdef *TimeZoneDefDto) IsValid() bool {
+func (tzdef *TimeZoneDefDto) IsValid() error {
 
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
 
+	ePrefix := "TimeZoneDefDto.IsValid() "
+
 	tzDefUtil := timeZoneDefUtility{}
 
-	return tzDefUtil.isValidTimeZoneDefDto(tzdef)
+	return tzDefUtil.isValidTimeZoneDefDto(tzdef, ePrefix)
 }
 
 // IsValidFromDateTime - Uses a time.Time input parameter, 'dateTime' to
