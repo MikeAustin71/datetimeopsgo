@@ -621,57 +621,58 @@ func (tzDto TimeZoneDto) ConvertTz(tIn time.Time, targetTz, dateTimeFmtStr strin
 	ePrefix := "TimeZoneDto.ConvertTz() "
 	var err error
 
-	tzuOut := TimeZoneDto{}
+	tzDtoOut := TimeZoneDto{}
 
-	if isValidTz, _, _ := tzDto.IsValidTimeZone(targetTz); !isValidTz {
-		return tzuOut, errors.New(fmt.Sprintf("%v\nError: targetTz is INVALID!!\n" +
+	// TODO - Fix this. Can't use IsValidTimeZone
+	if isValidTz, _ := tzDto.IsValidTimeZone(targetTz); !isValidTz {
+		return tzDtoOut, errors.New(fmt.Sprintf("%v\nError: targetTz is INVALID!!\n" +
 			"Input Time Zone == %v\n", ePrefix, targetTz))
 	}
 
 	if tIn.IsZero() {
-		return tzuOut, errors.New(ePrefix + "\nError: Input parameter time, 'tIn' is ZERO and INVALID\n")
+		return tzDtoOut, errors.New(ePrefix + "\nError: Input parameter time, 'tIn' is ZERO and INVALID\n")
 	}
 
 	tzOut, err := time.LoadLocation(targetTz)
 
 	if err != nil {
-		return tzuOut, fmt.Errorf(ePrefix + "\nError Loading Target IANA Time Zone\n" +
+		return tzDtoOut, fmt.Errorf(ePrefix + "\nError Loading Target IANA Time Zone\n" +
 			"targetTz='%v'\n Errors: %v\n", targetTz, err.Error())
 	}
 
-	tzuOut.SetDateTimeFormatStr(dateTimeFmtStr)
+	tzDtoOut.SetDateTimeFormatStr(dateTimeFmtStr)
 
-	err = tzuOut.setTimeIn(tIn)
+	err = tzDtoOut.setTimeIn(tIn)
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by tzuOut.setTimeIn(tIn).\nError='%v'\n", err.Error())
+			"\nError returned by tzDtoOut.setTimeIn(tIn).\nError='%v'\n", err.Error())
 	}
 
-	err = tzuOut.setTimeOut(tIn.In(tzOut))
+	err = tzDtoOut.setTimeOut(tIn.In(tzOut))
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by tzuOut.setTimeOut(tIn.In(tzOut)).\n" +
+			"\nError returned by tzDtoOut.setTimeOut(tIn.In(tzOut)).\n" +
 			"Error='%v'\n", err.Error())
 	}
 
-	err = tzuOut.setUTCTime(tIn)
+	err = tzDtoOut.setUTCTime(tIn)
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by tzuOut.setUTCTime(tIn).\nError='%v'\n", err.Error())
+			"\nError returned by tzDtoOut.setUTCTime(tIn).\nError='%v'\n", err.Error())
 	}
 
-	err = tzuOut.setLocalTime(tIn)
+	err = tzDtoOut.setLocalTime(tIn)
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by tzuOut.SetLocalTime(tIn).\n" +
+			"\nError returned by tzDtoOut.SetLocalTime(tIn).\n" +
 			"Error='%v'\n", err.Error())
 	}
 
-	return tzuOut, nil
+	return tzDtoOut, nil
 }
 
 // copyOut - Creates and returns a deep copy of the
@@ -768,19 +769,19 @@ func (tzDto *TimeZoneDto) CopyIn(tzdto2 TimeZoneDto) {
 // Input Parameter
 // ===============
 //
-// tzdto2		TimeZoneDto - This input parameter TimeZoneDto
-//												is compared to the current TimeZoneDto
-//												to determine if they are equivalent.
+// tzdto2  TimeZoneDto - This input parameter TimeZoneDto
+//                       is compared to the current TimeZoneDto
+//                       to determine if they are equivalent.
 //
 // Return
 // ======
 //
-//	bool		- If the current TimeZoneDto is equivalent to the
-//						input parameter TimeZoneDto, this method returns
-//						'true'.
+// bool  - If the current TimeZoneDto is equivalent to the
+//         input parameter TimeZoneDto, this method returns
+//         'true'.
 //
-// 						If the two TimeZoneDto's are NOT equivalent, this
-//						method returns 'false'
+//         If the two TimeZoneDto's are NOT equivalent, this
+//         method returns 'false'
 //
 func (tzDto *TimeZoneDto) Equal(tzdto2 TimeZoneDto) bool {
 
@@ -843,44 +844,82 @@ func (tzDto *TimeZoneDto) IsValid() error {
 }
 
 // IsValidTimeZone - Tests a Time Zone Location string and
-// returns three boolean values signaling whether the input
-// parameter Time Zone Location string is:
-// (1.) a valid time zone ('true')
-// (2.) a valid IANA time zone ('true')
-// (3.) a valid Local time zone ('true')
+// returns two values:
 //
-func (tzDto *TimeZoneDto) IsValidTimeZone(tZone string) (isValidTz, isValidIanaTz, isValidLocalTz bool) {
+// Input Parameters
+// ============================================================================
+//
+// tZone   string  - The name of a valid time zone. This time zone must
+//                   specify one of three types of time zones.
+//
+//                   (1) The 'Local' Time Zone.  Time Zone 'Local' specifies
+//                       the time zone configured and applied on the host
+//                       computer.
+//
+//                   (2) A IANA Time zone. This time must exist in the IANA
+//                       database. The IANA database is widely recognized as
+//                       a leading authority of global time zones.
+//
+//                       Reference:
+//
+//                          https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+//                          https://en.wikipedia.org/wiki/Tz_database
+//                          https://www.iana.org/time-zones
+//
+//                   (3) A single character or the full text name of a valid Military
+//                       time zone. Military time zones are commonly used in aviation
+//                       as well as at sea. They are also known as nautical or maritime
+//                       time zones.
+//                       Reference:
+//                           https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                           http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                           https://www.timeanddate.com/time/zones/military
+//
+// Return Values
+// ============================================================================
+//
+// isValidTz            bool - If true it signals the the time zone name contained in
+//                             input parameter 'tZone' is a valid time zone.
+//
+// timeZoneType TimeZoneType - If return value 'isValidTz' is 'true', the 'timeZoneType'
+//                             value will describe the valid time zone as one of three
+//                             types: 'Local', 'IANA' or Military.
+//
+func (tzDto *TimeZoneDto) IsValidTimeZone(
+	tZone string) (isValidTz bool, timeZoneType TimeZoneType) {
 
 	isValidTz = false
 
-	isValidIanaTz = false
-
-	isValidLocalTz = false
+	timeZoneType = TzType.None()
 
 	if tZone == "" {
 		return
 	}
 
-	if tZone == "Local" {
-		isValidTz = true
-		isValidLocalTz = true
-		return
-	}
+	ePrefix := "TimeZoneDto.IsValidTimeZone() "
 
-	_, err := time.LoadLocation(tZone)
+	dTimeUtil := DTimeUtility{}
+
+	var err error
+	_,
+		_,
+		_,
+		_,
+		timeZoneType,
+		err = dTimeUtil.GetTimeZoneFromName(tZone, ePrefix)
 
 	if err != nil {
-		return
+
+		isValidTz = false
+
+		timeZoneType = TzType.None()
+
+		return isValidTz, timeZoneType
 	}
 
 	isValidTz = true
 
-	isValidIanaTz = true
-
-	isValidLocalTz = false
-
-	return
-
+	return isValidTz, timeZoneType
 }
 
 // New - Initializes and returns a new TimeZoneDto object.
