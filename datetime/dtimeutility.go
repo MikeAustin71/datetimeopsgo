@@ -241,8 +241,9 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 
 	var err2 error
 
-	timeZoneName =
-		strings.TrimLeft(strings.TrimRight(timeZoneName, " "), " ")
+	dtUtil2 := DTimeUtility{}
+
+	timeZoneName = dtUtil2.PreProcessTimeZoneLocation(timeZoneName)
 
 	if len(timeZoneName) == 0 {
 		err = errors.New(ePrefix +
@@ -436,7 +437,7 @@ func (dtUtil *DTimeUtility) PreProcessTimeZoneLocation(
 		strings.TrimLeft(strings.TrimRight(timeZoneLocation, " "), " ")
 
 	if len(timeZoneLocation) == 0 {
-		return TZones.UTC()
+		return timeZoneLocation
 	}
 
 	testZone := strings.ToLower(timeZoneLocation)

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -75,6 +76,7 @@ type TimeZoneDto struct {
 	DateTimeFmt string      // Date Time Format String. This format string is used to format
 	                        //   Date Time text displays. The Default format string is:
 	                        //   "2006-01-02 15:04:05.000000000 -0700 MST"
+	lock         sync.Mutex // Mutex used to manage thread safe operations
 }
 
 // AddDate - Adds specified years, months and days values to the
@@ -101,7 +103,9 @@ func (tzDto *TimeZoneDto) AddDate(years, months, days int) error {
 
 	ePrefix := "TimeZoneDto.AddDate() "
 
-	err := tzDto.IsValid()
+	tZoneUtil := typeZoneUtility{}
+
+	err := tZoneUtil.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"Error: This Time Zone Utility is INVALID!  Error='%v'", err.Error())
@@ -179,7 +183,9 @@ func (tzDto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 
 	ePrefix := "TimeZoneDto.addDateTime() "
 
-	err := tzDto.IsValid()
+	tZoneUtil := typeZoneUtility{}
+	
+	err := tZoneUtil.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"This current TimeZoneDto instance is INVALID! Error='%v'", err.Error())
@@ -234,21 +240,21 @@ func (tzDto *TimeZoneDto) AddDateTime(years, months, days, hours, minutes,
 // Input Parameters
 // ================
 //
-// duration		time.Duration		- May be a positive or negative duration
-//															value which is added to the time value
-//															of the current TimeZoneDto instance.
+// duration  time.Duration  - May be a positive or negative duration
+//                            value which is added to the time value
+//                            of the current TimeZoneDto instance.
 //
-// Note: 		The time.Duration input parameter may be either negative
-// 					or positive. Negative values will subtract time from
-// 					the current TimeZoneDt instance.
+// Note:   The time.Duration input parameter may be either negative
+//         or positive. Negative values will subtract time from
+//         the current TimeZoneDt instance.
 //
 // Returns
 // =======
 // There is only one return: an 'error' type.
 //
-// error - 	If errors are encountered, this method returns an 'error'
-//					instance populated with an error message. If the method completes
-//					successfully, this error value is set to 'nil'
+// error -  If errors are encountered, this method returns an 'error'
+//          instance populated with an error message. If the method completes
+//          successfully, this error value is set to 'nil'
 //
 func (tzDto *TimeZoneDto) AddDuration(duration time.Duration) error {
 
@@ -258,7 +264,9 @@ func (tzDto *TimeZoneDto) AddDuration(duration time.Duration) error {
 		return nil
 	}
 
-	err := tzDto.IsValid()
+	tZoneUtil := typeZoneUtility{}
+	
+	err := tZoneUtil.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"This current TimeZoneDto instance is INVALID! Error='%v'", err.Error())
@@ -444,30 +452,32 @@ func (tzDto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 // Input Parameters:
 // =================
 //
-// hours				- hours to be added to current TimeZoneDto
-// minutes			- minutes to be added to current TimeZoneDto
-// seconds			- seconds to be added to current TimeZoneDto
-// milliseconds	- milliseconds to be added to current TimeZoneDto
-// microseconds	- microseconds to be added to current TimeZoneDto
-// nanoseconds	- nanoseconds to be added to current TimeZoneDto
+// hours        - hours to be added to current TimeZoneDto
+// minutes      - minutes to be added to current TimeZoneDto
+// seconds      - seconds to be added to current TimeZoneDto
+// milliseconds - milliseconds to be added to current TimeZoneDto
+// microseconds - microseconds to be added to current TimeZoneDto
+// nanoseconds  - nanoseconds to be added to current TimeZoneDto
 //
-// Note: 		The time component input parameter may be either negative
-// 					or positive. Negative values will subtract time from
-// 					the current TimeZoneDto instance.
+// Note:   The time component input parameter may be either negative
+//         or positive. Negative values will subtract time from
+//         the current TimeZoneDto instance.
 //
 // Returns
 // =======
 // There is only one return: an 'error' type.
 //
-// error - 	If errors are encountered, this method returns an 'error'
-//					instance populated with an error message. If the method completes
-//					successfully, this error value is set to 'nil'
+// error -  If errors are encountered, this method returns an 'error'
+//          instance populated with an error message. If the method completes
+//          successfully, this error value is set to 'nil'.
 //
 func (tzDto *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds int) error {
 
 	ePrefix := "TimeZoneDto.AddTime() "
 
-	err := tzDto.IsValid()
+	tZoneUtil := typeZoneUtility{}
+
+	err := tZoneUtil.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"This TimeZoneDto instance is INVALID! Error='%v'", err.Error())
@@ -816,6 +826,14 @@ func (tzDto *TimeZoneDto) IsValid() error {
 
 	ePrefix := "TimeZoneDto.IsValid() "
 
+	tzDto.lock.Lock()
+
+	defer tzDto.lock.Unlock()
+
+	tZoneUtil := typeZoneUtility{}
+
+	return tZoneUtil.isValidTimeZoneDto(tzDto, ePrefix)
+	/*
 	errorArray := make([]error, 0)
 
 	if err := tzDto.TimeIn.IsValid(); err != nil {
@@ -841,6 +859,8 @@ func (tzDto *TimeZoneDto) IsValid() error {
 	dtUtil := DTimeUtility{}
 
 	return dtUtil.ConsolidateErrors(errorArray)
+
+	 */
 }
 
 // IsValidTimeZone - Tests a Time Zone Location string and
@@ -1052,12 +1072,16 @@ func (tzDto TimeZoneDto) New(tIn time.Time, timeZoneOutLocation, dateTimeFmtStr 
 func (tzDto TimeZoneDto) NewAddDate(tzuIn TimeZoneDto, years, months, days int,
 	dateTimeFmtStr string) (TimeZoneDto, error) {
 
-	ePrefix := "TimeZoneDto.NewAddDate()"
+	ePrefix := "TimeZoneDto.NewAddDate() "
 
-	err := tzuIn.IsValid()
+	tZoneUtil := typeZoneUtility{}
+
+	err := tZoneUtil.isValidTimeZoneDto(&tzuIn, ePrefix)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input parameter tzuIn (TimeZoneDto) is INVALID! Error='%v'", err.Error())
+		return TimeZoneDto{}, fmt.Errorf(ePrefix+
+			"\nError: Input parameter tzuIn (TimeZoneDto) is INVALID!\n" +
+			"Error='%v'\n", err.Error())
 	}
 
 	tzuOut := tzuIn.CopyOut()
@@ -1139,7 +1163,9 @@ func (tzDto TimeZoneDto) NewAddDateTime(tzdtoIn TimeZoneDto, years, months, days
 
 	ePrefix := "TimeZoneDto.NewAddDateTime() "
 
-	err := tzdtoIn.IsValid()
+	tZoneUtil := typeZoneUtility{}
+
+	err := tZoneUtil.isValidTimeZoneDto(&tzdtoIn, ePrefix)
 
 	if err != nil {
 		return TimeZoneDto{},
@@ -1222,7 +1248,9 @@ func (tzDto TimeZoneDto) NewAddDuration(tzdtoIn TimeZoneDto, duration time.Durat
 
 	ePrefix := "TimeZoneDto.NewAddDuration() "
 
-	err := tzdtoIn.IsValid()
+	tZoneUtil := typeZoneUtility{}
+
+	err := tZoneUtil.isValidTimeZoneDto(&tzdtoIn, ePrefix)
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
@@ -1301,7 +1329,9 @@ func (tzDto TimeZoneDto) NewAddTime(tzdtoIn TimeZoneDto, hours, minutes, seconds
 
 	ePrefix := "TimeZoneDto.NewAddTime() "
 
-	err := tzdtoIn.IsValid()
+	tZoneUtil := typeZoneUtility{}
+
+	err := tZoneUtil.isValidTimeZoneDto(&tzdtoIn, ePrefix)
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
@@ -1856,31 +1886,35 @@ func (tzDto TimeZoneDto) NewTimeAddTime(tIn time.Time, tZoneLocation string, hou
 // zone is changed but the time value remains unchanged.
 // Input Parameters:
 //
-// tIn time.Time 					- initial time whose time zone will be changed to
-//													second input parameter, 'tZoneLocation'
+// tIn time.Time      - Initial time whose time zone will be changed to
+//                      second input parameter, 'tZoneLocation'
 //
-// tZoneLocation string		- The first input time value, 'tIn' will have its time zone
-// 													changed to a new time zone location specified by this second
-// 													parameter, 'tZoneLocation'. This time zone location must be
-// 													designated as one of two values:
+// tZoneLocation string  - The first input time value, 'tIn' will have its time zone
+//                         changed to a new time zone location specified by this second
+//                         parameter, 'tZoneLocation'. This time zone location must be
+//                         designated as one of two values:
 //
-// 														(1) the string 'Local' - signals the designation of the
-// 																time zone	location used by the host computer.
+//               (1) the string 'Local' - signals the designation of the
+//                 time zone location used by the host computer.
 //
-//														(2) IANA Time Zone Location -
-// 																See https://golang.org/pkg/time/#LoadLocation
-// 																and https://www.iana.org/time-zones to ensure that
-// 																the IANA Time Zone Database is properly configured
-// 																on your system. Note: IANA Time Zone Data base is
-// 																equivalent to 'tz database'.
-//																Examples:
-//																	"America/New_York"
-//																	"America/Chicago"
-//																	"America/Denver"
-//																	"America/Los_Angeles"
-//																	"Pacific/Honolulu"
+//              (2) IANA Time Zone Location -
+//                 See https://golang.org/pkg/time/#LoadLocation
+//                 and https://www.iana.org/time-zones to ensure that
+//                 the IANA Time Zone Database is properly configured
+//                 on your system. Note: IANA Time Zone Data base is
+//                 equivalent to 'tz database'.
 //
-func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(tIn time.Time, tZoneLocation string) (time.Time, error) {
+//                 Examples:
+//                  "America/New_York"
+//                  "America/Chicago"
+//                  "America/Denver"
+//                  "America/Los_Angeles"
+//                  "Pacific/Honolulu"
+//
+func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
+	tIn time.Time,
+	tZoneLocation string) (time.Time, error) {
+
 	ePrefix := "TimeZoneDto.ReclassifyTimeWithNewTz() "
 
 	strTime := tzDto.TimeWithoutTimeZone(tIn)
@@ -1893,25 +1927,30 @@ func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(tIn time.Time, tZoneLocation s
 		tZoneLocation = "Local"
 	}
 
-	isValidTz, _, _ := tzDto.IsValidTimeZone(tZoneLocation)
+	dtUtil := DTimeUtility{}
 
-	if !isValidTz {
-		return time.Time{}, fmt.Errorf(ePrefix+"Error: Input Time Zone Location is INVALID! tZoneLocation='%v'", tZoneLocation)
-	}
+	_,
+	_,
+	_,
+	tzNew,
+	_,
+	err := dtUtil.GetTimeZoneFromName(tZoneLocation, ePrefix)
 
-	tzNew, err := time.LoadLocation(tZoneLocation)
-
-	if err != nil {
-		return time.Time{}, fmt.Errorf(ePrefix+"Error returned by time.Location('%v') - Error: %v", tZoneLocation, err.Error())
-	}
-
-	tOut, err := time.ParseInLocation(FmtDateTimeNeutralDateFmt, strTime, tzNew)
 
 	if err != nil {
-		return tOut, fmt.Errorf(ePrefix+"Error returned by time.Parse - Error: %v", err.Error())
+		return time.Time{}, fmt.Errorf( ePrefix +
+			"\nError: Input Time Zone Location is INVALID!\ntZoneLocation='%v'\n", tZoneLocation)
 	}
 
-	return tOut, nil
+	var tOutDateTime time.Time
+
+	tOutDateTime, err = time.ParseInLocation(FmtDateTimeNeutralDateFmt, strTime, tzNew)
+
+	if err != nil {
+		return tOutDateTime, fmt.Errorf(ePrefix+"Error returned by time.Parse - Error: %v", err.Error())
+	}
+
+	return tOutDateTime, nil
 }
 
 // SetDateTimeFormatStr - Sets the value of the TimeZoneDto.DateTimeFmt field.
@@ -1951,13 +1990,15 @@ func (tzDto *TimeZoneDto) Sub(tzu2 TimeZoneDto) (time.Duration, error) {
 
 	ePrefix := "TimeZoneDto.Sub() "
 
-	err := tzDto.IsValid()
+	tZoneUtil := typeZoneUtility{}
+
+	err := tZoneUtil.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
 		return time.Duration(0), fmt.Errorf(ePrefix+"Error: Current TimeZoneDto (tzDto) is INVALID. Error='%v'", err.Error())
 	}
 
-	err = tzu2.IsValid()
+	err = tZoneUtil.isValidTimeZoneDto(&tzu2, ePrefix)
 
 	if err != nil {
 		return time.Duration(0), fmt.Errorf(ePrefix+"Error: Input Parameter 'tzu2' is INVALID! Error='%v'", err.Error())

@@ -526,18 +526,16 @@ func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 
 	tzu := TimeZoneDto{}
 
-	isValidTz, isValidIanaTz, isValidLocalTz := tzu.IsValidTimeZone(tIn.Location().String())
+	isValidTz, tzType := tzu.IsValidTimeZone(tIn.Location().String())
 
 	if isValidTz == false {
-		t.Error("Expected Now() Location to yield 'Local' Time Zone isValidTz == VALID ('true'), instead got: ", isValidTz)
+		t.Errorf("Expected Now() Location to yield 'Local' Time Zone isValidTz == VALID ('true')\n" +
+			"Instead got: %v\n", isValidTz)
 	}
 
-	if isValidIanaTz == true {
-		t.Error("Passed Time Zone was 'Local' Time Zone. Expected isValidIanaTz == false, got: ", isValidIanaTz)
-	}
-
-	if isValidLocalTz == false {
-		t.Error("Passed Time Zone was 'Local' Time Zone. Expected isValidLocalTz == true, got: ", isValidIanaTz)
+	if tzType != tzType.Local() {
+		t.Errorf("Passed Time Zone was 'Local' Time Zone. Expected tzType == tzType.Local().\n" +
+			"Instead, tzType='%v'\n", tzType.String())
 	}
 
 	tz := tzu.TimeIn.GetTimeZone()
@@ -552,18 +550,15 @@ func TestTimeZoneUtility_IsValidTimeZone02(t *testing.T) {
 
 	tzu := TimeZoneDto{}
 
-	isValidTz, isValidIanaTz, isValidLocalTz := tzu.IsValidTimeZone("America/Chicago")
+	isValidTz, tzType := tzu.IsValidTimeZone("America/Chicago")
 
 	if isValidTz == false {
 		t.Error("Expected 'America/Chicago' to yield isValidTz = 'true', instead got", isValidTz)
 	}
 
-	if isValidIanaTz == false {
-		t.Error("Expected 'America/Chicago' to yield isValidIanaTz = 'true', instead got", isValidIanaTz)
-	}
-
-	if isValidLocalTz == true {
-		t.Error("Expected 'America/Chicago' to yield isValidLocalTz = 'false', instead got", isValidLocalTz)
+	if tzType != tzType.Iana() {
+		t.Errorf("Expected 'America/Chicago' to yield tzType = tzType.Iana().\n" +
+			"Instead, tzType='%v'\n", tzType.String())
 	}
 
 }
