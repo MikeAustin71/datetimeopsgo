@@ -217,6 +217,7 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 // through input parameter, 'timeZoneName'. If valid, the
 // method populates time zone description elements and
 // returns them.
+//
 func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 	timeZoneName string,
 	ePrefix string) (milTzLetter,
@@ -388,11 +389,11 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 //         https://www.timeanddate.com/time/map/
 //
 //        Examples:
-//          "Alpha"   or A
-//          "Bravo"   or B
-//          "Charlie" or C
-//          "Delta"   or D
-//          "Zulu"    or Z
+//          "Alpha"   or "A"
+//          "Bravo"   or "B"
+//          "Charlie" or "C"
+//          "Delta"   or "D"
+//          "Zulu"    or "Z"
 //
 func (dtUtil *DTimeUtility) RelativeTimeToTimeNameZoneConversion(
 	dateTime time.Time,

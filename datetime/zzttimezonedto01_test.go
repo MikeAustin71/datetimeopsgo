@@ -117,6 +117,14 @@ func TestTimeZoneDto_AddMinusTimeDto(t *testing.T) {
 		return
 	}
 
+	err = tzu1.IsValid()
+
+	if err != nil {
+		t.Errorf("tzu1 is INVALID!\n" +
+			"%v\n", err.Error())
+		return
+	}
+
 	tDto := TimeDto{Years: 3, Months: 2, DateDays: 15, Hours: 3, Minutes: 4, Seconds: 2}
 
 	tzu2 := tzu1.CopyOut()
@@ -137,7 +145,9 @@ func TestTimeZoneDto_AddMinusTimeDto(t *testing.T) {
 	tzu2Dur, err := tzu1.Sub(tzu2)
 
 	if err != nil {
-		t.Errorf("Error returned by tzu2.Sub(tzu1)")
+		t.Errorf("Error returned by tzu2.Sub(tzu1)\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	if t12Dur != tzu2Dur {

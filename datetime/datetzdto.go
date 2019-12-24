@@ -2716,10 +2716,10 @@ func (dtz DateTzDto) NewTimeDto(
 //
 // Input Parameters
 //
-//   dateTime      time.Time - A date time value
+//   dateTime          time.Time - A date time value
 //
-//   timeZoneLocation string - time zone location must be designated as one of
-//                             two values:
+//   timeZoneLocationName string - time zone location must be designated as one of
+//                                 two values:
 //
 //            (1) The string 'Local' - signals the designation of the local time zone
 //                location for the host computer.
@@ -2804,7 +2804,7 @@ func (dtz DateTzDto) NewTimeDto(
 //
 func (dtz DateTzDto) NewTz(
 	dateTime time.Time,
-	timeZoneLocation string,
+	timeZoneLocationName string,
 	timeZoneConversionType TimeZoneConversionType,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
@@ -2821,7 +2821,7 @@ func (dtz DateTzDto) NewTz(
 	err := dTzUtil.setFromTimeTz(
 		&dtz2,
 		dateTime,
-		timeZoneLocation,
+		timeZoneLocationName,
 		timeZoneConversionType,
 		dateTimeFmtStr,
 		ePrefix)
@@ -3250,10 +3250,6 @@ func (dtz *DateTzDto) SetFromTimeDto(tDto TimeDto, timeZoneLocation string) erro
 //                  "America/Los_Angeles"
 //                  "Pacific/Honolulu"
 //
-//                 The source file 'constantsdatetime.go' contains a number of
-//                 constant declarations covering the more frequently used time
-//                 zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TzIana'.
 //
 //   dateTimeFmtStr string   - A date time format string which will be used
 //                             to format and display 'dateTime'. Example:

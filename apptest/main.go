@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest033()
+	mainTest{}.mainTest034()
 
 }
 
@@ -19,6 +19,40 @@ type mainTest struct {
 	output string
 }
 
+
+func (mt mainTest) mainTest034() {
+
+	ePrefix := "mainTest034()"
+	title := fmt.Sprintf("       %v         ", ePrefix)
+	ln := strings.Repeat("-", len(title))
+	fmt.Println(ln)
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
+
+	// t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	tzu1, err := dt.TimeZoneDto{}.New(t2, dt.TZones.US.Eastern(), fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = tzu1.IsValid()
+
+	if err != nil {
+		fmt.Printf("tzu1 is INVALID!\n" +
+			"%v\n", err.Error())
+		return
+	}
+
+}
 
 func (mt mainTest) mainTest033() {
 
