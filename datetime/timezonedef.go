@@ -2,7 +2,6 @@ package datetime
 
 import (
 	"errors"
-	"fmt"
 	"sync"
 	"time"
 )
@@ -542,9 +541,11 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 	tzDef2 := TimeZoneDefDto{}
 
 	tzDefUtil := timeZoneDefUtility{}
+// 	locationName := dateTime.Location().String()
 
 	err := tzDefUtil.setFromDateTime(&tzDef2, dateTime, ePrefix)
 
+	// err := tzDefUtil.setFromTimeZoneName(&tzDef2, locationName, ePrefix)
 	if err != nil {
 		return TimeZoneDefDto{}, err
 	}
@@ -572,7 +573,7 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	err = tzDefUtil.setFromDateTime(&tzDefDto, time.Now().In(tzLocPtr), ePrefix)
+	err = tzDefUtil.setFromTimeZoneName(&tzDefDto, tzLocPtr.String(), ePrefix)
 
 	if err != nil {
 		tzDefDto = TimeZoneDefDto{}
@@ -601,11 +602,11 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 
 	ePrefix := "TimeZoneDefDto.NewFromTimeZoneName() "
 
-	var tzLoc *time.Location
+// 	var tzLoc *time.Location
 	err = nil
 	tzDefDto = TimeZoneDefDto{}
 
-	var err2 error
+//	var err2 error
 
 	if len(timeZoneName) == 0 {
 		err = errors.New(ePrefix +
@@ -615,6 +616,7 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 
 	tzDefUtil := timeZoneDefUtility{}
 
+	/*
 	tzLoc, err2 = time.LoadLocation(timeZoneName)
 
 	if err2 != nil {
@@ -624,8 +626,9 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 			"Error='%v'\n", timeZoneName, err2.Error())
 		return tzDefDto, err
 	}
+	*/
 
-	err = tzDefUtil.setFromDateTime(&tzDefDto, time.Now().In(tzLoc), ePrefix)
+	err = tzDefUtil.setFromTimeZoneName(&tzDefDto, timeZoneName, ePrefix)
 
 	return tzDefDto, err
 }

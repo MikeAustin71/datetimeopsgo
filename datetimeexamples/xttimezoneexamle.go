@@ -598,18 +598,39 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 
 // PrintOutTimeZoneDefDtoFields
 func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefDto) {
+
+	var milTzLetter, milTzName string
+	var err error
+
+	milTzLetter, err = tzDef.GetMilitaryTimeZoneLetter()
+
+	if err != nil {
+		milTzLetter = "Empty String"
+	}
+
+	milTzName, err = tzDef.GetMilitaryTimeZoneName()
+
+	if err != nil {
+		milTzName = "Empty String"
+	}
+
 	fmt.Println("-----------------------------------------------")
-	fmt.Println("           ZoneName: ", tzDef.GetZoneName())
-	fmt.Println("         ZoneOffset: ", tzDef.GetZoneOffset())
-	fmt.Println("         UTC Offset: ", tzDef.GetUtcOffset())
-	fmt.Println("  ZoneOffsetSeconds:", tzDef.GetZoneOffsetSeconds())
-	fmt.Println("           ZoneSign: ", tzDef.GetZoneSign())
-	fmt.Println("        OffsetHours: ", tzDef.GetOffsetHours())
-	fmt.Println("      OffsetMinutes: ", tzDef.GetOffsetMinutes())
-	fmt.Println("      OffsetSeconds: ", tzDef.GetOffsetSeconds())
-	fmt.Println("    Location String: ", tzDef.GetLocationPtr().String())
-	fmt.Println("      Location Name: ", tzDef.GetLocationName())
+	fmt.Println("                 ZoneName: ", tzDef.GetZoneName())
+	fmt.Println("               ZoneOffset: ", tzDef.GetZoneOffset())
+	fmt.Println("               UTC Offset: ", tzDef.GetUtcOffset())
+	fmt.Println("        ZoneOffsetSeconds:", tzDef.GetZoneOffsetSeconds())
+	fmt.Println("                 ZoneSign: ", tzDef.GetZoneSign())
+	fmt.Println("              OffsetHours: ", tzDef.GetOffsetHours())
+	fmt.Println("            OffsetMinutes: ", tzDef.GetOffsetMinutes())
+	fmt.Println("            OffsetSeconds: ", tzDef.GetOffsetSeconds())
+	fmt.Println("          Location String: ", tzDef.GetLocationPtr().String())
+	fmt.Println("            Location Name: ", tzDef.GetLocationName())
+	fmt.Println("Military Time Zone Letter: ", milTzLetter)
+	fmt.Println("  Military Time Zone Name: ", milTzName)
+	fmt.Println("          Tag Description: ", tzDef.GetTagDescription())
+	fmt.Println( "          Time Zone Type: ", tzDef.GetTimeZoneType().String())
 	fmt.Println("-----------------------------------------------")
+
 }
 
 // PrintOutTimeZoneFields

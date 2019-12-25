@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest034()
+	mainTest{}.mainTest036()
 
 }
 
@@ -19,6 +19,164 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest036() {
+
+	ePrefix := "mainTest036()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	t1str := "06/30/2019 22:58:32.000000000 -0400 EDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, err := time.Parse(fmtstr, t1str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtstr, t1str)\n" +
+			"t1str='%v'\n" +
+			"Error='%v'\n", t1str, err.Error())
+		return
+	}
+
+	tzName := t1.Location().String()
+
+	fmt.Println("t1 date Time String: ", t1str)
+	fmt.Println("       t1 date time: ", t1.Format(fmtstr))
+	fmt.Println("  t1 Time Zone Name: ", tzName)
+	fmt.Println()
+
+/*
+	locPtr, err := time.LoadLocation(tzName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzName).\n" +
+			"tzName='%v'\n" +
+			"Error='%v'\n", tzName, err.Error())
+		return
+	}
+*/
+
+	t2str := "06/30/2019 22:58:32.000000000 -0500 CDT"
+
+	t2, err := time.Parse(fmtstr, t2str)
+
+	if err != nil {
+		fmt.Printf("Error returned from time.Parse(fmtstr, t2str)\n" +
+			"t2str='%v'\n", t2str, err.Error())
+		return
+	}
+
+	t3 := t2.In(t1.Location())
+	tzName = t3.Location().String()
+
+	fmt.Println("t2 date Time String: ", t2.Format(fmtstr))
+	fmt.Println("       t3 date time: ", t3.Format(fmtstr))
+	fmt.Println("  t3 Time Zone Name: ", tzName)
+	fmt.Println()
+
+}
+
+func (mt mainTest) mainTest035() {
+	ePrefix := "mainTest035()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	t1str := "06/30/2019 22:58:32.000000000 -0400 EDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	tZoneName := dt.TZones.US.Eastern()
+
+	easternLocPtr, err := time.LoadLocation(tZoneName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(dt.TZones.US.Central())\n" +
+			"tZoneName='%v'\n" +
+			"Error='%v'\n", tZoneName, err.Error())
+		return
+	}
+
+	t1, err := time.Parse(fmtstr, t1str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtstr, t1str)\n" +
+			"t1str='%v'\n" +
+			"Error='%v'\n", t1str, err.Error())
+		return
+	}
+
+	t1Dup := time.Date(
+		2019,
+		time.Month(6),
+		30,
+		22,
+		58,
+		32,
+		0,
+		easternLocPtr)
+
+	fmt.Printf("   t1 Time: %v\n", t1.Format(fmtstr))
+	fmt.Printf("t1Dup Time: %v\n", t1Dup.Format(fmtstr))
+
+	if t1.Equal(t1Dup) {
+		fmt.Println("--- t1 is EQUAL to t1Dup ---")
+	} else {
+		fmt.Println("--- t1 is NOT equal to t1Dup ---")
+	}
+
+	fmt.Println()
+
+	t1TzDefDtoDateTime, err :=
+		dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)\n" +
+			"tZoneName='%v'\n" +
+			"Error='%v'\n", tZoneName, err.Error())
+	}
+
+	mt.mainPrintHdr("       t1TzDefDtoDateTime Data" , "=")
+	fmt.Println("          From t1")
+	ex.PrintOutTimeZoneDefDtoFields(t1TzDefDtoDateTime)
+	fmt.Println()
+
+	t2TzDefDtoDateTime, err :=
+		dt.TimeZoneDefDto{}.New(t1)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t1)\n" +
+			"t1='%v'\n" +
+			"Error='%v'\n", t1.Format(fmtstr), err.Error())
+		return
+	}
+
+	mt.mainPrintHdr("       t2TzDefDtoDateTime Data" , "=")
+	fmt.Println("          From t1")
+	ex.PrintOutTimeZoneDefDtoFields(t2TzDefDtoDateTime)
+	fmt.Println()
+
+
+	t1TzDefDtoDateTime, err =
+		dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)\n" +
+			"tZoneName='%v'\n" +
+			"Error='%v'\n", tZoneName, err.Error())
+	}
+
+	t2TzDefDtoDateTime, err =
+		dt.TimeZoneDefDto{}.New(t1Dup)
+
+	mt.mainPrintHdr("       t1TzDefDtoDateTime Data" , "*")
+	fmt.Println("From: t1Dup")
+	ex.PrintOutTimeZoneDefDtoFields(t1TzDefDtoDateTime)
+	fmt.Println()
+
+	mt.mainPrintHdr("       t2TzDefDtoDateTime Data" , "*")
+	fmt.Println("From: t1Dup")
+	ex.PrintOutTimeZoneDefDtoFields(t2TzDefDtoDateTime)
+	fmt.Println()
+
+}
 
 func (mt mainTest) mainTest034() {
 
@@ -1747,5 +1905,15 @@ func (mt mainTest) mainTest001() {
 
 	fmt.Println("t1: ", t1.Format(fmtstr))
 	fmt.Println("t2: ", t2.Format(fmtstr))
+
+}
+
+func (mt mainTest) mainPrintHdr(textToPrint string, repeatStr string) {
+	title := fmt.Sprintf("       %v         ", textToPrint)
+	ln := strings.Repeat(repeatStr, len(title))
+	fmt.Println(ln)
+	fmt.Println(title)
+	fmt.Println(ln)
+	fmt.Println()
 
 }
