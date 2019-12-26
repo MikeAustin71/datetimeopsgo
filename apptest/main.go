@@ -10,13 +10,180 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest036()
+	mainTest{}.mainTest039()
+
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest039() {
+
+	ePrefix := "mainTest039()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tzName := "Australia/Adelaide"
+
+	tzLocPtr, err := time.LoadLocation(tzName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzName)\n" +
+			"tzName='%v'\n" +
+			"Error='%v'\n", tzName, err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2019,
+		time.Month(6),
+		30,
+		22,
+		58,
+		32,
+		0,
+		tzLocPtr)
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	tzDef, err := dt.TimeZoneDefDto{}.New(t1)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t1)\n" +
+			"t1='%v'\n" +
+			"Error='%v'\n", t1.Format(fmtStr))
+		return
+	}
+
+	fmt.Println("t1 Date Time: ", t1.Format(fmtStr))
+	ex.PrintOutTimeZoneDefDtoFields(tzDef)
+
+
+	t2 := time.Date(
+		2019,
+		time.Month(12),
+		30,
+		22,
+		58,
+		32,
+		0,
+		tzLocPtr)
+
+	tzDef, err = dt.TimeZoneDefDto{}.New(t2)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t2)\n" +
+			"t2='%v'\n" +
+			"Error='%v'\n", t1.Format(fmtStr))
+		return
+	}
+
+	fmt.Println("t2 Date Time: ", t2.Format(fmtStr))
+
+	ex.PrintOutTimeZoneDefDtoFields(tzDef)
+}
+
+func (mt mainTest) mainTest038() {
+
+	ePrefix := "mainTest038()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	t1str := "06/30/2019 22:58:32.000000000 -0400 EDT"
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	tZoneName := dt.TZones.Other.EST05EDT()
+
+	easternLocPtr, err := time.LoadLocation(tZoneName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(dt.TZones.US.Central())\n" +
+			"tZoneName='%v'\n" +
+			"Error='%v'\n", tZoneName, err.Error())
+		return
+	}
+
+	t1, err := time.Parse(fmtStr, t1str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtstr, t1str)\n" +
+			"t1str='%v'\n" +
+			"Error='%v'\n", t1str, err.Error())
+		return
+	}
+
+	t2 := time.Date(
+		2019,
+		time.Month(6),
+		30,
+		22,
+		58,
+		32,
+		0,
+		easternLocPtr)
+
+	fmt.Println("t1 Date Time: ", t1.Format(fmtStr))
+	fmt.Println("t2 Date Time: ", t2.Format(fmtStr))
+
+
+}
+
+func (mt mainTest) mainTest037() {
+
+	ePrefix := "mainTest037()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tzName := "EST"
+
+	tzNameLocPtr, err := time.LoadLocation(tzName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzName).\n" +
+			"tzName='%v'\n" +
+			"Error='%v'\n", tzName, err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2019,
+		time.Month(6),
+		30,
+		22,
+		58,
+		32,
+		0,
+		tzNameLocPtr)
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	fmt.Println("t1 Date Time: ", t1.Format(fmtStr))
+
+	tz2Name := dt.TZones.America.New_York()
+
+	tz2NameLocPtr, err := time.LoadLocation(tz2Name)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzName).\n" +
+			"tzName='%v'\n" +
+			"Error='%v'\n", tzName, err.Error())
+		return
+	}
+
+	t2 := time.Date(
+		2019,
+		time.Month(6),
+		30,
+		22,
+		58,
+		32,
+		0,
+		tz2NameLocPtr)
+
+	fmt.Println("t2 Date Time: ", t2.Format(fmtStr))
 }
 
 func (mt mainTest) mainTest036() {
