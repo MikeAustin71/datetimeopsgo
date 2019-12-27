@@ -61,7 +61,6 @@ func (mt mainTest) mainTest039() {
 	fmt.Println("t1 Date Time: ", t1.Format(fmtStr))
 	ex.PrintOutTimeZoneDefDtoFields(tzDef)
 
-
 	t2 := time.Date(
 		2019,
 		time.Month(12),

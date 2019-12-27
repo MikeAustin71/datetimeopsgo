@@ -212,11 +212,93 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 	return fmt.Errorf("%v", errStr)
 }
 
+// GetTzAbbrvFromDateTime - Receives a time.Time, date
+// time, input parameter and extracts and returns the
+// the time zone abbreviation.
+//
+// Offsets are returned in the format illustrated by the
+// following example:
+//
+//   Time String:  2019-12-26 00:56:15 -0600 CST
+//   Returned Offset:  'CST'
+//
+func (dtUtil *DTimeUtility) GetTzAbbrvFromDateTime(
+	dateTime time.Time) string {
+
+	tStr := dateTime.Format("2006-01-02 15:04:05 -0700 MST")
+
+	lenLeadStr := len("2006-01-02 15:04:05 -0700 ")
+
+	offsetStr := tStr[lenLeadStr:]
+
+	return strings.TrimRight(offsetStr, " ")
+}
+
+// GetUtcOffsetFromDateTime - Receives a time.Time, date
+// time, input parameter and extracts and returns the
+// 5-character UTC offset.
+//
+// Offsets are returned in the format illustrated by the
+// following examples:
+//   +1030
+//   -0500
+//   +1100
+//   -1100
+//
+func (dtUtil *DTimeUtility) GetUtcOffsetFromDateTime(
+	dateTime time.Time) string {
+
+	testTimeStr := dateTime.Format("2006-01-02 15:04:05 -0700 MST")
+
+	lenLeadStr := len("2006-01-02 15:04:05 ")
+
+	return testTimeStr[lenLeadStr: lenLeadStr + 5]
+}
 
 // GetTimeZoneFromName - Analyzes a time zone name passed
 // through input parameter, 'timeZoneName'. If valid, the
 // method populates time zone description elements and
 // returns them.
+//
+// This method will accept and successfully process one
+// of three types of time zones:
+//
+//   (1) The time zone "Local", which Golang accepts as
+//       the time zone currently configured on the host
+//       computer.
+//
+//   (2) IANA Time Zone - A valid IANA Time Zone from the
+//       IANA database.
+//       See https://golang.org/pkg/time/#LoadLocation
+//       and https://www.iana.org/time-zones to ensure that
+//       the IANA Time Zone Database is properly configured
+//       on your system.
+//
+//       IANA Time Zone Examples:
+//         "America/New_York"
+//         "America/Chicago"
+//         "America/Denver"
+//         "America/Los_Angeles"
+//         "Pacific/Honolulu"
+//         "Etc/UTC" = GMT or UTC
+//
+//    (3) A Military Time Zone
+//        Reference:
+//         https://en.wikipedia.org/wiki/List_of_military_time_zones
+//         http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//         https://www.timeanddate.com/time/zones/military
+//         https://www.timeanddate.com/worldclock/timezone/alpha
+//         https://www.timeanddate.com/time/map/
+//
+//        Examples:
+//          "Alpha"   or "A"
+//          "Bravo"   or "B"
+//          "Charlie" or "C"
+//          "Delta"   or "D"
+//          "Zulu"    or "Z"
+//
+// If the time zone "Zulu" is passed to this method, it will be
+// classified as a Military Time Zone.
 //
 func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 	timeZoneName string,
@@ -262,8 +344,6 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 
 		timeZoneName = strings.ToUpper(timeZoneName)
 
-		dtUtil2 := DTimeUtility{}
-
 		milTzLetter,
 			milTzName,
 			ianaTzName,
@@ -291,6 +371,37 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 	}
 
 	testTzName := strings.ToLower(timeZoneName)
+
+	if testTzName == "zulu" {
+
+		timeZoneName = "Zulu"
+
+		milTzLetter,
+			milTzName,
+			ianaTzName,
+			ianaLocationPtr,
+			err =
+			dtUtil2.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
+
+		if err != nil {
+			return milTzLetter,
+				milTzName,
+				ianaTzName,
+				ianaLocationPtr,
+				tzType,
+				err
+		}
+
+		tzType = TzType.Military()
+
+		return milTzLetter,
+			milTzName,
+			ianaTzName,
+			ianaLocationPtr,
+			tzType,
+			err
+	}
+
 	tzType = TzType.Iana()
 
 	if testTzName == "utc" {
