@@ -92,6 +92,7 @@ func (tzDefUtil *timeZoneDefUtility) copyIn(
 	tzdef.utcOffset = tzdef2.utcOffset
 	tzdef.location = tzdef2.location
 	tzdef.locationName = tzdef2.locationName
+	tzdef.locationNameType = tzdef2.locationNameType
 	tzdef.militaryTimeZoneLetter = tzdef2.militaryTimeZoneLetter
 	tzdef.militaryTimeZoneName = tzdef2.militaryTimeZoneName
 	tzdef.tagDescription = tzdef2.tagDescription
@@ -128,6 +129,7 @@ func (tzDefUtil *timeZoneDefUtility) copyOut(
 
 	tzdef2.location = tzdef.location
 	tzdef2.locationName = tzdef.locationName
+	tzdef2.locationNameType = tzdef.locationNameType
 	tzdef2.militaryTimeZoneLetter = tzdef.militaryTimeZoneLetter
 	tzdef2.militaryTimeZoneName = tzdef.militaryTimeZoneName
 
@@ -162,6 +164,7 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 	tzdef.utcOffset = ""
 	tzdef.location = nil
 	tzdef.locationName = ""
+	tzdef.locationNameType = LocNameType.None()
 	tzdef.militaryTimeZoneLetter = ""
 	tzdef.militaryTimeZoneName = ""
 	tzdef.tagDescription = ""
@@ -208,17 +211,30 @@ func (tzDefUtil *timeZoneDefUtility) equal(
 
 	if tzdef.zoneName != tzdef2.zoneName ||
 		tzdef.zoneOffsetSeconds != tzdef2.zoneOffsetSeconds ||
-		tzdef.zoneSign != tzdef2.zoneSign ||
-		tzdef.offsetHours != tzdef2.offsetHours ||
+		tzdef.zoneSign != tzdef2.zoneSign {
+		return false
+	}
+
+	if tzdef.offsetHours != tzdef2.offsetHours ||
 		tzdef.offsetMinutes != tzdef2.offsetMinutes ||
-		tzdef.offsetSeconds != tzdef2.offsetSeconds ||
-		tzdef.zoneOffset != tzdef2.zoneOffset ||
-		tzdef.utcOffset != tzdef2.utcOffset ||
-		tzdef.locationName != tzdef2.locationName ||
+		tzdef.offsetSeconds != tzdef2.offsetSeconds {
+		return false
+	}
+
+	if tzdef.zoneOffset != tzdef2.zoneOffset ||
+		tzdef.utcOffset != tzdef2.utcOffset {
+		return false
+	}
+
+	if tzdef.locationName != tzdef2.locationName ||
 		tzdef.militaryTimeZoneLetter != tzdef2.militaryTimeZoneLetter ||
 		tzdef.militaryTimeZoneName != tzdef2.militaryTimeZoneName ||
-		tzdef.tagDescription != tzdef2.tagDescription ||
-		tzdef.timeZoneType != tzdef2.timeZoneType {
+		tzdef.tagDescription != tzdef2.tagDescription {
+		return false
+	}
+
+	if tzdef.timeZoneType != tzdef2.timeZoneType ||
+		tzdef.locationNameType != tzdef2.locationNameType {
 		return false
 	}
 
@@ -335,7 +351,7 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
 	return true
 }
 
-// EqualZoneOffsets - Compares ZoneOffsets for two TimeZoneDefDto's and
+// equalZoneOffsets - Compares ZoneOffsets for two TimeZoneDefDto's and
 // returns 'true' if they are equal.
 //
 // Zone Offset is a text string representing the offset from UTC plus the

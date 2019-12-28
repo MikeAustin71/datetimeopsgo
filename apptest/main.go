@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest039()
+	mainTest{}.mainTest040()
 
 
 }
@@ -27,11 +27,21 @@ func (mt mainTest) mainTest040() {
 	        Instead, actual Zone Out='PST'
 	*/
 
+	ePrefix := "mainTest040()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
-	tIn, _ := time.Parse(fmtstr, tstr)
-	tzu, _ := dt.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+	tIn, _ := time.Parse(fmtStr, tstr)
+	tzu, _ := dt.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtStr)
+
+	fmt.Println("       tstr: ", tstr)
+	inTimeStr := tzu.TimeIn.GetDateTimeValue().Format(fmtStr)
+	fmt.Println(" tzu.TimeIn: ", inTimeStr)
+	outTimeStr := tzu.TimeOut.GetDateTimeValue().Format(fmtStr)
+	fmt.Println("tzu.TimeOut: ", outTimeStr)
 
 	expectedZone := "PDT"
 

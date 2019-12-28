@@ -7,8 +7,6 @@ import (
 	"sync"
 )
 
-var lockMapTimeZoneTypeStringToCode = sync.Mutex{}
-
 var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
 	"None":     TimeZoneType(0).None(),
 	"Iana":     TimeZoneType(0).Iana(),
@@ -16,16 +14,12 @@ var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
 	"Local":    TimeZoneType(0).Local(),
 }
 
-var lockMapTimeZoneTypeLwrCaseStringToCode = sync.Mutex{}
-
 var mTimeZoneTypeLwrCaseStringToCode = map[string]TimeZoneType{
 	"none":     TimeZoneType(0).None(),
 	"iana":     TimeZoneType(0).Iana(),
 	"military": TimeZoneType(0).Military(),
 	"local":    TimeZoneType(0).Local(),
 }
-
-var lockMapTimeZoneTypeCodeToString = sync.Mutex{}
 
 var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 	TimeZoneType(0).None():     "None",
@@ -38,8 +32,8 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 // constant integer values describing the valid types
 // of time zones processed by type 'TimeZoneDefDto'.
 //
-// Functionally, 'TimeZoneType' serves as enumeration of
-// valid time zone types.
+// Functionally, 'TimeZoneType' serves as an enumeration
+// of valid time zone types.
 //
 //                      Time Zone
 //   Method             Type Code
@@ -75,6 +69,8 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 //             https://www.youtube.com/watch?v=DyXJy_0v0_U
 //
 type TimeZoneType int
+
+var lockTypeZoneType sync.Mutex
 
 // None - TimeZoneType is uninitialized and has no value.
 //
@@ -128,9 +124,9 @@ func (tzType TimeZoneType) Local() TimeZoneType { return TimeZoneType(3) }
 //
 func (tzType TimeZoneType) String() string {
 
-	lockMapTimeZoneTypeCodeToString.Lock()
+	lockTypeZoneType.Lock()
 
-	defer lockMapTimeZoneTypeCodeToString.Unlock()
+	defer lockTypeZoneType.Unlock()
 
 	label, ok := mTimeZoneTypeCodeToString[tzType]
 
@@ -159,13 +155,13 @@ func (tzType TimeZoneType) String() string {
 //
 // caseSensitive   bool - If 'true' the search for enumeration names
 //                        will be case sensitive and will require an
-//                        exact match. Therefore, 'valid' will NOT
-//                        match the enumeration name, 'Valid'.
+//                        exact match. Therefore, 'iana' will NOT
+//                        match the enumeration name, 'Iana'.
 //
 //                        If 'false' a case insensitive search is
 //                        conducted for the enumeration name. In
-//                        this case, 'valid' will match the
-//                        enumeration name 'Valid'.
+//                        this case, 'iana' will match the
+//                        enumeration name 'Iana'.
 //
 // ------------------------------------------------------------------------
 //
@@ -198,6 +194,10 @@ func (tzType TimeZoneType) XParseString(
 	valueString string,
 	caseSensitive bool) (TimeZoneType, error) {
 
+	lockTypeZoneType.Lock()
+
+	defer lockTypeZoneType.Unlock()
+
 	ePrefix := "TimeZoneType.XParseString() "
 
 	lenValueStr := len(valueString)
@@ -229,10 +229,6 @@ func (tzType TimeZoneType) XParseString(
 
 	} else if caseSensitive {
 
-		lockMapTimeZoneTypeStringToCode.Lock()
-
-		defer lockMapTimeZoneTypeStringToCode.Unlock()
-
 		timeZoneType, ok = mTimeZoneTypeStringToCode[valueString]
 
 		if !ok {
@@ -242,11 +238,8 @@ func (tzType TimeZoneType) XParseString(
 
 	} else {
 		// caseSensitive must be 'false'
-		valueString = strings.ToLower(valueString)
 
-		lockMapTimeZoneTypeLwrCaseStringToCode.Lock()
-
-		defer lockMapTimeZoneTypeLwrCaseStringToCode.Unlock()
+		valueString = strings.ToLower(testStr)
 
 		timeZoneType, ok = mTimeZoneTypeLwrCaseStringToCode[valueString]
 
@@ -267,6 +260,10 @@ func (tzType TimeZoneType) XParseString(
 // enumerations for this type.
 //
 func (tzType TimeZoneType) XValue() TimeZoneType {
+
+	lockTypeZoneType.Lock()
+
+	defer lockTypeZoneType.Unlock()
 
 	return tzType
 }

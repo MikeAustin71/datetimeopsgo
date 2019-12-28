@@ -42,6 +42,11 @@ type TimeZoneDefDto struct {
 	utcOffset              string         // A text string representing the offset for UTC. Example "-0600" or "+0200"
 	location               *time.Location // Pointer to a Time Zone Location
 	locationName           string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
+	locationNameType       LocationNameType // Four possible values:
+	//                                           None()
+	//                                           ConvertibleAbbreviation()
+	//                                           NonConvertibleAbbreviation()
+	//                                           ConvertibleTimeZoneName()
 	militaryTimeZoneName   string         // Full Military Time Zone text name. Examples: "Alpha", "Bravo", "Charlie", "Zulu"
 	militaryTimeZoneLetter string         // Single Alphabetic Character identifying a Military Time Zone.
 	tagDescription         string         // Unused - Available for classification, labeling or description by user.
@@ -228,6 +233,20 @@ func (tzdef *TimeZoneDefDto) GetLocationName() string {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.locationName
+}
+
+// GetLocationNameType - Returns the value of internal
+// private member variable TimeZoneDefDto.locationNameType.
+//
+// Possible return values:
+//  LocationNameType(0).None()
+//  LocationNameType(0).ConvertibleAbbreviation()
+//  LocationNameType(0).NonConvertibleAbbreviation()
+//  LocationNameType(0).ConvertibleTimeZoneName()
+//
+func (tzdef *TimeZoneDefDto) GetLocationNameType() LocationNameType {
+
+	return tzdef.locationNameType
 }
 
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
@@ -473,26 +492,6 @@ func (tzdef *TimeZoneDefDto) IsValid() error {
 	return tzDefUtil.isValidTimeZoneDefDto(tzdef, ePrefix)
 }
 
-// IsValidFromDateTime - Uses a time.Time input parameter, 'dateTime' to
-// analyze the current TimeZoneDefDto instance. If the zone and location
-// details of 'dateTime' are not perfectly matched to the current TimeZoneDefDto
-// instance, the instance is considered INVALID, and this method returns 'false'.
-//
-// Otherwise, if all zone and location details are perfectly matched, this
-// method returns 'true', signaling that the TimeZoneDateDefDto instance
-// is VALID.
-//
-func (tzdef *TimeZoneDefDto) IsValidFromDateTime(dateTime time.Time) bool {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	tzDefUtil := timeZoneDefUtility{}
-
-	return tzDefUtil.isValidFromDateTime(tzdef, dateTime)
-}
-
 // New - Creates and returns a new TimeZoneDefDto instance based on
 // a 'dateTime (time.Time) input parameter.
 //
@@ -505,8 +504,8 @@ func (tzdef *TimeZoneDefDto) IsValidFromDateTime(dateTime time.Time) bool {
 // Returns
 // =======
 //
-// This method will return two Types:
-//      (1) A Time Zone Definition Dto
+// This method will return two values:
+//      (1) A Time Zone Definition Dto (TimeZoneDefDto)
 //      (2) An 'error' type
 //
 //  (1) If successful, this method will return a valid, populated TimeZoneDefDto instance.
