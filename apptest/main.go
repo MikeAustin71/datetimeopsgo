@@ -20,6 +20,30 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest040() {
+	/*
+	--- FAIL: TestTimeZoneUtility_GetZoneOut_01 (0.00s)
+	    zzttimezonedto01_test.go:528: Expected Zone Out='PDT'.
+	        Instead, actual Zone Out='PST'
+	*/
+
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu, _ := dt.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+
+	expectedZone := "PDT"
+
+	actualZone := tzu.TimeOut.GetTimeZoneAbbreviation()
+
+	if expectedZone != actualZone {
+		fmt.Printf("Expected Zone Out='%v'.\n" +
+			"Instead, actual Zone Out='%v'\n", expectedZone, actualZone)
+	}
+
+}
+
 func (mt mainTest) mainTest039() {
 
 	ePrefix := "mainTest039()"

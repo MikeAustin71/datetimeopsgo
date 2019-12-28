@@ -450,10 +450,13 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 			"Error='%v'\n", err.Error())
 	}
 
+
+	/* TODO - Fix IsValidFromDateTime()
 	if !dTz.timeZone.IsValidFromDateTime(dTz.dateTimeValue) {
 		return errors.New(ePrefix +
 			"\nError: dTz.TimeZone is INVALID!\n")
 	}
+*/
 
 	return nil
 }

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"sync"
 )
+
 
 // mTDurCalcTypeIntToString - This map is used to map enumeration values
 // to enumeration names stored as strings for Type TDurCalcType.
@@ -77,6 +79,8 @@ var mTDurCalcTypeLwrCaseStringToInt = map[string]int{}
 //	                 allocation is performed using standard Gregorian Years.
 //
 type TDurCalcType int
+
+var lockTDurCalcType sync.Mutex
 
 // StdYearMth - Allocates time duration by Standard Year, months, weeks,
 // weekdays, date days, hours, minutes, seconds, milliseconds, microseconds
@@ -670,6 +674,10 @@ func (TDurCalcType) GregorianYears() TDurCalcType { return TDurCalcType(10) }
 //
 func (c TDurCalcType) String() string {
 
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
 	c.checkInitializeMaps(false)
 
 	result, ok := mTDurCalcTypeIntToString[int(c)]
@@ -730,6 +738,10 @@ func (c TDurCalcType) ParseString(
 	valueString string,
 	caseSensitive bool) (TDurCalcType, error) {
 
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
 	ePrefix := "TDurCalcType.ParseString() "
 
 	c.checkInitializeMaps(false)
@@ -779,6 +791,11 @@ func (c TDurCalcType) ParseString(
 // instance.
 //
 func (c TDurCalcType) Value() int {
+
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
 	return int(c)
 }
 
