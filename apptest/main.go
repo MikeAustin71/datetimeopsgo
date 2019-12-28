@@ -10,14 +10,130 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest040()
-
+	mainTest{}.mainTest042()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest042() {
+
+	ePrefix := "mainTest042()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+
+	tIn, _ := time.Parse(fmtStr, tstr)
+
+	ianaPacificTzPtr, err := time.LoadLocation(ianaPacificTz)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(ianaPacificTz)\n" +
+			"ianaPacificTz='%v'\n" +
+			"Error='%v'\n", ianaPacificTz, err.Error())
+		return
+	}
+
+	tOut := tIn.In(ianaPacificTzPtr)
+
+	fmt.Println(" tIn: ", tIn.Format(fmtStr))
+	fmt.Println("tOut: ", tOut.Format(fmtStr))
+
+	dTzDtoIn, err := dt.DateTzDto{}.New(tIn, fmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.DateTzDto{}.New(tIn, fmtStr)\n" +
+			"tIn='%v'\n" +
+			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
+		return
+	}
+
+	tzDefIn := dTzDtoIn.GetTimeZone()
+
+	ex.PrintOutTimeZoneDefDtoFields(tzDefIn)
+
+	dTzDtoOut, err := dt.DateTzDto{}.NewTz(
+		tIn,
+		ianaPacificTz,
+		dt.TzConvertType.Relative(),
+		fmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.DateTzDto{}.NewTz(tIn,ianaPacificTz,...)\n" +
+			"tIn='%v'\n" +
+			"ianaPacificTz='%v'\n" +
+			"Error='%v'\n",
+			tIn.Format(fmtStr),
+			ianaPacificTz,
+			err.Error())
+		return
+	}
+
+	tzDefOut := dTzDtoOut.GetTimeZone()
+
+	ex.PrintOutTimeZoneDefDtoFields(tzDefOut)
+
+	tOut2 := tIn.In(tzDefOut.GetLocationPtr())
+
+	fmt.Println()
+	fmt.Println("Final tOut2: ", tOut2.Format(fmtStr))
+
+}
+
+func (mt mainTest) mainTest041() {
+
+	ePrefix := "mainTest041()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+
+	tIn, _ := time.Parse(fmtStr, tstr)
+
+	ianaPacificTzPtr, err := time.LoadLocation(ianaPacificTz)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(ianaPacificTz)\n" +
+			"ianaPacificTz='%v'\n" +
+			"Error='%v'\n", ianaPacificTz, err.Error())
+		return
+	}
+
+	tOut := tIn.In(ianaPacificTzPtr)
+
+	fmt.Println(" tIn: ", tIn.Format(fmtStr))
+	fmt.Println("tOut: ", tOut.Format(fmtStr))
+
+	tzDefIn, err := dt.TimeZoneDefDto{}.New(tIn)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(tIn)\n" +
+			"tIn='%v'\n" +
+			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
+		return
+	}
+
+	ex.PrintOutTimeZoneDefDtoFields(tzDefIn)
+
+	tzDefOut, err := dt.TimeZoneDefDto{}.New(tOut)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(tOut)\n" +
+			"tOut='%v'\n" +
+			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
+		return
+	}
+
+	ex.PrintOutTimeZoneDefDtoFields(tzDefOut)
+
 }
 
 func (mt mainTest) mainTest040() {
@@ -42,6 +158,14 @@ func (mt mainTest) mainTest040() {
 	fmt.Println(" tzu.TimeIn: ", inTimeStr)
 	outTimeStr := tzu.TimeOut.GetDateTimeValue().Format(fmtStr)
 	fmt.Println("tzu.TimeOut: ", outTimeStr)
+
+	timeInDef := tzu.TimeIn.GetTimeZone()
+
+	ex.PrintOutTimeZoneDefDtoFields(timeInDef)
+
+	timeOutDef := tzu.TimeOut.GetTimeZone()
+
+	ex.PrintOutTimeZoneDefDtoFields(timeOutDef)
 
 	expectedZone := "PDT"
 
@@ -88,11 +212,12 @@ func (mt mainTest) mainTest039() {
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t1)\n" +
 			"t1='%v'\n" +
-			"Error='%v'\n", t1.Format(fmtStr))
+			"Error='%v'\n", t1.Format(fmtStr), err.Error())
 		return
 	}
 
 	fmt.Println("t1 Date Time: ", t1.Format(fmtStr))
+
 	ex.PrintOutTimeZoneDefDtoFields(tzDef)
 
 	t2 := time.Date(
@@ -110,7 +235,8 @@ func (mt mainTest) mainTest039() {
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t2)\n" +
 			"t2='%v'\n" +
-			"Error='%v'\n", t1.Format(fmtStr))
+			"Error='%v'\n",
+			t2.Format(fmtStr),t1.Format(fmtStr))
 		return
 	}
 
@@ -261,7 +387,8 @@ func (mt mainTest) mainTest036() {
 
 	if err != nil {
 		fmt.Printf("Error returned from time.Parse(fmtstr, t2str)\n" +
-			"t2str='%v'\n", t2str, err.Error())
+			"t2str='%v'\n" +
+			"Error='%v'\n", t2str, err.Error())
 		return
 	}
 
