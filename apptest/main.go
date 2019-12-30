@@ -10,13 +10,587 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest042()
+	mainTest{}.mainTest048()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest049() {
+
+	ePrefix := "mainTest048()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
+	// t1EstStr :=  "12/20/2019 09:58:32.000000000 -0500 EST"
+	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0500 CDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0600 CST"
+	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0600 MDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0700 MST"
+	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0700 PDT"
+	// t2PstStr :=  "12/20/2019 09:58:32.000000000 -0800 PST"
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	timeStr := t1EdtStr
+	t1, err := time.Parse(fmtStr, timeStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, timeStr)\n" +
+			"timeStr='%v'\nError='%v'\n", timeStr, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+
+}
+
+func (mt mainTest) mainTest048() {
+
+	ePrefix := "mainTest048()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	// t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
+	t1EstStr :=  "12/20/2019 09:58:32.000000000 -0500 EST"
+	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0500 CDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0600 CST"
+	// t3PdtStr :=  "06/20/2019 09:58:32.000000000 -0600 MDT"
+	// t3PdtStr :=  "12/20/2019 09:58:32.000000000 -0700 MST"
+	// t4PdtStr :=  "06/20/2019 09:58:32.000000000 -0700 PDT"
+	// t4PstStr :=  "12/20/2019 09:58:32.000000000 -0800 PST"
+	// t5CestStr := "06/20/2019 09:58:32.000000000 +0200 CEST"
+	// t7MSKStr := "06/20/2019 09:58:32.000000000 +0300 MSK"
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	timeStr := t1EstStr
+	t1, err := time.Parse(fmtStr, timeStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, timeStr)\n" +
+			"timeStr='%v'\nError='%v'\n", timeStr, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+
+	locNamePtr := t1.Location()
+	locName := locNamePtr.String()
+	lenLocName := len(locName)
+
+	if lenLocName > 5 {
+		_, err = time.LoadLocation(locName)
+
+		if err != nil {
+			fmt.Printf(ePrefix +
+				"\nError returned by time.LoadLocation(locName)\n" +
+				"locName='%v'\nError='%v'\n",
+				locName, err.Error())
+			return
+		}
+
+	fmt.Println("Location Loaded Successfully: ", locNamePtr.String())
+
+	} else {
+
+		offsetLeadLen := len("01/02/2006 15:04:05.000000000 ")
+
+		t2AbbrvLookup := locName + timeStr[offsetLeadLen:offsetLeadLen+5]
+
+		stdAbbrvs := dt.StdTZoneAbbreviations{}
+
+		tzones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(t2AbbrvLookup)
+
+		if !ok {
+			fmt.Printf(ePrefix +
+				"\nError: Map TzAbbrvs to Time Zones Failed.\n" +
+				"Lookup key='%v'\n", t2AbbrvLookup)
+			return
+		}
+
+		fmt.Println("Abbreviation Lookup: ", t2AbbrvLookup)
+		newTZone := ""
+
+		if len(tzones) == 1 {
+			newTZone = tzones[0]
+		}
+	/*
+		if len(newTZone) == 0 {
+			for i:= 0; i < len(tzones); i++ {
+				if (strings.HasPrefix(tzones[i], locName) ||
+					strings.HasSuffix(tzones[i], locName)) &&
+					len(tzones[i]) > lenLocName {
+					newTZone = tzones[i]
+					break
+				}
+			}
+		}
+
+		if len(newTZone) == 0 {
+			for i:= 0; i < len(tzones); i++ {
+				if len(tzones[i]) <= lenLocName &&
+					!strings.Contains(tzones[i], "-") {
+					newTZone = tzones[i]
+					break
+				}
+			}
+		}
+*/
+
+		if len(newTZone) == 0 {
+
+			priorityList := []string {
+				"UTC",
+				"Etc/UTC",
+				"Etc/GMT-0",
+				"America/New_York",
+				"America/Chicago",
+				"America/Denver",
+				"America/Los_Angeles",
+				"Pacific/Honolulu",
+				"America/Anchorage",
+				"America/Adak",
+				"America/Havana",
+				"America/St_Johns",
+				"America/Thule",
+				"America",
+				"EST5EDT",
+				"CST6CDT",
+				"MST7MDT",
+				"PST8PDT",
+				"US",
+				"Europe/Paris",
+				"Europe/London",
+				"Europe/Dublin",
+				"Europe/Rome",
+				"Europe/Madrid",
+				"Europe/Kiev",
+				"Europe/Moscow",
+				"Europe",
+				"Asia/Shanghai",
+				"Asia/Hong_Kong",
+				"Asia/Seoul",
+				"Asia/Tokyo",
+				"Asia/Calcutta",
+				"Asia/Karachi",
+				"Asia/Manila",
+				"Asia/Jerusalem",
+				"Asia/Tel_Aviv",
+				"Asia/Jakarta",
+				"Asia/Makassar",
+				"Asia",
+				"Atlantic/Canary",
+				"Atlantic",
+				"Australia/Sydney",
+				"Australia/Darwin",
+				"Australia/Melbourne",
+				"Australia/Adelaide",
+				"Australia/Perth",
+				"Australia",
+				"Canada",
+				"Pacific/Guam",
+				"Pacific/Samoa",
+				"Pacific",
+				"Africa/Cairo",
+				"Africa/Johannesburg",
+				"Africa/Nairobi",
+				"Africa/Lagos",
+				"Africa",
+				"Indian",
+				"Etc",
+				"Other",
+				"Antarctica/McMurdo",
+				"Antarctica",
+			}
+
+			for i:=0; i < len(priorityList) && len(newTZone)== 0 ; i++ {
+
+				for j:=0; j < len(tzones); j++ {
+
+					if strings.HasPrefix(tzones[j], priorityList[i]) {
+						newTZone = tzones[j]
+						break
+					}
+				}
+			}
+		}
+
+		if len(newTZone) == 0 {
+			newTZone = tzones[0]
+		}
+
+		locNamePtr , err = time.LoadLocation(newTZone)
+
+		if err != nil {
+			fmt.Printf(ePrefix +
+				"\nError loading New Time Zone!\n" +
+				"time.LoadLocation(newTZone)\n" +
+				"newTZone='%v'\nError='%v'\n",
+				newTZone, err.Error())
+			return
+		}
+
+		t1 = t1.In(locNamePtr)
+		locName = newTZone
+
+		fmt.Printf("t1 converted to new time zone '%v'\n",
+			locName)
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Final Date Time")
+}
+
+
+
+func (mt mainTest) mainTest047() {
+// CET is a valid time zone
+	ePrefix := "mainTest047()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	// t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
+	// t1EstStr :=  "12/20/2019 09:58:32.000000000 -0500 EST"
+	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0500 CDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0600 CST"
+	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0600 MDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0700 MST"
+	t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0700 PDT"
+	// t2PstStr :=  "12/20/2019 09:58:32.000000000 -0800 PST"
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1Edt, err := time.Parse(fmtStr, t2PdtStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, t2PdtStr)\n" +
+			"t2PdtStr='%v'\nError='%v'\n", t2PdtStr, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t1Edt, "t1 EST Date Time")
+
+	newTimeZoneName := "MST"
+
+	newTimeZoneLocPtr, err := time.LoadLocation(newTimeZoneName)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(newTimeZoneName)\n" +
+			"newTimeZoneName='%v'\nError='%v'\n",
+			newTimeZoneName, err.Error())
+		return
+	}
+
+	t2Cdt := t1Edt.In(newTimeZoneLocPtr)
+
+
+	ex.PrintOutDateTimeTimeZoneFields(t2Cdt, "t1 CDT Date Time")
+
+}
+
+func (mt mainTest) mainTest046() {
+
+	ePrefix := "mainTest046()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tstr1 := "12/29/2019 17:54:30 -0800 PST"
+	tstr2 := "12/29/2019 20:54:30 -0500 EST"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	tzLeadLen := len("01/02/2006 15:04:05 -0700 ")
+
+	tIn1, err := time.Parse(fmtStr, tstr1)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, tstr1)\n" +
+			"testr='%v'\nError='%v'\n", tstr1, err.Error())
+		return
+	}
+
+	tIn2, err := time.Parse(fmtStr, tstr2)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, tstr2)\n" +
+			"testr='%v'\nError='%v'\n", tstr1, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn1, "tIn1")
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn2, "tIn2")
+
+
+	tstr1TimeZone := tstr1[tzLeadLen:]
+
+	fmt.Println("Time Zone tstr1: ", tstr1TimeZone)
+
+	fmt.Println("Loading Time Zone: ", tstr1TimeZone)
+	// CST6CDT
+	tstr1TimeZoneLocPtr, err := time.LoadLocation(tstr1TimeZone)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(tstr1TimeZone).\n" +
+			"tstr1TimeZone='%v'\nError='%v'\n", tstr1TimeZone ,err.Error())
+		return
+	}
+
+
+	tstr2TimeZone := tstr2[tzLeadLen:]
+
+	fmt.Println("Time Zone tstr2: ", tstr2TimeZone)
+	fmt.Println("Loading Time Zone: ", tstr2TimeZone)
+	// EST5EDT
+
+	tstr2TimeZoneLocPtr, err := time.LoadLocation(tstr2TimeZone)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(tstr2TimeZone).\n" +
+			"tstr2TimeZone='%v'\nError='%v'\n", tstr2TimeZone ,err.Error())
+		return
+	}
+
+	t1ConvertedByT2 := tIn1.In(tstr2TimeZoneLocPtr)
+
+	t2ConvertedByT1 := tIn2.In(tstr1TimeZoneLocPtr)
+
+	ex.PrintOutDateTimeTimeZoneFields(t1ConvertedByT2, "t1ConvertedByT2")
+
+	ex.PrintOutDateTimeTimeZoneFields(t2ConvertedByT1, "t2ConvertedByT1")
+
+}
+
+func (mt mainTest) mainTest045() {
+
+	ePrefix := "mainTest045()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tstr1 := "06/29/2019 19:54:30 -0500 CDT"
+	tstr2 := "06/29/2019 20:54:30 -0400 EDT"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	tzLeadLen := len("01/02/2006 15:04:05 -0700 ")
+
+	tIn1, err := time.Parse(fmtStr, tstr1)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, tstr1)\n" +
+			"testr='%v'\nError='%v'\n", tstr1, err.Error())
+		return
+	}
+
+	tIn2, err := time.Parse(fmtStr, tstr2)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, tstr2)\n" +
+			"testr='%v'\nError='%v'\n", tstr1, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn1, "tIn1")
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn2, "tIn2")
+
+	tstr1TimeZone := tstr1[tzLeadLen:]
+
+	fmt.Println("Time Zone tstr1: ", tstr1TimeZone)
+
+	fmt.Println("Loading Time Zone: ", "CST6CDT")
+	// CST6CDT
+	tstr1TimeZoneLocPtr, err := time.LoadLocation("CST6CDT")
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(\"CST6CDT\").\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	tstr2TimeZone := tstr2[tzLeadLen:]
+
+	fmt.Println("Time Zone tstr2: ", tstr2TimeZone)
+	fmt.Println("Loading Time Zone: ", "EST5EDT")
+	// EST5EDT
+
+	tstr2TimeZoneLocPtr, err := time.LoadLocation("EST5EDT")
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(\"EST5EDT\").\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1ConvertedByT2 := tIn1.In(tstr2TimeZoneLocPtr)
+
+	t2ConvertedByT1 := tIn2.In(tstr1TimeZoneLocPtr)
+
+	ex.PrintOutDateTimeTimeZoneFields(t1ConvertedByT2, "t1ConvertedByT2")
+
+	ex.PrintOutDateTimeTimeZoneFields(t2ConvertedByT1, "t2ConvertedByT1")
+
+}
+
+func (mt mainTest) mainTest044() {
+
+	ePrefix := "mainTest044()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tstr1 := "06/29/2019 19:54:30 -0500 CDT"
+	tstr2 := "06/29/2019 20:54:30 -0400 EDT"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	offsetLeadLen := len("01/02/2006 15:04:05 ")
+
+	tzLeadLen := len("01/02/2006 15:04:05 -0700 ")
+
+	tIn1, err := time.Parse(fmtStr, tstr1)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, tstr1)\n" +
+			"testr='%v'\nError='%v'\n", tstr1, err.Error())
+		return
+	}
+
+	tIn2, err := time.Parse(fmtStr, tstr2)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, tstr2)\n" +
+			"testr='%v'\nError='%v'\n", tstr1, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn1, "tIn1")
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn2, "tIn2")
+
+
+	tIn1V2 := time.Date(
+		2019,
+		time.Month(12),
+		30,
+		9,
+		0,
+		0,
+		0,
+		tIn2.Location())
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn1V2, "tIn1V2")
+
+	tIn2V2 := time.Date(
+		2019,
+		time.Month(12),
+		30,
+		9,
+		0,
+		0,
+		0,
+		tIn1.Location())
+
+	ex.PrintOutDateTimeTimeZoneFields(tIn2V2, "tIn2V2")
+
+	currTz := tstr2[tzLeadLen:]
+
+	t2AbbrvLookup := currTz + tstr2[offsetLeadLen:offsetLeadLen+5]
+
+	stdAbbrvs := dt.StdTZoneAbbreviations{}
+
+	tzones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(t2AbbrvLookup)
+
+	if !ok {
+		fmt.Printf(ePrefix +
+			"\nError: Map TzAbbrvs to Time Zones Failed.\n" +
+			"Lookup key='%v'\n", t2AbbrvLookup)
+		return
+	}
+
+	newTZone := ""
+
+	for i:= 0; i < len(tzones); i++ {
+		if strings.HasPrefix(tzones[i], currTz) ||
+			strings.HasSuffix(tzones[i], currTz){
+			newTZone = tzones[i]
+		}
+	}
+
+	if newTZone == "" {
+		fmt.Println(ePrefix +
+			"\nError: New Time Zone Look Up failed!")
+		return
+	}
+
+	newTZonePtr, err := time.LoadLocation(newTZone)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(newTZone)\n" +
+			"newTZone='%v'\nError='%v'\n", newTZone, err.Error())
+		return
+	}
+
+	convertedTIn1 := tIn1.In(newTZonePtr)
+	ex.PrintOutDateTimeTimeZoneFields(convertedTIn1, "convertedTIn1")
+
+}
+
+func (mt mainTest) mainTest043() {
+	ePrefix := "mainTest043()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	tzName := "EST"
+	tzLocPtr, err := time.LoadLocation(tzName)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(tzName)\n" +
+			"tzName='%v'\n" +
+			"Error='%v'\n", tzName, err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2019,
+		time.Month(6),
+		30,
+		22,
+		58,
+		32,
+		0,
+		tzLocPtr)
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1")
+
+	t1V2str := "06/30/2019 22:58:32.000000000 -0400 EDT"
+
+	t1V2, err := time.Parse(fmtStr, t1V2str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtstr, t1str)\n" +
+			"t1V2str='%v'\n" +
+			"Error='%v'\n", t1V2str, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t1V2, "t1V2")
+
 }
 
 func (mt mainTest) mainTest042() {
@@ -284,8 +858,9 @@ func (mt mainTest) mainTest038() {
 		0,
 		easternLocPtr)
 
-	fmt.Println("t1 Date Time: ", t1.Format(fmtStr))
-	fmt.Println("t2 Date Time: ", t2.Format(fmtStr))
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Date Time")
+
+	ex.PrintOutDateTimeTimeZoneFields(t2, "t2 Date Time")
 
 
 }
@@ -351,42 +926,55 @@ func (mt mainTest) mainTest036() {
 
 	mt.mainPrintHdr(ePrefix , "-")
 
-	t1str := "06/30/2019 22:58:32.000000000 -0400 EDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1str := "12/30/2019 22:58:32.000000000 -0400 EDT"
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	t1, err := time.Parse(fmtstr, t1str)
+	t1, err := time.Parse(fmtStr, t1str)
 
 	if err != nil {
-		fmt.Printf("Error returned by time.Parse(fmtstr, t1str)\n" +
+		fmt.Printf("Error returned by time.Parse(fmtStr, t1str)\n" +
 			"t1str='%v'\n" +
 			"Error='%v'\n", t1str, err.Error())
 		return
 	}
 
+
 	tzName := t1.Location().String()
+	t1UTC := t1.In(time.UTC)
+	fmt.Println("    t1 date Time String: ", t1str)
+	fmt.Println("           t1 date time: ", t1.Format(fmtStr))
+	fmt.Println("      t1 Time Zone Name: ", tzName)
 
-	fmt.Println("t1 date Time String: ", t1str)
-	fmt.Println("       t1 date time: ", t1.Format(fmtstr))
-	fmt.Println("  t1 Time Zone Name: ", tzName)
+	t1V2 := time.Date(
+		t1.Year(),
+		t1.Month(),
+		t1.Day(),
+		t1.Hour(),
+		t1.Minute(),
+		t1.Second(),
+		t1.Nanosecond(),
+		t1.Location())
+
+	fmt.Println("  t1V2 Date Time String: ", t1V2.Format(fmtStr))
+	fmt.Println("t1 UTC Date Time String: ", t1UTC.Format(fmtStr))
 	fmt.Println()
-
-/*
-	locPtr, err := time.LoadLocation(tzName)
+	t1TzLoaded := "EST"
+	_, err = time.LoadLocation(t1TzLoaded)
 
 	if err != nil {
 		fmt.Printf("Error returned by time.LoadLocation(tzName).\n" +
 			"tzName='%v'\n" +
-			"Error='%v'\n", tzName, err.Error())
+			"Error='%v'\n", t1TzLoaded, err.Error())
 		return
 	}
-*/
+
 
 	t2str := "06/30/2019 22:58:32.000000000 -0500 CDT"
 
-	t2, err := time.Parse(fmtstr, t2str)
+	t2, err := time.Parse(fmtStr, t2str)
 
 	if err != nil {
-		fmt.Printf("Error returned from time.Parse(fmtstr, t2str)\n" +
+		fmt.Printf("Error returned from time.Parse(fmtStr, t2str)\n" +
 			"t2str='%v'\n" +
 			"Error='%v'\n", t2str, err.Error())
 		return
@@ -395,8 +983,8 @@ func (mt mainTest) mainTest036() {
 	t3 := t2.In(t1.Location())
 	tzName = t3.Location().String()
 
-	fmt.Println("t2 date Time String: ", t2.Format(fmtstr))
-	fmt.Println("       t3 date time: ", t3.Format(fmtstr))
+	fmt.Println("t2 date Time String: ", t2.Format(fmtStr))
+	fmt.Println("       t3 date time: ", t3.Format(fmtStr))
 	fmt.Println("  t3 Time Zone Name: ", tzName)
 	fmt.Println()
 

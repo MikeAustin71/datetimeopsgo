@@ -3,6 +3,7 @@ package datetimeexamples
 import (
 	"fmt"
 	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
+	"strings"
 	"time"
 )
 
@@ -680,6 +681,99 @@ func PrintOutTimeDtoFields(tDto dt.TimeDto) {
 	fmt.Println("========================================")
 
 }
+
+func PrintOutDateTimeTimeZoneFields(dt time.Time, dtLabel string) {
+	fmt.Println("=========================================")
+	fmt.Println("     Time Zone Fields From time.Time     ")
+	fmt.Println("=========================================")
+
+	zoneName, zoneOffsetSeconds := dt.Zone()
+
+	locationPtr := dt.Location()
+
+	var locationName, locationPtrStr,
+	  offsetSignStr string
+
+	if locationPtr == nil {
+		locationName = ""
+		locationPtrStr = ""
+	} else {
+		locationName = dt.Location().String()
+		locationPtrStr = locationName
+	}
+
+	var zoneSign, offsetHours, offsetMinutes,
+	offsetSeconds, totalOffsetSeconds int
+
+
+	totalOffsetSeconds = zoneOffsetSeconds
+
+	if zoneOffsetSeconds < 0 {
+		zoneSign = -1
+		offsetSignStr = "-"
+	} else {
+		zoneSign = 1
+		offsetSignStr = "+"
+	}
+
+	unSignedZoneOffsetSeconds := zoneOffsetSeconds
+
+	unSignedZoneOffsetSeconds *= zoneSign
+
+	if unSignedZoneOffsetSeconds != 0 {
+		offsetHours = unSignedZoneOffsetSeconds / 3600 // compute hours
+		unSignedZoneOffsetSeconds -= offsetHours * 3600
+
+		if unSignedZoneOffsetSeconds != 0 {
+			offsetMinutes = unSignedZoneOffsetSeconds / 60 // compute minutes
+			unSignedZoneOffsetSeconds -= offsetMinutes * 60
+		}
+
+		offsetSeconds = unSignedZoneOffsetSeconds
+	}
+	utcOffset := fmt.Sprintf("UTC" + offsetSignStr +
+		"%02d%02d", offsetHours, offsetMinutes)
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	/*
+	abbreviationLookUp := fmt.Sprintf(
+		zoneName + offsetSignStr +
+			"%02d%02d", offsetHours, offsetMinutes)
+*/
+
+	abbreviationLookUp := zoneName + utcOffset[3:]
+
+	fieldLen := len("    Total Offset Seconds:")
+
+	lenDtLabel := len(dtLabel) + 2
+
+	if lenDtLabel == 0 {
+		dtLabel = "        Input Date Time: "
+	} else if lenDtLabel >= fieldLen {
+		dtLabel += ": "
+	} else {
+		xSpacer := strings.Repeat(" ", fieldLen - lenDtLabel)
+		dtLabel = xSpacer + dtLabel + ": "
+	}
+
+	fmt.Print()
+	fmt.Println(dtLabel, dt.Format(fmtStr))
+	fmt.Println("              Zone Name: ", zoneName)
+	fmt.Println("    Abbreviation Lookup: ", abbreviationLookUp)
+	fmt.Println("              Zone Sign: ", offsetSignStr)
+	fmt.Println("      Zone Offset Hours: ", offsetHours)
+	fmt.Println("    Zone Offset Minutes: ", offsetMinutes)
+	fmt.Println("    Zone Offset Seconds: ", offsetSeconds)
+	fmt.Println("   Total Offset Seconds: ", totalOffsetSeconds)
+	fmt.Println("             UTC Offset: ", utcOffset)
+	fmt.Println("       Location Pointer: ", locationPtrStr)
+	fmt.Println("          Location Name: ", locationName)
+	fmt.Println("=========================================")
+	fmt.Println()
+
+}
+
 
 // ExampleDurationLocalUTCTime
 func ExampleDurationLocalUTCTime() {
