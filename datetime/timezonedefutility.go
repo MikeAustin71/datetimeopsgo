@@ -8,74 +8,6 @@ import (
 	"time"
 )
 
-// tzAbbrvToTimeZonePriorityList - Internal list
-// used to assign Time Zones to Time Zone abbreviations
-// based on priority
-var tzAbbrvToTimeZonePriorityList = []string {
-			"UTC",
-			"Etc/UTC",
-			"Etc/GMT-0",
-			"America/New_York",
-			"America/Chicago",
-			"America/Denver",
-			"America/Los_Angeles",
-			"Pacific/Honolulu",
-			"America/Anchorage",
-			"America/Adak",
-			"America/Havana",
-			"America/St_Johns",
-			"America/Thule",
-			"America",
-			"EST5EDT",
-			"CST6CDT",
-			"MST7MDT",
-			"PST8PDT",
-			"US",
-			"Europe/Paris",
-			"Europe/London",
-			"Europe/Dublin",
-			"Europe/Rome",
-			"Europe/Madrid",
-			"Europe/Kiev",
-			"Europe/Moscow",
-			"Europe",
-			"Asia/Shanghai",
-			"Asia/Hong_Kong",
-			"Asia/Seoul",
-			"Asia/Tokyo",
-			"Asia/Calcutta",
-			"Asia/Karachi",
-			"Asia/Manila",
-			"Asia/Jerusalem",
-			"Asia/Tel_Aviv",
-			"Asia/Jakarta",
-			"Asia/Makassar",
-			"Asia",
-			"Atlantic/Canary",
-			"Atlantic",
-			"Australia/Sydney",
-			"Australia/Darwin",
-			"Australia/Melbourne",
-			"Australia/Adelaide",
-			"Australia/Perth",
-			"Australia",
-			"Canada",
-			"Pacific/Guam",
-			"Pacific/Samoa",
-			"Pacific",
-			"Africa/Cairo",
-			"Africa/Johannesburg",
-			"Africa/Nairobi",
-			"Africa/Lagos",
-			"Africa",
-			"Indian",
-			"Etc",
-			"Other",
-			"Antarctica/McMurdo",
-			"Antarctica",
-}
-
-
 type timeZoneDefUtility struct {
 	lock sync.Mutex
 }
@@ -117,7 +49,7 @@ func (tzDefUtil *timeZoneDefUtility) allocateZoneOffsetSeconds(
 	tzdef.offsetHours = signedZoneOffsetSeconds / 3600 // compute hours
 	signedZoneOffsetSeconds -= tzdef.offsetHours * 3600
 
-	if signedZoneOffsetSeconds != 0 {
+	if signedZoneOffsetSeconds > 0 {
 		tzdef.offsetMinutes = signedZoneOffsetSeconds / 60 // compute minutes
 		signedZoneOffsetSeconds -= tzdef.offsetMinutes * 60
 	}
@@ -605,6 +537,7 @@ func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
 // SetFromDateTimeComponents - Re-initializes the values of the
 // 'TimeZoneDefDto' instance based on input parameter, 'dateTime'.
 //
+/*
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef *TimeZoneDefDto,
 	dateTime time.Time,
@@ -673,7 +606,9 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	return nil
 }
-/*
+
+ */
+
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef *TimeZoneDefDto,
 	dateTime time.Time,
@@ -725,7 +660,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	return nil
 }
-*/
 
 // setFromTimeZoneName - Sets the data fields of the specified
 // TimeZoneDefDto instance base on the time zone text name.

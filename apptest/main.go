@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest048()
+	mainTest{}.mainTest050()
 
 }
 
@@ -19,9 +19,61 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest050() {
+/*
+	 =========================================
+	      Time Zone Fields From time.Time
+	 =========================================
+	    t1 Initial Date Time:  12/30/2019 09:00:00.000000000 +0700 +07
+	               Zone Name:  +07
+	     Abbreviation Lookup:  +07+0700
+	               Zone Sign:  +
+	       Zone Offset Hours:  7
+	     Zone Offset Minutes:  0
+	     Zone Offset Seconds:  0
+	    Total Offset Seconds:  25200
+	              UTC Offset:  UTC+0700
+	        Location Pointer:  Asia/Ho_Chi_Minh
+	           Location Name:  Asia/Ho_Chi_Minh
+	 =========================================
+ */
+	ePrefix := "mainTest050()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	// "Asia/Ho_Chi_Minh"
+// timeZoneName := "Asia/Vladivostok"
+timeZoneName := "Asia/Ho_Chi_Minh"
+
+tzLocPtr, err := time.LoadLocation(timeZoneName)
+
+if err != nil {
+	fmt.Printf(ePrefix +
+		"Error returned by time.LoadLocation(timeZoneName)\n" +
+		"timeZoneName='%v'\n" +
+		"Error='%v'\n", timeZoneName, err.Error())
+
+	return
+
+}
+
+	t1 := time.Date(
+		2019,
+		time.Month(12),
+		30,
+		9,
+		0,
+		0,
+		0,
+		tzLocPtr)
+
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+
+}
+
 func (mt mainTest) mainTest049() {
 
-	ePrefix := "mainTest048()"
+	ePrefix := "mainTest049()"
 
 	mt.mainPrintHdr(ePrefix , "-")
 

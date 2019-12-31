@@ -212,49 +212,6 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 	return fmt.Errorf("%v", errStr)
 }
 
-// GetTzAbbrvFromDateTime - Receives a time.Time, date
-// time, input parameter and extracts and returns the
-// the time zone abbreviation.
-//
-// Offsets are returned in the format illustrated by the
-// following example:
-//
-//   Time String:  2019-12-26 00:56:15 -0600 CST
-//   Returned Offset:  'CST'
-//
-func (dtUtil *DTimeUtility) GetTzAbbrvFromDateTime(
-	dateTime time.Time) string {
-
-	tStr := dateTime.Format("2006-01-02 15:04:05 -0700 MST")
-
-	lenLeadStr := len("2006-01-02 15:04:05 -0700 ")
-
-	offsetStr := tStr[lenLeadStr:]
-
-	return strings.TrimRight(offsetStr, " ")
-}
-
-// GetUtcOffsetFromDateTime - Receives a time.Time, date
-// time, input parameter and extracts and returns the
-// 5-character UTC offset.
-//
-// Offsets are returned in the format illustrated by the
-// following examples:
-//   +1030
-//   -0500
-//   +1100
-//   -1100
-//
-func (dtUtil *DTimeUtility) GetUtcOffsetFromDateTime(
-	dateTime time.Time) string {
-
-	testTimeStr := dateTime.Format("2006-01-02 15:04:05 -0700 MST")
-
-	lenLeadStr := len("2006-01-02 15:04:05 ")
-
-	return testTimeStr[lenLeadStr: lenLeadStr + 5]
-}
-
 // GetTimeZoneFromName - Analyzes a time zone name passed
 // through input parameter, 'timeZoneName'. If valid, the
 // method populates time zone description elements and
@@ -465,6 +422,51 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 		ianaLocationPtr,
 		tzType,
 		err
+}
+
+// TODO - Finish this method
+func (dtUtil *DTimeUtility) GetTimeZoneFromDateTime(
+	dateTime time.Time,
+	ePrefix string) (tzName string, err error) {
+
+	ePrefix += "DTimeUtility.GetTimeZoneFromDateTime() "
+
+
+
+
+	return "Unfinished", nil
+}
+
+
+// GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
+// time, input parameter and extracts and returns the
+// 5-character UTC offset and UTC offset.
+//
+// UTC Offsets are returned in the format illustrated by the
+// following examples:
+//   +1030
+//   -0500
+//   +1100
+//   -1100
+//
+// Example:
+//  Time String:  2019-12-26 00:56:15 -0600 CST
+//  Returned UTC Offset:  '-0600'
+//  Returned Time Zone Abbreviation: 'CST'
+//
+func (dtUtil *DTimeUtility) GetUtcOffsetTzAbbrvFromDateTime(
+	dateTime time.Time,
+	ePrefix string) (utcOffset, tzAbbrv string, err error) {
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.GetUtcOffsetTzAbbrvFromDateTime() "
+
+	dtMech := dateTimeMechanics{}
+
+	return dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
 }
 
 // RelativeTimeToTimeNameZoneConversion - Converts a time value
