@@ -629,25 +629,63 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
 	}
 
+	zoneName, zoneOffsetSeconds := dateTime.Zone()
+
+	dtMech := dateTimeMechanics{}
+
+	offsetHours,
+		offsetMinutes,
+		offsetSeconds,
+		zoneSign := dtMech.allocateSecondsToHrsMinSecs(zoneOffsetSeconds)
+
 	tzDefUtil2 := timeZoneDefUtility{}
 
-	tzDefUtil2.empty(tzdef)
+	zoneOffset,
+	utcOffset,
+	err := tzDefUtil2.calcZoneProfile(
+		offsetHours,
+		offsetMinutes,
+		offsetSeconds,
+		zoneSign,
+		zoneName,
+		ePrefix)
 
-	tzdef.zoneName, tzdef.zoneOffsetSeconds = dateTime.Zone()
-
-	tzDefUtil2.allocateZoneOffsetSeconds(tzdef, tzdef.zoneOffsetSeconds)
-
-	tzdef.location = dateTime.Location()
-
-	if tzdef.location == nil {
-		return errors.New(ePrefix +
-			"\n'dateTime.Location()' returned a 'nil' pointer!\n")
+	if err != nil {
+		return err
 	}
 
-	tzdef.locationName = dateTime.Location().String()
+	locationPtr := dateTime.Location()
+	locationName := dateTime.Location().String()
 
-	tzDefUtil2.setZoneProfile(tzdef)
+	if locationName != "Local" {
+		abbrvId := locationName + utcOffset
 
+		_,
+		_,
+		ianaTimeZoneName,
+		ianaLocationPtr,
+		err := dtMech.convertTzAbbreviationToTimeZone(abbrvId, ePrefix)
+
+		if err == nil {
+			locationPtr = ianaLocationPtr
+			locationName = ianaTimeZoneName
+		}
+	}
+
+	tzDefUtil2.empty(tzdef)
+	tzdef.zoneName = zoneName
+	tzdef.zoneOffsetSeconds = offsetSeconds
+	tzdef.zoneSign = zoneSign
+	tzdef.offsetHours = offsetHours
+	tzdef.offsetMinutes = offsetMinutes
+	tzdef.offsetSeconds = offsetSeconds
+	tzdef.zoneOffset = zoneOffset
+	tzdef.utcOffset = utcOffset
+	tzdef.location = locationPtr
+	tzdef.locationName = locationName
+	tzdef.locationNameType = LocNameType.ConvertibleTimeZoneName()
+	tzdef.militaryTimeZoneName = ""
+	tzdef.militaryTimeZoneLetter = ""
 	tzdef.tagDescription = ""
 
 	testTzName := strings.ToLower(tzdef.locationName)
@@ -743,39 +781,84 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 //      "-0600 CST"
 //      "+0200 EET"
 //
-func (tzDefUtil *timeZoneDefUtility) setZoneProfile(
-	tzdef *TimeZoneDefDto) {
+func (tzDefUtil *timeZoneDefUtility) calcZoneProfile(
+	offsetHours int,
+	offsetMinutes int,
+	offsetSeconds int,
+	zoneSign int,
+	zoneName string,
+	ePrefix string) (
+	zoneOffset string,
+	utcOffset string,
+	err error) {
 
 	tzDefUtil.lock.Lock()
 
 	defer tzDefUtil.lock.Unlock()
 
-	if tzdef == nil {
-		panic("Error: timeZoneDefUtility.setZoneProfile() - tzdef pointer is nil!")
+	ePrefix += "timeZoneDefUtility.calcZoneProfile() "
+	zoneOffset = ""
+	utcOffset = ""
+	err = nil
+
+	if zoneSign < -1 ||
+		zoneSign > 1 ||
+		zoneSign == 0 {
+		return zoneOffset, utcOffset,
+		fmt.Errorf(ePrefix,
+			"Error: Input parameter 'zoneSign' must be equal to -1 or +1.\n" +
+			"zoneSign='%v'\n", zoneSign)
 	}
 
-	tzdef.zoneOffset = ""
+	if offsetHours < 0 {
+		return zoneOffset, utcOffset,
+			fmt.Errorf(ePrefix,
+				"Error: Input parameter 'offsetHours' is less than zero.\n" +
+					"offsetHours='%v'\n", offsetHours)
+	}
+
+	if offsetMinutes < 0 {
+		return zoneOffset, utcOffset,
+			fmt.Errorf(ePrefix,
+				"Error: Input parameter 'offsetMinutes' is less than zero.\n" +
+					"offsetMinutes='%v'\n", offsetMinutes)
+	}
+
+	if offsetSeconds < 0 {
+		return zoneOffset, utcOffset,
+			fmt.Errorf(ePrefix,
+				"Error: Input parameter 'offsetSeconds' is less than zero.\n" +
+					"offsetSeconds='%v'\n", offsetSeconds)
+	}
+
+	if len(zoneName) == 0 {
+		return zoneOffset, utcOffset,
+			errors.New(ePrefix +
+				"Error: Input parameter 'zoneName' is an empty string.\n")
+	}
 
 	// Generates an offset in the form of "+0330" or "-0330"
-	if tzdef.zoneSign < 0 {
-		tzdef.zoneOffset += "-"
+	if zoneSign == -1 {
+		zoneOffset += "-"
 	} else {
-		tzdef.zoneOffset += "+"
+		zoneOffset += "+"
 	}
 
-	tzdef.zoneOffset += fmt.Sprintf("%02d%02d", tzdef.offsetHours, tzdef.offsetMinutes)
+	zoneOffset += fmt.Sprintf("%02d%02d", offsetHours, offsetMinutes)
 
-	tzdef.utcOffset = tzdef.zoneOffset
+	// Generates final UTC offset in the form
+	// "-0500" or "+0200"
+	utcOffset = zoneOffset
 
-	if tzdef.offsetSeconds > 0 {
-		tzdef.zoneOffset += fmt.Sprintf("%02d", tzdef.offsetSeconds)
+	if offsetSeconds > 0 {
+		zoneOffset += fmt.Sprintf("%02d", offsetSeconds)
 	}
 
 	// Generates final ZoneOffset in the form
 	// "-0500 CST" or "+0200 EET"
-	tzdef.zoneOffset += " " + tzdef.zoneName
+	zoneOffset += " " + zoneName
 
-	return
+	return zoneOffset, utcOffset, err
 }
 
 // parseMilitaryTzNameAndLetter - Parses a text string which

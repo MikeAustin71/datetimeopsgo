@@ -540,7 +540,7 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 	tzDef2 := TimeZoneDefDto{}
 
 	tzDefUtil := timeZoneDefUtility{}
-// 	locationName := dateTime.Location().String()
+
 
 	err := tzDefUtil.setFromDateTime(&tzDef2, dateTime, ePrefix)
 
