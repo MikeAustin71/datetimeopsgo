@@ -100,3 +100,5 @@ var tzAbbrvToTimeZonePriorityList = []string {
 			"Other",
 }
 
+var lenTzAbbrvToTimeZonePriorityList = len(tzAbbrvToTimeZonePriorityList)
+

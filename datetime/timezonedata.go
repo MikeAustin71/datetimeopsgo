@@ -124,7 +124,7 @@ import (
 // 
 //            Primary Time Zone Groups:  17
 // 
-// Type Creation Date: 2019-12-30 Monday 23:50:33 -0600 CST
+// Type Creation Date: 2020-01-02 Thursday 14:53:08 -0600 CST
 // ----------------------------------------------------------------------------
 // 
 type TimeZones struct {
@@ -3183,7 +3183,7 @@ func (milTz militaryTimeZones) Victor() string {return "Etc/GMT+9" }
 //  
 func (milTz militaryTimeZones) Whiskey() string {return "Etc/GMT+10" }
 
-// Xray - Military Time Zone 'X' or 'Xray' is equivalent to
+// X-ray - Military Time Zone 'X' or 'X-ray' is equivalent to
 // to IANA Time Zone "Etc/GMT+11".
 //  
 // Offset from Universal Coordinated Time (UTC) is computed at
@@ -4588,7 +4588,7 @@ var mapAllTimeZonesToUtcOffsets = map[string][]string{
   "Uniform"                            : { "UTC-0800", "UTC-0800"},
   "Victor"                             : { "UTC-0900", "UTC-0900"},
   "Whiskey"                            : { "UTC-1000", "UTC-1000"},
-  "Xray"                               : { "UTC-1100", "UTC-1100"},
+  "X-ray"                              : { "UTC-1100", "UTC-1100"},
   "Yankee"                             : { "UTC-1200", "UTC-1200"},
 }
 
@@ -5232,7 +5232,7 @@ var mapAllTimeZonesToUtcOffsets = map[string][]string{
 //           20.      U        Uniform       Etc/GMT+8       UTC-8   
 //           21.      V        Victor        Etc/GMT+9       UTC-9   
 //           22.      W        Whiskey       Etc/GMT+10      UTC-10  
-//           23.      X        Xray          Etc/GMT+11      UTC-11  
+//           23.      X        X-ray         Etc/GMT+11      UTC-11  
 //           24.      Y        Yankee        Etc/GMT+12      UTC-12  
 //           25.      Z        Zulu          UTC             UTC+0   
 // 

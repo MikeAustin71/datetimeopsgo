@@ -250,7 +250,7 @@ var militaryTzLetterToTxtNameMap = map[string]string {
 	"U" : "Uniform",
 	"V" : "Victor",
 	"W" : "Whiskey",
-	"X" : "Xray",
+	"X" : "X-ray",
 	"Y" : "Yankee",
 	"Z" : "Zulu" }
 
@@ -279,7 +279,7 @@ var militaryTzToIanaTzMap = map[string]string {
 	"Uniform":  TZones.Military.Uniform(),
 	"Victor":   TZones.Military.Victor(),
 	"Whiskey":  TZones.Military.Whiskey(),
-	"Xray":     TZones.Military.Xray(),
+	"X-ray":     TZones.Military.Xray(),
 	"Yankee":   TZones.Military.Yankee(),
 	"Zulu":     TZones.Military.Zulu()}
 
@@ -310,7 +310,7 @@ var militaryUTCToTzMap = map[string]string{
 	"-0800":    "Uniform",
 	"-0900":    "Victor",
 	"-1000":    "Whiskey",
-	"-1100":    "Xray",
+	"-1100":    "X-ray",
 	"-1200":    "Yankee",
 	"+0000":    "Zulu" }
 
@@ -339,7 +339,7 @@ var militaryTzToUTCMap = map[string]string{
 	"Uniform":  "-0800",
 	"Victor":   "-0900",
 	"Whiskey":  "-1000",
-	"Xray":     "-1100",
+	"X-ray":     "-1100",
 	"Yankee":   "-1200",
 	"Zulu":     "+0000"}
 
@@ -368,7 +368,7 @@ var militaryTzToLocationMap = map[string]string{
 	"Uniform"  :  "PST, Los Angeles, CA",
 	"Victor"   :  "Juneau, AK",
 	"Whiskey"  :  "Honolulu, HI",
-	"Xray"     :  "American Samoa",
+	"X-ray"    :  "American Samoa",
 	"Yankee"   :  "e.g. Fiji",
 	"Zulu"     :  "Zulu time",
 }
