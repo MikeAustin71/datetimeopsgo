@@ -32,30 +32,11 @@ Overview and General Usage
 // Contains detailed parameters describing a specific
 // Time Zone and Time Zone Location
 type TimeZoneDefDto struct {
-	zoneName               string         // The Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
-	zoneOffsetSeconds      int            // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
-	zoneSign               int            // -1 == West of UTC  +1 == East of UTC
-	offsetHours            int            // Normalized Offset Hours from UTC. Always a positive number, refer to ZoneSign
-	offsetMinutes          int            // Normalized Offset Minutes offset from UTC. Always a positive number, refer to ZoneSign
-	offsetSeconds          int            // Normalized Offset Seconds offset from UTC. Always a positive number, refer to ZoneSign
-	zoneOffset             string         // A text string representing the time zone. Example "-0600 CST" or "+0200 EET"
-	utcOffset              string         // A text string representing the offset for UTC. Example "-0600" or "+0200"
-	location               *time.Location // Pointer to a Time Zone Location
-	locationName           string         // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
-	locationNameType       LocationNameType // Four possible values:
-	//                                           None()
-	//                                           ConvertibleAbbreviation()
-	//                                           NonConvertibleAbbreviation()
-	//                                           ConvertibleTimeZoneName()
-	militaryTimeZoneName   string         // Full Military Time Zone text name. Examples: "Alpha", "Bravo", "Charlie", "Zulu"
-	militaryTimeZoneLetter string         // Single Alphabetic Character identifying a Military Time Zone.
-	tagDescription         string         // Unused - Available for classification, labeling or description by user.
-	timeZoneType           TimeZoneType   // Enumeration of Time Zone Type:
-	//  TzType.None()
-	//  TzType.Iana()
-	//  TzType.Military()
-	//  TzType.Local()
-	//  TzType.UtcOffset()
+	referenceDateTime      time.Time        // The date time associated with this time zone
+	//                                         definition.
+	originalTimeZone       TimeZoneSpecDto  // The Time Zone Specification originally submitted.
+	convertibleTimeZone    TimeZoneSpecDto  // A version of the original time zone with a new fully
+	//                                         convertible time zone subtituted.
 	lock sync.Mutex // Used for implementing thread safe operations.
 }
 
@@ -213,11 +194,7 @@ func (tzdef *TimeZoneDefDto) GetLocationPtr() *time.Location {
 
 	defer tzdef.lock.Unlock()
 
-	if tzdef.location == nil {
-		panic("TimeZoneDefDto.GetLocationPtr()\ntzdef.location is nil!\n")
-	}
-
-	return tzdef.location
+	return tzdef.originalTimeZone.locationPtr
 }
 
 // GetLocationName - Returns TimeZoneDefDto member variable
@@ -232,7 +209,7 @@ func (tzdef *TimeZoneDefDto) GetLocationName() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.locationName
+	return tzdef.originalTimeZone.locationName
 }
 
 // GetLocationNameType - Returns the value of internal
@@ -246,7 +223,7 @@ func (tzdef *TimeZoneDefDto) GetLocationName() string {
 //
 func (tzdef *TimeZoneDefDto) GetLocationNameType() LocationNameType {
 
-	return tzdef.locationNameType
+	return tzdef.originalTimeZone.locationNameType
 }
 
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
@@ -269,14 +246,14 @@ func (tzdef *TimeZoneDefDto) GetMilitaryTimeZoneLetter() (string, error) {
 
 	ePrefix := "TimeZoneDefDto.GetMilitaryTimeZoneLetter() "
 
-	if tzdef.timeZoneType != TzType.Military() {
+	if tzdef.originalTimeZone.timeZoneType != TzType.Military() {
 		return "",
 			errors.New(ePrefix +
 				"\nError: This TimeZoneDefDto instance is NOT configured as a Military Time Zone!\n" +
 				"Therefore Military Time Zone Letter is invalid!\n")
 	}
 
-	return tzdef.militaryTimeZoneLetter, nil
+	return tzdef.originalTimeZone.militaryTimeZoneLetter, nil
 }
 
 // GetMilitaryTimeZoneName - Returns the a text name which represents
@@ -299,14 +276,14 @@ func (tzdef *TimeZoneDefDto) GetMilitaryTimeZoneName() (string, error) {
 
 	ePrefix := "TimeZoneDefDto.GetMilitaryTimeZoneLetter() "
 
-	if tzdef.timeZoneType != TzType.Military() {
+	if tzdef.originalTimeZone.timeZoneType != TzType.Military() {
 		return "",
 			errors.New(ePrefix +
 				"\nError: This TimeZoneDefDto instance is NOT configured as a Military Time Zone!\n" +
 				"Therefore Military Time Zone Name is invalid!\n")
 	}
 
-	return tzdef.militaryTimeZoneName, nil
+	return tzdef.originalTimeZone.militaryTimeZoneName, nil
 }
 
 // GetOffsetHours - Returns TimeZoneDefDto member variable
@@ -321,7 +298,7 @@ func (tzdef *TimeZoneDefDto) GetOffsetHours() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.offsetHours
+	return tzdef.originalTimeZone.offsetHours
 }
 
 // GetOffsetMinutes - Returns TimeZoneDefDto member variable
@@ -337,7 +314,7 @@ func (tzdef *TimeZoneDefDto) GetOffsetMinutes() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.offsetMinutes
+	return tzdef.originalTimeZone.offsetMinutes
 }
 
 // GetOffsetSeconds - Returns TimeZoneDefDto member variable
@@ -353,7 +330,7 @@ func (tzdef *TimeZoneDefDto) GetOffsetSeconds() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.offsetSeconds
+	return tzdef.originalTimeZone.offsetSeconds
 }
 
 // GetTagDescription - Returns TimeZoneDefDto member variable
@@ -368,7 +345,7 @@ func (tzdef *TimeZoneDefDto) GetTagDescription() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.tagDescription
+	return tzdef.originalTimeZone.tagDescription
 }
 
 // GetUtcOffset - Returns the offset from UTC as a string.
@@ -380,7 +357,7 @@ func (tzdef *TimeZoneDefDto) GetUtcOffset() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.utcOffset
+	return tzdef.originalTimeZone.utcOffset
 }
 
 // GetZoneName - Returns TimeZoneDefDto member variable
@@ -398,7 +375,7 @@ func (tzdef *TimeZoneDefDto) GetZoneName() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.zoneName
+	return tzdef.originalTimeZone.zoneName
 }
 
 // GetZoneOffset - Returns TimeZoneDefDto member variable
@@ -413,7 +390,7 @@ func (tzdef *TimeZoneDefDto) GetZoneOffset() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.zoneOffset
+	return tzdef.originalTimeZone.zoneOffset
 }
 
 // GetZoneOffsetSeconds - Returns TimeZoneDefDto member variable
@@ -425,7 +402,7 @@ func (tzdef *TimeZoneDefDto) GetZoneOffsetSeconds() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.zoneOffsetSeconds
+	return tzdef.originalTimeZone.zoneOffsetTotalSeconds
 }
 
 // GetZoneSign - Returns TimeZoneDefDto member variable
@@ -439,7 +416,7 @@ func (tzdef *TimeZoneDefDto) GetZoneSign() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.zoneSign
+	return tzdef.originalTimeZone.zoneSignValue
 }
 
 // GetTimeZoneType - Returns the Time Zone Type associated
@@ -452,7 +429,7 @@ func (tzdef *TimeZoneDefDto) GetTimeZoneType() TimeZoneType {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.timeZoneType
+	return tzdef.originalTimeZone.timeZoneType
 }
 
 // IsEmpty - Determines whether the current TimeZoneDefDto

@@ -57,7 +57,6 @@ func (dtMech *dateTimeMechanics) allocateSecondsToHrsMinSecs(
 	return hours, minutes, seconds, sign
 }
 
-
 // convertTzAbbreviationToTimeZone - receives an input parameter,
 // 'tzAbbrvLookupKey' which is used to look up a time zone abbreviation
 // and return an associated IANA Time Zone Name.
@@ -105,6 +104,17 @@ func (dtMech *dateTimeMechanics) convertTzAbbreviationToTimeZone(
 	ePrefix += "dateTimeMechanics.convertTzAbbreviationToTimeZone() "
 
 	if len(tzAbbrvLookupKey) == 0 {
+		err = &InputParameterError{
+			ePrefix:ePrefix,
+			inputParameterName:tzAbbrvLookupKey,
+			errMsg:"tzAbbrvLookKey is a zero length string!",
+			err: nil}
+
+		return milTzLetter,
+			milTzName,
+			ianaTimeZoneName,
+			ianaLocationPtr,
+			err
 
 	}
 

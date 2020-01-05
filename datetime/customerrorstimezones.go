@@ -3,13 +3,12 @@ package datetime
 import "fmt"
 
 type TimeZoneMapLookupError struct {
-	ePrefix string
-	mapName string
-	lookUpId string
-	errMsg string
-	err error
+	ePrefix  string // Contains a chain of called methods leading to error
+	mapName  string // Variable name identifying map
+	lookUpId string // Lookup Id used as a key value for map
+	errMsg   string // Error Message
+	err      error  // Next error in error chain
 }
-
 
 func (e *TimeZoneMapLookupError) Error() string{
 

@@ -12,53 +12,6 @@ type timeZoneDefUtility struct {
 	lock sync.Mutex
 }
 
-
-// allocateZoneOffsetSeconds - allocates a signed value of total offset seconds from
-// UTC to the associated fields in the current TimeZoneDefDto instance.
-func (tzDefUtil *timeZoneDefUtility) allocateZoneOffsetSeconds(
-  tzdef *TimeZoneDefDto,
-	signedZoneOffsetSeconds int) {
-
-	tzDefUtil.lock.Lock()
-
-	defer tzDefUtil.lock.Unlock()
-
-	if tzdef == nil {
-		panic("timeZoneDefUtility.allocateZoneOffsetSeconds()\n" +
-			"Error: Input parameter 'tzdef' is a 'nil' pointer!\n")
-	}
-
-	if signedZoneOffsetSeconds < 0 {
-		tzdef.zoneSign = -1
-	} else {
-		tzdef.zoneSign = 1
-	}
-
-	tzdef.zoneOffsetSeconds = signedZoneOffsetSeconds
-
-	signedZoneOffsetSeconds *= tzdef.zoneSign
-
-	tzdef.offsetHours = 0
-	tzdef.offsetMinutes = 0
-	tzdef.offsetSeconds = 0
-
-	if signedZoneOffsetSeconds == 0 {
-		return
-	}
-
-	tzdef.offsetHours = signedZoneOffsetSeconds / 3600 // compute hours
-	signedZoneOffsetSeconds -= tzdef.offsetHours * 3600
-
-	if signedZoneOffsetSeconds > 0 {
-		tzdef.offsetMinutes = signedZoneOffsetSeconds / 60 // compute minutes
-		signedZoneOffsetSeconds -= tzdef.offsetMinutes * 60
-	}
-
-	tzdef.offsetSeconds = signedZoneOffsetSeconds
-
-	return
-}
-
 // CopyIn - Copies an incoming TimeZoneDefDto into the
 // data fields of the current TimeZoneDefDto instance.
 //
@@ -84,21 +37,9 @@ func (tzDefUtil *timeZoneDefUtility) copyIn(
 
 	tzDefUtil2.empty(tzdef)
 
-	tzdef.zoneName = tzdef2.zoneName
-	tzdef.zoneOffsetSeconds = tzdef2.zoneOffsetSeconds
-	tzdef.zoneSign = tzdef2.zoneSign
-	tzdef.offsetHours = tzdef2.offsetHours
-	tzdef.offsetMinutes = tzdef2.offsetMinutes
-	tzdef.offsetSeconds = tzdef2.offsetSeconds
-	tzdef.zoneOffset = tzdef2.zoneOffset
-	tzdef.utcOffset = tzdef2.utcOffset
-	tzdef.location = tzdef2.location
-	tzdef.locationName = tzdef2.locationName
-	tzdef.locationNameType = tzdef2.locationNameType
-	tzdef.militaryTimeZoneLetter = tzdef2.militaryTimeZoneLetter
-	tzdef.militaryTimeZoneName = tzdef2.militaryTimeZoneName
-	tzdef.tagDescription = tzdef2.tagDescription
-	tzdef.timeZoneType = tzdef2.timeZoneType
+	tzdef.referenceDateTime = tzdef2.referenceDateTime
+	tzdef.originalTimeZone = tzdef2.originalTimeZone.CopyOut()
+	tzdef.convertibleTimeZone = tzdef2.convertibleTimeZone.CopyOut()
 
 	return
 }
@@ -120,23 +61,9 @@ func (tzDefUtil *timeZoneDefUtility) copyOut(
 
 	tzdef2 := TimeZoneDefDto{}
 
-	tzdef2.zoneName = tzdef.zoneName
-	tzdef2.zoneOffsetSeconds = tzdef.zoneOffsetSeconds
-	tzdef2.zoneSign = tzdef.zoneSign
-	tzdef2.offsetHours = tzdef.offsetHours
-	tzdef2.offsetMinutes = tzdef.offsetMinutes
-	tzdef2.offsetSeconds = tzdef.offsetSeconds
-	tzdef2.zoneOffset = tzdef.zoneOffset
-	tzdef2.utcOffset = tzdef.utcOffset
-
-	tzdef2.location = tzdef.location
-	tzdef2.locationName = tzdef.locationName
-	tzdef2.locationNameType = tzdef.locationNameType
-	tzdef2.militaryTimeZoneLetter = tzdef.militaryTimeZoneLetter
-	tzdef2.militaryTimeZoneName = tzdef.militaryTimeZoneName
-
-	tzdef2.tagDescription = tzdef.tagDescription
-	tzdef2.timeZoneType = tzdef.timeZoneType
+	tzdef2.referenceDateTime = tzdef.referenceDateTime
+	tzdef2.originalTimeZone = tzdef.originalTimeZone.CopyOut()
+	tzdef2.convertibleTimeZone = tzdef.convertibleTimeZone.CopyOut()
 
 	return tzdef2
 }
@@ -156,21 +83,9 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 			"Error: 'tzdef' pointer is nil!\n")
 	}
 
-	tzdef.zoneName = ""
-	tzdef.zoneOffsetSeconds = 0
-	tzdef.zoneSign = 0
-	tzdef.offsetHours = 0
-	tzdef.offsetMinutes = 0
-	tzdef.offsetSeconds = 0
-	tzdef.zoneOffset = ""
-	tzdef.utcOffset = ""
-	tzdef.location = nil
-	tzdef.locationName = ""
-	tzdef.locationNameType = LocNameType.None()
-	tzdef.militaryTimeZoneLetter = ""
-	tzdef.militaryTimeZoneName = ""
-	tzdef.tagDescription = ""
-	tzdef.timeZoneType = TzType.None()
+	tzdef.referenceDateTime = time.Time{}
+	tzdef.originalTimeZone.Empty()
+	tzdef.convertibleTimeZone.Empty()
 
 	return
 }
@@ -400,22 +315,13 @@ func (tzDefUtil *timeZoneDefUtility) isEmpty(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
-	if tzdef.zoneName != "" ||
-		tzdef.zoneOffsetSeconds != 0 ||
-		tzdef.zoneSign != 0 ||
-		tzdef.offsetHours != 0 ||
-		tzdef.offsetMinutes != 0 ||
-		tzdef.offsetSeconds != 0 ||
-		tzdef.zoneOffset != "" ||
-		tzdef.utcOffset != "" ||
-		tzdef.timeZoneType != TzType.None() ||
-		tzdef.locationName != "" ||
-		tzdef.militaryTimeZoneName != "" ||
-		tzdef.militaryTimeZoneLetter != "" {
-		return false
+	if tzdef.referenceDateTime.IsZero() &&
+		tzdef.originalTimeZone.IsEmpty() &&
+		tzdef.convertibleTimeZone.IsEmpty() {
+		return true
 	}
 
-	return true
+	return false
 }
 
 // isValidTimeZoneDefDto - Analyzes the TimeZoneDefDto
@@ -607,7 +513,55 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	return nil
 }
 
- */
+
+func (tzDefUtil *timeZoneDefUtility) isConvertibleTimeZone(
+	dateTime time.Time,
+	ePrefix string) error {
+
+		ePrefix += "timeZoneDefUtility.isConvertibleTimeZone()"
+
+
+
+	if dateTime.IsZero() {
+		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+	}
+
+	fmtStr := "2006-01-02 15:04:05 -0700 MST"
+
+	tzAbbrFmtStr := "2006-01-02 15:04:05 -0700 "
+
+	lenAbbrFmtStr := len(tzAbbrFmtStr)
+
+	d1TzAbbrv := dateTime.Format(fmtStr)[lenAbbrFmtStr:]
+
+	d1TzAbbrv = strings.TrimLeft(strings.TrimRight(d1TzAbbrv, " "), " ")
+
+	_,
+	_,
+	ianaTimeZoneName,
+	ianaLocationPtr,
+	err := dtMech.convertTzAbbreviationToTimeZone(d1TzAbbrv, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	dt1June := time.Date(
+		time.Now().Year(),
+		time.Month(06),
+		30,
+		9,
+		0,
+		0,
+		0,
+		dateTime.Location())
+
+
+	dt1Dec :=  
+
+	return nil
+}
+*/
 
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef *TimeZoneDefDto,
@@ -626,7 +580,13 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	}
 
 	if dateTime.IsZero() {
-		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "'dateTime' value is Zero!",
+			err:                 nil,
+		}
 	}
 
 	zoneName, zoneOffsetSeconds := dateTime.Zone()
@@ -642,7 +602,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	zoneOffset,
 	utcOffset,
-	err := tzDefUtil2.calcZoneProfile(
+	err := tzDefUtil2.calcZoneOffsets(
 		offsetHours,
 		offsetMinutes,
 		offsetSeconds,
@@ -727,14 +687,14 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 
 	dtUtil := DTimeUtility{}
 
-	var milTzLetter, milTzName string
+	var milTzLetter, milTzName, ianaLocationName string
 	var ianaLocationPtr *time.Location
 	var tzType TimeZoneType
 	var err error
 
 	milTzLetter,
 	milTzName,
-	_,
+	ianaLocationName,
 	ianaLocationPtr,
 	tzType,
 	err = dtUtil.GetTimeZoneFromName(
@@ -742,32 +702,67 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf("'timeZoneName' is INVALID!\n" +
+		return fmt.Errorf(ePrefix +
+			"\n'timeZoneName' is INVALID!\n" +
 			"%v", err.Error())
 	}
 
-	dateTime := time.Now().In(ianaLocationPtr)
+	// dateTime := time.Now().In(ianaLocationPtr)
+	dateTime := time.Date(
+		time.Now().Year(),
+		time.Month(12),
+		15,
+		11,
+		0,
+		0,
+		0,
+		ianaLocationPtr)
+
+	zoneName, zoneOffsetSeconds := dateTime.Zone()
+
+	dtMech := dateTimeMechanics{}
+
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds,
+	zoneSign := dtMech.allocateSecondsToHrsMinSecs(zoneOffsetSeconds)
 
 	tzDefUtil2 := timeZoneDefUtility{}
 
-	tzDefUtil2.empty(tzdef)
+	zoneOffset,
+	utcOffset,
+	err := tzDefUtil2.calcZoneOffsets(
+		offsetHours,
+		offsetMinutes,
+		offsetSeconds,
+		zoneSign,
+		zoneName,
+		ePrefix)
 
-	tzdef.zoneName, tzdef.zoneOffsetSeconds = dateTime.Zone()
-
-	tzDefUtil2.allocateZoneOffsetSeconds(tzdef, tzdef.zoneOffsetSeconds)
-
-	tzdef.location = dateTime.Location()
-
-	tzdef.locationName = dateTime.Location().String()
-
-	tzDefUtil2.setZoneProfile(tzdef)
-
+	if err != nil {
+		return err
+	}
+	tzdef.zoneName = zoneName
+	tzdef.zoneOffsetSeconds = offsetSeconds
+	tzdef.zoneSign = zoneSign
+	tzdef.offsetHours = offsetHours
+	tzdef.offsetMinutes = offsetMinutes
+	tzdef.offsetSeconds = offsetSeconds
+	tzdef.zoneOffset = zoneOffset
+	tzdef.utcOffset = utcOffset
+	tzdef.location = locationPtr
+	tzdef.locationName = ianaLocationName
+	tzdef.locationNameType = LocNameType.ConvertibleTimeZoneName()
+	tzdef.militaryTimeZoneName = milTzName
+	tzdef.militaryTimeZoneLetter = milTzLetter
 	tzdef.tagDescription = ""
-	tzdef.timeZoneType = tzType
 
-	if tzdef.timeZoneType == TzType.Military() {
-		tzdef.militaryTimeZoneLetter = milTzLetter
-		tzdef.militaryTimeZoneName = milTzName
+	testTzName := strings.ToLower(tzdef.locationName)
+
+	if testTzName == "local" {
+		tzdef.timeZoneType = TzType.Local()
+	} else {
+		tzdef.timeZoneType = TzType.Iana()
 	}
 
 	return nil
@@ -781,7 +776,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 //      "-0600 CST"
 //      "+0200 EET"
 //
-func (tzDefUtil *timeZoneDefUtility) calcZoneProfile(
+func (tzDefUtil *timeZoneDefUtility) calcZoneOffsets(
 	offsetHours int,
 	offsetMinutes int,
 	offsetSeconds int,
@@ -796,7 +791,7 @@ func (tzDefUtil *timeZoneDefUtility) calcZoneProfile(
 
 	defer tzDefUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDefUtility.calcZoneProfile() "
+	ePrefix += "timeZoneDefUtility.calcZoneOffsets() "
 	zoneOffset = ""
 	utcOffset = ""
 	err = nil
