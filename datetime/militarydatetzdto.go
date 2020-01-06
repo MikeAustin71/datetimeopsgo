@@ -968,7 +968,10 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 
 	var err2 error
 
-	equivalentIanaTimeZone, err2 = TimeZoneDefDto{}.NewFromTimeZoneName(equivalentTzStr)
+	equivalentIanaTimeZone, err2 = TimeZoneDefDto{}.NewFromTimeZoneName(
+		time.Now(),
+		equivalentTzStr,
+		TzConvertType.Relative())
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix +

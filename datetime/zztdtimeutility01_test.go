@@ -19,7 +19,10 @@ func TestDTimeUtility_AbsoluteTimeToTimeZoneDtoConversion_01(t *testing.T) {
 		return
 	}
 
-	tzDefDto, err := TimeZoneDefDto{}.NewFromTimeZoneName(TZones.America.New_York())
+	tzDefDto, err := TimeZoneDefDto{}.NewFromTimeZoneName(
+		dt1,
+		TZones.America.New_York(),
+		TzConvertType.Relative())
 
 	if err != nil {
 		t.Errorf("Error returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(" +

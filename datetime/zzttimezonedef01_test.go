@@ -197,7 +197,7 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 		return
 	}
 
-	tzDef0.tagDescription = descStr
+	tzDef0.originalTimeZone.tagDescription = descStr
 
 	tzDef := tzDef0.CopyOut()
 
@@ -445,7 +445,7 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 			descStr, tzDef.GetTagDescription())
 	}
 
-	tzDef0.location = nil
+	tzDef0.originalTimeZone.locationPtr = nil
 
 	if tzDef0.Equal(tzDef) {
 		t.Error("Error: Expected tzDef0 to be NOT EQUAL to tzDef. IT WAS EQUAL!")
@@ -539,7 +539,7 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 			descStr, tzDef.GetTagDescription())
 	}
 
-	tzDef0.location = nil
+	tzDef0.originalTimeZone.locationPtr = nil
 
 	if tzDef0.Equal(tzDef) {
 		t.Error("Error: Expected tzDef0 to be NOT EQUAL to tzDef. IT WAS EQUAL!")

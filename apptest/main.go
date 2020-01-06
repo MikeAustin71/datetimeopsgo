@@ -156,7 +156,7 @@ func (mt mainTest) mainTest048() {
 
 		stdAbbrvs := dt.StdTZoneAbbreviations{}
 
-		tzones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(t2AbbrvLookup)
+		tZones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(t2AbbrvLookup)
 
 		if !ok {
 			fmt.Printf(ePrefix +
@@ -168,26 +168,26 @@ func (mt mainTest) mainTest048() {
 		fmt.Println("Abbreviation Lookup: ", t2AbbrvLookup)
 		newTZone := ""
 
-		if len(tzones) == 1 {
-			newTZone = tzones[0]
+		if len(tZones) == 1 {
+			newTZone = tZones[0]
 		}
 	/*
 		if len(newTZone) == 0 {
-			for i:= 0; i < len(tzones); i++ {
-				if (strings.HasPrefix(tzones[i], locName) ||
-					strings.HasSuffix(tzones[i], locName)) &&
-					len(tzones[i]) > lenLocName {
-					newTZone = tzones[i]
+			for i:= 0; i < len(tZones); i++ {
+				if (strings.HasPrefix(tZones[i], locName) ||
+					strings.HasSuffix(tZones[i], locName)) &&
+					len(tZones[i]) > lenLocName {
+					newTZone = tZones[i]
 					break
 				}
 			}
 		}
 
 		if len(newTZone) == 0 {
-			for i:= 0; i < len(tzones); i++ {
-				if len(tzones[i]) <= lenLocName &&
-					!strings.Contains(tzones[i], "-") {
-					newTZone = tzones[i]
+			for i:= 0; i < len(tZones); i++ {
+				if len(tZones[i]) <= lenLocName &&
+					!strings.Contains(tZones[i], "-") {
+					newTZone = tZones[i]
 					break
 				}
 			}
@@ -262,10 +262,10 @@ func (mt mainTest) mainTest048() {
 
 			for i:=0; i < len(priorityList) && len(newTZone)== 0 ; i++ {
 
-				for j:=0; j < len(tzones); j++ {
+				for j:=0; j < len(tZones); j++ {
 
-					if strings.HasPrefix(tzones[j], priorityList[i]) {
-						newTZone = tzones[j]
+					if strings.HasPrefix(tZones[j], priorityList[i]) {
+						newTZone = tZones[j]
 						break
 					}
 				}
@@ -273,7 +273,7 @@ func (mt mainTest) mainTest048() {
 		}
 
 		if len(newTZone) == 0 {
-			newTZone = tzones[0]
+			newTZone = tZones[0]
 		}
 
 		locNamePtr , err = time.LoadLocation(newTZone)
@@ -563,7 +563,7 @@ func (mt mainTest) mainTest044() {
 
 	stdAbbrvs := dt.StdTZoneAbbreviations{}
 
-	tzones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(t2AbbrvLookup)
+	tZones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(t2AbbrvLookup)
 
 	if !ok {
 		fmt.Printf(ePrefix +
@@ -574,10 +574,10 @@ func (mt mainTest) mainTest044() {
 
 	newTZone := ""
 
-	for i:= 0; i < len(tzones); i++ {
-		if strings.HasPrefix(tzones[i], currTz) ||
-			strings.HasSuffix(tzones[i], currTz){
-			newTZone = tzones[i]
+	for i:= 0; i < len(tZones); i++ {
+		if strings.HasPrefix(tZones[i], currTz) ||
+			strings.HasSuffix(tZones[i], currTz){
+			newTZone = tZones[i]
 		}
 	}
 
@@ -1092,7 +1092,10 @@ func (mt mainTest) mainTest035() {
 	fmt.Println()
 
 	t1TzDefDtoDateTime, err :=
-		dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)
+		dt.TimeZoneDefDto{}.NewFromTimeZoneName(
+			t1,
+			tZoneName,
+			dt.TzConvertType.Relative())
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)\n" +
@@ -1122,7 +1125,10 @@ func (mt mainTest) mainTest035() {
 
 
 	t1TzDefDtoDateTime, err =
-		dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)
+		dt.TimeZoneDefDto{}.NewFromTimeZoneName(
+			t1,
+			tZoneName,
+			dt.TzConvertType.Relative(),)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)\n" +
@@ -1361,7 +1367,7 @@ func (mt mainTest) mainTest032() {
 
 	dtUtil := dt.DTimeUtility{}
 
-	dt2, err := dtUtil.AbsoluteTimeToTimeZoneNameConversion(dt1, dt.TZones.America.New_York())
+	dt2, err := dtUtil.AbsoluteTimeToTimeZoneNameConversion(dt1, dt.TZones.America.New_York(),ePrefix)
 
 	if err != nil {
 		fmt.Printf(ePrefix +
@@ -1416,7 +1422,10 @@ func (mt mainTest) mainTest031() {
 		return
 	}
 
-	tzDefDto, err := dt.TimeZoneDefDto{}.NewFromTimeZoneName(dt.TZones.America.New_York())
+	tzDefDto, err := dt.TimeZoneDefDto{}.NewFromTimeZoneName(
+		dt1,
+		dt.TZones.America.New_York(),
+		dt.TzConvertType.Relative())
 
 	if err != nil {
 		fmt.Printf(ePrefix +

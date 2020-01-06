@@ -12,7 +12,8 @@ type InputParameterError struct {
 
 func (e *InputParameterError) Error() string{
 
-	if len(e.inputParameterValue) > 0 {
+	if len(e.inputParameterValue) > 0 &&
+		len(e.errMsg) > 0 {
 		return fmt.Sprintf(e.ePrefix +
 			"Method Input Parameter, '%v' is invalid!\n" +
 			"%v='%v'\n" +
@@ -21,6 +22,16 @@ func (e *InputParameterError) Error() string{
 			e.inputParameterName,
 			e.inputParameterValue,
 		  e.errMsg)
+	}
+
+	if len(e.inputParameterValue) > 0 &&
+		len(e.errMsg) == 0 {
+		return fmt.Sprintf(e.ePrefix +
+			"Method Input Parameter, '%v' is invalid!\n" +
+			"%v='%v'\n",
+			e.inputParameterName,
+			e.inputParameterName,
+			e.inputParameterValue)
 	}
 
 	return fmt.Sprintf(e.ePrefix +

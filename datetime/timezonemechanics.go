@@ -515,7 +515,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 
 	stdAbbrvs := StdTZoneAbbreviations{}
 
-	tzones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(tzAbbrvLookupKey)
+	tZones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(tzAbbrvLookupKey)
 
 	if !ok {
 		ePrefix += "StdTZoneAbbreviations.AbbrvOffsetToTimeZones() "
@@ -533,7 +533,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 			err
 	}
 
-	lenTZones := len(tzones)
+	lenTZones := len(tZones)
 
 	if lenTZones == 0 {
 		err = &TzAbbrvMapLookupError{
@@ -582,7 +582,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 	//loadTzLocationPtr(
 	if lenTZones == 1 {
 
-		ianaLocationPtr, err = dtMech2.loadTzLocationPtr(tzones[0], ePrefix)
+		ianaLocationPtr, err = dtMech2.loadTzLocationPtr(tZones[0], ePrefix)
 
 		if err != nil {
 			milTzLetter = ""
@@ -596,7 +596,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 				err
 		}
 
-		ianaTimeZoneName = tzones[0]
+		ianaTimeZoneName = tZones[0]
 
 		return milTzLetter,
 			milTzName,
@@ -611,16 +611,16 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 	for i := 0; i < lenTZones && ianaTimeZoneName == ""; i++ {
 
 		for j := 0; j < lenTzAbbrvToTimeZonePriorityList; j++ {
-			if strings.HasPrefix(tzones[i], tzAbbrvToTimeZonePriorityList[j]) {
+			if strings.HasPrefix(tZones[i], tzAbbrvToTimeZonePriorityList[j]) {
 
-				ianaTimeZoneName = tzones[i]
+				ianaTimeZoneName = tZones[i]
 				break
 			}
 		}
 	}
 
 	if len(ianaTimeZoneName) == 0 {
-		ianaTimeZoneName = tzones[0]
+		ianaTimeZoneName = tZones[0]
 	}
 
 	ianaLocationPtr, err = dtMech2.loadTzLocationPtr(ianaTimeZoneName, ePrefix)

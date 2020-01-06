@@ -1810,7 +1810,7 @@ func (dtz *DateTzDto) GetTimeZoneLocationPtr() *time.Location {
 
 	defer dtz.lock.Unlock()
 
-	return dtz.timeZone.location
+	return dtz.timeZone.originalTimeZone.locationPtr
 }
 
 // GetTimeZoneName - Returns a string containing the

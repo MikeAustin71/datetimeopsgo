@@ -1,6 +1,9 @@
 package datetime
 
 import (
+	"errors"
+	"fmt"
+	"strings"
 	"sync"
 	"time"
 )
@@ -263,6 +266,69 @@ func (tzSpec *TimeZoneSpecDto) IsEmpty() bool {
 	return true
 }
 
+// IsValid - Examines the data fields of the current
+// TimeZoneSpecDto instance are valid.
+//
+func (tzSpec *TimeZoneSpecDto) IsValid(ePrefix string) error {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	ePrefix += "TimeZoneSpecDto.IsValid() "
+
+	if strings.TrimLeft(strings.TrimRight(tzSpec.locationName, " "), " ") == "" {
+		return errors.New(ePrefix +
+			"\nError: locationName is an empty string!\n")
+	}
+
+	if tzSpec.locationPtr == nil {
+		return errors.New(ePrefix +
+			"\nError: Location Pointer is 'nil'!\n")
+	}
+
+	if tzSpec.locationPtr.String() != tzSpec.locationName {
+		return fmt.Errorf(ePrefix +
+			"\nError: The Location Pointer is NOT equal to the Location Name!\n" +
+			"Location Pointer String='%v'\n" +
+			"Location Name = '%v'\n",
+			tzSpec.locationPtr.String() , tzSpec.locationName)
+	}
+
+	dtMech := dateTimeMechanics{}
+
+	locPtr, err := dtMech.loadTzLocationPtr(tzSpec.locationName, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError: Location Name is NOT a valid time zone!\n"+
+			"tzdef.locationName='%v'\n"+
+			"Returned Error='%v'\n", tzSpec.locationName, err.Error())
+	}
+
+	if locPtr.String() != tzSpec.locationName {
+		return fmt.Errorf(ePrefix +
+			"\nError: LoadLocation Pointer string NOT equal to tzSpec.locationName !\n" +
+			"tzSpec.locationName='%v'\n" +
+			"loc.String()='%v'\n", tzSpec.locationName, locPtr.String())
+	}
+
+	if tzSpec.timeZoneType == TzType.Military() &&
+		(tzSpec.militaryTimeZoneLetter == "" ||
+			tzSpec.militaryTimeZoneName == "") {
+		return fmt.Errorf(ePrefix +
+			"\nError: This time zone is classified as a 'Military' Time Zone.\n" +
+			"However, one or both of the Military Time Zone name strings are empty.\n" +
+			"tzSpec.militaryTimeZoneLetter='%v'\n" +
+			"tzSpec.militaryTimeZoneName='%v'\n",
+			tzSpec.militaryTimeZoneLetter , tzSpec.militaryTimeZoneName)
+	}
+
+	return nil
+}
+
+// New - Returns a new instance of TimeZoneSpecDto.
+//
 func (tzSpec TimeZoneSpecDto) New(
 	referenceDateTime      time.Time,
 	militaryTimeZoneName   string,
@@ -300,8 +366,8 @@ func (tzSpec TimeZoneSpecDto) New(
 //
 func (tzSpec *TimeZoneSpecDto) SetTimeZone(
 	referenceDateTime      time.Time,
-	militaryTimeZoneName   string,
 	militaryTimeZoneLetter string,
+	militaryTimeZoneName   string,
 	zoneLabel              string,
 	tagDescription         string,
 	locationNameType       LocationNameType,

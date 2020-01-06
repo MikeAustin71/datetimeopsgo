@@ -32,11 +32,10 @@ Overview and General Usage
 // Contains detailed parameters describing a specific
 // Time Zone and Time Zone Location
 type TimeZoneDefDto struct {
-	referenceDateTime      time.Time        // The date time associated with this time zone
 	//                                         definition.
 	originalTimeZone       TimeZoneSpecDto  // The Time Zone Specification originally submitted.
 	convertibleTimeZone    TimeZoneSpecDto  // A version of the original time zone with a new fully
-	//                                         convertible time zone subtituted.
+	//                                         convertible time zone substituted.
 	lock sync.Mutex // Used for implementing thread safe operations.
 }
 
@@ -530,36 +529,6 @@ func (tzdef TimeZoneDefDto) New(dateTime time.Time) (TimeZoneDefDto, error) {
 }
 
 // NewFromTimeZoneName - Creates and returns a new instance 'TimeZoneDefDto'.
-// The new instance is based on input parameter 'tzLocPtr', a pointer to
-// and instance to time.Location.
-//
-func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
-	tzLocPtr *time.Location) (tzDefDto TimeZoneDefDto, err error) {
-
-	ePrefix := "TimeZoneDefDto.NewFromTimeZoneLocationPtr() "
-
-	err = nil
-	tzDefDto = TimeZoneDefDto{}
-
-	if tzLocPtr == nil {
-		err = errors.New(ePrefix +
-			"\nError: Input parameter 'tzLocPtr' is 'nil'!\n")
-		return tzDefDto, err
-	}
-
-	tzDefUtil := timeZoneDefUtility{}
-
-	err = tzDefUtil.setFromTimeZoneName(&tzDefDto, tzLocPtr.String(), ePrefix)
-
-	if err != nil {
-		tzDefDto = TimeZoneDefDto{}
-		return tzDefDto, err
-	}
-
-	return tzDefDto, err
-}
-
-// NewFromTimeZoneName - Creates and returns a new instance 'TimeZoneDefDto'.
 // The new instance is based on input parameter 'timeZoneName'.
 //
 // The 'timeZoneName' string must be set to one of three values:
@@ -574,7 +543,11 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneLocationPtr(
 //      zone name.
 //
 func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
-	timeZoneName string) (tzDefDto TimeZoneDefDto, err error) {
+	dateTime time.Time,
+	timeZoneName string,
+	timeConversionType TimeZoneConversionType,) (
+	tzDefDto TimeZoneDefDto,
+	err error) {
 
 	ePrefix := "TimeZoneDefDto.NewFromTimeZoneName() "
 
@@ -592,19 +565,12 @@ func (tzdef TimeZoneDefDto) NewFromTimeZoneName(
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	/*
-	tzLoc, err2 = time.LoadLocation(timeZoneName)
-
-	if err2 != nil {
-		err = fmt.Errorf(ePrefix+
-			"\nError returned by time.LoadLocation(timeZoneName).\n"+
-			"timeZoneName='%v'\n"+
-			"Error='%v'\n", timeZoneName, err2.Error())
-		return tzDefDto, err
-	}
-	*/
-
-	err = tzDefUtil.setFromTimeZoneName(&tzDefDto, timeZoneName, ePrefix)
+	err = tzDefUtil.setFromTimeZoneName(
+		&tzDefDto,
+		dateTime,
+		timeZoneName,
+		timeConversionType,
+		ePrefix)
 
 	return tzDefDto, err
 }
@@ -621,8 +587,8 @@ func (tzdef *TimeZoneDefDto) SetTagDescription(tagDesc string) {
 
 	defer tzdef.lock.Unlock()
 
-	tzdef.tagDescription = tagDesc
-
+	tzdef.originalTimeZone.tagDescription = tagDesc
+	tzdef.convertibleTimeZone.tagDescription = tagDesc
 }
 
 // SetFromDateTimeComponents - Re-initializes the values of the current
@@ -650,7 +616,10 @@ func (tzdef *TimeZoneDefDto) SetFromDateTime(dateTime time.Time) error {
 // TimeZoneDefDto instance based on the time zone text name
 // passed as an input parameter.
 //
-func (tzdef *TimeZoneDefDto) SetFromTimeZoneName(timeZoneName string) error {
+func (tzdef *TimeZoneDefDto) SetFromTimeZoneName(
+	dateTime time.Time,
+	timeZoneName string,
+	timeConversionType TimeZoneConversionType) error {
 
 	tzdef.lock.Lock()
 
@@ -660,5 +629,10 @@ func (tzdef *TimeZoneDefDto) SetFromTimeZoneName(timeZoneName string) error {
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	return tzDefUtil.setFromTimeZoneName(tzdef, timeZoneName, ePrefix)
+	return tzDefUtil.setFromTimeZoneName(
+		tzdef,
+		dateTime,
+		timeZoneName,
+		timeConversionType,
+		ePrefix)
 }

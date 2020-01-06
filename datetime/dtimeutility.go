@@ -123,29 +123,41 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneDtoConversion(
 //
 func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneNameConversion(
 	dateTime time.Time,
-	timeZoneName string) (time.Time, error) {
+	timeZoneName string,
+	ePrefix string) (time.Time, error) {
 
 	dtUtil.lock.Lock()
 
 	defer dtUtil.lock.Unlock()
 
-	ePrefix := "DTimeUtility.AbsoluteTimeToTimeZoneNameConversion() "
+	ePrefix += "DTimeUtility.AbsoluteTimeToTimeZoneNameConversion() "
 
 	if dateTime.IsZero() {
 		return time.Time{},
-			errors.New(ePrefix +
-				"\nError: Input parameter 'dateTime' is zero!")
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dateTime",
+				inputParameterValue: "",
+				errMsg:              "Error: Input parameter 'dateTime' is zero!",
+				err:                 nil,
+			}
 	}
 
-	dt2Util := DTimeUtility{}
+	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
 
-	_,
-	_,
-	_,
-	tzLocPtr,
-	_,
-	err := dt2Util.GetTimeZoneFromName(timeZoneName, ePrefix)
+	if len(timeZoneName) == 0 {
+		return time.Time{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeZoneName",
+				inputParameterValue: "",
+				errMsg:              "Error: 'timeZoneName' is an empty string!",
+				err:                 nil,
+			}
+	}
 
+	dtMech := dateTimeMechanics{}
+	tzLocPtr, err := dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
 
 	if err != nil {
 		return time.Time{}, err
@@ -424,20 +436,6 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 		err
 }
 
-// TODO - Finish this method
-func (dtUtil *DTimeUtility) GetTimeZoneFromDateTime(
-	dateTime time.Time,
-	ePrefix string) (tzName string, err error) {
-
-	ePrefix += "DTimeUtility.GetTimeZoneFromDateTime() "
-
-
-
-
-	return "Unfinished", nil
-}
-
-
 // GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
 // time, input parameter and extracts and returns the
 // 5-character UTC offset and UTC offset.
@@ -519,14 +517,33 @@ func (dtUtil *DTimeUtility) RelativeTimeToTimeNameZoneConversion(
 
 	ePrefix += "DTimeUtility.RelativeTimeToTimeNameZoneConversion() "
 
-	dt2Util := DTimeUtility{}
+	if dateTime.IsZero() {
+		return time.Time{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dateTime",
+				inputParameterValue: "",
+				errMsg:              "Error: Input parameter 'dateTime' is zero!",
+				err:                 nil,
+			}
+	}
 
-	_,
-	_,
-	_,
-	tzLocPtr,
-	_,
-	err := dt2Util.GetTimeZoneFromName(timeZoneName, ePrefix)
+	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
+
+	if len(timeZoneName) == 0 {
+		return time.Time{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeZoneName",
+				inputParameterValue: "",
+				errMsg:              "Error: 'timeZoneName' is an empty string!",
+				err:                 nil,
+			}
+	}
+
+	dtMech := dateTimeMechanics{}
+
+	tzLocPtr, err := dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
 
 	if err != nil {
 		return time.Time{}, err
@@ -622,8 +639,15 @@ func (dtUtil *DTimeUtility) ParseMilitaryTzNameAndLetter(
 	lMilTz := len(rawTz)
 
 	if lMilTz == 0 {
-		err = errors.New(ePrefix +
-			"Error: Input Parameter 'rawTz' is EMPTY!\n")
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "rawTz",
+			inputParameterValue: "",
+			errMsg:              "Error: Input Parameter 'rawTz' is empty string!",
+			err:                 nil,
+		}
+
 		return milTzLetter,
 			milTzName,
 			equivalentIanaTimeZone,
@@ -714,7 +738,10 @@ func (dtUtil *DTimeUtility) ParseMilitaryTzNameAndLetter(
 
 	var err2 error
 	err = nil
-	equivalentIanaLocationPtr, err2 = time.LoadLocation(equivalentIanaTimeZone)
+	dtMech := dateTimeMechanics{}
+
+	equivalentIanaLocationPtr, err2 =
+		dtMech.loadTzLocationPtr(equivalentIanaTimeZone, ePrefix)
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix+
