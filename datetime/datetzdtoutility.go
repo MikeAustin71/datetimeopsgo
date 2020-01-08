@@ -557,7 +557,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 	millisecond,
 	microsecond,
 	nanosecond int,
-	timeZoneLocation,
+	timeZoneName,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -587,15 +587,15 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	dtUtil := DTimeUtility{}
 
-	tzl := dtUtil.PreProcessTimeZoneLocation(timeZoneLocation)
+	tzl := dtUtil.PreProcessTimeZoneLocation(timeZoneName)
 
 	_, err = time.LoadLocation(tzl)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned by time.LoadLocation(tzl).\nINVALID 'timeZoneLocation'!\n"+
-			"tzl='%v'\ntimeZoneLocation='%v'\nError='%v'\n",
-			tzl, timeZoneLocation, err.Error())
+			"\nError returned by time.LoadLocation(tzl).\nINVALID 'timeZoneName'!\n"+
+			"tzl='%v'\ntimeZoneName='%v'\nError='%v'\n",
+			tzl, timeZoneName, err.Error())
 	}
 
 	var dt time.Time
@@ -605,15 +605,20 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError returned by tDto.GetDateTime(tzl).\n"+
-			"\ntimeZoneLocation='%v'\ntzl='%v'\nError='%v'\n",
-			timeZoneLocation, tzl, err.Error())
+			"\ntimeZoneName='%v'\ntzl='%v'\nError='%v'\n",
+			timeZoneName, tzl, err.Error())
 	}
 
 	timeZone := TimeZoneDefDto{}
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	err = tzDefUtil.setFromDateTime(&timeZone, dt, ePrefix)
+	err = tzDefUtil.setFromTimeZoneName(
+		&timeZone,
+		dt,
+		timeZoneName,
+		TzConvertType.Absolute(),
+		ePrefix)
 
 	if err != nil {
 		return err
@@ -646,7 +651,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 	minute,
 	second,
 	nanosecond int,
-	timeZoneLocation,
+	timeZoneName,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -676,36 +681,41 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	dtUtil := DTimeUtility{}
 
-	timeZoneLocation = dtUtil.PreProcessTimeZoneLocation(timeZoneLocation)
+	timeZoneName = dtUtil.PreProcessTimeZoneLocation(timeZoneName)
 
-	_, err = time.LoadLocation(timeZoneLocation)
+	_, err = time.LoadLocation(timeZoneName)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError returned by time.LoadLocation(tzl).\n"+
-			"INVALID 'timeZoneLocation'!\n"+
-			"tzl='%v'\ntimeZoneLocation='%v'\n"+
+			"INVALID 'timeZoneName'!\n"+
+			"tzl='%v'\ntimeZoneName='%v'\n"+
 			"Error='%v'\n",
-			timeZoneLocation, timeZoneLocation, err.Error())
+			timeZoneName, timeZoneName, err.Error())
 	}
 
 	var dt time.Time
 
-	dt, err = tDto.GetDateTime(timeZoneLocation)
+	dt, err = tDto.GetDateTime(timeZoneName)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError returned by tDto.GetDateTime(tzl).\n"+
-			"\ntimeZoneLocation='%v'\ntzl='%v'\n"+
+			"\ntimeZoneName='%v'\ntzl='%v'\n"+
 			"Error='%v'\n",
-			timeZoneLocation, timeZoneLocation, err.Error())
+			timeZoneName, timeZoneName, err.Error())
 	}
 
 	timeZone := TimeZoneDefDto{}
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	err = tzDefUtil.setFromDateTime(&timeZone, dt, ePrefix)
+	err = tzDefUtil.setFromTimeZoneName(
+		&timeZone,
+		dt,
+		timeZoneName,
+		TzConvertType.Absolute(),
+		ePrefix)
 
 	if err != nil {
 		return err
