@@ -658,7 +658,32 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 
 	zoneLabel := "Original Time Zone"
 
-	dateTime = dateTime.In(ianaLocationPtr)
+	switch timeZoneConversionType {
+
+	case TzConvertType.Relative():
+
+		dateTime = dateTime.In(ianaLocationPtr)
+
+	case TzConvertType.Absolute():
+
+		dateTime = time.Date(dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			ianaLocationPtr)
+
+	default:
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneConversionType",
+			inputParameterValue: timeZoneConversionType.String(),
+			errMsg:              "Input parameter 'timeZoneName' is not equal to 'Absolute' and not equal to 'Relative'!",
+			err:                 nil,
+		}
+	}
 
 	tzSpec := TimeZoneSpecDto{}
 
