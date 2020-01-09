@@ -639,6 +639,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 		err
 }
 
+
 // getTzAbbrvLookupIdFromDateTime
 func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
 	dateTime time.Time,
@@ -680,6 +681,51 @@ func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
 	return tzAbbrvLookupId, err
 }
 
+// getTimeZoneFromName - Analyzes a time zone name passed
+// through input parameter, 'timeZoneName'. If valid, the
+// method populates time zone description elements and
+// returns them.
+//
+// This method will accept and successfully process one
+// of three types of time zones:
+//
+//   (1) The time zone "Local", which Golang accepts as
+//       the time zone currently configured on the host
+//       computer.
+//
+//   (2) IANA Time Zone - A valid IANA Time Zone from the
+//       IANA database.
+//       See https://golang.org/pkg/time/#LoadLocation
+//       and https://www.iana.org/time-zones to ensure that
+//       the IANA Time Zone Database is properly configured
+//       on your system.
+//
+//       IANA Time Zone Examples:
+//         "America/New_York"
+//         "America/Chicago"
+//         "America/Denver"
+//         "America/Los_Angeles"
+//         "Pacific/Honolulu"
+//         "Etc/UTC" = GMT or UTC
+//
+//    (3) A Military Time Zone
+//        Reference:
+//         https://en.wikipedia.org/wiki/List_of_military_time_zones
+//         http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//         https://www.timeanddate.com/time/zones/military
+//         https://www.timeanddate.com/worldclock/timezone/alpha
+//         https://www.timeanddate.com/time/map/
+//
+//        Examples:
+//          "Alpha"   or "A"
+//          "Bravo"   or "B"
+//          "Charlie" or "C"
+//          "Delta"   or "D"
+//          "Zulu"    or "Z"
+//
+// If the time zone "Zulu" is passed to this method, it will be
+// classified as a Military Time Zone.
+//
 func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 	timeZoneName string,
 	ePrefix string) (

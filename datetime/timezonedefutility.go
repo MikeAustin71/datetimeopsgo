@@ -615,6 +615,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	tzdef *TimeZoneDefDto,
 	dateTime time.Time,
 	timeZoneName string,
+	timeZoneConversionType TimeZoneConversionType,
 	ePrefix string) error {
 
 	tzDefUtil.lock.Lock()
@@ -731,7 +732,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		ePrefix)
 
 	if err != nil {
-		
+
 	}
 
 	return err

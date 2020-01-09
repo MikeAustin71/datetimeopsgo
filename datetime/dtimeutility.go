@@ -157,20 +157,10 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneNameConversion(
 	}
 
 	dtMech := dateTimeMechanics{}
-	tzLocPtr, err := dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
-
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	return time.Date(dateTime.Year(),
-		dateTime.Month(),
-		dateTime.Day(),
-		dateTime.Hour(),
-		dateTime.Minute(),
-		dateTime.Second(),
-		dateTime.Nanosecond(),
-		tzLocPtr), nil
+	return 	dtMech.absoluteTimeToTimeZoneNameConversion(
+		dateTime,
+		timeZoneName,
+		ePrefix)
 }
 
 // ConsolidateErrors - Receives an array of errors and converts them
@@ -291,11 +281,6 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 	tzType = TzType.None()
 	err = nil
 
-	var err2 error
-
-	dtUtil2 := DTimeUtility{}
-
-	timeZoneName = dtUtil2.PreProcessTimeZoneLocation(timeZoneName)
 
 	if len(timeZoneName) == 0 {
 		err = errors.New(ePrefix +
@@ -309,131 +294,10 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 			err
 	}
 
-	if len(timeZoneName) == 1 {
+	tzMech := timeZoneMechanics{}
 
-		timeZoneName = strings.ToUpper(timeZoneName)
+	return tzMech.getTimeZoneFromName(timeZoneName, ePrefix)
 
-		milTzLetter,
-			milTzName,
-			ianaTzName,
-			ianaLocationPtr,
-			err =
-			dtUtil2.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
-
-		if err != nil {
-			return milTzLetter,
-				milTzName,
-				ianaTzName,
-				ianaLocationPtr,
-				tzType,
-				err
-		}
-
-		tzType = TzType.Military()
-
-		return milTzLetter,
-			milTzName,
-			ianaTzName,
-			ianaLocationPtr,
-			tzType,
-			err
-	}
-
-	testTzName := strings.ToLower(timeZoneName)
-
-	if testTzName == "zulu" {
-
-		timeZoneName = "Zulu"
-
-		milTzLetter,
-			milTzName,
-			ianaTzName,
-			ianaLocationPtr,
-			err =
-			dtUtil2.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
-
-		if err != nil {
-			return milTzLetter,
-				milTzName,
-				ianaTzName,
-				ianaLocationPtr,
-				tzType,
-				err
-		}
-
-		tzType = TzType.Military()
-
-		return milTzLetter,
-			milTzName,
-			ianaTzName,
-			ianaLocationPtr,
-			tzType,
-			err
-	}
-
-	tzType = TzType.Iana()
-
-	if testTzName == "utc" {
-		timeZoneName = TZones.UTC()
-
-	} else if testTzName == "uct" {
-		timeZoneName = TZones.UCT()
-	} else if testTzName == "gmt" {
-		timeZoneName = TZones.Other.GMT()
-	} else if testTzName == "local" {
-		timeZoneName = TZones.Local()
-		tzType = TzType.Local()
-	}
-
-	ianaLocationPtr, err2 = time.LoadLocation(timeZoneName)
-
-	if err2 == nil {
-		milTzLetter = ""
-		milTzName = ""
-		ianaTzName = timeZoneName
-		err = nil
-
-		return milTzLetter,
-			milTzName,
-			ianaTzName,
-			ianaLocationPtr,
-			tzType,
-			err
-	}
-
-	tzType = TzType.Military()
-
-	err = nil
-
-	dtUtil3 := DTimeUtility{}
-
-	milTzLetter,
-		milTzName,
-		ianaTzName,
-		ianaLocationPtr,
-		err2 =
-		dtUtil3.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
-
-	if err2 != nil {
-		err = fmt.Errorf(ePrefix+
-			"\nError: The input parameter 'timeZoneName' is invalid!\n"+
-			"It could NOT be classified as either an IANA, Local or\n"+
-			"Military time zone.\n"+
-			"timeZoneName='%v'\n", timeZoneName)
-
-		milTzLetter = ""
-		milTzName = ""
-		ianaTzName = ""
-		ianaLocationPtr = nil
-		tzType = TzType.None()
-	}
-
-	return milTzLetter,
-		milTzName,
-		ianaTzName,
-		ianaLocationPtr,
-		tzType,
-		err
 }
 
 // GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
@@ -543,13 +407,10 @@ func (dtUtil *DTimeUtility) RelativeTimeToTimeNameZoneConversion(
 
 	dtMech := dateTimeMechanics{}
 
-	tzLocPtr, err := dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
-
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	return dateTime.In(tzLocPtr), nil
+	return dtMech.relativeTimeToTimeNameZoneConversion(
+		dateTime,
+		timeZoneName,
+		ePrefix)
 }
 
 // PreProcessTimeZoneLocation - Scans a time zone location

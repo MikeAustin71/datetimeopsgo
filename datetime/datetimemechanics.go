@@ -12,6 +12,96 @@ type dateTimeMechanics struct {
 	lock sync.Mutex
 }
 
+
+// absoluteTimeToTimeZoneNameConversion - Converts a given time to
+// another time zone using the 'Absolute' conversion method.
+// This means that the years, months, days, hours, minutes,
+// seconds and nanoseconds of the original 'dateTime' are not
+// changed. That time value is simply assigned to another
+// designated time zone. The target time zone is derived from
+// input parameter 'timeZoneDefDto', an instance of type
+// 'TimeZoneDefDto'.
+//
+// For example, assume that 'dateTime' represents 10:00AM in USA
+// time zone 'Central Standard Time'.  Using the 'Absolute'
+// conversion method, and converting this time value to the USA
+// Eastern Standard Time Zone would result in a date time of
+// 10:00AM EST or Eastern Standard Time. The time value of
+// 10:00AM is not changed, it is simply assigned to another
+// time zone.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+// dateTime            time.Time  - The date time to be converted.
+//
+// timeZoneName           string  - A string containing a valid IANA,
+//                                  Military or "Local" time zone.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+// time.Time  - The date time converted to the time zone specified in
+//              in input parameter 'timeZoneDefDto'.
+//
+// error      - If the method completes successfully this value is set
+//              to 'nil'. If an error is encountered, the returned error
+//              value encapsulates an appropriate error message.
+//
+func (dtMech *dateTimeMechanics) absoluteTimeToTimeZoneNameConversion(
+	dateTime time.Time,
+	timeZoneName string,
+	ePrefix string) (time.Time, error) {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix += "dateTimeMechanics.absoluteTimeToTimeZoneNameConversion() "
+
+	if dateTime.IsZero() {
+		return time.Time{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dateTime",
+				inputParameterValue: "",
+				errMsg:              "Error: Input parameter 'dateTime' is zero!",
+				err:                 nil,
+			}
+	}
+
+	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
+
+	if len(timeZoneName) == 0 {
+		return time.Time{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeZoneName",
+				inputParameterValue: "",
+				errMsg:              "Error: 'timeZoneName' is an empty string!",
+				err:                 nil,
+			}
+	}
+
+	dtMech2 := dateTimeMechanics{}
+	tzLocPtr, err := dtMech2.loadTzLocationPtr(timeZoneName, ePrefix)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return time.Date(dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+		dateTime.Second(),
+		dateTime.Nanosecond(),
+		tzLocPtr), nil
+}
+
 // allocateSecondsToHrsMinSecs - Useful in calculating offset hours,
 // minutes and seconds from UTC+0000. A total signed seconds value
 // is passed as an input parameter. This method then breaks down
@@ -305,7 +395,7 @@ func (dtMech *dateTimeMechanics) getUtcOffsetTzAbbrvFromDateTime(
 // If successful, this method returns a *time.Location or
 // location pointer to a valid time zone.
 //
-func (dtMech *dateTimeMechanics)loadTzLocationPtr(
+func (dtMech *dateTimeMechanics) loadTzLocationPtr(
 	timeZoneName string,
 	ePrefix string) (*time.Location, error) {
 
@@ -337,4 +427,98 @@ func (dtMech *dateTimeMechanics)loadTzLocationPtr(
 	}
 
 	return locPtr, nil
+}
+
+
+// RelativeTimeToTimeNameZoneConversion - Converts a time value
+// to its equivalent time in another time zone specified by input
+// parameter string, 'timeZoneName'.
+//
+// The 'timeZoneName' string must specify one of three types of
+// time zones:
+//
+//   (1) The string 'Local' - selects the local time zone
+//                            location for the host computer.
+//
+//   (2) IANA Time Zone Location -
+//      See https://golang.org/pkg/time/#LoadLocation
+//      and https://www.iana.org/time-zones to ensure that
+//      the IANA Time Zone Database is properly configured
+//      on your system. Note: IANA Time Zone Data base is
+//      equivalent to 'tz database'.
+//     Examples:
+//      "America/New_York"
+//      "America/Chicago"
+//      "America/Denver"
+//      "America/Los_Angeles"
+//      "Pacific/Honolulu"
+//      "Etc/UTC" = GMT or UTC
+//
+//    (3) A Military Time Zone
+//        Reference:
+//         https://en.wikipedia.org/wiki/List_of_military_time_zones
+//         http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//         https://www.timeanddate.com/time/zones/military
+//         https://www.timeanddate.com/worldclock/timezone/alpha
+//         https://www.timeanddate.com/time/map/
+//
+//        Examples:
+//          "Alpha"   or "A"
+//          "Bravo"   or "B"
+//          "Charlie" or "C"
+//          "Delta"   or "D"
+//          "Zulu"    or "Z"
+//
+func (dtMech *dateTimeMechanics) relativeTimeToTimeNameZoneConversion(
+	dateTime time.Time,
+	timeZoneName string,
+	ePrefix string) (time.Time, error) {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix += "dateTimeMechanics.relativeTimeToTimeNameZoneConversion() "
+
+	if dateTime.IsZero() {
+		return time.Time{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dateTime",
+				inputParameterValue: "",
+				errMsg:              "Error: Input parameter 'dateTime' is zero!",
+				err:                 nil,
+			}
+	}
+
+	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
+
+	if len(timeZoneName) == 0 {
+		return time.Time{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeZoneName",
+				inputParameterValue: "",
+				errMsg:              "Error: 'timeZoneName' is an empty string!",
+				err:                 nil,
+			}
+	}
+
+	tzMech := timeZoneMechanics{}
+
+	_,
+	_,
+	_,
+	ianaLocationPtr,
+	_,
+	err := tzMech.getTimeZoneFromName(
+		timeZoneName,
+		ePrefix)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+
+	return dateTime.In(ianaLocationPtr), nil
 }
