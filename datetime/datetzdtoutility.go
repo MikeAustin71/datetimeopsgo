@@ -444,19 +444,17 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 			"\nError: DateTzDto.TimeZone is EMPTY!\n")
 	}
 
-	if err := dTz.timeComponents.IsValid(); err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError: dTz.timeComponents is INVALID.\n"+
+	if err := dTz.timeZone.IsValid(); err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError: DateTzDto tuneZone is INVALID!\n" +
 			"Error='%v'\n", err.Error())
 	}
 
-
-	/* TODO - Fix IsValidFromDateTime()
-	if !dTz.timeZone.IsValidFromDateTime(dTz.dateTimeValue) {
-		return errors.New(ePrefix +
-			"\nError: dTz.TimeZone is INVALID!\n")
+	if err := dTz.timeComponents.IsValid(); err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError: DateTzDto timeComponents is INVALID!\n"+
+			"Error='%v'\n", err.Error())
 	}
-*/
 
 	return nil
 }
