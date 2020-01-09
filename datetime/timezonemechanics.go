@@ -877,6 +877,26 @@ func (tzMech *timeZoneMechanics) getUtcOffsetTzAbbrvFromDateTime(
 	return utcOffset, tzAbbrv, err
 }
 
+
+// parseMilitaryTzNameAndLetter - Parses a text string which
+// contains either a single letter military time zone designation
+// or a multi-character time zone text name.
+//
+// If successful, three populated strings are returned. The first
+// is the valid Military Time Zone Letter designation. The second
+// returned string contains the text name of the Military Time
+// Zone. The third string contains the name of the equivalent
+// IANA Time Zone. This is required because Golang does not
+// currently support Military Time Zones.
+//
+// In addition to the three strings, a successful method completion
+// will also return the equivalent IANA Time Zone Location pointer
+// (*time.Location).
+//
+// If an error is encountered, the return value, 'err' is populated
+// with an appropriate error message. Otherwise, 'err' is set
+// equal to 'nil' signaling no error was encountered.
+//
 func (tzMech *timeZoneMechanics) parseMilitaryTzNameAndLetter(
 	rawTz string,
 	ePrefix string) (milTzLetter,
