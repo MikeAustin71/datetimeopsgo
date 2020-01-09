@@ -398,128 +398,55 @@ func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
 	return true
 }
 
-// SetFromDateTimeComponents - Re-initializes the values of the
-// 'TimeZoneDefDto' instance based on input parameter, 'dateTime'.
+// SetFromDateTimeComponents - Re-initializes the values of a
+// 'TimeZoneDefDto' instance based on time components (i.e.
+// years, months, days, hours, minutes, seconds and nanoseconds)
+// passed through input parameter 'TimeDto' ('tDto').
 //
-/*
-func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
+func (tzDefUtil *timeZoneDefUtility) setFromDateTimeComponents(
 	tzdef *TimeZoneDefDto,
-	dateTime time.Time,
+	tDto TimeDto,
+	timeZoneName string,
 	ePrefix string) error {
 
-	ePrefix += "timeZoneDefUtility.setFromDateTime() "
+	ePrefix += "timeZoneDefUtility.setFromDateTimeComponents() "
 
-	locPtr := dateTime.Location()
-	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
-
-	if locPtr == nil {
-		return fmt.Errorf(ePrefix +
-			"Error: Input Parameter 'dateTime' has a nil Location Pointer!\n" +
-			"dateTime='%v'\n", dateTime.Format(fmtStr))
-	}
-
-	zoneName, zoneSeconds := dateTime.Zone()
-
-	locName := locPtr.String()
-
-	if locName != zoneName {
-		// Maybe a good Iana Time Zone!
-	}
-
-	timeStr := dateTime.Format(fmtStr)
-
-	offsetLeadLen := len("01/02/2006 15:04:05.000000000 ")
-
-	t2AbbrvLookup := locName + timeStr[offsetLeadLen:offsetLeadLen+5]
-
-	stdAbbrvs := StdTZoneAbbreviations{}
-
-	tZones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(t2AbbrvLookup)
-
-	if !ok {
-		return fmt.Errorf(ePrefix +
-			"\nError: Could NOT location Time Zone Abbreviation!\n" +
-			"Mapping Time Zone Abbreviation to Time Zones Failed.\n" +
-			"Lookup key='%v'\n", t2AbbrvLookup)
-	}
-
-	var newTZone string
-
-	if len(tZones) == 1 {
-		newTZone = tZones[0]
-	}
-
-	if len(newTZone) == 0 {
-		// tzAbbrvToTimeZonePriorityList
-		for i:=0; i < len(tzAbbrvToTimeZonePriorityList) && len(newTZone)== 0 ; i++ {
-
-			for j:=0; j < len(tZones); j++ {
-
-				if strings.HasPrefix(tZones[j], priorityList[i]) {
-					newTZone = tZones[j]
-					break
-				}
-			}
+	if tzdef == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzdef",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzdef' pointer is nil!",
+			err:                 nil,
 		}
 	}
 
-	if len(newTZone) == 0 {
-		newTZone = tZones[0]
-	}
-
-
-	return nil
-}
-
-
-func (tzDefUtil *timeZoneDefUtility) isConvertibleTimeZone(
-	dateTime time.Time,
-	ePrefix string) error {
-
-		ePrefix += "timeZoneDefUtility.isConvertibleTimeZone()"
-
-
-
-	if dateTime.IsZero() {
-		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
-	}
-
-	fmtStr := "2006-01-02 15:04:05 -0700 MST"
-
-	tzAbbrFmtStr := "2006-01-02 15:04:05 -0700 "
-
-	lenAbbrFmtStr := len(tzAbbrFmtStr)
-
-	d1TzAbbrv := dateTime.Format(fmtStr)[lenAbbrFmtStr:]
-
-	d1TzAbbrv = strings.TrimLeft(strings.TrimRight(d1TzAbbrv, " "), " ")
-
-	_,
-	_,
-	ianaTimeZoneName,
-	ianaLocationPtr,
-	err := dtMech.convertTzAbbreviationToTimeZone(d1TzAbbrv, ePrefix)
+	utcLocPtr, err := time.LoadLocation(TZones.UTC())
 
 	if err != nil {
-		return err
+		return fmt.Errorf(ePrefix +
+			"\nError returned by time.LoadLocation(TZones.UTC())\n" +
+			"Error='%v'\n", err.Error())
 	}
 
-	dt1June := time.Date(
-		time.Now().Year(),
-		time.Month(06),
-		30,
-		9,
-		0,
-		0,
-		0,
-		dateTime.Location())
+	dateTime := time.Date(tDto.Years,
+		time.Month(tDto.Months),
+		tDto.DateDays,
+		tDto.Hours,
+		tDto.Minutes,
+		tDto.Seconds,
+		tDto.TotSubSecNanoseconds,
+		utcLocPtr)
 
+	tzDefUtil2 := timeZoneDefUtility{}
 
-	dt1Dec :=  
-
-	return nil
+	return tzDefUtil2.setFromTimeZoneName(
+		tzdef,
+		dateTime,
+		timeZoneName,
+		TzConvertType.Absolute(),
+		ePrefix)
 }
-*/
 
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef *TimeZoneDefDto,
@@ -542,8 +469,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		}
 	}
 
-	dtMech :=  dateTimeMechanics{}
-
 	ianaTimeZonePtr := dateTime.Location()
 
 	if ianaTimeZonePtr == nil {
@@ -553,59 +478,17 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 			"dateTime='%v'",dateTime.Format(FmtDateTimeTzNanoYMD))
 	}
 
-	var err error
-
 	ianaTimeZoneName := ianaTimeZonePtr.String()
 
-	_, err =  dtMech.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
+	tzDefUtil2 := timeZoneDefUtility{}
 
-	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error: Attempt to load dateTime Time Zone Name FAILED!\n" +
-			"ianaTimeZoneName='%v'\ndateTime='%v'\n",
-			ianaTimeZoneName, dateTime.Format(FmtDateTimeTzNanoYMD))
-	}
-
-	milTzLetter := ""
-	milTzName := ""
-
-	var timeZoneType TimeZoneType
-
-	testTzName := strings.ToLower(ianaTimeZoneName)
-
-	if testTzName == "local" {
-
-		timeZoneType = TzType.Local()
-
-	} else {
-
-		timeZoneType = TzType.Iana()
-
-	}
-
-	zoneLabel := "Original Time Zone"
-
-	tzSpec := TimeZoneSpecDto{}
-
-	err = tzSpec.SetTimeZone(
+	return tzDefUtil2.setFromTimeZoneName(
+		tzdef,
 		dateTime,
-		milTzLetter,
-		milTzName,
-		zoneLabel,
-		"",
-		LocNameType.ConvertibleTimeZoneName(),
-		timeZoneType,
+		ianaTimeZoneName,
+		TzConvertType.Absolute(),
 		ePrefix)
 
-	if err != nil {
-		return err
-	}
-
-	tzdef.originalTimeZone = tzSpec.CopyOut()
-
-	tzdef.convertibleTimeZone = tzSpec.CopyOut()
-
-	return nil
 }
 
 // setFromTimeZoneName - Sets the data fields of the specified
@@ -707,7 +590,11 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 
 	zoneLabel, _ = dateTime.Zone()
 
-	if zoneLabel != ianaTimeZoneName {
+	firstTzLetter := ianaTimeZoneName[0:1]
+
+	if zoneLabel != ianaTimeZoneName &&
+		firstTzLetter != "+" &&
+		firstTzLetter != "-" {
 		tzdef.originalTimeZone.locationNameType = LocNameType.ConvertibleTimeZoneName()
 		tzdef.convertibleTimeZone = tzdef.originalTimeZone.CopyOut()
 		return nil

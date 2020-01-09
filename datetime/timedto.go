@@ -239,14 +239,16 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 
 	ePrefix := "TimeDto.GetDateTime() "
 
-	dtUtil := DTimeUtility{}
+	tzMech := timeZoneMechanics{}
 
 	_,
 	_,
 	_,
 	tzLocPtr,
 	_,
-	err := dtUtil.GetTimeZoneFromName(timeZoneLocationName, ePrefix)
+	err := tzMech.getTimeZoneFromName(
+		timeZoneLocationName,
+		ePrefix)
 
 	if err != nil {
 		return time.Time{}, err
