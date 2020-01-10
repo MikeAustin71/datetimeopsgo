@@ -607,17 +607,20 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 
 	lockTzAbbrvToTimeZonePriorityList.Lock()
 	defer lockTzAbbrvToTimeZonePriorityList.Unlock()
+tzPriority := 999999
 
-	for i := 0; i < lenTZones && ianaTimeZoneName == ""; i++ {
+for i:=0; i < lenTzAbbrvToTimeZonePriorityList; i++ {
 
-		for j := 0; j < lenTzAbbrvToTimeZonePriorityList; j++ {
-			if strings.HasPrefix(tZones[i], tzAbbrvToTimeZonePriorityList[j]) {
+	for j := 0; j < lenTZones; j++ {
 
-				ianaTimeZoneName = tZones[i]
-				break
+		if strings.HasPrefix(tZones[j], tzAbbrvToTimeZonePriorityList[i]) {
+			if i < tzPriority {
+				tzPriority = i
+				ianaTimeZoneName = tZones[j]
 			}
 		}
 	}
+}
 
 	if len(ianaTimeZoneName) == 0 {
 		ianaTimeZoneName = tZones[0]

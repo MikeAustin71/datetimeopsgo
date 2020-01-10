@@ -10,13 +10,72 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest050()
+	mainTest{}.mainTest051()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest051() {
+	ePrefix := "mainTest051()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0700 PDT"
+
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	timeStr := t2PdtStr
+	t1, err := time.Parse(fmtStr, timeStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, timeStr)\n" +
+			"timeStr='%v'\nError='%v'\n", timeStr, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+
+	_, err = time.LoadLocation(t1.Location().String())
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(t1.Location().String())\n" +
+			"t1.Location().String()='%v'\n" +
+			"Error='%v'\n", t1.Location().String(), err.Error())
+	}
+
+	dtUtil := dt.DTimeUtility{}
+
+	var milTzLetter, milTzName, ianaTimeZoneName string
+	var ianaLocationPtr *time.Location
+
+	milTzLetter,
+	milTzName,
+	ianaTimeZoneName,
+	ianaLocationPtr,
+	err = dtUtil.GetConvertibleTimeZoneFromTzAbbreviation(t1, ePrefix)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by dtUtil.GetConvertibleTimeZoneFromTzAbbreviation(t1, ePrefix)\n" +
+			"t1='%v'\n" +
+			"Error='%v'\n", t1.Format(fmtStr))
+		return
+	}
+
+	fmt.Printf("     milTzLetter: %v\n", milTzLetter)
+	fmt.Printf("       milTzName: %v\n", milTzName)
+	fmt.Printf("ianaTimeZoneName: %v\n", ianaTimeZoneName)
+	fmt.Printf(" ianaLocationPtr: %v\n\n", ianaLocationPtr.String())
+
+	fmt.Printf(ePrefix +
+		"\nSuccess!\n" +
+		"time zone pointer name = '%v'\n",t1.Location().String())
+
 }
 
 func (mt mainTest) mainTest050() {
@@ -77,9 +136,9 @@ func (mt mainTest) mainTest049() {
 
 	mt.mainPrintHdr(ePrefix , "-")
 
-	t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
+	// t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
 	// t1EstStr :=  "12/20/2019 09:58:32.000000000 -0500 EST"
-	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0500 CDT"
+	t2CdtStr :=  "06/20/2019 09:58:32.000000000 -0500 CDT"
 	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0600 CST"
 	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0600 MDT"
 	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0700 MST"
@@ -87,7 +146,7 @@ func (mt mainTest) mainTest049() {
 	// t2PstStr :=  "12/20/2019 09:58:32.000000000 -0800 PST"
 
 	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	timeStr := t1EdtStr
+	timeStr := t2CdtStr
 	t1, err := time.Parse(fmtStr, timeStr)
 
 	if err != nil {
