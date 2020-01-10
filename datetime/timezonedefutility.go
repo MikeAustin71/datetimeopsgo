@@ -470,6 +470,16 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		}
 	}
 
+	if dateTime.IsZero() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'dateTime' is ZERO!",
+			err:                 nil,
+		}
+	}
+
 	ianaTimeZonePtr := dateTime.Location()
 
 	if ianaTimeZonePtr == nil {

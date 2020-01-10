@@ -610,14 +610,14 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 	defer lockTzAbbrvToTimeZonePriorityList.Unlock()
 tzPriority := 999999
 
-for i:=0; i < lenTzAbbrvToTimeZonePriorityList; i++ {
+for i:=0; i < lenTZones; i++ {
 
-	for j := 0; j < lenTZones; j++ {
+	for j := 0; j < lenTzAbbrvToTimeZonePriorityList; j++ {
 
-		if strings.HasPrefix(tZones[j], tzAbbrvToTimeZonePriorityList[i]) {
-			if i < tzPriority {
-				tzPriority = i
-				ianaTimeZoneName = tZones[j]
+		if strings.HasPrefix(tZones[i], tzAbbrvToTimeZonePriorityList[j]) {
+			if j < tzPriority {
+				tzPriority = j
+				ianaTimeZoneName = tZones[i]
 			}
 		}
 	}
@@ -643,48 +643,141 @@ for i:=0; i < lenTzAbbrvToTimeZonePriorityList; i++ {
 		err
 }
 
-// getTzAbbrvLookupIdFromDateTime - Returns a Time Zone Abbreviation
-// Lookup Id. This Time Zone Abbreviation Lookup Id is used to lookup
-// alternative time zones from 'mapTzAbbrvsToTimeZones'.
+
+// getConvertibleTimeZoneFromDateTime - Receives a date time
+// (type time.Time) as an input parameter. 'dateTime' is parsed
+// and a valid, convertible time zone name and location pointer
+// are returned.  Note: Due to the structure of 'dateTime', a
+// military time zone is never returned. All returned time zones
+// are either IANA time zones or the 'Local' time zone designated
+// by golang and the host computer.
 //
-func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
+// If the initial time zone extracted from 'dateTime' is invalid,
+// the date time time zone abbreviation will be used to look up an
+// alternate, convertible time zone and the returned boolean value,
+// 'isAlternateConvertibleTz', will be set to 'true'.
+//
+func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
-	tzAbbrvLookupId string,
+	ianaTimeZoneName string,
+	ianaLocationPtr *time.Location,
+	isAlternateConvertibleTz bool,
 	err error) {
 
 	tzMech.lock.Lock()
 
 	defer tzMech.lock.Unlock()
 
-	tzAbbrvLookupId = ""
-	err = nil
+	ePrefix += "timeZoneMechanics.getConvertibleTimeZoneFromDateTime() "
 
-	ePrefix += "timeZoneMechanics.getTzAbbrvLookupIdFromDateTime() "
+	ianaTimeZoneName = ""
+	ianaLocationPtr = nil
+	isAlternateConvertibleTz = false
+	err = nil
 
 	if dateTime.IsZero() {
 		err = &InputParameterError{
-			ePrefix:            ePrefix,
-			inputParameterName: "dateTime",
-			errMsg:             "dateTime is Zero!",
-			err:                nil,
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'dateTime' is ZERO!",
+			err:                 nil,
 		}
-		return tzAbbrvLookupId, err
+
+		return ianaTimeZoneName,
+		ianaLocationPtr,
+		isAlternateConvertibleTz,
+		err
 	}
 
-	tStr :=
-		dateTime.Format("2006-01-02 15:04:05 -0700 MST")
+	ianaLocationPtr = dateTime.Location()
 
-	lenLeadOffsetStr := len("2006-01-02 15:04:05 ")
+	if ianaLocationPtr == nil {
+		err = fmt.Errorf(ePrefix +
+			"\nAttempt to load dateTime.Location() pointer FAILED!\n" +
+			"Returned pointer is nil.\n" +
+			"dateTime='%v'",dateTime.Format(FmtDateTimeTzNanoYMD))
 
-	tzAbbrvLookupId = tStr[len("2006-01-02 15:04:05 -0700 "):]
+		return ianaTimeZoneName,
+		ianaLocationPtr,
+		isAlternateConvertibleTz,
+		err
+	}
 
-	tzAbbrvLookupId =
-		strings.TrimLeft(strings.TrimRight(tzAbbrvLookupId, " "), " ")
+	ianaTimeZoneName = ianaLocationPtr.String()
 
-	tzAbbrvLookupId = tzAbbrvLookupId + tStr[lenLeadOffsetStr : lenLeadOffsetStr+5]
 
-	return tzAbbrvLookupId, err
+	dtMech := dateTimeMechanics{}
+	var err2 error
+
+	ianaLocationPtr, err2 = dtMech.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
+
+	if err2 == nil {
+		err = nil
+		return ianaTimeZoneName,
+		ianaLocationPtr,
+		isAlternateConvertibleTz,
+		err
+	}
+
+	isAlternateConvertibleTz = true
+
+	var utcOffset, tzAbbrv string
+
+	utcOffset,
+		tzAbbrv,
+		err2 =
+		dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix +
+			"\nError: 'dateTime' Time Zone failed to load. Attempt to create look-up ID FAILED!\n" +
+			"dateTime='%v'\n" +
+			"Error='%v'\n",
+			dateTime.Format("2006-01-02 15:04:05 -0700 MST"),
+			err2.Error())
+
+		ianaTimeZoneName = ""
+		ianaLocationPtr = nil
+		isAlternateConvertibleTz = false
+
+		return ianaTimeZoneName,
+		ianaLocationPtr,
+		isAlternateConvertibleTz,
+		err
+	}
+
+	tzAbbrv = tzAbbrv + utcOffset
+
+	tzMech2 := timeZoneMechanics{}
+
+	_,
+		_,
+		ianaTimeZoneName,
+		ianaLocationPtr,
+		err2 =
+			tzMech2.convertTzAbbreviationToTimeZone(
+				tzAbbrv,
+				ePrefix)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix +
+			"\nError: 'dateTime' Time Zone failed to load. Convertible Time Zone look-up FAILED!\n" +
+			"dateTime='%v'\n" +
+			"Error='%v'\n",
+			dateTime.Format("2006-01-02 15:04:05 -0700 MST"),
+			err2.Error())
+
+		ianaTimeZoneName = ""
+		ianaLocationPtr = nil
+		isAlternateConvertibleTz = false
+	}
+
+	return ianaTimeZoneName,
+		ianaLocationPtr,
+		isAlternateConvertibleTz,
+		err
 }
 
 // getTimeZoneFromName - Analyzes a time zone name passed
@@ -741,6 +834,10 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 	ianaLocationPtr *time.Location,
 	tzType TimeZoneType,
 	err error) {
+
+	tzMech.lock.Lock()
+
+	defer tzMech.lock.Unlock()
 
 	ePrefix += "timeZoneMechanics.getTimeZoneFromName() "
 
@@ -822,6 +919,50 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 		ianaLocationPtr,
 		tzType,
 		err
+}
+
+// getTzAbbrvLookupIdFromDateTime - Returns a Time Zone Abbreviation
+// Lookup Id. This Time Zone Abbreviation Lookup Id is used to lookup
+// alternative time zones from 'mapTzAbbrvsToTimeZones'.
+//
+func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
+	dateTime time.Time,
+	ePrefix string) (
+	tzAbbrvLookupId string,
+	err error) {
+
+	tzMech.lock.Lock()
+
+	defer tzMech.lock.Unlock()
+
+	tzAbbrvLookupId = ""
+	err = nil
+
+	ePrefix += "timeZoneMechanics.getTzAbbrvLookupIdFromDateTime() "
+
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:            ePrefix,
+			inputParameterName: "dateTime",
+			errMsg:             "dateTime is Zero!",
+			err:                nil,
+		}
+		return tzAbbrvLookupId, err
+	}
+
+	tStr :=
+		dateTime.Format("2006-01-02 15:04:05 -0700 MST")
+
+	lenLeadOffsetStr := len("2006-01-02 15:04:05 ")
+
+	tzAbbrvLookupId = tStr[len("2006-01-02 15:04:05 -0700 "):]
+
+	tzAbbrvLookupId =
+		strings.TrimLeft(strings.TrimRight(tzAbbrvLookupId, " "), " ")
+
+	tzAbbrvLookupId = tzAbbrvLookupId + tStr[lenLeadOffsetStr : lenLeadOffsetStr+5]
+
+	return tzAbbrvLookupId, err
 }
 
 // getUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date

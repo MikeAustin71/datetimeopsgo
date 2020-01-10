@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest050()
+	mainTest{}.mainTest051()
 
 }
 
@@ -50,27 +50,27 @@ func (mt mainTest) mainTest051() {
 
 	dtUtil := dt.DTimeUtility{}
 
-	var milTzLetter, milTzName, ianaTimeZoneName string
+	var ianaTimeZoneName string
 	var ianaLocationPtr *time.Location
+	var isAlternateConvertibleTz bool
 
-	milTzLetter,
-	milTzName,
 	ianaTimeZoneName,
 	ianaLocationPtr,
-	err = dtUtil.GetConvertibleTimeZoneFromTzAbbreviation(t1, ePrefix)
+	isAlternateConvertibleTz,
+	err = dtUtil.GetConvertibleTimeZoneFromDateTime(t1, ePrefix)
 
 	if err != nil {
 		fmt.Printf(ePrefix +
-			"\nError returned by dtUtil.GetConvertibleTimeZoneFromTzAbbreviation(t1, ePrefix)\n" +
+			"\nError returned by dtUtil.GetConvertibleTimeZoneFromDateTime(t1, ePrefix)\n" +
 			"t1='%v'\n" +
 			"Error='%v'\n", t1.Format(fmtStr), err.Error())
 		return
 	}
 
-	fmt.Printf("     milTzLetter: %v\n", milTzLetter)
-	fmt.Printf("       milTzName: %v\n", milTzName)
-	fmt.Printf("ianaTimeZoneName: %v\n", ianaTimeZoneName)
-	fmt.Printf(" ianaLocationPtr: %v\n\n", ianaLocationPtr.String())
+	fmt.Println()
+	fmt.Printf("        ianaTimeZoneName: %v\n", ianaTimeZoneName)
+	fmt.Printf("         ianaLocationPtr: %v\n", ianaLocationPtr.String())
+	fmt.Printf("isAlternateConvertibleTz: %v\n\n", isAlternateConvertibleTz)
 
 	fmt.Printf(ePrefix +
 		"\nSuccess!\n" +

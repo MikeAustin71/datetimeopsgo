@@ -300,19 +300,25 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 
 }
 
-// GetConvertibleTimeZoneFromTzAbbreviation - Returns alternative time
-// zone data based on the time zone abbreviation and UTC offset.
-// This alternative time zone is convertible, meaning it can
-// be used successfully to convert a give time to any other time
-// of the year.
+// GetConvertibleTimeZoneFromDateTime - Receives a date time
+// (type time.Time) as an input parameter. 'dateTime' is parsed
+// and a valid, convertible time zone name and location pointer
+// are returned.  Note: Due to the structure of 'dateTime', a
+// military time zone is never returned. All returned time zones
+// are either IANA time zones or the 'Local' time zone designated
+// by golang and the host computer.
 //
-func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromTzAbbreviation(
+// If the initial time zone extracted from 'dateTime' is invalid,
+// the date time time zone abbreviation will be used to look up an
+// alternate, convertible time zone and the returned boolean value
+//'isAlternateConvertibleTz' will be set to 'true'.
+//
+func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
-	milTzLetter,
-	milTzName,
 	ianaTimeZoneName string,
 	ianaLocationPtr *time.Location,
+	isAlternateConvertibleTz bool,
 	err error) {
 
 	dtUtil.lock.Lock()
@@ -321,35 +327,16 @@ func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromTzAbbreviation(
 
 	ePrefix += "DTimeUtility.GetUtcOffsetTzAbbrvFromDateTime() "
 
-	milTzLetter = ""
-	milTzName = ""
 	ianaTimeZoneName = ""
 	ianaLocationPtr = nil
+	isAlternateConvertibleTz = false
 	err = nil
-
-	dtMech := dateTimeMechanics{}
-
-	var utcOffset, tzAbbrv string
-
-	utcOffset,
-	tzAbbrv,
-	err =
-		dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
-
-	if err != nil {
-
-		return milTzLetter,
-		milTzName,
-		ianaTimeZoneName,
-		ianaLocationPtr,
-		err
-	}
-
-	tzAbbrv = tzAbbrv + utcOffset
 
 	tzMech := timeZoneMechanics{}
 
-	return tzMech.convertTzAbbreviationToTimeZone(tzAbbrv, ePrefix)
+	return tzMech.getConvertibleTimeZoneFromDateTime(
+		dateTime,
+		ePrefix)
 }
 
 // GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
