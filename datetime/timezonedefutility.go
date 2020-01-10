@@ -481,6 +481,50 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	ianaTimeZoneName := ianaTimeZonePtr.String()
 
+	dtMech := dateTimeMechanics{}
+	var utcOffset, tzAbbrv string
+
+	_, err := dtMech.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
+
+	if err != nil {
+
+		utcOffset,
+			tzAbbrv,
+			err =
+			dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+
+		if err != nil {
+			return fmt.Errorf(ePrefix +
+				"\nError: dateTime Time Zone failed to load. Attempt to create look-up ID FAILED!\n" +
+				"dateTime='%v'\n" +
+				"Error='%v'\n",
+				dateTime.Format("2006-01-02 15:04:05 -0700 MST"),
+				err.Error())
+		}
+
+		tzAbbrv = tzAbbrv + utcOffset
+
+		tzMech := timeZoneMechanics{}
+
+		_,
+		_,
+		ianaTimeZoneName,
+		_,
+		err =
+			tzMech.convertTzAbbreviationToTimeZone(
+				tzAbbrv,
+				ePrefix)
+
+		if err != nil {
+			return fmt.Errorf(ePrefix +
+				"\nError: dateTime Time Zone failed to load. Convertible Time Zone look-up FAILED!\n" +
+				"dateTime='%v'\n" +
+				"Error='%v'\n",
+				dateTime.Format("2006-01-02 15:04:05 -0700 MST"),
+				err.Error())
+		}
+	}
+
 	tzDefUtil2 := timeZoneDefUtility{}
 
 	return tzDefUtil2.setFromTimeZoneName(
@@ -489,7 +533,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		ianaTimeZoneName,
 		TzConvertType.Absolute(),
 		ePrefix)
-
 }
 
 // setFromTimeZoneName - Sets the data fields of the specified

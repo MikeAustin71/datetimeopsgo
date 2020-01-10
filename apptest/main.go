@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest051()
+	mainTest{}.mainTest050()
 
 }
 
@@ -63,7 +63,7 @@ func (mt mainTest) mainTest051() {
 		fmt.Printf(ePrefix +
 			"\nError returned by dtUtil.GetConvertibleTimeZoneFromTzAbbreviation(t1, ePrefix)\n" +
 			"t1='%v'\n" +
-			"Error='%v'\n", t1.Format(fmtStr))
+			"Error='%v'\n", t1.Format(fmtStr), err.Error())
 		return
 	}
 

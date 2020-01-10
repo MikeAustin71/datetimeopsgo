@@ -510,7 +510,6 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 			ianaTimeZoneName,
 			ianaLocationPtr,
 			err
-
 	}
 
 	stdAbbrvs := StdTZoneAbbreviations{}
@@ -526,6 +525,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 			errMsg:   "",
 			err:      nil,
 		}
+
 		return milTzLetter,
 			milTzName,
 			ianaTimeZoneName,
@@ -563,6 +563,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 			errMsg:   "",
 			err:      nil,
 		}
+
 		return milTzLetter,
 			milTzName,
 			ianaTimeZoneName,
