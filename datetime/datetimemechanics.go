@@ -147,203 +147,20 @@ func (dtMech *dateTimeMechanics) allocateSecondsToHrsMinSecs(
 	return hours, minutes, seconds, sign
 }
 
-// convertTzAbbreviationToTimeZone - receives an input parameter,
-// 'tzAbbrvLookupKey' which is used to look up a time zone abbreviation
-// and return an associated IANA Time Zone Name.
-//
-// The method uses the global variable, 'tzAbbrvToTimeZonePriorityList'
-// to assign the IANA Time Zone in cases of multiple time zones
-// associated with the Time Zone Abbreviation.
-//
-// The 'tzAbbrvLookupKey' is formatted the Time Zone Abbreviation
-// followed by the UTC offsets as illustrated by the following
-// examples:
-//   "EDT-0400"
-//   "EST-0500"
-//   "CDT-0500"
-//   "CST-0600"
-//   "PDT-0700"
-//   "PST-0800"
-//
-// The associated IANA Time Zone name is identified using the
-// global variable 'mapTzAbbrvsToTimeZones' which is accessed
-// through method StdTZoneAbbreviations{}.AbbrvOffsetToTimeZones().
-//
-// If an associated IANA Time Zone is not found the returned
-// boolean value, 'isValidTzAbbreviation', is set to 'false'.
-//
-func (dtMech *dateTimeMechanics) convertTzAbbreviationToTimeZone(
-	tzAbbrvLookupKey string,
-	ePrefix string) (
-	milTzLetter,
-	milTzName,
-	ianaTimeZoneName string,
-	ianaLocationPtr *time.Location,
-	err error) {
-
-	dtMech.lock.Lock()
-
-	defer dtMech.lock.Unlock()
-
-	milTzLetter = ""
-	milTzName = ""
-	ianaTimeZoneName = ""
-	ianaLocationPtr = nil
-	err = nil
-
-	ePrefix += "dateTimeMechanics.convertTzAbbreviationToTimeZone() "
-
-	if len(tzAbbrvLookupKey) == 0 {
-		err = &InputParameterError{
-			ePrefix:ePrefix,
-			inputParameterName:tzAbbrvLookupKey,
-			errMsg:"tzAbbrvLookKey is a zero length string!",
-			err: nil}
-
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
-
-	}
-
-	stdAbbrvs := StdTZoneAbbreviations{}
-
-	tZones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(tzAbbrvLookupKey)
-
-	if !ok {
-		ePrefix += "StdTZoneAbbreviations.AbbrvOffsetToTimeZones() "
-		err = &TzAbbrvMapLookupError{
-			ePrefix:  ePrefix,
-			mapName:  "mapTzAbbrvsToTimeZones",
-			lookUpId: tzAbbrvLookupKey,
-			errMsg: "",
-			err:      nil,
-		}
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
-	}
-
-	lenTZones := len(tZones)
-
-	if lenTZones == 0 {
-		err = &TzAbbrvMapLookupError{
-			ePrefix:  ePrefix,
-			mapName:  "mapTzAbbrvsToTimeZones",
-			lookUpId: tzAbbrvLookupKey,
-			errMsg: "Map returned a zero length time zones string array!",
-			err:      nil,
-		}
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
-	}
-
-	var tzAbbrRef TimeZoneAbbreviationDto
-
-	tzAbbrRef, ok = stdAbbrvs.AbbrvOffsetToTzReference(tzAbbrvLookupKey)
-
-	if !ok {
-		ePrefix += "StdTZoneAbbreviations.AbbrvOffsetToTzReference() "
-		err = &TzAbbrvMapLookupError{
-			ePrefix:  ePrefix,
-			mapName:  "mapTzAbbreviationReference",
-			lookUpId: tzAbbrvLookupKey,
-			errMsg: "",
-			err:      nil,
-		}
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
-	}
-
-	if tzAbbrRef.Location == "Military" {
-
-		milTzLetter = tzAbbrRef.Abbrv
-		milTzName = tzAbbrRef.AbbrvDescription
-
-	}
-
-	dtMech2 := dateTimeMechanics{}
-
-//loadTzLocationPtr(
-	if lenTZones == 1 {
-
-		ianaLocationPtr, err = dtMech2.loadTzLocationPtr(tZones[0], ePrefix)
-
-		if err != nil {
-			milTzLetter = ""
-			milTzName = ""
-			ianaLocationPtr = nil
-
-			return milTzLetter,
-				milTzName,
-				ianaTimeZoneName,
-				ianaLocationPtr,
-				err
-		}
-
-		ianaTimeZoneName = tZones[0]
-
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
-	}
-
-	lockTzAbbrvToTimeZonePriorityList.Lock()
-	defer lockTzAbbrvToTimeZonePriorityList.Unlock()
-
-	for i := 0; i < lenTZones && ianaTimeZoneName == ""; i++ {
-
-		for j := 0; j < lenTzAbbrvToTimeZonePriorityList; j++ {
-			if strings.HasPrefix(tZones[i], tzAbbrvToTimeZonePriorityList[j]) {
-
-				ianaTimeZoneName = tZones[i]
-				break
-			}
-		}
-	}
-
-	if len(ianaTimeZoneName) == 0 {
-		ianaTimeZoneName = tZones[0]
-	}
-
-	ianaLocationPtr, err = dtMech2.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
-
-	if err != nil {
-		milTzLetter = ""
-		milTzName = ""
-		ianaTimeZoneName = ""
-		ianaLocationPtr = nil
-	}
-
-	return milTzLetter,
-		milTzName,
-		ianaTimeZoneName,
-		ianaLocationPtr,
-		err
-}
-
-// getUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
-// time, input parameter and extracts and returns the
+// getUtcOffsetTzAbbrvFromDateTime - Receives a time.Time,
+// date time, input parameter and extracts and returns the
 // 5-character UTC offset and the time zone abbreviation.
 //
 // UTC Offsets are returned in the format illustrated by the
 // following examples:
+//
 //   +1030
 //   -0500
 //   +1100
 //   -1100
+//
+// The time zone abbreviation,'tzAbbrv', is formatted as
+// shown in the following example ('CST').
 //
 // Example:
 //  Time String:  2019-12-26 00:56:15 -0600 CST
@@ -352,7 +169,10 @@ func (dtMech *dateTimeMechanics) convertTzAbbreviationToTimeZone(
 //
 func (dtMech *dateTimeMechanics) getUtcOffsetTzAbbrvFromDateTime(
 	dateTime time.Time,
-	ePrefix string) (utcOffset, tzAbbrv string, err error) {
+	ePrefix string) (
+	utcOffset,
+	tzAbbrv string,
+	err error) {
 
 	dtMech.lock.Lock()
 

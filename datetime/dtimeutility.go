@@ -300,6 +300,58 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 
 }
 
+// GetConvertibleTimeZoneFromTzAbbreviation - Returns alternative time
+// zone data based on the time zone abbreviation and UTC offset.
+// This alternative time zone is convertible, meaning it can
+// be used successfully to convert a give time to any other time
+// of the year.
+//
+func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromTzAbbreviation(
+	dateTime time.Time,
+	ePrefix string) (
+	milTzLetter,
+	milTzName,
+	ianaTimeZoneName string,
+	ianaLocationPtr *time.Location,
+	err error) {
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.GetUtcOffsetTzAbbrvFromDateTime() "
+
+	milTzLetter = ""
+	milTzName = ""
+	ianaTimeZoneName = ""
+	ianaLocationPtr = nil
+	err = nil
+
+	dtMech := dateTimeMechanics{}
+
+	var utcOffset, tzAbbrv string
+
+	utcOffset,
+	tzAbbrv,
+	err =
+		dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+
+	if err != nil {
+
+		return milTzLetter,
+		milTzName,
+		ianaTimeZoneName,
+		ianaLocationPtr,
+		err
+	}
+
+	tzAbbrv = tzAbbrv + utcOffset
+
+	tzMech := timeZoneMechanics{}
+
+	return tzMech.convertTzAbbreviationToTimeZone(tzAbbrv, ePrefix)
+}
+
 // GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
 // time, input parameter and extracts and returns the
 // 5-character UTC offset and UTC offset.

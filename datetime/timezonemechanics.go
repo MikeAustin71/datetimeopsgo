@@ -639,8 +639,10 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 		err
 }
 
-
-// getTzAbbrvLookupIdFromDateTime
+// getTzAbbrvLookupIdFromDateTime - Returns a Time Zone Abbreviation
+// Lookup Id. This Time Zone Abbreviation Lookup Id is used to lookup
+// alternative time zones from 'mapTzAbbrvsToTimeZones'.
+//
 func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
