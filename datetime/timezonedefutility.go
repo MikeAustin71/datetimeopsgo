@@ -448,7 +448,9 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTimeComponents(
 		ePrefix)
 }
 
-
+// setFromDateTime - Sets the values of a TimeZoneDefDto
+// based on input parameter 'dateTime'.
+//
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef *TimeZoneDefDto,
 	dateTime time.Time,
@@ -480,59 +482,21 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		}
 	}
 
-	ianaTimeZonePtr := dateTime.Location()
+	tzMech := timeZoneMechanics{}
 
-	if ianaTimeZonePtr == nil {
-		return fmt.Errorf(ePrefix +
-			"\nAttempt to load dateTime.Location() pointer FAILED!\n" +
-			"Returned pointer is nil.\n" +
-			"dateTime='%v'",dateTime.Format(FmtDateTimeTzNanoYMD))
-	}
+	var ianaTimeZoneName string
+	var err error
 
-	ianaTimeZoneName := ianaTimeZonePtr.String()
-
-	dtMech := dateTimeMechanics{}
-	var utcOffset, tzAbbrv string
-
-	_, err := dtMech.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
+	ianaTimeZoneName,
+	_,
+	_,
+	err =
+		tzMech.getConvertibleTimeZoneFromDateTime(
+			dateTime,
+			ePrefix)
 
 	if err != nil {
-
-		utcOffset,
-			tzAbbrv,
-			err =
-			dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
-
-		if err != nil {
-			return fmt.Errorf(ePrefix +
-				"\nError: dateTime Time Zone failed to load. Attempt to create look-up ID FAILED!\n" +
-				"dateTime='%v'\n" +
-				"Error='%v'\n",
-				dateTime.Format("2006-01-02 15:04:05 -0700 MST"),
-				err.Error())
-		}
-
-		tzAbbrv = tzAbbrv + utcOffset
-
-		tzMech := timeZoneMechanics{}
-
-		_,
-		_,
-		ianaTimeZoneName,
-		_,
-		err =
-			tzMech.convertTzAbbreviationToTimeZone(
-				tzAbbrv,
-				ePrefix)
-
-		if err != nil {
-			return fmt.Errorf(ePrefix +
-				"\nError: dateTime Time Zone failed to load. Convertible Time Zone look-up FAILED!\n" +
-				"dateTime='%v'\n" +
-				"Error='%v'\n",
-				dateTime.Format("2006-01-02 15:04:05 -0700 MST"),
-				err.Error())
-		}
+		return err
 	}
 
 	tzDefUtil2 := timeZoneDefUtility{}
