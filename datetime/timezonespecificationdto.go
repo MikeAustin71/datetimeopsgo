@@ -581,6 +581,17 @@ func (tzSpec TimeZoneSpecDto) New(
 
 	return tzSpecOut, err
 }
+
+// SetTagDescription - Sets the value of member variable
+// and data field, TimeZoneSpecDto.tagDescription. This
+// field is available for users to tag, classify or
+// otherwise attach descriptive information to this
+// TimeZoneSpecDto instance.
+//
+func (tzSpec *TimeZoneSpecDto) SetTagDescription(tagDescription string) {
+	tzSpec.tagDescription = tagDescription
+}
+
 // SetZoneLabel - Sets the value of data field "Zone Label". 'Zone
 // Label' a tag or text description field available for use
 // by the user.
