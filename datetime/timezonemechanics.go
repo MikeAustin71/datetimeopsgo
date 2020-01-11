@@ -264,10 +264,10 @@ func (tzMech *timeZoneMechanics) calcConvertibleTimeZoneStats(
 //                            5-character string formatted as follows:
 //                               "-0400", "-0500", "+0500", "+1000"
 //
-//  zoneAbbrv        string - Zone Abbreviations are used by other methods
-//                            key values for map lookups. The Zone Abbreviation
-//                            return value is formatted as follows:
-//                               "CST-0600", "EET+0200"
+//  zoneAbbrvLookupId string - Zone Abbreviations are used by other methods
+//                             key values for map lookups. The Zone Abbreviation
+//                             return value is formatted as follows:
+//                             "CST-0600", "EET+0200"
 //
 //  offsetHours      int    - A positive value indicating the number of hours
 //                            offset from UTC. For the sign value of hours,
@@ -310,7 +310,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 	zoneName string,
 	zoneOffset string,
 	utcOffset string,
-	zoneAbbrv string,
+	zoneAbbrvLookupId string,
 	offsetHours int,
 	offsetMinutes int,
 	offsetSeconds int,
@@ -329,7 +329,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 	zoneName = ""
 	zoneOffset = ""
 	utcOffset = ""
-	zoneAbbrv = ""
+	zoneAbbrvLookupId = ""
 	offsetHours = 0
 	offsetMinutes = 0
 	offsetSeconds = 0
@@ -352,7 +352,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 		return zoneName,
 			zoneOffset,
 			utcOffset,
-			zoneAbbrv,
+			zoneAbbrvLookupId,
 			offsetHours,
 			offsetMinutes,
 			offsetSeconds,
@@ -377,7 +377,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 		return zoneName,
 			zoneOffset,
 			utcOffset,
-			zoneAbbrv,
+			zoneAbbrvLookupId,
 			offsetHours,
 			offsetMinutes,
 			offsetSeconds,
@@ -428,7 +428,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 
 	// Generates final zone abbreviation in the
 	// format "CST-0500" or " EET+0200"
-	zoneAbbrv = zoneName + zoneOffset
+	zoneAbbrvLookupId = zoneName + zoneOffset
 
 	if offsetSeconds > 0 {
 		zoneOffset += fmt.Sprintf("%02d", offsetSeconds)
@@ -441,7 +441,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 	return zoneName,
 		zoneOffset,
 		utcOffset,
-		zoneAbbrv,
+		zoneAbbrvLookupId,
 		offsetHours,
 		offsetMinutes,
 		offsetSeconds,

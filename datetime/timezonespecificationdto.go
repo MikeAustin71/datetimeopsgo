@@ -11,7 +11,7 @@ import (
 // timeZoneSpecDto - Internal data structure used to
 // store Time Zone data elements.
 type TimeZoneSpecDto struct {
-	zoneLabel              string           // Identifying Time Zone Label
+	zoneLabel              string           // Identifying Time Zone Label. A tag or description field.
 	referenceDateTime      time.Time        // The date time used in defining the Time Zone
 	zoneName               string           // The Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
 	zoneOffsetTotalSeconds int              // Signed number of seconds offset from UTC.
@@ -24,9 +24,12 @@ type TimeZoneSpecDto struct {
 	//                                         refer to ZoneSign for the correct sign value
 	offsetSeconds          int              // Normalized Offset Seconds offset from UTC. Always a positive number,
 	//                                         refer to ZoneSign for the correct sign value
-	zoneOffset             string           // A text string representing the time zone. Example "-0600 CST" or "+0200 EET"
-	zoneAbbreviation       string           // A test string representing the Abbreviation Id used in map lookups. Example: "CST-0600"
-	utcOffset              string           // A text string representing the offset for UTC. Example "-0600" or "+0200"
+	zoneOffset             string           // A text string representing offset from UTC for this time zone.
+	//                                         Example "-0600 CST" or "+0200 EET"
+	zoneAbbrvLookupId      string           // A string representing the Abbreviation Id used in map lookups.
+	//                                         Examples: "CST-0600", "EET+0200"
+	utcOffset              string           // A text string representing the offset from UTC for this Time Zone.
+	//                                         Examples: "-0600" or "+0200"
 	locationPtr            *time.Location   // Pointer to a Time Zone Location
 	locationName           string           // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
 	locationNameType       LocationNameType // Four possible values:
@@ -66,7 +69,7 @@ func (tzSpec *TimeZoneSpecDto) CopyIn(tzSpec2 TimeZoneSpecDto) {
 	tzSpec.offsetMinutes          = tzSpec2.offsetMinutes
 	tzSpec.offsetSeconds          = tzSpec2.offsetSeconds
 	tzSpec.zoneOffset             = tzSpec2.zoneOffset
-	tzSpec.zoneAbbreviation       = tzSpec2.zoneAbbreviation
+	tzSpec.zoneAbbrvLookupId      = tzSpec2.zoneAbbrvLookupId
 	tzSpec.utcOffset              = tzSpec2.utcOffset
 	tzSpec.locationPtr            = tzSpec2.locationPtr
 	tzSpec.locationName           = tzSpec2.locationName
@@ -99,7 +102,7 @@ func (tzSpec *TimeZoneSpecDto) CopyOut() TimeZoneSpecDto {
 	tzSpec2.offsetMinutes          = tzSpec.offsetMinutes          
 	tzSpec2.offsetSeconds          = tzSpec.offsetSeconds          
 	tzSpec2.zoneOffset             = tzSpec.zoneOffset             
-	tzSpec2.zoneAbbreviation       = tzSpec.zoneAbbreviation       
+	tzSpec2.zoneAbbrvLookupId      = tzSpec.zoneAbbrvLookupId
 	tzSpec2.utcOffset              = tzSpec.utcOffset              
 	tzSpec2.locationPtr            = tzSpec.locationPtr            
 	tzSpec2.locationName           = tzSpec.locationName           
@@ -130,7 +133,7 @@ func (tzSpec *TimeZoneSpecDto) Empty() {
 	tzSpec.offsetMinutes          = 0
 	tzSpec.offsetSeconds          = 0
 	tzSpec.zoneOffset             = ""
-	tzSpec.zoneAbbreviation       = ""
+	tzSpec.zoneAbbrvLookupId      = ""
 	tzSpec.utcOffset              = ""
 	tzSpec.locationPtr            = nil
 	tzSpec.locationName           = ""
@@ -171,7 +174,7 @@ func (tzSpec *TimeZoneSpecDto) Equal( tzSpec2 TimeZoneSpecDto) bool {
 
 
 	if tzSpec.zoneOffset != tzSpec2.zoneOffset ||
-		tzSpec.zoneAbbreviation != tzSpec2.zoneAbbreviation ||
+		tzSpec.zoneAbbrvLookupId != tzSpec2.zoneAbbrvLookupId ||
 		tzSpec.utcOffset != tzSpec2.utcOffset {
 		return false
 	}
@@ -239,7 +242,7 @@ func (tzSpec *TimeZoneSpecDto) IsEmpty() bool {
 	if tzSpec.zoneLabel != "" ||
 	tzSpec.zoneName != "" ||
 	tzSpec.zoneOffset != "" ||
-	tzSpec.zoneAbbreviation != "" ||
+	tzSpec.zoneAbbrvLookupId != "" ||
 	tzSpec.utcOffset != "" {
 		return false
 	}
@@ -327,6 +330,273 @@ func (tzSpec *TimeZoneSpecDto) IsValid(ePrefix string) error {
 	return nil
 }
 
+// GetLocationPointer - Returns the time zone location in the form of
+// a pointer to 'time.Location'.
+//
+func (tzSpec *TimeZoneSpecDto) GetLocationPointer() *time.Location {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.locationPtr
+}
+
+// GetLocationName - Returns the time zone name or time zone location.
+// Examples: "Local", "America/Chicago", "America/New_York"
+//
+func (tzSpec *TimeZoneSpecDto) GetLocationName() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.locationName
+}
+
+// GetLocationNameType - Describes and classifies the Time Zone
+// Location. The return value is a LocationNameType value which
+// is an enumeration time zone location name classifications.
+//
+// Possible return values:
+//
+//    ConvertibleAbbreviation    - Time Zone Zone Location Name is an
+//                                 abbreviation which is valid and
+//                                 convertible across all other time
+//                                 zones.
+//
+//    NonConvertibleAbbreviation - The Time Zone Location Name cannot
+//                                 be converted to other time zones.
+//
+//    ConvertibleTimeZoneName    - The Time Zone Name is a complete
+//                                 and valid time zone name which is
+//                                 convertible across all other
+//                                 time zones.
+//
+func (tzSpec *TimeZoneSpecDto) GetLocationNameType() LocationNameType {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.locationNameType
+}
+
+// GetMilitaryTimeZoneName - Returns a string containing the military
+// time zone name, if applicable. If the current TimeZoneSpecDto
+// instance does not define a military time zone, this return value
+// is an empty string.
+//
+func (tzSpec *TimeZoneSpecDto) GetMilitaryTimeZoneName() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.militaryTimeZoneName
+}
+
+// GetMilitaryTimeZoneLetter - Returns a string containing the military
+// time zone letter or abbreviation. If the current TimeZoneSpecDto
+// instance does not define a military time zone, this return value
+// is an empty string.
+//
+func (tzSpec *TimeZoneSpecDto) GetMilitaryTimeZoneLetter() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.militaryTimeZoneLetter
+}
+
+// GetOffsetElements - Returns a series of integer values which
+// taken collectively identify the offset from UTC for this time
+// zone.
+//
+// ------------------------------------------------------------
+//
+// Return Values
+// =============
+//
+// zoneSignValue int  -1 == West of UTC  +1 == East of UTC. Apply this sign
+//                    to the offset hours, minutes and seconds value
+//
+// offsetHours   int  Normalized Offset Hours from UTC. Always a positive number,
+//                    refer to ZoneSign for correct sign value.
+//
+// offsetMinutes int  Normalized Offset Minutes offset from UTC. Always a
+//                    positive number, refer to ZoneSign for the correct
+//                    sign value.
+//
+// offsetSeconds int  Normalized Offset Seconds offset from UTC. Always a
+//                    positive number, refer to ZoneSign for the correct
+//                    sign value.
+//
+func (tzSpec *TimeZoneSpecDto) GetOffsetElements() (
+	zoneSignValue,
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds int) {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneSignValue,
+		tzSpec.offsetHours,
+		tzSpec.offsetMinutes,
+		tzSpec.offsetSeconds
+}
+
+// GetReferenceDateTime - Returns the reference Date Time
+//
+func (tzSpec *TimeZoneSpecDto) GetReferenceDateTime() time.Time {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.referenceDateTime
+}
+
+// GetTagDescription - Returns the private member variable
+// "tagDescription". This field is available for users to
+// tag, classify or otherwise attach descriptive information
+// to this TimeZoneSpecDto instance.
+//
+func (tzSpec *TimeZoneSpecDto) GetTagDescription() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.tagDescription
+}
+
+// GetTimeZoneType - Returns the Time Zone Type classification.
+// Time Zone Type is an enumeration identifying the time zone
+// source.
+//
+// Possible return types.
+//
+//  TzType.Iana()      - Identifies an IANA Time Zone
+//  TzType.Military()  - Identifies a Military Time Zone
+//  TzType.Local()     - Identifies this as a 'Local' Time Zone
+//  TzType.UtcOffset() - Identifies this time zone a UTC Offset
+//
+func (tzSpec *TimeZoneSpecDto) GetTimeZoneType() TimeZoneType {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.timeZoneType
+}
+
+// GetUtcOffset - returns a text string representing the
+// offset from UTC for this time zone.
+//
+//  Examples: "-0600", "+0200"
+//
+func (tzSpec *TimeZoneSpecDto) GetUtcOffset() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.utcOffset
+}
+
+// GetZoneAbbrvLookupId - Returns a text string containing the
+// Time Zone abbreviation plus the UTC offset. This text value
+// is used to look up time zone data in various internal data
+// maps. Examples: "CST-0600", "EET+0200"
+//
+// Note: To access the time zone abbreviation, see method
+// TimeZoneSpecDto.GetZoneName()
+//
+func (tzSpec *TimeZoneSpecDto) GetZoneAbbrvLookupId() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneAbbrvLookupId
+}
+
+// GetZoneLabel - Returns the Zone Label, a tag or text
+// description field available for use by the user.
+//
+func (tzSpec *TimeZoneSpecDto) GetZoneLabel() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneLabel
+}
+
+// GetZoneName - Returns the 'Zone Name'. 'Zone Name' is the
+// the Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
+//
+func (tzSpec *TimeZoneSpecDto) GetZoneName() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneName
+}
+
+// GetZoneOffset - Returns data field 'zoneOffset'. This is
+// a text string representing the offset from UTC for this
+// time zone. The returned offset string consists of two
+// components, the hours and minutes of offset and the time
+// zone abbreviation.
+//
+// Example: "-0600 CST" or "+0200 EET"
+//
+func (tzSpec *TimeZoneSpecDto) GetZoneOffset() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneOffset
+}
+
+// GetZoneOffsetTotalSeconds - Returns the total offset seconds
+// from 'UTC' for this time zone. The returned value is a signed
+// value. Positive ('+') values identify seconds East of UTC.
+// Negative ('-') values identify seconds West of UTC.
+//
+func (tzSpec *TimeZoneSpecDto) GetZoneOffsetTotalSeconds() int {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneOffsetTotalSeconds
+}
+
+// GetZoneSignValue - Returns the data field 'zoneSignValue'. This
+// is a signed integer value identifying whether the time zone
+// offset from UTC is east or west of UTC. The returned integer
+// will hold one of only two values: a positive '1' or a negative
+// '-1'.  '-1' indicates an offset West of UTC while a positive
+// '1' identifies and offset East of UTC. Apply this sign to the
+// unsigned values for offset hours, minutes and seconds.
+//
+func (tzSpec *TimeZoneSpecDto) GetZoneSignValue() int {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneSignValue
+}
+
 // New - Returns a new instance of TimeZoneSpecDto.
 //
 func (tzSpec TimeZoneSpecDto) New(
@@ -359,6 +629,13 @@ func (tzSpec TimeZoneSpecDto) New(
 
 
 	return tzSpecOut, err
+}
+// SetZoneLabel - Sets the value of data field "Zone Label". 'Zone
+// Label' a tag or text description field available for use
+// by the user.
+//
+func (tzSpec *TimeZoneSpecDto) SetZoneLabel() string {
+	return tzSpec.zoneLabel
 }
 
 // SetTimeZone - Sets the data values of the current Time Zone
@@ -396,7 +673,7 @@ func (tzSpec *TimeZoneSpecDto) SetTimeZone(
 	tzSpec.zoneName,
 		tzSpec.zoneOffset,
 		tzSpec.utcOffset,
-		tzSpec.zoneAbbreviation,
+		tzSpec.zoneAbbrvLookupId,
 		tzSpec.offsetHours,
 		tzSpec.offsetMinutes,
 		tzSpec.offsetSeconds,
