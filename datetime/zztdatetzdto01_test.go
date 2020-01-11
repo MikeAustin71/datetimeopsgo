@@ -17,7 +17,8 @@ func TestDateTzDto_AddDate_01(t *testing.T) {
 	dtz1, err := DateTzDto{}.New(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
+			"Error='%v'", err.Error())
 		return
 	}
 

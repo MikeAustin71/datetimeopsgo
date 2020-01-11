@@ -512,6 +512,18 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 			err
 	}
 
+	firstLtr := tzAbbrvLookupKey[0:1]
+
+	if firstLtr == "+" || firstLtr == "-" {
+		if len(tzAbbrvLookupKey) == 10 {
+			if tzAbbrvLookupKey[3:5] == "00" {
+				newAbbrv :=
+					tzAbbrvLookupKey[0:3] + tzAbbrvLookupKey[5:10]
+				tzAbbrvLookupKey = newAbbrv
+			}
+		}
+	}
+
 	stdAbbrvs := StdTZoneAbbreviations{}
 
 	tZones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(tzAbbrvLookupKey)
@@ -748,6 +760,7 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 		err
 	}
 
+
 	tzAbbrv = tzAbbrv + utcOffset
 
 	tzMech2 := timeZoneMechanics{}
@@ -869,13 +882,15 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 
 	tzMech2 := timeZoneMechanics{}
 
+	var err2 error
+
 	milTzLetter,
 	milTzName,
 	ianaTzName,
 	ianaLocationPtr,
-	err  = tzMech2.parseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
+	err2 = tzMech2.parseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
 
-	if err == nil {
+	if err2 == nil {
 		tzType = TzType.Military()
 
 		return milTzLetter,
@@ -887,8 +902,6 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 	}
 
 	dtMech := dateTimeMechanics{}
-
-	var err2 error
 
 	ianaLocationPtr, err2 = dtMech.loadTzLocationPtr(timeZoneName,ePrefix)
 
@@ -1098,7 +1111,7 @@ func (tzMech *timeZoneMechanics) parseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix+
-				"Error: Input Parameter Value 'militaryTz' is INVALID!\n"+
+				"\nError: Input Parameter Value 'militaryTz' is INVALID!\n"+
 				"'militaryTz' DOES NOT map to a valid Military Time Zone.\n"+
 				"militaryTz='%v'", milTzLetter)
 
