@@ -578,7 +578,6 @@ func (tzSpec TimeZoneSpecDto) New(
 		timeZoneType,
 		ePrefix)
 
-
 	return tzSpecOut, err
 }
 
