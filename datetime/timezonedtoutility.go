@@ -103,7 +103,7 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 
 	defer tZoneUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDtoUtility.ConvertTz() "
+	ePrefix += "timeZoneDtoUtility.newTzDto() "
 
 	if tIn.IsZero() {
 		return TimeZoneDto{},

@@ -446,7 +446,7 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 
 	if err := dTz.timeZone.IsValid(); err != nil {
 		return fmt.Errorf(ePrefix +
-			"\nError: DateTzDto tuneZone is INVALID!\n" +
+			"\nError: DateTzDto Time Zone is INVALID!\n" +
 			"Error='%v'\n", err.Error())
 	}
 
