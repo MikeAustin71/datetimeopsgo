@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest052()
+	mainTest{}.mainTest053()
 
 }
 
@@ -18,6 +18,36 @@ type mainTest struct {
 	input  string
 	output string
 }
+func (mt mainTest) mainTest053() {
+
+	ePrefix := "mainTest053()"
+
+	mt.mainPrintHdr(ePrefix , "=")
+
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	ianaPacificTz := "America/Los_Angeles"
+	tIn, _ := time.Parse(fmtstr, tstr)
+	tzu, _ := dt.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
+
+	fmt.Println(" Time In: ", tzu.TimeIn.GetDateTimeValue().Format(fmtstr))
+	fmt.Println("Time Out: ", tzu.TimeOut.GetDateTimeValue().Format(fmtstr))
+
+	expectedZone := "PDT"
+
+	actualZone := tzu.TimeOut.GetTimeZoneAbbreviation()
+
+	if expectedZone != actualZone {
+		fmt.Printf("Expected Zone Out='%v'.\n" +
+			"Instead, actual Zone Out='%v'\n", expectedZone, actualZone)
+		return
+	}
+
+	mt.mainPrintHdr("SUCCESS" , "!!!")
+
+
+}
+
 
 func (mt mainTest) mainTest052() {
 
@@ -155,11 +185,33 @@ func (mt mainTest) mainTest051() {
 
 	mt.mainPrintHdr(ePrefix , "-")
 
-	t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0700 PDT"
+	timeZone := dt.TZones.Local()
+	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0700 PDT"
+	utcLoc, err := time.LoadLocation(timeZone)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(dt.TZones.UTC())\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	txUtc := time.Date(
+		2019,
+		time.Month(12),
+		15,
+		11,
+		0,
+		0,
+		0,
+		utcLoc)
 
 	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	timeStr := t2PdtStr
-	t1, err := time.Parse(fmtStr, timeStr)
+	timeStr := txUtc.Format(fmtStr)
+	fmt.Println()
+	fmt.Println("#1   timeStr: ", timeStr)
+	fmt.Println("#1 time zone: ", timeZone)
+	fmt.Println()
+
+		t1, err := time.Parse(fmtStr, timeStr)
 
 	if err != nil {
 		fmt.Printf(ePrefix +

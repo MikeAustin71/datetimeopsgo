@@ -171,7 +171,7 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	if err != nil {
 		return TimeZoneDto{},
 			fmt.Errorf("tzDtoOut.TimeUTC configuration FAILED!\n" +
-				"%v", err.Error())
+				"%v\n", err.Error())
 	}
 	// Set tzDtoOut.TimeLocal
 	err = dTzUtil.setFromTimeTz(
@@ -185,7 +185,7 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	if err != nil {
 		return TimeZoneDto{},
 			fmt.Errorf("tzDtoOut.TimeLocal configuration FAILED!\n" +
-				"%v", err.Error())
+				"%v\n", err.Error())
 	}
 
 	return tzDtoOut, nil

@@ -515,13 +515,14 @@ func TestTimeZoneUtility_GetZoneIn_01(t *testing.T) {
 
 
 func TestTimeZoneUtility_GetZoneOut_01(t *testing.T) {
+	// Daylight saving time began in USA Sunday, March 12, 2017
 	tstr := "04/29/2017 19:54:30 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	ianaPacificTz := "America/Los_Angeles"
 	tIn, _ := time.Parse(fmtstr, tstr)
 	tzu, _ := TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
-	expectedZone := "PST"
+	expectedZone := "PDT"
 
 	actualZone := tzu.TimeOut.GetTimeZoneAbbreviation()
 

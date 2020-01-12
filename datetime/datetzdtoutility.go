@@ -767,7 +767,8 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 	var err error
 
 	err = tzDefUtil.setFromTimeZoneName(
-		&tZoneDefDto, dateTime,
+		&tZoneDefDto,
+		dateTime,
 		timeZoneLocationName,
 		timeZoneConversionType,
 		ePrefix)
