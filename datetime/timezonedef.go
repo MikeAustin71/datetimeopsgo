@@ -332,6 +332,35 @@ func (tzdef *TimeZoneDefDto) GetOffsetSeconds() int {
 	return tzdef.originalTimeZone.offsetSeconds
 }
 
+// GetConvertibleTimeZone - Returns the convertible form of
+// the current time zone. This time zone should be convertible
+// across all time zones. To verify convertibility, call
+// TimeZoneSpecDto.GetLocationNameType() and inspect the result.
+//
+func (tzdef *TimeZoneDefDto) GetConvertibleTimeZone() TimeZoneSpecDto {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone
+
+}
+
+// GetOriginalTimeZone - Returns the originally configured
+// time zone specification. Check TimeZoneSpecDto.GetLocationNameType()
+// if this time zone is fully convertible across all time zones.
+// If not convertible, use TimeZoneDefDto.GetConvertibleTimeZone().
+//
+func (tzdef *TimeZoneDefDto) GetOriginalTimeZone() TimeZoneSpecDto {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone
+}
+
 // GetTagDescription - Returns TimeZoneDefDto member variable
 // Description value.
 //
