@@ -1027,6 +1027,28 @@ func (tzDto TimeZoneDto) New(
 	ePrefix := "TimeZoneDto.New() "
 	tZoneUtil := timeZoneDtoUtility{}
 
+	if tIn.IsZero() {
+		return TimeZoneDto{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "tIn",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'tIn' has a ZERO value!",
+				err:                 nil,
+			}
+	}
+
+	if len(timeZoneOutLocationName) == 0 {
+		return TimeZoneDto{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeZoneOutLocationName",
+				inputParameterValue: "Input parameter 'timeZoneOutLocationName' is an EMPTY string!",
+				errMsg:              "",
+				err:                 nil,
+			}
+	}
+
 	return tZoneUtil.newTzDto( tIn, timeZoneOutLocationName, dateTimeFmtStr, ePrefix)
 }
 
