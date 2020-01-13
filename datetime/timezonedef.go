@@ -10,6 +10,8 @@ import (
 //
 // Overview and General Usage
 //
+// A Time Zone Definition includes two Time Zone Specifications
+// (TimeZoneSpec
 // This structure is designed to store detailed information
 // on Time Zones. It used primarily as a 'helper' or subsidiary
 // structure for Type, 'TimeZoneDto'.
@@ -32,8 +34,8 @@ import (
 //   MikeAustin71\datetimeopsgo\datetime\timezonedef.go
 //
 type TimeZoneDefinition struct {
-	originalTimeZone       TimeZoneSpecDto  // The Time Zone Specification originally submitted.
-	convertibleTimeZone    TimeZoneSpecDto  // A version of the original time zone with a new fully
+	originalTimeZone    TimeZoneSpecification // The Time Zone Specification originally submitted.
+	convertibleTimeZone TimeZoneSpecification // A version of the original time zone with a new fully
 	//                                         convertible time zone substituted.
 	lock sync.Mutex // Used for implementing thread safe operations.
 }
@@ -334,9 +336,9 @@ func (tzdef *TimeZoneDefinition) GetOffsetSeconds() int {
 // GetConvertibleTimeZone - Returns the convertible form of
 // the current time zone. This time zone should be convertible
 // across all time zones. To verify convertibility, call
-// TimeZoneSpecDto.GetLocationNameType() and inspect the result.
+// TimeZoneSpecification.GetLocationNameType() and inspect the result.
 //
-func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecDto {
+func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification {
 
 	tzdef.lock.Lock()
 
@@ -347,11 +349,11 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecDto {
 }
 
 // GetOriginalTimeZone - Returns the originally configured
-// time zone specification. Check TimeZoneSpecDto.GetLocationNameType()
+// time zone specification. Check TimeZoneSpecification.GetLocationNameType()
 // if this time zone is fully convertible across all time zones.
 // If not convertible, use TimeZoneDefinition.GetConvertibleTimeZone().
 //
-func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecDto {
+func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 
 	tzdef.lock.Lock()
 

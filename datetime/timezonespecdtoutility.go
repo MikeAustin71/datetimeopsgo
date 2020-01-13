@@ -11,12 +11,12 @@ type typeZoneSpecUtility struct {
 
 // copyIn - Copies the values of input parameter 'tzSpec2'
 // to all of the data fields in the tzSpec instance of
-// TimeZoneSpecDto (tzSpec). When completed 'tzSpec' will
+// TimeZoneSpecification (tzSpec). When completed 'tzSpec' will
 // have data field values identical to those of 'tzSpec2'
 //
 func (tzSpecUtil *typeZoneSpecUtility) copyIn(
-	tzSpec *TimeZoneSpecDto,
-	tzSpec2 TimeZoneSpecDto)  {
+	tzSpec *TimeZoneSpecification,
+	tzSpec2 TimeZoneSpecification)  {
 
 	tzSpecUtil.lock.Lock()
 
@@ -47,10 +47,10 @@ func (tzSpecUtil *typeZoneSpecUtility) copyIn(
 	tzSpec.timeZoneType           = tzSpec2.timeZoneType
 }
 	// CopyOut - Returns a deep copy of the current Time Zone
-// Specification object as a new instance of 'TimeZoneSpecDto'.
+// Specification object as a new instance of 'TimeZoneSpecification'.
 //
 func (tzSpecUtil *typeZoneSpecUtility) copyOut(
-	tzSpec *TimeZoneSpecDto) TimeZoneSpecDto {
+	tzSpec *TimeZoneSpecification) TimeZoneSpecification {
 
 	tzSpecUtil.lock.Lock()
 
@@ -61,7 +61,7 @@ func (tzSpecUtil *typeZoneSpecUtility) copyOut(
 			"Error: Input parameter tzSpec is a 'nil' pointer!\n")
 	}
 
-	tzSpec2 := TimeZoneSpecDto{}
+	tzSpec2 := TimeZoneSpecification{}
 
 	tzSpec2.zoneLabel              = tzSpec.zoneLabel
 	tzSpec2.referenceDateTime      = tzSpec.referenceDateTime
@@ -86,11 +86,11 @@ func (tzSpecUtil *typeZoneSpecUtility) copyOut(
 }
 
 // empty - This method resets all the member variables
-// of a TimeZoneSpecDto instance to their uninitialized
+// of a TimeZoneSpecification instance to their uninitialized
 // or zero values.
 //
 func (tzSpecUtil *typeZoneSpecUtility) empty(
-	tzSpec *TimeZoneSpecDto) {
+	tzSpec *TimeZoneSpecification) {
 
 	tzSpecUtil.lock.Lock()
 

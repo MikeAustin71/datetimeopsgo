@@ -586,7 +586,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		}
 	}
 
-	tzSpec := TimeZoneSpecDto{}
+	tzSpec := TimeZoneSpecification{}
 
 	err = tzSpec.SetTimeZone(
 		dateTime,
@@ -651,7 +651,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 			"Error='%v'\n", err.Error())
 	}
 
-	tzSpec = TimeZoneSpecDto{}
+	tzSpec = TimeZoneSpecification{}
 
 	dateTime = dateTime.In(ianaLocationPtr)
 
