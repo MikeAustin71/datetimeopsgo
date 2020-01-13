@@ -19,7 +19,7 @@ type DTimeUtility struct {
 // changed. That time value is simply assigned to another
 // designated time zone. The target time zone is derived from
 // input parameter 'timeZoneDefDto', an instance of type
-// 'TimeZoneDefDto'.
+// 'TimeZoneDefinition'.
 //
 // For example, assume that 'dateTime' represents 10:00AM in USA
 // time zone 'Central Standard Time'.  Using the 'Absolute'
@@ -35,7 +35,7 @@ type DTimeUtility struct {
 //
 // dateTime            time.Time  - The date time to be converted.
 //
-// timeZoneDefDto TimeZoneDefDto  - A properly initialized 'TimeZoneDto'
+// timeZoneDefDto TimeZoneDefinition  - A properly initialized 'TimeZoneDto'
 //                                  encapsulating the time zone to which
 //                                  'dateTime' will be converted.
 //
@@ -52,7 +52,7 @@ type DTimeUtility struct {
 //
 func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneDtoConversion(
 	dateTime time.Time,
-	timeZoneDefDto TimeZoneDefDto) (time.Time, error) {
+	timeZoneDefDto TimeZoneDefinition) (time.Time, error) {
 
 	dtUtil.lock.Lock()
 
@@ -91,7 +91,7 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneDtoConversion(
 // changed. That time value is simply assigned to another
 // designated time zone. The target time zone is derived from
 // input parameter 'timeZoneDefDto', an instance of type
-// 'TimeZoneDefDto'.
+// 'TimeZoneDefinition'.
 //
 // For example, assume that 'dateTime' represents 10:00AM in USA
 // time zone 'Central Standard Time'.  Using the 'Absolute'

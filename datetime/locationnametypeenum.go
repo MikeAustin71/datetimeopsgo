@@ -27,7 +27,7 @@ var mLocationNameTypeCodeToString = map[LocationNameType] string {
 
 // LocationNameType - This type is configured as a series of
 // constant integer values describing different types of Time
-// Zone Location Names processed by type 'TimeZoneDefDto'.
+// Zone Location Names processed by type 'TimeZoneDefinition'.
 //
 // Functionally, 'LocationNameType' serves as an enumeration
 // of valid Location Name types.

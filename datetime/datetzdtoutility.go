@@ -321,7 +321,7 @@ func (dTzUtil *dateTzDtoUtility) copyIn(
 	baseDtz.dateTimeFmt = incomingDtz.dateTimeFmt
 
 	if incomingDtz.dateTimeValue.IsZero() {
-		baseDtz.timeZone = TimeZoneDefDto{}
+		baseDtz.timeZone = TimeZoneDefinition{}
 		baseDtz.dateTimeValue = time.Time{}
 	} else {
 		baseDtz.dateTimeValue = incomingDtz.dateTimeValue
@@ -349,7 +349,7 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 	dtz2.dateTimeFmt = dTz.dateTimeFmt
 
 	if dTz.dateTimeValue.IsZero() {
-		dtz2.timeZone = TimeZoneDefDto{}
+		dtz2.timeZone = TimeZoneDefinition{}
 		dtz2.dateTimeValue = time.Time{}
 	} else {
 		dtz2.dateTimeValue = dTz.dateTimeValue
@@ -374,7 +374,7 @@ func (dTzUtil *dateTzDtoUtility) empty(dTz *DateTzDto) {
 
 	dTz.tagDescription = ""
 	dTz.timeComponents.Empty()
-	dTz.timeZone = TimeZoneDefDto{}
+	dTz.timeZone = TimeZoneDefinition{}
 	dTz.dateTimeValue = time.Time{}
 	dTz.dateTimeFmt = ""
 
@@ -517,7 +517,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 		return err
 	}
 
-	timeZone := TimeZoneDefDto{}
+	timeZone := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
 
@@ -607,7 +607,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 			timeZoneName, tzl, err.Error())
 	}
 
-	timeZone := TimeZoneDefDto{}
+	timeZone := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
 
@@ -706,7 +706,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 			timeZoneName, timeZoneName, err.Error())
 	}
 
-	timeZone := TimeZoneDefDto{}
+	timeZone := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
 
@@ -760,7 +760,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
 	}
 
-	tZoneDefDto := TimeZoneDefDto{}
+	tZoneDefDto := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
 
@@ -897,7 +897,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 			timeZoneLocation, err.Error())
 	}
 
-	timeZoneDef := TimeZoneDefDto{}
+	timeZoneDef := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
 

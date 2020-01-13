@@ -20,7 +20,7 @@ type dateTimeMechanics struct {
 // changed. That time value is simply assigned to another
 // designated time zone. The target time zone is derived from
 // input parameter 'timeZoneDefDto', an instance of type
-// 'TimeZoneDefDto'.
+// 'TimeZoneDefinition'.
 //
 // For example, assume that 'dateTime' represents 10:00AM in USA
 // time zone 'Central Standard Time'.  Using the 'Absolute'

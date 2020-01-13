@@ -368,7 +368,7 @@ func TzExampleParseIn0012() {
 
 }
 
-// TimeZoneDefExample014 - Provides example for creating a TimeZoneDefDto
+// TimeZoneDefExample014 - Provides example for creating a TimeZoneDefinition
 // object.
 func TimeZoneDefExample014() {
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
@@ -382,10 +382,10 @@ func TimeZoneDefExample014() {
 	tBeijing := time.Date(2014, 2, 15, 19, 54, 30, 38175584, beijingLoc)
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 
-	tzDef, err := dt.TimeZoneDefDto{}.New(tUsPacific)
+	tzDef, err := dt.TimeZoneDefinition{}.New(tUsPacific)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefDto{}.New(tUsPacific). Error='%v'", err.Error())
+		fmt.Printf("Error returned by TimeZoneDefinition{}.New(tUsPacific). Error='%v'", err.Error())
 		return
 	}
 
@@ -598,7 +598,7 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 }
 
 // PrintOutTimeZoneDefDtoFields
-func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefDto) {
+func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefinition) {
 
 	var milTzLetter, milTzName string
 	var err error

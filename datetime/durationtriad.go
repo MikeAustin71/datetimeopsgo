@@ -1238,7 +1238,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 //			TotalNanoSecs     int64  // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
 //			DateTime      time.Time  // DateTime value for this DateTzDto Type
 //			DateTimeFmt      string  // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone TimeZoneDefDto  // Contains a detailed description of the Time Zone and Time Zone Location
+//			TimeZone TimeZoneDefinition  // Contains a detailed description of the Time Zone and Time Zone Location
 //			                         //    associated with this date time.
 //		}
 //
@@ -1432,7 +1432,7 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 //			DateTime      time.Time  // DateTime value for this DateTzDto Type
 //			DateTimeFmt      string  // Date Time Format String. Default is
 //			                         //    "2006-01-02 15:04:05.000000000 -0700 MST"
-//			TimeZone TimeZoneDefDto  // Contains a detailed description of the Time Zone
+//			TimeZone TimeZoneDefinition  // Contains a detailed description of the Time Zone
 //			                         //    and Time Zone Location associated with this
 //			                         //    date time.
 //		}

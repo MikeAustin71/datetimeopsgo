@@ -12,12 +12,12 @@ type timeZoneDefUtility struct {
 	lock sync.Mutex
 }
 
-// CopyIn - Copies an incoming TimeZoneDefDto into the
-// data fields of the current TimeZoneDefDto instance.
+// CopyIn - Copies an incoming TimeZoneDefinition into the
+// data fields of the current TimeZoneDefinition instance.
 //
 func (tzDefUtil *timeZoneDefUtility) copyIn(
-	tzdef *TimeZoneDefDto,
-	tzdef2 *TimeZoneDefDto) {
+	tzdef *TimeZoneDefinition,
+	tzdef2 *TimeZoneDefinition) {
 
 	tzDefUtil.lock.Lock()
 
@@ -44,10 +44,10 @@ func (tzDefUtil *timeZoneDefUtility) copyIn(
 }
 
 // copyOut - creates and returns a deep copy of the current
-// TimeZoneDefDto instance.
+// TimeZoneDefinition instance.
 //
 func (tzDefUtil *timeZoneDefUtility) copyOut(
-	tzdef *TimeZoneDefDto) TimeZoneDefDto {
+	tzdef *TimeZoneDefinition) TimeZoneDefinition {
 
 	tzDefUtil.lock.Lock()
 
@@ -58,7 +58,7 @@ func (tzDefUtil *timeZoneDefUtility) copyOut(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
-	tzdef2 := TimeZoneDefDto{}
+	tzdef2 := TimeZoneDefinition{}
 	tzdef2.originalTimeZone = tzdef.originalTimeZone.CopyOut()
 	tzdef2.convertibleTimeZone = tzdef.convertibleTimeZone.CopyOut()
 
@@ -66,10 +66,10 @@ func (tzDefUtil *timeZoneDefUtility) copyOut(
 }
 
 // Empty - Resets all field values for the input parameter
-// TimeZoneDefDto to their uninitialized or 'zero' states.
+// TimeZoneDefinition to their uninitialized or 'zero' states.
 //
 func (tzDefUtil *timeZoneDefUtility) empty(
-	tzdef *TimeZoneDefDto) {
+	tzdef *TimeZoneDefinition) {
 
 	tzDefUtil.lock.Lock()
 
@@ -86,15 +86,15 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 }
 
 
-// Equal - Determines if two TimeZoneDefDto instances are
+// Equal - Determines if two TimeZoneDefinition instances are
 // equivalent in value.
 //
-// This method returns 'true' of two TimeZoneDefDto's are
+// This method returns 'true' of two TimeZoneDefinition's are
 // equal in all respects.
 //
 func (tzDefUtil *timeZoneDefUtility) equal(
-	tzdef *TimeZoneDefDto,
-	tzdef2 *TimeZoneDefDto) bool {
+	tzdef *TimeZoneDefinition,
+	tzdef2 *TimeZoneDefinition) bool {
 
 	tzDefUtil.lock.Lock()
 
@@ -129,7 +129,7 @@ func (tzDefUtil *timeZoneDefUtility) equal(
 	return true
 }
 
-// equalLocations - Compares the Time Zone Locations for two TimeZoneDefDto's
+// equalLocations - Compares the Time Zone Locations for two TimeZoneDefinition's
 // and returns 'true' if they are equal.
 //
 // Time Zone Location Name Examples:
@@ -138,8 +138,8 @@ func (tzDefUtil *timeZoneDefUtility) equal(
 //   "America/New_York"
 //
 func (tzDefUtil *timeZoneDefUtility) equalLocations(
-	tzdef *TimeZoneDefDto,
-	tzdef2 *TimeZoneDefDto) bool {
+	tzdef *TimeZoneDefinition,
+	tzdef2 *TimeZoneDefinition) bool {
 
 	tzDefUtil.lock.Lock()
 
@@ -166,7 +166,7 @@ func (tzDefUtil *timeZoneDefUtility) equalLocations(
 	 return true
 }
 
-// equalOffsetSeconds - Compares Zone Offset Seconds for two TimeZoneDefDto's and
+// equalOffsetSeconds - Compares Zone Offset Seconds for two TimeZoneDefinition's and
 // returns 'true' if they are equal.
 //
 // ZoneOffsetSeconds is a signed number of seconds offset from UTC:
@@ -174,8 +174,8 @@ func (tzDefUtil *timeZoneDefUtility) equalLocations(
 //   - == West of UTC
 //
 func (tzDefUtil *timeZoneDefUtility) equalOffsetSeconds(
-	tzdef *TimeZoneDefDto,
-	tzdef2 *TimeZoneDefDto) bool {
+	tzdef *TimeZoneDefinition,
+	tzdef2 *TimeZoneDefinition) bool {
 
 	tzDefUtil.lock.Lock()
 
@@ -204,7 +204,7 @@ func (tzDefUtil *timeZoneDefUtility) equalOffsetSeconds(
 	return true
 }
 
-// equalZoneLocation - Compares two TimeZoneDefDto's and returns
+// equalZoneLocation - Compares two TimeZoneDefinition's and returns
 // 'true' if Time Zone Location Name, the Zone Name and Zone
 // Offsets match.
 //
@@ -225,8 +225,8 @@ func (tzDefUtil *timeZoneDefUtility) equalOffsetSeconds(
 //   "+0200 EET"
 //
 func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
-	tzdef *TimeZoneDefDto,
-	tzdef2 *TimeZoneDefDto) bool {
+	tzdef *TimeZoneDefinition,
+	tzdef2 *TimeZoneDefinition) bool {
 
 	tzDefUtil.lock.Lock()
 
@@ -263,7 +263,7 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
 	return true
 }
 
-// equalZoneOffsets - Compares ZoneOffsets for two TimeZoneDefDto's and
+// equalZoneOffsets - Compares ZoneOffsets for two TimeZoneDefinition's and
 // returns 'true' if they are equal.
 //
 // Zone Offset is a text string representing the offset from UTC plus the
@@ -272,8 +272,8 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
 // Example "-0500 CDT"
 //
 func (tzDefUtil *timeZoneDefUtility) equalZoneOffsets(
-	tzdef *TimeZoneDefDto,
-	tzdef2 *TimeZoneDefDto) bool {
+	tzdef *TimeZoneDefinition,
+	tzdef2 *TimeZoneDefinition) bool {
 
 	tzDefUtil.lock.Lock()
 
@@ -302,14 +302,14 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneOffsets(
 	return true
 }
 
-// isEmpty - Determines whether the current TimeZoneDefDto
+// isEmpty - Determines whether the current TimeZoneDefinition
 // instance is Empty.
 //
-// If the TimeZoneDefDto instance (tzdef) is NOT populated,
+// If the TimeZoneDefinition instance (tzdef) is NOT populated,
 // this method returns 'true'. Otherwise, it returns 'false'.
 //
 func (tzDefUtil *timeZoneDefUtility) isEmpty(
-	tzdef *TimeZoneDefDto ) bool {
+	tzdef *TimeZoneDefinition) bool {
 
 	tzDefUtil.lock.Lock()
 
@@ -328,14 +328,14 @@ func (tzDefUtil *timeZoneDefUtility) isEmpty(
 	return false
 }
 
-// isValidTimeZoneDefDto - Analyzes the TimeZoneDefDto
+// isValidTimeZoneDefDto - Analyzes the TimeZoneDefinition
 // parameter, 'tzdef', instance to determine validity.
 //
-// This method returns 'true' if the TimeZoneDefDto
+// This method returns 'true' if the TimeZoneDefinition
 // instance is valid.  Otherwise, it returns 'false'.
 //
 func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
-	tzdef *TimeZoneDefDto,
+	tzdef *TimeZoneDefinition,
 	ePrefix string) error {
 
 	tzDefUtil.lock.Lock()
@@ -369,9 +369,9 @@ func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
 }
 
 // isValidFromDateTime - Uses a time.Time input parameter, 'dateTime' to
-// analyze the specified TimeZoneDefDto instance (tzdef). If the zone and
+// analyze the specified TimeZoneDefinition instance (tzdef). If the zone and
 // location details of 'dateTime' are not perfectly matched to the current
-// TimeZoneDefDto instance, the instance is considered INVALID, and this
+// TimeZoneDefinition instance, the instance is considered INVALID, and this
 // method returns 'false'.
 //
 // Otherwise, if all zone and location details are perfectly matched, this
@@ -379,7 +379,7 @@ func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
 // (tzdef) is VALID.
 //
 func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
-	tzdef *TimeZoneDefDto,
+	tzdef *TimeZoneDefinition,
 	dateTime time.Time) bool {
 
 	tzDefUtil.lock.Lock()
@@ -399,12 +399,12 @@ func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
 }
 
 // SetFromDateTimeComponents - Re-initializes the values of a
-// 'TimeZoneDefDto' instance based on time components (i.e.
+// 'TimeZoneDefinition' instance based on time components (i.e.
 // years, months, days, hours, minutes, seconds and nanoseconds)
 // passed through input parameter 'TimeDto' ('tDto').
 //
 func (tzDefUtil *timeZoneDefUtility) setFromDateTimeComponents(
-	tzdef *TimeZoneDefDto,
+	tzdef *TimeZoneDefinition,
 	tDto TimeDto,
 	timeZoneName string,
 	ePrefix string) error {
@@ -448,11 +448,11 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTimeComponents(
 		ePrefix)
 }
 
-// setFromDateTime - Sets the values of a TimeZoneDefDto
+// setFromDateTime - Sets the values of a TimeZoneDefinition
 // based on input parameter 'dateTime'.
 //
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
-	tzdef *TimeZoneDefDto,
+	tzdef *TimeZoneDefinition,
 	dateTime time.Time,
 	ePrefix string) error {
 
@@ -510,10 +510,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 }
 
 // setFromTimeZoneName - Sets the data fields of the specified
-// TimeZoneDefDto instance base on the time zone text name.
+// TimeZoneDefinition instance base on the time zone text name.
 //
 func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
-	tzdef *TimeZoneDefDto,
+	tzdef *TimeZoneDefinition,
 	dateTime time.Time,
 	timeZoneName string,
 	timeZoneConversionType TimeZoneConversionType,

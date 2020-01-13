@@ -70,8 +70,8 @@ type MilitaryDateTzDto struct {
 	DateTime                   time.Time       // DateTime value for this MilitaryDateTzDto Type
 	MilitaryTzLetterName       string          // A single letter/character designating the military
 	                                           //   time zone
-	MilitaryTzTextName         string          // A Text String containing the Military Time Zone Name
-	EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+	MilitaryTzTextName     string             // A Text String containing the Military Time Zone Name
+	EquivalentIanaTimeZone TimeZoneDefinition // The IANA time zone which equates to this
 	                                           //   Military Time Zone
 	UtcOffset                  string          // UTC Offset for this Military Time Zone
 	GeoLocationDesc            string          // Military Time Zone Geographic Location
@@ -105,7 +105,7 @@ type MilitaryDateTzDto struct {
 //                                                   //   time zone
 //        MilitaryTzTextName         string          // A Text String containing the
 //                                                   //   Military Time Zone Name
-//        EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates
+//        EquivalentIanaTimeZone     TimeZoneDefinition  // The IANA time zone which equates
 //                                                   //   to the Military Time Zone
 //        UtcOffset                  string          // UTC Offset for this Military
 //                                                   //   Time Zone
@@ -138,7 +138,7 @@ func (milDtDto *MilitaryDateTzDto) CopyIn(milDtDto2 MilitaryDateTzDto) {
 		milDtDto.DateTime = milDtDto2.DateTime
 		milDtDto.EquivalentIanaTimeZone = milDtDto2.EquivalentIanaTimeZone.CopyOut()
 	} else {
-		milDtDto.EquivalentIanaTimeZone = TimeZoneDefDto{}
+		milDtDto.EquivalentIanaTimeZone = TimeZoneDefinition{}
 		milDtDto.DateTime = time.Time{}
 	}
 
@@ -174,7 +174,7 @@ func (milDtDto *MilitaryDateTzDto) CopyIn(milDtDto2 MilitaryDateTzDto) {
 //                                                   //   time zone
 //        MilitaryTzTextName         string          // A Text String containing the
 //                                                   //   Military Time Zone Name
-//        EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates
+//        EquivalentIanaTimeZone     TimeZoneDefinition  // The IANA time zone which equates
 //                                                   //   to the Military Time Zone
 //        UtcOffset                  string          // UTC Offset for this Military
 //                                                   //   Time Zone
@@ -219,7 +219,7 @@ func (milDtDto *MilitaryDateTzDto) Empty() {
 	milDtDto.DateTime = time.Time{}
 	milDtDto.MilitaryTzLetterName = ""
 	milDtDto.MilitaryTzTextName = ""
-	milDtDto.EquivalentIanaTimeZone = TimeZoneDefDto{}
+	milDtDto.EquivalentIanaTimeZone = TimeZoneDefinition{}
 	milDtDto.UtcOffset = ""
 	milDtDto.GeoLocationDesc = ""
 
@@ -369,7 +369,7 @@ func (milDtDto *MilitaryDateTzDto) GetOpenDateTimeGroup() (string, error) {
 //                                                 //   military time zone
 //      MilitaryTzTextName         string          // A Text String containing the Military Time
 //                                                 //   Zone Name
-//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//      EquivalentIanaTimeZone     TimeZoneDefinition  // The IANA time zone which equates to this
 //                                                 //   Military Time Zone
 //      UtcOffset                  string          // UTC Offset for this Military Time Zone
 //      GeoLocationDesc            string          // Military Time Zone Geographic Location
@@ -474,7 +474,7 @@ func (milDtDto MilitaryDateTzDto) New(
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String.
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -495,7 +495,7 @@ func (milDtDto MilitaryDateTzDto) New(
 //                                                 //   military time zone
 //      MilitaryTzTextName         string          // A Text String containing the Military Time
 //                                                 //   Zone Name
-//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//      EquivalentIanaTimeZone     TimeZoneDefinition  // The IANA time zone which equates to this
 //                                                 //   Military Time Zone
 //      UtcOffset                  string          // UTC Offset for this Military Time Zone
 //      GeoLocationDesc            string          // Military Time Zone Geographic Location
@@ -629,7 +629,7 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 //                                                 //   military time zone
 //      MilitaryTzTextName         string          // A Text String containing the Military Time
 //                                                 //   Zone Name
-//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//      EquivalentIanaTimeZone     TimeZoneDefinition  // The IANA time zone which equates to this
 //                                                 //   Military Time Zone
 //      UtcOffset                  string          // UTC Offset for this Military Time Zone
 //      GeoLocationDesc            string          // Military Time Zone Geographic Location
@@ -735,7 +735,7 @@ func (milDtDto MilitaryDateTzDto) NewNow(
 //                                                 //   military time zone
 //      MilitaryTzTextName         string          // A Text String containing the Military Time
 //                                                 //   Zone Name
-//      EquivalentIanaTimeZone     TimeZoneDefDto  // The IANA time zone which equates to this
+//      EquivalentIanaTimeZone     TimeZoneDefinition  // The IANA time zone which equates to this
 //                                                 //   Military Time Zone
 //      UtcOffset                  string          // UTC Offset for this Military Time Zone
 //      GeoLocationDesc            string          // Military Time Zone Geographic Location
@@ -894,11 +894,11 @@ func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
 // equal to 'nil' signaling no error was encountered.
 //
 func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
-	rawTz string) (milTzLetter, milTzName string, equivalentIanaTimeZone TimeZoneDefDto, err error) {
+	rawTz string) (milTzLetter, milTzName string, equivalentIanaTimeZone TimeZoneDefinition, err error) {
 
 	milTzLetter = ""
 	milTzName = ""
-	equivalentIanaTimeZone = TimeZoneDefDto{}
+	equivalentIanaTimeZone = TimeZoneDefinition{}
 	err = nil
 
 		ePrefix := "MilitaryDateTzDto.parseMilitaryTzNameAndLetter() "
@@ -968,20 +968,20 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 
 	var err2 error
 
-	equivalentIanaTimeZone, err2 = TimeZoneDefDto{}.NewFromTimeZoneName(
+	equivalentIanaTimeZone, err2 = TimeZoneDefinition{}.NewFromTimeZoneName(
 		time.Now(),
 		equivalentTzStr,
 		TzConvertType.Relative())
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix +
-			"\nError returned by TimeZoneDefDto{}.NewFromTimeZoneName(equivalentTzStr)\n" +
+			"\nError returned by TimeZoneDefinition{}.NewFromTimeZoneName(equivalentTzStr)\n" +
 			"equivalentTzStr='%v'\n" +
 			"Error='%v'\n", equivalentTzStr, err2.Error())
 
 		milTzLetter = ""
 		milTzName = ""
-		equivalentIanaTimeZone = TimeZoneDefDto{}
+		equivalentIanaTimeZone = TimeZoneDefinition{}
 
 		return milTzLetter, milTzName, equivalentIanaTimeZone, err
 	}

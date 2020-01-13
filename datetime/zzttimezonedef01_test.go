@@ -21,10 +21,10 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef, err := TimeZoneDefDto{}.New(tUsPacific)
+	tzDef, err := TimeZoneDefinition{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -101,10 +101,10 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -189,10 +189,10 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 	locationName := "America/Los_Angeles"
 	descStr := "America-Los_Angeles"
 
-	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -279,10 +279,10 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific).\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -373,10 +373,10 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := TimeZoneDefDto{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tUsPacific).\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -469,10 +469,10 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 	locationName := "America/Los_Angeles"
 	descStr := "America-Los_Angeles"
 
-	tzDef0, err := TimeZoneDefDto{}.New(tAmericaLA)
+	tzDef0, err := TimeZoneDefinition{}.New(tAmericaLA)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(tAmericaLA).\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(tAmericaLA).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

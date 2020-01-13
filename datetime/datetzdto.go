@@ -110,7 +110,7 @@ type DateTzDto struct {
 	dateTimeValue  time.Time   // DateTime value for this DateTzDto Type
 	dateTimeFmt    string      // Date Time Format String. Default is
 	                           //    "2006-01-02 15:04:05.000000000 -0700 MST"
-	timeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone and Time Zone
+	timeZone TimeZoneDefinition // Contains a detailed description of the Time Zone and Time Zone
 	                           //    Location associated with this date time.
 	lock        sync.Mutex     // Mutex used to ensure thread-safe operations.
 }
@@ -164,7 +164,7 @@ type DateTzDto struct {
 //        DateTime        time.Time      // DateTime value for this DateTzDto Type
 //        DateTimeFmt     string         // Date Time Format String.
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//        TimeZone        TimeZoneDefDto // Contains a detailed description of the Time Zone
+//        TimeZone        TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -283,7 +283,7 @@ func (dtz *DateTzDto) AddDate(
 //        DateTime        time.Time      // DateTime value for this DateTzDto Type
 //        DateTimeFmt     string         // Date Time Format String.
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//        TimeZone        TimeZoneDefDto // Contains a detailed description of the Time Zone
+//        TimeZone        TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -563,7 +563,7 @@ func (dtz *DateTzDto) AddDateToThis(
 //        DateTime        time.Time      // DateTime value for this DateTzDto Type
 //        DateTimeFmt     string         // Date Time Format String.
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//        TimeZone        TimeZoneDefDto // Contains a detailed description of the Time Zone
+//        TimeZone        TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -706,7 +706,7 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -854,7 +854,7 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -1008,7 +1008,7 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -1173,7 +1173,7 @@ func (dtz *DateTzDto) AddTimeToThis(
 //            DateTime    time.Time      // DateTime value for this DateTzDto Type
 //            DateTimeFmt string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//            TimeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone
+//            TimeZone    TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -1230,7 +1230,7 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 //            DateTime    time.Time      // DateTime value for this DateTzDto Type
 //            DateTimeFmt string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//            TimeZone    TimeZoneDefDto // Contains a detailed description of the Time Zone
+//            TimeZone    TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -1572,7 +1572,7 @@ func (dtz *DateTzDto) GetMilitaryCompactDateTimeGroup() (string, error) {
 
 	defer dtz.lock.Unlock()
 
-	ePrefix := "TimeZoneDefDto.GetMilitaryCompactDateTimeGroup() "
+	ePrefix := "TimeZoneDefinition.GetMilitaryCompactDateTimeGroup() "
 
 	tzType := dtz.timeZone.GetTimeZoneType()
 
@@ -1583,7 +1583,7 @@ func (dtz *DateTzDto) GetMilitaryCompactDateTimeGroup() (string, error) {
 				"Military Time Zone. The Compact Date Time Group is only applicable to \n" +
 				"Military Time Zones. Therefore, this time zone is invaid as a Military\n" +
 				"Time Zone.\n" +
-				"TimeZoneDefDto Time Zone Type='%v'\n", tzType.String())
+				"TimeZoneDefinition Time Zone Type='%v'\n", tzType.String())
 	}
 
 	milTzLetter, err := dtz.timeZone.GetMilitaryTimeZoneLetter()
@@ -1641,7 +1641,7 @@ func (dtz *DateTzDto) GetMilitaryOpenDateTimeGroup() (string, error) {
 
 	defer dtz.lock.Unlock()
 
-	ePrefix := "TimeZoneDefDto.GetMilitaryOpenDateTimeGroup() "
+	ePrefix := "TimeZoneDefinition.GetMilitaryOpenDateTimeGroup() "
 
 	tzType := dtz.timeZone.GetTimeZoneType()
 
@@ -1652,7 +1652,7 @@ func (dtz *DateTzDto) GetMilitaryOpenDateTimeGroup() (string, error) {
 					"Military Time Zone. The Open Date Time Group is only applicable to \n" +
 					"Military Time Zones. Therefore, this time zone is invalid as a Military\n" +
 					"Time Zone.\n" +
-					"TimeZoneDefDto Time Zone Type='%v'\n", tzType.String())
+					"TimeZoneDefinition Time Zone Type='%v'\n", tzType.String())
 	}
 
 	milTzLetter, err := dtz.timeZone.GetMilitaryTimeZoneLetter()
@@ -1709,7 +1709,7 @@ func (dtz *DateTzDto) GetTimeComponents() TimeDto {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -1772,9 +1772,9 @@ func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 }
 
 // GetTimeZone - Returns a deep copy of the 'DateTzDto' private
-// member variable, 'timeZone', of type TimeZoneDefDto.
+// member variable, 'timeZone', of type TimeZoneDefinition.
 //
-func (dtz *DateTzDto) GetTimeZone() TimeZoneDefDto {
+func (dtz *DateTzDto) GetTimeZone() TimeZoneDefinition {
 
 	dtz.lock.Lock()
 
@@ -1783,8 +1783,8 @@ func (dtz *DateTzDto) GetTimeZone() TimeZoneDefDto {
 	return dtz.timeZone.CopyOut()
 }
 
-// GetTimeZoneAbbreviation - Returns TimeZoneDefDto member variable
-// TimeZoneDefDto.zoneName value.
+// GetTimeZoneAbbreviation - Returns TimeZoneDefinition member variable
+// TimeZoneDefinition.zoneName value.
 //
 // Zone Name is the Time Zone abbreviation. This may
 // may be a series of characters, like "EST", "CST"
@@ -1930,7 +1930,7 @@ func (dtz *DateTzDto) IsValid() error {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -2051,7 +2051,7 @@ func (dtz DateTzDto) New(
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -2197,7 +2197,7 @@ func (dtz DateTzDto) NewDateTimeComponents(
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -2310,7 +2310,7 @@ func (dtz DateTzDto) NewDateTimeElements(
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -2425,7 +2425,7 @@ func (dtz DateTzDto) NewNowLocal(dateTimeFmtStr string) (DateTzDto, error) {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -2529,7 +2529,7 @@ func (dtz DateTzDto) NewNowTz(
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -2658,7 +2658,7 @@ func (dtz DateTzDto) NewNowUTC(dateTimeFmtStr string) (DateTzDto, error) {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -2777,7 +2777,7 @@ func (dtz DateTzDto) NewTimeDto(
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }
@@ -3435,7 +3435,7 @@ func (dtz *DateTzDto) String() string {
 //           DateTime     time.Time      // DateTime value for this DateTzDto Type
 //           DateTimeFmt  string         // Date Time Format String. 
 //                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefDto // Contains a detailed description of the Time Zone
+//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
 //                                       //  and Time Zone Location
 //                                       // associated with this date time.
 //      }

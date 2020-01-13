@@ -560,10 +560,10 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 			t4USCentral.Format(fmtstr), dTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	eTimeZoneDef, err := TimeZoneDefDto{}.New(t4USCentral)
+	eTimeZoneDef, err := TimeZoneDefinition{}.New(t4USCentral)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(t4USCentral)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(t4USCentral)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -814,10 +814,10 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 			dTzDto.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	eTimeZoneDef, err := TimeZoneDefDto{}.New(t4USCentral)
+	eTimeZoneDef, err := TimeZoneDefinition{}.New(t4USCentral)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(t4USCentral)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(t4USCentral)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -894,10 +894,10 @@ func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 		t.Errorf("Error returned by t4USCentral TimeDto{}.New(). Error='%v'", err.Error())
 	}
 
-	t4TZoneDef, err := TimeZoneDefDto{}.New(t4USCentral)
+	t4TZoneDef, err := TimeZoneDefinition{}.New(t4USCentral)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefDto{}.New(t4USCentral). Error='%v'", err.Error())
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(t4USCentral). Error='%v'", err.Error())
 	}
 
 	locTokyo, err := time.LoadLocation(TZones.Asia.Tokyo())
@@ -915,7 +915,7 @@ func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 		t.Errorf("Error returned by t5Tokyo TimeDto{}.New(). Error='%v'", err.Error())
 	}
 
-	t5TZoneDef, err := TimeZoneDefDto{}.New(t5Tokyo)
+	t5TZoneDef, err := TimeZoneDefinition{}.New(t5Tokyo)
 
 	dTz1, err := DateTzDto{}.New(t5Tokyo, FmtDateTimeYrMDayFmtStr)
 

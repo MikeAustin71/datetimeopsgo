@@ -980,10 +980,10 @@ func (mt mainTest) mainTest041() {
 	fmt.Println(" tIn: ", tIn.Format(fmtStr))
 	fmt.Println("tOut: ", tOut.Format(fmtStr))
 
-	tzDefIn, err := dt.TimeZoneDefDto{}.New(tIn)
+	tzDefIn, err := dt.TimeZoneDefinition{}.New(tIn)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(tIn)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(tIn)\n" +
 			"tIn='%v'\n" +
 			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
 		return
@@ -991,10 +991,10 @@ func (mt mainTest) mainTest041() {
 
 	ex.PrintOutTimeZoneDefDtoFields(tzDefIn)
 
-	tzDefOut, err := dt.TimeZoneDefDto{}.New(tOut)
+	tzDefOut, err := dt.TimeZoneDefinition{}.New(tOut)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(tOut)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(tOut)\n" +
 			"tOut='%v'\n" +
 			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
 		return
@@ -1075,10 +1075,10 @@ func (mt mainTest) mainTest039() {
 
 	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	tzDef, err := dt.TimeZoneDefDto{}.New(t1)
+	tzDef, err := dt.TimeZoneDefinition{}.New(t1)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t1)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
 			"t1='%v'\n" +
 			"Error='%v'\n", t1.Format(fmtStr), err.Error())
 		return
@@ -1098,10 +1098,10 @@ func (mt mainTest) mainTest039() {
 		0,
 		tzLocPtr)
 
-	tzDef, err = dt.TimeZoneDefDto{}.New(t2)
+	tzDef, err = dt.TimeZoneDefinition{}.New(t2)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t2)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t2)\n" +
 			"t2='%v'\n" +
 			"Error='%v'\n",
 			t2.Format(fmtStr),t1.Format(fmtStr))
@@ -1334,13 +1334,13 @@ func (mt mainTest) mainTest035() {
 	fmt.Println()
 
 	t1TzDefDtoDateTime, err :=
-		dt.TimeZoneDefDto{}.NewFromTimeZoneName(
+		dt.TimeZoneDefinition{}.NewFromTimeZoneName(
 			t1,
 			tZoneName,
 			dt.TzConvertType.Relative())
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewFromTimeZoneName(tZoneName)\n" +
 			"tZoneName='%v'\n" +
 			"Error='%v'\n", tZoneName, err.Error())
 	}
@@ -1351,10 +1351,10 @@ func (mt mainTest) mainTest035() {
 	fmt.Println()
 
 	t2TzDefDtoDateTime, err :=
-		dt.TimeZoneDefDto{}.New(t1)
+		dt.TimeZoneDefinition{}.New(t1)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.New(t1)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
 			"t1='%v'\n" +
 			"Error='%v'\n", t1.Format(fmtstr), err.Error())
 		return
@@ -1367,19 +1367,19 @@ func (mt mainTest) mainTest035() {
 
 
 	t1TzDefDtoDateTime, err =
-		dt.TimeZoneDefDto{}.NewFromTimeZoneName(
+		dt.TimeZoneDefinition{}.NewFromTimeZoneName(
 			t1,
 			tZoneName,
 			dt.TzConvertType.Relative(),)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(tZoneName)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewFromTimeZoneName(tZoneName)\n" +
 			"tZoneName='%v'\n" +
 			"Error='%v'\n", tZoneName, err.Error())
 	}
 
 	t2TzDefDtoDateTime, err =
-		dt.TimeZoneDefDto{}.New(t1Dup)
+		dt.TimeZoneDefinition{}.New(t1Dup)
 
 	mt.mainPrintHdr("       t1TzDefDtoDateTime Data" , "*")
 	fmt.Println("From: t1Dup")
@@ -1484,10 +1484,10 @@ func (mt mainTest) mainTest033() {
 		return
 	}
 
-	eTimeZoneDef, err := dt.TimeZoneDefDto{}.New(t4USCentral)
+	eTimeZoneDef, err := dt.TimeZoneDefinition{}.New(t4USCentral)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefDto{}.New(t4USCentral)\n" +
+		fmt.Printf("Error returned by TimeZoneDefinition{}.New(t4USCentral)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1664,14 +1664,14 @@ func (mt mainTest) mainTest031() {
 		return
 	}
 
-	tzDefDto, err := dt.TimeZoneDefDto{}.NewFromTimeZoneName(
+	tzDefDto, err := dt.TimeZoneDefinition{}.NewFromTimeZoneName(
 		dt1,
 		dt.TZones.America.New_York(),
 		dt.TzConvertType.Relative())
 
 	if err != nil {
 		fmt.Printf(ePrefix +
-			"\nError returned by dt.TimeZoneDefDto{}.NewFromTimeZoneName(dt.TZones.America.New_York())\n" +
+			"\nError returned by dt.TimeZoneDefinition{}.NewFromTimeZoneName(dt.TZones.America.New_York())\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -2182,7 +2182,7 @@ func (mt mainTest) mainTest021() {
 		return
 	}
 
-	tzDef2, err := dt.TimeZoneDefDto{}.New(dtz.GetDateTimeValue())
+	tzDef2, err := dt.TimeZoneDefinition{}.New(dtz.GetDateTimeValue())
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
 		return
@@ -2211,7 +2211,7 @@ func (mt mainTest) mainTest020() {
 		return
 	}
 
-	tzDef, err := dt.TimeZoneDefDto{}.New(dtz.GetDateTimeValue())
+	tzDef, err := dt.TimeZoneDefinition{}.New(dtz.GetDateTimeValue())
 
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
@@ -2225,7 +2225,7 @@ func (mt mainTest) mainTest020() {
 		return
 	}
 
-	tzDef2, err := dt.TimeZoneDefDto{}.New(dtz2.GetDateTimeValue())
+	tzDef2, err := dt.TimeZoneDefinition{}.New(dtz2.GetDateTimeValue())
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
 		return
@@ -2488,10 +2488,10 @@ func (mt mainTest) mainTest016() {
 		return
 	}
 
-	t4TZoneDef, err := dt.TimeZoneDefDto{}.New(t4USCentral)
+	t4TZoneDef, err := dt.TimeZoneDefinition{}.New(t4USCentral)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefDto{}.New(t4USCentral). Error='%v'", err.Error())
+		fmt.Printf("Error returned by TimeZoneDefinition{}.New(t4USCentral). Error='%v'", err.Error())
 		return
 	}
 
@@ -2512,7 +2512,7 @@ func (mt mainTest) mainTest016() {
 		return
 	}
 
-	t5TZoneDef, err := dt.TimeZoneDefDto{}.New(t5Tokyo)
+	t5TZoneDef, err := dt.TimeZoneDefinition{}.New(t5Tokyo)
 
 	dTz1, err := dt.DateTzDto{}.New(t5Tokyo, dt.FmtDateTimeYrMDayFmtStr)
 

@@ -33,7 +33,7 @@ var mTimeZoneConversionTypeCodeToString = map[TimeZoneConversionType]string{
 // TimeZoneConversionType - This type is configured as a series of
 // constant integer values describing the two valid types of time
 // zone conversion algorithms used to create new instances of type,
-// 'TimeZoneDefDto'.
+// 'TimeZoneDefinition'.
 //
 // Functionally, 'TimeZoneConversionType' serves as enumeration of
 // valid time zone conversion algorithms.
