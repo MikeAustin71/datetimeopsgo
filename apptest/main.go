@@ -991,7 +991,7 @@ func (mt mainTest) mainTest042() {
 
 	tzDefIn := dTzDtoIn.GetTimeZone()
 
-	ex.PrintOutTimeZoneDefDtoFields(tzDefIn)
+	ex.PrintOutTimeZoneDefFields(tzDefIn)
 
 	dTzDtoOut, err := dt.DateTzDto{}.NewTz(
 		tIn,
@@ -1012,7 +1012,7 @@ func (mt mainTest) mainTest042() {
 
 	tzDefOut := dTzDtoOut.GetTimeZone()
 
-	ex.PrintOutTimeZoneDefDtoFields(tzDefOut)
+	ex.PrintOutTimeZoneDefFields(tzDefOut)
 
 	tOut2 := tIn.In(tzDefOut.GetOriginalLocationPtr())
 
@@ -1056,7 +1056,7 @@ func (mt mainTest) mainTest041() {
 		return
 	}
 
-	ex.PrintOutTimeZoneDefDtoFields(tzDefIn)
+	ex.PrintOutTimeZoneDefFields(tzDefIn)
 
 	tzDefOut, err := dt.TimeZoneDefinition{}.New(tOut)
 
@@ -1067,7 +1067,7 @@ func (mt mainTest) mainTest041() {
 		return
 	}
 
-	ex.PrintOutTimeZoneDefDtoFields(tzDefOut)
+	ex.PrintOutTimeZoneDefFields(tzDefOut)
 
 }
 
@@ -1096,11 +1096,11 @@ func (mt mainTest) mainTest040() {
 
 	timeInDef := tzu.TimeIn.GetTimeZone()
 
-	ex.PrintOutTimeZoneDefDtoFields(timeInDef)
+	ex.PrintOutTimeZoneDefFields(timeInDef)
 
 	timeOutDef := tzu.TimeOut.GetTimeZone()
 
-	ex.PrintOutTimeZoneDefDtoFields(timeOutDef)
+	ex.PrintOutTimeZoneDefFields(timeOutDef)
 
 	expectedZone := "PDT"
 
@@ -1153,7 +1153,7 @@ func (mt mainTest) mainTest039() {
 
 	fmt.Println("t1 Date Time: ", t1.Format(fmtStr))
 
-	ex.PrintOutTimeZoneDefDtoFields(tzDef)
+	ex.PrintOutTimeZoneDefFields(tzDef)
 
 	t2 := time.Date(
 		2019,
@@ -1177,7 +1177,7 @@ func (mt mainTest) mainTest039() {
 
 	fmt.Println("t2 Date Time: ", t2.Format(fmtStr))
 
-	ex.PrintOutTimeZoneDefDtoFields(tzDef)
+	ex.PrintOutTimeZoneDefFields(tzDef)
 }
 
 func (mt mainTest) mainTest038() {
@@ -1414,7 +1414,7 @@ func (mt mainTest) mainTest035() {
 
 	mt.mainPrintHdr("       t1TzDefDtoDateTime Data" , "=")
 	fmt.Println("          From t1")
-	ex.PrintOutTimeZoneDefDtoFields(t1TzDefDtoDateTime)
+	ex.PrintOutTimeZoneDefFields(t1TzDefDtoDateTime)
 	fmt.Println()
 
 	t2TzDefDtoDateTime, err :=
@@ -1429,7 +1429,7 @@ func (mt mainTest) mainTest035() {
 
 	mt.mainPrintHdr("       t2TzDefDtoDateTime Data" , "=")
 	fmt.Println("          From t1")
-	ex.PrintOutTimeZoneDefDtoFields(t2TzDefDtoDateTime)
+	ex.PrintOutTimeZoneDefFields(t2TzDefDtoDateTime)
 	fmt.Println()
 
 
@@ -1450,12 +1450,12 @@ func (mt mainTest) mainTest035() {
 
 	mt.mainPrintHdr("       t1TzDefDtoDateTime Data" , "*")
 	fmt.Println("From: t1Dup")
-	ex.PrintOutTimeZoneDefDtoFields(t1TzDefDtoDateTime)
+	ex.PrintOutTimeZoneDefFields(t1TzDefDtoDateTime)
 	fmt.Println()
 
 	mt.mainPrintHdr("       t2TzDefDtoDateTime Data" , "*")
 	fmt.Println("From: t1Dup")
-	ex.PrintOutTimeZoneDefDtoFields(t2TzDefDtoDateTime)
+	ex.PrintOutTimeZoneDefFields(t2TzDefDtoDateTime)
 	fmt.Println()
 
 }
@@ -1820,6 +1820,12 @@ func (mt mainTest) mainTest030() {
 
 	tZoneDef := dtz1.GetTimeZone()
 
+	offsetSignChar,
+	_,
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds := tZoneDef.GetOriginalOffsetElements()
+
 	fmt.Println("------ Success!!! ------")
 	fmt.Println()
 	fmt.Printf("   Time Zone Name: %v\n", tzLocName)
@@ -1827,10 +1833,10 @@ func (mt mainTest) mainTest030() {
 	fmt.Println()
 	fmt.Printf("         ZoneName: %v\n", tZoneDef.GetZoneName())
 	fmt.Printf("ZoneOffsetSeconds: %v\n", tZoneDef.GetZoneOffsetSeconds())
-	fmt.Printf("         ZoneSign: %v\n", tZoneDef.GetZoneSign())
-	fmt.Printf("      OffsetHours: %v\n", tZoneDef.GetOffsetHours())
-	fmt.Printf("    OffsetMinutes: %v\n", tZoneDef.GetOffsetMinutes())
-	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
+	fmt.Printf("         ZoneSign: %v\n", offsetSignChar)
+	fmt.Printf("      OffsetHours: %v\n", offsetHours)
+	fmt.Printf("    OffsetMinutes: %v\n", offsetMinutes)
+	fmt.Printf("    OffsetSeconds: %v\n", offsetSeconds)
 	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
 	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
 	fmt.Printf("    Location Name: %v\n", tZoneDef.GetOriginalLocationName())
@@ -1882,6 +1888,12 @@ func (mt mainTest) mainTest029() {
 
 	tZoneDef := dtz1.GetTimeZone()
 
+	offsetSignChar,
+	_,
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds := tZoneDef.GetOriginalOffsetElements()
+
 	fmt.Println("------ Success!!! ------")
 	fmt.Println()
 	fmt.Printf("   Time Zone Name: %v\n", tzLocName)
@@ -1889,10 +1901,10 @@ func (mt mainTest) mainTest029() {
 	fmt.Println()
 	fmt.Printf("         ZoneName: %v\n", tZoneDef.GetZoneName())
 	fmt.Printf("ZoneOffsetSeconds: %v\n", tZoneDef.GetZoneOffsetSeconds())
-	fmt.Printf("         ZoneSign: %v\n", tZoneDef.GetZoneSign())
-	fmt.Printf("      OffsetHours: %v\n", tZoneDef.GetOffsetHours())
-	fmt.Printf("    OffsetMinutes: %v\n", tZoneDef.GetOffsetMinutes())
-	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
+	fmt.Printf("         ZoneSign: %v\n", offsetSignChar)
+	fmt.Printf("      OffsetHours: %v\n", offsetHours)
+	fmt.Printf("    OffsetMinutes: %v\n", offsetMinutes)
+	fmt.Printf("    OffsetSeconds: %v\n", offsetSeconds)
 	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
 	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
 	fmt.Printf("    Location Name: %v\n", tZoneDef.GetOriginalLocationName())
@@ -1944,17 +1956,24 @@ func (mt mainTest) mainTest028() {
 
 	tZoneDef := dtz1.GetTimeZone()
 
+	offsetSignChar,
+	_,
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds := tZoneDef.GetOriginalOffsetElements()
+
 	fmt.Println("------ Success!!! ------")
 	fmt.Println()
 	fmt.Printf("   Time Zone Name: %v\n", tzLocName)
-	fmt.Println("  -- tZoneDef Values -- ")
+	fmt.Println(" --  tZoneDef Values   -- ")
 	fmt.Println()
+	fmt.Println(" -- Original Time Zone --")
 	fmt.Printf("         ZoneName: %v\n", tZoneDef.GetZoneName())
 	fmt.Printf("ZoneOffsetSeconds: %v\n", tZoneDef.GetZoneOffsetSeconds())
-	fmt.Printf("         ZoneSign: %v\n", tZoneDef.GetZoneSign())
-	fmt.Printf("      OffsetHours: %v\n", tZoneDef.GetOffsetHours())
-	fmt.Printf("    OffsetMinutes: %v\n", tZoneDef.GetOffsetMinutes())
-	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
+	fmt.Printf("         ZoneSign: %v\n", offsetSignChar)
+	fmt.Printf("      OffsetHours: %v\n", offsetHours)
+	fmt.Printf("    OffsetMinutes: %v\n", offsetMinutes)
+	fmt.Printf("    OffsetSeconds: %v\n", offsetSeconds)
 	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
 	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
 	fmt.Printf("    Location Name: %v\n", tZoneDef.GetOriginalLocationName())
@@ -2635,9 +2654,9 @@ func (mt mainTest) mainTest016() {
 			"THEY ARE NOT EQUAL!\n")
 
 		fmt.Println("t4TZoneDef")
-		ex.PrintOutTimeZoneDefDtoFields(t4TZoneDef)
+		ex.PrintOutTimeZoneDefFields(t4TZoneDef)
 		fmt.Println("\n\ndTz1.GetTimeZone()")
-		ex.PrintOutTimeZoneDefDtoFields(dTz1.GetTimeZone())
+		ex.PrintOutTimeZoneDefFields(dTz1.GetTimeZone())
 
 		return
 	}

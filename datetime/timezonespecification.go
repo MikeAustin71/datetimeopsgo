@@ -362,31 +362,42 @@ func (tzSpec *TimeZoneSpecification) GetMilitaryTimeZoneLetter() string {
 	return tzSpec.militaryTimeZoneLetter
 }
 
-// GetOffsetElements - Returns a series of integer values which
-// taken collectively identify the offset from UTC for this time
-// zone.
+// GetOffsetElements - Returns a series of string and integer
+// values which taken collectively identify the offset from
+// UTC for this time zone.
 //
 // ------------------------------------------------------------
 //
 // Return Values
 // =============
 //
-// zoneSignValue int  -1 == West of UTC  +1 == East of UTC. Apply this sign
-//                    to the offset hours, minutes and seconds value
+// offsetSignChar string - Like return value offsetSignValue, this string
+//                         value signals whether the offset from UTC is West
+//                         or East of UTC. This string will always have one of
+//                         two values: "+" or "-". The plus sign ("+") signals
+//                         that the offset is East of UTC. The minus sign ("-")
+//                         signals that the offset is West of UTC.
 //
-// offsetHours   int  Normalized Offset Hours from UTC. Always a positive number,
-//                    refer to ZoneSign for correct sign value.
+// offsetSignValue int  - Similar to return value 'offsetSignChar' above except
+//                        that sign values are expressed as either a '-1' or positive
+//                        '1' integer value. -1 == West of UTC  +1 == East of UTC.
+//                        Apply this sign value to the offset hours, minutes and
+//                        seconds value returned below.
 //
-// offsetMinutes int  Normalized Offset Minutes offset from UTC. Always a
-//                    positive number, refer to ZoneSign for the correct
-//                    sign value.
+// offsetHours     int  - Normalized Offset Hours from UTC. Always a positive number,
+//                        refer to ZoneSign for correct sign value.
 //
-// offsetSeconds int  Normalized Offset Seconds offset from UTC. Always a
-//                    positive number, refer to ZoneSign for the correct
-//                    sign value.
+// offsetMinutes   int  - Normalized Offset Minutes offset from UTC. Always a
+//                        positive number, refer to ZoneSign for the correct
+//                        sign value.
+//
+// offsetSeconds   int  - Normalized Offset Seconds offset from UTC. Always a
+//                        positive number, refer to ZoneSign for the correct
+//                        sign value.
 //
 func (tzSpec *TimeZoneSpecification) GetOffsetElements() (
-	zoneSignValue,
+	offsetSignChar string,
+	offsetSignValue,
 	offsetHours,
 	offsetMinutes,
 	offsetSeconds int) {
@@ -395,10 +406,22 @@ func (tzSpec *TimeZoneSpecification) GetOffsetElements() (
 
 	defer tzSpec.lock.Unlock()
 
-	return tzSpec.zoneSignValue,
-		tzSpec.offsetHours,
-		tzSpec.offsetMinutes,
-		tzSpec.offsetSeconds
+	if tzSpec.zoneSignValue < 0 {
+		offsetSignChar = "-"
+	} else {
+		offsetSignChar = "+"
+	}
+
+	offsetSignValue = tzSpec.zoneSignValue
+	offsetHours = tzSpec.offsetHours
+	offsetMinutes = tzSpec.offsetMinutes
+	offsetSeconds = tzSpec.offsetSeconds
+
+	return offsetSignChar,
+		offsetSignValue,
+		offsetHours,
+		offsetMinutes,
+		offsetSeconds
 }
 
 // GetReferenceDateTime - Returns the reference Date Time
@@ -530,6 +553,28 @@ func (tzSpec *TimeZoneSpecification) GetZoneOffsetTotalSeconds() int {
 	defer tzSpec.lock.Unlock()
 
 	return tzSpec.zoneOffsetTotalSeconds
+}
+
+// GetZoneSignChar - Returns the sign character as a string.
+// This is a string value identifying whether the time zone
+// offset from UTC is east or west of UTC. The returned string
+// will hold one of only two values: a positive "+" or a negative
+// "-".  A negative minus ('-') indicates an offset West of UTC
+// while a positive plus ('+') identifies and offset East of UTC.
+// This string is designed to be used with the unsigned or positive
+// values for offset hours, minutes and seconds.
+//
+func (tzSpec *TimeZoneSpecification) GetZoneSignChar() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	if tzSpec.zoneSignValue < 0 {
+		return "-"
+	}
+
+	return "+"
 }
 
 // GetZoneSignValue - Returns the data field 'zoneSignValue'. This

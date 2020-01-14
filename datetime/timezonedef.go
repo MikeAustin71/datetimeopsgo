@@ -274,6 +274,32 @@ func (tzdef *TimeZoneDefinition) EqualZoneLocation(tzdef2 TimeZoneDefinition) bo
 	return true
 }
 
+// GetConvertibleTimeZone - Returns the convertible form of
+// the current time zone. This time zone should be convertible
+// across all time zones. To verify convertibility, call
+// TimeZoneSpecification.GetOriginalLocationNameType() and inspect the result.
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone
+
+}
+
+// GetOriginalDateTime - Returns the Original Time Zone reference
+// date time value.
+//
+func (tzdef *TimeZoneDefinition) GetOriginalDateTime() time.Time {
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.referenceDateTime
+}
+
 // GetOriginalLocationPtr - Returns a pointer to a time.Location for
 // the original time zone (TimeZoneDefinition.originalTimeZone.locationPtr).
 //
@@ -315,6 +341,67 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
 func (tzdef *TimeZoneDefinition) GetOriginalLocationNameType() LocationNameType {
 
 	return tzdef.originalTimeZone.locationNameType
+}
+
+// GetOriginalOffsetElements - Returns a series of string and
+// integer values which taken collectively identify the offset
+// from UTC for the Original Time Zone.
+//
+// ------------------------------------------------------------
+//
+// Return Values
+// =============
+//
+// offsetSignChar string - Like return value offsetSignValue, this string
+//                         value signals whether the offset from UTC is West
+//                         or East of UTC. This string will always have one of
+//                         two values: "+" or "-". The plus sign ("+") signals
+//                         that the offset is East of UTC. The minus sign ("-")
+//                         signals that the offset is West of UTC.
+//
+// offsetSignValue int  - Similar to return value 'offsetSignChar' above except
+//                        that sign values are expressed as either a '-1' or positive
+//                        '1' integer value. -1 == West of UTC  +1 == East of UTC.
+//                        Apply this sign value to the offset hours, minutes and
+//                        seconds value returned below.
+//
+// offsetHours     int  - Normalized Offset Hours from UTC. Always a positive number,
+//                        refer to ZoneSign for correct sign value.
+//
+// offsetMinutes   int  - Normalized Offset Minutes offset from UTC. Always a
+//                        positive number, refer to ZoneSign for the correct
+//                        sign value.
+//
+// offsetSeconds   int  - Normalized Offset Seconds offset from UTC. Always a
+//                        positive number, refer to ZoneSign for the correct
+//                        sign value.
+//
+func (tzdef *TimeZoneDefinition) GetOriginalOffsetElements() (
+	offsetSignChar string,
+	offsetSignValue,
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds int) {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.GetOffsetElements()
+}
+
+// GetOriginalTimeZone - Returns the originally configured
+// time zone specification. Check TimeZoneSpecification.GetOriginalLocationNameType()
+// if this time zone is fully convertible across all time zones.
+// If not convertible, use TimeZoneDefinition.GetConvertibleTimeZone().
+//
+func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone
 }
 
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
@@ -375,82 +462,6 @@ func (tzdef *TimeZoneDefinition) GetMilitaryTimeZoneName() (string, error) {
 	}
 
 	return tzdef.originalTimeZone.militaryTimeZoneName, nil
-}
-
-// GetOffsetHours - Returns TimeZoneDefinition member variable
-// ZoneOffset value.
-//
-// Normalized Offset Hours from UTC. Always a positive number,
-// refer to ZoneSign to determine East or West of UTC.
-//
-func (tzdef *TimeZoneDefinition) GetOffsetHours() int {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.offsetHours
-}
-
-// GetOffsetMinutes - Returns TimeZoneDefinition member variable
-// ZoneOffsetMinutes value.
-//
-// Normalized Offset Minutes offset from UTC. Always a
-// positive number, refer to ZoneSign to determine East or
-// West of UTC.
-//
-func (tzdef *TimeZoneDefinition) GetOffsetMinutes() int {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.offsetMinutes
-}
-
-// GetOffsetSeconds - Returns TimeZoneDefinition member variable
-// ZoneOffsetSeconds value.
-//
-// Normalized Offset Seconds offset from UTC. Always a
-// positive number, refer to ZoneSign to determine East or
-// West of UTC.
-//
-func (tzdef *TimeZoneDefinition) GetOffsetSeconds() int {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.offsetSeconds
-}
-
-// GetConvertibleTimeZone - Returns the convertible form of
-// the current time zone. This time zone should be convertible
-// across all time zones. To verify convertibility, call
-// TimeZoneSpecification.GetOriginalLocationNameType() and inspect the result.
-//
-func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.convertibleTimeZone
-
-}
-
-// GetOriginalTimeZone - Returns the originally configured
-// time zone specification. Check TimeZoneSpecification.GetOriginalLocationNameType()
-// if this time zone is fully convertible across all time zones.
-// If not convertible, use TimeZoneDefinition.GetConvertibleTimeZone().
-//
-func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone
 }
 
 // GetTagDescription - Returns TimeZoneDefinition member variable
