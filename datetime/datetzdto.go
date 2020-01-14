@@ -1574,7 +1574,7 @@ func (dtz *DateTzDto) GetMilitaryCompactDateTimeGroup() (string, error) {
 
 	ePrefix := "TimeZoneDefinition.GetMilitaryCompactDateTimeGroup() "
 
-	tzType := dtz.timeZone.GetTimeZoneType()
+	tzType := dtz.timeZone.GetOriginalTimeZoneType()
 
 	if tzType != TzType.Military() {
 		return "",
@@ -1643,7 +1643,7 @@ func (dtz *DateTzDto) GetMilitaryOpenDateTimeGroup() (string, error) {
 
 	ePrefix := "TimeZoneDefinition.GetMilitaryOpenDateTimeGroup() "
 
-	tzType := dtz.timeZone.GetTimeZoneType()
+	tzType := dtz.timeZone.GetOriginalTimeZoneType()
 
 	if tzType != TzType.Military() {
 		return "",

@@ -562,6 +562,24 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 	return tzdef.originalTimeZone
 }
 
+// GetOriginalTimeZoneType - Returns the Time Zone Type associated
+// with the Original Time Zone.
+//
+// Time Zone Type is styled as an enumeration. Possible values are:
+//
+//           TimeZoneType(0).Iana()
+//           TimeZoneType(0).Military()
+//           TimeZoneType(0).Local()
+//
+func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneType() TimeZoneType {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.timeZoneType
+}
+
 // GetOriginalZoneName - Returns the Original Time Zone
 // Name.
 //
@@ -681,19 +699,6 @@ func (tzdef *TimeZoneDefinition) GetZoneOffsetSeconds() int {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.zoneOffsetTotalSeconds
-}
-
-// GetTimeZoneType - Returns the Time Zone Type associated
-// with this instance of TimeZoneDefinition.
-//
-// Time Zone Type is styled as an enumeration.
-func (tzdef *TimeZoneDefinition) GetTimeZoneType() TimeZoneType {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.timeZoneType
 }
 
 // IsEmpty - Determines whether the current TimeZoneDefinition

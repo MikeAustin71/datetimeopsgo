@@ -449,7 +449,7 @@ func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
 	return tzSpec.tagDescription
 }
 
-// GetTimeZoneType - Returns the Time Zone Type classification.
+// GetOriginalTimeZoneType - Returns the Time Zone Type classification.
 // Time Zone Type is an enumeration identifying the time zone
 // source.
 //
