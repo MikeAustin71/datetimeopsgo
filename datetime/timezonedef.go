@@ -767,6 +767,10 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 //
 func (tzdef TimeZoneDefinition) New(dateTime time.Time) (TimeZoneDefinition, error) {
 
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
 	ePrefix := "TimeZoneDefinition.New() "
 
 	if dateTime.IsZero() {
@@ -781,7 +785,6 @@ func (tzdef TimeZoneDefinition) New(dateTime time.Time) (TimeZoneDefinition, err
 
 	err := tzDefUtil.setFromDateTime(&tzDef2, dateTime, ePrefix)
 
-	// err := tzDefUtil.setFromTimeZoneName(&tzDef2, locationName, ePrefix)
 	if err != nil {
 		return TimeZoneDefinition{}, err
 	}
@@ -810,17 +813,36 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	tzDefDto TimeZoneDefinition,
 	err error) {
 
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
 	ePrefix := "TimeZoneDefinition.NewFromTimeZoneName() "
 
-// 	var tzLoc *time.Location
 	err = nil
 	tzDefDto = TimeZoneDefinition{}
 
-//	var err2 error
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' has a Zero value!",
+			err:                 nil,
+		}
+
+		return tzDefDto, err
+	}
 
 	if len(timeZoneName) == 0 {
-		err = errors.New(ePrefix +
-			"\nError: Input parameter 'timeZoneName' is EMPTY!\n")
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneName",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'timeZoneName' is an empty string!",
+			err:                 nil,
+		}
+
 		return tzDefDto, err
 	}
 
@@ -836,11 +858,9 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	return tzDefDto, err
 }
 
-// SetTagDescription - Sets TimeZoneDefinition private member variable
-// TimeZoneDefinition.tagDescription to the value passed in 'tagDesc'.
-//
-// The TimeZoneDefinition.tagDescription string is available to users
-// for use as a tag, label, classification or text description.
+// SetTagDescription - Sets the Original and Convertible time zone
+// tag/description. This string field is available to users for use
+// as a tag, label, classification or text description.
 //
 func (tzdef *TimeZoneDefinition) SetTagDescription(tagDesc string) {
 
