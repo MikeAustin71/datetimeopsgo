@@ -617,6 +617,33 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneOffset() string {
 	return tzdef.originalTimeZone.zoneOffset
 }
 
+// GetOriginalZoneOffsetTotalSeconds - Returns Zone Offset Total Seconds
+// for the Original Time Zone. Zone offset total seconds is a positive
+// or negative integer value presenting the total number of seconds of
+// offset from UTC. A positive value signals that the offset is East of
+// UTC. A negative value indicates that the offset is West of UTC.
+//
+func (tzdef *TimeZoneDefinition) GetOriginalZoneOffsetTotalSeconds() int {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.zoneOffsetTotalSeconds
+}
+
+// GetOriginalUtcOffset - Returns the offset from UTC as a string.
+// Examples of the UTC offset format are: "-0600" or "+0200".
+//
+func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.utcOffset
+}
+
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
 // the Military Time Zone Letter designation.
 //
@@ -675,30 +702,6 @@ func (tzdef *TimeZoneDefinition) GetMilitaryTimeZoneName() (string, error) {
 	}
 
 	return tzdef.originalTimeZone.militaryTimeZoneName, nil
-}
-
-// GetOriginalUtcOffset - Returns the offset from UTC as a string.
-// Examples of the UTC offset format are: "-0600" or "+0200".
-//
-func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.utcOffset
-}
-
-// GetZoneOffsetSeconds - Returns TimeZoneDefinition member variable
-// ZoneOffsetSeconds value.
-//
-func (tzdef *TimeZoneDefinition) GetZoneOffsetSeconds() int {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.zoneOffsetTotalSeconds
 }
 
 // IsEmpty - Determines whether the current TimeZoneDefinition

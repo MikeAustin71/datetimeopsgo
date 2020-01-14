@@ -48,10 +48,10 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 			t1ExpectedZone,tz.GetOriginalZoneName())
 	}
 
-	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
+	if t1ExpectedZoneOffset != tz.GetOriginalZoneOffsetTotalSeconds() {
 		t.Errorf("Error: Expected tz.GetTimeZoneOffset()='%v'.\n" +
 			"Instead, tz.GetTimeZone().OffsetSeconds='%v'\n",
-			t1ExpectedZoneOffset, tz.GetZoneOffsetSeconds())
+			t1ExpectedZoneOffset, tz.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	if t1ExpectedLocationName != tz.GetOriginalLocationName() {
@@ -164,10 +164,10 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 			t1ExpectedZone, tz.GetOriginalZoneName())
 	}
 
-	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tz.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tz.GetZoneOffsetSeconds()='%v'",
-			t1ExpectedZoneOffset, tz.GetZoneOffsetSeconds())
+	if t1ExpectedZoneOffset != tz.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tz.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tz.GetOriginalZoneOffsetTotalSeconds()='%v'",
+			t1ExpectedZoneOffset, tz.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	if t1ExpectedLocationName != tz.GetOriginalLocationName() {
@@ -255,10 +255,10 @@ func TestDateTzDto_New_01(t *testing.T) {
 			t1ExpectedZone, tz.GetOriginalZoneName())
 	}
 
-	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tz.GetZoneOffsetSeconds()='%v'.\n" +
+	if t1ExpectedZoneOffset != tz.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tz.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
 			"Instead, tz.ZoneOffsetSeconds()='%v'",
-			t1ExpectedZoneOffset, tz.GetZoneOffsetSeconds())
+			t1ExpectedZoneOffset, tz.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	if t1ExpectedLocationName != tz.GetOriginalLocationName() {
@@ -340,10 +340,10 @@ func TestDateTzDto_New_02(t *testing.T) {
 			t1ExpectedZone, tz.GetOriginalZoneName())
 	}
 
-	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tz.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tz.GetZoneOffsetSeconds()='%v'\n",
-			t1ExpectedZoneOffset, tz.GetZoneOffsetSeconds())
+	if t1ExpectedZoneOffset != tz.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tz.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tz.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			t1ExpectedZoneOffset, tz.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	if t1ExpectedLocationName != tz.GetOriginalLocationName() {
@@ -654,10 +654,10 @@ func TestDateTzDto_SetFromDateTimeComponents_01(t *testing.T) {
 			t1ExpectedZone,  tz.GetOriginalZoneName())
 	}
 
-	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tz.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tz.GetZoneOffsetSeconds()='%v'\n",
-			t1ExpectedZoneOffset, tz.GetZoneOffsetSeconds())
+	if t1ExpectedZoneOffset != tz.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tz.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tz.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			t1ExpectedZoneOffset, tz.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	if t1ExpectedLocationName != dTzDto.GetTimeZoneName() {

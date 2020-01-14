@@ -39,13 +39,13 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 
 	if zoneOffset != tzDef.GetOriginalZoneOffset() {
 		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffset()='%v'.\n" +
-			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n", zoneOffset, tzDef.GetZoneOffsetSeconds())
+			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n", zoneOffset, tzDef.GetOriginalZoneOffsetTotalSeconds())
 	}
 
-	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
-			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
+	if zoneOffsetSecs != tzDef.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	actOffsetSignChar,
@@ -138,10 +138,10 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 			utcOffset, tzDef.GetOriginalUtcOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
-			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
+	if zoneOffsetSecs != tzDef.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	if zoneSign != tzDef.GetOriginalOffsetSignValue() {
@@ -238,10 +238,10 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 			utcOffset, tzDef.GetOriginalUtcOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
-			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
+	if zoneOffsetSecs != tzDef.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	actOffsetSignChar,
@@ -334,10 +334,10 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 			utcOffset, tzDef.GetOriginalUtcOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
-			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
+	if zoneOffsetSecs != tzDef.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	actOffsetSignChar,
@@ -434,10 +434,10 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 			zoneOffset, tzDef.GetOriginalUtcOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
-			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
+	if zoneOffsetSecs != tzDef.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	actOffsetSignChar,
@@ -535,10 +535,10 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 			utcOffset, tzDef.GetOriginalUtcOffset())
 	}
 
-	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffsetSeconds()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffsetSeconds()='%v'\n",
-			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
+	if zoneOffsetSecs != tzDef.GetOriginalZoneOffsetTotalSeconds() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffsetTotalSeconds()='%v'\n",
+			zoneOffsetSecs, tzDef.GetOriginalZoneOffsetTotalSeconds())
 	}
 
 	actOffsetSignChar,
