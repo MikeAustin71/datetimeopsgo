@@ -11,19 +11,108 @@ import (
 // Overview and General Usage
 //
 // A Time Zone Definition includes two Time Zone Specifications
-// (TimeZoneSpec
-// This structure is designed to store detailed information
-// on Time Zones. It used primarily as a 'helper' or subsidiary
-// structure for Type, 'TimeZoneDto'.
-//
-// The TimeZoneDefinition method 'New' may be used to extract
-// detailed time zone information from a time.Time date time
-// value.
+// (Type: TimeZoneSpecification). Both describe the same time zone.
+// The first 'TimeZoneSpecification' describes the original time
+// zone used to initialize the current TimeZoneDefinition instance.
+// The second is provided to ensure the configuration of a time zone
+// which can be used to convert date times to another time zone
+// anywhere in the world.
 //
 //
-// TimeZoneDefinition - Time Zone Definition Dto
-// Contains detailed parameters describing a specific
-// Time Zone and Time Zone Location
+// Why Two Time Zone Specifications?
+//
+// Providing two time zone specifications deals with errors which
+// may be introduced when using the Golang time package to parse
+// date time strings in order to generate date time objects (time.Time).
+// In the following example, assume you, and your computer, live in
+// New York, NewYork USA. (I'll explain later). Now, create a new
+// date time object (time.Time) by parsing the following date time
+// string, "06/20/2019 09:58:32 -0700 PDT". This is a date time
+// using 'Pacific Daylight Time' or 'PDT'. Notice how the string
+// is parsed to identify a time zone.
+//
+//   tstr := "06/20/2019 09:58:32 -0700 PDT"
+//   fmtStr := "01/02/2006 15:04:05 -0700 MST"
+//   t1, err := time.Parse(fmtstr, t1str)
+//
+//   Note: 'time.Parse' will NOT return an 'error'. The resulting
+//   't1' will be created with a time.Location (a.k.a time zone)
+//   of "PDT". However, "PDT" is NOT a valid IANA time zone. If
+//   you try to create a new date time ('t2') using the 't1' location
+//   pointer ('t1.Location()') it could well generate an invalid
+//   date time and time zone.
+//
+//   t2 := time.Date(
+//         2019,
+//         time.Month(12),
+//         30,
+//          9,
+//          0,
+//          0,
+//          0,
+//          t1.Location())
+//
+//   't2' is created as "12/30/2019 09:00:00 -0700 PDT". This is
+//   WRONG. The correct time value is "12/30/2019 09:00:00 -0800 PST".
+//   'PST' stands for 'Pacific Standard Time'.
+//
+//   Remember that I asked that you assume both you and your computer
+//   live in New York, New York USA. If in fact you lived in Los
+//   Angeles, California USA, parsing date time string,
+//   "06/20/2019 09:58:32 -0700 PDT", Golang would return a valid time
+//   zone of "Local", and the error described would not exist.
+//
+// Because of the possibility of generating invalid time zones, Type
+// 'TimeZoneDefinition' contains two Time Zone Specifications. The
+// first contains the 'Original Time Zone' values. The second contains
+// 'Convertible Time Zone' values. 'Convertible' values are valid times
+// which can be safely used across all world time zones. 'Convertible'
+// time zones can be used to accurately convert a given date time to
+// other time zones.
+//
+// Each Time Zone Specification object includes a flag indicating
+// whether that time zone is 'Convertible'. This flag or indicator
+// is labeled "location Name Type". See type 'LocationNameType'
+// in source file:
+//   'MikeAustin71\datetimeopsgo\datetime\locationnametypeenum.go'
+//
+// If the time zone is NOT convertible, the Location Name Type will
+// be assigned an enumeration value of "NonConvertibleTimeZone".
+// Conversely, if the time IS convertible, it will be assigned a
+// Location Name Type of 'ConvertibleTimeZone'.
+//
+// The TimeZoneDefinition Type includes 'Getter' methods which will
+// allow calling functions to extract 'Original' Time Zone data or
+// 'Convertible' Time Zone data.
+//
+// Reference:
+//   Golang Time Package: https://golang.org/pkg/time/
+//   IANA Time Zones:
+//     https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+//     https://en.wikipedia.org/wiki/Tz_database
+//     https://www.iana.org/time-zones
+//     https://data.iana.org/time-zones/releases/
+//
+//
+// Dependencies
+//
+// The 'TimeZoneDefinition' Type is dependent on type
+// 'TimeZoneSpecification'.
+//  Source Code File:
+//    MikeAustin71/datetimeopsgo/datetime/timezonespecification.go
+//
+// In addition, 'TimeZoneDefinition' methods rely on
+// the utility methods found in type 'timeZoneDefUtility'.
+//
+//  Source Code File:
+//    MikeAustin71\datetimeopsgo\datetime\timezonedefutility.go
+//
+// The 'TimeZoneDefinition' makes use of two enumeration types,
+// 'LocationNameType' and 'TimeZoneType'.
+// Source Code Files:
+//   'MikeAustin71\datetimeopsgo\datetime\locationnametypeenum.go'
+//   'MikeAustin71\datetimeopsgo\datetime\timezonetypeenum.go'
+//
 //
 // Source Code Location
 //
@@ -218,8 +307,8 @@ func (tzdef *TimeZoneDefinition) GetLocationName() string {
 // Possible return values:
 //  LocationNameType(0).None()
 //  LocationNameType(0).ConvertibleAbbreviation()
-//  LocationNameType(0).NonConvertibleAbbreviation()
-//  LocationNameType(0).ConvertibleTimeZoneName()
+//  LocationNameType(0).NonConvertibleTimeZone()
+//  LocationNameType(0).ConvertibleTimeZone()
 //
 func (tzdef *TimeZoneDefinition) GetLocationNameType() LocationNameType {
 

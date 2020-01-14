@@ -9,7 +9,8 @@ import (
 )
 
 // TimeZoneSpecification - Internal data structure used to
-// store Time Zone data elements.
+// store the Time Zone data elements used to describe a single
+// time zone.
 type TimeZoneSpecification struct {
 	zoneLabel              string           // Identifying Time Zone Label. A tag or description field.
 	referenceDateTime      time.Time        // The date time used in defining the Time Zone
@@ -35,8 +36,8 @@ type TimeZoneSpecification struct {
 	locationNameType       LocationNameType // Four possible values:
 	//                                           None()
 	//                                           ConvertibleAbbreviation()
-	//                                           NonConvertibleAbbreviation()
-	//                                           ConvertibleTimeZoneName()
+	//                                           NonConvertibleTimeZone()
+	//                                           ConvertibleTimeZone()
 	militaryTimeZoneName   string           // Full Military Time Zone text name. Examples: "Alpha", "Bravo", "Charlie", "Zulu"
 	militaryTimeZoneLetter string           // Single Alphabetic Character identifying a Military Time Zone.
 	tagDescription         string           // Unused - Available for classification, labeling or description by user.
@@ -316,10 +317,10 @@ func (tzSpec *TimeZoneSpecification) GetLocationName() string {
 //                                 convertible across all other time
 //                                 zones.
 //
-//    NonConvertibleAbbreviation - The Time Zone Location Name cannot
+//    NonConvertibleTimeZone - The Time Zone Location Name cannot
 //                                 be converted to other time zones.
 //
-//    ConvertibleTimeZoneName    - The Time Zone Name is a complete
+//    ConvertibleTimeZone    - The Time Zone Name is a complete
 //                                 and valid time zone name which is
 //                                 convertible across all other
 //                                 time zones.

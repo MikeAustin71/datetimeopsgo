@@ -594,7 +594,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		milTzName,
 		zoneLabel,
 		"",
-		LocNameType.ConvertibleTimeZoneName(),
+		LocNameType.ConvertibleTimeZone(),
 		tzType,
 		ePrefix)
 
@@ -613,18 +613,18 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	if zoneLabel != ianaTimeZoneName &&
 		firstTzLetter != "+" &&
 		firstTzLetter != "-" {
-		tzdef.originalTimeZone.locationNameType = LocNameType.ConvertibleTimeZoneName()
+		tzdef.originalTimeZone.locationNameType = LocNameType.ConvertibleTimeZone()
 		tzdef.convertibleTimeZone = tzdef.originalTimeZone.CopyOut()
 		return nil
 	}
 
 	if ianaTimeZoneName == "UTC" {
-		tzdef.originalTimeZone.locationNameType = LocNameType.ConvertibleAbbreviation()
+		tzdef.originalTimeZone.locationNameType = LocNameType.ConvertibleTimeZone()
 		tzdef.convertibleTimeZone = tzdef.originalTimeZone.CopyOut()
 		return nil
 	}
 
-	tzdef.originalTimeZone.locationNameType = LocNameType.NonConvertibleAbbreviation()
+	tzdef.originalTimeZone.locationNameType = LocNameType.NonConvertibleTimeZone()
 
 	var tzAbbrvLookupId string
 
@@ -663,7 +663,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		milTzName,
 		zoneLabel,
 		"",
-		LocNameType.ConvertibleTimeZoneName(),
+		LocNameType.ConvertibleTimeZone(),
 		tzType,
 		ePrefix)
 
@@ -676,7 +676,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	}
 
 	tzdef.convertibleTimeZone = tzSpec.CopyOut()
-	tzdef.convertibleTimeZone.locationNameType = LocNameType.ConvertibleAbbreviation()
+	tzdef.convertibleTimeZone.locationNameType = LocNameType.ConvertibleTimeZone()
 
 	return nil
 }

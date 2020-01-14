@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest053()
+	mainTest{}.mainTest054()
 
 }
 
@@ -18,6 +18,73 @@ type mainTest struct {
 	input  string
 	output string
 }
+
+func (mt mainTest) mainTest054() {
+
+	ePrefix := "mainTest049()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	// t1EdtStr :=  "06/20/2019 09:58:32 -0400 EDT"
+	// t1EstStr :=  "12/20/2019 09:58:32 -0500 EST"
+	// t2CdtStr :=  "06/20/2019 09:58:32 -0500 CDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0600 CST"
+	// t2PdtStr :=  "06/20/2019 09:58:32 -0600 MDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0700 MST"
+	t2PdtStr :=  "06/20/2019 09:58:32 -0700 PDT"
+	// t2PstStr :=  "12/20/2019 09:58:32 -0800 PST"
+
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	timeStr := t2PdtStr
+	t1, err := time.Parse(fmtStr, timeStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, timeStr)\n" +
+			"timeStr='%v'\nError='%v'\n", timeStr, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+
+	t2 := time.Date(
+		2019,
+		time.Month(12),
+		30,
+		9,
+		0,
+		0,
+		0,
+		t1.Location())
+
+	ex.PrintOutDateTimeTimeZoneFields(t2, "t2 Date Time")
+
+	pacificTz := dt.TZones.America.Los_Angeles()
+
+	pacificTzPtr, err := time.LoadLocation(pacificTz)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.LoadLocation(pacificTz)\n" +
+			"pacificTz='%v'\nError='%v'\n", pacificTz, err.Error())
+		return
+	}
+
+	t3 := time.Date(
+		2019,
+		time.Month(12),
+		30,
+		9,
+		0,
+		0,
+		0,
+		pacificTzPtr)
+
+	ex.PrintOutDateTimeTimeZoneFields(t3, "t3 Date Time")
+
+}
+
+
 func (mt mainTest) mainTest053() {
 
 	ePrefix := "mainTest053()"
@@ -319,17 +386,17 @@ func (mt mainTest) mainTest049() {
 
 	mt.mainPrintHdr(ePrefix , "-")
 
-	// t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
-	// t1EstStr :=  "12/20/2019 09:58:32.000000000 -0500 EST"
-	t2CdtStr :=  "06/20/2019 09:58:32.000000000 -0500 CDT"
-	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0600 CST"
-	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0600 MDT"
-	// t2PdtStr :=  "12/20/2019 09:58:32.000000000 -0700 MST"
-	// t2PdtStr :=  "06/20/2019 09:58:32.000000000 -0700 PDT"
-	// t2PstStr :=  "12/20/2019 09:58:32.000000000 -0800 PST"
+	// t1EdtStr :=  "06/20/2019 09:58:32 -0400 EDT"
+	// t1EstStr :=  "12/20/2019 09:58:32 -0500 EST"
+	// t2CdtStr :=  "06/20/2019 09:58:32 -0500 CDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0600 CST"
+	// t2PdtStr :=  "06/20/2019 09:58:32 -0600 MDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0700 MST"
+	t2PdtStr :=  "06/20/2019 09:58:32 -0700 PDT"
+	// t2PstStr :=  "12/20/2019 09:58:32 -0800 PST"
 
-	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
-	timeStr := t2CdtStr
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	timeStr := t2PdtStr
 	t1, err := time.Parse(fmtStr, timeStr)
 
 	if err != nil {

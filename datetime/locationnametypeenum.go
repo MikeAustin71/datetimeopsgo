@@ -9,20 +9,20 @@ import (
 
 var mLocationNameTypeStringToCode = map[string]LocationNameType{
 	"None"                    : LocationNameType(0).None(),
-	"ConvertibleAbbreviation" : LocationNameType(0).ConvertibleAbbreviation(),
-	"ConvertibleTimeZoneName" : LocationNameType(0).ConvertibleTimeZoneName(),
+	"NonConvertibleTimeZone"  : LocationNameType(0).NonConvertibleTimeZone(),
+	"ConvertibleTimeZone"     : LocationNameType(0).ConvertibleTimeZone(),
 }
 
 var mLocationNameTypeLwrCaseStringToCode = map[string]LocationNameType{
 	"none"                    : LocationNameType(0).None(),
-	"convertibleabbreviation" : LocationNameType(0).ConvertibleAbbreviation(),
-	"convertibletimezonename" : LocationNameType(0).ConvertibleTimeZoneName(),
+	"nonconvertibletimezone"  : LocationNameType(0).NonConvertibleTimeZone(),
+	"convertibletimezone" : LocationNameType(0).ConvertibleTimeZone(),
 }
 
 var mLocationNameTypeCodeToString = map[LocationNameType] string {
 	LocationNameType(0).None()                    : "None",
-	LocationNameType(0).ConvertibleAbbreviation() : "ConvertibleAbbreviation",
-	LocationNameType(0).ConvertibleTimeZoneName() : "ConvertibleTimeZoneName",
+	LocationNameType(0).NonConvertibleTimeZone()  : "NonConvertibleTimeZone",
+	LocationNameType(0).ConvertibleTimeZone()     : "ConvertibleTimeZone",
 }
 
 // LocationNameType - This type is configured as a series of
@@ -39,21 +39,16 @@ var mLocationNameTypeCodeToString = map[LocationNameType] string {
 //   None()                     0          LocationNameType is uninitialized
 //                                          and has no significant value.
 //
-//   ConvertibleAbbreviation    1          Tests have established that this
-//                                          time zone abbreviation can be
-//                                          used to convert date times to
-//                                          a valid time zone.
+//   NonConvertibleTimeZone     1          Tests have established that this
+//                                         time zone cannot be used to
+//                                         accurately convert date times to
+//                                         other valid time zones.
 //
-//   NonConvertibleAbbreviation 2          Tests have established that this
-//                                          time zone abbreviation cannot be
-//                                          used to convert date times to
-//                                          a valid time zone.
-//
-//   ConvertibleTimeZoneName    3          Tests have established that this
-//                                          Location Name is a valid fully
-//                                          formed time zone name which can
-//                                          be used to successfully convert
-//                                          date times to a valid time zone.
+//   ConvertibleTimeZone        2          Tests have established that this
+//                                          Location Name is a valid, fully
+//                                          formed, time zone which can be
+//                                          used to accurately convert date
+//                                          times to other valid time zones.
 //
 // For easy access to these enumeration values, use the global variable
 // 'LocNameType'.
@@ -81,39 +76,29 @@ func (locType LocationNameType) None() LocationNameType {
 	return LocationNameType(0)
 }
 
-// ConvertibleAbbreviation - Classifies the Location Name as a Time Zone
-// abbreviation which can be used to successfully convert date times to
-// the designated time zone.
+// NonConvertibleTimeZone - Classifies the date time (time.Time) Location
+// Name as a Time Zone which cannot be used to accurately convert date
+// times to other time zones.
 //
 // This method is part of the standard enumeration.
 //
-func (locType LocationNameType) ConvertibleAbbreviation() LocationNameType {
+func (locType LocationNameType) NonConvertibleTimeZone() LocationNameType {
 	return LocationNameType(1)
 }
 
-// NonConvertibleAbbreviation - Classifies the Location Name as a Time
-// Zone abbreviation which cannot be used to successfully convert date
-// times to the designated time zone.
-//
-// This method is part of the standard enumeration.
-//
-func (locType LocationNameType) NonConvertibleAbbreviation() LocationNameType {
-	return LocationNameType(2)
-}
-
-// ConvertibleTimeZoneName - Classifies the Location Name as fully formed
-// time zone name which can be used to successfully convert date times
-// to a designated time zone.
+// ConvertibleTimeZone - Classifies the date time (time.Time) Location Name
+// as fully formed time zone name which can be used to accurately convert
+// date times to other time zones.
 //
 // As a practical matter, Location Names associated with this classification
 // are either IANA Time Zones or the special time zone, 'Local'. The 'Local'
-// is a Golang construct used to identify the time zone implemented by the
-// host computer.
+// is a Golang construct used to identify the default time zone applied by
+// the host computer.
 //
 // This method is part of the standard enumeration.
 //
-func (locType LocationNameType) ConvertibleTimeZoneName() LocationNameType {
-	return LocationNameType(3)
+func (locType LocationNameType) ConvertibleTimeZone() LocationNameType {
+	return LocationNameType(2)
 }
 
 
@@ -137,9 +122,9 @@ func (locType LocationNameType) ConvertibleTimeZoneName() LocationNameType {
 //
 // Usage
 //
-//	t:= LocationNameType(0).ConvertibleTimeZoneName()
+//	t:= LocationNameType(0).ConvertibleTimeZone()
 //	str := t.String()
-//	    str is now equal to "ConvertibleTimeZoneName"
+//	    str is now equal to "ConvertibleTimeZone"
 //
 func (locType LocationNameType) String() string {
 
@@ -201,14 +186,14 @@ func (locType LocationNameType) String() string {
 //
 // Usage:
 //
-// t, err := LocationNameType(0).ParseString("ConvertibleTimeZoneName", true)
+// t, err := LocationNameType(0).ParseString("ConvertibleTimeZone", true)
 //                            OR
-// t, err := LocationNameType(0).ParseString("ConvertibleTimeZoneName()", true)
+// t, err := LocationNameType(0).ParseString("ConvertibleTimeZone()", true)
 //                            OR
 // t, err := LocationNameType(0).ParseString("convertibletimezonename", false)
 //
 // For all of the cases shown above,
-//  t is now equal to LocationNameType(0).ConvertibleTimeZoneName()
+//  t is now equal to LocationNameType(0).ConvertibleTimeZone()
 //
 func (locType LocationNameType) XParseString(
 	valueString string,
@@ -287,8 +272,7 @@ func (locType LocationNameType) XValue() LocationNameType {
 //
 // Usage:
 //  LocNameType.None()
-//  LocNameType.ConvertibleAbbreviation()
-//  LocNameType.NonConvertibleAbbreviation()
-//  LocNameType.ConvertibleTimeZoneName()
+//  LocNameType.NonConvertibleTimeZone()
+//  LocNameType.ConvertibleTimeZone()
 //
 var LocNameType LocationNameType
