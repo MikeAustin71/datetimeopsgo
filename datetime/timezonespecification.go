@@ -524,7 +524,7 @@ func (tzSpec *TimeZoneSpecification) GetZoneName() string {
 	return tzSpec.zoneName
 }
 
-// GetZoneOffset - Returns data field 'zoneOffset'. This is
+// GetOriginalZoneOffset - Returns data field 'zoneOffset'. This is
 // a text string representing the offset from UTC for this
 // time zone. The returned offset string consists of two
 // components, the hours and minutes of offset and the time

@@ -562,8 +562,8 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 	return tzdef.originalTimeZone
 }
 
-// GetOriginalZoneName - Returns TimeZoneDefinition member variable
-// TimeZoneDefinition.zoneName value.
+// GetOriginalZoneName - Returns the Original Time Zone
+// Name.
 //
 // Zone Name is the Time Zone abbreviation. This may
 // may be a series of characters, like "EST", "CST"
@@ -571,7 +571,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 // not exist for this time zone, the time zone abbreviation
 // might be listed simply as the UTC offset.
 //
-// Examples: '-0430', '-04', '+05'
+// UTC Offset Examples: '-0430', '-04', '+05'
 //
 func (tzdef *TimeZoneDefinition) GetOriginalZoneName() string {
 
@@ -580,6 +580,23 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneName() string {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.zoneName
+}
+
+// GetOriginalZoneOffset - Returns the Original Time Zone
+// Offset value.
+//
+// Zone Offset is a text string representing the time zone
+// which is formatted as follows:
+//
+// "-0600 CST" or "+0200 EET"
+//
+func (tzdef *TimeZoneDefinition) GetOriginalZoneOffset() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.zoneOffset
 }
 
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
@@ -652,21 +669,6 @@ func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.utcOffset
-}
-
-// GetZoneOffset - Returns TimeZoneDefinition member variable
-// ZoneOffset value.
-//
-// ZoneOffset is a text string representing the time zone.
-// Example "-0600 CST" or "+0200 EET"
-//
-func (tzdef *TimeZoneDefinition) GetZoneOffset() string {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.zoneOffset
 }
 
 // GetZoneOffsetSeconds - Returns TimeZoneDefinition member variable

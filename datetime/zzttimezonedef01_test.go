@@ -37,9 +37,9 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 			zoneName, tzDef.GetOriginalZoneName())
 	}
 
-	if zoneOffset != tzDef.GetZoneOffset() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffset()='%v'\n", zoneOffset, tzDef.GetZoneOffsetSeconds())
+	if zoneOffset != tzDef.GetOriginalZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n", zoneOffset, tzDef.GetZoneOffsetSeconds())
 	}
 
 	if zoneOffsetSecs != tzDef.GetZoneOffsetSeconds() {
@@ -126,10 +126,10 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 			zoneName, tzDef.GetOriginalZoneName())
 	}
 
-	if zoneOffset != tzDef.GetZoneOffset() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffset()='%v'\n",
-			zoneOffset, tzDef.GetZoneOffset())
+	if zoneOffset != tzDef.GetOriginalZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetOriginalZoneOffset())
 	}
 
 	if utcOffset != tzDef.GetOriginalUtcOffset() {
@@ -226,10 +226,10 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 			zoneName, tzDef.GetOriginalZoneName())
 	}
 
-	if zoneOffset != tzDef.GetZoneOffset() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffset()='%v'\n",
-			zoneOffset, tzDef.GetZoneOffset())
+	if zoneOffset != tzDef.GetOriginalZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetOriginalZoneOffset())
 	}
 
 	if utcOffset != tzDef.GetOriginalUtcOffset() {
@@ -322,10 +322,10 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 			zoneName, tzDef.GetOriginalZoneName())
 	}
 
-	if zoneOffset != tzDef.GetZoneOffset() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffset()='%v'\n",
-			zoneOffset, tzDef.GetZoneOffset())
+	if zoneOffset != tzDef.GetOriginalZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetOriginalZoneOffset())
 	}
 
 	if utcOffset != tzDef.GetOriginalUtcOffset() {
@@ -422,10 +422,10 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 			zoneName, tzDef.GetOriginalZoneName())
 	}
 
-	if zoneOffset != tzDef.GetZoneOffset() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffset()='%v'\n",
-			zoneOffset, tzDef.GetZoneOffset())
+	if zoneOffset != tzDef.GetOriginalZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetOriginalZoneOffset())
 	}
 
 	if utcOffset != tzDef.GetOriginalUtcOffset() {
@@ -523,10 +523,10 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 			"Instead, tzDef.GetOriginalZoneName()='%v'\n", zoneName, tzDef.GetOriginalZoneName())
 	}
 
-	if zoneOffset != tzDef.GetZoneOffset() {
-		t.Errorf("Error: Expected tzDef.GetZoneOffset()='%v'.\n" +
-			"Instead, tzDef.GetZoneOffset()='%v'\n",
-			zoneOffset, tzDef.GetZoneOffset())
+	if zoneOffset != tzDef.GetOriginalZoneOffset() {
+		t.Errorf("Error: Expected tzDef.GetOriginalZoneOffset()='%v'.\n" +
+			"Instead, tzDef.GetOriginalZoneOffset()='%v'\n",
+			zoneOffset, tzDef.GetOriginalZoneOffset())
 	}
 
 	if utcOffset != tzDef.GetOriginalUtcOffset() {
