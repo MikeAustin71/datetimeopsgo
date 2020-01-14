@@ -603,7 +603,8 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 
 }
 
-// PrintOutTimeZoneDefFields
+// PrintOutTimeZoneDefFields - Prints elements included in
+// TimeZoneDefinition input parameter.
 func PrintOutTimeZoneDefFields(tzDef dt.TimeZoneDefinition) {
 
 	var milTzLetter, milTzName string

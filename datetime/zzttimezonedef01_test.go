@@ -144,9 +144,9 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 			zoneOffsetSecs, tzDef.GetZoneOffsetSeconds())
 	}
 
-	if zoneSign != tzDef.GetZoneSign() {
-		t.Errorf("Error: Expected tzDef.GetZoneSign()='%v'.\n" +
-			"Instead, tzDef.GetZoneSign()='%v'", zoneSign, tzDef.GetZoneSign())
+	if zoneSign != tzDef.GetOriginalOffsetSignValue() {
+		t.Errorf("Error: Expected tzDef.GetOriginalOffsetSignValue()='%v'.\n" +
+			"Instead, tzDef.GetOriginalOffsetSignValue()='%v'", zoneSign, tzDef.GetOriginalOffsetSignValue())
 	}
 
 	actOffsetSignChar,
