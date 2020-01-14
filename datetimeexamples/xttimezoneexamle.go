@@ -626,7 +626,7 @@ func PrintOutTimeZoneDefDtoFields(tzDef dt.TimeZoneDefinition) {
 	fmt.Println("            OffsetSeconds: ", tzDef.GetOffsetSeconds())
 	fmt.Println("          Location String: ", tzDef.GetOriginalLocationPtr().String())
 	fmt.Println("            Location Name: ", tzDef.GetOriginalLocationName())
-	fmt.Println("       Location Name Type: ", tzDef.GetLocationNameType().String())
+	fmt.Println("       Location Name Type: ", tzDef.GetOriginalLocationNameType().String())
 	fmt.Println("Military Time Zone Letter: ", milTzLetter)
 	fmt.Println("  Military Time Zone Name: ", milTzName)
 	fmt.Println("          Tag Description: ", tzDef.GetTagDescription())

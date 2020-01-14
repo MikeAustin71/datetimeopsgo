@@ -301,16 +301,18 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
 	return tzdef.originalTimeZone.locationName
 }
 
-// GetLocationNameType - Returns the value of internal
-// private member variable TimeZoneDefinition.locationNameType.
+// GetOriginalLocationNameType - Returns the Location Name Type
+// value for the Original Time Zone. This is private
+// member variable:
+//
+//  TimeZoneDefinition.originalTimeZone.locationNameType.
 //
 // Possible return values:
 //  LocationNameType(0).None()
-//  LocationNameType(0).ConvertibleAbbreviation()
 //  LocationNameType(0).NonConvertibleTimeZone()
 //  LocationNameType(0).ConvertibleTimeZone()
 //
-func (tzdef *TimeZoneDefinition) GetLocationNameType() LocationNameType {
+func (tzdef *TimeZoneDefinition) GetOriginalLocationNameType() LocationNameType {
 
 	return tzdef.originalTimeZone.locationNameType
 }
@@ -425,7 +427,7 @@ func (tzdef *TimeZoneDefinition) GetOffsetSeconds() int {
 // GetConvertibleTimeZone - Returns the convertible form of
 // the current time zone. This time zone should be convertible
 // across all time zones. To verify convertibility, call
-// TimeZoneSpecification.GetLocationNameType() and inspect the result.
+// TimeZoneSpecification.GetOriginalLocationNameType() and inspect the result.
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification {
 
@@ -438,7 +440,7 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification 
 }
 
 // GetOriginalTimeZone - Returns the originally configured
-// time zone specification. Check TimeZoneSpecification.GetLocationNameType()
+// time zone specification. Check TimeZoneSpecification.GetOriginalLocationNameType()
 // if this time zone is fully convertible across all time zones.
 // If not convertible, use TimeZoneDefinition.GetConvertibleTimeZone().
 //
