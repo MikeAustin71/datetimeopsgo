@@ -42,10 +42,10 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 
 	tz := dTzDto.GetTimeZone()
 
-	if t1ExpectedZone != tz.GetZoneName() {
+	if t1ExpectedZone != tz.GetOriginalZoneName() {
 		t.Errorf("Error: Expected dTzDto.TimeZone='%v'.\n" +
 			"Instead, dTzDto.GetTimeZone().ZoneName='%v'\n",
-			t1ExpectedZone,tz.GetZoneName())
+			t1ExpectedZone,tz.GetOriginalZoneName())
 	}
 
 	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
@@ -158,10 +158,10 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 
 	tz := dTzDto.GetTimeZone()
 
-	if t1ExpectedZone != tz.GetZoneName() {
+	if t1ExpectedZone != tz.GetOriginalZoneName() {
 		t.Errorf("Error: Expected tz.ZoneName='%v'.\n" +
 			"Instead, tz.ZoneName='%v'\n",
-			t1ExpectedZone, tz.GetZoneName())
+			t1ExpectedZone, tz.GetOriginalZoneName())
 	}
 
 	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
@@ -249,10 +249,10 @@ func TestDateTzDto_New_01(t *testing.T) {
 
 	tz := dTzDto.GetTimeZone()
 
-	if t1ExpectedZone != tz.GetZoneName() {
-		t.Errorf("Error: Expected tz.GetZoneName()='%v'.\n" +
-			"Instead, tz.GetZoneName()='%v'",
-			t1ExpectedZone, tz.GetZoneName())
+	if t1ExpectedZone != tz.GetOriginalZoneName() {
+		t.Errorf("Error: Expected tz.GetOriginalZoneName()='%v'.\n" +
+			"Instead, tz.GetOriginalZoneName()='%v'",
+			t1ExpectedZone, tz.GetOriginalZoneName())
 	}
 
 	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
@@ -334,10 +334,10 @@ func TestDateTzDto_New_02(t *testing.T) {
 
 	tz := dTzDto.GetTimeZone()
 
-	if t1ExpectedZone != tz.GetZoneName() {
-		t.Errorf("Error: Expected tz.GetZoneName()='%v'.\n" +
-			"Instead, tz.GetZoneName()='%v'\n",
-			t1ExpectedZone, tz.GetZoneName())
+	if t1ExpectedZone != tz.GetOriginalZoneName() {
+		t.Errorf("Error: Expected tz.GetOriginalZoneName()='%v'.\n" +
+			"Instead, tz.GetOriginalZoneName()='%v'\n",
+			t1ExpectedZone, tz.GetOriginalZoneName())
 	}
 
 	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {
@@ -648,10 +648,10 @@ func TestDateTzDto_SetFromDateTimeComponents_01(t *testing.T) {
 
 	tz := dTzDto.GetTimeZone()
 
-	if t1ExpectedZone != tz.GetZoneName() {
-		t.Errorf("Error: Expected tz.GetZoneName()='%v'.\n" +
-			"Instead, tz.GetZoneName()='%v'\n",
-			t1ExpectedZone,  tz.GetZoneName())
+	if t1ExpectedZone != tz.GetOriginalZoneName() {
+		t.Errorf("Error: Expected tz.GetOriginalZoneName()='%v'.\n" +
+			"Instead, tz.GetOriginalZoneName()='%v'\n",
+			t1ExpectedZone,  tz.GetOriginalZoneName())
 	}
 
 	if t1ExpectedZoneOffset != tz.GetZoneOffsetSeconds() {

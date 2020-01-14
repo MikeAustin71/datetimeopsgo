@@ -1798,7 +1798,7 @@ func (dtz *DateTzDto) GetTimeZoneAbbreviation() string {
 
 	defer dtz.lock.Unlock()
 
-return dtz.timeZone.GetZoneName()
+return dtz.timeZone.GetOriginalZoneName()
 }
 
 // GetTimeZoneLocationPtr - Returns the Time Zone Location pointer

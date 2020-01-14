@@ -562,6 +562,26 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 	return tzdef.originalTimeZone
 }
 
+// GetOriginalZoneName - Returns TimeZoneDefinition member variable
+// TimeZoneDefinition.zoneName value.
+//
+// Zone Name is the Time Zone abbreviation. This may
+// may be a series of characters, like "EST", "CST"
+// and "PDT" - or - if a time zone abbreviation does
+// not exist for this time zone, the time zone abbreviation
+// might be listed simply as the UTC offset.
+//
+// Examples: '-0430', '-04', '+05'
+//
+func (tzdef *TimeZoneDefinition) GetOriginalZoneName() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.zoneName
+}
+
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
 // the Military Time Zone Letter designation.
 //
@@ -632,26 +652,6 @@ func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.utcOffset
-}
-
-// GetZoneName - Returns TimeZoneDefinition member variable
-// TimeZoneDefinition.zoneName value.
-//
-// Zone Name is the Time Zone abbreviation. This may
-// may be a series of characters, like "EST", "CST"
-// and "PDT" - or - if a time zone abbreviation does
-// not exist for this time zone, the time zone abbreviation
-// might be listed simply as the UTC offset.
-//
-// Examples: '-0430', '-04', '+05'
-//
-func (tzdef *TimeZoneDefinition) GetZoneName() string {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.zoneName
 }
 
 // GetZoneOffset - Returns TimeZoneDefinition member variable

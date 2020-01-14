@@ -489,7 +489,7 @@ func (tzSpec *TimeZoneSpecification) GetUtcOffset() string {
 // maps. Examples: "CST-0600", "EET+0200"
 //
 // Note: To access the time zone abbreviation, see method
-// TimeZoneSpecification.GetZoneName()
+// TimeZoneSpecification.GetOriginalZoneName()
 //
 func (tzSpec *TimeZoneSpecification) GetZoneAbbrvLookupId() string {
 
@@ -512,7 +512,7 @@ func (tzSpec *TimeZoneSpecification) GetZoneLabel() string {
 	return tzSpec.zoneLabel
 }
 
-// GetZoneName - Returns the 'Zone Name'. 'Zone Name' is the
+// GetOriginalZoneName - Returns the 'Zone Name'. 'Zone Name' is the
 // the Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
 //
 func (tzSpec *TimeZoneSpecification) GetZoneName() string {
