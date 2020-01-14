@@ -81,7 +81,7 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneDtoConversion(
 		dateTime.Minute(),
 		dateTime.Second(),
 		dateTime.Nanosecond(),
-		timeZoneDefDto.GetLocationPtr()), nil
+		timeZoneDefDto.GetOriginalLocationPtr()), nil
 }
 
 // AbsoluteTimeToTimeZoneDtoConversion - Converts a given time to

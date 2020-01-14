@@ -274,10 +274,10 @@ func (tzdef *TimeZoneDefinition) EqualZoneLocation(tzdef2 TimeZoneDefinition) bo
 	return true
 }
 
-// GetLocationPtr - Returns a pointer to a time.Location or
-// time zone location (TimeZoneDefinition.Location).
+// GetOriginalLocationPtr - Returns a pointer to a time.Location for
+// the original time zone (TimeZoneDefinition.originalTimeZone.locationPtr).
 //
-func (tzdef *TimeZoneDefinition) GetLocationPtr() *time.Location {
+func (tzdef *TimeZoneDefinition) GetOriginalLocationPtr() *time.Location {
 
 	tzdef.lock.Lock()
 

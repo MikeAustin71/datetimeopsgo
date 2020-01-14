@@ -416,7 +416,7 @@ func (milDtDto MilitaryDateTzDto) New(
 				"\nError: '%v'\n", err.Error())
 	}
 
-	newMilDateDto.DateTime = t.In(newMilDateDto.EquivalentIanaTimeZone.GetLocationPtr())
+	newMilDateDto.DateTime = t.In(newMilDateDto.EquivalentIanaTimeZone.GetOriginalLocationPtr())
 
 	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
 
@@ -555,7 +555,7 @@ func (milDtDto MilitaryDateTzDto) NewFromDateTzDto(
 		err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter(militaryTz)
 
 	newMilDateDto.DateTime =
-		dtzDto.GetDateTimeValue().In(newMilDateDto.EquivalentIanaTimeZone.GetLocationPtr())
+		dtzDto.GetDateTimeValue().In(newMilDateDto.EquivalentIanaTimeZone.GetOriginalLocationPtr())
 
 	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
 
@@ -672,7 +672,7 @@ func (milDtDto MilitaryDateTzDto) NewNow(
 	}
 
 	t := time.Now().UTC()
-	newMilDateDto.DateTime = t.In(newMilDateDto.EquivalentIanaTimeZone.GetLocationPtr())
+	newMilDateDto.DateTime = t.In(newMilDateDto.EquivalentIanaTimeZone.GetOriginalLocationPtr())
 
 	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
 
@@ -841,7 +841,7 @@ func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
 			"\nError: '%v'\n", err.Error())
 	}
 
-	newMilDateDto.DateTime = dateTime.In(newMilDateDto.EquivalentIanaTimeZone.GetLocationPtr())
+	newMilDateDto.DateTime = dateTime.In(newMilDateDto.EquivalentIanaTimeZone.GetOriginalLocationPtr())
 
 	newMilDateDto.Time, err = TimeDto{}.NewFromDateTime(newMilDateDto.DateTime)
 

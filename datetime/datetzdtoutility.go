@@ -796,7 +796,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 	} else {
 		// Must be TzConvertType.Relative() or TzConvertType.None()
 		// This the default.
-		targetDateTime = dateTime.In(tZoneDefDto.GetLocationPtr())
+		targetDateTime = dateTime.In(tZoneDefDto.GetOriginalLocationPtr())
 	}
 
 	var tDto TimeDto
