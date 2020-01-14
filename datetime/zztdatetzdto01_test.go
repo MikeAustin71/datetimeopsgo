@@ -461,10 +461,10 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 			t1ExpectedZoneOffset, tz.GetZoneOffsetSeconds())
 	}
 
-	if t1ExpectedLocationName != tz.GetLocationName() {
-		t.Errorf("Error: Expected tz.GetLocationName()='%v'.\n" +
-			"Instead, tz.GetLocationName()='%v'\n",
-			t1ExpectedLocationName, tz.GetLocationName())
+	if t1ExpectedLocationName != tz.GetOriginalLocationName() {
+		t.Errorf("Error: Expected tz.GetOriginalLocationName()='%v'.\n" +
+			"Instead, tz.GetOriginalLocationName()='%v'\n",
+			t1ExpectedLocationName, tz.GetOriginalLocationName())
 	}
 
 	if t1.Year() != dTzDto.GetTimeComponents().Years {

@@ -294,7 +294,7 @@ func (tzSpec *TimeZoneSpecification) GetLocationPointer() *time.Location {
 	return tzSpec.locationPtr
 }
 
-// GetLocationName - Returns the time zone name or time zone location.
+// GetOriginalLocationName - Returns the time zone name or time zone location.
 // Examples: "Local", "America/Chicago", "America/New_York"
 //
 func (tzSpec *TimeZoneSpecification) GetLocationName() string {

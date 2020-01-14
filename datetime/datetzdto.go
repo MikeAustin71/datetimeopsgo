@@ -1823,7 +1823,7 @@ func (dtz *DateTzDto) GetTimeZoneName() string {
 
 	defer dtz.lock.Unlock()
 
-	return  dtz.timeZone.GetLocationName()
+	return  dtz.timeZone.GetOriginalLocationName()
 
 }
 

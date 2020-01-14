@@ -286,13 +286,13 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationPtr() *time.Location {
 	return tzdef.originalTimeZone.locationPtr
 }
 
-// GetLocationName - Returns TimeZoneDefinition member variable
-// LocationName value.
+// GetOriginalLocationName - Returns TimeZoneDefinition member variable
+// TimeZoneDefinition.originalTimeZone.locationName.
 //
 // Time Zone Location Name Examples: "Local", "America/Chicago",
 // "America/New_York".
 //
-func (tzdef *TimeZoneDefinition) GetLocationName() string {
+func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
 
 	tzdef.lock.Lock()
 

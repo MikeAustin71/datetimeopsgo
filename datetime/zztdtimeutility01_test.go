@@ -41,7 +41,7 @@ func TestDTimeUtility_AbsoluteTimeToTimeZoneDtoConversion_01(t *testing.T) {
 			"dt1='%v'\n" +
 			"tzDefDto='%v'\n" +
 			"Error='%v'\n",
-			dt1.Format(fmtStr), tzDefDto.GetLocationName() ,err.Error())
+			dt1.Format(fmtStr), tzDefDto.GetOriginalLocationName() ,err.Error())
 		return
 	}
 

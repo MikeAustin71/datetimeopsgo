@@ -72,10 +72,10 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if locationName != tzDef.GetLocationName() {
+	if locationName != tzDef.GetOriginalLocationName() {
 		t.Errorf("Error: Expected tzDef.GerLocationName()='%v'.\n" +
-			"Instead, tzDef.GetLocationName()='%v'\n",
-			locationName, tzDef.GetLocationName())
+			"Instead, tzDef.GetOriginalLocationName()='%v'\n",
+			locationName, tzDef.GetOriginalLocationName())
 	}
 
 	if descStr != tzDef.GetTagDescription() {
@@ -160,10 +160,10 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if locationName != tzDef.GetLocationName() {
-		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
-			"Instead, tzDef.GetLocationName()='%v'\n",
-			locationName, tzDef.GetLocationName())
+	if locationName != tzDef.GetOriginalLocationName() {
+		t.Errorf("Error: Expected tzDef.GetOriginalLocationName()='%v'.\n" +
+			"Instead, tzDef.GetOriginalLocationName()='%v'\n",
+			locationName, tzDef.GetOriginalLocationName())
 	}
 
 	if descStr != tzDef.GetTagDescription() {
@@ -249,10 +249,10 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if locationName != tzDef.GetLocationName() {
-		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
-			"Instead, tzDef.GetLocationName()='%v'\n",
-			locationName, tzDef.GetLocationName())
+	if locationName != tzDef.GetOriginalLocationName() {
+		t.Errorf("Error: Expected tzDef.GetOriginalLocationName()='%v'.\n" +
+			"Instead, tzDef.GetOriginalLocationName()='%v'\n",
+			locationName, tzDef.GetOriginalLocationName())
 	}
 
 	if descStr != tzDef.GetTagDescription() {
@@ -339,10 +339,10 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if locationName != tzDef.GetLocationName() {
-		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
-			"Instead, tzDef.GetLocationName()='%v\n",
-			locationName, tzDef.GetLocationName())
+	if locationName != tzDef.GetOriginalLocationName() {
+		t.Errorf("Error: Expected tzDef.GetOriginalLocationName()='%v'.\n" +
+			"Instead, tzDef.GetOriginalLocationName()='%v\n",
+			locationName, tzDef.GetOriginalLocationName())
 	}
 
 	if descStr != tzDef.GetTagDescription() {
@@ -433,10 +433,10 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if locationName != tzDef.GetLocationName() {
-		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
-			"Instead, tzDef.GetLocationName()='%v'\n",
-			locationName, tzDef.GetLocationName())
+	if locationName != tzDef.GetOriginalLocationName() {
+		t.Errorf("Error: Expected tzDef.GetOriginalLocationName()='%v'.\n" +
+			"Instead, tzDef.GetOriginalLocationName()='%v'\n",
+			locationName, tzDef.GetOriginalLocationName())
 	}
 
 	if descStr != tzDef.GetTagDescription() {
@@ -527,10 +527,10 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 			offsetSeconds, tzDef.GetOffsetSeconds())
 	}
 
-	if locationName != tzDef.GetLocationName() {
-		t.Errorf("Error: Expected tzDef.GetLocationName()='%v'.\n" +
-			"Instead, tzDef.GetLocationName()='%v'\n",
-			locationName, tzDef.GetLocationName())
+	if locationName != tzDef.GetOriginalLocationName() {
+		t.Errorf("Error: Expected tzDef.GetOriginalLocationName()='%v'.\n" +
+			"Instead, tzDef.GetOriginalLocationName()='%v'\n",
+			locationName, tzDef.GetOriginalLocationName())
 	}
 
 	if descStr != tzDef.GetTagDescription() {

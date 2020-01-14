@@ -1562,7 +1562,7 @@ func (mt mainTest) mainTest033() {
 	if !eTimeZoneDef.Equal(dTz.GetTimeZone()) {
 		fmt.Printf("Expected dTz.GetTimeZone().LocationName='%v'.\n"+
 			"Instead, dTz.GetTimeZone().LocationName='%v'\n",
-			eTimeZoneDef.GetLocationName(), dTz.GetTimeZoneName())
+			eTimeZoneDef.GetOriginalLocationName(), dTz.GetTimeZoneName())
 		return
 	}
 
@@ -1833,7 +1833,7 @@ func (mt mainTest) mainTest030() {
 	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
 	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
 	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
-	fmt.Printf("    Location Name: %v\n", tZoneDef.GetLocationName())
+	fmt.Printf("    Location Name: %v\n", tZoneDef.GetOriginalLocationName())
 	fmt.Printf("        *Location: %v\n", tZoneDef.GetOriginalLocationPtr().String())
 	fmt.Printf("      Description: %v\n", tZoneDef.GetTagDescription())
 	fmt.Println()
@@ -1895,7 +1895,7 @@ func (mt mainTest) mainTest029() {
 	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
 	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
 	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
-	fmt.Printf("    Location Name: %v\n", tZoneDef.GetLocationName())
+	fmt.Printf("    Location Name: %v\n", tZoneDef.GetOriginalLocationName())
 	fmt.Printf("        *Location: %v\n", tZoneDef.GetOriginalLocationPtr().String())
 	fmt.Printf("      Description: %v\n", tZoneDef.GetTagDescription())
 	fmt.Println()
@@ -1957,7 +1957,7 @@ func (mt mainTest) mainTest028() {
 	fmt.Printf("    OffsetSeconds: %v\n", tZoneDef.GetOffsetSeconds())
 	fmt.Printf("       ZoneOffset: %v\n", tZoneDef.GetZoneOffset())
 	fmt.Printf("       UTC Offset: %v\n", tZoneDef.GetUtcOffset())
-	fmt.Printf("    Location Name: %v\n", tZoneDef.GetLocationName())
+	fmt.Printf("    Location Name: %v\n", tZoneDef.GetOriginalLocationName())
 	fmt.Printf("        *Location: %v\n", tZoneDef.GetOriginalLocationPtr().String())
 	fmt.Printf("      Description: %v\n", tZoneDef.GetTagDescription())
 }
@@ -2261,7 +2261,7 @@ func (mt mainTest) mainTest021() {
 	fmt.Println("    Zone Name: ", tzDef2.GetZoneName())
 	fmt.Println("  Zone Offset: ", tzDef2.GetZoneOffset())
 	fmt.Println("   UTC Offset: ", tzDef2.GetUtcOffset())
-	fmt.Println("Location Name: ", tzDef2.GetLocationName())
+	fmt.Println("Location Name: ", tzDef2.GetOriginalLocationName())
 	fmt.Println("    *Location: ", tzDef2.GetOriginalLocationPtr().String())
 }
 
@@ -2302,7 +2302,7 @@ func (mt mainTest) mainTest020() {
 	fmt.Println("-------------------------------------")
 	fmt.Println("    Zone Name: ", tzDef.GetZoneName())
 	fmt.Println("       Offset: ", tzDef.GetZoneOffset())
-	fmt.Println("Location Name: ", tzDef.GetLocationName())
+	fmt.Println("Location Name: ", tzDef.GetOriginalLocationName())
 	fmt.Println("    *Location: ", tzDef.GetOriginalLocationPtr().String())
 
 	fmt.Println()
@@ -2310,7 +2310,7 @@ func (mt mainTest) mainTest020() {
 	fmt.Println("-------------------------------------")
 	fmt.Println("    Zone Name: ", tzDef2.GetZoneName())
 	fmt.Println("       Offset: ", tzDef2.GetZoneOffset())
-	fmt.Println("Location Name: ", tzDef2.GetLocationName())
+	fmt.Println("Location Name: ", tzDef2.GetOriginalLocationName())
 	fmt.Println("    *Location: ", tzDef2.GetOriginalLocationPtr().String())
 }
 

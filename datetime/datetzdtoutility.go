@@ -791,7 +791,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 			return fmt.Errorf(ePrefix+
 				"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime,tZoneDefDto)\n"+
 				"dateTime='%v'\ntZoneDefDto='%v'\nError='%v'\n",
-				dateTime.Format(FmtDateTimeTzNanoYMD), tZoneDefDto.GetLocationName(), err.Error())
+				dateTime.Format(FmtDateTimeTzNanoYMD), tZoneDefDto.GetOriginalLocationName(), err.Error())
 		}
 	} else {
 		// Must be TzConvertType.Relative() or TzConvertType.None()
