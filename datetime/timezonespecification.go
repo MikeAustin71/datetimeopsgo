@@ -435,7 +435,7 @@ func (tzSpec *TimeZoneSpecification) GetReferenceDateTime() time.Time {
 	return tzSpec.referenceDateTime
 }
 
-// GetTagDescription - Returns the private member variable
+// GetOriginalTagDescription - Returns the private member variable
 // "tagDescription". This field is available for users to
 // tag, classify or otherwise attach descriptive information
 // to this TimeZoneSpecification instance.
@@ -469,7 +469,7 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneType() TimeZoneType {
 	return tzSpec.timeZoneType
 }
 
-// GetUtcOffset - returns a text string representing the
+// GetOriginalUtcOffset - returns a text string representing the
 // offset from UTC for this time zone.
 //
 //  Examples: "-0600", "+0200"

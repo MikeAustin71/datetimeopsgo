@@ -533,6 +533,21 @@ func (tzdef *TimeZoneDefinition) GetOriginalOffsetSignValue() int {
 	return tzdef.originalTimeZone.zoneSignValue
 }
 
+// GetOriginalTagDescription - Returns the tag/description
+// for the Original Time Zone.
+//
+// This string is typically used classification, labeling
+// or description text by user.
+//
+func (tzdef *TimeZoneDefinition) GetOriginalTagDescription() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.tagDescription
+}
+
 // GetOriginalTimeZone - Returns the originally configured
 // time zone specification. Check TimeZoneSpecification.GetOriginalLocationNameType()
 // if this time zone is fully convertible across all time zones.
@@ -607,25 +622,10 @@ func (tzdef *TimeZoneDefinition) GetMilitaryTimeZoneName() (string, error) {
 	return tzdef.originalTimeZone.militaryTimeZoneName, nil
 }
 
-// GetTagDescription - Returns TimeZoneDefinition member variable
-// Description value.
-//
-// Unused - Available to user. This string is typically used
-// classification, labeling or description text by user.
-//
-func (tzdef *TimeZoneDefinition) GetTagDescription() string {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.tagDescription
-}
-
-// GetUtcOffset - Returns the offset from UTC as a string.
+// GetOriginalUtcOffset - Returns the offset from UTC as a string.
 // Examples of the UTC offset format are: "-0600" or "+0200".
 //
-func (tzdef *TimeZoneDefinition) GetUtcOffset() string {
+func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
 
 	tzdef.lock.Lock()
 
@@ -641,7 +641,9 @@ func (tzdef *TimeZoneDefinition) GetUtcOffset() string {
 // may be a series of characters, like "EST", "CST"
 // and "PDT" - or - if a time zone abbreviation does
 // not exist for this time zone, the time zone abbreviation
-// might be listed simply as the UTC offset ('-0430')
+// might be listed simply as the UTC offset.
+//
+// Examples: '-0430', '-04', '+05'
 //
 func (tzdef *TimeZoneDefinition) GetZoneName() string {
 

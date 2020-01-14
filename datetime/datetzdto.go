@@ -1521,7 +1521,7 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 	return dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr)
 }
 
-// GetTagDescription - Returns DateTzDto private member
+// GetOriginalTagDescription - Returns DateTzDto private member
 // variable, DateTzDto.tagDescription.
 //
 // 'tagDescription' is available to users for use as
@@ -1840,7 +1840,7 @@ func (dtz *DateTzDto) GetTimeZoneUtcOffset() string {
 
 	defer dtz.lock.Unlock()
 
-	return dtz.timeZone.GetUtcOffset()
+	return dtz.timeZone.GetOriginalUtcOffset()
 }
 
 // IsEmpty - Analyzes the current DateTzDto instance to determine
