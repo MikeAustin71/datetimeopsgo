@@ -181,6 +181,10 @@ func (tzdef *TimeZoneDefinition) Empty() {
 // Equal - Determines if two TimeZoneDefinition are equivalent in
 // value. Returns 'true' of two TimeZoneDefinition's are equal in
 // all respects.
+//
+// In order to qualify as equal both the Original Time Zones and
+// the Convertible Time Zones must be equal.
+//
 func (tzdef *TimeZoneDefinition) Equal(tzdef2 TimeZoneDefinition) bool {
 
 	tzdef.lock.Lock()
@@ -198,6 +202,10 @@ func (tzdef *TimeZoneDefinition) Equal(tzdef2 TimeZoneDefinition) bool {
 // ZoneOffsetSeconds is a signed number of seconds offset from UTC:
 //   + == East of UTC
 //   - == West of UTC
+//
+// In order to qualify as equal, both the Original Time Zones and
+// the Convertible Time Zones must be equal.
+//
 func (tzdef *TimeZoneDefinition) EqualOffsetSeconds(tzdef2 TimeZoneDefinition) bool {
 
 	tzdef.lock.Lock()
@@ -217,6 +225,9 @@ func (tzdef *TimeZoneDefinition) EqualOffsetSeconds(tzdef2 TimeZoneDefinition) b
 //
 // Example "-0500 CDT"
 //
+// In order to qualify as 'equal', both the Original Time Zone Offsets and
+// the Convertible Time Zone Offsets must be equal.
+//
 func (tzdef *TimeZoneDefinition) EqualZoneOffsets(tzdef2 TimeZoneDefinition) bool {
 
 	tzdef.lock.Lock()
@@ -235,6 +246,9 @@ func (tzdef *TimeZoneDefinition) EqualZoneOffsets(tzdef2 TimeZoneDefinition) boo
 //   "Local"
 //   "America/Chicago"
 //   "America/New_York"
+//
+// In order to qualify as equal, both the Original Time Zone Locations
+// and the Convertible Time Zone Locations must be equal.
 //
 func (tzdef *TimeZoneDefinition) EqualLocations(tzdef2 TimeZoneDefinition) bool {
 
@@ -266,6 +280,10 @@ func (tzdef *TimeZoneDefinition) EqualLocations(tzdef2 TimeZoneDefinition) bool 
 //   "-0600 CST"
 //   "-0500 EST"
 //   "+0200 EET"
+//
+// To qualify as 'equal', Location Names, Zone Names and Zone Offsets
+// for both Original Time Zones and Convertible Time Zones must be
+// equal.
 //
 func (tzdef *TimeZoneDefinition) EqualZoneLocation(tzdef2 TimeZoneDefinition) bool {
 
@@ -407,6 +425,21 @@ func (tzdef *TimeZoneDefinition) GetConvertibleOffsetSignValue() int {
 	return tzdef.convertibleTimeZone.GetZoneSignValue()
 }
 
+// GetConvertibleTagDescription - Returns the tag/description
+// for the Convertible Time Zone.
+//
+// This string is typically used classification, labeling
+// or description text by user.
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleTagDescription() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetTagDescription()
+}
+
 // GetConvertibleTimeZone - Returns a deep copy of the convertible
 // form of the current time zone. This time zone should be convertible
 // across all time zones. To verify convertibility, call
@@ -437,6 +470,20 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneType() TimeZoneType {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.convertibleTimeZone.GetTimeZoneType()
+}
+
+// GetConvertibleUtcOffset - Returns the offset from UTC as a string
+// for the Convertible Time Zone.
+//
+// Examples of the UTC offset format are: "-0600" or "+0200".
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleUtcOffset() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetUtcOffset()
 }
 
 // GetConvertibleZoneOffset - Returns the Convertible Time Zone
@@ -470,20 +517,6 @@ func (tzdef *TimeZoneDefinition) GetConvertibleZoneOffsetTotalSeconds() int {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.convertibleTimeZone.GetZoneOffsetTotalSeconds()
-}
-
-// GetOriginalUtcOffset - Returns the offset from UTC as a string
-// for the Convertible Time Zone.
-//
-// Examples of the UTC offset format are: "-0600" or "+0200".
-//
-func (tzdef *TimeZoneDefinition) GetConvertibleUtcOffset() string {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.convertibleTimeZone.GetUtcOffset()
 }
 
 // GetConvertibleZoneName - Returns the Convertible Time
@@ -675,6 +708,20 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneType() TimeZoneType {
 	return tzdef.originalTimeZone.GetTimeZoneType()
 }
 
+// GetOriginalUtcOffset - Returns the offset from UTC as a string
+// for the Original Time Zone.
+//
+// Examples of the UTC offset format are: "-0600" or "+0200".
+//
+func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.GetUtcOffset()
+}
+
 // GetOriginalZoneName - Returns the Original Time Zone
 // Name.
 //
@@ -726,20 +773,6 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneOffsetTotalSeconds() int {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.GetZoneOffsetTotalSeconds()
-}
-
-// GetOriginalUtcOffset - Returns the offset from UTC as a string
-// for the Original Time Zone.
-//
-// Examples of the UTC offset format are: "-0600" or "+0200".
-//
-func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
-
-	tzdef.lock.Lock()
-
-	defer tzdef.lock.Unlock()
-
-	return tzdef.originalTimeZone.GetUtcOffset()
 }
 
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
@@ -968,18 +1001,30 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	return tzDefDto, err
 }
 
-// SetTagDescription - Sets the Original and Convertible time zone
+// SetConvertibleTagDescription - Sets the Convertible Time Zone
 // tag/description. This string field is available to users for use
 // as a tag, label, classification or text description.
 //
-func (tzdef *TimeZoneDefinition) SetTagDescription(tagDesc string) {
+func (tzdef *TimeZoneDefinition) SetConvertibleTagDescription(tagDesc string) {
 
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
 
-	tzdef.originalTimeZone.tagDescription = tagDesc
-	tzdef.convertibleTimeZone.tagDescription = tagDesc
+	tzdef.convertibleTimeZone.SetTagDescription(tagDesc)
+}
+
+// SetOriginalTagDescription - Sets the Original Time Zone
+// tag/description. This string field is available to users for use
+// as a tag, label, classification or text description.
+//
+func (tzdef *TimeZoneDefinition) SetOriginalTagDescription(tagDesc string) {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	tzdef.originalTimeZone.SetTagDescription(tagDesc)
 }
 
 // SetFromDateTimeComponents - Re-initializes the values of the current

@@ -29,7 +29,7 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 		return
 	}
 
-	tzDef.SetTagDescription(descStr)
+	tzDef.SetOriginalTagDescription(descStr)
 
 	if zoneName != tzDef.GetOriginalZoneName() {
 		t.Errorf("Error: Expected tzDef.GetOriginalZoneName()='%v'.\n" +
@@ -116,7 +116,7 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 		return
 	}
 
-	tzDef0.SetTagDescription(descStr)
+	tzDef0.SetOriginalTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 
@@ -312,7 +312,7 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 		return
 	}
 
-	tzDef0.SetTagDescription(descStr)
+	tzDef0.SetOriginalTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 
@@ -412,7 +412,7 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 		return
 	}
 
-	tzDef0.SetTagDescription(descStr)
+	tzDef0.SetOriginalTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 
@@ -514,7 +514,7 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 		return
 	}
 
-	tzDef0.SetTagDescription(descStr)
+	tzDef0.SetOriginalTagDescription(descStr)
 
 	tzDef := tzDef0.CopyOut()
 

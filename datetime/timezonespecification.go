@@ -627,7 +627,7 @@ func (tzSpec TimeZoneSpecification) New(
 	return tzSpecOut, err
 }
 
-// SetTagDescription - Sets the value of member variable
+// SetOriginalTagDescription - Sets the value of member variable
 // and data field, TimeZoneSpecification.tagDescription. This
 // field is available for users to tag, classify or
 // otherwise attach descriptive information to this

@@ -3376,7 +3376,7 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 	return err
 }
 
-// SetTagDescription - Sets DateTzDto private member variable
+// SetOriginalTagDescription - Sets DateTzDto private member variable
 // DateTzDto.tagDescription to the value passed in 'tagDesc'.
 //
 // The DateTzDto.tagDescription is available to users for use
