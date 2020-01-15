@@ -290,7 +290,7 @@ func (tzdef *TimeZoneDefinition) GetConvertibleDateTime() time.Time {
 
 	defer tzdef.lock.Unlock()
 
-return tzdef.convertibleTimeZone.referenceDateTime
+return tzdef.convertibleTimeZone.GetReferenceDateTime()
 }
 
 
@@ -305,7 +305,7 @@ func (tzdef *TimeZoneDefinition) GetConvertibleLocationPtr() *time.Location {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.convertibleTimeZone.locationPtr
+	return tzdef.convertibleTimeZone.GetLocationPointer()
 }
 
 // GetConvertibleLocationName - Returns convertible Time Zone
@@ -321,7 +321,7 @@ func (tzdef *TimeZoneDefinition) GetConvertibleLocationName() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.convertibleTimeZone.locationName
+	return tzdef.convertibleTimeZone.GetLocationName()
 }
 
 // GetConvertibleLocationNameType - Returns the Location Name Type
@@ -337,7 +337,7 @@ func (tzdef *TimeZoneDefinition) GetConvertibleLocationName() string {
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleLocationNameType() LocationNameType {
 
-	return tzdef.convertibleTimeZone.locationNameType
+	return tzdef.convertibleTimeZone.GetLocationNameType()
 }
 
 // GetConvertibleOffsetElements - Returns a series of string and
@@ -384,16 +384,17 @@ func (tzdef *TimeZoneDefinition) GetConvertibleOffsetElements() (
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.GetOffsetElements()
+	return tzdef.convertibleTimeZone.GetOffsetElements()
 }
 
-// GetConvertibleOffsetSignValue - Returns the Original Time Zone
-// Offset Sign as an integer value. The returned integer will
-// have one of two values: '-1' or the positive value, '1'.
+// GetConvertibleOffsetSignValue - Returns the Convertible Time
+// Zone Offset Sign as an integer value. The returned integer
+// will have one of two values: '-1' or the positive value
+// '1'.
 //
-// A negative value (-1) signals that the time zone offset
-// from UTC is West of UTC.  Conversely, a positive value
-// (+1) signals that the offset is East of UTC.
+// A negative value (-1) signals that the time zone offset from
+// UTC is West of UTC.  Conversely, a positive value (+1)
+// signals that the offset is East of UTC.
 //
 // -1 == West of UTC  +1 == East of UTC
 //
@@ -403,13 +404,13 @@ func (tzdef *TimeZoneDefinition) GetConvertibleOffsetSignValue() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.zoneSignValue
+	return tzdef.convertibleTimeZone.GetZoneSignValue()
 }
 
-// GetConvertibleTimeZone - Returns the convertible form of
-// the current time zone. This time zone should be convertible
+// GetConvertibleTimeZone - Returns a deep copy of the convertible
+// form of the current time zone. This time zone should be convertible
 // across all time zones. To verify convertibility, call
-// TimeZoneSpecification.GetOriginalLocationNameType() and inspect the result.
+// 'TimeZoneSpecification.GetOriginalLocationNameType()' and inspect the result.
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification {
 
@@ -417,7 +418,92 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification 
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.convertibleTimeZone
+	return tzdef.convertibleTimeZone.CopyOut()
+}
+
+// GetConvertibleTimeZoneType - Returns the Time Zone Type associated
+// with the Convertible Time Zone.
+//
+// Time Zone Type is styled as an enumeration. Possible values are:
+//
+//           TimeZoneType(0).Iana()
+//           TimeZoneType(0).Military()
+//           TimeZoneType(0).Local()
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneType() TimeZoneType {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetTimeZoneType()
+}
+
+// GetConvertibleZoneOffset - Returns the Convertible Time Zone
+// Offset value.
+//
+// Zone Offset is a text string representing the time zone
+// which is formatted with UTC offset followed by time zone
+// abbreviation.
+//
+//   Examples: "-0600 CST" or "+0200 EET"
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleZoneOffset() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetZoneOffset()
+}
+
+// GetOriginalZoneOffsetTotalSeconds - Returns Zone Offset Total Seconds
+// for the Convertible Time Zone. Zone offset total seconds is a positive
+// or negative integer value presenting the total number of seconds of
+// offset from UTC. A positive value signals that the offset is East of
+// UTC. A negative value indicates that the offset is West of UTC.
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleZoneOffsetTotalSeconds() int {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetZoneOffsetTotalSeconds()
+}
+
+// GetOriginalUtcOffset - Returns the offset from UTC as a string
+// for the Convertible Time Zone.
+//
+// Examples of the UTC offset format are: "-0600" or "+0200".
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleUtcOffset() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetUtcOffset()
+}
+
+// GetConvertibleZoneName - Returns the Convertible Time
+// Zone Name.
+//
+// Zone Name is the Time Zone abbreviation. This may
+// may be a series of characters, like "EST", "CST"
+// and "PDT" - or - if a time zone abbreviation does
+// not exist for this time zone, the time zone abbreviation
+// might be listed simply as the UTC offset.
+//
+// UTC Offset Examples: '-0430', '-04', '+05'
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleZoneName() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.GetZoneName()
 }
 
 // GetOriginalDateTime - Returns the Original Time Zone reference
@@ -428,7 +514,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalDateTime() time.Time {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.referenceDateTime
+	return tzdef.originalTimeZone.GetReferenceDateTime()
 }
 
 // GetOriginalLocationPtr - Returns a pointer to a time.Location for
@@ -440,12 +526,13 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationPtr() *time.Location {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.locationPtr
+	return tzdef.originalTimeZone.GetLocationPointer()
 }
 
-// GetOriginalLocationName - Returns original Time Zone
-// Name. This is also referred to as the "Location Name". This
-// private member variable is TimeZoneDefinition.convertibleTimeZone.locationName.
+// GetOriginalLocationName - Returns original Time Zone Name.
+// This is also referred to as the "Location Name". This
+// private member variable is:
+//   TimeZoneDefinition.convertibleTimeZone.locationName.
 //
 // Time Zone Location Name Examples: "Local", "America/Chicago",
 // "America/New_York".
@@ -456,14 +543,14 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.locationName
+	return tzdef.originalTimeZone.GetLocationName()
 }
 
 // GetOriginalLocationNameType - Returns the Location Name Type
-// value for the Original Time Zone. This is private
-// member variable:
+// value for the Original Time Zone. This is private a member
+// variable:
 //
-//  TimeZoneDefinition.originalTimeZone.locationNameType.
+//   TimeZoneDefinition.originalTimeZone.locationNameType.
 //
 // Possible return values:
 //  LocationNameType(0).None()
@@ -472,7 +559,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
 //
 func (tzdef *TimeZoneDefinition) GetOriginalLocationNameType() LocationNameType {
 
-	return tzdef.originalTimeZone.locationNameType
+	return tzdef.originalTimeZone.GetLocationNameType()
 }
 
 // GetOriginalOffsetElements - Returns a series of string and
@@ -538,7 +625,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalOffsetSignValue() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.zoneSignValue
+	return tzdef.originalTimeZone.GetZoneSignValue()
 }
 
 // GetOriginalTagDescription - Returns the tag/description
@@ -553,13 +640,13 @@ func (tzdef *TimeZoneDefinition) GetOriginalTagDescription() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.tagDescription
+	return tzdef.originalTimeZone.GetTagDescription()
 }
 
-// GetOriginalTimeZone - Returns the originally configured
-// time zone specification. Check TimeZoneSpecification.GetOriginalLocationNameType()
-// if this time zone is fully convertible across all time zones.
-// If not convertible, use TimeZoneDefinition.GetConvertibleTimeZone().
+// GetOriginalTimeZone - Returns a deep copy of the originally configured
+// time zone specification. Check 'TimeZoneSpecification.GetOriginalLocationNameType()'
+// to determine if this time zone is fully convertible across all time zones.
+// If it not convertible, use TimeZoneDefinition.GetConvertibleTimeZone().
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 
@@ -567,7 +654,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone
+	return tzdef.originalTimeZone.CopyOut()
 }
 
 // GetOriginalTimeZoneType - Returns the Time Zone Type associated
@@ -585,7 +672,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneType() TimeZoneType {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.timeZoneType
+	return tzdef.originalTimeZone.GetTimeZoneType()
 }
 
 // GetOriginalZoneName - Returns the Original Time Zone
@@ -605,16 +692,17 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneName() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.zoneName
+	return tzdef.originalTimeZone.GetZoneName()
 }
 
 // GetOriginalZoneOffset - Returns the Original Time Zone
 // Offset value.
 //
 // Zone Offset is a text string representing the time zone
-// which is formatted as follows:
+// which is formatted with UTC offset followed by time zone
+// abbreviation.
 //
-// "-0600 CST" or "+0200 EET"
+//   Examples: "-0600 CST" or "+0200 EET"
 //
 func (tzdef *TimeZoneDefinition) GetOriginalZoneOffset() string {
 
@@ -622,7 +710,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneOffset() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.zoneOffset
+	return tzdef.originalTimeZone.GetZoneOffset()
 }
 
 // GetOriginalZoneOffsetTotalSeconds - Returns Zone Offset Total Seconds
@@ -637,10 +725,12 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneOffsetTotalSeconds() int {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.zoneOffsetTotalSeconds
+	return tzdef.originalTimeZone.GetZoneOffsetTotalSeconds()
 }
 
-// GetOriginalUtcOffset - Returns the offset from UTC as a string.
+// GetOriginalUtcOffset - Returns the offset from UTC as a string
+// for the Original Time Zone.
+//
 // Examples of the UTC offset format are: "-0600" or "+0200".
 //
 func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
@@ -649,7 +739,7 @@ func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
 
 	defer tzdef.lock.Unlock()
 
-	return tzdef.originalTimeZone.utcOffset
+	return tzdef.originalTimeZone.GetUtcOffset()
 }
 
 // GetMilitaryTimeZoneLetter - Returns the single character which represents
