@@ -650,8 +650,33 @@ func PrintOutTimeZoneDefFields(tzDef dt.TimeZoneDefinition) {
 	fmt.Println("          Tag Description: ", tzDef.GetOriginalTagDescription())
 	fmt.Println( "          Time Zone Type: ", tzDef.GetOriginalTimeZoneType().String())
 	fmt.Println("-----------------------------------------------")
-	fmt.Println("                Convertible Time Zone          ")
+	fmt.Println("              Convertible Time Zone            ")
 	fmt.Println("-----------------------------------------------")
+
+	offsetSignChar,
+	_,
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds = tzDef.GetConvertibleOffsetElements()
+
+	fmt.Println("      Reference Date Time: ", tzDef.GetConvertibleDateTime().Format(fmtStr))
+	fmt.Println("                 ZoneName: ", tzDef.GetConvertibleZoneName())
+	fmt.Println("               ZoneOffset: ", tzDef.GetConvertibleZoneOffset())
+	fmt.Println("               UTC Offset: ", tzDef.GetConvertibleUtcOffset())
+	fmt.Println("        ZoneOffsetSeconds:", tzDef.GetConvertibleZoneOffsetTotalSeconds())
+	fmt.Println("                 ZoneSign: ", offsetSignChar)
+	fmt.Println("              OffsetHours: ", offsetHours)
+	fmt.Println("            OffsetMinutes: ", offsetMinutes)
+	fmt.Println("            OffsetSeconds: ", offsetSeconds)
+	fmt.Println("          Location String: ", tzDef.GetConvertibleLocationPtr().String())
+	fmt.Println("            Location Name: ", tzDef.GetConvertibleLocationName())
+	fmt.Println("       Location Name Type: ", tzDef.GetConvertibleLocationNameType().String())
+	fmt.Println("Military Time Zone Letter: ", milTzLetter)
+	fmt.Println("  Military Time Zone Name: ", milTzName)
+	fmt.Println("          Tag Description: ", tzDef.GetConvertibleTagDescription())
+	fmt.Println( "          Time Zone Type: ", tzDef.GetConvertibleTimeZoneType().String())
+	fmt.Println("-----------------------------------------------")
+	fmt.Println()
 
 }
 

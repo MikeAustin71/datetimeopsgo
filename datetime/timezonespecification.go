@@ -33,9 +33,8 @@ type TimeZoneSpecification struct {
 	//                                         Examples: "-0600" or "+0200"
 	locationPtr            *time.Location   // Pointer to a Time Zone Location
 	locationName           string           // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
-	locationNameType       LocationNameType // Four possible values:
+	locationNameType       LocationNameType // Three possible values:
 	//                                           None()
-	//                                           ConvertibleAbbreviation()
 	//                                           NonConvertibleTimeZone()
 	//                                           ConvertibleTimeZone()
 	militaryTimeZoneName   string           // Full Military Time Zone text name. Examples: "Alpha", "Bravo", "Charlie", "Zulu"

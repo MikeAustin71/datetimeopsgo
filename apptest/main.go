@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest054()
+	mainTest{}.mainTest055()
 
 }
 
@@ -19,9 +19,49 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest055() {
+
+	ePrefix := "mainTest055()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	// t1EdtStr :=  "06/20/2019 09:58:32 -0400 EDT"
+	// t1EstStr :=  "12/20/2019 09:58:32 -0500 EST"
+	// t2CdtStr :=  "06/20/2019 09:58:32 -0500 CDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0600 CST"
+	// t2PdtStr :=  "06/20/2019 09:58:32 -0600 MDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0700 MST"
+	t2PdtStr :=  "06/20/2019 09:58:32 -0700 PDT"
+	// t2PstStr :=  "12/20/2019 09:58:32 -0800 PST"
+
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	timeStr := t2PdtStr
+	t1, err := time.Parse(fmtStr, timeStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, timeStr)\n" +
+			"timeStr='%v'\nError='%v'\n", timeStr, err.Error())
+		return
+	}
+
+	tzDef, err := dt.TimeZoneDefinition{}.New(t1)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
+			"t1='%v'\nError='%v'\n", t1.Format(fmtStr), err.Error())
+		return
+	}
+
+	ex.PrintOutTimeZoneDefFields(tzDef)
+
+}
+
+
+
 func (mt mainTest) mainTest054() {
 
-	ePrefix := "mainTest049()"
+	ePrefix := "mainTest054()"
 
 	mt.mainPrintHdr(ePrefix , "-")
 
