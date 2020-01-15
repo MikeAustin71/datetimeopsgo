@@ -674,7 +674,7 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 	ePrefix string) (
 	ianaTimeZoneName string,
 	ianaLocationPtr *time.Location,
-	isAlternateConvertibleTz bool,
+	timeZoneClass TimeZoneClass,
 	err error) {
 
 	tzMech.lock.Lock()
@@ -685,7 +685,7 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 	ianaTimeZoneName = ""
 	ianaLocationPtr = nil
-	isAlternateConvertibleTz = false
+	timeZoneClass = TzClass.None()
 	err = nil
 
 	if dateTime.IsZero() {
@@ -699,7 +699,7 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 		return ianaTimeZoneName,
 		ianaLocationPtr,
-		isAlternateConvertibleTz,
+		timeZoneClass,
 		err
 	}
 
@@ -713,12 +713,11 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 		return ianaTimeZoneName,
 		ianaLocationPtr,
-		isAlternateConvertibleTz,
+		timeZoneClass,
 		err
 	}
 
 	ianaTimeZoneName = ianaLocationPtr.String()
-
 
 	dtMech := dateTimeMechanics{}
 	var err2 error
@@ -727,13 +726,14 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 	if err2 == nil {
 		err = nil
+		timeZoneClass = TzClass.OriginalTimeZone()
 		return ianaTimeZoneName,
 		ianaLocationPtr,
-		isAlternateConvertibleTz,
+		timeZoneClass,
 		err
 	}
 
-	isAlternateConvertibleTz = true
+	timeZoneClass = TzClass.AlternateTimeZone()
 
 	var utcOffset, tzAbbrv string
 
@@ -752,11 +752,11 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 		ianaTimeZoneName = ""
 		ianaLocationPtr = nil
-		isAlternateConvertibleTz = false
+		timeZoneClass = TzClass.None()
 
 		return ianaTimeZoneName,
 		ianaLocationPtr,
-		isAlternateConvertibleTz,
+		timeZoneClass,
 		err
 	}
 
@@ -784,12 +784,12 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 		ianaTimeZoneName = ""
 		ianaLocationPtr = nil
-		isAlternateConvertibleTz = false
+		timeZoneClass = TzClass.None()
 	}
 
 	return ianaTimeZoneName,
 		ianaLocationPtr,
-		isAlternateConvertibleTz,
+		timeZoneClass,
 		err
 }
 

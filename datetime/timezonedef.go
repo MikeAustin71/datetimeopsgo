@@ -304,6 +304,7 @@ func (tzdef *TimeZoneDefinition) EqualZoneLocation(tzdef2 TimeZoneDefinition) bo
 // date time value.
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleDateTime() time.Time {
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -354,6 +355,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleLocationName() string {
 //  LocationNameType(0).ConvertibleTimeZone()
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleLocationNameType() LocationNameType {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
 
 	return tzdef.convertibleTimeZone.GetLocationNameType()
 }
@@ -454,6 +459,25 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification 
 	return tzdef.convertibleTimeZone.CopyOut()
 }
 
+// GetConvertibleTimeZoneClass - Returns the Time Zone Class associated
+// with the Original Time Zone.
+//
+// Time Zone Class is styled as enumeration. Possible values are:
+//
+// TimeZoneClass(0).None()              - An Error Condition
+// TimeZoneClass(0).AlternateTimeZone() - Generated Time Zone from
+//                                        Time Zone Abbreviation
+// TimeZoneClass(0).OriginalTimeZone()  - Original Valid Time Zone
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneClass() TimeZoneClass {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetTimeZoneClass()
+}
+
 // GetConvertibleTimeZoneType - Returns the Time Zone Type associated
 // with the Convertible Time Zone.
 //
@@ -543,6 +567,7 @@ func (tzdef *TimeZoneDefinition) GetConvertibleZoneName() string {
 // date time value.
 //
 func (tzdef *TimeZoneDefinition) GetOriginalDateTime() time.Time {
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -591,6 +616,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
 //  LocationNameType(0).ConvertibleTimeZone()
 //
 func (tzdef *TimeZoneDefinition) GetOriginalLocationNameType() LocationNameType {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.GetLocationNameType()
 }
@@ -688,6 +717,25 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.CopyOut()
+}
+
+// GetOriginalTimeZoneClass - Returns the Time Zone Class associated
+// with the Original Time Zone.
+//
+// Time Zone Class is styled as enumeration. Possible values are:
+//
+// TimeZoneClass(0).None()              - An Error Condition
+// TimeZoneClass(0).AlternateTimeZone() - Generated Time Zone from
+//                                        Time Zone Abbreviation
+// TimeZoneClass(0).OriginalTimeZone()  - Original Valid Time Zone
+//
+func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneClass() TimeZoneClass {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.GetTimeZoneClass()
 }
 
 // GetOriginalTimeZoneType - Returns the Time Zone Type associated

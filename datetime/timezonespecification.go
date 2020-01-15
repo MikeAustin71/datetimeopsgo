@@ -46,6 +46,10 @@ type TimeZoneSpecification struct {
 	//                                          TzType.Military()
 	//                                          TzType.Local()
 	//                                          TzType.UtcOffset()
+	timeZoneClass          TimeZoneClass    // Enumeration of Time Zone Class:
+	//                                          TzClass.None()
+	//                                          TzClass.AlternateTimeZone()
+	//                                          TzClass.OriginalTimeZone()
 	lock sync.Mutex // Used for implementing thread safe operations.
 }
 
@@ -160,6 +164,10 @@ func (tzSpec *TimeZoneSpecification) Equal( tzSpec2 TimeZoneSpecification) bool 
 		return false
 	}
 
+	if tzSpec.timeZoneClass != tzSpec2.timeZoneClass {
+		return false
+	}
+
 	if tzSpec.tagDescription != tzSpec2.tagDescription {
 		return false
 	}
@@ -208,8 +216,15 @@ func (tzSpec *TimeZoneSpecification) IsEmpty() bool {
 		return false
 	}
 
-	if tzSpec.locationNameType != LocNameType.None() ||
-		tzSpec.timeZoneType != TzType.None(){
+	if tzSpec.locationNameType != LocNameType.None(){
+		return false
+	}
+
+	if tzSpec.timeZoneType != TzType.None() {
+		return false
+	}
+
+	if tzSpec.timeZoneClass != TzClass.None() {
 		return false
 	}
 
@@ -448,7 +463,26 @@ func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
 	return tzSpec.tagDescription
 }
 
-// GetOriginalTimeZoneType - Returns the Time Zone Type classification.
+// GetTimeZoneClass - Returns the Time Zone Class description.
+// Time Zone Class is an enumeration identifying the time zone
+// status.
+//
+// Possible Values:
+// TimeZoneClass(0).None()              - An Error Condition
+// TimeZoneClass(0).AlternateTimeZone() - Generated Time Zone from
+//                                        Time Zone Abbreviation
+// TimeZoneClass(0).OriginalTimeZone()  - Original Valid Time Zone
+//
+func (tzSpec *TimeZoneSpecification) GetTimeZoneClass() TimeZoneClass {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.timeZoneClass
+}
+
+// GetTimeZoneType - Returns the Time Zone Type description.
 // Time Zone Type is an enumeration identifying the time zone
 // source.
 //
@@ -603,6 +637,7 @@ func (tzSpec TimeZoneSpecification) New(
 	tagDescription         string,
 	locationNameType       LocationNameType,
 	timeZoneType           TimeZoneType,
+	timeZoneClass          TimeZoneClass,
 	ePrefix string) (TimeZoneSpecification, error) {
 
 	tzSpec.lock.Lock()
@@ -621,6 +656,7 @@ func (tzSpec TimeZoneSpecification) New(
 		tagDescription,
 		locationNameType,
 		timeZoneType,
+		timeZoneClass,
 		ePrefix)
 
 	return tzSpecOut, err
@@ -655,6 +691,7 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 	tagDescription         string,
 	locationNameType       LocationNameType,
 	timeZoneType           TimeZoneType,
+	timeZoneClass          TimeZoneClass,
 	ePrefix string) error {
 
 	tzSpec.lock.Lock()
@@ -704,6 +741,7 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 	tzSpec.tagDescription = tagDescription
 	tzSpec.locationNameType = locationNameType
 	tzSpec.timeZoneType = timeZoneType
+	tzSpec.timeZoneClass = timeZoneClass
 
 	return nil
 }

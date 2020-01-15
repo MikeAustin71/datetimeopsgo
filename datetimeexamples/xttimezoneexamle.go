@@ -649,6 +649,7 @@ func PrintOutTimeZoneDefFields(tzDef dt.TimeZoneDefinition) {
 	fmt.Println("  Military Time Zone Name: ", milTzName)
 	fmt.Println("          Tag Description: ", tzDef.GetOriginalTagDescription())
 	fmt.Println( "          Time Zone Type: ", tzDef.GetOriginalTimeZoneType().String())
+	fmt.Println("          Time Zone Class: ", tzDef.GetOriginalTimeZoneClass())
 	fmt.Println("-----------------------------------------------")
 	fmt.Println("              Convertible Time Zone            ")
 	fmt.Println("-----------------------------------------------")
@@ -675,6 +676,7 @@ func PrintOutTimeZoneDefFields(tzDef dt.TimeZoneDefinition) {
 	fmt.Println("  Military Time Zone Name: ", milTzName)
 	fmt.Println("          Tag Description: ", tzDef.GetConvertibleTagDescription())
 	fmt.Println( "          Time Zone Type: ", tzDef.GetConvertibleTimeZoneType().String())
+	fmt.Println("          Time Zone Class: ", tzDef.GetConvertibleTimeZoneClass())
 	fmt.Println("-----------------------------------------------")
 	fmt.Println()
 

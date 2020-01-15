@@ -45,6 +45,7 @@ func (tzSpecUtil *typeZoneSpecUtility) copyIn(
 	tzSpec.militaryTimeZoneLetter = tzSpec2.militaryTimeZoneLetter
 	tzSpec.tagDescription         = tzSpec2.tagDescription
 	tzSpec.timeZoneType           = tzSpec2.timeZoneType
+	tzSpec.timeZoneClass          = tzSpec2.timeZoneClass
 }
 	// CopyOut - Returns a deep copy of the current Time Zone
 // Specification object as a new instance of 'TimeZoneSpecification'.
@@ -81,6 +82,7 @@ func (tzSpecUtil *typeZoneSpecUtility) copyOut(
 	tzSpec2.militaryTimeZoneLetter = tzSpec.militaryTimeZoneLetter
 	tzSpec2.tagDescription         = tzSpec.tagDescription
 	tzSpec2.timeZoneType           = tzSpec.timeZoneType
+	tzSpec2.timeZoneClass          = tzSpec.timeZoneClass
 
 	return tzSpec2
 }
@@ -119,5 +121,6 @@ func (tzSpecUtil *typeZoneSpecUtility) empty(
 	tzSpec.militaryTimeZoneLetter = ""
 	tzSpec.tagDescription         = ""
 	tzSpec.timeZoneType           = TzType.None()
+	tzSpec.timeZoneClass          = TzClass.None()
 
 }

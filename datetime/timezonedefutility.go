@@ -486,10 +486,11 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	var ianaTimeZoneName string
 	var err error
+	tzClass := TzClass.None()
 
 	ianaTimeZoneName,
 	_,
-	_,
+	tzClass,
 	err =
 		tzMech.getConvertibleTimeZoneFromDateTime(
 			dateTime,
@@ -596,6 +597,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		"",
 		LocNameType.ConvertibleTimeZone(),
 		tzType,
+		tzClass,
 		ePrefix)
 
 	if err != nil {
