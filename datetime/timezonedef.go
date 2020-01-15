@@ -881,32 +881,19 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 //  dateTime   time.Time  - A date time value which will be used to construct the
 //                          elements of a Time Zone Definition Dto instance.
 //
-// Returns
-// =======
+// Return Values
+// =============
 //
 // This method will return two values:
-//      (1) A Time Zone Definition Dto (TimeZoneDefinition)
+//      (1) A Time Zone Definition (TimeZoneDefinition)
 //      (2) An 'error' type
 //
-//  (1) If successful, this method will return a valid, populated TimeZoneDefinition instance.
-//      A TimeZoneDefinition is defined as follows:
-//      type TimeZoneDefinition struct {
-//        ZoneName            string
-//        ZoneOffsetSeconds    int     // Signed number of seconds offset from UTC. + == East of UTC; - == West of UTC
-//        ZoneSign             int     // -1 == West of UTC  +1 == East of UTC
-//        OffsetHours          int     // Hours offset from UTC. Always a positive number, refer to ZoneSign
-//        OffsetMinutes        int     // Minutes offset from UTC. Always a positive number, refer to ZoneSign
-//        OffsetSeconds        int     // Seconds offset from UTC. Always a positive number, refer to ZoneSign
-//        ZoneOffset           string  // A text string representing the time zone. Example "-0500 CDT"
-//        Location             *time.Location  // Pointer to a Time Zone Location
-//        LocationName         string          // Time Zone Location Name Examples: "Local", "America/Chicago", "America/New_York"
-//        Description          string          // Unused - Available for classification, labeling or description by user.
-//      }
+//  (1) If successful, this method will return a valid, populated TimeZoneDefinition
+//      instance.
 //
-//
-//  (2)   If successful, this method will set the returned 'error' instance to 'nil'.
-//        If errors are encountered a valid error message will be returned in the
-//        error instance.
+//  (2) If successful, this method will set the returned 'error' instance to 'nil'.
+//      If errors are encountered a valid error message will be returned in the
+//      error instance.
 //
 func (tzdef TimeZoneDefinition) New(dateTime time.Time) (TimeZoneDefinition, error) {
 
@@ -953,6 +940,20 @@ func (tzdef TimeZoneDefinition) New(dateTime time.Time) (TimeZoneDefinition, err
 //   3. A valid Military Time Zone which can be submitted either as
 //      a single alphabetic character or as a full Military Time
 //      zone name.
+//
+// Return Values
+// =============
+//
+// This method will return two values:
+//      (1) A Time Zone Definition (TimeZoneDefinition)
+//      (2) An 'error' type
+//
+//  (1) If successful, this method will return a valid, populated TimeZoneDefinition
+//      instance.
+//
+//  (2) If successful, this method will set the returned 'error' instance to 'nil'.
+//      If errors are encountered a valid error message will be returned in the
+//      error instance.
 //
 func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	dateTime time.Time,
