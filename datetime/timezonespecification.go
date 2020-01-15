@@ -104,77 +104,21 @@ func (tzSpec *TimeZoneSpecification) Empty() {
 // of TimeZoneSpecification and the input parameter TimeZoneSpecification are
 // equivalent in all respects.
 //
+// Exceptions: Note that the following private member data fields
+// are NOT checked for equivalency.
+//
+// zone label is NOT checked for equivalency
+// tagDescription is NOT checked for equivalency
+//
 func (tzSpec *TimeZoneSpecification) Equal( tzSpec2 TimeZoneSpecification) bool {
 
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
 
-	if !tzSpec.referenceDateTime.Equal(tzSpec2.referenceDateTime) {
-		return false
-	}
+	tzSpecUtil := typeZoneSpecUtility{}
 
-	// Do NOT check Zone Label
-
-	if tzSpec.zoneName != tzSpec2.zoneName ||
-		tzSpec.zoneOffsetTotalSeconds != tzSpec2.zoneOffsetTotalSeconds ||
-		tzSpec.zoneSignValue != tzSpec2.zoneSignValue {
-		return false
-	}
-
-	if tzSpec.offsetHours != tzSpec2.offsetHours ||
-		tzSpec.offsetMinutes != tzSpec2.offsetMinutes ||
-		tzSpec.offsetSeconds != tzSpec2.offsetSeconds {
-		return false
-	}
-
-
-	if tzSpec.zoneOffset != tzSpec2.zoneOffset ||
-		tzSpec.zoneAbbrvLookupId != tzSpec2.zoneAbbrvLookupId ||
-		tzSpec.utcOffset != tzSpec2.utcOffset {
-		return false
-	}
-
-	if tzSpec.locationPtr == nil && tzSpec2.locationPtr != nil{
-		return false
-	}
-
-	if tzSpec.locationPtr != nil && tzSpec2.locationPtr == nil {
-		return false
-	}
-
-	if tzSpec.locationPtr != nil && tzSpec2.locationPtr != nil &&
-		tzSpec.locationPtr.String() != tzSpec2.locationPtr.String() {
-		return false
-	}
-
-	if tzSpec.locationName != tzSpec2.locationName {
-		return false
-	}
-
-	if tzSpec.militaryTimeZoneLetter != tzSpec2.militaryTimeZoneLetter ||
-		tzSpec.militaryTimeZoneName != tzSpec2.militaryTimeZoneName {
-		return false
-	}
-
-	if tzSpec.locationNameType != tzSpec.locationNameType {
-		return false
-	}
-
-	if tzSpec.timeZoneType != tzSpec2.timeZoneType {
-		return false
-	}
-
-	if tzSpec.timeZoneClass != tzSpec2.timeZoneClass {
-		return false
-	}
-
-	if tzSpec.tagDescription != tzSpec2.tagDescription {
-		return false
-	}
-
-	return true
-
+	return tzSpecUtil.equal(tzSpec, tzSpec2)
 }
 
 // IsEmpty() returns a boolean value of 'true' if all

@@ -124,3 +124,107 @@ func (tzSpecUtil *typeZoneSpecUtility) empty(
 	tzSpec.timeZoneClass          = TzClass.None()
 
 }
+
+// equal - Returns a boolean value of true if both the current instance
+// of TimeZoneSpecification and the input parameter TimeZoneSpecification are
+// equivalent in all respects.
+//
+// Exceptions: Note that the following private member data fields
+// are NOT checked for equivalency.
+//
+// zone label is NOT checked for equivalency
+// tagDescription is NOT checked for equivalency
+//
+func (tzSpecUtil *typeZoneSpecUtility) equal(
+	tzSpec *TimeZoneSpecification,
+	tzSpec2 TimeZoneSpecification) bool {
+
+	tzSpecUtil.lock.Lock()
+
+	defer tzSpecUtil.lock.Unlock()
+
+	if tzSpec == nil {
+		panic("typeZoneSpecUtility.empty()\n" +
+			"Error: Input parameter tzSpec is a 'nil' pointer!\n")
+	}
+
+	if !tzSpec.referenceDateTime.Equal(tzSpec2.referenceDateTime) {
+		return false
+	}
+
+	if tzSpec.zoneName != tzSpec2.zoneName {
+		return false
+	}
+
+	if tzSpec.zoneOffsetTotalSeconds != tzSpec2.zoneOffsetTotalSeconds{
+		return false
+	}
+
+	if tzSpec.zoneSignValue != tzSpec2.zoneSignValue {
+		return false
+	}
+
+	if tzSpec.offsetHours != tzSpec2.offsetHours {
+		return false
+	}
+
+	if tzSpec.offsetMinutes != tzSpec2.offsetMinutes {
+		return false
+	}
+
+	if tzSpec.offsetSeconds != tzSpec2.offsetSeconds {
+		return false
+	}
+
+	if tzSpec.zoneOffset != tzSpec2.zoneOffset {
+		return false
+	}
+
+	if tzSpec.zoneAbbrvLookupId != tzSpec2.zoneAbbrvLookupId {
+		return false
+	}
+
+	if tzSpec.utcOffset != tzSpec2.utcOffset {
+		return false
+	}
+
+	if tzSpec.locationPtr == nil && tzSpec2.locationPtr != nil{
+		return false
+	}
+
+	if tzSpec.locationPtr != nil && tzSpec2.locationPtr == nil {
+		return false
+	}
+
+	if tzSpec.locationPtr != nil && tzSpec2.locationPtr != nil &&
+		tzSpec.locationPtr.String() != tzSpec2.locationPtr.String() {
+		return false
+	}
+
+	if tzSpec.locationName != tzSpec2.locationName {
+		return false
+	}
+
+	if tzSpec.militaryTimeZoneLetter != tzSpec2.militaryTimeZoneLetter {
+		return false
+	}
+
+	if tzSpec.militaryTimeZoneName != tzSpec2.militaryTimeZoneName {
+		return false
+	}
+
+	if tzSpec.locationNameType != tzSpec.locationNameType {
+		return false
+	}
+
+	if tzSpec.timeZoneType != tzSpec2.timeZoneType {
+		return false
+	}
+
+	if tzSpec.timeZoneClass != tzSpec2.timeZoneClass {
+		return false
+	}
+
+	return true
+
+}
