@@ -10,13 +10,114 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest055()
+	mainTest{}.mainTest056()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest056() {
+
+	ePrefix := "mainTest056()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	dtUtil := dt.DTimeUtility{}
+	locUSCentral, err :=
+		dtUtil.LoadTzLocation(dt.TZones.US.Central(), ePrefix)
+
+	if err != nil {
+		fmt.Printf("Error='%v'\n", err.Error())
+		return
+	}
+
+	locTokyo, err := dtUtil.LoadTzLocation(dt.TZones.Asia.Tokyo(), ePrefix)
+
+	if err != nil {
+		fmt.Printf("Error='%v'", err.Error())
+		return
+	}
+
+	t4USCentral := time.Date(2018, time.Month(3), 06, 20, 02, 18, 792489279, locUSCentral)
+
+	t4AsiaTokyo := t4USCentral.In(locTokyo)
+
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	dTz, err := dt.DateTzDto{}.NewTz(
+		t4AsiaTokyo,
+		dt.TZones.US.Central(),
+		dt.TzConvertType.Relative(),
+		fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.NewTz(t4AsiaTokyo, TZones.US.Central(), fmtstr).\n" +
+			"Error='%v'\n",
+			err.Error())
+		return
+	}
+
+	if !t4USCentral.Equal(dTz.GetDateTimeValue()) {
+		fmt.Printf("Error: Expected DateTime='%v'. Instead DateTime='%v'",
+			t4USCentral.Format(fmtstr), dTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	eTimeZoneDef, err := dt.TimeZoneDefinition{}.New(t4USCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDefinition{}.New(t4USCentral)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	areEqual := eTimeZoneDef.Equal(dTz.GetTimeZone())
+
+	if ! areEqual {
+		fmt.Printf("Expected dTz.GetTimeZone().LocationName='%v'.\n"+
+			"Instead, dTz.GetTimeZone().LocationName='%v'\n",
+			eTimeZoneDef.GetOriginalLocationName(), dTz.GetTimeZoneName())
+	}
+
+	tDto, err := dt.TimeDto{}.NewFromDateTime(t4USCentral)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeDto{}.NewFromDateTime(t4USCentral)\n"+
+			"t4USCentral='%v'\nError='%v'\n",
+			t4USCentral.Format(dt.FmtDateTimeYrMDayFmtStr), err.Error())
+		return
+	}
+
+	expectedDt, err := tDto.GetDateTime(dt.TZones.US.Central())
+
+	if err != nil {
+		fmt.Printf("Error returned from tDto.GetDateTime(TZones.US.Central()). "+
+			"Error='%v'", err.Error())
+	}
+
+	timeComponents := dTz.GetTimeComponents()
+
+	actualDt, err := timeComponents.GetDateTime(dt.TZones.US.Central())
+
+	if err != nil {
+		fmt.Printf("Error returned from dTz.GetTimeComponents().GetDateTime(TZones.US.Central()).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !tDto.Equal(dTz.GetTimeComponents()) {
+		fmt.Printf("Expected dTz.Time (TimeDto) == '%v' Instead, dTz.Time (TimeDto) == '%v'",
+			expectedDt.Format(dt.FmtDateTimeYrMDayFmtStr),
+			actualDt.Format(dt.FmtDateTimeYrMDayFmtStr))
+	}
+
+	if dt.FmtDateTimeYrMDayFmtStr != dTz.GetDateTimeFmt() {
+		fmt.Printf("Expected dTz.GetDateTimeFmt()='%v' Instead, dTz.GetDateTimeFmt()='%v' ",
+			dt.FmtDateTimeYrMDayFmtStr, dTz.GetDateTimeFmt())
+	}
+
 }
 
 func (mt mainTest) mainTest055() {
@@ -342,11 +443,11 @@ func (mt mainTest) mainTest051() {
 
 	var ianaTimeZoneName string
 	var ianaLocationPtr *time.Location
-	var isAlternateConvertibleTz bool
+	var tzClass dt.TimeZoneClass
 
 	ianaTimeZoneName,
 	ianaLocationPtr,
-	isAlternateConvertibleTz,
+		tzClass,
 	err = dtUtil.GetConvertibleTimeZoneFromDateTime(t1, ePrefix)
 
 	if err != nil {
@@ -360,7 +461,7 @@ func (mt mainTest) mainTest051() {
 	fmt.Println()
 	fmt.Printf("        ianaTimeZoneName: %v\n", ianaTimeZoneName)
 	fmt.Printf("         ianaLocationPtr: %v\n", ianaLocationPtr.String())
-	fmt.Printf("isAlternateConvertibleTz: %v\n\n", isAlternateConvertibleTz)
+	fmt.Printf("tzClass: %v\n\n", tzClass.String())
 
 	fmt.Printf(ePrefix +
 		"\nSuccess!\n" +

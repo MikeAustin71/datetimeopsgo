@@ -449,7 +449,9 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTimeComponents(
 }
 
 // setFromDateTime - Sets the values of a TimeZoneDefinition
-// based on input parameter 'dateTime'.
+// based on input parameter 'dateTime'. Note: TimeZoneDefinition
+// objects set from date times may NOT be configured as Military
+// Time Zones.
 //
 func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzdef *TimeZoneDefinition,
@@ -485,11 +487,12 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	tzMech := timeZoneMechanics{}
 
 	var ianaTimeZoneName string
+	var ianaTimeZonePtr *time.Location
 	var err error
 	tzClass := TzClass.None()
 
 	ianaTimeZoneName,
-	_,
+	ianaTimeZonePtr,
 	tzClass,
 	err =
 		tzMech.getConvertibleTimeZoneFromDateTime(
@@ -500,14 +503,47 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		return err
 	}
 
-	tzDefUtil2 := timeZoneDefUtility{}
+	dateTime = time.Date(dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+		dateTime.Second(),
+		dateTime.Nanosecond(),
+		ianaTimeZonePtr)
 
-	return tzDefUtil2.setFromTimeZoneName(
-		tzdef,
+	tzType := TzType.Iana()
+
+	if strings.ToLower(ianaTimeZoneName) == "local" {
+		tzType = TzType.Local()
+	}
+
+	tzSpec := TimeZoneSpecification{}
+
+	err = tzSpec.SetTimeZone(
 		dateTime,
-		ianaTimeZoneName,
-		TzConvertType.Absolute(),
+		"",
+		"",
+		"Original Time Zone",
+		"",
+		LocNameType.ConvertibleTimeZone(),
+		tzType,
+		tzClass,
 		ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Error: tzdef.originalTimeZone failed to initialize.\n" +
+			"Error='%v'", err.Error())
+	}
+
+	tzdef.originalTimeZone = tzSpec.CopyOut()
+
+	tzSpec.zoneLabel = "Convertible Time Zone"
+
+	tzdef.convertibleTimeZone = tzSpec.CopyOut()
+
+	return nil
 }
 
 // setFromTimeZoneName - Sets the data fields of the specified
@@ -587,6 +623,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		}
 	}
 
+
 	tzSpec := TimeZoneSpecification{}
 
 	err = tzSpec.SetTimeZone(
@@ -597,7 +634,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		"",
 		LocNameType.ConvertibleTimeZone(),
 		tzType,
-		tzClass,
+		TzClass.OriginalTimeZone(),
 		ePrefix)
 
 	if err != nil {
@@ -653,8 +690,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 			"Error='%v'\n", err.Error())
 	}
 
-	tzSpec = TimeZoneSpecification{}
-
 	dateTime = dateTime.In(ianaLocationPtr)
 
 	zoneLabel = "Convertible Time Zone"
@@ -667,6 +702,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		"",
 		LocNameType.ConvertibleTimeZone(),
 		tzType,
+		TzClass.AlternateTimeZone(),
 		ePrefix)
 
 	if err != nil {

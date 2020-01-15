@@ -114,8 +114,9 @@ func (tzSpec *TimeZoneSpecification) Equal( tzSpec2 TimeZoneSpecification) bool 
 		return false
 	}
 
-	if tzSpec.zoneLabel != tzSpec2.zoneLabel ||
-		tzSpec.zoneName != tzSpec2.zoneName ||
+	// Do NOT check Zone Label
+
+	if tzSpec.zoneName != tzSpec2.zoneName ||
 		tzSpec.zoneOffsetTotalSeconds != tzSpec2.zoneOffsetTotalSeconds ||
 		tzSpec.zoneSignValue != tzSpec2.zoneSignValue {
 		return false

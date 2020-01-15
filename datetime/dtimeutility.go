@@ -318,7 +318,7 @@ func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromDateTime(
 	ePrefix string) (
 	ianaTimeZoneName string,
 	ianaLocationPtr *time.Location,
-	isAlternateConvertibleTz bool,
+	timeZoneClass TimeZoneClass,
 	err error) {
 
 	dtUtil.lock.Lock()
@@ -329,7 +329,7 @@ func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromDateTime(
 
 	ianaTimeZoneName = ""
 	ianaLocationPtr = nil
-	isAlternateConvertibleTz = false
+	timeZoneClass = TzClass.None()
 	err = nil
 
 	tzMech := timeZoneMechanics{}
@@ -368,6 +368,41 @@ func (dtUtil *DTimeUtility) GetUtcOffsetTzAbbrvFromDateTime(
 	dtMech := dateTimeMechanics{}
 
 	return dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+}
+
+// LoadTzLocation - This is a wrapper method for time.LoadLocation.
+// Using this method provides the option to load time zones from
+// an internal zoneinfo.zip database in future upgrades.
+//
+func (dtUtil *DTimeUtility) LoadTzLocation(
+	timeZoneName string,
+	ePrefix string) (
+	tzPointer *time.Location,
+	err error) {
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.LoadTzLocation() "
+
+	tzPointer = nil
+	err = nil
+
+	if len(timeZoneName) == 0 {
+		return tzPointer,
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeZoneName",
+				inputParameterValue: "Input parameter 'timeZoneName' is an EMPTY string!",
+				errMsg:              "",
+				err:                 nil,
+			}
+	}
+
+	dtMech := dateTimeMechanics{}
+
+	return dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
 }
 
 // RelativeTimeToTimeNameZoneConversion - Converts a time value
