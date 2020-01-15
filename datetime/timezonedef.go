@@ -917,14 +917,19 @@ func (tzdef TimeZoneDefinition) New(dateTime time.Time) (TimeZoneDefinition, err
 	ePrefix := "TimeZoneDefinition.New() "
 
 	if dateTime.IsZero() {
-		return TimeZoneDefinition{}, errors.New(ePrefix +
-			"\nError: Input parameter 'dateTime' is a ZERO value!\n")
+		return TimeZoneDefinition{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dateTime",
+				inputParameterValue: "Input parameter 'dateTime' is a ZERO value!",
+				errMsg:              "",
+				err:                 nil,
+			}
 	}
 
 	tzDef2 := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
-
 
 	err := tzDefUtil.setFromDateTime(&tzDef2, dateTime, ePrefix)
 
