@@ -10,6 +10,14 @@ import (
 //
 // Overview and General Usage
 //
+// This type is designed to process IANA Time Zones, Military Time
+// Zones and the 'Local' Time Zone implemented by Golang.
+//
+// For background information on Time Zones, see comments in the
+// 'timezonedata.go' source file and the 'TimeZones' Type at:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timezonedata.go
+//
 // A Time Zone Definition includes two Time Zone Specifications
 // (Type: TimeZoneSpecification). Both describe the same time zone.
 // The first 'TimeZoneSpecification' describes the original time
