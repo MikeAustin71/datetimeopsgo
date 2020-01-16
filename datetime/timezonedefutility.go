@@ -403,13 +403,13 @@ func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
 // years, months, days, hours, minutes, seconds and nanoseconds)
 // passed through input parameter 'TimeDto' ('tDto').
 //
-func (tzDefUtil *timeZoneDefUtility) setFromDateTimeComponents(
+func (tzDefUtil *timeZoneDefUtility) setFromTimeDto(
 	tzdef *TimeZoneDefinition,
 	tDto TimeDto,
 	timeZoneName string,
 	ePrefix string) error {
 
-	ePrefix += "timeZoneDefUtility.setFromDateTimeComponents() "
+	ePrefix += "timeZoneDefUtility.setFromTimeDto() "
 
 	if tzdef == nil {
 		return &InputParameterError{

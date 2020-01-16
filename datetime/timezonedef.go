@@ -927,7 +927,7 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 // ===============
 //
 //  dateTime   time.Time  - A date time value which will be used to construct the
-//                          elements of a Time Zone Definition Dto instance.
+//                          an instance of Time Zone Definition (TimeZoneDefinition).
 //
 // Return Values
 // =============
@@ -936,14 +936,15 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 //      (1) A Time Zone Definition (TimeZoneDefinition)
 //      (2) An 'error' type
 //
-//  (1) If successful, this method will return a valid, populated TimeZoneDefinition
+//  (1) If successful, this method will return a valid, populated 'TimeZoneDefinition'
 //      instance.
 //
 //  (2) If successful, this method will set the returned 'error' instance to 'nil'.
 //      If errors are encountered a valid error message will be returned in the
 //      error instance.
 //
-func (tzdef TimeZoneDefinition) New(dateTime time.Time) (TimeZoneDefinition, error) {
+func (tzdef TimeZoneDefinition) New(
+	dateTime time.Time) (TimeZoneDefinition, error) {
 
 	tzdef.lock.Lock()
 
@@ -967,6 +968,91 @@ func (tzdef TimeZoneDefinition) New(dateTime time.Time) (TimeZoneDefinition, err
 	tzDefUtil := timeZoneDefUtility{}
 
 	err := tzDefUtil.setFromDateTime(&tzDef2, dateTime, ePrefix)
+
+	if err != nil {
+		return TimeZoneDefinition{}, err
+	}
+
+	return tzDef2, nil
+}
+
+// NewFromTimeDto - Creates and returns a new TimeZoneDefinition instance based on
+// a TimeDto and Time Zone Name input parameters.
+//
+// Input Parameter
+// ===============
+//
+//  timeDto     TimeDto  - The 'TimeDto' type contains time components such as years,
+//                         months, days, seconds and nanoseconds which is used to
+//                         construct a date time value (time.Time).
+//
+//  timeZoneName string  - This string contains the name of a valid time zone.
+//                         The 'timeZoneName' string must be set to one of three values:
+//
+//                         1. A valid IANA Time Zone name.
+//
+//                         2. The time zone "Local", which Golang accepts as the time
+//                            zone currently configured on the host computer.
+//
+//                         3. A valid Military Time Zone which can be submitted either as
+//                            a single alphabetic character Military Time Zone abbreviation
+//                            or as a full Military Time Zone name.
+//
+// Return Values
+// =============
+//
+// This method will return two values:
+//      (1) A Time Zone Definition (TimeZoneDefinition)
+//      (2) An 'error' type
+//
+//  (1) If successful, this method will return a valid, populated TimeZoneDefinition
+//      instance.
+//
+//  (2) If successful, this method will set the returned 'error' instance to 'nil'.
+//      If errors are encountered a valid error message will be returned in the
+//      error instance.
+//
+func (tzdef TimeZoneDefinition) NewFromTimeDto(
+	timeDto TimeDto,
+	timeZoneName string) (TimeZoneDefinition, error) {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	ePrefix := "TimeZoneDefinition.NewFromTimeDto() "
+
+	if timeDto.IsEmpty() {
+		return TimeZoneDefinition{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeDto",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'timeDto' is EMPTY!",
+				err:                 nil,
+		}
+	}
+
+	if len(timeZoneName) == 0 {
+		return TimeZoneDefinition{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeZoneName",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'timeZoneName' is an EMPTY string!",
+				err:                 nil,
+		}
+	}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	tzDef2 := TimeZoneDefinition{}
+
+	err := tzDefUtil.setFromTimeDto(
+		&tzDef2,
+		timeDto,
+		timeZoneName,
+		ePrefix)
 
 	if err != nil {
 		return TimeZoneDefinition{}, err

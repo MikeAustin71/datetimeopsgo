@@ -563,7 +563,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	defer dTzUtil.lock.Unlock()
 
-	ePrefix += "dateTzDtoUtility.setFromDateTimeComponents() "
+	ePrefix += "dateTzDtoUtility.setFromTimeDto() "
 
 	if dTz == nil {
 		return errors.New(ePrefix +

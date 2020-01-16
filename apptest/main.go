@@ -10,13 +10,89 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest056()
+	mainTest{}.mainTest057()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+
+func (mt mainTest) mainTest057() {
+
+	ePrefix := "mainTest057()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	dtUtil := dt.DTimeUtility{}
+
+	locPtr, err := dtUtil.LoadTzLocation(dt.TZones.Asia.Vladivostok(), ePrefix)
+
+	if err != nil {
+		fmt.Printf("Error='%v'\n", err.Error())
+		return
+	}
+
+	dateTime := time.Date(
+		2019,
+		time.Month(6),
+		15,
+		11,
+		23,
+		0,
+		0,
+		locPtr)
+
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	tzDef, err := dt.TimeZoneDefinition{}.NewFromTimeZoneName(
+		dateTime, dt.TZones.Asia.Vladivostok(), dt.TzConvertType.Absolute())
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(dateTime, London Time)\n" +
+			"dateTime='%v'\nError='%v'\n",
+			dateTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	ex.PrintOutTimeZoneDefFields(tzDef)
+
+
+	// t1EdtStr :=  "06/20/2019 09:58:32 -0400 EDT"
+	// t1EstStr :=  "12/20/2019 09:58:32 -0500 EST"
+	// t2CdtStr :=  "06/20/2019 09:58:32 -0500 CDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0600 CST"
+	// t2PdtStr :=  "06/20/2019 09:58:32 -0600 MDT"
+	// t2PdtStr :=  "12/20/2019 09:58:32 -0700 MST"
+	// t2PdtStr :=  "06/20/2019 09:58:32 -0700 PDT"
+	// t2PstStr :=  "12/20/2019 09:58:32 -0800 PST"
+
+	timeStr := dateTime.Format(fmtStr)
+
+	t2, err := time.Parse(fmtStr, timeStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtStr, timeStr)\n" +
+			"timeStr='%v'\nError='%v'\n", timeStr, err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(t2, "t2 Parse Result")
+
+	tzDef, err = dt.TimeZoneDefinition{}.New(t2)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
+			"t2='%v'\nError='%v'\n", t2.Format(fmtStr), err.Error())
+		return
+	}
+
+	ex.PrintOutTimeZoneDefFields(tzDef)
+
+	mt.mainPrintHdr("SUCCESS" , "!")
 }
 
 func (mt mainTest) mainTest056() {
