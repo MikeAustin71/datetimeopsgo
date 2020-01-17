@@ -126,7 +126,7 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 	tzMech2 := TimeZoneMechanics{}
 
 	var tzAbbrvLookUpId  string
-	var ianaLocationPtr *time.Location
+	var tzSpec TimeZoneSpecification
 
 	tzAbbrvLookUpId, err =
 		tzMech2.GetTzAbbrvLookupIdFromDateTime(
@@ -138,19 +138,6 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 			err
 	}
 
-	_,
-	_,
-	_,
-	ianaLocationPtr,
-	err =
-	 tzMech2.ConvertTzAbbreviationToTimeZone(tzAbbrvLookUpId, ePrefix)
-
-	 if err != nil {
-		 return tzIsConvertible,
-			 convertibleDateTime,
-			 err
-	 }
-
 	tInputJune := time.Date(
 		dateTime.Year(),
 		time.Month(6),
@@ -161,6 +148,30 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 		0,
 		dateTime.Location())
 
+	tzSpec,
+	err =
+	 tzMech2.ConvertTzAbbreviationToTimeZone(
+	 	tInputJune,
+	 	tzAbbrvLookUpId,
+	 	"",
+	 	ePrefix)
+
+	 if err != nil {
+		 return tzIsConvertible,
+			 convertibleDateTime,
+			 err
+	 }
+
+	tInputJune = time.Date(
+		dateTime.Year(),
+		time.Month(6),
+		15,
+		11,
+		0,
+		0,
+		0,
+		tzSpec.GetLocationPointer())
+
 
 	tInputDec := time.Date(
 		dateTime.Year(),
@@ -170,7 +181,7 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 		0,
 		0,
 		0,
-		dateTime.Location())
+		tzSpec.GetLocationPointer())
 
 	tLookupJune := time.Date(
 		dateTime.Year(),
@@ -180,7 +191,7 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 		0,
 		0,
 		0,
-		ianaLocationPtr)
+		tzSpec.GetLocationPointer())
 
 
 	tLookupDec := time.Date(
@@ -191,7 +202,7 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 		0,
 		0,
 		0,
-		ianaLocationPtr)
+		tzSpec.GetLocationPointer())
 
 	tLookupActual := time.Date(
 		dateTime.Year(),
@@ -201,7 +212,7 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 		dateTime.Minute(),
 		dateTime.Second(),
 		dateTime.Nanosecond(),
-		ianaLocationPtr)
+		tzSpec.GetLocationPointer())
 
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
 
@@ -478,22 +489,22 @@ func (tzMech *TimeZoneMechanics) CalcUtcZoneOffsets(
 // boolean value, 'isValidTzAbbreviation', is set to 'false'.
 //
 func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
+	dateTime time.Time,
 	tzAbbrvLookupKey string,
+	timeZoneLabel string,
 	ePrefix string) (
-	milTzLetter,
-	milTzName,
-	ianaTimeZoneName string,
-	ianaLocationPtr *time.Location,
+	tzSpec TimeZoneSpecification,
 	err error) {
 
 	tzMech.lock.Lock()
 
 	defer tzMech.lock.Unlock()
 
-	milTzLetter = ""
-	milTzName = ""
-	ianaTimeZoneName = ""
-	ianaLocationPtr = nil
+	milTzLetter := ""
+	milTzName := ""
+	ianaTimeZoneName := ""
+	var ianaLocationPtr *time.Location
+	tzSpec = TimeZoneSpecification{}
 	err = nil
 
 	ePrefix += "dateTimeMechanics.ConvertTzAbbreviationToTimeZone() "
@@ -505,11 +516,7 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 			errMsg:             "tzAbbrvLookKey is a zero length string!",
 			err:                nil}
 
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
+		return tzSpec, err
 	}
 
 	firstLtr := tzAbbrvLookupKey[0:1]
@@ -538,11 +545,7 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 			err:      nil,
 		}
 
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
+		return tzSpec, err
 	}
 
 	lenTZones := len(tZones)
@@ -555,11 +558,7 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 			errMsg:   "Map returned a zero length time zones string array!",
 			err:      nil,
 		}
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
+		return tzSpec, err
 	}
 
 	var tzAbbrRef TimeZoneAbbreviationDto
@@ -576,51 +575,64 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 			err:      nil,
 		}
 
-		return milTzLetter,
-			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
+		return tzSpec, err
 	}
+
+	timeZoneType := TzType.Iana()
 
 	if tzAbbrRef.Location == "Military" {
 
 		milTzLetter = tzAbbrRef.Abbrv
 		milTzName = tzAbbrRef.AbbrvDescription
-
+		timeZoneType = TzType.Military()
 	}
 
 	dtMech2 := dateTimeMechanics{}
+	var err2 error
 
 	//loadTzLocationPtr(
 	if lenTZones == 1 {
 
-		ianaLocationPtr, err = dtMech2.loadTzLocationPtr(tZones[0], ePrefix)
+		ianaLocationPtr, err2 = dtMech2.loadTzLocationPtr(tZones[0], ePrefix)
 
-		if err != nil {
-			milTzLetter = ""
-			milTzName = ""
-			ianaLocationPtr = nil
+		if err2 != nil {
 
-			return milTzLetter,
-				milTzName,
-				ianaTimeZoneName,
-				ianaLocationPtr,
-				err
+			err = fmt.Errorf(ePrefix +
+				"\nAttempted loading of Time Zone %v Failed!\n" +
+				"Error='%v'\n", tZones[0], err2.Error())
+
+			return tzSpec, err
 		}
 
-		ianaTimeZoneName = tZones[0]
+		dateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			ianaLocationPtr)
 
-		return milTzLetter,
+		tzSpec = TimeZoneSpecification{}
+
+		err = tzSpec.SetTimeZone(
+			dateTime,
+			milTzLetter,
 			milTzName,
-			ianaTimeZoneName,
-			ianaLocationPtr,
-			err
+			timeZoneLabel,
+			"",
+			LocNameType.ConvertibleTimeZone(),
+			timeZoneType,
+			TzClass.AlternateTimeZone(),
+			ePrefix)
+
+		return tzSpec, err
 	}
 
 	lockTzAbbrvToTimeZonePriorityList.Lock()
 	defer lockTzAbbrvToTimeZonePriorityList.Unlock()
-tzPriority := 999999
+	tzPriority := 999999
 
 for i:=0; i < lenTZones; i++ {
 
@@ -639,20 +651,40 @@ for i:=0; i < lenTZones; i++ {
 		ianaTimeZoneName = tZones[0]
 	}
 
-	ianaLocationPtr, err = dtMech2.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
+	ianaLocationPtr, err2 = dtMech2.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
 
-	if err != nil {
-		milTzLetter = ""
-		milTzName = ""
-		ianaTimeZoneName = ""
-		ianaLocationPtr = nil
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix +
+			"\nAttempted Loading of Time Zone '%v' Failed!\n" +
+			"Error='%v'\n", ianaTimeZoneName, err2.Error())
+
+		return tzSpec, err
 	}
 
-	return milTzLetter,
+	dateTime = time.Date(
+		dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+		dateTime.Second(),
+		dateTime.Nanosecond(),
+		ianaLocationPtr)
+
+	tzSpec = TimeZoneSpecification{}
+
+	err = tzSpec.SetTimeZone(
+		dateTime,
+		milTzLetter,
 		milTzName,
-		ianaTimeZoneName,
-		ianaLocationPtr,
-		err
+		timeZoneLabel,
+		"",
+		LocNameType.ConvertibleTimeZone(),
+		timeZoneType,
+		TzClass.AlternateTimeZone(),
+		ePrefix)
+
+	return tzSpec, err
 }
 
 // ConvertUtcAbbrvToStaticTz - Takes a UTC offset time zone
@@ -673,6 +705,7 @@ for i:=0; i < lenTZones; i++ {
 //
 func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 	dateTime time.Time,
+	timeZoneLabel string,
 	utcOffsetAbbrv string,
 	ePrefix string) (
 	staticTimeZone TimeZoneSpecification,
@@ -706,7 +739,6 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 	}
 
 	// lenUtcOffsetAbbrv length must be 3 or 5
-
 	firstLetterSignChar := utcOffsetAbbrv[0:1]
 
 	if firstLetterSignChar != "+" &&
@@ -722,13 +754,47 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 		return staticTimeZone, err
 	}
 
+	dtMech := dateTimeMechanics{}
+
 	if utcOffsetAbbrv == "+00"    ||
 			utcOffsetAbbrv == "-00"   ||
 			utcOffsetAbbrv == "+0000" ||
 			utcOffsetAbbrv == "-0000" {
 
 		// TZones.Etc.UTC()
-		err = staticTimeZone
+		locPtr, err2 := dtMech.loadTzLocationPtr(TZones.Etc.UTC(),ePrefix)
+
+		if err2 != nil {
+			err = fmt.Errorf(ePrefix + "\n" +
+				"Attempted UTC Time Zone Load Failed!\n" +
+				"Error: %v", err2.Error())
+
+			return staticTimeZone, err
+		}
+
+		dateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			locPtr)
+
+		staticTimeZone = TimeZoneSpecification{}
+
+		err = staticTimeZone.SetTimeZone(
+			dateTime,
+			"",
+			"",
+			timeZoneLabel,
+			"",
+			LocNameType.ConvertibleTimeZone(),
+			TzType.Iana(),
+			TzClass.AlternateTimeZone(),
+			ePrefix)
+
 		return staticTimeZone, err
 	}
 
@@ -781,16 +847,18 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 		return staticTimeZone, err
 	}
 
+	timeZoneName := ""
+
 	lenTZones := len(tZones)
 	// First look for a static time zone beginning with 'Etc'
 	for i:=0; i < lenTZones; i++ {
 		if strings.HasPrefix(tZones[i], "Etc") {
-			staticTimeZone = tZones[i]
+			timeZoneName = tZones[i]
 			break
 		}
 	}
 
-	if len(staticTimeZone) == 0 {
+	if len(timeZoneName) == 0 {
 		// No 'Etc' zone was found. Now look for a
 		// a time zone name.
 		lockTzAbbrvToTimeZonePriorityList.Lock()
@@ -804,24 +872,59 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 				if strings.HasPrefix(tZones[i], tzAbbrvToTimeZonePriorityList[j]) {
 					if j < tzPriority {
 						tzPriority = j
-						staticTimeZone = tZones[i]
+						timeZoneName = tZones[i]
 					}
 				}
 			}
 		}
 	}
 
-	if len(staticTimeZone) == 0 {
-		staticTimeZone = tZones[0]
+	if len(timeZoneName) == 0 {
+		timeZoneName = tZones[0]
 	}
 
-	if staticTimeZone == "" {
+	if timeZoneName == "" {
 		err = fmt.Errorf(ePrefix +
 			"\nError: Could not locate equivalent 'Etc' " +
 			"static time zone for UTC Time Zone abbreviation!\n" +
 			"utcOffsetAbbrv='%v'\n", utcOffsetAbbrv)
 		return staticTimeZone, err
 	}
+
+	locPtr, err2 := dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Attempted Load of Time Zone '%v' Failed!\n" +
+			"Error: %v",
+			timeZoneName,
+			err2.Error())
+
+		return staticTimeZone, err
+	}
+
+	dateTime = time.Date(
+		dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+		dateTime.Second(),
+		dateTime.Nanosecond(),
+		locPtr)
+
+	staticTimeZone = TimeZoneSpecification{}
+
+	err = staticTimeZone.SetTimeZone(
+		dateTime,
+		"",
+		"",
+		timeZoneLabel,
+		"",
+		LocNameType.ConvertibleTimeZone(),
+		TzType.Iana(),
+		TzClass.AlternateTimeZone(),
+		ePrefix)
 
 	return staticTimeZone, err
 }
@@ -968,42 +1071,22 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 
 	if tzMech2.IsTzAbbrvUtcOffset(tzAbbrv) {
 
+		return tzMech2.ConvertUtcAbbrvToStaticTz(
+			dateTime,
+			timeZoneLabel,
+			tzAbbrv,
+			ePrefix)
 	}
 
 	tzAbbrv = tzAbbrv + utcOffset
 
-
-	_,
-		_,
-		ianaTimeZoneName,
-		ianaLocationPtr,
-		err2 =
+	tzSpec,
+	err =
 			tzMech2.ConvertTzAbbreviationToTimeZone(
+				dateTime,
 				tzAbbrv,
+				timeZoneLabel,
 				ePrefix)
-
-	if err2 != nil {
-		err = fmt.Errorf(ePrefix +
-			"\nError: 'dateTime' Time Zone failed to load. Convertible Time Zone look-up FAILED!\n" +
-			"dateTime='%v'\n" +
-			"Error='%v'\n",
-			dateTime.Format("2006-01-02 15:04:05 -0700 MST"),
-			err2.Error())
-
-		return tzSpec, err
-	}
-
-	tzSpec = TimeZoneSpecification{}
-	err = tzSpec.SetTimeZone(
-		dateTime,
-		"",
-		"",
-		timeZoneLabel,
-		"",
-		LocNameType.ConvertibleTimeZone(),
-		TzType.Iana(),
-		TzClass.AlternateTimeZone(),
-		ePrefix)
 
 	return tzSpec, err
 }
