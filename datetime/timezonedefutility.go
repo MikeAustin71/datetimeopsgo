@@ -485,14 +485,99 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	}
 
 	tzMech := TimeZoneMechanics{}
-
-	var ianaTimeZoneName string
 	var ianaTimeZonePtr *time.Location
+	var ianaTimeZoneName, tzAbbrv string
 	var err error
+	var tzSpec TimeZoneSpecification
+
+	tzType := TzType.None()
 	tzClass := TzClass.None()
+
+	ianaTimeZonePtr = dateTime.Location()
+
+	if ianaTimeZonePtr == nil {
+		return &TimeZoneError{
+			ePrefix: ePrefix,
+			errMsg:  "Error: dateTime.Location() returned a 'nil' pointer!",
+			err:     nil,
+		}
+	}
+
+	ianaTimeZoneName = ianaTimeZonePtr.String()
+
+	dtMech := dateTimeMechanics{}
+
+	_, err = dtMech.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
+
+	if err != nil {
+		// Time Zone will NOT Load!
+		_, tzAbbrv, err =
+			tzMech.GetUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+
+		if err != nil {
+			return fmt.Errorf(ePrefix + "\n" +
+				"Load Location Failed. Error returned extracting UTC Offset, Tz Abreviation.\n" +
+				"%v", err.Error())
+		}
+
+		if tzMech.IsTzAbbrvUtcOffset(tzAbbrv) {
+			ianaTimeZoneName,
+			err = tzMech.ConvertUtcAbbrvToStaticTz(tzAbbrv, ePrefix)
+
+			if err != nil {
+				return err
+			}
+
+			_,
+			_,
+			ianaTimeZoneName,
+			ianaTimeZonePtr,
+			tzType,
+			err = tzMech.GetTimeZoneFromName(ianaTimeZoneName, ePrefix)
+
+			if err != nil {
+				return err
+			}
+
+			dateTime2 := time.Date(dateTime.Year(),
+				dateTime.Month(),
+				dateTime.Day(),
+				dateTime.Hour(),
+				dateTime.Minute(),
+				dateTime.Second(),
+				dateTime.Nanosecond(),
+				ianaTimeZonePtr)
+
+			tzSpec = TimeZoneSpecification{}
+
+			err = tzSpec.SetTimeZone(
+				dateTime2,
+				"",
+				"",
+				"Original Time Zone",
+				"",
+				LocNameType.ConvertibleTimeZone(),
+				tzType,
+				TzClass.AlternateTimeZone(),
+				ePrefix)
+
+			if err != nil {
+				return fmt.Errorf(ePrefix +
+					"Error: After Time Zone Load Failure and alternate time zone selection,\n" +
+					"TimeZoneSpecification failed to initialize.\n" +
+					"Error='%v'", err.Error())
+			}
+
+			tzdef.originalTimeZone = tzSpec.CopyOut()
+
+
+
+		}
+	}
 
 	ianaTimeZoneName,
 	ianaTimeZonePtr,
+	tzType,
 	tzClass,
 	err =
 		tzMech.GetConvertibleTimeZoneFromDateTime(
@@ -512,13 +597,13 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		dateTime.Nanosecond(),
 		ianaTimeZonePtr)
 
-	tzType := TzType.Iana()
+	tzType = TzType.Iana()
 
 	if strings.ToLower(ianaTimeZoneName) == "local" {
 		tzType = TzType.Local()
 	}
 
-	tzSpec := TimeZoneSpecification{}
+	tzSpec = TimeZoneSpecification{}
 
 	err = tzSpec.SetTimeZone(
 		dateTime,
