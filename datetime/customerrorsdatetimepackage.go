@@ -14,7 +14,7 @@ func (e *InputParameterError) Error() string{
 
 	if len(e.inputParameterValue) > 0 &&
 		len(e.errMsg) > 0 {
-		return fmt.Sprintf(e.ePrefix +
+		return fmt.Sprintf(e.ePrefix + "\n" +
 			"Error: Input Parameter, '%v' is invalid!\n" +
 			"%v='%v'\n" +
 			"%v",
@@ -26,7 +26,7 @@ func (e *InputParameterError) Error() string{
 
 	if len(e.inputParameterValue) > 0 &&
 		len(e.errMsg) == 0 {
-		return fmt.Sprintf(e.ePrefix +
+		return fmt.Sprintf(e.ePrefix + "\n" +
 			"Error: Input Parameter, '%v' is invalid!\n" +
 			"%v='%v'\n",
 			e.inputParameterName,
@@ -34,7 +34,7 @@ func (e *InputParameterError) Error() string{
 			e.inputParameterValue)
 	}
 
-	return fmt.Sprintf(e.ePrefix +
+	return fmt.Sprintf(e.ePrefix + "\n" +
 		"\nError: Input Parameter, '%v' is invalid!\n" +
 		"%v\n",
 		e.inputParameterName, e.errMsg)

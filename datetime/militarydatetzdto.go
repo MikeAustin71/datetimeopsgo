@@ -880,7 +880,7 @@ func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
 	return nil
 }
 
-// parseMilitaryTzNameAndLetter - Parses a text string which
+// ParseMilitaryTzNameAndLetter - Parses a text string which
 // contains either a single letter military time zone designation
 // or a multi-character time zone text name.
 //
@@ -901,7 +901,7 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 	equivalentIanaTimeZone = TimeZoneDefinition{}
 	err = nil
 
-		ePrefix := "MilitaryDateTzDto.parseMilitaryTzNameAndLetter() "
+		ePrefix := "MilitaryDateTzDto.ParseMilitaryTzNameAndLetter() "
 
 		lMilTz := len(rawTz)
 

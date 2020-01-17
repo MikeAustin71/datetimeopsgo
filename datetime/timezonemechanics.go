@@ -7,11 +7,11 @@ import (
 	"time"
 )
 
-type timeZoneMechanics struct {
+type TimeZoneMechanics struct {
 	lock sync.Mutex
 }
 
-// allocateOffsetSeconds - Designed to calculate offset hours,
+// AllocateOffsetSeconds - Designed to calculate offset hours,
 // minutes and seconds from UTC+0000. A total signed seconds
 // integer value is passed as an input parameter. This method
 // then breaks down the total seconds into hours, minutes and
@@ -19,7 +19,7 @@ type timeZoneMechanics struct {
 // minutes and seconds is returned in the 'sign' parameter as
 // either a value +1, or -1.
 //
-func (tzMech *timeZoneMechanics) allocateOffsetSeconds(
+func (tzMech *TimeZoneMechanics) AllocateOffsetSeconds(
 	signedTotalSeconds int) (
 	hours,
 	minutes,
@@ -58,11 +58,11 @@ func (tzMech *timeZoneMechanics) allocateOffsetSeconds(
 }
 
 
-// calcConvertibleTimeZoneStats - Receives and examines a date time
+// CalcConvertibleTimeZoneStats - Receives and examines a date time
 // value to determine if the associated time zone is convertible
 // across other time zones.
 //
-func (tzMech *timeZoneMechanics) calcConvertibleTimeZoneStats(
+func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 	dateTime time.Time,
 	ePrefix string) (
 	tzIsConvertible bool,
@@ -77,7 +77,7 @@ func (tzMech *timeZoneMechanics) calcConvertibleTimeZoneStats(
 	convertibleDateTime = time.Time{}
 	err = nil
 
-	ePrefix += "timeZoneMechanics.calcConvertibleTimeZoneStats() "
+	ePrefix += "TimeZoneMechanics.CalcConvertibleTimeZoneStats() "
 
 	if dateTime.IsZero() {
 		err = &InputParameterError{
@@ -123,13 +123,13 @@ func (tzMech *timeZoneMechanics) calcConvertibleTimeZoneStats(
 			err
 	}
 
-	tzMech2 := timeZoneMechanics{}
+	tzMech2 := TimeZoneMechanics{}
 
 	var tzAbbrvLookUpId  string
 	var ianaLocationPtr *time.Location
 
 	tzAbbrvLookUpId, err =
-		tzMech2.getTzAbbrvLookupIdFromDateTime(
+		tzMech2.GetTzAbbrvLookupIdFromDateTime(
 			dateTime, ePrefix)
 
 	if err != nil {
@@ -143,7 +143,7 @@ func (tzMech *timeZoneMechanics) calcConvertibleTimeZoneStats(
 	_,
 	ianaLocationPtr,
 	err =
-	 tzMech2.convertTzAbbreviationToTimeZone(tzAbbrvLookUpId, ePrefix)
+	 tzMech2.ConvertTzAbbreviationToTimeZone(tzAbbrvLookUpId, ePrefix)
 
 	 if err != nil {
 		 return tzIsConvertible,
@@ -237,7 +237,7 @@ func (tzMech *timeZoneMechanics) calcConvertibleTimeZoneStats(
 		err
 }
 
-// calcUtcZoneOffsets - Receives an input parameter, 'dateTime',
+// CalcUtcZoneOffsets - Receives an input parameter, 'dateTime',
 // of type 'time.Time' and proceeds to extract and return time
 // a variety of zone components and descriptions.
 //
@@ -304,7 +304,7 @@ func (tzMech *timeZoneMechanics) calcConvertibleTimeZoneStats(
 //                                    'err' is configured with an appropriate error
 //                                    message.
 //
-func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
+func (tzMech *TimeZoneMechanics) CalcUtcZoneOffsets(
 	dateTime time.Time,
 	ePrefix string) (
 	zoneName string,
@@ -324,7 +324,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 
 	defer tzMech.lock.Unlock()
 
-	ePrefix += "timeZoneMechanics.calcUtcZoneOffsets() "
+	ePrefix += "TimeZoneMechanics.CalcUtcZoneOffsets() "
 
 	zoneName = ""
 	zoneOffset = ""
@@ -452,7 +452,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 		err
 }
 
-// convertTzAbbreviationToTimeZone - receives an input parameter,
+// ConvertTzAbbreviationToTimeZone - receives an input parameter,
 // 'tzAbbrvLookupKey' which is used to look up a time zone abbreviation
 // and return an associated IANA Time Zone Name.
 //
@@ -477,7 +477,7 @@ func (tzMech *timeZoneMechanics) calcUtcZoneOffsets(
 // If an associated IANA Time Zone is not found the returned
 // boolean value, 'isValidTzAbbreviation', is set to 'false'.
 //
-func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
+func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 	tzAbbrvLookupKey string,
 	ePrefix string) (
 	milTzLetter,
@@ -496,7 +496,7 @@ func (tzMech *timeZoneMechanics) convertTzAbbreviationToTimeZone(
 	ianaLocationPtr = nil
 	err = nil
 
-	ePrefix += "dateTimeMechanics.convertTzAbbreviationToTimeZone() "
+	ePrefix += "dateTimeMechanics.ConvertTzAbbreviationToTimeZone() "
 
 	if len(tzAbbrvLookupKey) == 0 {
 		err = &InputParameterError{
@@ -655,8 +655,205 @@ for i:=0; i < lenTZones; i++ {
 		err
 }
 
+// ConvertUtcAbbrvToStaticTz - Takes a UTC offset time zone
+// abbreviation and converts to a static time zone name.
+//
+// If an equivalent 'Etc' static time zone is associated with
+// this offset, it will be selected. Other wise the standard
+// selection criteria will be applied to select a standard
+// Time Zone Name.
+//
+// Examples:
+//
+// UTC Offset        Selected Time Zone
+// ----------        ------------------
+//  +10                Etc/GMT-10
+//  +1030              Australia/Lord_Howe
+//  -10                Etc/GMT+10
+//
+func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
+	utcOffsetAbbrv string,
+	ePrefix string) (staticTimeZone string, err error) {
 
-// getConvertibleTimeZoneFromDateTime - Receives a date time
+	tzMech.lock.Lock()
+
+	defer tzMech.lock.Unlock()
+
+	ePrefix += "TimeZoneMechanics.ConvertUtcAbbrvToStaticTz() "
+
+	err = nil
+	staticTimeZone = ""
+
+	utcOffsetAbbrv =
+		strings.TrimLeft(strings.TrimRight(utcOffsetAbbrv, " "), " ")
+
+	lenUtcOffsetAbbrv := len(utcOffsetAbbrv)
+
+	if lenUtcOffsetAbbrv != 3 &&
+			lenUtcOffsetAbbrv != 5 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "utcOffsetAbbrv",
+			inputParameterValue: utcOffsetAbbrv,
+			errMsg: "Input parameter 'utcOffsetAbbrv' " +
+				"has an invalid string length!",
+			err: nil,
+		}
+		return staticTimeZone, err
+	}
+
+	// lenUtcOffsetAbbrv length must be 3 or 5
+
+	firstLetterSignChar := utcOffsetAbbrv[0:1]
+
+	if firstLetterSignChar != "+" &&
+		firstLetterSignChar != "-" {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "utcOffsetAbbrv",
+			inputParameterValue: utcOffsetAbbrv,
+			errMsg: "Input parameter 'utcOffsetAbbrv' " +
+				"does NOT qualify as a UTC Offset time zone abbreviation!",
+			err: nil,
+		}
+		return staticTimeZone, err
+	}
+
+	if utcOffsetAbbrv == "+00"    ||
+			utcOffsetAbbrv == "-00"   ||
+			utcOffsetAbbrv == "+0000" ||
+			utcOffsetAbbrv == "-0000" {
+
+		staticTimeZone = TZones.Etc.UTC()
+		return staticTimeZone, err
+	}
+
+	var utcOffsetAbbrv2 string
+
+	switch lenUtcOffsetAbbrv {
+
+	case 3:
+		utcOffsetAbbrv2 = utcOffsetAbbrv + "00"
+
+	case 5:
+
+		minutes:= utcOffsetAbbrv[3:5]
+
+		if minutes == "00" {
+			utcOffsetAbbrv2 = utcOffsetAbbrv
+			utcOffsetAbbrv = utcOffsetAbbrv[0:3]
+		} else {
+			utcOffsetAbbrv2 = utcOffsetAbbrv
+		}
+
+	default:
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "utcOffsetAbbrv",
+			inputParameterValue: utcOffsetAbbrv,
+			errMsg: "Input parameter 'utcOffsetAbbrv' " +
+				"has an invalid string length!\n",
+			err: nil,
+		}
+		return staticTimeZone, err
+	}
+
+	utcOffsetLookUpId := utcOffsetAbbrv + utcOffsetAbbrv2
+
+	stdAbbrvs := StdTZoneAbbreviations{}
+
+	tZones, ok := stdAbbrvs.AbbrvOffsetToTimeZones(utcOffsetLookUpId)
+
+	if !ok {
+		ePrefix += "StdTZoneAbbreviations.AbbrvOffsetToTimeZones() "
+		err = &TzAbbrvMapLookupError{
+			ePrefix:  ePrefix,
+			mapName:  "mapTzAbbrvsToTimeZones",
+			lookUpId: utcOffsetLookUpId,
+			errMsg:   "",
+			err:      nil,
+		}
+
+		return staticTimeZone, err
+	}
+
+	lenTZones := len(tZones)
+	// First look for a static time zone beginning with 'Etc'
+	for i:=0; i < lenTZones; i++ {
+		if strings.HasPrefix(tZones[i], "Etc") {
+			staticTimeZone = tZones[i]
+			break
+		}
+	}
+
+	if len(staticTimeZone) == 0 {
+		// No 'Etc' zone was found. Now look for a
+		// a time zone name.
+		lockTzAbbrvToTimeZonePriorityList.Lock()
+		defer lockTzAbbrvToTimeZonePriorityList.Unlock()
+		tzPriority := 999999
+
+		for i:=0; i < lenTZones; i++ {
+
+			for j := 0; j < lenTzAbbrvToTimeZonePriorityList; j++ {
+
+				if strings.HasPrefix(tZones[i], tzAbbrvToTimeZonePriorityList[j]) {
+					if j < tzPriority {
+						tzPriority = j
+						staticTimeZone = tZones[i]
+					}
+				}
+			}
+		}
+	}
+
+	if len(staticTimeZone) == 0 {
+		staticTimeZone = tZones[0]
+	}
+
+	if staticTimeZone == "" {
+		err = fmt.Errorf(ePrefix +
+			"\nError: Could not locate equivalent 'Etc' " +
+			"static time zone for UTC Time Zone abbreviation!\n" +
+			"utcOffsetAbbrv='%v'\n", utcOffsetAbbrv)
+		return staticTimeZone, err
+	}
+
+	return staticTimeZone, err
+}
+
+// IsTzAbbrvUtcOffset - Returns a boolean value indicating
+// whether the Time Zone Abbreviation is a UTC offset.
+//
+// Example UTC Offsets:
+//   "+10", "+1000", "-05", "-0500"
+//
+// If the time zone abbreviation is a UTC offset, this
+// method returns 'true'.
+//
+func (tzMech *TimeZoneMechanics) IsTzAbbrvUtcOffset(
+	timeZoneAbbreviation string ) bool {
+
+	tzMech.lock.Lock()
+
+	defer tzMech.lock.Unlock()
+
+	lenTzAbbrvStr := len(timeZoneAbbreviation)
+
+	if lenTzAbbrvStr == 0 {
+		return false
+	}
+
+	firstChar := timeZoneAbbreviation[0:1]
+
+	if firstChar == "+" || firstChar == "-" {
+		return true
+	}
+
+	return false
+}
+
+// GetConvertibleTimeZoneFromDateTime - Receives a date time
 // (type time.Time) as an input parameter. 'dateTime' is parsed
 // and a valid, convertible time zone name and location pointer
 // are returned.  Note: Due to the structure of 'dateTime', a
@@ -669,7 +866,7 @@ for i:=0; i < lenTZones; i++ {
 // alternate, convertible time zone and the returned boolean value,
 // 'isAlternateConvertibleTz', will be set to 'true'.
 //
-func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
+func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
 	ianaTimeZoneName string,
@@ -681,7 +878,7 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 	defer tzMech.lock.Unlock()
 
-	ePrefix += "timeZoneMechanics.getConvertibleTimeZoneFromDateTime() "
+	ePrefix += "TimeZoneMechanics.GetConvertibleTimeZoneFromDateTime() "
 
 	ianaTimeZoneName = ""
 	ianaLocationPtr = nil
@@ -763,14 +960,14 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 
 	tzAbbrv = tzAbbrv + utcOffset
 
-	tzMech2 := timeZoneMechanics{}
+	tzMech2 := TimeZoneMechanics{}
 
 	_,
 		_,
 		ianaTimeZoneName,
 		ianaLocationPtr,
 		err2 =
-			tzMech2.convertTzAbbreviationToTimeZone(
+			tzMech2.ConvertTzAbbreviationToTimeZone(
 				tzAbbrv,
 				ePrefix)
 
@@ -793,7 +990,7 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 		err
 }
 
-// getTimeZoneFromName - Analyzes a time zone name passed
+// GetTimeZoneFromName - Analyzes a time zone name passed
 // through input parameter, 'timeZoneName'. If valid, the
 // method populates time zone description elements and
 // returns them.
@@ -838,7 +1035,7 @@ func (tzMech *timeZoneMechanics) getConvertibleTimeZoneFromDateTime(
 // If the time zone "Zulu" is passed to this method, it will be
 // classified as a Military Time Zone.
 //
-func (tzMech *timeZoneMechanics) getTimeZoneFromName(
+func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 	timeZoneName string,
 	ePrefix string) (
 	milTzLetter,
@@ -852,7 +1049,7 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 
 	defer tzMech.lock.Unlock()
 
-	ePrefix += "timeZoneMechanics.getTimeZoneFromName() "
+	ePrefix += "TimeZoneMechanics.GetTimeZoneFromName() "
 
 	milTzLetter = ""
 	milTzName = ""
@@ -880,7 +1077,7 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 		err
 	}
 
-	tzMech2 := timeZoneMechanics{}
+	tzMech2 := TimeZoneMechanics{}
 
 	var err2 error
 
@@ -888,7 +1085,7 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 	milTzName,
 	ianaTzName,
 	ianaLocationPtr,
-	err2 = tzMech2.parseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
+	err2 = tzMech2.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
 
 	if err2 == nil {
 		tzType = TzType.Military()
@@ -934,11 +1131,11 @@ func (tzMech *timeZoneMechanics) getTimeZoneFromName(
 		err
 }
 
-// getTzAbbrvLookupIdFromDateTime - Returns a Time Zone Abbreviation
+// GetTzAbbrvLookupIdFromDateTime - Returns a Time Zone Abbreviation
 // Lookup Id. This Time Zone Abbreviation Lookup Id is used to lookup
 // alternative time zones from 'mapTzAbbrvsToTimeZones'.
 //
-func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
+func (tzMech *TimeZoneMechanics) GetTzAbbrvLookupIdFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
 	tzAbbrvLookupId string,
@@ -951,7 +1148,7 @@ func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
 	tzAbbrvLookupId = ""
 	err = nil
 
-	ePrefix += "timeZoneMechanics.getTzAbbrvLookupIdFromDateTime() "
+	ePrefix += "TimeZoneMechanics.GetTzAbbrvLookupIdFromDateTime() "
 
 	if dateTime.IsZero() {
 		err = &InputParameterError{
@@ -978,7 +1175,7 @@ func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
 	return tzAbbrvLookupId, err
 }
 
-// getUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
+// GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
 // time, input parameter and extracts and returns the
 // 5-character UTC offset and the time zone abbreviation.
 //
@@ -996,7 +1193,7 @@ func (tzMech *timeZoneMechanics) getTzAbbrvLookupIdFromDateTime(
 //
 //  Returned Time Zone Abbreviation: 'CST'
 //
-func (tzMech *timeZoneMechanics) getUtcOffsetTzAbbrvFromDateTime(
+func (tzMech *TimeZoneMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
 	utcOffset,
@@ -1010,7 +1207,7 @@ func (tzMech *timeZoneMechanics) getUtcOffsetTzAbbrvFromDateTime(
 	tzAbbrv = ""
 	err = nil
 
-	ePrefix += "timeZoneMechanics.getUtcOffsetTzAbbrvFromDateTime() "
+	ePrefix += "TimeZoneMechanics.GetUtcOffsetTzAbbrvFromDateTime() "
 
 	if dateTime.IsZero() {
 		err = &InputParameterError{
@@ -1038,7 +1235,7 @@ func (tzMech *timeZoneMechanics) getUtcOffsetTzAbbrvFromDateTime(
 }
 
 
-// parseMilitaryTzNameAndLetter - Parses a text string which
+// ParseMilitaryTzNameAndLetter - Parses a text string which
 // contains either a single letter military time zone designation
 // or a multi-character time zone text name.
 //
@@ -1057,7 +1254,7 @@ func (tzMech *timeZoneMechanics) getUtcOffsetTzAbbrvFromDateTime(
 // with an appropriate error message. Otherwise, 'err' is set
 // equal to 'nil' signaling no error was encountered.
 //
-func (tzMech *timeZoneMechanics) parseMilitaryTzNameAndLetter(
+func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 	rawTz string,
 	ePrefix string) (milTzLetter,
 	milTzName,
@@ -1069,7 +1266,7 @@ func (tzMech *timeZoneMechanics) parseMilitaryTzNameAndLetter(
 
 	defer tzMech.lock.Unlock()
 
-	ePrefix += "timeZoneMechanics.parseMilitaryTzNameAndLetter() "
+	ePrefix += "TimeZoneMechanics.ParseMilitaryTzNameAndLetter() "
 
 	milTzLetter = ""
 	milTzName = ""

@@ -147,7 +147,7 @@ func (dtMech *dateTimeMechanics) allocateSecondsToHrsMinSecs(
 	return hours, minutes, seconds, sign
 }
 
-// getUtcOffsetTzAbbrvFromDateTime - Receives a time.Time,
+// GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time,
 // date time, input parameter and extracts and returns the
 // 5-character UTC offset and the time zone abbreviation.
 //
@@ -182,7 +182,7 @@ func (dtMech *dateTimeMechanics) getUtcOffsetTzAbbrvFromDateTime(
 	tzAbbrv = ""
 	err = nil
 
-	ePrefix += "dateTimeMechanics.getUtcOffsetTzAbbrvFromDateTime() "
+	ePrefix += "dateTimeMechanics.GetUtcOffsetTzAbbrvFromDateTime() "
 
 	if dateTime.IsZero() {
 		err = errors.New(ePrefix +
@@ -324,14 +324,14 @@ func (dtMech *dateTimeMechanics) relativeTimeToTimeNameZoneConversion(
 			}
 	}
 
-	tzMech := timeZoneMechanics{}
+	tzMech := TimeZoneMechanics{}
 
 	_,
 	_,
 	_,
 	ianaLocationPtr,
 	_,
-	err := tzMech.getTimeZoneFromName(
+	err := tzMech.GetTimeZoneFromName(
 		timeZoneName,
 		ePrefix)
 

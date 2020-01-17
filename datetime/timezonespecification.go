@@ -659,7 +659,7 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 
 	tzSpecUtil.empty(tzSpec)
 
-	tzMech := timeZoneMechanics{}
+	tzMech := TimeZoneMechanics{}
   var err error
 	
 	tzSpec.zoneName,
@@ -673,7 +673,7 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 		tzSpec.zoneOffsetTotalSeconds,
 		tzSpec.locationPtr,
 		tzSpec.locationName,
-		err = tzMech.calcUtcZoneOffsets(referenceDateTime, ePrefix)
+		err = tzMech.CalcUtcZoneOffsets(referenceDateTime, ePrefix)
 	
 	 if err != nil {
 	 	return err

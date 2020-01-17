@@ -484,7 +484,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		}
 	}
 
-	tzMech := timeZoneMechanics{}
+	tzMech := TimeZoneMechanics{}
 
 	var ianaTimeZoneName string
 	var ianaTimeZonePtr *time.Location
@@ -495,7 +495,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	ianaTimeZonePtr,
 	tzClass,
 	err =
-		tzMech.getConvertibleTimeZoneFromDateTime(
+		tzMech.GetConvertibleTimeZoneFromDateTime(
 			dateTime,
 			ePrefix)
 
@@ -579,14 +579,14 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		}
 	}
 
-	tzMech := timeZoneMechanics{}
+	tzMech := TimeZoneMechanics{}
 
 	milTzLetter,
 	milTzName,
 	ianaTimeZoneName,
 	ianaLocationPtr,
 	tzType,
-	err := tzMech.getTimeZoneFromName(
+	err := tzMech.GetTimeZoneFromName(
 		timeZoneName,
 		ePrefix)
 
@@ -667,7 +667,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 
 	var tzAbbrvLookupId string
 
-	tzAbbrvLookupId, err = tzMech.getTzAbbrvLookupIdFromDateTime(dateTime, ePrefix)
+	tzAbbrvLookupId, err = tzMech.GetTzAbbrvLookupIdFromDateTime(dateTime, ePrefix)
 
 	if err != nil {
 		tzdef.originalTimeZone.Empty()
@@ -681,7 +681,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	milTzName,
 	ianaTimeZoneName,
 	ianaLocationPtr,
-	err = tzMech.convertTzAbbreviationToTimeZone(tzAbbrvLookupId, ePrefix)
+	err = tzMech.ConvertTzAbbreviationToTimeZone(tzAbbrvLookupId, ePrefix)
 
 	if err != nil {
 		tzdef.originalTimeZone.Empty()

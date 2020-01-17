@@ -294,9 +294,9 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 			err
 	}
 
-	tzMech := timeZoneMechanics{}
+	tzMech := TimeZoneMechanics{}
 
-	return tzMech.getTimeZoneFromName(timeZoneName, ePrefix)
+	return tzMech.GetTimeZoneFromName(timeZoneName, ePrefix)
 
 }
 
@@ -332,9 +332,9 @@ func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromDateTime(
 	timeZoneClass = TzClass.None()
 	err = nil
 
-	tzMech := timeZoneMechanics{}
+	tzMech := TimeZoneMechanics{}
 
-	return tzMech.getConvertibleTimeZoneFromDateTime(
+	return tzMech.GetConvertibleTimeZoneFromDateTime(
 		dateTime,
 		ePrefix)
 }
@@ -589,7 +589,7 @@ func (dtUtil *DTimeUtility) ParseMilitaryTzNameAndLetter(
 			err
 	}
 
-	tzMech := timeZoneMechanics{}
+	tzMech := TimeZoneMechanics{}
 
-	return tzMech.parseMilitaryTzNameAndLetter(rawTz, ePrefix)
+	return tzMech.ParseMilitaryTzNameAndLetter(rawTz, ePrefix)
 }

@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest057()
+	mainTest{}.mainTest058()
 
 }
 
@@ -19,6 +19,30 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest058() {
+	ePrefix := "mainTest058()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+	mt.mainPrintHdr("ConvertTzAbbreviationToTimeZone" , "-")
+
+	testUtcOffset := "-03"
+	tzMech := dt.TimeZoneMechanics{}
+
+	fmt.Println("testUtcOffset: ", testUtcOffset)
+
+	staticTimeZone,
+	err := tzMech.ConvertUtcAbbrvToStaticTz(testUtcOffset, ePrefix)
+
+	if err != nil {
+		fmt.Printf("%v", err.Error())
+		return
+	}
+
+	fmt.Println("staticTimeZone: ", staticTimeZone)
+	fmt.Println()
+	mt.mainPrintHdr("SUCCESS" , "!")
+
+}
 
 func (mt mainTest) mainTest057() {
 
