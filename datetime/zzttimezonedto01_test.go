@@ -32,8 +32,9 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 		fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDurationDto{}.NewStartEndTimesCalcTz() "+
-			"Error='%v' ", err.Error())
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartEndTimesCalcTz()\n"+
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	tzu2 := tzu1.CopyOut()
@@ -41,56 +42,73 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 	err = tzu2.AddTimeDurationDto(tdurDto)
 
 	if err != nil {
-		t.Errorf("Error returned by tzu2.AddTimeDurationDto(tdurDto). "+
-			"Error='%v' ", err.Error())
+		t.Errorf("Error returned by tzu2.AddTimeDurationDto(tdurDto).\n"+
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 	tzu1OutStr := tzu1.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t1OutStr != tzu1OutStr {
-		t.Errorf("Error: Expected Time1 TimeIn='%v'.  Instead Time1 TimeIn='%v'", t1OutStr, tzu1OutStr)
+		t.Errorf("Error: Expected Time1 TimeIn='%v'.\n" +
+			"Instead Time1 TimeIn='%v'\n", t1OutStr, tzu1OutStr)
+		return
 	}
 
 	tzu2OutStr := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
 
 	if t2OutStr != tzu2OutStr {
-		t.Errorf("Error: Expected after duration tzu2TimeIn='%v'.  Instead, tzu2TimeIn='%v'", t2OutStr, tzu2OutStr)
+		t.Errorf("Error: Expected after duration tzu2TimeIn='%v'.\n" +
+			"Instead, tzu2TimeIn='%v'\n", t2OutStr, tzu2OutStr)
+		return
 	}
 
 	actualDur := tzu2.TimeIn.Sub(tzu1.TimeIn)
 
 	if t12Dur != actualDur {
-		t.Errorf("Error: Expected tzu2.TimeIn.Sub(tzu1.TimeIn)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
+		t.Errorf("Error: Expected tzu2.TimeIn.Sub(tzu1.TimeIn)='%v'.\n" +
+			"Instead, duration='%v'\n", t12Dur, actualDur)
+		return
 	}
 
 	actualDur = tzu2.TimeOut.Sub(tzu1.TimeOut)
 
 	if t12Dur != actualDur {
-		t.Errorf("Error: Expected tzu2.TimeOut.Sub(tzu1.TimeOut)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
+		t.Errorf("Error: Expected tzu2.TimeOut.Sub(tzu1.TimeOut)='%v'.\n" +
+			"Instead, duration='%v'\n", t12Dur, actualDur)
+		return
 	}
 
 	actualDur = tzu2.TimeUTC.Sub(tzu1.TimeUTC)
 
 	if t12Dur != actualDur {
-		t.Errorf("Error: Expected tzu2.TimeUTC.Sub(tzu1.TimeUTC)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
+		t.Errorf("Error: Expected tzu2.TimeUTC.Sub(tzu1.TimeUTC)='%v'.\n" +
+			"Instead, duration='%v'\n", t12Dur, actualDur)
+		return
 	}
 
 	actualDur = tzu2.TimeLocal.Sub(tzu1.TimeLocal)
 
 	if t12Dur != actualDur {
-		t.Errorf("Error: Expected tzu2.TimeLocal.Sub(tzu1.TimeLocal)='%v'.  Instead, duration='%v'", t12Dur, actualDur)
+		t.Errorf("Error: Expected tzu2.TimeLocal.Sub(tzu1.TimeLocal)='%v'.\n" +
+			"Instead, duration='%v'\n", t12Dur, actualDur)
+		return
 	}
 
 	actualTimeOutLoc := tzu1.TimeOut.GetTimeZoneName()
 
 	if TZones.US.Pacific() != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.  Instead, tzu1.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
+		t.Errorf("Error: Expected tzu1.TimeOutLoc='%v'.\n" +
+			"Instead, tzu1.TimeOutLoc='%v'.\n",
+			TZones.US.Pacific(), actualTimeOutLoc)
+		return
 	}
 
 	actualTimeOutLoc = tzu2.TimeOut.GetTimeZoneName()
 
 	if TZones.US.Pacific() != actualTimeOutLoc {
-		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.  Instead, tzu2.TimeOutLoc='%v'.", TZones.US.Pacific(), actualTimeOutLoc)
+		t.Errorf("Error: Expected tzu2.TimeOutLoc.String()='%v'.\n" +
+			"Instead, tzu2.TimeOutLoc='%v'.\n", TZones.US.Pacific(), actualTimeOutLoc)
 	}
 
 }
@@ -219,7 +237,9 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 	tPacificIn, err := time.Parse(fmtstr, pacificTime)
 
 	if err != nil {
-		t.Errorf("Received error from time parse tPacificIn: %v", err.Error())
+		t.Errorf("Received error from time parse tPacificIn: %v\n",
+			err.Error())
+		return
 	}
 
 	tzu := TimeZoneDto{}
@@ -234,10 +254,15 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 	centralTOut := tzuCentral.TimeOut.GetDateTimeValue().Format(fmtstr)
 
 	if centralTime != centralTOut {
-		t.Errorf("Expected tzuCentral.TimeOut %v, got %v", centralTime, centralTOut)
+		t.Errorf("Expected tzuCentral.TimeOut = '%v'.\n" +
+			"Instead, tzuCentral.TimeOut = '%v'.\n",
+			centralTime, centralTOut)
+		return
 	}
 
-	tzuMountain, err := tzu.ConvertTz(tzuCentral.TimeOut.GetDateTimeValue(), ianaMountainTz, FmtDateTimeYrMDayFmtStr)
+	tzuMountain, err := tzu.ConvertTz(
+			tzuCentral.TimeOut.GetDateTimeValue(),
+			ianaMountainTz, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error from  tzuMountain TimeZoneDto.ConvertTz().\n" +
@@ -248,10 +273,15 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 	mountainTOut := tzuMountain.TimeOut.GetDateTimeValue().Format(fmtstr)
 
 	if mountainTime != mountainTOut {
-		t.Errorf("Expected tzuMountain.TimeOut %v, got %v", mountainTime, mountainTOut)
+		t.Errorf("Expected tzuMountain.TimeOut= '%v'.\n" +
+			"Instead, tzuMountain.TimeOut= '%v'.\n",
+			mountainTime, mountainTOut)
+		return
 	}
 
-	tzuPacific, err := tzu.ConvertTz(tzuMountain.TimeOut.GetDateTimeValue(), ianaPacificTz, FmtDateTimeYrMDayFmtStr)
+	tzuPacific, err := tzu.ConvertTz(
+		tzuMountain.TimeOut.GetDateTimeValue(),
+		ianaPacificTz, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error from tzuMountain TimeZoneDto.ConvertTz().\n" +
@@ -263,7 +293,10 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 
 	if pacificTime != pacificTOut {
 
-		t.Errorf("Expected tzuPacific.TimeOut %v, got %v", pacificTime, pacificTOut)
+		t.Errorf("Expected tzuPacific.TimeOut= '%v'.\n" +
+			"Instead, tzuPacific.TimeOut= '%v'.\n",
+			pacificTime, pacificTOut)
+		return
 	}
 
 	exTOutLoc := "America/Los_Angeles"
@@ -275,24 +308,33 @@ func TestTimeZoneUtility_ConvertTz_01(t *testing.T) {
 			exTOutLoc,
 			tzuPacific.TimeOut.GetTimeZoneName(),
 			tzuPacific.TimeOut.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
+		return
 	}
 
 	pacificUtcOut := tzuPacific.TimeUTC.GetDateTimeValue().Format(fmtstr)
 
 	if utcTime != pacificUtcOut {
-		t.Errorf("Expected tzuPacific.TimeUTC %v, got %v", utcTime, pacificUtcOut)
+		t.Errorf("Expected tzuPacific.TimeUTC= '%v'\n" +
+			"Instead, tzuPacific.TimeUTC= '%v'\n",
+			utcTime, pacificUtcOut)
+		return
 	}
 
 	centralUtcOut := tzuCentral.TimeUTC.GetDateTimeValue().Format(fmtstr)
 
 	if utcTime != centralUtcOut {
-		t.Errorf("Expected tzuCentral.TimeUTC %v, got %v", utcTime, pacificUtcOut)
+		t.Errorf("Expected tzuCentral.TimeUTC= '%v'\n" +
+			"Instead, tzuCentral.TimeUTC= '%v'\n",
+			utcTime, pacificUtcOut)
+		return
 	}
 
 	mountainUtcOut := tzuMountain.TimeUTC.GetDateTimeValue().Format(fmtstr)
 
 	if utcTime != mountainUtcOut {
-		t.Errorf("Expected tzuMountain.TimeUTC %v, got %v", utcTime, pacificUtcOut)
+		t.Errorf("Expected tzuMountain.TimeUTC= '%v'\n" +
+			"Instead, tzuMountain.TimeUTC= '%v'\n",
+			utcTime, pacificUtcOut)
 	}
 
 }

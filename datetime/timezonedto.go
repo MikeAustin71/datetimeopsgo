@@ -653,12 +653,15 @@ func (tzDto TimeZoneDto) ConvertTz(
 	tzDtoOut := TimeZoneDto{}
 
 	if isValidTz, _ := tzDto.IsValidTimeZone(targetTz); !isValidTz {
-		return tzDtoOut, errors.New(fmt.Sprintf("%v\nError: targetTz is INVALID!!\n" +
-			"Input Time Zone == %v\n", ePrefix, targetTz))
+		return tzDtoOut,
+		fmt.Errorf(ePrefix +
+			"\nError: targetTz is INVALID!!\n" +
+			"Input Time Zone == %v\n",  targetTz)
 	}
 
 	if tIn.IsZero() {
-		return tzDtoOut, errors.New(ePrefix + "\nError: Input parameter time, 'tIn' is ZERO and INVALID\n")
+		return tzDtoOut,
+		errors.New(ePrefix + "\nError: Input parameter time, 'tIn' is ZERO and INVALID\n")
 	}
 
 	var tzOutLocPtr *time.Location
@@ -666,7 +669,9 @@ func (tzDto TimeZoneDto) ConvertTz(
 	tzOutLocPtr, err = time.LoadLocation(targetTz)
 
 	if err != nil {
-		return tzDtoOut, fmt.Errorf(ePrefix + "\nError Loading Target IANA Time Zone\n" +
+		return tzDtoOut,
+		fmt.Errorf(ePrefix +
+			"\nError Loading Target IANA Time Zone\n" +
 			"targetTz='%v'\n Errors: %v\n", targetTz, err.Error())
 	}
 
@@ -676,7 +681,8 @@ func (tzDto TimeZoneDto) ConvertTz(
 
 	if err != nil {
 		return TimeZoneDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by tzDtoOut.setTimeIn(tIn).\nError='%v'\n", err.Error())
+			"\nError returned by tzDtoOut.setTimeIn(tIn).\n" +
+			"Error='%v'\n", err.Error())
 	}
 
 	err = tzDtoOut.setTimeOut(tIn.In(tzOutLocPtr))
@@ -2141,7 +2147,10 @@ func (tzDto *TimeZoneDto) setTimeIn(tIn time.Time) error {
 	tzDto.TimeIn, err = DateTzDto{}.New(tIn, tzDto.DateTimeFmt)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error retrned by DateTzDto{}.New(tIn,tzDto.DateTimeFmt), tIn='%v'  Error='%v'", tIn.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return fmt.Errorf(ePrefix+
+			"\nError returned by DateTzDto{}.New(tIn,tzDto.DateTimeFmt)\n" +
+			"tIn='%v'\nError='%v'\n",
+			tIn.Format(FmtDateTimeYrMDayFmtStr), err.Error())
 	}
 
 	return nil

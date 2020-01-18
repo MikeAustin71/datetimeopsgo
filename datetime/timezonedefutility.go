@@ -489,7 +489,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	var err error
 	var tzSpec1, tzSpec2 TimeZoneSpecification
 
-
 	if dateTime.Location() == nil {
 		return &TimeZoneError{
 			ePrefix: ePrefix,
@@ -504,28 +503,75 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		dateTime.Location().String(),
 		ePrefix)
 
-	if err != nil {
-		// Time Zone will NOT Load!
-		utcOffset, tzAbbrv, err =
-			tzMech.GetUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+	if err == nil {
+		// The Original Time Zone Loaded Successfully!
+
+		tzSpec1,
+			err =
+			tzMech.GetConvertibleTimeZoneFromDateTime(
+				dateTime,
+				TzConvertType.Absolute(),
+				"Original Time Zone",
+				ePrefix)
 
 		if err != nil {
-			return fmt.Errorf(ePrefix + "\n" +
-				"Load Location Failed. Error returned extracting UTC Offset, Tz Abreviation.\n" +
-				"%v", err.Error())
+			return err
 		}
 
-		if !tzMech.IsTzAbbrvUtcOffset(tzAbbrv) {
-			return fmt.Errorf(ePrefix + "\n" +
-				"Load Location Failed. The time zone name is invalid!\n" +
-				"Time Zone Name: '%v'\n" +
+		tzSpec1.timeZoneClass.OriginalTimeZone()
+		tzdef.originalTimeZone = tzSpec1.CopyOut()
+
+		tzSpec1.zoneLabel = "Convertible Time Zone"
+		tzdef.convertibleTimeZone = tzSpec1.CopyOut()
+
+		return nil
+	}
+
+	// Original Time Zone will NOT Load!
+	// Try to find an equivalent substitute
+	// Time Zone!
+
+	utcOffset, tzAbbrv, err =
+		tzMech.GetUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+"\n"+
+			"Load Location Failed. Error returned extracting UTC Offset, Tz Abreviation.\n"+
+			"%v", err.Error())
+	}
+
+	if !tzMech.IsTzAbbrvUtcOffset(tzAbbrv) {
+		// Original Time Zone Did NOT Load AND,
+		// The Time Zone Abbreviation is NOT a UTC Offset
+		tzSpec1,
+			err = tzMech.ConvertTzAbbreviationToTimeZone(
+			dateTime,
+			TzConvertType.Absolute(),
+			tzAbbrv+utcOffset,
+			"Convertible Time Zone",
+			ePrefix)
+
+		if err != nil {
+			// Original Time Zone failed to Load AND,
+			// all efforts to find a satisfactory substitution
+			// FAILED!
+			return fmt.Errorf(ePrefix+"\n"+
+				"Load Location Failed. The time zone name is invalid!\n"+
+				"Time Zone Name: '%v'\n"+
 				"dateTime= '%v'\n",
 				dateTime.Location().String(),
 				dateTime.Format(FmtDateTimeTzNanoYMD))
 		}
 
+		tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
+		tzSpec1.timeZoneClass = TzClass.AlternateTimeZone()
+
+	} else {
+		// Original Time Zone Did NOT Load AND,
+		// The Time Zone Abbreviation IS a UTC Offset
+
 		tzSpec1,
-		err = tzMech.ConvertUtcAbbrvToStaticTz(
+			err = tzMech.ConvertUtcAbbrvToStaticTz(
 			dateTime,
 			TzConvertType.Absolute(),
 			"Original Time Zone",
@@ -538,47 +584,25 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 		tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
 		tzSpec1.timeZoneClass = TzClass.OriginalTimeZone()
-
-		tzSpec2,
-		err = tzMech.ConvertTzAbbreviationToTimeZone(
-			dateTime,
-			TzConvertType.Absolute(),
-			tzAbbrv + utcOffset,
-			"Convertible Time Zone",
-			ePrefix)
-
-		if err != nil {
-			return err
-		}
-
-			tzdef.originalTimeZone = tzSpec1.CopyOut()
-
-			tzSpec2.locationNameType = LocNameType.ConvertibleTimeZone()
-			tzSpec2.timeZoneClass = TzClass.AlternateTimeZone()
-
-			tzdef.convertibleTimeZone = tzSpec1.CopyOut()
-
-			return nil
 	}
 
-	// The input time zone loaded successfully!
-
-	tzSpec1,
-	err =
-		tzMech.GetConvertibleTimeZoneFromDateTime(
-			dateTime,
-			TzConvertType.Absolute(),
-			"Original Time Zone",
-			ePrefix)
+	tzSpec2,
+		err = tzMech.ConvertTzAbbreviationToTimeZone(
+		dateTime,
+		TzConvertType.Absolute(),
+		tzAbbrv+utcOffset,
+		"Convertible Time Zone",
+		ePrefix)
 
 	if err != nil {
 		return err
 	}
 
-	tzSpec1.timeZoneClass.OriginalTimeZone()
 	tzdef.originalTimeZone = tzSpec1.CopyOut()
 
-	tzSpec1.zoneLabel = "Convertible Time Zone"
+	tzSpec2.locationNameType = LocNameType.ConvertibleTimeZone()
+	tzSpec2.timeZoneClass = TzClass.AlternateTimeZone()
+
 	tzdef.convertibleTimeZone = tzSpec1.CopyOut()
 
 	return nil

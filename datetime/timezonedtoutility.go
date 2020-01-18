@@ -14,7 +14,9 @@ type timeZoneDtoUtility struct {
 
 // newTzDto - Converts 'tIn' Date Time from existing time zone to a 'targetTz'
 // or target Time Zone. The results are stored and returned in a TimeZoneDto
-// data structure.
+// data structure. TimeZoneDto.TimeIn stores the original 'tIn' Date Time,
+// TimeZoneDto.TimeOut stores the converted date time using the target Time
+// Zone.
 //
 // The input time and output time are equivalent times adjusted
 // for different time zones.
@@ -111,31 +113,13 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 							"\nInput parameter 'tIn' has a value of 'zero'!\n")
 	}
 
-	dtUtil := DTimeUtility{}
-
-	// Set tzDtoOut.TimeIn
-	tzSpec,
-		err := dtUtil.GetTimeZoneFromName(
-			tIn,
-			targetTz,
-			TzConvertType.Relative(),
-			ePrefix)
-
-	if err != nil {
-		return TimeZoneDto{},
-		fmt.Errorf("'targetTz' Time Zone is INVALID!\n" +
-			"targetTz='%v'\n" +
-			"%v", targetTz, err.Error())
-	}
-
 	tzDtoOut := TimeZoneDto{}
-
 	dTzUtil := dateTzDtoUtility{}
 
 	// Set tzDtoOut.TimeIn
-	err = dTzUtil.setFromDateTime(
+	err := dTzUtil.setFromDateTime(
 		&tzDtoOut.TimeIn,
-		tzSpec.referenceDateTime,
+		tIn,
 		dateTimeFmtStr,
 		ePrefix)
 

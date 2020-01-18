@@ -47,7 +47,8 @@ func TestTimeDto_AddTimeDto_01(t *testing.T) {
 	}
 
 	if Weeks != tDto.Weeks {
-		t.Errorf("Error: Expected tDto.Weeks='%v'. Instead, tDto.Weeks='%v'",
+		t.Errorf("Error: Expected tDto.Weeks='%v'.\n" +
+			"Instead, tDto.Weeks='%v'\n",
 			Weeks, tDto.Weeks)
 	}
 
