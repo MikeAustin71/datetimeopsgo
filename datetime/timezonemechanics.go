@@ -732,6 +732,33 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 	err = nil
 	staticTimeZone = TimeZoneSpecification{}
 
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' " +
+				"has a ZERO value!",
+			err:                 nil,
+		}
+
+		return staticTimeZone, err
+	}
+
+	if timeConversionType != TzConvertType.Relative() &&
+		timeConversionType != TzConvertType.Absolute() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input parameter 'timeConversionType' value is Invalid!",
+			err:                 nil,
+		}
+
+		return staticTimeZone, err
+	}
+
 	utcOffsetAbbrv =
 		strings.TrimLeft(strings.TrimRight(utcOffsetAbbrv, " "), " ")
 
@@ -1022,6 +1049,20 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 		return tzSpec, err
 	}
 
+	if timeConversionType != TzConvertType.Relative() &&
+		timeConversionType != TzConvertType.Absolute() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input parameter 'timeConversionType' value is Invalid!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
 	ianaLocationPtr = dateTime.Location()
 
 	if ianaLocationPtr == nil {
@@ -1176,6 +1217,33 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 	tzSpec = TimeZoneSpecification{}
 	err = nil
 
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' " +
+				"has a ZERO value!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
+	if timeConversionType != TzConvertType.Relative() &&
+		timeConversionType != TzConvertType.Absolute() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input parameter 'timeConversionType' value is Invalid!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
 	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
 
 	if len(timeZoneName) == 0 {
@@ -1194,58 +1262,84 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 
 	var err2 error
 
-	milTzLetter,
-	milTzName,
-	_,
-	ianaLocationPtr,
-	err2 = tzMech2.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
+	tzSpec,
+	err = tzMech2.ParseMilitaryTzNameAndLetter(
+		dateTime,
+		timeConversionType,
+		timeZoneName,
+		ePrefix)
 
-	if err2 == nil {
+	if err == nil {
 		// Loaded a Military Time Zone
-
-		if timeConversionType == TzConvertType.Absolute() {
-
-			dateTime = time.Date(
-				dateTime.Year(),
-				dateTime.Month(),
-				dateTime.Day(),
-				dateTime.Hour(),
-				dateTime.Minute(),
-				dateTime.Second(),
-				dateTime.Nanosecond(),
-				ianaLocationPtr)
-		} else {
-			dateTime = dateTime.In(ianaLocationPtr)
-		}
-
-		err = tzSpec.SetTimeZone(
-			dateTime,
-			milTzLetter,
-			milTzName,
-			"Original Time Zone",
-			"",
-			LocNameType.ConvertibleTimeZone(),
-			TzType.Military(),
-			TzClass.OriginalTimeZone(),
-			ePrefix)
-
 		return tzSpec, err
 	}
 
 	// This is NOT a Military Time Zone. Try
-	// a conventional IANA Time Zone.
+	// a conventional Time Zone.
+	tzSpec = TimeZoneSpecification{}
+	err = nil
 
 	dtMech := dateTimeMechanics{}
 
-	ianaLocationPtr, err2 = dtMech.loadTzLocationPtr(timeZoneName,ePrefix)
+	ianaLocationPtr, err2 =
+		dtMech.loadTzLocationPtr(timeZoneName,ePrefix)
 
 	if err2 != nil {
-		err = fmt.Errorf(ePrefix +
-			"\nError: Input parameter, 'timeZoneName', failed to load!\n" +
-			"Therefore, 'timeZoneName is an invalid time zone." )
+
+		// The Time Zone failed to load!
+		var utcOffset, tzAbbrv string
+
+		utcOffset, tzAbbrv, err2 =
+			tzMech2.GetUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+
+		if err2 != nil {
+
+			err = fmt.Errorf(ePrefix + "\n" +
+				"Load Location Failed. Error returned extracting UTC Offset, Tz Abreviation.\n" +
+				"%v", err2.Error())
+
+			return tzSpec, err
+		}
+
+		if !tzMech2.IsTzAbbrvUtcOffset(tzAbbrv) {
+			err = fmt.Errorf(ePrefix +
+				"\nError: Input parameter, 'timeZoneName', failed to load!\n" +
+				"Therefore, 'timeZoneName is an invalid time zone." )
+			return tzSpec, err
+		}
+
+		// This is a UTC offset
+		tzSpec,
+			err = tzMech2.ConvertUtcAbbrvToStaticTz(
+			dateTime,
+			TzConvertType.Absolute(),
+			"Original Time Zone",
+			tzAbbrv,
+			ePrefix)
+
+		if err == nil {
+			return tzSpec, err
+		}
+
+		// An error occurred ConvertUtcAbbrvToStaticTz() Failed
+		// Next, try ConvertTzAbbreviationToTimeZone
+		tzSpec,
+			err = tzMech2.ConvertTzAbbreviationToTimeZone(
+			dateTime,
+			TzConvertType.Absolute(),
+			tzAbbrv + utcOffset,
+			"Convertible Time Zone",
+			ePrefix)
+
+		if err != nil {
+			return tzSpec, err
+		}
+
+		tzSpec.timeZoneClass = TzClass.AlternateTimeZone()
 		return tzSpec, err
 	}
 
+	// The time zone loaded successfully!
 	var tzType TimeZoneType
 
 	if strings.ToLower(timeZoneName) == "local" {
@@ -1410,11 +1504,11 @@ func (tzMech *TimeZoneMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 // equal to 'nil' signaling no error was encountered.
 //
 func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
-	rawTz string,
-	ePrefix string) (milTzLetter,
-	milTzName,
-	equivalentIanaTimeZone string,
-	equivalentIanaLocationPtr *time.Location,
+	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
+	timeZoneName string,
+	ePrefix string) (
+	tzSpec TimeZoneSpecification,
 	err error) {
 
 	tzMech.lock.Lock()
@@ -1423,32 +1517,55 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 	ePrefix += "TimeZoneMechanics.ParseMilitaryTzNameAndLetter() "
 
-	milTzLetter = ""
-	milTzName = ""
-	equivalentIanaTimeZone = ""
-	equivalentIanaLocationPtr = nil
+	milTzLetter := ""
+	milTzName := ""
+	equivalentIanaTimeZone := ""
+	var equivalentIanaLocationPtr *time.Location
 	err = nil
+	tzSpec = TimeZoneSpecification{}
 
-	rawTz =
-		strings.TrimLeft(strings.TrimLeft(rawTz, " "), " ")
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Error: Input Parameter 'dateTime' has a ZERO value!",
+			err:                 nil,
+		}
 
-	lMilTz := len(rawTz)
+		return tzSpec, err
+	}
+
+	if timeConversionType != TzConvertType.Relative() &&
+		timeConversionType != TzConvertType.Absolute() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input parameter 'timeConversionType' value is Invalid!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
+	timeZoneName =
+		strings.TrimLeft(strings.TrimLeft(timeZoneName, " "), " ")
+
+	lMilTz := len(timeZoneName)
 
 	if lMilTz == 0 {
 
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "rawTz",
+			inputParameterName:  "timeZoneName",
 			inputParameterValue: "",
-			errMsg:              "Error: Input Parameter 'rawTz' is empty string!",
+			errMsg:              "Error: Input Parameter 'timeZoneName' is empty string!",
 			err:                 nil,
 		}
 
-		return milTzLetter,
-			milTzName,
-			equivalentIanaTimeZone,
-			equivalentIanaLocationPtr,
-			err
+		return tzSpec, err
 	}
 
 	var ok bool
@@ -1456,7 +1573,7 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 	if lMilTz == 1 {
 
-		milTzLetter = strings.ToUpper(rawTz)
+		milTzLetter = strings.ToUpper(timeZoneName)
 
 		milTzName, ok =
 			milTzData.MilTzLetterToTextName(milTzLetter)
@@ -1467,42 +1584,26 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 				"'militaryTz' DOES NOT map to a valid Military Time Zone.\n"+
 				"militaryTz='%v'", milTzLetter)
 
-			milTzLetter = ""
-			milTzName = ""
-			equivalentIanaTimeZone = ""
-			equivalentIanaLocationPtr = nil
-
-			return milTzLetter,
-				milTzName,
-				equivalentIanaTimeZone,
-				equivalentIanaLocationPtr,
-				err
+			return tzSpec, err
 		}
 
 		equivalentIanaTimeZone, ok = milTzData.MilitaryTzToIanaTz(milTzName)
 
 		if !ok {
 			err = fmt.Errorf(ePrefix+
-				"Error: Input Parameter Value 'rawTz' is INVALID!\n"+
-				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n"+
-				"rawTz='%v'", milTzName)
+				"Error: Input Parameter Value 'timeZoneName' is INVALID!\n"+
+				"'timeZoneName' DOES NOT map to a valid IANA Time Zone.\n"+
+				"timeZoneName='%v'", milTzName)
 
-			milTzLetter = ""
-			milTzName = ""
-			equivalentIanaTimeZone = ""
-			equivalentIanaLocationPtr = nil
-
-			return milTzLetter,
-				milTzName,
-				equivalentIanaTimeZone,
-				equivalentIanaLocationPtr,
-				err
+			return tzSpec, err
 		}
 
 	} else {
-		// lMilTz > 1
-		temp1 := rawTz[:1]
-		temp2 := rawTz[1:]
+		// lMilTz > 1 - The length of the Military Time Zone Name
+		// string is greater than '1'
+
+		temp1 := timeZoneName[:1]
+		temp2 := timeZoneName[1:]
 
 		temp1 = strings.ToUpper(temp1)
 		temp2 = strings.ToLower(temp2)
@@ -1514,21 +1615,12 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix+
-				"Error: Input Parameter Value 'rawTz' is INVALID!\n"+
-				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n"+
+				"Error: Input Parameter Value 'timeZoneName' is INVALID!\n"+
+				"'timeZoneName' DOES NOT map to a valid IANA Time Zone.\n"+
 				"Military Time Zone Letter='%v'\n"+
 				"Military Time Zone Text Name='%v'", milTzLetter, milTzName)
 
-			milTzLetter = ""
-			milTzName = ""
-			equivalentIanaTimeZone = ""
-			equivalentIanaLocationPtr = nil
-
-			return milTzLetter,
-				milTzName,
-				equivalentIanaTimeZone,
-				equivalentIanaLocationPtr,
-				err
+			return tzSpec, err
 		}
 	}
 
@@ -1553,15 +1645,37 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 			equivalentIanaTimeZone,
 			err2.Error())
 
-		milTzLetter = ""
-		milTzName = ""
-		equivalentIanaTimeZone = ""
-		equivalentIanaLocationPtr = nil
+		return tzSpec, err
 	}
 
-	return milTzLetter,
+	if timeConversionType == TzConvertType.Absolute() {
+
+		dateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			equivalentIanaLocationPtr)
+
+	} else {
+
+		dateTime = dateTime.In(equivalentIanaLocationPtr)
+
+	}
+
+	err = tzSpec.SetTimeZone(
+		dateTime,
+		milTzLetter,
 		milTzName,
-		equivalentIanaTimeZone,
-		equivalentIanaLocationPtr,
-		err
+		"Original Time Zone",
+		"",
+		LocNameType.ConvertibleTimeZone(),
+		TzType.Military(),
+		TzClass.OriginalTimeZone(),
+		ePrefix)
+
+	return tzSpec, err
 }

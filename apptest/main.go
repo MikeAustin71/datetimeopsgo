@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest058()
+	mainTest{}.mainTest059()
 
 }
 
@@ -19,36 +19,59 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest059() {
+	ePrefix := "mainTest059()"
+
+	mt.mainPrintHdr(ePrefix , "-")
+	mt.mainPrintHdr("ConvertTz" , "-")
+
+	tstr := "04/29/2017 19:54:30 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05 -0700 MST"
+	// Invalid Target Iana Time Zone
+	invalidTz := "XUZ Time Zone"
+	tIn, err := time.Parse(fmtstr, tstr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by time.Parse(fmtstr, tstr)\n" +
+			"tstr='%v'\n" +
+			"Error='%v'\n", tstr, err.Error())
+		return
+	}
+
+	tzu := dt.TimeZoneDto{}
+
+	_, err = tzu.ConvertTz(tIn, invalidTz, fmtstr)
+
+	if err == nil {
+		fmt.Printf("ConvertTz() failed to detect INVALID Target Time Zone.\n" +
+			"err=='nil'\n" +
+			"invalidTz='%v'\n", invalidTz)
+	}
+
+	return
+}
+
 func (mt mainTest) mainTest058() {
 	ePrefix := "mainTest058()"
 
 	mt.mainPrintHdr(ePrefix , "-")
 	mt.mainPrintHdr("ConvertTzAbbreviationToTimeZone" , "-")
 
-	testUtcOffset := "-03"
+	tzAbbrv := "-03"
+	testUtcOffset := "-0300"
+
 	tzMech := dt.TimeZoneMechanics{}
 
-	fmt.Println("testUtcOffset: ", testUtcOffset)
-
-	testTime := "01/17/2020 17:08:05 -03"
-	fmtStr := "01/02/2006 15:04:05 -0700 MST"
-
-	dateTime, err := time.Parse(testTime, fmtStr)
-
-	if err != nil {
-		fmt.Printf(ePrefix +
-			"\ntime.Parse(testTime, fmtStr)\n" +
-			"testTime='%v'\n" +
-			"fmtStr='%v'\n" +
-			"Error='%v'\n", testTime, fmtStr, err.Error())
-	}
+	dateTime := time.Now().UTC()
 
 	var staticTimeZone dt.TimeZoneSpecification
+	var err error
 
 	staticTimeZone,
 	err = tzMech.ConvertUtcAbbrvToStaticTz(
 		dateTime,
-		dt.TzConvertType.Absolute(),
+		dt.TzConvertType.Relative(),
 		"Original Time Zone",
 		testUtcOffset,
 		ePrefix)
@@ -60,6 +83,31 @@ func (mt mainTest) mainTest058() {
 
 	fmt.Println("staticTimeZone: ", staticTimeZone.GetLocationName())
 	fmt.Println()
+	ex.PrintOutDateTimeTimeZoneFields(staticTimeZone.GetReferenceDateTime(), "staticTimeZone")
+	ex.PrintOutTimeZoneSpecFields(staticTimeZone, "staticTimeZone")
+
+	var tzSpec dt.TimeZoneSpecification
+
+	tzSpec,
+	err =
+	tzMech.ConvertTzAbbreviationToTimeZone(
+		dateTime,
+		dt.TimeZoneConversionType(0).Relative(),
+		tzAbbrv+testUtcOffset,
+		"",
+		ePrefix)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\nError returned by tzMech.ConvertTzAbbreviationToTimeZone()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	ex.PrintOutDateTimeTimeZoneFields(tzSpec.GetReferenceDateTime(), "tzSpec")
+	ex.PrintOutTimeZoneSpecFields(tzSpec, "tzSpec")
+
+
 	mt.mainPrintHdr("SUCCESS" , "!")
 
 }

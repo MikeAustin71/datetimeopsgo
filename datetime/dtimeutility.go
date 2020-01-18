@@ -276,6 +276,33 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 	tzSpec = TimeZoneSpecification{}
 	err = nil
 
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' has " +
+				"a Zero value!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
+	if timeConversionType != TzConvertType.Absolute() &&
+		timeConversionType != TzConvertType.Relative() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input Parameter 'timeConversionType' " +
+				"contains an invalid value!",
+			err:                 nil,
+		}
+		return tzSpec, err
+	}
+
 	if len(timeZoneName) == 0 {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
@@ -542,11 +569,11 @@ func (dtUtil *DTimeUtility) PreProcessTimeZoneLocation(
 // equal to 'nil' signaling no error was encountered.
 //
 func (dtUtil *DTimeUtility) ParseMilitaryTzNameAndLetter(
-	rawTz string,
-	ePrefix string) (milTzLetter,
-	milTzName,
-	equivalentIanaTimeZone string,
-	equivalentIanaLocationPtr *time.Location,
+	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
+	timeZoneName string,
+	ePrefix string) (
+	tzSpec TimeZoneSpecification,
 	err error) {
 
 	dtUtil.lock.Lock()
@@ -555,34 +582,57 @@ func (dtUtil *DTimeUtility) ParseMilitaryTzNameAndLetter(
 
 	ePrefix += "DTimeUtility.ParseMilitaryTzNameAndLetter() "
 
-	milTzLetter = ""
-	milTzName = ""
-	equivalentIanaTimeZone = ""
-	equivalentIanaLocationPtr = nil
+	tzSpec = TimeZoneSpecification{}
 	err = nil
 
-	rawTz =
-		strings.TrimLeft(strings.TrimLeft(rawTz, " "), " ")
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' " +
+				"has a ZERO value!",
+			err:                 nil,
+		}
+		return tzSpec, err
+	}
 
-	lMilTz := len(rawTz)
+	if timeConversionType != TzConvertType.Relative() &&
+		timeConversionType != TzConvertType.Absolute() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input parameter 'timeConversionType' value is Invalid!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
+	timeZoneName =
+		strings.TrimLeft(strings.TrimLeft(timeZoneName, " "), " ")
+
+	lMilTz := len(timeZoneName)
 
 	if lMilTz == 0 {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "rawTz",
+			inputParameterName:  "timeZoneName",
 			inputParameterValue: "",
-			errMsg:              "Error: Input Parameter 'rawTz' is empty string!",
+			errMsg:              "Error: Input Parameter 'timeZoneName' is empty string!",
 			err:                 nil,
 		}
 
-	return milTzLetter,
-			milTzName,
-			equivalentIanaTimeZone,
-			equivalentIanaLocationPtr,
-			err
+		return tzSpec, err
 	}
 
 	tzMech := TimeZoneMechanics{}
 
-	return tzMech.ParseMilitaryTzNameAndLetter(rawTz, ePrefix)
+	return tzMech.ParseMilitaryTzNameAndLetter(
+		dateTime,
+		timeConversionType,
+		timeZoneName,
+		ePrefix)
 }

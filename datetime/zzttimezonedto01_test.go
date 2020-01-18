@@ -450,9 +450,19 @@ func TestInvalidTargetTzInConversion(t *testing.T) {
 	fmtstr := "01/02/2006 15:04:05 -0700 MST"
 	// Invalid Target Iana Time Zone
 	invalidTz := "XUZ Time Zone"
-	tIn, _ := time.Parse(fmtstr, tstr)
+
+	tIn, err := time.Parse(fmtstr, tstr)
+
+	if err != nil {
+		t.Errorf("Error returned by time.Parse(fmtstr, tstr)\n" +
+			"tstr='%v'\n" +
+			"Error='%v'\n", tstr, err.Error())
+		return
+	}
+
 	tzu := TimeZoneDto{}
-	_, err := tzu.ConvertTz(tIn, invalidTz, fmtstr)
+
+	_, err = tzu.ConvertTz(tIn, invalidTz, fmtstr)
 
 	if err == nil {
 		t.Error("ConvertTz() failed to detect INVALID Target Time Zone. Got: ", "err==nil")

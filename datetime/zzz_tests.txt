@@ -19,7 +19,7 @@
 === RUN   TestDateTzDto_CopyOut
 --- PASS: TestDateTzDto_CopyOut (0.00s)
 === RUN   TestDateTzDto_GetTimeDto_01
---- PASS: TestDateTzDto_GetTimeDto_01 (0.22s)
+--- PASS: TestDateTzDto_GetTimeDto_01 (0.00s)
 === RUN   TestDateTzDto_GetDateTimeTzNanoSecYMDDowText
 --- PASS: TestDateTzDto_GetDateTimeTzNanoSecYMDDowText (0.00s)
 === RUN   TestDateTzDto_NewDateTimeElements_01
@@ -39,13 +39,13 @@
 === RUN   TestDateTzDto_NewTimeDto_01
 --- PASS: TestDateTzDto_NewTimeDto_01 (0.00s)
 === RUN   TestDateTzDto_NewTz_01
---- PASS: TestDateTzDto_NewTz_01 (0.02s)
+--- PASS: TestDateTzDto_NewTz_01 (0.00s)
 === RUN   TestDateTzDto_SetFromDateTimeComponents_01
 --- PASS: TestDateTzDto_SetFromDateTimeComponents_01 (0.00s)
 === RUN   TestDateTzDto_SetNewTimeZone_01
 --- PASS: TestDateTzDto_SetNewTimeZone_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeTz_01
---- PASS: TestDateTzDto_SetFromTimeTz_01 (0.01s)
+--- PASS: TestDateTzDto_SetFromTimeTz_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeDto
 --- PASS: TestDateTzDto_SetFromTimeDto (0.00s)
 === RUN   TestDateTzDto_Sub_01
@@ -185,15 +185,15 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.72s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.04s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.25s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.03s)
+--- PASS: TestDtfmtTestSuite (4.33s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.05s)
     --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.01s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.07s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.02s)
 === RUN   TestTDurCalcTypeString_001
 --- PASS: TestTDurCalcTypeString_001 (0.00s)
 === RUN   TestTDurCalcTypeString_002
@@ -423,7 +423,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneDefDto_CopyOut_01
 --- PASS: TestTimeZoneDefDto_CopyOut_01 (0.00s)
 === RUN   TestTimeZoneDefDto_CopyOut_02
---- PASS: TestTimeZoneDefDto_CopyOut_02 (0.01s)
+--- PASS: TestTimeZoneDefDto_CopyOut_02 (0.00s)
 === RUN   TestTimeZoneDefDto_Equal_01
 --- PASS: TestTimeZoneDefDto_Equal_01 (0.00s)
 === RUN   TestTimeZoneDefDto_Equal_02
@@ -431,29 +431,76 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneDefDto_Equal_03
 --- PASS: TestTimeZoneDefDto_Equal_03 (0.00s)
 === RUN   TestTimeZoneDto_AddTimeDurationDto_01
---- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.00s)
+--- FAIL: TestTimeZoneDto_AddTimeDurationDto_01 (0.00s)
+    zzttimezonedto01_test.go:51: Error: Expected Time1 TimeIn='02/15/2014 19:54:30.000000000 -0600 CST'.  Instead Time1 TimeIn='02/15/2014 17:54:30.000000000 -0800 PST'
+    zzttimezonedto01_test.go:57: Error: Expected after duration tzu2TimeIn='04/30/2017 22:58:32.000000000 -0500 CDT'.  Instead, tzu2TimeIn='04/30/2017 20:58:32.000000000 -0700 PDT'
 === RUN   TestTimeZoneDto_AddMinusTimeDto
---- PASS: TestTimeZoneDto_AddMinusTimeDto (0.00s)
+--- FAIL: TestTimeZoneDto_AddMinusTimeDto (0.01s)
+    zzttimezonedto01_test.go:142: Error: Expected tzu2.TimeIn='02/15/2014 19:54:30.000000000 -0600 CST'.  Instead, tzu2.TimeIn='02/15/2014 20:54:30.000000000 -0500 EST'. 
 === RUN   TestTimeZoneDto_AddPlusTimeDto
---- PASS: TestTimeZoneDto_AddPlusTimeDto (0.00s)
+--- FAIL: TestTimeZoneDto_AddPlusTimeDto (0.01s)
+    zzttimezonedto01_test.go:195: Error: Expected tzu2.TimeIn='04/30/2017 22:58:32.000000000 -0500 CDT'.  Instead, tzu2.TimeIn='04/30/2017 23:58:32.000000000 -0400 EDT'. 
 === RUN   TestTimeZoneUtility_ConvertTz_01
---- PASS: TestTimeZoneUtility_ConvertTz_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_ConvertTz_01 (0.00s)
+    zzttimezonedto01_test.go:229: Error from TimeZoneDto.ConvertTz().
+        Error: TimeZoneDto.ConvertTz() 
+        Error returned by tzDtoOut.setTimeIn(tIn).
+        Error='TimeZoneDto.SetTimeIn() Error retrned by DateTzDto{}.New(tIn,tzDto.DateTimeFmt), tIn='2017-04-29 17:54:30.000000000 -0700 PDT'  Error='DateTzDto.New() 
+        Error returned from dTzUtil.setFromDateTime( &dtz2, dateTime, dateTimeFmtStr, ePrefix).
+        dateTime='2017-04-29 17:54:30 -0700 PDT'
+        Error='DateTzDto.New() dateTzDtoUtility.setFromDateTime() timeZoneDefUtility.setFromDateTime() 
+        Load Location Failed. The time zone name is invalid!
+        Time Zone Name: 'PDT'
+        dateTime= '2017-04-29 17:54:30.000000000 -0700 PDT'
+        '
+        ''
+        
 === RUN   TestTimeZoneUtility_ConvertTz_02
 --- PASS: TestTimeZoneUtility_ConvertTz_02 (0.00s)
 === RUN   TestTimeZoneUtility_ConvertTz_03
 --- PASS: TestTimeZoneUtility_ConvertTz_03 (0.00s)
 === RUN   TestTimeZoneUtility_ConvertTz_04
---- PASS: TestTimeZoneUtility_ConvertTz_04 (0.00s)
+--- FAIL: TestTimeZoneUtility_ConvertTz_04 (0.00s)
+    zzttimezonedto01_test.go:392: Error returned by TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)
+        Error='TimeZoneDto.ConvertTz() 
+        Error returned by tzDtoOut.setTimeIn(tIn).
+        Error='TimeZoneDto.SetTimeIn() Error retrned by DateTzDto{}.New(tIn,tzDto.DateTimeFmt), tIn='2017-04-29 17:54:30.000000000 -0700 PDT'  Error='DateTzDto.New() 
+        Error returned from dTzUtil.setFromDateTime( &dtz2, dateTime, dateTimeFmtStr, ePrefix).
+        dateTime='2017-04-29 17:54:30 -0700 PDT'
+        Error='DateTzDto.New() dateTzDtoUtility.setFromDateTime() timeZoneDefUtility.setFromDateTime() 
+        Load Location Failed. The time zone name is invalid!
+        Time Zone Name: 'PDT'
+        dateTime= '2017-04-29 17:54:30.000000000 -0700 PDT'
+        '
+        ''
+        '
 === RUN   TestTimeZoneUtility_ConvertTz_05
---- PASS: TestTimeZoneUtility_ConvertTz_05 (0.00s)
+--- FAIL: TestTimeZoneUtility_ConvertTz_05 (0.00s)
+    zzttimezonedto01_test.go:435: Error returned by TimeZoneDto{}.ConvertTz(tPacific, ianaCentralTz, fmtstr)
+        Error='TimeZoneDto.ConvertTz() 
+        Error returned by tzDtoOut.setTimeIn(tIn).
+        Error='TimeZoneDto.SetTimeIn() Error retrned by DateTzDto{}.New(tIn,tzDto.DateTimeFmt), tIn='2017-04-29 17:54:30.000000000 -0700 PDT'  Error='DateTzDto.New() 
+        Error returned from dTzUtil.setFromDateTime( &dtz2, dateTime, dateTimeFmtStr, ePrefix).
+        dateTime='2017-04-29 17:54:30 -0700 PDT'
+        Error='DateTzDto.New() dateTzDtoUtility.setFromDateTime() timeZoneDefUtility.setFromDateTime() 
+        Load Location Failed. The time zone name is invalid!
+        Time Zone Name: 'PDT'
+        dateTime= '2017-04-29 17:54:30.000000000 -0700 PDT'
+        '
+        ''
+        '
 === RUN   TestInvalidTargetTzInConversion
 --- PASS: TestInvalidTargetTzInConversion (0.00s)
 === RUN   TestTimeZoneUtility_GetLocationIn01
---- PASS: TestTimeZoneUtility_GetLocationIn01 (0.00s)
+--- FAIL: TestTimeZoneUtility_GetLocationIn01 (0.00s)
+    zzttimezonedto01_test.go:475: Expected Location='Local'.
+        Instead, actual location='America/Los_Angeles'.
 === RUN   TestTimeZoneUtility_GetLocationOut_01
 --- PASS: TestTimeZoneUtility_GetLocationOut_01 (0.00s)
 === RUN   TestTimeZoneUtility_GetZoneIn_01
---- PASS: TestTimeZoneUtility_GetZoneIn_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_GetZoneIn_01 (0.00s)
+    zzttimezonedto01_test.go:510: Expected Zone In='CDT'.
+        Instead, actual Zone In='PDT'
 === RUN   TestTimeZoneUtility_GetZoneOut_01
 --- PASS: TestTimeZoneUtility_GetZoneOut_01 (0.00s)
 === RUN   TestTimeZoneUtility_IsValidTimeZone_01
@@ -463,30 +510,57 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneUtility_Location_01
 --- PASS: TestTimeZoneUtility_Location_01 (0.00s)
 === RUN   TestTimeZoneUtility_Location_02
---- PASS: TestTimeZoneUtility_Location_02 (0.00s)
+--- FAIL: TestTimeZoneUtility_Location_02 (0.00s)
+    zzttimezonedto01_test.go:615: Error from TimeZoneDto{}.ConvertTz.
+        Pacific Time = '2017-04-29 17:54:30 -0700 PDT'
+        Error= 'TimeZoneDto.ConvertTz() 
+        Error returned by tzDtoOut.setTimeIn(tIn).
+        Error='TimeZoneDto.SetTimeIn() Error retrned by DateTzDto{}.New(tIn,tzDto.DateTimeFmt), tIn='2017-04-29 17:54:30.000000000 -0700 PDT'  Error='DateTzDto.New() 
+        Error returned from dTzUtil.setFromDateTime( &dtz2, dateTime, dateTimeFmtStr, ePrefix).
+        dateTime='2017-04-29 17:54:30 -0700 PDT'
+        Error='DateTzDto.New() dateTzDtoUtility.setFromDateTime() timeZoneDefUtility.setFromDateTime() 
+        Load Location Failed. The time zone name is invalid!
+        Time Zone Name: 'PDT'
+        dateTime= '2017-04-29 17:54:30.000000000 -0700 PDT'
+        '
+        ''
+        '
 === RUN   TestTimeZoneUtility_New_01
---- PASS: TestTimeZoneUtility_New_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_New_01 (0.00s)
+    zzttimezonedto01_test.go:638: Expected Time In='2017-04-29 19:54:30.000000000 -0500 CDT'. Instead, Time In='2017-04-29 17:54:30.000000000 -0700 PDT'
 === RUN   TestTimeZoneUtility_NewAddDuration_01
---- PASS: TestTimeZoneUtility_NewAddDuration_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewAddDuration_01 (0.00s)
+    zzttimezonedto01_test.go:678: Error: Expected Time1 TimeIn='02/15/2014 19:54:30.000000000 -0600 CST'.
+        Instead Time1 TimeIn='02/15/2014 17:54:30.000000000 -0800 PST'
 === RUN   TestTimeZoneUtility_NewAddDate_01
---- PASS: TestTimeZoneUtility_NewAddDate_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewAddDate_01 (0.01s)
+    zzttimezonedto01_test.go:744: Error: Expected tzu1OutStrTIn='02/15/2014 19:54:30.000000000 -0600 CST'.  Instead, tzu1OutStrTIn='02/15/2014 17:54:30.000000000 -0800 PST'
+    zzttimezonedto01_test.go:761: Error: Expected tzu2OutStrTIn='04/30/2017 19:54:30.000000000 -0500 CDT'.  Instead, tzu2OutStrTIn='04/30/2017 17:54:30.000000000 -0700 PDT'
 === RUN   TestTimeZoneUtility_NewAddDateTime_01
---- PASS: TestTimeZoneUtility_NewAddDateTime_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewAddDateTime_01 (0.01s)
+    zzttimezonedto01_test.go:807: Error: Expected tzu2.TimeIn='04/30/2017 22:58:32.000000000 -0500 CDT'.  Instead, tzu2.TimeIn='04/30/2017 23:58:32.000000000 -0400 EDT'. 
 === RUN   TestTimeZoneUtility_NewAddTime_01
---- PASS: TestTimeZoneUtility_NewAddTime_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewAddTime_01 (0.00s)
+    zzttimezonedto01_test.go:839: Error: Expected tzu1OutStrTIn='02/15/2014 19:54:30.000000000 -0600 CST'.  Instead, tzu1OutStrTIn='02/15/2014 17:54:30.000000000 -0800 PST'
+    zzttimezonedto01_test.go:866: Error: Expected tzu2OutStrTIn='02/15/2014 23:26:48.122058615 -0600 CST'.  Instead, tzu2OutStrTIn='02/15/2014 21:26:48.122058615 -0800 PST'
 === RUN   TestTimeZoneUtility_NewTimeAddDate_01
---- PASS: TestTimeZoneUtility_NewTimeAddDate_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewTimeAddDate_01 (0.00s)
+    zzttimezonedto02_test.go:28: Error: Expected tzu2OutStrTIn='04/30/2017 19:54:30.000000000 -0500 CDT'.  Instead, tzu2OutStrTIn='04/30/2017 17:54:30.000000000 -0700 PDT'
 === RUN   TestTimeZoneUtility_NewTimeAddTime_01
---- PASS: TestTimeZoneUtility_NewTimeAddTime_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewTimeAddTime_01 (0.00s)
+    zzttimezonedto02_test.go:70: Error: Expected tzu2OutStrTIn='02/15/2014 23:26:48.122058615 -0600 CST'.  Instead, tzu2OutStrTIn='02/15/2014 21:26:48.122058615 -0800 PST'
 === RUN   TestTimeZoneUtility_NewTimeAddDateTime_01
---- PASS: TestTimeZoneUtility_NewTimeAddDateTime_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewTimeAddDateTime_01 (0.00s)
+    zzttimezonedto02_test.go:106: Error: Expected tzu2.TimeIn='04/30/2017 22:58:32.000000000 -0500 CDT'.  Instead, tzu2.TimeIn='04/30/2017 23:58:32.000000000 -0400 EDT'. 
 === RUN   TestTimeZoneUtility_NewTimeAddDuration_01
---- PASS: TestTimeZoneUtility_NewTimeAddDuration_01 (0.00s)
+--- FAIL: TestTimeZoneUtility_NewTimeAddDuration_01 (0.00s)
+    zzttimezonedto02_test.go:146: Error: Expected tzu2OutStrTIn='02/15/2014 23:26:48.122058615 -0600 CST'.  Instead, tzu2OutStrTIn='02/15/2014 21:26:48.122058615 -0800 PST'
 === RUN   TestTimeZoneUtility_ReclassifyTimeWithTzLocal
 --- PASS: TestTimeZoneUtility_ReclassifyTimeWithTzLocal (0.00s)
 === RUN   TestTimeZoneUtility_ReclassifyTimeWithNewTz
 --- PASS: TestTimeZoneUtility_ReclassifyTimeWithNewTz (0.00s)
 === RUN   TestTimeZoneUtility_ReclassifyTimeAsMountain
---- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.00s)
-PASS
-ok  	github.com/MikeAustin71/datetimeopsgo/datetime	13.163s
+--- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.02s)
+FAIL
+exit status 1
+FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	11.247s

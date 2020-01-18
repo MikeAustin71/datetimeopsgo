@@ -732,6 +732,43 @@ func PrintOutTimeDtoFields(tDto dt.TimeDto) {
 
 }
 
+
+func PrintOutTimeZoneSpecFields(tzSpec dt.TimeZoneSpecification, tzSpecLabel string){
+
+	_,
+	_,
+	offsetHours,
+	offsetMinutes,
+	offsetSeconds := tzSpec.GetOffsetElements()
+
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+	fmt.Println("===============================================")
+	fmt.Println("       Time Zone Specification Fields          ")
+	fmt.Println("===============================================")
+	fmt.Println("-----------------------------------------------")
+	fmt.Println(tzSpecLabel)
+	fmt.Println("-----------------------------------------------")
+	fmt.Println("      Reference Date Time: ", tzSpec.GetReferenceDateTime().Format(fmtStr))
+	fmt.Println("                 ZoneName: ", tzSpec.GetZoneName())
+	fmt.Println("               ZoneOffset: ", tzSpec.GetZoneOffset())
+	fmt.Println("               UTC Offset: ", tzSpec.GetUtcOffset())
+	fmt.Println("        ZoneOffsetSeconds:", tzSpec.GetZoneOffsetTotalSeconds())
+	fmt.Println("                 ZoneSign: ", tzSpec.GetZoneSignChar())
+	fmt.Println("              OffsetHours: ", offsetHours)
+	fmt.Println("            OffsetMinutes: ", offsetMinutes)
+	fmt.Println("            OffsetSeconds: ", offsetSeconds)
+	fmt.Println("          Location String: ", tzSpec.GetLocationPointer().String())
+	fmt.Println("            Location Name: ", tzSpec.GetLocationName())
+	fmt.Println("       Location Name Type: ", tzSpec.GetLocationNameType().String())
+	fmt.Println("Military Time Zone Letter: ", tzSpec.GetMilitaryTimeZoneLetter())
+	fmt.Println("  Military Time Zone Name: ", tzSpec.GetMilitaryTimeZoneName())
+	fmt.Println("          Tag Description: ", tzSpec.GetTagDescription())
+	fmt.Println( "          Time Zone Type: ", tzSpec.GetTimeZoneType().String())
+	fmt.Println("          Time Zone Class: ", tzSpec.GetTimeZoneClass().String())
+	fmt.Println("===============================================")
+
+}
+
 func PrintOutDateTimeTimeZoneFields(dt time.Time, dtLabel string) {
 	fmt.Println("=========================================")
 	fmt.Println("     Time Zone Fields From time.Time     ")

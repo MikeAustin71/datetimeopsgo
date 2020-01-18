@@ -515,31 +515,29 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 				"%v", err.Error())
 		}
 
-		if tzMech.IsTzAbbrvUtcOffset(tzAbbrv) {
+		if !tzMech.IsTzAbbrvUtcOffset(tzAbbrv) {
+			return fmt.Errorf(ePrefix + "\n" +
+				"Load Location Failed. The time zone name is invalid!\n" +
+				"Time Zone Name: '%v'\n" +
+				"dateTime= '%v'\n",
+				dateTime.Location().String(),
+				dateTime.Format(FmtDateTimeTzNanoYMD))
+		}
 
-			tzSpec1,
-			err = tzMech.ConvertUtcAbbrvToStaticTz(
-				dateTime,
-				TzConvertType.Absolute(),
-				"Original Time Zone",
-				tzAbbrv,
-				ePrefix)
+		tzSpec1,
+		err = tzMech.ConvertUtcAbbrvToStaticTz(
+			dateTime,
+			TzConvertType.Absolute(),
+			"Original Time Zone",
+			tzAbbrv,
+			ePrefix)
 
-			if err != nil {
-				return err
-			}
+		if err != nil {
+			return err
+		}
 
-			dateTime = time.Date(dateTime.Year(),
-				dateTime.Month(),
-				dateTime.Day(),
-				dateTime.Hour(),
-				dateTime.Minute(),
-				dateTime.Second(),
-				dateTime.Nanosecond(),
-				tzSpec1.locationPtr)
-
-			tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
-			tzSpec1.timeZoneClass = TzClass.OriginalTimeZone()
+		tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
+		tzSpec1.timeZoneClass = TzClass.OriginalTimeZone()
 
 		tzSpec2,
 		err = tzMech.ConvertTzAbbreviationToTimeZone(
@@ -559,8 +557,8 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 			tzSpec2.timeZoneClass = TzClass.AlternateTimeZone()
 
 			tzdef.convertibleTimeZone = tzSpec1.CopyOut()
+
 			return nil
-		}
 	}
 
 	// The input time zone loaded successfully!
