@@ -260,12 +260,11 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 // classified as a Military Time Zone.
 //
 func (dtUtil *DTimeUtility) GetTimeZoneFromName(
+	dateTime time.Time,
 	timeZoneName string,
-	ePrefix string) (milTzLetter,
-	milTzName,
-	ianaTzName string,
-	ianaLocationPtr *time.Location,
-	tzType TimeZoneType,
+	timeConversionType TimeZoneConversionType,
+	ePrefix string) (
+	tzSpec TimeZoneSpecification,
 	err error) {
 
 	dtUtil.lock.Lock()
@@ -274,30 +273,28 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 
 	ePrefix += "DTimeUtility.GetTimeZoneFromName() "
 
-	milTzLetter = ""
-	milTzName = ""
-	ianaTzName = ""
-	ianaLocationPtr = nil
-	tzType = TzType.None()
+	tzSpec = TimeZoneSpecification{}
 	err = nil
 
-
 	if len(timeZoneName) == 0 {
-		err = errors.New(ePrefix +
-			"\nError: Input parameter 'timeZoneName' is an empty string!\n")
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneName",
+			inputParameterValue: "",
+			errMsg:              "Input parameter is an EMPTY String!",
+			err:                 nil,
+		}
 
-		return milTzLetter,
-			milTzName,
-			ianaTzName,
-			ianaLocationPtr,
-			tzType,
-			err
+		return tzSpec, err
 	}
 
 	tzMech := TimeZoneMechanics{}
 
-	return tzMech.GetTimeZoneFromName(timeZoneName, ePrefix)
-
+	return tzMech.GetTimeZoneFromName(
+		dateTime,
+		timeZoneName,
+		timeConversionType,
+		ePrefix)
 }
 
 // GetConvertibleTimeZoneFromDateTime - Receives a date time
@@ -310,32 +307,28 @@ func (dtUtil *DTimeUtility) GetTimeZoneFromName(
 //
 // If the initial time zone extracted from 'dateTime' is invalid,
 // the date time time zone abbreviation will be used to look up an
-// alternate, convertible time zone and the returned boolean value
-//'isAlternateConvertibleTz' will be set to 'true'.
+// alternate, convertible time zone. Check the flags on the returned
+// 'Time Zone Specification'.
 //
 func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromDateTime(
 	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
 	ePrefix string) (
-	ianaTimeZoneName string,
-	ianaLocationPtr *time.Location,
-	timeZoneClass TimeZoneClass,
+	tzSpec TimeZoneSpecification,
 	err error) {
 
 	dtUtil.lock.Lock()
 
 	defer dtUtil.lock.Unlock()
 
-	ePrefix += "DTimeUtility.GetUtcOffsetTzAbbrvFromDateTime() "
-
-	ianaTimeZoneName = ""
-	ianaLocationPtr = nil
-	timeZoneClass = TzClass.None()
-	err = nil
+	ePrefix += "DTimeUtility.GetConvertibleTimeZoneFromDateTime() "
 
 	tzMech := TimeZoneMechanics{}
 
 	return tzMech.GetConvertibleTimeZoneFromDateTime(
 		dateTime,
+		timeConversionType,
+		"Convertible Time Zone",
 		ePrefix)
 }
 

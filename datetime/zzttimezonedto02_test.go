@@ -171,7 +171,10 @@ func TestTimeZoneUtility_ReclassifyTimeWithTzLocal(t *testing.T) {
 		t.Errorf("Error returned from time.Parse: %v", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TZones.Local())
+	tOut, err := tz.ReclassifyTimeWithNewTz(
+		tIn,
+		TzConvertType.Relative(),
+		TZones.Local())
 
 	if err != nil {
 		t.Errorf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, TZones.Local())\n" +
@@ -197,7 +200,10 @@ func TestTimeZoneUtility_ReclassifyTimeWithNewTz(t *testing.T) {
 		t.Errorf("Error returned from time.Parse: %v", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Hawaii())
+	tOut, err := tz.ReclassifyTimeWithNewTz(
+		tIn,
+		TzConvertType.Relative(),
+		TZones.US.Hawaii())
 
 	if err != nil {
 		t.Errorf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Hawaii())\n" +
@@ -223,7 +229,10 @@ func TestTimeZoneUtility_ReclassifyTimeAsMountain(t *testing.T) {
 		t.Errorf("Error returned from time.Parse: %v", err.Error())
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Mountain())
+	tOut, err := tz.ReclassifyTimeWithNewTz(
+		tIn,
+		TzConvertType.Relative(),
+		TZones.US.Mountain())
 
 	if err != nil {
 		t.Errorf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, TZones.US.Mountain())\n" +

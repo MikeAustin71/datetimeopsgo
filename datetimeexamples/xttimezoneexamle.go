@@ -285,7 +285,10 @@ func ReclassifyTimeAsLocal() {
 		return
 	}
 
-	tOut, err := tz.ReclassifyTimeWithNewTz(tIn, "Local")
+	tOut, err := tz.ReclassifyTimeWithNewTz(
+		tIn,
+		dt.TzConvertType.Relative(),
+		"Local")
 
 	if err != nil {
 		fmt.Printf("Error returned by tz.ReclassifyTimeWithNewTz(tIn, \"Local\")\n" +

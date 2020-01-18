@@ -113,12 +113,13 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 
 	dtUtil := DTimeUtility{}
 
-	_,
-		_,
-		_,
-		_,
-		_,
-		err := dtUtil.GetTimeZoneFromName(targetTz, ePrefix)
+	// Set tzDtoOut.TimeIn
+	tzSpec,
+		err := dtUtil.GetTimeZoneFromName(
+			tIn,
+			targetTz,
+			TzConvertType.Relative(),
+			ePrefix)
 
 	if err != nil {
 		return TimeZoneDto{},
@@ -134,7 +135,7 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	// Set tzDtoOut.TimeIn
 	err = dTzUtil.setFromDateTime(
 		&tzDtoOut.TimeIn,
-		tIn,
+		tzSpec.referenceDateTime,
 		dateTimeFmtStr,
 		ePrefix)
 

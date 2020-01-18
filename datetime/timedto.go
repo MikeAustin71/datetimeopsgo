@@ -241,27 +241,27 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 
 	tzMech := TimeZoneMechanics{}
 
-	_,
-	_,
-	_,
-	tzLocPtr,
-	_,
-	err := tzMech.GetTimeZoneFromName(
-		timeZoneLocationName,
-		ePrefix)
-
-	if err != nil {
-		return time.Time{}, err
-	}
-
-return time.Date(tDto.Years,
+	dateTime := time.Date(tDto.Years,
 		time.Month(tDto.Months),
 		tDto.DateDays,
 		tDto.Hours,
 		tDto.Minutes,
 		tDto.Seconds,
 		tDto.TotSubSecNanoseconds,
-		tzLocPtr), nil
+		time.UTC)
+
+	tzSpec,
+	err := tzMech.GetTimeZoneFromName(
+		dateTime,
+		timeZoneLocationName,
+		TzConvertType.Absolute(),
+		ePrefix)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return tzSpec.referenceDateTime, nil
 }
 
 // IsEmpty - Returns 'true' if all data fields in the current

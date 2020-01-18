@@ -85,21 +85,22 @@ func (dtMech *dateTimeMechanics) absoluteTimeToTimeZoneNameConversion(
 			}
 	}
 
-	dtMech2 := dateTimeMechanics{}
-	tzLocPtr, err := dtMech2.loadTzLocationPtr(timeZoneName, ePrefix)
+	var err error
+	tzSpec := TimeZoneSpecification{}
+	tzMech := TimeZoneMechanics{}
+
+	tzSpec,
+	err = tzMech.GetTimeZoneFromName(
+		dateTime,
+		timeZoneName,
+		TzConvertType.Absolute(),
+		ePrefix)
 
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	return time.Date(dateTime.Year(),
-		dateTime.Month(),
-		dateTime.Day(),
-		dateTime.Hour(),
-		dateTime.Minute(),
-		dateTime.Second(),
-		dateTime.Nanosecond(),
-		tzLocPtr), nil
+	return tzSpec.referenceDateTime, nil
 }
 
 // allocateSecondsToHrsMinSecs - Useful in calculating offset hours,
@@ -250,7 +251,7 @@ func (dtMech *dateTimeMechanics) loadTzLocationPtr(
 }
 
 
-// RelativeTimeToTimeNameZoneConversion - Converts a time value
+// relativeTimeToTimeNameZoneConversion - Converts a time value
 // to its equivalent time in another time zone specified by input
 // parameter string, 'timeZoneName'.
 //
@@ -324,21 +325,20 @@ func (dtMech *dateTimeMechanics) relativeTimeToTimeNameZoneConversion(
 			}
 	}
 
+	var err error
+	tzSpec := TimeZoneSpecification{}
 	tzMech := TimeZoneMechanics{}
 
-	_,
-	_,
-	_,
-	ianaLocationPtr,
-	_,
-	err := tzMech.GetTimeZoneFromName(
+	tzSpec,
+	err = tzMech.GetTimeZoneFromName(
+		dateTime,
 		timeZoneName,
+		TzConvertType.Relative(),
 		ePrefix)
 
 	if err != nil {
 		return time.Time{}, err
 	}
 
-
-	return dateTime.In(ianaLocationPtr), nil
+	return tzSpec.referenceDateTime, nil
 }

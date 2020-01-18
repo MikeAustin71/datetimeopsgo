@@ -485,17 +485,12 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	}
 
 	tzMech := TimeZoneMechanics{}
-	var ianaTimeZonePtr *time.Location
-	var ianaTimeZoneName, tzAbbrv string
+	var tzAbbrv, utcOffset string
 	var err error
-	var tzSpec TimeZoneSpecification
+	var tzSpec1, tzSpec2 TimeZoneSpecification
 
-	tzType := TzType.None()
-	tzClass := TzClass.None()
 
-	ianaTimeZonePtr = dateTime.Location()
-
-	if ianaTimeZonePtr == nil {
+	if dateTime.Location() == nil {
 		return &TimeZoneError{
 			ePrefix: ePrefix,
 			errMsg:  "Error: dateTime.Location() returned a 'nil' pointer!",
@@ -503,15 +498,15 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		}
 	}
 
-	ianaTimeZoneName = ianaTimeZonePtr.String()
-
 	dtMech := dateTimeMechanics{}
 
-	_, err = dtMech.loadTzLocationPtr(ianaTimeZoneName, ePrefix)
+	_, err = dtMech.loadTzLocationPtr(
+		dateTime.Location().String(),
+		ePrefix)
 
 	if err != nil {
 		// Time Zone will NOT Load!
-		_, tzAbbrv, err =
+		utcOffset, tzAbbrv, err =
 			tzMech.GetUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
 
 		if err != nil {
@@ -521,112 +516,72 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		}
 
 		if tzMech.IsTzAbbrvUtcOffset(tzAbbrv) {
-			ianaTimeZoneName,
-			err = tzMech.ConvertUtcAbbrvToStaticTz(tzAbbrv, ePrefix)
+
+			tzSpec1,
+			err = tzMech.ConvertUtcAbbrvToStaticTz(
+				dateTime,
+				TzConvertType.Absolute(),
+				"Original Time Zone",
+				tzAbbrv,
+				ePrefix)
 
 			if err != nil {
 				return err
 			}
 
-			_,
-			_,
-			ianaTimeZoneName,
-			ianaTimeZonePtr,
-			tzType,
-			err = tzMech.GetTimeZoneFromName(ianaTimeZoneName, ePrefix)
-
-			if err != nil {
-				return err
-			}
-
-			dateTime2 := time.Date(dateTime.Year(),
+			dateTime = time.Date(dateTime.Year(),
 				dateTime.Month(),
 				dateTime.Day(),
 				dateTime.Hour(),
 				dateTime.Minute(),
 				dateTime.Second(),
 				dateTime.Nanosecond(),
-				ianaTimeZonePtr)
+				tzSpec1.locationPtr)
 
-			tzSpec = TimeZoneSpecification{}
+			tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
+			tzSpec1.timeZoneClass = TzClass.OriginalTimeZone()
 
-			err = tzSpec.SetTimeZone(
-				dateTime2,
-				"",
-				"",
-				"Original Time Zone",
-				"",
-				LocNameType.ConvertibleTimeZone(),
-				tzType,
-				TzClass.AlternateTimeZone(),
-				ePrefix)
+		tzSpec2,
+		err = tzMech.ConvertTzAbbreviationToTimeZone(
+			dateTime,
+			TzConvertType.Absolute(),
+			tzAbbrv + utcOffset,
+			"Convertible Time Zone",
+			ePrefix)
 
-			if err != nil {
-				return fmt.Errorf(ePrefix +
-					"Error: After Time Zone Load Failure and alternate time zone selection,\n" +
-					"TimeZoneSpecification failed to initialize.\n" +
-					"Error='%v'", err.Error())
-			}
+		if err != nil {
+			return err
+		}
 
-			tzdef.originalTimeZone = tzSpec.CopyOut()
+			tzdef.originalTimeZone = tzSpec1.CopyOut()
 
+			tzSpec2.locationNameType = LocNameType.ConvertibleTimeZone()
+			tzSpec2.timeZoneClass = TzClass.AlternateTimeZone()
 
-
+			tzdef.convertibleTimeZone = tzSpec1.CopyOut()
+			return nil
 		}
 	}
 
-	ianaTimeZoneName,
-	ianaTimeZonePtr,
-	tzType,
-	tzClass,
+	// The input time zone loaded successfully!
+
+	tzSpec1,
 	err =
 		tzMech.GetConvertibleTimeZoneFromDateTime(
 			dateTime,
+			TzConvertType.Absolute(),
+			"Original Time Zone",
 			ePrefix)
 
 	if err != nil {
 		return err
 	}
 
-	dateTime = time.Date(dateTime.Year(),
-		dateTime.Month(),
-		dateTime.Day(),
-		dateTime.Hour(),
-		dateTime.Minute(),
-		dateTime.Second(),
-		dateTime.Nanosecond(),
-		ianaTimeZonePtr)
+	tzSpec1.timeZoneClass.OriginalTimeZone()
+	tzdef.originalTimeZone = tzSpec1.CopyOut()
 
-	tzType = TzType.Iana()
-
-	if strings.ToLower(ianaTimeZoneName) == "local" {
-		tzType = TzType.Local()
-	}
-
-	tzSpec = TimeZoneSpecification{}
-
-	err = tzSpec.SetTimeZone(
-		dateTime,
-		"",
-		"",
-		"Original Time Zone",
-		"",
-		LocNameType.ConvertibleTimeZone(),
-		tzType,
-		tzClass,
-		ePrefix)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error: tzdef.originalTimeZone failed to initialize.\n" +
-			"Error='%v'", err.Error())
-	}
-
-	tzdef.originalTimeZone = tzSpec.CopyOut()
-
-	tzSpec.zoneLabel = "Convertible Time Zone"
-
-	tzdef.convertibleTimeZone = tzSpec.CopyOut()
+	tzSpec1.zoneLabel = "Convertible Time Zone"
+	tzdef.convertibleTimeZone = tzSpec1.CopyOut()
 
 	return nil
 }
@@ -664,142 +619,30 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		}
 	}
 
+	var tzSpec TimeZoneSpecification
+	var err error
+
 	tzMech := TimeZoneMechanics{}
 
-	milTzLetter,
-	milTzName,
-	ianaTimeZoneName,
-	ianaLocationPtr,
-	tzType,
-	err := tzMech.GetTimeZoneFromName(
+	tzSpec,
+	err = tzMech.GetTimeZoneFromName(
+		dateTime,
 		timeZoneName,
+		timeZoneConversionType,
 		ePrefix)
 
 	if err != nil {
 		return err
 	}
 
-	zoneLabel := "Original Time Zone"
-
-	switch timeZoneConversionType {
-
-	case TzConvertType.Relative():
-
-		dateTime = dateTime.In(ianaLocationPtr)
-
-	case TzConvertType.Absolute():
-
-		dateTime = time.Date(dateTime.Year(),
-			dateTime.Month(),
-			dateTime.Day(),
-			dateTime.Hour(),
-			dateTime.Minute(),
-			dateTime.Second(),
-			dateTime.Nanosecond(),
-			ianaLocationPtr)
-
-	default:
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "timeZoneConversionType",
-			inputParameterValue: timeZoneConversionType.String(),
-			errMsg:              "Input parameter 'timeZoneName' is not equal to 'Absolute' and not equal to 'Relative'!",
-			err:                 nil,
-		}
-	}
-
-
-	tzSpec := TimeZoneSpecification{}
-
-	err = tzSpec.SetTimeZone(
-		dateTime,
-		milTzLetter,
-		milTzName,
-		zoneLabel,
-		"",
-		LocNameType.ConvertibleTimeZone(),
-		tzType,
-		TzClass.OriginalTimeZone(),
-		ePrefix)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"Error: tzdef.originalTimeZone failed to initialize.\n" +
-			"Error='%v'", err.Error())
-	}
+	tzSpec.zoneLabel = "Original Time Zone"
 
 	tzdef.originalTimeZone = tzSpec.CopyOut()
 
-	zoneLabel, _ = dateTime.Zone()
-
-	firstTzLetter := ianaTimeZoneName[0:1]
-
-	if zoneLabel != ianaTimeZoneName &&
-		firstTzLetter != "+" &&
-		firstTzLetter != "-" {
-		tzdef.originalTimeZone.locationNameType = LocNameType.ConvertibleTimeZone()
-		tzdef.convertibleTimeZone = tzdef.originalTimeZone.CopyOut()
-		return nil
-	}
-
-	if ianaTimeZoneName == "UTC" {
-		tzdef.originalTimeZone.locationNameType = LocNameType.ConvertibleTimeZone()
-		tzdef.convertibleTimeZone = tzdef.originalTimeZone.CopyOut()
-		return nil
-	}
-
-	tzdef.originalTimeZone.locationNameType = LocNameType.NonConvertibleTimeZone()
-
-	var tzAbbrvLookupId string
-
-	tzAbbrvLookupId, err = tzMech.GetTzAbbrvLookupIdFromDateTime(dateTime, ePrefix)
-
-	if err != nil {
-		tzdef.originalTimeZone.Empty()
-
-		return fmt.Errorf(ePrefix +
-			"\nAttempted creation of Time Zone Abbreviation Look-Up Id Failed!\n" +
-			"Error='%v'\n", err.Error())
-	}
-
-	milTzLetter,
-	milTzName,
-	ianaTimeZoneName,
-	ianaLocationPtr,
-	err = tzMech.ConvertTzAbbreviationToTimeZone(tzAbbrvLookupId, ePrefix)
-
-	if err != nil {
-		tzdef.originalTimeZone.Empty()
-		return fmt.Errorf(ePrefix +
-			"\nError: Non-Convertible Time Zone Abbreviation Lookup Failed!\n" +
-			"Error='%v'\n", err.Error())
-	}
-
-	dateTime = dateTime.In(ianaLocationPtr)
-
-	zoneLabel = "Convertible Time Zone"
-
-	err = tzSpec.SetTimeZone(
-		dateTime,
-		milTzLetter,
-		milTzName,
-		zoneLabel,
-		"",
-		LocNameType.ConvertibleTimeZone(),
-		tzType,
-		TzClass.AlternateTimeZone(),
-		ePrefix)
-
-	if err != nil {
-
-		tzdef.originalTimeZone.Empty()
-		tzdef.convertibleTimeZone.Empty()
-
-		return err
-	}
+	tzSpec.zoneLabel = "Convertible Time Zone"
+	tzSpec.locationNameType.ConvertibleTimeZone()
 
 	tzdef.convertibleTimeZone = tzSpec.CopyOut()
-	tzdef.convertibleTimeZone.locationNameType = LocNameType.ConvertibleTimeZone()
 
 	return nil
 }

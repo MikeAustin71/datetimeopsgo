@@ -30,15 +30,35 @@ func (mt mainTest) mainTest058() {
 
 	fmt.Println("testUtcOffset: ", testUtcOffset)
 
+	testTime := "01/17/2020 17:08:05 -03"
+	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	dateTime, err := time.Parse(testTime, fmtStr)
+
+	if err != nil {
+		fmt.Printf(ePrefix +
+			"\ntime.Parse(testTime, fmtStr)\n" +
+			"testTime='%v'\n" +
+			"fmtStr='%v'\n" +
+			"Error='%v'\n", testTime, fmtStr, err.Error())
+	}
+
+	var staticTimeZone dt.TimeZoneSpecification
+
 	staticTimeZone,
-	err := tzMech.ConvertUtcAbbrvToStaticTz(testUtcOffset, ePrefix)
+	err = tzMech.ConvertUtcAbbrvToStaticTz(
+		dateTime,
+		dt.TzConvertType.Absolute(),
+		"Original Time Zone",
+		testUtcOffset,
+		ePrefix)
 
 	if err != nil {
 		fmt.Printf("%v", err.Error())
 		return
 	}
 
-	fmt.Println("staticTimeZone: ", staticTimeZone)
+	fmt.Println("staticTimeZone: ", staticTimeZone.GetLocationName())
 	fmt.Println()
 	mt.mainPrintHdr("SUCCESS" , "!")
 
@@ -541,14 +561,13 @@ func (mt mainTest) mainTest051() {
 
 	dtUtil := dt.DTimeUtility{}
 
-	var ianaTimeZoneName string
-	var ianaLocationPtr *time.Location
-	var tzClass dt.TimeZoneClass
+	var tzSpec dt.TimeZoneSpecification
 
-	ianaTimeZoneName,
-	ianaLocationPtr,
-		tzClass,
-	err = dtUtil.GetConvertibleTimeZoneFromDateTime(t1, ePrefix)
+	tzSpec,
+	err = dtUtil.GetConvertibleTimeZoneFromDateTime(
+		t1,
+		dt.TzConvertType.Absolute(),
+		ePrefix)
 
 	if err != nil {
 		fmt.Printf(ePrefix +
@@ -559,9 +578,9 @@ func (mt mainTest) mainTest051() {
 	}
 
 	fmt.Println()
-	fmt.Printf("        ianaTimeZoneName: %v\n", ianaTimeZoneName)
-	fmt.Printf("         ianaLocationPtr: %v\n", ianaLocationPtr.String())
-	fmt.Printf("tzClass: %v\n\n", tzClass.String())
+	fmt.Printf("        ianaTimeZoneName: %v\n", tzSpec.GetLocationName())
+	fmt.Printf("         ianaLocationPtr: %v\n", tzSpec.GetLocationPointer().String())
+	fmt.Printf("                 tzClass: %v\n\n", tzSpec.GetTimeZoneClass().String())
 
 	fmt.Printf(ePrefix +
 		"\nSuccess!\n" +

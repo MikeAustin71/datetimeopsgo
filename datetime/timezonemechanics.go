@@ -152,6 +152,7 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 	err =
 	 tzMech2.ConvertTzAbbreviationToTimeZone(
 	 	tInputJune,
+	 	TzConvertType.Absolute(),
 	 	tzAbbrvLookUpId,
 	 	"",
 	 	ePrefix)
@@ -490,6 +491,7 @@ func (tzMech *TimeZoneMechanics) CalcUtcZoneOffsets(
 //
 func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
 	tzAbbrvLookupKey string,
 	timeZoneLabel string,
 	ePrefix string) (
@@ -604,6 +606,7 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 			return tzSpec, err
 		}
 
+	if timeConversionType == TzConvertType.Absolute() {
 		dateTime = time.Date(
 			dateTime.Year(),
 			dateTime.Month(),
@@ -613,6 +616,9 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 			dateTime.Second(),
 			dateTime.Nanosecond(),
 			ianaLocationPtr)
+	} else {
+		dateTime = dateTime.In(ianaLocationPtr)
+	}
 
 		tzSpec = TimeZoneSpecification{}
 
@@ -661,15 +667,20 @@ for i:=0; i < lenTZones; i++ {
 		return tzSpec, err
 	}
 
-	dateTime = time.Date(
-		dateTime.Year(),
-		dateTime.Month(),
-		dateTime.Day(),
-		dateTime.Hour(),
-		dateTime.Minute(),
-		dateTime.Second(),
-		dateTime.Nanosecond(),
-		ianaLocationPtr)
+
+	if timeConversionType == TzConvertType.Absolute() {
+		dateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			ianaLocationPtr)
+	} else {
+		dateTime = dateTime.In(ianaLocationPtr)
+	}
 
 	tzSpec = TimeZoneSpecification{}
 
@@ -705,6 +716,7 @@ for i:=0; i < lenTZones; i++ {
 //
 func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
 	timeZoneLabel string,
 	utcOffsetAbbrv string,
 	ePrefix string) (
@@ -772,15 +784,20 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 			return staticTimeZone, err
 		}
 
-		dateTime = time.Date(
-			dateTime.Year(),
-			dateTime.Month(),
-			dateTime.Day(),
-			dateTime.Hour(),
-			dateTime.Minute(),
-			dateTime.Second(),
-			dateTime.Nanosecond(),
-			locPtr)
+		if timeConversionType == TzConvertType.Absolute() {
+			dateTime = time.Date(
+				dateTime.Year(),
+				dateTime.Month(),
+				dateTime.Day(),
+				dateTime.Hour(),
+				dateTime.Minute(),
+				dateTime.Second(),
+				dateTime.Nanosecond(),
+				locPtr)
+		} else {
+
+			dateTime = dateTime.In(locPtr)
+		}
 
 		staticTimeZone = TimeZoneSpecification{}
 
@@ -975,6 +992,7 @@ func (tzMech *TimeZoneMechanics) IsTzAbbrvUtcOffset(
 //
 func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
 	timeZoneLabel string,
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
@@ -1073,6 +1091,7 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 
 		return tzMech2.ConvertUtcAbbrvToStaticTz(
 			dateTime,
+			timeConversionType,
 			timeZoneLabel,
 			tzAbbrv,
 			ePrefix)
@@ -1084,6 +1103,7 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 	err =
 			tzMech2.ConvertTzAbbreviationToTimeZone(
 				dateTime,
+				timeConversionType,
 				tzAbbrv,
 				timeZoneLabel,
 				ePrefix)
@@ -1137,13 +1157,11 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 // classified as a Military Time Zone.
 //
 func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
+	dateTime time.Time,
 	timeZoneName string,
+	timeConversionType TimeZoneConversionType,
 	ePrefix string) (
-	milTzLetter,
-	milTzName,
-	ianaTzName string,
-	ianaLocationPtr *time.Location,
-	tzType TimeZoneType,
+	tzSpec TimeZoneSpecification,
 	err error) {
 
 	tzMech.lock.Lock()
@@ -1152,11 +1170,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 
 	ePrefix += "TimeZoneMechanics.GetTimeZoneFromName() "
 
-	milTzLetter = ""
-	milTzName = ""
-	ianaTzName = ""
-	ianaLocationPtr = nil
-	tzType = TzType.None()
+	milTzLetter := ""
+	milTzName := ""
+	var ianaLocationPtr *time.Location
+	tzSpec = TimeZoneSpecification{}
 	err = nil
 
 	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
@@ -1170,12 +1187,7 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 			err:                 nil,
 		}
 
-		return milTzLetter,
-		milTzName,
-		ianaTzName,
-		ianaLocationPtr,
-		tzType,
-		err
+		return tzSpec, err
 	}
 
 	tzMech2 := TimeZoneMechanics{}
@@ -1184,52 +1196,94 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 
 	milTzLetter,
 	milTzName,
-	ianaTzName,
+	_,
 	ianaLocationPtr,
 	err2 = tzMech2.ParseMilitaryTzNameAndLetter(timeZoneName, ePrefix)
 
 	if err2 == nil {
-		tzType = TzType.Military()
+		// Loaded a Military Time Zone
 
-		return milTzLetter,
+		if timeConversionType == TzConvertType.Absolute() {
+
+			dateTime = time.Date(
+				dateTime.Year(),
+				dateTime.Month(),
+				dateTime.Day(),
+				dateTime.Hour(),
+				dateTime.Minute(),
+				dateTime.Second(),
+				dateTime.Nanosecond(),
+				ianaLocationPtr)
+		} else {
+			dateTime = dateTime.In(ianaLocationPtr)
+		}
+
+		err = tzSpec.SetTimeZone(
+			dateTime,
+			milTzLetter,
 			milTzName,
-			ianaTzName,
-			ianaLocationPtr,
-			tzType,
-			err
+			"Original Time Zone",
+			"",
+			LocNameType.ConvertibleTimeZone(),
+			TzType.Military(),
+			TzClass.OriginalTimeZone(),
+			ePrefix)
+
+		return tzSpec, err
 	}
+
+	// This is NOT a Military Time Zone. Try
+	// a conventional IANA Time Zone.
 
 	dtMech := dateTimeMechanics{}
 
 	ianaLocationPtr, err2 = dtMech.loadTzLocationPtr(timeZoneName,ePrefix)
 
-	if err2!=nil {
-		ianaLocationPtr = nil
+	if err2 != nil {
 		err = fmt.Errorf(ePrefix +
 			"\nError: Input parameter, 'timeZoneName', failed to load!\n" +
 			"Therefore, 'timeZoneName is an invalid time zone." )
-	} else {
-
-		ianaTzName = timeZoneName
-
-		testTzName := strings.ToLower(ianaTzName)
-
-		if testTzName == "local" {
-
-			tzType = TzType.Local()
-
-		} else {
-
-			tzType = TzType.Iana()
-		}
+		return tzSpec, err
 	}
 
-	return milTzLetter,
+	var tzType TimeZoneType
+
+	if strings.ToLower(timeZoneName) == "local" {
+
+		tzType = TzType.Local()
+
+	} else {
+
+		tzType = TzType.Iana()
+	}
+
+	if timeConversionType == TzConvertType.Absolute() {
+
+		dateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			ianaLocationPtr)
+	} else {
+		dateTime = dateTime.In(ianaLocationPtr)
+	}
+
+	err = tzSpec.SetTimeZone(
+		dateTime,
+		milTzLetter,
 		milTzName,
-		ianaTzName,
-		ianaLocationPtr,
+		"Original Time Zone",
+		"",
+		LocNameType.ConvertibleTimeZone(),
 		tzType,
-		err
+		TzClass.OriginalTimeZone(),
+		ePrefix)
+
+	return tzSpec, err
 }
 
 // GetTzAbbrvLookupIdFromDateTime - Returns a Time Zone Abbreviation

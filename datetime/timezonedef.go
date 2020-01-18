@@ -1203,7 +1203,7 @@ func (tzdef TimeZoneDefinition) NewFromTimeDto(
 func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	dateTime time.Time,
 	timeZoneName string,
-	timeConversionType TimeZoneConversionType,) (
+	timeConversionType TimeZoneConversionType) (
 	tzDefDto TimeZoneDefinition,
 	err error) {
 

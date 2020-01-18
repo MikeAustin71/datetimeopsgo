@@ -913,12 +913,16 @@ func (tzDto *TimeZoneDto) IsValidTimeZone(
 	dTimeUtil := DTimeUtility{}
 
 	var err error
-	_,
-		_,
-		_,
-		_,
-		timeZoneType,
-		err = dTimeUtil.GetTimeZoneFromName(tZone, ePrefix)
+	var tzSpec TimeZoneSpecification
+	dateTime := time.Now().In(time.UTC)
+
+
+	tzSpec,
+		err = dTimeUtil.GetTimeZoneFromName(
+			dateTime,
+			tZone,
+			TzConvertType.Absolute(),
+			ePrefix)
 
 	if err != nil {
 
@@ -929,7 +933,17 @@ func (tzDto *TimeZoneDto) IsValidTimeZone(
 		return isValidTz, timeZoneType
 	}
 
+	if tZone != tzSpec.GetLocationName() {
+
+		isValidTz = false
+
+		timeZoneType = TzType.None()
+
+		return isValidTz, timeZoneType
+	}
+
 	isValidTz = true
+	timeZoneType = tzSpec.GetTimeZoneType()
 
 	return isValidTz, timeZoneType
 }
@@ -2026,11 +2040,10 @@ func (tzDto TimeZoneDto) NewTimeAddTime(
 //
 func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 	tIn time.Time,
+	timeConversionType TimeZoneConversionType,
 	tZoneLocation string) (time.Time, error) {
 
 	ePrefix := "TimeZoneDto.ReclassifyTimeWithNewTz() "
-
-	strTime := tzDto.TimeWithoutTimeZone(tIn)
 
 	if len(tZoneLocation) == 0 {
 		return time.Time{}, errors.New(ePrefix + "Error: Time Zone Location, 'tZoneLocation', is an EMPTY string!")
@@ -2042,28 +2055,18 @@ func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 
 	dtUtil := DTimeUtility{}
 
-	_,
-	_,
-	_,
-	tzNew,
-	_,
-	err := dtUtil.GetTimeZoneFromName(tZoneLocation, ePrefix)
-
-
-	if err != nil {
-		return time.Time{}, fmt.Errorf( ePrefix +
-			"\nError: Input Time Zone Location is INVALID!\ntZoneLocation='%v'\n", tZoneLocation)
-	}
-
-	var tOutDateTime time.Time
-
-	tOutDateTime, err = time.ParseInLocation(FmtDateTimeNeutralDateFmt, strTime, tzNew)
+	tzSpec,
+	err := dtUtil.GetTimeZoneFromName(
+		tIn,
+		tZoneLocation,
+		timeConversionType,
+		ePrefix)
 
 	if err != nil {
-		return tOutDateTime, fmt.Errorf(ePrefix+"Error returned by time.Parse - Error: %v", err.Error())
+		return time.Time{}, err
 	}
 
-	return tOutDateTime, nil
+	return tzSpec.referenceDateTime, nil
 }
 
 // SetDateTimeFormatStr - Sets the value of the TimeZoneDto.DateTimeFmt field.
