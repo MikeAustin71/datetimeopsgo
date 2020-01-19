@@ -420,7 +420,7 @@ func (dtUtil *DTimeUtility) GetUtcOffsetTzAbbrvFromDateTime(
 // Using this method provides the option to load time zones from
 // an internal zoneinfo.zip database in future upgrades.
 //
-func (dtUtil *DTimeUtility) LoadTzLocation(
+func (dtUtil DTimeUtility) LoadTzLocation(
 	timeZoneName string,
 	ePrefix string) (
 	tzPointer *time.Location,
