@@ -185,14 +185,14 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.53s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.04s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.05s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.01s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.02s)
+--- PASS: TestDtfmtTestSuite (4.52s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.04s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.18s)
     --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.01s)
 === RUN   TestTDurCalcTypeString_001
 --- PASS: TestTDurCalcTypeString_001 (0.00s)
@@ -352,7 +352,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.05s)
+--- PASS: TestTimeDuroTestSuite (0.07s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
@@ -489,4 +489,4 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneUtility_ReclassifyTimeAsMountain
 --- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.00s)
 PASS
-ok  	github.com/MikeAustin71/datetimeopsgo/datetime	9.514s
+ok  	github.com/MikeAustin71/datetimeopsgo/datetime	11.613s

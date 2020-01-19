@@ -1152,6 +1152,174 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 	return tzSpec, err
 }
 
+func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
+	dateTime time.Time,
+	ePrefix string) (
+	tzSpec TimeZoneSpecification,
+	err error) {
+
+	tzMech.lock.Lock()
+
+	defer tzMech.lock.Unlock()
+
+	ePrefix += "TimeZoneMechanics.GetTimeZoneFromDateTime() "
+tzSpec = TimeZoneSpecification{}
+err = nil
+
+	if dateTime.IsZero() {
+		err =  &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'dateTime' is ZERO!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
+	if dateTime.Location() == nil {
+		err = &TimeZoneError{
+			ePrefix: ePrefix,
+			errMsg:  "Error: dateTime.Location() returned a 'nil' pointer!",
+			err:     nil,
+		}
+
+		return tzSpec, err
+	}
+
+	var err2 error
+	var tzAbbrv, utcOffset string
+	tzMech2 := TimeZoneMechanics{}
+	dtMech := dateTimeMechanics{}
+
+	_, err2 = dtMech.loadTzLocationPtr(
+		dateTime.Location().String(),
+		ePrefix)
+
+	if err2 == nil {
+		// The Original Time Zone Loaded Successfully!
+
+		tzSpec,
+			err =
+			tzMech2.GetConvertibleTimeZoneFromDateTime(
+				dateTime,
+				TzConvertType.Absolute(),
+				"Original Time Zone",
+				ePrefix)
+
+		if err != nil {
+			return tzSpec, err
+		}
+
+		tzSpec.timeZoneClass.OriginalTimeZone()
+		tzSpec.zoneLabel = "Convertible Time Zone"
+
+		return tzSpec, err
+	}
+
+	// Original Time Zone will NOT Load!
+	// Try to find an equivalent substitute
+	// Time Zone!
+
+	utcOffset, tzAbbrv, err =
+		tzMech2.GetUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
+
+	if err != nil {
+		err = fmt.Errorf(ePrefix+"\n"+
+			"Load Location Failed. Error returned extracting UTC Offset, Tz Abreviation.\n"+
+			"%v", err.Error())
+
+		return tzSpec, err
+	}
+
+	if !tzMech2.IsTzAbbrvUtcOffset(tzAbbrv) {
+		// Original Time Zone Did NOT Load AND,
+		// The Time Zone Abbreviation is NOT a UTC Offset
+		tzSpec,
+			err2 = tzMech2.ConvertTzAbbreviationToTimeZone(
+			dateTime,
+			TzConvertType.Absolute(),
+			tzAbbrv+utcOffset,
+			"Convertible Time Zone",
+			ePrefix)
+
+		if err2 != nil {
+			// Original Time Zone failed to Load AND,
+			// all efforts to find a satisfactory substitution
+			// FAILED!
+			err = fmt.Errorf(ePrefix+"\n"+
+				"Load Location Failed. The time zone name is invalid!\n"+
+				"Time Zone Name: '%v'\n"+
+				"dateTime= '%v'\n" +
+				"Error='%v'\n",
+				dateTime.Location().String(),
+				dateTime.Format(FmtDateTimeTzNanoYMD),
+				err2.Error())
+
+			tzSpec = TimeZoneSpecification{}
+
+			return tzSpec, err
+		}
+
+		tzSpec.locationNameType = LocNameType.ConvertibleTimeZone()
+		tzSpec.timeZoneClass = TzClass.AlternateTimeZone()
+
+		return tzSpec, err
+
+	}
+
+	// Original Time Zone Did NOT Load AND,
+	// The Time Zone Abbreviation IS a UTC Offset
+	tzSpec,
+		err = tzMech2.ConvertUtcAbbrvToStaticTz(
+		dateTime,
+		TzConvertType.Absolute(),
+		"Original Time Zone",
+		tzAbbrv,
+		ePrefix)
+
+	if err == nil {
+		// tzMech.ConvertUtcAbbrvToStaticTz Succeeded!
+		tzSpec.locationNameType = LocNameType.ConvertibleTimeZone()
+		tzSpec.timeZoneClass = TzClass.OriginalTimeZone()
+
+		return tzSpec, err
+	}
+
+	// Original Time Zone Did NOT Load AND,
+	// tzMech.ConvertUtcAbbrvToStaticTz Failed
+	// Attempt to select an alternate time zone!
+	tzSpec,
+		err2 = tzMech2.ConvertTzAbbreviationToTimeZone(
+		dateTime,
+		TzConvertType.Absolute(),
+		tzAbbrv+utcOffset,
+		"Convertible Time Zone",
+		ePrefix)
+
+	if err2 != nil {
+		// Original Time Zone failed to Load AND,
+		// all efforts to find a satisfactory substitution
+		// FAILED!
+		err = fmt.Errorf(ePrefix+"\n"+
+			"Load Location Failed. The time zone name is invalid!\n" +
+			"All attempts to find a equivalent alternate time zone Failed.\n"+
+			"Time Zone Name: '%v'\n"+
+			"dateTime= '%v'\n" +
+			"Error='%v'\n",
+			dateTime.Location().String(),
+			dateTime.Format(FmtDateTimeTzNanoYMD),
+			err2.Error())
+
+		tzSpec = TimeZoneSpecification{}
+
+		return tzSpec, err
+	}
+
+	return tzSpec, err
+}
+
 // GetTimeZoneFromName - Analyzes a time zone name passed
 // through input parameter, 'timeZoneName'. If valid, the
 // method populates time zone description elements and

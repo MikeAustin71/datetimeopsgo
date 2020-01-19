@@ -484,11 +484,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 		}
 	}
 
-	tzMech := TimeZoneMechanics{}
-	var tzAbbrv, utcOffset string
-	var err error
-	var tzSpec1, tzSpec2 TimeZoneSpecification
-
 	if dateTime.Location() == nil {
 		return &TimeZoneError{
 			ePrefix: ePrefix,
@@ -496,6 +491,11 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 			err:     nil,
 		}
 	}
+
+	tzMech := TimeZoneMechanics{}
+	var tzAbbrv, utcOffset string
+	var err error
+	var tzSpec1, tzSpec2 TimeZoneSpecification
 
 	dtMech := dateTimeMechanics{}
 
@@ -578,12 +578,31 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 			tzAbbrv,
 			ePrefix)
 
-		if err != nil {
-			return err
-		}
+		if err == nil {
+			tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
+			tzSpec1.timeZoneClass = TzClass.OriginalTimeZone()
 
-		tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
-		tzSpec1.timeZoneClass = TzClass.OriginalTimeZone()
+		} else {
+			// Original Time Zone Did NOT Load AND,
+			// Attempted loading of UTC Offset, static time zone
+			// Failed. Now, try an alternate equivalent time zone.
+
+			tzSpec1,
+				err = tzMech.ConvertTzAbbreviationToTimeZone(
+				dateTime,
+				TzConvertType.Absolute(),
+				tzAbbrv+utcOffset,
+				"Convertible Time Zone",
+				ePrefix)
+
+			if err != nil {
+				return err
+			}
+
+			tzSpec1.locationNameType = LocNameType.ConvertibleTimeZone()
+			tzSpec1.timeZoneClass = TzClass.AlternateTimeZone()
+
+		}
 	}
 
 	tzSpec2,

@@ -214,6 +214,18 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 	return fmt.Errorf("%v", errStr)
 }
 
+/*
+func (dtUtil *DTimeUtility) GetTimeZoneFromDateTime(
+	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
+	ePrefix string) (
+	tzSpec TimeZoneSpecification,
+	err error) {
+
+
+}
+*/
+
 // GetTimeZoneFromName - Analyzes a time zone name passed
 // through input parameter, 'timeZoneName'. If valid, the
 // method populates time zone description elements and
