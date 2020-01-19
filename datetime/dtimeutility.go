@@ -214,22 +214,36 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 	return fmt.Errorf("%v", errStr)
 }
 
-/*
+// GetTimeZoneFromDateTime - Analyzes a date time object
+// and returns a valid time zone in the form of a
+// 'TimeZoneSpecification' instance.
+//
+// Because date time objects (time.Time) do not support
+// Military Time Zones; therefore, Military Time Zones
+// are never returned by this method.
+//
 func (dtUtil *DTimeUtility) GetTimeZoneFromDateTime(
 	dateTime time.Time,
-	timeConversionType TimeZoneConversionType,
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
 
+	dtUtil.lock.Lock()
 
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.GetTimeZoneFromName() "
+
+	tzMech := TimeZoneMechanics{}
+
+	return tzMech.GetTimeZoneFromDateTime(dateTime, ePrefix)
 }
-*/
+
 
 // GetTimeZoneFromName - Analyzes a time zone name passed
 // through input parameter, 'timeZoneName'. If valid, the
-// method populates time zone description elements and
-// returns them.
+// method populates and returns a 'TimeZoneSpecification'
+// instance.
 //
 // This method will accept and successfully process one
 // of three types of time zones:

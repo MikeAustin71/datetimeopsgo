@@ -1152,6 +1152,15 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 	return tzSpec, err
 }
 
+
+// GetTimeZoneFromDateTime - Analyzes a date time object
+// and returns a valid time zone in the form of a
+// 'TimeZoneSpecification' instance.
+//
+// Because date time objects (time.Time) do not support
+// Military Time Zones; therefore, Military Time Zones
+// are never returned by this method.
+//
 func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
