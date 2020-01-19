@@ -431,6 +431,11 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneClass() TimeZoneClass {
 // known as the Time Zone 'Location' Name.
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneName() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
 	return tzSpec.locationName
 }
 

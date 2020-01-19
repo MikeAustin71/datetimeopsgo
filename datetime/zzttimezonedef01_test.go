@@ -1,11 +1,12 @@
 package datetime
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
 
-func TestTimeZoneDefDto_New_01(t *testing.T) {
+func TestTimeZoneDefinition_New_01(t *testing.T) {
 
 	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
@@ -92,7 +93,7 @@ func TestTimeZoneDefDto_New_01(t *testing.T) {
 
 }
 
-func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
+func TestTimeZoneDefinition_CopyOut_01(t *testing.T) {
 	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
@@ -193,7 +194,7 @@ func TestTimeZoneDefDto_CopyOut_01(t *testing.T) {
 
 }
 
-func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
+func TestTimeZoneDefinition_CopyOut_02(t *testing.T) {
 	americaLALoc, _ := time.LoadLocation(TZones.America.Los_Angeles())
 
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, americaLALoc)
@@ -288,7 +289,7 @@ func TestTimeZoneDefDto_CopyOut_02(t *testing.T) {
 
 }
 
-func TestTimeZoneDefDto_Equal_01(t *testing.T) {
+func TestTimeZoneDefinition_Equal_01(t *testing.T) {
 
 	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
@@ -388,7 +389,7 @@ func TestTimeZoneDefDto_Equal_01(t *testing.T) {
 
 }
 
-func TestTimeZoneDefDto_Equal_02(t *testing.T) {
+func TestTimeZoneDefinition_Equal_02(t *testing.T) {
 
 	usPacificLoc, _ := time.LoadLocation(TZones.US.Pacific())
 
@@ -490,7 +491,7 @@ func TestTimeZoneDefDto_Equal_02(t *testing.T) {
 
 }
 
-func TestTimeZoneDefDto_Equal_03(t *testing.T) {
+func TestTimeZoneDefinition_Equal_03(t *testing.T) {
 
 	americaLALoc, _ := time.LoadLocation(TZones.America.Los_Angeles())
 
@@ -589,4 +590,52 @@ func TestTimeZoneDefDto_Equal_03(t *testing.T) {
 		t.Error("Error: Expected tzDef0 to be NOT EQUAL to tzDef. IT WAS EQUAL!")
 	}
 
+}
+
+func TestTimeZoneDefinition_GetConvertibleTimeZoneName_01(t *testing.T) {
+
+	utcOffset := "2020-01-19 04:21:18 +1000 +10"
+	fmtStr := "2006-01-02 15:04:05 -0700 MST"
+
+	utcOffsetTime, err := time.Parse(fmtStr, utcOffset)
+
+	if err != nil {
+		fmt.Printf("Received error from time parse utcOffset: %v\n",
+			err.Error())
+		return
+	}
+
+	var tzDef TimeZoneDefinition
+
+	tzDef, err = TimeZoneDefinition{}.New(utcOffsetTime)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(utcOffsetTime)\n" +
+			"utcOffsetTime= '%v'\n" +
+			"Error='%v'\n",
+			utcOffsetTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	expectedOriginalTz := "Etc/GMT-10"
+
+	actualOriginalTz := tzDef.GetOriginalTimeZoneName()
+
+	actualConvertibleTz := tzDef.GetConvertibleTimeZoneName()
+
+	expectedConvertibleTz := "Asia/Vladivostok"
+
+	if expectedOriginalTz != actualOriginalTz {
+		t.Errorf("Error: Expected actualOriginalTz='%v'.\n" +
+			"Instead, actualOriginalTz='%v'\n",
+			expectedOriginalTz, actualOriginalTz)
+		return
+	}
+	
+	if expectedConvertibleTz != actualConvertibleTz {
+		t.Errorf("Error: Expected actualConvertibleTz='%v'.\n" +
+			"Instead, actualConvertibleTz='%v'\n",
+			expectedConvertibleTz, actualOriginalTz)
+	}
+	
 }

@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest061()
+	mainTest{}.mainTest058()
 
 }
 
@@ -312,8 +312,8 @@ func (mt mainTest) mainTest058() {
 	mt.mainPrintHdr(ePrefix , "-")
 	mt.mainPrintHdr("ConvertTzAbbreviationToTimeZone" , "-")
 
-	tzAbbrv := "-03"
-	testUtcOffset := "-0300"
+	tzAbbrv := "+10"
+	testUtcOffset := "+1000"
 
 	tzMech := dt.TimeZoneMechanics{}
 

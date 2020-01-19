@@ -479,6 +479,19 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneClass() TimeZoneClass {
 	return tzdef.convertibleTimeZone.GetTimeZoneClass()
 }
 
+// GetConvertibleTimeZoneName - Returns the time zone name,
+// also known as the Time Zone 'Location' Name, for the
+// Convertible Time Zone.
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneName() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.locationName
+}
+
 // GetConvertibleTimeZoneType - Returns the Time Zone Type associated
 // with the Convertible Time Zone.
 //
@@ -737,6 +750,19 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneClass() TimeZoneClass {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.GetTimeZoneClass()
+}
+
+// GetOriginalTimeZoneName - Returns the time zone name, also
+// known as the Time Zone 'Location' Name, for the Original
+// Time Zone.
+//
+func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneName() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.locationName
 }
 
 // GetOriginalTimeZoneType - Returns the Time Zone Type associated
@@ -1222,6 +1248,21 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 			inputParameterName:  "dateTime",
 			inputParameterValue: "",
 			errMsg:              "Input parameter 'dateTime' has a Zero value!",
+			err:                 nil,
+		}
+
+		return tzDefDto, err
+	}
+
+	if timeConversionType != TzConvertType.Absolute() &&
+		timeConversionType != TzConvertType.Relative() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input Parameter 'timeConversionType' " +
+				"contains an invalid value!",
 			err:                 nil,
 		}
 
