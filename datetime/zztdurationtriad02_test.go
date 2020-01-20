@@ -127,18 +127,18 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 
 	t1Local := t1.In(loc)
 
-	if t1Local.Location().String() != dur.LocalTime.StartTimeDateTz.GetTimeZoneName() {
+	if t1Local.Location().String() != dur.LocalTime.StartTimeDateTz.GetOriginalTzName() {
 		t.Errorf("Expected Local Time Zone Location ='%v'.\n" +
 			"Actual Time Zone Location ='%v'.\n",
 			t1Local.Location().String(),
-			dur.LocalTime.StartTimeDateTz.GetTimeZoneName())
+			dur.LocalTime.StartTimeDateTz.GetOriginalTzName())
 	}
 
 	if !t1Local.Equal(dur.LocalTime.StartTimeDateTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local Start Time ='%v'.\n" +
 			"Actual Local Start Time ='%v'.\n",
 			t1Local.Location().String(),
-			dur.LocalTime.StartTimeDateTz.GetTimeZoneName())
+			dur.LocalTime.StartTimeDateTz.GetOriginalTzName())
 	}
 
 	t2Local := dur.LocalTime.StartTimeDateTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
@@ -209,18 +209,18 @@ func TestDurationTriad_SetStartEndTimes_02(t *testing.T) {
 
 	t1Local := t1.In(loc)
 
-	if t1Local.Location().String() != dur.LocalTime.StartTimeDateTz.GetTimeZoneName() {
+	if t1Local.Location().String() != dur.LocalTime.StartTimeDateTz.GetOriginalTzName() {
 		t.Errorf("Expected Local Time Zone Location ='%v'.\n" +
 			"Actual Time Zone Location ='%v'.\n",
 			t1Local.Location().String(),
-			dur.LocalTime.StartTimeDateTz.GetTimeZoneName())
+			dur.LocalTime.StartTimeDateTz.GetOriginalTzName())
 	}
 
 	if !t1Local.Equal(dur.LocalTime.StartTimeDateTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local Start Time ='%v'.\n" +
 			"Actual Local Start Time ='%v'.\n",
 			t1Local.Location().String(),
-			dur.LocalTime.StartTimeDateTz.GetTimeZoneName())
+			dur.LocalTime.StartTimeDateTz.GetOriginalTzName())
 	}
 
 	t2Local := dur.LocalTime.StartTimeDateTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)

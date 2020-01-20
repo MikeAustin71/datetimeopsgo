@@ -2860,7 +2860,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 	calcType := durT.BaseTime.CalcType
 	startDateTime := durT.BaseTime.StartTimeDateTz.GetDateTimeValue()
 
-	tzLocName := durT.BaseTime.StartTimeDateTz.GetTimeZoneName()
+	tzLocName := durT.BaseTime.StartTimeDateTz.GetOriginalTzName()
 	fmtStr := durT.BaseTime.StartTimeDateTz.GetDateTimeFmt()
 
 	err := durT.SetStartEndTimesCalcTz(startDateTime, endDateTime, calcType, tzLocName, fmtStr)

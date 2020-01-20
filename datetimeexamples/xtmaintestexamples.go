@@ -736,7 +736,7 @@ func (mc MainCodeExamples) mainCodeEx040() {
 
 	expectedZone := "PDT"
 
-	actualZone := tzu.TimeOut.GetTimeZoneAbbreviation()
+	actualZone := tzu.TimeOut.GetOriginalTzAbbreviation()
 
 	if expectedZone != actualZone {
 		fmt.Printf("Expected Zone Out='%v'.\n" +
@@ -1194,7 +1194,7 @@ func (mc MainCodeExamples) mainCodeEx033() {
 	if !eTimeZoneDef.Equal(dTz.GetTimeZoneDef()) {
 		fmt.Printf("Expected dTz.GetTimeZoneDef().LocationName='%v'.\n"+
 			"Instead, dTz.GetTimeZoneDef().LocationName='%v'\n",
-			eTimeZoneDef.GetOriginalLocationName(), dTz.GetTimeZoneName())
+			eTimeZoneDef.GetOriginalLocationName(), dTz.GetOriginalTzName())
 		return
 	}
 

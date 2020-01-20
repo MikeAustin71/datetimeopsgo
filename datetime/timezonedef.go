@@ -786,7 +786,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneType() TimeZoneType {
 // GetOriginalUtcOffset - Returns the offset from UTC as a string
 // for the Original Time Zone.
 //
-// Examples of the UTC offset format are: "-0600" or "+0200".
+// Examples of the UTC offset format are:
+//   "+0600"
+//   "-0500"
+//   "-0430"
 //
 func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
 

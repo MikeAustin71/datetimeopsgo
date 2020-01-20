@@ -173,12 +173,12 @@ func (mt mainTest) mainTest061() {
 
 	exTOutLoc := "America/Los_Angeles"
 
-	if exTOutLoc != tzuPacific.TimeOut.GetTimeZoneName() {
+	if exTOutLoc != tzuPacific.TimeOut.GetOriginalTzName() {
 		fmt.Printf("Expected tzu.TimeOutLoc='%v'.\n" +
 			"Instead tzu.TimeOutLoc='%v'\n" +
 			"tzuPacific.TimeOut='%v'\n",
 			exTOutLoc,
-			tzuPacific.TimeOut.GetTimeZoneName(),
+			tzuPacific.TimeOut.GetOriginalTzName(),
 			tzuPacific.TimeOut.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
@@ -321,7 +321,7 @@ func (mt mainTest) mainTest060() {
 		return
 	}
 
-	actualTimeOutLoc := tzu1.TimeOut.GetTimeZoneName()
+	actualTimeOutLoc := tzu1.TimeOut.GetOriginalTzName()
 
 	if dt.TZones.US.Pacific() != actualTimeOutLoc {
 		fmt.Printf("Error: Expected tzu1.TimeOutLoc='%v'.\n" +
@@ -330,7 +330,7 @@ func (mt mainTest) mainTest060() {
 		return
 	}
 
-	actualTimeOutLoc = tzu2.TimeOut.GetTimeZoneName()
+	actualTimeOutLoc = tzu2.TimeOut.GetOriginalTzName()
 
 	if dt.TZones.US.Pacific() != actualTimeOutLoc {
 		fmt.Printf("Error: Expected tzu2.TimeOutLoc.String()='%v'.\n" +
@@ -569,7 +569,7 @@ func (mt mainTest) mainTest056() {
 	if ! areEqual {
 		fmt.Printf("Expected dTz.GetTimeZoneDef().LocationName='%v'.\n"+
 			"Instead, dTz.GetTimeZoneDef().LocationName='%v'\n",
-			eTimeZoneDef.GetOriginalLocationName(), dTz.GetTimeZoneName())
+			eTimeZoneDef.GetOriginalLocationName(), dTz.GetOriginalTzName())
 	}
 
 	tDto, err := dt.TimeDto{}.NewFromDateTime(t4USCentral)
@@ -734,7 +734,7 @@ func (mt mainTest) mainTest053() {
 
 	expectedZone := "PDT"
 
-	actualZone := tzu.TimeOut.GetTimeZoneAbbreviation()
+	actualZone := tzu.TimeOut.GetOriginalTzAbbreviation()
 
 	if expectedZone != actualZone {
 		fmt.Printf("Expected Zone Out='%v'.\n" +
@@ -857,7 +857,7 @@ func (mt mainTest) mainTest052() {
 		return
 	}
 
-	actualTimeOutLoc := tzu1.TimeOut.GetTimeZoneName()
+	actualTimeOutLoc := tzu1.TimeOut.GetOriginalTzName()
 
 	if dt.TZones.US.Pacific() != actualTimeOutLoc {
 		fmt.Printf("Error: Expected tzu1.TimeOutLoc='%v'.\n" +
@@ -866,7 +866,7 @@ func (mt mainTest) mainTest052() {
 		return
 	}
 
-	actualTimeOutLoc = tzu2.TimeOut.GetTimeZoneName()
+	actualTimeOutLoc = tzu2.TimeOut.GetOriginalTzName()
 
 	if dt.TZones.US.Pacific() != actualTimeOutLoc {
 		fmt.Printf("Error: Expected tzu2.TimeOutLoc.String()='%v'.\n" +

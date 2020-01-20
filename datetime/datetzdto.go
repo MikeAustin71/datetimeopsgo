@@ -1783,16 +1783,15 @@ func (dtz *DateTzDto) GetTimeZoneDef() TimeZoneDefinition {
 	return dtz.timeZone.CopyOut()
 }
 
-// GetTimeZoneAbbreviation - Returns TimeZoneDefinition member variable
-// TimeZoneDefinition.zoneName value.
+// GetOriginalTzAbbreviation - Returns the time zone abbreviation
+// for the Original Time Zone.
 //
-// Zone Name is the Time Zone abbreviation. This may
-// may be a series of characters, like "EST", "CST"
-// and "PDT" - or - if a time zone abbreviation does
-// not exist for this time zone, the time zone abbreviation
-// might be listed simply as the UTC offset ('-0430')
+// The Time Zone abbreviation may be  a series of characters,
+// like "EST", "CST" and "PDT" - or - if a time zone abbreviation
+// does not exist for this time zone, the time zone abbreviation
+// might be listed simply as the UTC offset ('+04' or '+03')
 //
-func (dtz *DateTzDto) GetTimeZoneAbbreviation() string {
+func (dtz *DateTzDto) GetOriginalTzAbbreviation() string {
 
 	dtz.lock.Lock()
 
@@ -1801,10 +1800,11 @@ func (dtz *DateTzDto) GetTimeZoneAbbreviation() string {
 return dtz.timeZone.GetOriginalZoneName()
 }
 
-// GetTimeZoneLocationPtr - Returns the Time Zone Location pointer
-// in the form of a '*time.Location' type.
+// GetOriginalTzLocationPtr - Returns a pointer to the Time Zone
+// Location for the Original Time Zone. The return value is
+// is a '*time.Location'.
 //
-func (dtz *DateTzDto) GetTimeZoneLocationPtr() *time.Location {
+func (dtz *DateTzDto) GetOriginalTzLocationPtr() *time.Location {
 
 	dtz.lock.Lock()
 
@@ -1813,11 +1813,14 @@ func (dtz *DateTzDto) GetTimeZoneLocationPtr() *time.Location {
 	return dtz.timeZone.originalTimeZone.locationPtr
 }
 
-// GetTimeZoneName - Returns a string containing the
-// time zone location name. If this is an IANA time
-// zone, the full IANA Time Zone text name will be
-// returned.
-func (dtz *DateTzDto) GetTimeZoneName() string {
+// GetOriginalTzName - Returns a string containing the
+// time zone location name for the Original Time Zone.
+//
+// If this is an IANA time zone, the full IANA Time
+// Zone text name will be returned. If this is a Military
+// Time Zone, the equivalent IANA Time Zone name will
+// be returned. (See DateTzDto.GetMilitaryTzName() )
+func (dtz *DateTzDto) GetOriginalTzName() string {
 
 	dtz.lock.Lock()
 
@@ -1827,14 +1830,17 @@ func (dtz *DateTzDto) GetTimeZoneName() string {
 
 }
 
-// GetTimeZoneUtcOffset - Returns the UTC Offset for
-// the associated time zone as a string. The UTC offset
-// is formatted in accordance with the following Examples:
+// GetOriginalTzUtcOffset - Returns the UTC Offset for
+// the Original Time Zone associated with this date time.
+//
+// The UTC offset is formatted as shown in the following
+// Examples:
+//
 //   "+0600"
 //   "-0500"
 //   "-0430"
 //
-func (dtz *DateTzDto) GetTimeZoneUtcOffset() string {
+func (dtz *DateTzDto) GetOriginalTzUtcOffset() string {
 
 	dtz.lock.Lock()
 

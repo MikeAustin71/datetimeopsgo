@@ -3897,7 +3897,7 @@ func(tzUtcOffset TimeZoneUtcOffsetReference) GetTimeZoneUtcOffsets(
 
   defer lockMapAllTimeZonesToUtcOffsets.Unlock()
 
-  ePrefix := "TimeZoneUtcOffsetReference.GetTimeZoneUtcOffset() " 
+  ePrefix := "TimeZoneUtcOffsetReference.GetOriginalTzUtcOffset() "
 
   utcArray := make([]string, 2) 
 

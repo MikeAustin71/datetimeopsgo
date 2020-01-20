@@ -1682,7 +1682,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 
 	ePrefix := "TimeDurationDto.NewStartEndDateTzDto() "
 
-	timeZoneLocation := startDateTz.GetTimeZoneName()
+	timeZoneLocation := startDateTz.GetOriginalTzName()
 
 	t2Dur := TimeDurationDto{}
 
@@ -2312,7 +2312,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(startDateTime,
 				"input parameters are ZERO!")
 	}
 
-	timeZoneLocation := startDateTime.GetTimeZoneName()
+	timeZoneLocation := startDateTime.GetOriginalTzName()
 
 	t2Dur := TimeDurationDto{}
 
@@ -2414,7 +2414,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(startDateTime,
 
 	t2Dur := TimeDurationDto{}
 
-	timeZoneLocation := startDateTime.GetTimeZoneName()
+	timeZoneLocation := startDateTime.GetOriginalTzName()
 
 	err := t2Dur.SetStartEndTimesDateDtoCalcTz(startDateTime,
 		endDateTime,
@@ -3040,7 +3040,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
 				"input parameters are ZERO!")
 	}
 
-	timeZoneLocation := startDateTime.GetTimeZoneName()
+	timeZoneLocation := startDateTime.GetOriginalTzName()
 
 	t2Dur := TimeDurationDto{}
 
@@ -3410,7 +3410,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 				"input parameters are ZERO!")
 	}
 
-	timeZoneLocation := startDateTime.GetTimeZoneName()
+	timeZoneLocation := startDateTime.GetOriginalTzName()
 
 	t2Dur := TimeDurationDto{}
 
@@ -3963,14 +3963,14 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 
 	ePrefix := "TimeDurationDto.ReCalcEndDateTimeToNow() "
 
-	eTime := time.Now().In(tDur.StartTimeDateTz.GetTimeZoneLocationPtr())
+	eTime := time.Now().In(tDur.StartTimeDateTz.GetOriginalTzLocationPtr())
 
 	calcType := tDur.CalcType
 
 	err := tDur.SetStartEndTimesCalcTz(tDur.StartTimeDateTz.GetDateTimeValue(),
 			eTime,
 			calcType,
-			tDur.StartTimeDateTz.GetTimeZoneName(),
+			tDur.StartTimeDateTz.GetOriginalTzName(),
 			tDur.StartTimeDateTz.GetDateTimeFmt())
 
 	if err != nil {
@@ -4002,7 +4002,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 
 	endDateTime := time.Now().Local()
 
-	locName := tDur.StartTimeDateTz.GetTimeZoneName()
+	locName := tDur.StartTimeDateTz.GetOriginalTzName()
 
 	_, err := time.LoadLocation(locName)
 

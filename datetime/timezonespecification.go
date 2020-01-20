@@ -427,7 +427,7 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneClass() TimeZoneClass {
 	return tzSpec.timeZoneClass
 }
 
-// GetTimeZoneName - Returns the time zone name, also
+// GetOriginalTzName - Returns the time zone name, also
 // known as the Time Zone 'Location' Name.
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneName() string {
