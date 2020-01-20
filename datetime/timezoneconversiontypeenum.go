@@ -206,11 +206,11 @@ func (tzConvertType TimeZoneConversionType) String() string {
 //
 // Usage:
 //
-// t, err := TimeZoneConversionType(0).ParseString("Relative", true)
+// t, err := TimeZoneConversionType(0).XParseString("Relative", true)
 //                            OR
-// t, err := TimeZoneConversionType(0).ParseString("Relative()", true)
+// t, err := TimeZoneConversionType(0).XParseString("Relative()", true)
 //                            OR
-// t, err := TimeZoneConversionType(0).ParseString("relative", false)
+// t, err := TimeZoneConversionType(0).XParseString("relative", false)
 //
 // For all of the cases shown above,
 //  t is now equal to TimeZoneConversionType(0).Relative()

@@ -186,11 +186,11 @@ func (locType LocationNameType) String() string {
 //
 // Usage:
 //
-// t, err := LocationNameType(0).ParseString("ConvertibleTimeZone", true)
+// t, err := LocationNameType(0).XParseString("ConvertibleTimeZone", true)
 //                            OR
-// t, err := LocationNameType(0).ParseString("ConvertibleTimeZone()", true)
+// t, err := LocationNameType(0).XParseString("ConvertibleTimeZone()", true)
 //                            OR
-// t, err := LocationNameType(0).ParseString("convertibletimezonename", false)
+// t, err := LocationNameType(0).XParseString("convertibletimezonename", false)
 //
 // For all of the cases shown above,
 //  t is now equal to LocationNameType(0).ConvertibleTimeZone()

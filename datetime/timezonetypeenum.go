@@ -10,22 +10,22 @@ import (
 var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
 	"None":     TimeZoneType(0).None(),
 	"Iana":     TimeZoneType(0).Iana(),
-	"Military": TimeZoneType(0).Military(),
 	"Local":    TimeZoneType(0).Local(),
+	"Military": TimeZoneType(0).Military(),
 }
 
 var mTimeZoneTypeLwrCaseStringToCode = map[string]TimeZoneType{
 	"none":     TimeZoneType(0).None(),
 	"iana":     TimeZoneType(0).Iana(),
-	"military": TimeZoneType(0).Military(),
 	"local":    TimeZoneType(0).Local(),
+	"military": TimeZoneType(0).Military(),
 }
 
 var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 	TimeZoneType(0).None():     "None",
 	TimeZoneType(0).Iana():     "Iana",
-	TimeZoneType(0).Military(): "Military",
 	TimeZoneType(0).Local():    "Local",
+	TimeZoneType(0).Military(): "Military",
 }
 
 // TimeZoneType - This type is configured as a series of
@@ -46,14 +46,14 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 //                                        Time Zone is identified in the
 //                                        IANA Time Zone database.
 //
-//  Military()              2           Tests have established that the
-//                                        Time Zone is a valid, standard
-//                                        Military Time Zone.
-//
-//  Local()                 3           Tests have established that the
+//  Local()                 2           Tests have established that the
 //                                        Time Zone is 'Local'. This is
 //                                        the time zone currently configured
 //                                        for the host computer.
+//
+//  Military()              3           Tests have established that the
+//                                        Time Zone is a valid, standard
+//                                        Military Time Zone.
 //
 // For easy access to these enumeration values, use the global variable
 // 'TzType'.
@@ -70,7 +70,7 @@ var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
 //
 type TimeZoneType int
 
-var lockTypeZoneType sync.Mutex
+var lockTimeZoneType sync.Mutex
 
 // None - TimeZoneType is uninitialized and has no value.
 //
@@ -84,19 +84,19 @@ func (tzType TimeZoneType) None() TimeZoneType { return TimeZoneType(0) }
 //
 func (tzType TimeZoneType) Iana() TimeZoneType { return TimeZoneType(1) }
 
-// Military - Classifies the time zone as a standard military time zone.
-//
-// This method is part of the standard enumeration.
-//
-func (tzType TimeZoneType) Military() TimeZoneType { return TimeZoneType(2) }
-
 // Local - The 'Local' time zone is construct of the Go programming language.
 // It signals that the time zone currently configured on the host computer
 // has been selected.
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) Local() TimeZoneType { return TimeZoneType(3) }
+func (tzType TimeZoneType) Local() TimeZoneType { return TimeZoneType(2) }
+
+// Military - Classifies the time zone as a standard military time zone.
+//
+// This method is part of the standard enumeration.
+//
+func (tzType TimeZoneType) Military() TimeZoneType { return TimeZoneType(3) }
 
 // =========================================================================
 
@@ -124,9 +124,9 @@ func (tzType TimeZoneType) Local() TimeZoneType { return TimeZoneType(3) }
 //
 func (tzType TimeZoneType) String() string {
 
-	lockTypeZoneType.Lock()
+	lockTimeZoneType.Lock()
 
-	defer lockTypeZoneType.Unlock()
+	defer lockTimeZoneType.Unlock()
 
 	label, ok := mTimeZoneTypeCodeToString[tzType]
 
@@ -181,11 +181,11 @@ func (tzType TimeZoneType) String() string {
 //
 // Usage:
 //
-// t, err := TimeZoneType(0).ParseString("Iana", true)
+// t, err := TimeZoneType(0).XParseString("Iana", true)
 //                            OR
-// t, err := TimeZoneType(0).ParseString("Iana()", true)
+// t, err := TimeZoneType(0).XParseString("Iana()", true)
 //                            OR
-// t, err := TimeZoneType(0).ParseString("iana", false)
+// t, err := TimeZoneType(0).XParseString("iana", false)
 //
 // For all of the cases shown above,
 //  t is now equal to TimeZoneType(0).Iana()
@@ -194,9 +194,9 @@ func (tzType TimeZoneType) XParseString(
 	valueString string,
 	caseSensitive bool) (TimeZoneType, error) {
 
-	lockTypeZoneType.Lock()
+	lockTimeZoneType.Lock()
 
-	defer lockTypeZoneType.Unlock()
+	defer lockTimeZoneType.Unlock()
 
 	ePrefix := "TimeZoneType.XParseString() "
 
@@ -253,7 +253,7 @@ func (tzType TimeZoneType) XParseString(
 	return timeZoneType, nil
 }
 
-// XValue - Returns the value of the TimeZoneType instance
+// XValue - Returns the value of the current TimeZoneType instance
 // as type TimeZoneType.
 //
 // This is a standard utility method and is not part of the valid
@@ -261,9 +261,9 @@ func (tzType TimeZoneType) XParseString(
 //
 func (tzType TimeZoneType) XValue() TimeZoneType {
 
-	lockTypeZoneType.Lock()
+	lockTimeZoneType.Lock()
 
-	defer lockTypeZoneType.Unlock()
+	defer lockTimeZoneType.Unlock()
 
 	return tzType
 }

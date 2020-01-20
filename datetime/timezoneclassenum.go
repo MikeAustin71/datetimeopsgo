@@ -27,7 +27,8 @@ var mTimeZoneClassCodeToString = map[TimeZoneClass]string{
 
 
 // TimeZoneClass - This type is configured as a series of constant integer values
-// describing the valid classes of time zones processed by type, 'TimeZoneDefinition'.
+// describing the valid classes of time zones processed by types, 'TimeZoneDefinition'
+// and 'TimeZoneSpecification'.
 //
 // Functionally, 'TimeZoneClass' serves as an enumeration of valid time zone classes.
 //
@@ -35,14 +36,15 @@ var mTimeZoneClassCodeToString = map[TimeZoneClass]string{
 //   Method                     Type Code
 //    Name                      Constant        Description
 //  _______________________________________________________________________________
+//
 //  None()                          0           Time Zone Class is uninitialized.
 //                                              This represents an error condition.
 //
-//  AlternateTimeZone()  1           Signals that the original Time Zone
+//  AlternateTimeZone()             1           Signals that the original Time Zone
 //                                              was invalid and that a valid Time
 //                                              Zone was substituted.
 //
-//  OriginalTimeZone()   2           Signals that the original Time Zone
+//  OriginalTimeZone()              2           Signals that the original Time Zone
 //                                              was valid and that no substitute
 //                                              time zone was required.
 //
@@ -296,6 +298,6 @@ func (tzClass TimeZoneClass) XValue() TimeZoneClass {
 // Usage:
 //  TzClass.None()
 //  TzClass.AlternateTimeZone()
-//  TzType.OriginalTimeZone()
+//  TzClass.OriginalTimeZone()
 //
 var TzClass TimeZoneClass
