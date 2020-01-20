@@ -639,3 +639,49 @@ func TestTimeZoneDefinition_GetConvertibleTimeZoneName_01(t *testing.T) {
 	}
 	
 }
+func TestTimeZoneDefinition_GetConvertibleTimeZoneName_02(t *testing.T) {
+
+	utcOffset := "2020-01-19 04:21:18 +0700 +07"
+	fmtStr := "2006-01-02 15:04:05 -0700 MST"
+
+	expectedOriginalTz := "Etc/GMT-7"
+	expectedConvertibleTz := TZones.Asia.Ho_Chi_Minh()
+
+	utcOffsetTime, err := time.Parse(fmtStr, utcOffset)
+
+	if err != nil {
+		fmt.Printf("Received error from time parse utcOffset: %v\n",
+			err.Error())
+		return
+	}
+
+	var tzDef TimeZoneDefinition
+
+	tzDef, err = TimeZoneDefinition{}.New(utcOffsetTime)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneDefinition{}.New(utcOffsetTime)\n" +
+			"utcOffsetTime= '%v'\n" +
+			"Error='%v'\n",
+			utcOffsetTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	actualOriginalTz := tzDef.GetOriginalTimeZoneName()
+
+	actualConvertibleTz := tzDef.GetConvertibleTimeZoneName()
+
+	if expectedOriginalTz != actualOriginalTz {
+		t.Errorf("Error: Expected actualOriginalTz='%v'.\n" +
+			"Instead, actualOriginalTz='%v'\n",
+			expectedOriginalTz, actualOriginalTz)
+		return
+	}
+
+	if expectedConvertibleTz != actualConvertibleTz {
+		t.Errorf("Error: Expected actualConvertibleTz='%v'.\n" +
+			"Instead, actualConvertibleTz='%v'\n",
+			expectedConvertibleTz, actualOriginalTz)
+	}
+
+}

@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest058()
+	mainTest{}.mainTest062()
 
 }
 
@@ -19,6 +19,75 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest062() {
+
+	ePrefix := "mainTest062() TimeZoneDefinition"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	utcOffset := "2020-01-19 04:21:18 +0700 +07"
+	fmtStr := "2006-01-02 15:04:05 -0700 MST"
+
+	expectedOriginalTz := "Etc/GMT-7"
+	expectedConvertibleTz := dt.TZones.Asia.Ho_Chi_Minh()
+
+	utcOffsetTime, err := time.Parse(fmtStr, utcOffset)
+
+	if err != nil {
+		fmt.Printf("Received error from time parse utcOffset: %v\n",
+			err.Error())
+		return
+	}
+
+	var tzDef dt.TimeZoneDefinition
+
+	tzDef, err = dt.TimeZoneDefinition{}.New(utcOffsetTime)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDefinition{}.New(utcOffsetTime)\n" +
+			"utcOffsetTime= '%v'\n" +
+			"Error='%v'\n",
+			utcOffsetTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	originalTzSpec := tzDef.GetOriginalTimeZone()
+	
+	ex.PrintOutDateTimeTimeZoneFields(originalTzSpec.GetReferenceDateTime(), "Original TZ Date Time")
+	ex.PrintOutTimeZoneSpecFields(originalTzSpec, "Original Time Zone")
+
+
+	convertibleTzSpec := tzDef.GetConvertibleTimeZone()
+	
+	ex.PrintOutDateTimeTimeZoneFields(convertibleTzSpec.GetReferenceDateTime(), "Convertible TZ Date Time")
+	ex.PrintOutTimeZoneSpecFields(convertibleTzSpec, "Convertible Time Zone")
+
+	
+	
+	
+
+	actualOriginalTz := tzDef.GetOriginalTimeZoneName()
+
+	actualConvertibleTz := tzDef.GetConvertibleTimeZoneName()
+
+
+	if expectedOriginalTz != actualOriginalTz {
+		fmt.Printf("Error: Expected actualOriginalTz='%v'.\n" +
+			"Instead, actualOriginalTz='%v'\n",
+			expectedOriginalTz, actualOriginalTz)
+		return
+	}
+
+	if expectedConvertibleTz != actualConvertibleTz {
+		fmt.Printf("Error: Expected actualConvertibleTz='%v'.\n" +
+			"Instead, actualConvertibleTz='%v'\n",
+			expectedConvertibleTz, actualOriginalTz)
+		return
+	}
+
+	mt.mainPrintHdr("Successful Completion" , "=")
+
+}
 
 func (mt mainTest) mainTest061() {
 
