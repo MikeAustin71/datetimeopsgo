@@ -40,17 +40,17 @@ func TestDateTzDto_NewDateTimeElements_01(t *testing.T) {
 			t1OutStr, actualTimeStr)
 	}
 
-	tz := dTzDto.GetTimeZone()
+	tz := dTzDto.GetTimeZoneDef()
 
 	if t1ExpectedZone != tz.GetOriginalZoneName() {
 		t.Errorf("Error: Expected dTzDto.TimeZone='%v'.\n" +
-			"Instead, dTzDto.GetTimeZone().ZoneName='%v'\n",
+			"Instead, dTzDto.GetTimeZoneDef().ZoneName='%v'\n",
 			t1ExpectedZone,tz.GetOriginalZoneName())
 	}
 
 	if t1ExpectedZoneOffset != tz.GetOriginalZoneOffsetTotalSeconds() {
 		t.Errorf("Error: Expected tz.GetTimeZoneOffset()='%v'.\n" +
-			"Instead, tz.GetTimeZone().OffsetSeconds='%v'\n",
+			"Instead, tz.GetTimeZoneDef().OffsetSeconds='%v'\n",
 			t1ExpectedZoneOffset, tz.GetOriginalZoneOffsetTotalSeconds())
 	}
 
@@ -156,7 +156,7 @@ func TestDateTzDto_NewDateTime_01(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
 	}
 
-	tz := dTzDto.GetTimeZone()
+	tz := dTzDto.GetTimeZoneDef()
 
 	if t1ExpectedZone != tz.GetOriginalZoneName() {
 		t.Errorf("Error: Expected tz.ZoneName='%v'.\n" +
@@ -247,7 +247,7 @@ func TestDateTzDto_New_01(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
 	}
 
-	tz := dTzDto.GetTimeZone()
+	tz := dTzDto.GetTimeZoneDef()
 
 	if t1ExpectedZone != tz.GetOriginalZoneName() {
 		t.Errorf("Error: Expected tz.GetOriginalZoneName()='%v'.\n" +
@@ -332,7 +332,7 @@ func TestDateTzDto_New_02(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
 	}
 
-	tz := dTzDto.GetTimeZone()
+	tz := dTzDto.GetTimeZoneDef()
 
 	if t1ExpectedZone != tz.GetOriginalZoneName() {
 		t.Errorf("Error: Expected tz.GetOriginalZoneName()='%v'.\n" +
@@ -568,9 +568,9 @@ func TestDateTzDto_NewTz_01(t *testing.T) {
 		return
 	}
 
-	if !eTimeZoneDef.Equal(dTz.GetTimeZone()) {
-		t.Errorf("Expected dTz.GetTimeZone().LocationName='%v'.\n"+
-			"Instead, dTz.GetTimeZone().LocationName='%v'\n",
+	if !eTimeZoneDef.Equal(dTz.GetTimeZoneDef()) {
+		t.Errorf("Expected dTz.GetTimeZoneDef().LocationName='%v'.\n"+
+			"Instead, dTz.GetTimeZoneDef().LocationName='%v'\n",
 			eTimeZoneDef.GetOriginalLocationName(), dTz.GetTimeZoneName())
 	}
 
@@ -646,7 +646,7 @@ func TestDateTzDto_SetFromDateTimeComponents_01(t *testing.T) {
 		t.Errorf("Error: expected dTzDto.DateTime='%v'.  Instead, dTzDto.DateTime='%v'", t1OutStr, actualTimeStr)
 	}
 
-	tz := dTzDto.GetTimeZone()
+	tz := dTzDto.GetTimeZoneDef()
 
 	if t1ExpectedZone != tz.GetOriginalZoneName() {
 		t.Errorf("Error: Expected tz.GetOriginalZoneName()='%v'.\n" +
@@ -822,9 +822,9 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 		return
 	}
 
-	if !eTimeZoneDef.Equal(dTzDto.GetTimeZone()) {
-		t.Errorf("Expected dTzDto.GetTimeZone().LocationName='%v'.\n"+
-			"Instead, dTzDto.GetTimeZone().LocationName='%v'\n",
+	if !eTimeZoneDef.Equal(dTzDto.GetTimeZoneDef()) {
+		t.Errorf("Expected dTzDto.GetTimeZoneDef().LocationName='%v'.\n"+
+			"Instead, dTzDto.GetTimeZoneDef().LocationName='%v'\n",
 			eTimeZoneDef.GetOriginalLocationName(), dTzDto.GetTimeZoneName())
 	}
 
@@ -929,8 +929,8 @@ func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 		t.Error("Expected t5Dto == dTz1.GetTimeComponents(). It DID NOT!")
 	}
 
-	if !t5TZoneDef.Equal(dTz1.GetTimeZone()) {
-		t.Error("Expected t5TZoneDef == dTz1.GetTimeZone(). It DID NOT!")
+	if !t5TZoneDef.Equal(dTz1.GetTimeZoneDef()) {
+		t.Error("Expected t5TZoneDef == dTz1.GetTimeZoneDef(). It DID NOT!")
 	}
 
 	err = dTz1.SetFromTimeDto(t4Dto, TZones.US.Central())
@@ -950,7 +950,7 @@ func TestDateTzDto_SetFromTimeDto(t *testing.T) {
 		t.Error("Expected t4Dto TimeDto == dTz1.Time Time Dto. THEY ARE NOT EQUAL!")
 	}
 
-	if !t4TZoneDef.Equal(dTz1.GetTimeZone()) {
+	if !t4TZoneDef.Equal(dTz1.GetTimeZoneDef()) {
 		t.Error("Expected t4TZoneDef TimeZoneDef == dTz1.TimeZone TimeZoneDef. " +
 			"THEY ARE NOT EQUAL!")
 	}

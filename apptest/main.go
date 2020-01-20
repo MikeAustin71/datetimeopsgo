@@ -564,11 +564,11 @@ func (mt mainTest) mainTest056() {
 		return
 	}
 
-	areEqual := eTimeZoneDef.Equal(dTz.GetTimeZone())
+	areEqual := eTimeZoneDef.Equal(dTz.GetTimeZoneDef())
 
 	if ! areEqual {
-		fmt.Printf("Expected dTz.GetTimeZone().LocationName='%v'.\n"+
-			"Instead, dTz.GetTimeZone().LocationName='%v'\n",
+		fmt.Printf("Expected dTz.GetTimeZoneDef().LocationName='%v'.\n"+
+			"Instead, dTz.GetTimeZoneDef().LocationName='%v'\n",
 			eTimeZoneDef.GetOriginalLocationName(), dTz.GetTimeZoneName())
 	}
 

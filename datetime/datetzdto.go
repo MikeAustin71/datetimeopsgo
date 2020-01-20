@@ -1771,10 +1771,10 @@ func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 	return dtz.dateTimeValue.Format(FmtDateTimeYMDAbbrvDowNano)
 }
 
-// GetTimeZone - Returns a deep copy of the 'DateTzDto' private
+// GetTimeZoneDef - Returns a deep copy of the 'DateTzDto' private
 // member variable, 'timeZone', of type TimeZoneDefinition.
 //
-func (dtz *DateTzDto) GetTimeZone() TimeZoneDefinition {
+func (dtz *DateTzDto) GetTimeZoneDef() TimeZoneDefinition {
 
 	dtz.lock.Lock()
 

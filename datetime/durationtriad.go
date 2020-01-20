@@ -1279,7 +1279,7 @@ func (durT DurationTriad) NewStartDateTzDuration(
 
 	ePrefix := "DurationTriad.NewStartDateTzDuration() "
 
-	tz := startDateTime.GetTimeZone()
+	tz := startDateTime.GetTimeZoneDef()
 
 	timeZoneLocation := tz.GetOriginalLocationName()
 	dateTimeFmtStr := startDateTime.GetDateTimeFmt()
@@ -1363,7 +1363,7 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 
 	du2 := DurationTriad{}
 
-	tz := startDateTime.GetTimeZone()
+	tz := startDateTime.GetTimeZoneDef()
 
 	timeZoneLocation := tz.GetOriginalLocationName()
 	dateTimeFmtStr := startDateTime.GetDateTimeFmt()

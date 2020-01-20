@@ -603,7 +603,7 @@ func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 			"Instead, tzType='%v'\n", tzType.String())
 	}
 
-	tz := tzu.TimeIn.GetTimeZone()
+	tz := tzu.TimeIn.GetTimeZoneDef()
 
 	if err := tz.IsValid(); err == nil {
 		t.Error("Expected tzu.TimeInZone.IsValid() to yield an error.  Instead, NO error was returned!\n" )

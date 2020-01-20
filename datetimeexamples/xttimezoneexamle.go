@@ -246,9 +246,9 @@ func Tex010() {
 		return
 	}
 
-	tzIn := tzu.TimeIn.GetTimeZone()
-	tzOut := tzu.TimeOut.GetTimeZone()
-	tzLocal := tzu.TimeLocal.GetTimeZone()
+	tzIn := tzu.TimeIn.GetTimeZoneDef()
+	tzOut := tzu.TimeOut.GetTimeZoneDef()
+	tzLocal := tzu.TimeLocal.GetTimeZoneDef()
 
 	fmt.Println("          Original Time: ", tIn.Format(dt.FmtDateTimeYrMDayFmtStr))
 	fmt.Println(" Original Time Location: ", tIn.Location())
@@ -424,8 +424,8 @@ func Tex021() {
 	//tz := TimeZoneDto{}
 	tzu, _ := dt.TimeZoneDto{}.New(tIn, ianaPacificTz, fmtstr)
 
-	tzIn := tzu.TimeIn.GetTimeZone()
-	tzOut := tzu.TimeOut.GetTimeZone()
+	tzIn := tzu.TimeIn.GetTimeZoneDef()
+	tzOut := tzu.TimeOut.GetTimeZoneDef()
 
 	fmt.Println("Original Time String: ", tstr)
 	fmt.Println("          tzu.TimeIn: ", tzu.TimeIn)
@@ -602,7 +602,7 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 	fmt.Println("----------------------------------")
 	fmt.Println("         Time Zone Info")
 	fmt.Println("----------------------------------")
-	PrintOutTimeZoneDefFields(dtz.GetTimeZone())
+	PrintOutTimeZoneDefFields(dtz.GetTimeZoneDef())
 
 }
 
@@ -693,19 +693,19 @@ func PrintOutTimeZoneFields(tz dt.TimeZoneDto) {
 	fmt.Println("     Description: ", tz.Description)
 	fmt.Println("          TimeIn: ", tz.TimeIn.String())
 	fmt.Println("      TimeIn Time Zone")
-	PrintOutTimeZoneDefFields(tz.TimeIn.GetTimeZone())
+	PrintOutTimeZoneDefFields(tz.TimeIn.GetTimeZoneDef())
 	fmt.Println()
 	fmt.Println("         TimeOut: ", tz.TimeOut.String())
 	fmt.Println("      TimeOut Time Zone")
-	PrintOutTimeZoneDefFields(tz.TimeOut.GetTimeZone())
+	PrintOutTimeZoneDefFields(tz.TimeOut.GetTimeZoneDef())
 	fmt.Println()
 	fmt.Println("       Time UTC : ", tz.TimeUTC.String())
 	fmt.Println("      TimeUTC Time Zone")
-	PrintOutTimeZoneDefFields(tz.TimeUTC.GetTimeZone())
+	PrintOutTimeZoneDefFields(tz.TimeUTC.GetTimeZoneDef())
 	fmt.Println()
 	fmt.Println("       TimeLocal: ", tz.TimeLocal.String())
 	fmt.Println("      TimeLocal Time Zone")
-	PrintOutTimeZoneDefFields(tz.TimeLocal.GetTimeZone())
+	PrintOutTimeZoneDefFields(tz.TimeLocal.GetTimeZoneDef())
 	fmt.Println()
 
 }

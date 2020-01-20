@@ -621,7 +621,7 @@ func (mc MainCodeExamples) mainCodeEx042() {
 		return
 	}
 
-	tzDefIn := dTzDtoIn.GetTimeZone()
+	tzDefIn := dTzDtoIn.GetTimeZoneDef()
 
 	PrintOutTimeZoneDefFields(tzDefIn)
 
@@ -642,7 +642,7 @@ func (mc MainCodeExamples) mainCodeEx042() {
 		return
 	}
 
-	tzDefOut := dTzDtoOut.GetTimeZone()
+	tzDefOut := dTzDtoOut.GetTimeZoneDef()
 
 	PrintOutTimeZoneDefFields(tzDefOut)
 
@@ -726,11 +726,11 @@ func (mc MainCodeExamples) mainCodeEx040() {
 	outTimeStr := tzu.TimeOut.GetDateTimeValue().Format(fmtStr)
 	fmt.Println("tzu.TimeOut: ", outTimeStr)
 
-	timeInDef := tzu.TimeIn.GetTimeZone()
+	timeInDef := tzu.TimeIn.GetTimeZoneDef()
 
 	PrintOutTimeZoneDefFields(timeInDef)
 
-	timeOutDef := tzu.TimeOut.GetTimeZone()
+	timeOutDef := tzu.TimeOut.GetTimeZoneDef()
 
 	PrintOutTimeZoneDefFields(timeOutDef)
 
@@ -1191,9 +1191,9 @@ func (mc MainCodeExamples) mainCodeEx033() {
 		return
 	}
 
-	if !eTimeZoneDef.Equal(dTz.GetTimeZone()) {
-		fmt.Printf("Expected dTz.GetTimeZone().LocationName='%v'.\n"+
-			"Instead, dTz.GetTimeZone().LocationName='%v'\n",
+	if !eTimeZoneDef.Equal(dTz.GetTimeZoneDef()) {
+		fmt.Printf("Expected dTz.GetTimeZoneDef().LocationName='%v'.\n"+
+			"Instead, dTz.GetTimeZoneDef().LocationName='%v'\n",
 			eTimeZoneDef.GetOriginalLocationName(), dTz.GetTimeZoneName())
 		return
 	}
@@ -1450,7 +1450,7 @@ func (mc MainCodeExamples) mainCodeEx030() {
 		return
 	}
 
-	tZoneDef := dtz1.GetTimeZone()
+	tZoneDef := dtz1.GetTimeZoneDef()
 
 	offsetSignChar,
 	_,
@@ -1518,7 +1518,7 @@ func (mc MainCodeExamples) mainCodeEx029() {
 		return
 	}
 
-	tZoneDef := dtz1.GetTimeZone()
+	tZoneDef := dtz1.GetTimeZoneDef()
 
 	offsetSignChar,
 	_,
@@ -1586,7 +1586,7 @@ func (mc MainCodeExamples) mainCodeEx028() {
 		return
 	}
 
-	tZoneDef := dtz1.GetTimeZone()
+	tZoneDef := dtz1.GetTimeZoneDef()
 
 	offsetSignChar,
 	_,
@@ -2251,8 +2251,8 @@ func (mc MainCodeExamples) mainCodeEx016() {
 		return
 	}
 
-	if !t5TZoneDef.Equal(dTz1.GetTimeZone()) {
-		fmt.Print("Expected t5TZoneDef == dTz1.GetTimeZone(). It DID NOT!")
+	if !t5TZoneDef.Equal(dTz1.GetTimeZoneDef()) {
+		fmt.Print("Expected t5TZoneDef == dTz1.GetTimeZoneDef(). It DID NOT!")
 	}
 
 	err = dTz1.SetFromTimeDto(t4Dto, dt.TZones.US.Central())
@@ -2281,14 +2281,14 @@ func (mc MainCodeExamples) mainCodeEx016() {
 		return
 	}
 
-	if !t4TZoneDef.Equal(dTz1.GetTimeZone()) {
-		fmt.Print("Expected t4TZoneDef TimeZoneDef == dTz1.GetTimeZone() TimeZoneDef. " +
+	if !t4TZoneDef.Equal(dTz1.GetTimeZoneDef()) {
+		fmt.Print("Expected t4TZoneDef TimeZoneDef == dTz1.GetTimeZoneDef() TimeZoneDef. " +
 			"THEY ARE NOT EQUAL!\n")
 
 		fmt.Println("t4TZoneDef")
 		PrintOutTimeZoneDefFields(t4TZoneDef)
-		fmt.Println("\n\ndTz1.GetTimeZone()")
-		PrintOutTimeZoneDefFields(dTz1.GetTimeZone())
+		fmt.Println("\n\ndTz1.GetTimeZoneDef()")
+		PrintOutTimeZoneDefFields(dTz1.GetTimeZoneDef())
 
 		return
 	}
