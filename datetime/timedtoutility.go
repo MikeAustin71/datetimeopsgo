@@ -884,7 +884,7 @@ func (tDtoUtil *timeDtoUtility) setFromDateTime(
 
 	if dateTime.IsZero() {
 		return errors.New(ePrefix +
-			"\nError: Input Parameter 'dateTime' has a ZERO Value!\n")
+			"\nError: Input Parameter 'dateTime' has a ZERO XValue!\n")
 	}
 
 	tDtoUtil2 := timeDtoUtility{}
@@ -1021,7 +1021,7 @@ func (tDtoUtil *timeDtoUtility) setTimeElements(
 		nanoseconds == 0 {
 
 		return fmt.Errorf(ePrefix +
-			"\nError: All input parameters (years, months, weeks, days etc.) are ZERO Value!\n")
+			"\nError: All input parameters (years, months, weeks, days etc.) are ZERO XValue!\n")
 	}
 
 	t1Dto := TimeDto{}

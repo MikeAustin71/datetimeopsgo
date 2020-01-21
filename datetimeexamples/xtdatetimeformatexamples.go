@@ -360,7 +360,7 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 
 	outStr = du.BaseTime.GetYearMthDaysTimeStr()
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
-	fmt.Println("Actual Duration Value: ", du.BaseTime.TimeDuration)
+	fmt.Println("Actual Duration XValue: ", du.BaseTime.TimeDuration)
 
 	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 
@@ -427,7 +427,7 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 	outStr := du.BaseTime.GetYearMthDaysTimeStr()
 
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
-	fmt.Println("Actual Duration Value: ", du.BaseTime.TimeDuration)
+	fmt.Println("Actual Duration XValue: ", du.BaseTime.TimeDuration)
 
 	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
 

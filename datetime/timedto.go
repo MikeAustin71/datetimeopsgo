@@ -446,7 +446,7 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 
 	if dateTime.IsZero() {
 		return TimeDto{}, errors.New(ePrefix +
-			"\nError: Input Parameter 'dateTime' has a ZERO Value!\n")
+			"\nError: Input Parameter 'dateTime' has a ZERO XValue!\n")
 	}
 
 	t2Dto := TimeDto{}
@@ -569,7 +569,7 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 
 	if dateTime.IsZero() {
 		return errors.New(ePrefix +
-			"\nError: Input Parameter 'dateTime' has a ZERO Value!\n")
+			"\nError: Input Parameter 'dateTime' has a ZERO XValue!\n")
 	}
 
 	tDtoUtil := timeDtoUtility{}

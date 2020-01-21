@@ -924,7 +924,7 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix +
-				"Error: Input Parameter Value 'militaryTz' is INVALID!\n" +
+				"Error: Input Parameter XValue 'militaryTz' is INVALID!\n" +
 				"'militaryTz' DOES NOT map to a valid Military Time Zone.\n" +
 				"militaryTz='%v'", milTzLetter)
 			return milTzLetter, milTzName, equivalentIanaTimeZone, err
@@ -934,7 +934,7 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix +
-				"Error: Input Parameter Value 'rawTz' is INVALID!\n" +
+				"Error: Input Parameter XValue 'rawTz' is INVALID!\n" +
 				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n" +
 				"rawTz='%v'", milTzName)
 			return milTzLetter, milTzName, equivalentIanaTimeZone, err
@@ -956,7 +956,7 @@ func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix +
-				"Error: Input Parameter Value 'rawTz' is INVALID!\n" +
+				"Error: Input Parameter XValue 'rawTz' is INVALID!\n" +
 				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n" +
 				"Military Time Zone Letter='%v'\n" +
 				"Military Time Zone Text Name='%v'", milTzLetter ,milTzName)

@@ -69,7 +69,7 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 	return dTz2, nil
 }
 
-// addDuration - Adds Duration to the DateTime Value of the input
+// addDuration - Adds Duration to the DateTime XValue of the input
 // parameter 'dTz' (DateTzDto) and returns a new DateTzDto instance
 // with the updated Date Time value.
 //

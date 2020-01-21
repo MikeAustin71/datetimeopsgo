@@ -8,21 +8,21 @@ import (
 )
 
 var mLocationNameTypeStringToCode = map[string]LocationNameType{
-	"None"                    : LocationNameType(0).None(),
-	"NonConvertibleTimeZone"  : LocationNameType(0).NonConvertibleTimeZone(),
-	"ConvertibleTimeZone"     : LocationNameType(0).ConvertibleTimeZone(),
+	"None"                    : LocationNameType(0),
+	"NonConvertibleTimeZone"  : LocationNameType(1),
+	"ConvertibleTimeZone"     : LocationNameType(2),
 }
 
 var mLocationNameTypeLwrCaseStringToCode = map[string]LocationNameType{
-	"none"                    : LocationNameType(0).None(),
-	"nonconvertibletimezone"  : LocationNameType(0).NonConvertibleTimeZone(),
-	"convertibletimezone" : LocationNameType(0).ConvertibleTimeZone(),
+	"none"                    : LocationNameType(0),
+	"nonconvertibletimezone"  : LocationNameType(1),
+	"convertibletimezone"     : LocationNameType(2),
 }
 
 var mLocationNameTypeCodeToString = map[LocationNameType] string {
-	LocationNameType(0).None()                    : "None",
-	LocationNameType(0).NonConvertibleTimeZone()  : "NonConvertibleTimeZone",
-	LocationNameType(0).ConvertibleTimeZone()     : "ConvertibleTimeZone",
+	LocationNameType(0) : "None",
+	LocationNameType(1) : "NonConvertibleTimeZone",
+	LocationNameType(2) : "ConvertibleTimeZone",
 }
 
 // LocationNameType - This type is configured as a series of
@@ -73,6 +73,11 @@ var lockLocationNameType sync.Mutex
 // This method is part of the standard enumeration.
 //
 func (locType LocationNameType) None() LocationNameType {
+
+	lockLocationNameType.Lock()
+
+	defer lockLocationNameType.Unlock()
+
 	return LocationNameType(0)
 }
 
@@ -83,6 +88,11 @@ func (locType LocationNameType) None() LocationNameType {
 // This method is part of the standard enumeration.
 //
 func (locType LocationNameType) NonConvertibleTimeZone() LocationNameType {
+
+	lockLocationNameType.Lock()
+
+	defer lockLocationNameType.Unlock()
+
 	return LocationNameType(1)
 }
 
@@ -98,6 +108,11 @@ func (locType LocationNameType) NonConvertibleTimeZone() LocationNameType {
 // This method is part of the standard enumeration.
 //
 func (locType LocationNameType) ConvertibleTimeZone() LocationNameType {
+
+	lockLocationNameType.Lock()
+
+	defer lockLocationNameType.Unlock()
+
 	return LocationNameType(2)
 }
 
@@ -112,7 +127,7 @@ func (locType LocationNameType) ConvertibleTimeZone() LocationNameType {
 //
 // ------------------------------------------------------------------------
 //
-// Return Value:
+// Return XValue:
 //
 //  string - The string label or description for the current enumeration
 //           value. If, the LocationNameType value is invalid, this
@@ -160,8 +175,9 @@ func (locType LocationNameType) String() string {
 //
 // caseSensitive   bool - If 'true' the search for enumeration names
 //                        will be case sensitive and will require an
-//                        exact match. Therefore, 'convertibleabbreviation' will NOT
-//                        match the enumeration name, 'ConvertibleAbbreviation'.
+//                        exact match. Therefore, 'convertibleabbreviation'
+//                        will NOT match the enumeration name,
+//                        'ConvertibleAbbreviation'.
 //
 //                        If 'false' a case insensitive search is
 //                        conducted for the enumeration name. In
@@ -172,8 +188,8 @@ func (locType LocationNameType) String() string {
 //
 // Return Values:
 //
-// TimeZoneType        - Upon successful completion, this method will return a new
-//                       instance of TimeZoneType set to the value of the
+// LocationNameType    - Upon successful completion, this method will return a new
+//                       instance of LocationNameType set to the value of the
 //                       enumeration matched by the string search performed on
 //                       input parameter,'valueString'.
 //
@@ -213,7 +229,7 @@ func (locType LocationNameType) XParseString(
 	}
 
 	if lenValueStr < 4 {
-		return LocNameType.None(),
+		return LocationNameType(0),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n"+
 				"Length Less than 4-characters\n"+
@@ -229,7 +245,7 @@ func (locType LocationNameType) XParseString(
 		locationNameType, ok = mLocationNameTypeStringToCode[valueString]
 
 		if !ok {
-			return LocNameType.None(),
+			return LocationNameType(0),
 				errors.New(ePrefix + "Invalid LocationNameType Code!")
 		}
 
@@ -240,7 +256,7 @@ func (locType LocationNameType) XParseString(
 		locationNameType, ok = mLocationNameTypeLwrCaseStringToCode[valueString]
 
 		if !ok {
-			return LocNameType.None(),
+			return LocationNameType(0),
 				errors.New(ePrefix + "Invalid LocationNameType Code!")
 		}
 	}

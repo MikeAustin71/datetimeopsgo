@@ -10,13 +10,34 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest062()
+	mainTest{}.mainTest063()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest063() {
+
+	ePrefix := "mainTest063() TestTDurCalcTypeString_034"
+
+	mt.mainPrintHdr(ePrefix , "-")
+
+	expectedStr := "XRAYxxx"
+
+	_, err :=  dt.TDurCalc.XParseString(expectedStr, false)
+
+	if err == nil {
+		fmt.Printf("Error: Expected an 'error' return from " +
+			"TDurCalc.XParseString(expectedStr, false).\n" +
+			"expectedStr='%v'.\n" +
+			"NO ERROR WAS RETURNED!!! ",expectedStr)
+		return
+	}
+
+	mt.mainPrintHdr("Successful Completion" , "=")
 }
 
 func (mt mainTest) mainTest062() {
@@ -61,10 +82,6 @@ func (mt mainTest) mainTest062() {
 	
 	ex.PrintOutDateTimeTimeZoneFields(convertibleTzSpec.GetReferenceDateTime(), "Convertible TZ Date Time")
 	ex.PrintOutTimeZoneSpecFields(convertibleTzSpec, "Convertible Time Zone")
-
-	
-	
-	
 
 	actualOriginalTz := tzDef.GetOriginalTimeZoneName()
 

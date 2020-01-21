@@ -7,24 +7,20 @@ import (
 	"sync"
 )
 
-
-var lockTimeZoneConversionTypeStringToCode sync.Mutex
-
 var mTimeZoneConversionTypeStringToCode = map[string]TimeZoneConversionType{
-	"Absolute":              TimeZoneConversionType(0).Absolute(),
+	"None"    :          TimeZoneConversionType(0).None(),
+	"Absolute":          TimeZoneConversionType(0).Absolute(),
 	"Relative":          TimeZoneConversionType(0).Relative(),
 }
 
-var lockMapTimeZoneConversionTypeLwrCaseStringToCode = sync.Mutex{}
-
 var mTimeZoneConversionTypeLwrCaseStringToCode = map[string]TimeZoneConversionType{
+	"none"    :          TimeZoneConversionType(0).None(),
 	"absolute":          TimeZoneConversionType(0).Absolute(),
 	"relative":          TimeZoneConversionType(0).Relative(),
 }
 
-var lockMapTimeZoneConversionTypeCodeToString = sync.Mutex{}
-
 var mTimeZoneConversionTypeCodeToString = map[TimeZoneConversionType]string{
+	TimeZoneConversionType(0).None()    :          "None",
 	TimeZoneConversionType(0).Absolute():          "Absolute",
 	TimeZoneConversionType(0).Relative():          "Relative",
 }
@@ -84,9 +80,16 @@ var mTimeZoneConversionTypeCodeToString = map[TimeZoneConversionType]string{
 //
 type TimeZoneConversionType int
 
+var lockTimeZoneConversionType sync.Mutex
+
 // None - Signals that the 'TimeZoneConversionType' value is empty. No 
 // 'TimeZoneConversionType' value has been specified.
 func (tzConvertType TimeZoneConversionType) None() TimeZoneConversionType {
+
+	lockTimeZoneConversionType.Lock()
+
+	defer lockTimeZoneConversionType.Unlock()
+
 	return TimeZoneConversionType(0)
 }
 
@@ -105,6 +108,11 @@ func (tzConvertType TimeZoneConversionType) None() TimeZoneConversionType {
 // For a comparison, see method TimeZoneConversionType(0).Relative() above.
 //
 func (tzConvertType TimeZoneConversionType) Absolute() TimeZoneConversionType {
+
+	lockTimeZoneConversionType.Lock()
+
+	defer lockTimeZoneConversionType.Unlock()
+
 	return TimeZoneConversionType(1)
 }
 
@@ -121,6 +129,11 @@ func (tzConvertType TimeZoneConversionType) Absolute() TimeZoneConversionType {
 // For a comparison, see method TimeZoneConversionType(0).Absolute() below.
 //
 func (tzConvertType TimeZoneConversionType) Relative() TimeZoneConversionType {
+
+	lockTimeZoneConversionType.Lock()
+
+	defer lockTimeZoneConversionType.Unlock()
+
 	return TimeZoneConversionType(2)
 }
 
@@ -132,7 +145,7 @@ func (tzConvertType TimeZoneConversionType) Relative() TimeZoneConversionType {
 //
 // ------------------------------------------------------------------------
 //
-// Return Value:
+// Return XValue:
 //
 //  string - The string label or description for the current enumeration
 //           value. If, the TimeZoneConversionType value is invalid, this
@@ -148,9 +161,9 @@ func (tzConvertType TimeZoneConversionType) Relative() TimeZoneConversionType {
 //
 func (tzConvertType TimeZoneConversionType) String() string {
 
-	lockMapTimeZoneConversionTypeCodeToString.Lock()
+	lockTimeZoneConversionType.Lock()
 
-	defer lockMapTimeZoneConversionTypeCodeToString.Unlock()
+	defer lockTimeZoneConversionType.Unlock()
 
 	label, ok := mTimeZoneConversionTypeCodeToString[tzConvertType]
 
@@ -219,6 +232,10 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 	valueString string,
 	caseSensitive bool) (TimeZoneConversionType, error) {
 
+	lockTimeZoneConversionType.Lock()
+
+	defer lockTimeZoneConversionType.Unlock()
+
 	ePrefix := "TimeZoneConversionType.XParseString() "
 
 	lenValueStr := len(valueString)
@@ -242,10 +259,6 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 
 	if caseSensitive {
 
-		lockTimeZoneConversionTypeStringToCode.Lock()
-
-		defer lockTimeZoneConversionTypeStringToCode.Unlock()
-
 		timeZoneConvertType, ok = mTimeZoneConversionTypeStringToCode[valueString]
 
 		if !ok {
@@ -256,10 +269,6 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 	} else {
 
 		valueString = strings.ToLower(valueString)
-
-		lockMapTimeZoneConversionTypeLwrCaseStringToCode.Lock()
-
-		defer lockMapTimeZoneConversionTypeLwrCaseStringToCode.Unlock()
 
 		timeZoneConvertType, ok = mTimeZoneConversionTypeLwrCaseStringToCode[valueString]
 
@@ -281,6 +290,10 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 //
 func (tzConvertType TimeZoneConversionType) XValue() TimeZoneConversionType {
 
+	lockTimeZoneConversionType.Lock()
+
+	defer lockTimeZoneConversionType.Unlock()
+
 	return tzConvertType
 }
 
@@ -291,6 +304,7 @@ func (tzConvertType TimeZoneConversionType) XValue() TimeZoneConversionType {
 // technique for accessing TimeZoneConversionType values.
 //
 // Usage:
+//  TzConvertType.None()
 //  TzConvertType.Relative()
 //  TzConvertType.Absolute()
 //

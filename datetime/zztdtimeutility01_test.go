@@ -238,7 +238,7 @@ func TestDTimeUtility_GetTimeZoneFromName_02(t *testing.T) {
 
 	if err == nil {
 		t.Error("Error: Expected an error return from dtUtil.GetTimeZoneFromName(dateTime,...)\n" +
-			"because 'dateTime' is a ZERO Value! However, NO ERROR WAS RETURNED!\n")
+			"because 'dateTime' is a ZERO XValue! However, NO ERROR WAS RETURNED!\n")
 	}
 }
 

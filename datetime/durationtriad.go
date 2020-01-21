@@ -224,7 +224,7 @@ func (durT *DurationTriad) CopyIn(duIn DurationTriad) {
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	DurationTriad - Upon completion, this method returns a new instance of
 //	                Type DurationTriad which is, in all respects, an exact
@@ -2838,7 +2838,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -3127,7 +3127,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error    - If this method completes successfully, the returned error
 //	           Type is set equal to 'nil'. If an error condition is encountered,
@@ -3351,7 +3351,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -3491,7 +3491,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error     - If this method completes successfully, the returned error
 //	            Type is set equal to 'nil'. If an error condition is encountered,
@@ -3585,7 +3585,7 @@ func (durT *DurationTriad) SetStartEndDateTzCalcTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -3721,7 +3721,7 @@ func (durT *DurationTriad) SetStartEndTimes(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -3886,7 +3886,7 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -3979,7 +3979,7 @@ func (durT *DurationTriad) SetStartEndTimesTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -4118,7 +4118,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -4285,7 +4285,7 @@ func (durT *DurationTriad) SetStartTimeDurationCalcTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -4396,7 +4396,7 @@ func (durT *DurationTriad) SetStartTimeDurationTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -4566,7 +4566,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,
@@ -4773,7 +4773,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //
 //	error		- If this method completes successfully, the returned error
 //			  Type is set equal to 'nil'. If an error condition is encountered,

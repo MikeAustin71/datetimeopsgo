@@ -39,7 +39,7 @@ type NthRootOp struct {
 	BigZero            *big.Int
 	Big3               *big.Int
 	Y                  *big.Int // Root Extracted thus far
-	YPrime             *big.Int // Next Value of Y
+	YPrime             *big.Int // Next XValue of Y
 	Minuend            *big.Int
 	Subtrahend         *big.Int
 	R                  *big.Int // Let R be the remainder

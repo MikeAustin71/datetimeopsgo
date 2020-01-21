@@ -4602,7 +4602,7 @@ var mapAllTimeZonesToUtcOffsets = map[string][]string{
 // 
 // 
 //        Item    Region  Region         Time Zone
-//         No.    Index    Name          Canonical Value
+//         No.    Index    Name          Canonical XValue
 // ----------------------------------------------------------------------
 // 
 //         1.       0     Africa         Africa/Abidjan

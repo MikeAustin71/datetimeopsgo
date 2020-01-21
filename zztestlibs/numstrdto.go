@@ -985,7 +985,7 @@ func (nDto *NumStrDto) IsNumStrDtoValid(numDto *NumStrDto, errName string) error
 	}
 
 	if numDto.SignVal != 1 && numDto.SignVal != -1 {
-		return fmt.Errorf("%v - Sign Value is INVALID. Should be +1 or -1. This Sign Value is %v", errName, numDto.SignVal)
+		return fmt.Errorf("%v - Sign XValue is INVALID. Should be +1 or -1. This Sign XValue is %v", errName, numDto.SignVal)
 	}
 
 	checkNumStrOut := ""

@@ -512,7 +512,7 @@ func (dtz *DateTzDto) AddDateToThis(
 
 }
 
-// AddDuration - Adds Duration to the DateTime Value of the current
+// AddDuration - Adds Duration to the DateTime XValue of the current
 // DateTzDto and returns a new DateTzDto instance with the updated
 // Date Time value.
 //
@@ -3553,7 +3553,7 @@ func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 //
 // ------------------------------------------------------------------------
 //
-// Return Value
+// Return XValue
 //   time.Duration - A time duration value representing the subtraction of the
 //                   input parameter t2 time value from the time value of the
 //                   current DateTzDto time value.

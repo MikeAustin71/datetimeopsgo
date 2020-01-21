@@ -8,21 +8,21 @@ import (
 )
 
 var mTimeZoneCategoryStringToCode = map[string]TimeZoneCategory{
-	"None":     TimeZoneCategory(0).None(),
-	"TextName":     TimeZoneCategory(0).TextName(),
-	"UtcOffset":    TimeZoneCategory(0).UtcOffset(),
+	"None"     :     TimeZoneCategory(0),
+	"TextName" :     TimeZoneCategory(1),
+	"UtcOffset":     TimeZoneCategory(2),
 }
 
 var mTimeZoneCategoryLwrCaseStringToCode = map[string]TimeZoneCategory{
-	"none":     TimeZoneCategory(0).None(),
-	"textname":     TimeZoneCategory(0).TextName(),
-	"utcoffset":    TimeZoneCategory(0).UtcOffset(),
+	"none"     :     TimeZoneCategory(0),
+	"textname" :     TimeZoneCategory(1),
+	"utcoffset":     TimeZoneCategory(2),
 }
 
 var mTimeZoneCategoryCodeToString = map[TimeZoneCategory]string{
-	TimeZoneCategory(0).None():     "None",
-	TimeZoneCategory(0).TextName(): "TextName",
-	TimeZoneCategory(0).UtcOffset():    "UtcOffset",
+	TimeZoneCategory(0).None()     : "None",
+	TimeZoneCategory(1).TextName() : "TextName",
+	TimeZoneCategory(2).UtcOffset(): "UtcOffset",
 }
 
 // TimeZoneCategory - This type is configured as a series of constant integer values
@@ -71,6 +71,11 @@ var lockTimeZoneCategory sync.Mutex
 // This method is part of the standard enumeration.
 //
 func (tzCat TimeZoneCategory) None() TimeZoneCategory {
+
+	lockTimeZoneCategory.Lock()
+
+	defer lockTimeZoneCategory.Unlock()
+
 	return TimeZoneCategory(0)
 }
 
@@ -83,6 +88,11 @@ func (tzCat TimeZoneCategory) None() TimeZoneCategory {
 //   "Europe/Rome"
 //
 func (tzCat TimeZoneCategory) TextName() TimeZoneCategory {
+
+	lockTimeZoneCategory.Lock()
+
+	defer lockTimeZoneCategory.Unlock()
+
 	return TimeZoneCategory(1)
 }
 
@@ -96,6 +106,11 @@ func (tzCat TimeZoneCategory) TextName() TimeZoneCategory {
 //   "+10"
 //
 func (tzCat TimeZoneCategory) UtcOffset() TimeZoneCategory {
+
+	lockTimeZoneCategory.Lock()
+
+	defer lockTimeZoneCategory.Unlock()
+
 	return TimeZoneCategory(2)
 }
 
@@ -109,7 +124,7 @@ func (tzCat TimeZoneCategory) UtcOffset() TimeZoneCategory {
 //
 // ------------------------------------------------------------------------
 //
-// Return Value:
+// Return XValue:
 //
 //  string - The string label or description for the current enumeration
 //           value. If, the TimeZoneCategory value is invalid, this
@@ -209,7 +224,7 @@ func (tzCat TimeZoneCategory) XParseString(
 	}
 
 	if lenValueStr < 8 {
-		return TzCat.None(),
+		return TimeZoneCategory(0),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n"+
 				"Length Less than 8-characters\n"+
@@ -227,7 +242,7 @@ func (tzCat TimeZoneCategory) XParseString(
 		timeZoneCategory, ok = mTimeZoneCategoryStringToCode[valueString]
 
 		if !ok {
-			return TzCat.None(),
+			return TimeZoneCategory(0),
 				errors.New(ePrefix + "Invalid TimeZoneCategory Code!")
 		}
 
@@ -239,7 +254,7 @@ func (tzCat TimeZoneCategory) XParseString(
 		timeZoneCategory, ok = mTimeZoneCategoryLwrCaseStringToCode[valueString]
 
 		if !ok {
-			return TzCat.None(),
+			return TimeZoneCategory(0),
 				errors.New(ePrefix + "Invalid TimeZoneCategory Code!")
 		}
 

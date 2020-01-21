@@ -490,7 +490,7 @@ func (ia *IntAry) AddToThis(ia2 *IntAry) error {
 
 	if compare == 1 {
 		// compare == + 1
-		// Absolute Value: N1 > N2
+		// Absolute XValue: N1 > N2
 
 		if ia.signVal == 1 && ia2.signVal == 1 {
 			doAdd = true
@@ -1873,7 +1873,7 @@ func (ia *IntAry) Floor() (IntAry, error) {
 }
 
 // GetAbsoluteValue - Returns an intAry which represents
-// the Absolute Value of the current intAry
+// the Absolute XValue of the current intAry
 func (ia *IntAry) GetAbsoluteValue() IntAry {
 
 	absIa := ia.CopyOut()
@@ -1940,7 +1940,7 @@ func (ia *IntAry) GetDecimalSeparator() rune {
 // digits to the right of the decimal point from the
 // current intAry object.
 //
-// Note: The Sign Value of the returned int Ary is always
+// Note: The Sign XValue of the returned int Ary is always
 // positive or +1.
 //
 // The return intAry will display fractional digits with
@@ -2099,7 +2099,7 @@ func (ia *IntAry) GetInt64() (int64, error) {
 //							the index is outside the range of
 //							the internal array, an error is returned.
 //
-// Return Value:	If the 'index' passed to the method is valid,
+// Return XValue:	If the 'index' passed to the method is valid,
 //								the method will return an integer of type
 //								uint8 representing the value of the internal
 //								integer array at the specified index.
@@ -2528,11 +2528,11 @@ func (ia *IntAry) IsIntAryValid(errName string) error {
 	ia.SetInternalFlags()
 
 	if ia.signVal != -1 && ia.signVal != 1 {
-		return fmt.Errorf("%v Sign Value is INVALID! Sign Value= '%v'", errName, ia.signVal)
+		return fmt.Errorf("%v Sign XValue is INVALID! Sign XValue= '%v'", errName, ia.signVal)
 	}
 
 	if ia.precision < 0 {
-		return fmt.Errorf("%v precision Value is INVALID! Sign Value= '%v'", errName, ia.precision)
+		return fmt.Errorf("%v precision XValue is INVALID! Sign XValue= '%v'", errName, ia.precision)
 	}
 
 	if ia.precision >= ia.intAryLen {
@@ -4522,14 +4522,14 @@ func (ia *IntAry) SubtractFromThis(ia2 *IntAry) error {
 	compare := ia.CompareAbsoluteValues(ia2)
 	isZeroResult := false
 
-	// Largest Value in now in N1 slot
+	// Largest XValue in now in N1 slot
 	newSignVal := ia.signVal
 	doAdd := false
 	doReverseNums := false
 
 	if compare == 1 {
 		// compare == + 1
-		// Absolute Value: N1 > N2
+		// Absolute XValue: N1 > N2
 
 		if ia.signVal == 1 && ia2.signVal == 1 {
 			doAdd = false
@@ -4597,7 +4597,7 @@ func (ia *IntAry) SubtractFromThis(ia2 *IntAry) error {
 //  											the final subtraction operation.
 //
 // iaMany ...*intAry - An unlimited series of pointers to intAry objects which will be
-// 										 subtracted from the current intAry Value.
+// 										 subtracted from the current intAry XValue.
 //
 func (ia *IntAry) SubtractMultipleFromThis(iaMany ...*IntAry) error {
 	var err error

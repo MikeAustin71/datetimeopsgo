@@ -1757,7 +1757,7 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix+
-				"\nError: Input Parameter Value 'militaryTz' is INVALID!\n"+
+				"\nError: Input Parameter XValue 'militaryTz' is INVALID!\n"+
 				"'militaryTz' DOES NOT map to a valid Military Time Zone.\n"+
 				"militaryTz='%v'", milTzLetter)
 
@@ -1768,7 +1768,7 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix+
-				"Error: Input Parameter Value 'timeZoneName' is INVALID!\n"+
+				"Error: Input Parameter XValue 'timeZoneName' is INVALID!\n"+
 				"'timeZoneName' DOES NOT map to a valid IANA Time Zone.\n"+
 				"timeZoneName='%v'", milTzName)
 
@@ -1792,7 +1792,7 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 		if !ok {
 			err = fmt.Errorf(ePrefix+
-				"Error: Input Parameter Value 'timeZoneName' is INVALID!\n"+
+				"Error: Input Parameter XValue 'timeZoneName' is INVALID!\n"+
 				"'timeZoneName' DOES NOT map to a valid IANA Time Zone.\n"+
 				"Military Time Zone Letter='%v'\n"+
 				"Military Time Zone Text Name='%v'", milTzLetter, milTzName)

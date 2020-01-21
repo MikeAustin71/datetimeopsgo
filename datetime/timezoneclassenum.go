@@ -8,21 +8,21 @@ import (
 )
 
 var mTimeZoneClassStringToCode = map[string]TimeZoneClass{
-	"None"             : TimeZoneClass(0).None(),
-	"AlternateTimeZone": TimeZoneClass(0).AlternateTimeZone(),
-	"OriginalTimeZone" : TimeZoneClass(0).OriginalTimeZone(),
+	"None"             : TimeZoneClass(0),
+	"AlternateTimeZone": TimeZoneClass(1),
+	"OriginalTimeZone" : TimeZoneClass(2),
 }
 
 var mTimeZoneClassLwrCaseStringToCode = map[string]TimeZoneClass{
-	"none"             : TimeZoneClass(0).None(),
-	"alternatetimezone": TimeZoneClass(0).AlternateTimeZone(),
-	"originaltimezone" : TimeZoneClass(0).OriginalTimeZone(),
+	"none"             : TimeZoneClass(0),
+	"alternatetimezone": TimeZoneClass(1),
+	"originaltimezone" : TimeZoneClass(2),
 }
 
 var mTimeZoneClassCodeToString = map[TimeZoneClass]string{
-	TimeZoneClass(0).None()              : "None",
-	TimeZoneClass(0).AlternateTimeZone() : "AlternateTimeZone",
-	TimeZoneClass(0).OriginalTimeZone()  : "OriginalTimeZone",
+	TimeZoneClass(0) : "None",
+	TimeZoneClass(1) : "AlternateTimeZone",
+	TimeZoneClass(2) : "OriginalTimeZone",
 }
 
 
@@ -134,7 +134,7 @@ func (tzClass TimeZoneClass) OriginalTimeZone() TimeZoneClass {
 //
 // ------------------------------------------------------------------------
 //
-// Return Value:
+// Return XValue:
 //
 //  string - The string label or description for the current enumeration
 //           value. If, the TimeZoneClass value is invalid, this
@@ -208,11 +208,11 @@ func (tzClass TimeZoneClass) String() string {
 //
 // Usage:
 //
-// t, err := TimeZoneClass(0).ParseString("AlternateTimeZone", true)
+// t, err := TimeZoneClass(0).XParseString("AlternateTimeZone", true)
 //                            OR
-// t, err := TimeZoneType(0).ParseString("AlternateTimeZone()", true)
+// t, err := TimeZoneType(0).XParseString("AlternateTimeZone()", true)
 //                            OR
-// t, err := TimeZoneType(0).ParseString("alternatetimezone", false)
+// t, err := TimeZoneType(0).XParseString("alternatetimezone", false)
 //
 // For all of the cases shown above,
 //  t is now equal to TimeZoneClass(0).AlternateTimeZone()
@@ -235,7 +235,7 @@ func (tzClass TimeZoneClass) XParseString(
 	}
 
 	if lenValueStr < 4 {
-		return TzClass.None(),
+		return TimeZoneClass(0),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n"+
 				"Length Less than 4-characters\n"+
@@ -253,7 +253,7 @@ func (tzClass TimeZoneClass) XParseString(
 		timeZoneClass, ok = mTimeZoneClassStringToCode[valueString]
 
 		if !ok {
-			return TzClass.None(),
+			return TimeZoneClass(0),
 				errors.New(ePrefix + "Invalid TimeZoneClass Code!")
 		}
 
@@ -265,7 +265,7 @@ func (tzClass TimeZoneClass) XParseString(
 		timeZoneClass, ok = mTimeZoneClassLwrCaseStringToCode[valueString]
 
 		if !ok {
-			return TzClass.None(),
+			return TimeZoneClass(0),
 				errors.New(ePrefix + "Invalid TimeZoneClass Code!")
 		}
 

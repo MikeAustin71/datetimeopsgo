@@ -76,13 +76,27 @@ var lockTimeZoneType sync.Mutex
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) None() TimeZoneType { return TimeZoneType(0) }
+func (tzType TimeZoneType) None() TimeZoneType {
+
+	lockTimeZoneType.Lock()
+
+	defer lockTimeZoneType.Unlock()
+
+	return TimeZoneType(0)
+}
 
 // Iana - Classifies the time zone as part of the IANA Time Zone database
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) Iana() TimeZoneType { return TimeZoneType(1) }
+func (tzType TimeZoneType) Iana() TimeZoneType {
+
+	lockTimeZoneType.Lock()
+
+	defer lockTimeZoneType.Unlock()
+
+	return TimeZoneType(1)
+}
 
 // Local - The 'Local' time zone is construct of the Go programming language.
 // It signals that the time zone currently configured on the host computer
@@ -90,13 +104,27 @@ func (tzType TimeZoneType) Iana() TimeZoneType { return TimeZoneType(1) }
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) Local() TimeZoneType { return TimeZoneType(2) }
+func (tzType TimeZoneType) Local() TimeZoneType {
+
+	lockTimeZoneType.Lock()
+
+	defer lockTimeZoneType.Unlock()
+
+	return TimeZoneType(2)
+}
 
 // Military - Classifies the time zone as a standard military time zone.
 //
 // This method is part of the standard enumeration.
 //
-func (tzType TimeZoneType) Military() TimeZoneType { return TimeZoneType(3) }
+func (tzType TimeZoneType) Military() TimeZoneType {
+
+	lockTimeZoneType.Lock()
+
+	defer lockTimeZoneType.Unlock()
+
+	return TimeZoneType(3)
+}
 
 // =========================================================================
 
@@ -108,7 +136,7 @@ func (tzType TimeZoneType) Military() TimeZoneType { return TimeZoneType(3) }
 //
 // ------------------------------------------------------------------------
 //
-// Return Value:
+// Return XValue:
 //
 //  string - The string label or description for the current enumeration
 //           value. If, the TimeZoneType value is invalid, this
@@ -208,7 +236,7 @@ func (tzType TimeZoneType) XParseString(
 	}
 
 	if lenValueStr < 3 {
-		return TzType.None(),
+		return TimeZoneType(0),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n"+
 				"Length Less than 3-characters\n"+
@@ -232,7 +260,7 @@ func (tzType TimeZoneType) XParseString(
 		timeZoneType, ok = mTimeZoneTypeStringToCode[valueString]
 
 		if !ok {
-			return TzType.None(),
+			return TimeZoneType(0),
 				errors.New(ePrefix + "Invalid TimeZoneType Code!")
 		}
 
@@ -244,7 +272,7 @@ func (tzType TimeZoneType) XParseString(
 		timeZoneType, ok = mTimeZoneTypeLwrCaseStringToCode[valueString]
 
 		if !ok {
-			return TzType.None(),
+			return TimeZoneType(0),
 				errors.New(ePrefix + "Invalid TimeZoneType Code!")
 		}
 

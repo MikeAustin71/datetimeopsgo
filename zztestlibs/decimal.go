@@ -323,7 +323,7 @@ func (dec *Decimal) GetAbsoluteAllDigitsStr() (string, error) {
 	return absVal.String(), nil
 }
 
-// GetBigFloat - returns big Float representation of the Decimal Value.
+// GetBigFloat - returns big Float representation of the Decimal XValue.
 func (dec *Decimal) GetBigFloat() (*big.Float, error) {
 
 	if !dec.isValid {
@@ -525,7 +525,7 @@ func (dec *Decimal) GetRational() (*big.Rat, error) {
 }
 
 // GetSign - Returns the sign of the current
-// Decimal Value. Return values are one of two
+// Decimal XValue. Return values are one of two
 // integers: +1 or -1.
 func (dec *Decimal) GetSign() int {
 
@@ -536,7 +536,7 @@ func (dec *Decimal) GetSign() int {
 // the number of decimal places to the right of the decimal which
 // are occupied by non-zero values.
 //
-// Example: Value = 1.640700000.  The number of relevant decimal
+// Example: XValue = 1.640700000.  The number of relevant decimal
 // places to the right of the decimal is '4'. In the case of an
 // integer number the relevant precision is zero ('0') because
 // there are no digits to the right of the decimal.
@@ -603,7 +603,7 @@ func (dec *Decimal) GetScaleVal() (*big.Int, error) {
 }
 
 // GetSignedAllDigitsStr - Returns the Decimal's internal
-// Signed All Digits Integer Value expressed as a string.
+// Signed All Digits Integer XValue expressed as a string.
 // No Fractional Digits are included, this is a signed
 // integer number string. Example: The value '-123.456'
 // would be returned as '-123456'
@@ -621,7 +621,7 @@ func (dec *Decimal) GetSignedAllDigitsStr() (string, error) {
 // integer value using type *big.Int. No factional values are included.
 // For example, the value '-123.456' would be returned as the integer
 // value '-123456'.  To compute the precise value of the Decimal, this
-// integer value would need to be divided by the 'Precision Value'. See
+// integer value would need to be divided by the 'Precision XValue'. See
 // GetScaleVal() below.
 func (dec *Decimal) GetSignedAllDigitsVal() (*big.Int, error) {
 
@@ -687,7 +687,7 @@ func (dec *Decimal) GetIsValid() bool {
 }
 
 // Inverse - Returns the inverse of the current
-// Decimal.  Inverse = 1/Current Decimal Value.
+// Decimal.  Inverse = 1/Current Decimal XValue.
 //
 // Input Parameters:
 // maxPrecision int - determines the number of digits
@@ -856,12 +856,12 @@ func (dec *Decimal) MakeDecimalFromIntAry(ia *IntAry) (Decimal, error) {
 }
 
 // Mul - Multiplies the incoming Decimal value, by the
-// current Decimal Value and returns the result in a
+// current Decimal XValue and returns the result in a
 // Decimal Type.
 func (dec *Decimal) Mul(d2 Decimal) (Decimal, error) {
 
 	if !dec.isValid {
-		return Decimal{}, errors.New("This Decimal Value Invalid!")
+		return Decimal{}, errors.New("This Decimal XValue Invalid!")
 	}
 
 	if !d2.isValid {
@@ -1210,7 +1210,7 @@ func (dec *Decimal) SetInt(iNum int, precision uint) error {
 // the right of the decimal place, while 'intNum' represents all the
 // integer digits to the left of the decimal place.
 //
-// The parameter 'signVal will determine the Sign Value for the returned
+// The parameter 'signVal will determine the Sign XValue for the returned
 // Decimal type. It should be set to either +1 or -1.
 func (dec *Decimal) SetIntFracStrings(signVal int, intNum, fracNum string) error {
 
@@ -1485,7 +1485,7 @@ func (dec *Decimal) SetFloatBig(bigFloat *big.Float) error {
 // Example Usage:
 // d:= Decimal{}.New()
 // d.SetNumStrPrecision("123456", 3)
-// Resulting Decimal Value = 123.456
+// Resulting Decimal XValue = 123.456
 func (dec *Decimal) SetNumStrPrecision(str string, precision uint, roundResult bool) error {
 
 	if dec.decimalSeparator == 0 {
@@ -1520,7 +1520,7 @@ func (dec *Decimal) SetNumStrPrecision(str string, precision uint, roundResult b
 // Example Usage:
 // d := Decimal{}.New()
 // d.SetNumStr("123.456")
-// Decimal Value = 123.456
+// Decimal XValue = 123.456
 func (dec *Decimal) SetNumStr(str string) error {
 
 	if dec.decimalSeparator == 0 {
@@ -1579,7 +1579,7 @@ func (dec *Decimal) SetNumStrDto(nDto NumStrDto) error {
 func (dec *Decimal) Subtract(d2 Decimal) (Decimal, error) {
 
 	if !dec.isValid {
-		return Decimal{}, errors.New("This Decimal Value Invalid!")
+		return Decimal{}, errors.New("This Decimal XValue Invalid!")
 	}
 
 	if !d2.isValid {
