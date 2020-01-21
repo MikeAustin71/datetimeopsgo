@@ -279,6 +279,20 @@ func (locType LocationNameType) XValue() LocationNameType {
 	return locType
 }
 
+// XValueInt - Returns the integer value of the LocationNameType instance.
+//
+// This is a standard utility method and is not part of the valid
+// enumerations for this type.
+//
+func (locType LocationNameType) XValueInt() int {
+
+	lockLocationNameType.Lock()
+
+	defer lockLocationNameType.Unlock()
+
+	return int(locType)
+}
+
 
 // LocNameType - public global variable of
 // type LocationNameType.

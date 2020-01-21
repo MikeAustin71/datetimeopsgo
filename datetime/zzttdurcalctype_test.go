@@ -917,3 +917,19 @@ func TestTDurCalcTypeValue_011(t *testing.T) {
 	}
 
 }
+
+func TestTDurCalcTypeValue_012(t *testing.T) {
+
+	testTDurCalcType := TDurCalcType(0).GregorianYears()
+
+	actualIntValue := testTDurCalcType.XValueInt()
+
+	expectedIntValue := int(TDurCalc.GregorianYears())
+
+	if expectedIntValue != actualIntValue {
+		t.Errorf("Error Expected actualIntValue='%v'.\n" +
+			"Instead, actualIntValue='%v'",
+			expectedIntValue, actualIntValue)
+	}
+
+}

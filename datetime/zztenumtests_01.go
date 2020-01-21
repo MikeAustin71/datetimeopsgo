@@ -98,6 +98,20 @@ func TestLocationNameType_06(t *testing.T) {
 	}
 }
 
+func TestLocationNameType_07(t *testing.T) {
+
+	testLocNameType := LocNameType.NonConvertibleTimeZone()
+
+	actualValue := testLocNameType.XValueInt()
+
+	expectedValue := int(LocNameType.NonConvertibleTimeZone())
+
+	if expectedValue != actualValue {
+		t.Errorf("Error: Expected actualValue int='%v'\n" +
+			"Instead, actualValue='%v'\n", expectedValue, actualValue)
+	}
+}
+
 func TestTimeZoneCategory_01 (t *testing.T) {
 
 	testTimeZoneCat := TimeZoneCategory(-1)
@@ -190,6 +204,20 @@ func TestTimeZoneCategory_06(t *testing.T) {
 	if TzCat.UtcOffset() != actualValue {
 		t.Errorf("Error: Expected actualValue=TzCat.UtcOffset()\n" +
 			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+}
+
+func TestTimeZoneCategory_07(t *testing.T) {
+
+	testTimeZoneCat := TzCat.UtcOffset()
+
+	actualValue := testTimeZoneCat.XValueInt()
+
+	expectedValue := int(TzCat.UtcOffset())
+
+	if expectedValue != actualValue {
+		t.Errorf("Error: Expected actualValue='%v'\n" +
+			"Instead, actualValue='%v'\n", expectedValue, actualValue)
 	}
 }
 
@@ -289,6 +317,21 @@ func TestTimeZoneClass_06(t *testing.T) {
 	if TzClass.OriginalTimeZone() != actualValue {
 		t.Errorf("Error: Expected actualValue=TzCat.UtcOffset()\n" +
 			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+
+}
+
+func TestTimeZoneClass_07(t *testing.T) {
+
+	testTimeZoneClass := TzClass.OriginalTimeZone()
+
+	actualValue := testTimeZoneClass.XValueInt()
+
+	expectedValue := int(TzClass.OriginalTimeZone())
+
+	if expectedValue != actualValue {
+		t.Errorf("Error: Expected actualValue='%v'\n" +
+			"Instead, actualValue='%v'\n", expectedValue, actualValue)
 	}
 
 }

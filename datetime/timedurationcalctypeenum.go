@@ -933,10 +933,12 @@ func (durCalc TDurCalcType) XParseString(
 	return timeDurCalcType, nil
 }
 
-// XValue - This is a utility method which is not part of the
-// enumerations supported by this type. It returns the numeric
-// value of the enumeration associated with the current TDurCalcType
+// XValue - This method returns the enumeration value of the current TDurCalcType
 // instance.
+//
+// This is a standard utility method and is not part of the valid enumerations
+// for this type.
+//
 //
 func (durCalc TDurCalcType) XValue() TDurCalcType {
 
@@ -945,6 +947,22 @@ func (durCalc TDurCalcType) XValue() TDurCalcType {
 	defer lockTDurCalcType.Unlock()
 
 	return durCalc
+}
+
+// XValueInt - This method returns the integer value of the current TDurCalcType
+// instance.
+//
+// This is a standard utility method and is not part of the valid enumerations
+// for this type.
+//
+//
+func (durCalc TDurCalcType) XValueInt() int {
+
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
+	return int(durCalc)
 }
 
 // TDurCalc - public global variable of

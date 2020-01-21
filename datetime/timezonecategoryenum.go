@@ -278,6 +278,21 @@ func (tzCat TimeZoneCategory) XValue() TimeZoneCategory {
 	return tzCat
 }
 
+// XValueInt - Returns the integer value of the current TimeZoneCategory
+// instance.
+//
+// This is a standard utility method and is not part of the valid
+// enumerations for this type.
+//
+func (tzCat TimeZoneCategory) XValueInt() int {
+
+	lockTimeZoneCategory.Lock()
+
+	defer lockTimeZoneCategory.Unlock()
+
+	return int(tzCat)
+}
+
 // TzCat - public global variable of
 // type TimeZoneClass.
 //
