@@ -75,7 +75,7 @@ func TestLocationNameType_05(t *testing.T) {
 		LocationNameType(0).XParseString(textString, false)
 
 	if err != nil {
-		t.Errorf("Error returned by LocationNameType(0).XParseString(textString, true)\n" +
+		t.Errorf("Error returned by LocationNameType(0).XParseString(textString, false)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -99,6 +99,50 @@ func TestLocationNameType_06(t *testing.T) {
 }
 
 func TestLocationNameType_07(t *testing.T) {
+
+	testLocNameType := LocationNameType(-5)
+
+	testString := testLocNameType.String()
+
+	if testString != "" {
+		t.Errorf("Error: Expected String() to return an Empty String\n" +
+			"because testLocNameType='LocationNameType(-5)'\n" +
+			"However, testLocNameType='%v'\n", testString)
+	}
+
+}
+
+func TestLocationNameType_08(t *testing.T) {
+
+	textString := "XRayzyxwVuTS"
+
+	_, err :=
+		LocationNameType(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from LocationNameType(0).XParseString(textString, true)\n" +
+			"because 'textString' is an INVALID string value.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestLocationNameType_09(t *testing.T) {
+
+	textString := "zvfuyhtsdbcrgq"
+
+	_, err :=
+		LocationNameType(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from LocationNameType(0).XParseString(textString, false)\n" +
+			"because textString is INVALID!" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestLocationNameType_10(t *testing.T) {
 
 	testLocNameType := LocNameType.NonConvertibleTimeZone()
 
@@ -208,6 +252,52 @@ func TestTimeZoneCategory_06(t *testing.T) {
 }
 
 func TestTimeZoneCategory_07(t *testing.T) {
+
+	testTimeZoneCategory := TimeZoneCategory(-5)
+
+	testString := testTimeZoneCategory.String()
+
+	if testString != "" {
+		t.Errorf("Error: Expected testTimeZoneCategory.String() to return an Empty String\n" +
+			"because testTimeZoneCategory='TimeZoneCategory(-5)'\n" +
+			"However, testTimeZoneCategory='%v'\n", testString)
+	}
+
+}
+
+func TestTimeZoneCategory_08(t *testing.T) {
+
+	textString := "XRayzyxwVuTS"
+
+	_, err :=
+		TimeZoneCategory(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from\n" +
+			"TimeZoneCategory(0).XParseString(textString, true)\n" +
+			"because 'textString' is an INVALID string value.\n" +
+			"However, NO ERROR WAS RETURNED\n")
+		return
+	}
+}
+
+func TestTimeZoneCategory_09(t *testing.T) {
+
+	textString := "zvfuyhtsdbcrgq"
+
+	_, err :=
+		TimeZoneCategory(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from\n" +
+			"TimeZoneCategory(0).XParseString(textString, false)\n" +
+			"because textString is INVALID!" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneCategory_10(t *testing.T) {
 
 	testTimeZoneCat := TzCat.UtcOffset()
 
@@ -322,6 +412,50 @@ func TestTimeZoneClass_06(t *testing.T) {
 }
 
 func TestTimeZoneClass_07(t *testing.T) {
+
+	testTimeZoneClass := TimeZoneClass(-5)
+
+	testString := testTimeZoneClass.String()
+
+	if testString != "" {
+		t.Errorf("Error: Expected String() to return an Empty String\n" +
+			"because testTimeZoneClass='TimeZoneClass(-5)'\n" +
+			"However, testTimeZoneClass='%v'\n", testString)
+	}
+
+}
+
+func TestTimeZoneClass_08(t *testing.T) {
+
+	textString := "XRayzyxwVuTS"
+
+	_, err :=
+		TimeZoneClass(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from TimeZoneClass(0).XParseString(textString, true)\n" +
+			"because 'textString' is an INVALID string value.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneClass_09(t *testing.T) {
+
+	textString := "zvfuyhtsdbcrgq"
+
+	_, err :=
+		TimeZoneClass(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from TimeZoneClass(0).XParseString(textString, false)\n" +
+			"because textString is INVALID!" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneClass_10(t *testing.T) {
 
 	testTimeZoneClass := TzClass.OriginalTimeZone()
 
