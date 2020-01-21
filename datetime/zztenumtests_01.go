@@ -191,7 +191,6 @@ func TestTimeZoneCategory_06(t *testing.T) {
 		t.Errorf("Error: Expected actualValue=TzCat.UtcOffset()\n" +
 			"Instead, actualValue='%v'\n", actualValue.String())
 	}
-
 }
 
 func TestTimeZoneClass_01(t *testing.T) {
