@@ -8,21 +8,21 @@ import (
 )
 
 var mTimeZoneConversionTypeStringToCode = map[string]TimeZoneConversionType{
-	"None"    :          TimeZoneConversionType(0).None(),
-	"Absolute":          TimeZoneConversionType(0).Absolute(),
-	"Relative":          TimeZoneConversionType(0).Relative(),
+	"None"    :  TimeZoneConversionType(0),
+	"Absolute":  TimeZoneConversionType(1),
+	"Relative":  TimeZoneConversionType(2),
 }
 
 var mTimeZoneConversionTypeLwrCaseStringToCode = map[string]TimeZoneConversionType{
-	"none"    :          TimeZoneConversionType(0).None(),
-	"absolute":          TimeZoneConversionType(0).Absolute(),
-	"relative":          TimeZoneConversionType(0).Relative(),
+	"none"     : TimeZoneConversionType(0),
+	"absolute" : TimeZoneConversionType(1),
+	"relative" : TimeZoneConversionType(2),
 }
 
 var mTimeZoneConversionTypeCodeToString = map[TimeZoneConversionType]string{
-	TimeZoneConversionType(0).None()    :          "None",
-	TimeZoneConversionType(0).Absolute():          "Absolute",
-	TimeZoneConversionType(0).Relative():          "Relative",
+	TimeZoneConversionType(0) : "None",
+	TimeZoneConversionType(1) : "Absolute",
+	TimeZoneConversionType(2) : "Relative",
 }
 
 

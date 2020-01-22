@@ -210,9 +210,9 @@ func (tzClass TimeZoneClass) String() string {
 //
 // t, err := TimeZoneClass(0).XParseString("AlternateTimeZone", true)
 //                            OR
-// t, err := TimeZoneType(0).XParseString("AlternateTimeZone()", true)
+// t, err := TimeZoneClass(0).XParseString("AlternateTimeZone()", true)
 //                            OR
-// t, err := TimeZoneType(0).XParseString("alternatetimezone", false)
+// t, err := TimeZoneClass(0).XParseString("alternatetimezone", false)
 //
 // For all of the cases shown above,
 //  t is now equal to TimeZoneClass(0).AlternateTimeZone()

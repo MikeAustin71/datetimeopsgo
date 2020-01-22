@@ -20,9 +20,9 @@ var mTimeZoneCategoryLwrCaseStringToCode = map[string]TimeZoneCategory{
 }
 
 var mTimeZoneCategoryCodeToString = map[TimeZoneCategory]string{
-	TimeZoneCategory(0).None()     : "None",
-	TimeZoneCategory(1).TextName() : "TextName",
-	TimeZoneCategory(2).UtcOffset(): "UtcOffset",
+	TimeZoneCategory(0) : "None",
+	TimeZoneCategory(1) : "TextName",
+	TimeZoneCategory(2) : "UtcOffset",
 }
 
 // TimeZoneCategory - This type is configured as a series of constant integer values
@@ -301,7 +301,7 @@ func (tzCat TimeZoneCategory) XValueInt() int {
 //
 // Usage:
 //  TzCat.None()
-//  TzCat.AlternateTimeZone()
-//  TzCat.OriginalTimeZone()
+//  TzCat.TextName()
+//  TzCat.UtcOffset()
 //
 var TzCat TimeZoneCategory

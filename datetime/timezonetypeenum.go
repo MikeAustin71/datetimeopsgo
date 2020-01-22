@@ -8,24 +8,24 @@ import (
 )
 
 var mTimeZoneTypeStringToCode = map[string]TimeZoneType{
-	"None":     TimeZoneType(0).None(),
-	"Iana":     TimeZoneType(0).Iana(),
-	"Local":    TimeZoneType(0).Local(),
-	"Military": TimeZoneType(0).Military(),
+	"None":     TimeZoneType(0),
+	"Iana":     TimeZoneType(1),
+	"Local":    TimeZoneType(2),
+	"Military": TimeZoneType(3),
 }
 
 var mTimeZoneTypeLwrCaseStringToCode = map[string]TimeZoneType{
-	"none":     TimeZoneType(0).None(),
-	"iana":     TimeZoneType(0).Iana(),
-	"local":    TimeZoneType(0).Local(),
-	"military": TimeZoneType(0).Military(),
+	"none":     TimeZoneType(0),
+	"iana":     TimeZoneType(1),
+	"local":    TimeZoneType(2),
+	"military": TimeZoneType(3),
 }
 
 var mTimeZoneTypeCodeToString = map[TimeZoneType]string{
-	TimeZoneType(0).None():     "None",
-	TimeZoneType(0).Iana():     "Iana",
-	TimeZoneType(0).Local():    "Local",
-	TimeZoneType(0).Military(): "Military",
+	TimeZoneType(0) : "None",
+	TimeZoneType(1) : "Iana",
+	TimeZoneType(2) : "Local",
+	TimeZoneType(3) : "Military",
 }
 
 // TimeZoneType - This type is configured as a series of
@@ -136,7 +136,7 @@ func (tzType TimeZoneType) Military() TimeZoneType {
 //
 // ------------------------------------------------------------------------
 //
-// Return XValue:
+// Return Value:
 //
 //  string - The string label or description for the current enumeration
 //           value. If, the TimeZoneType value is invalid, this
@@ -146,9 +146,9 @@ func (tzType TimeZoneType) Military() TimeZoneType {
 //
 // Usage
 //
-//	t:= TimeZoneType(0).Military()
-//	str := t.String()
-//	    str is now equal to "Military"
+// t:= TimeZoneType(0).Military()
+// str := t.String()
+//     str is now equal to "Military"
 //
 func (tzType TimeZoneType) String() string {
 
@@ -181,12 +181,12 @@ func (tzType TimeZoneType) String() string {
 //                        is equal to one of the enumeration names, this
 //                        method will proceed to successful completion
 //
-// caseSensitive   bool - If 'true' the search for enumeration names
+// caseSensitive   bool - If 'true', the search for enumeration names
 //                        will be case sensitive and will require an
 //                        exact match. Therefore, 'iana' will NOT
 //                        match the enumeration name, 'Iana'.
 //
-//                        If 'false' a case insensitive search is
+//                        If 'false', a case insensitive search is
 //                        conducted for the enumeration name. In
 //                        this case, 'iana' will match the
 //                        enumeration name 'Iana'.
@@ -235,11 +235,11 @@ func (tzType TimeZoneType) XParseString(
 		lenValueStr -= 2
 	}
 
-	if lenValueStr < 3 {
+	if lenValueStr < 4 {
 		return TimeZoneType(0),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n"+
-				"Length Less than 3-characters\n"+
+				"Length Less than 4-characters\n"+
 				"valueString='%v'\n", valueString)
 	}
 
@@ -253,7 +253,8 @@ func (tzType TimeZoneType) XParseString(
 		testStr == "uct" ||
 		testStr == "gmt" {
 
-		return TzType.Iana(), nil
+		// TimeZoneType(0).Iana()
+		return TimeZoneType(1), nil
 
 	} else if caseSensitive {
 
@@ -261,7 +262,7 @@ func (tzType TimeZoneType) XParseString(
 
 		if !ok {
 			return TimeZoneType(0),
-				errors.New(ePrefix + "Invalid TimeZoneType Code!")
+				errors.New(ePrefix + "\nInvalid TimeZoneType Code!\n")
 		}
 
 	} else {
@@ -273,7 +274,7 @@ func (tzType TimeZoneType) XParseString(
 
 		if !ok {
 			return TimeZoneType(0),
-				errors.New(ePrefix + "Invalid TimeZoneType Code!")
+				errors.New(ePrefix + "\nInvalid TimeZoneType Code!\n")
 		}
 
 	}
