@@ -1013,3 +1013,249 @@ func TestTimeZoneType_16(t *testing.T) {
 	}
 }
 
+func TestTimeZoneUtcOffsetStatus_01(t *testing.T) {
+
+	testTimeZoneUtcOffsetStatus := TimeZoneUtcOffsetStatus(-1)
+
+	isError := false
+
+	if testTimeZoneUtcOffsetStatus < TimeZoneUtcOffsetStatus(0).None() {
+		isError = true
+	}
+
+	if !isError {
+		t.Error("ERROR: Expected isError='true' because\n" +
+			"'testTimeZoneUtcOffsetStatus'= -1.\n" +
+			"However, NO ERROR WAS RETURNED!\n")
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_02(t *testing.T) {
+
+	testTimeZoneUtcOffsetStatus := TimeZoneUtcOffsetStatus(3)
+
+	isError := false
+
+	if testTimeZoneUtcOffsetStatus > TimeZoneUtcOffsetStatus(0).Variable() {
+		isError = true
+	}
+
+	if !isError {
+		t.Error("ERROR: Expected isError='true' because\n" +
+			"'testTimeZoneUtcOffsetStatus'= +3.\n" +
+			"However, NO ERROR WAS RETURNED!\n")
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_03(t *testing.T){
+
+	testTimeZoneUtcOffsetStatus := TzUtcStatus.Static()
+
+	testString := testTimeZoneUtcOffsetStatus.String()
+
+	if testString != "Static" {
+		t.Errorf("Error: Expected String() to return 'Static'\n" +
+			"because testTimeZoneUtcOffsetStatus='TzType.Static()'\n" +
+			"However, String()='%v'\n", testString)
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_04(t *testing.T){
+
+	testTimeZoneUtcOffsetStatus := TzUtcStatus.Variable()
+
+	testString := testTimeZoneUtcOffsetStatus.String()
+
+	if testString != "Variable" {
+		t.Errorf("Error: Expected String() to return 'Variable'\n" +
+			"because testTimeZoneUtcOffsetStatus='TzType.Variable()'\n" +
+			"However, String()='%v'\n", testString)
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_05(t *testing.T) {
+
+	testTimeZoneUtcOffsetStatus := TzUtcStatus.None()
+
+	testString := testTimeZoneUtcOffsetStatus.String()
+
+	if testString != "None" {
+		t.Errorf("Error: Expected String() to return 'None'\n" +
+			"because testTimeZoneUtcOffsetStatus='TzType.None()'\n" +
+			"However, String()='%v'\n", testString)
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_06(t *testing.T) {
+
+	testTimeZoneUtcOffsetStatus := TimeZoneUtcOffsetStatus(-5)
+
+	actualValue := testTimeZoneUtcOffsetStatus.String()
+
+	if actualValue != "" {
+		t.Errorf("Error: Expected String() to return an Empty String\n" +
+			"because testTimeZoneUtcOffsetStatus='TimeZoneUtcOffsetStatus(-5)'\n" +
+			"However, testTimeZoneUtcOffsetStatus='%v'\n", actualValue)
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_07(t *testing.T) {
+
+	textString := "Variable"
+
+	actualValue, err :=
+		TimeZoneUtcOffsetStatus(0).XParseString(textString, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneType(0).XParseString(textString, true)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if TimeZoneUtcOffsetStatus(0).Variable() != actualValue {
+		t.Errorf("Error: Expected actualValue=TimeZoneUtcOffsetStatus(0).Variable()\n" +
+			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+
+}
+
+func TestTimeZoneUtcOffsetStatus_08(t *testing.T) {
+
+	textString := "static"
+
+	actualValue, err :=
+		TimeZoneUtcOffsetStatus(0).XParseString(textString, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneType(0).XParseString(textString, false)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if TimeZoneUtcOffsetStatus(0).Static() != actualValue {
+		t.Errorf("Error: Expected actualValue=TimeZoneUtcOffsetStatus(0).Static()\n" +
+			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_09(t *testing.T) {
+
+	textString := "static"
+
+	actualValue, err :=
+		TimeZoneUtcOffsetStatus(0).XParseString(textString, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneType(0).XParseString(textString, false)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if TimeZoneUtcOffsetStatus(0).Static() != actualValue {
+		t.Errorf("Error: Expected actualValue=TimeZoneUtcOffsetStatus(0).Static()\n" +
+			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_10(t *testing.T) {
+
+	textString := "XRayzyxwVuTS"
+
+	_, err :=
+		TimeZoneUtcOffsetStatus(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from " +
+			"TimeZoneUtcOffsetStatus(0).XParseString(textString, true)\n" +
+			"because 'textString' is an INVALID string value.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_11(t *testing.T) {
+
+	textString := "xrayzyxwvuts"
+
+	_, err :=
+		TimeZoneUtcOffsetStatus(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from " +
+			"TimeZoneUtcOffsetStatus(0).XParseString(textString, false)\n" +
+			"because 'textString' is an INVALID string value.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_12(t *testing.T) {
+
+	textString := "Xr"
+
+	_, err :=
+		TimeZoneUtcOffsetStatus(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from " +
+			"TimeZoneUtcOffsetStatus(0).XParseString(textString, true)\n" +
+			"because 'textString' consists of only 2-characters.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_13(t *testing.T) {
+
+	textString := "xr"
+
+	_, err :=
+		TimeZoneUtcOffsetStatus(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from " +
+			"TimeZoneUtcOffsetStatus(0).XParseString(textString, false)\n" +
+			"because 'textString' consists of only 2-characters.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_14(t *testing.T) {
+
+	testTimeZoneType := TimeZoneUtcOffsetStatus(0).Static()
+
+	intVal := testTimeZoneType.XValueInt()
+
+	if 1 != intVal {
+		t.Errorf("Error: Expected TimeZoneUtcOffsetStatus.XValueInt()='1'\n" +
+			"Instead, TimeZoneUtcOffsetStatus.XValueInt()='%v'\n",
+			intVal)
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_15(t *testing.T) {
+
+	testTimeZoneType := TimeZoneUtcOffsetStatus(0).Variable()
+
+	intVal := testTimeZoneType.XValueInt()
+
+	if 2 != intVal {
+		t.Errorf("Error: Expected TimeZoneUtcOffsetStatus.XValueInt()='2'\n" +
+			"Instead, TimeZoneUtcOffsetStatus.XValueInt()='%v'\n",
+			intVal)
+	}
+}
+
+func TestTimeZoneUtcOffsetStatus_16(t *testing.T) {
+
+	testTimeZoneType := TimeZoneUtcOffsetStatus(0).None()
+
+	intVal := testTimeZoneType.XValueInt()
+
+	if 0 != intVal {
+		t.Errorf("Error: Expected TimeZoneUtcOffsetStatus.XValueInt()='0'\n" +
+			"Instead, TimeZoneUtcOffsetStatus.XValueInt()='%v'\n",
+			intVal)
+	}
+}
