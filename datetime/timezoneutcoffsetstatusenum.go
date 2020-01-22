@@ -309,8 +309,8 @@ func (tzUtcStat TimeZoneUtcOffsetStatus) XValueInt() int {
 // technique for accessing TimeZoneType values.
 //
 // Usage:
+//  TzUtcStatus.None()
 //  TzUtcStatus.Static()
 //  TzUtcStatus.Variable()
-//  TzUtcStatus.Military()
 //
 var TzUtcStatus TimeZoneUtcOffsetStatus

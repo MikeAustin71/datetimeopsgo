@@ -41,12 +41,18 @@ var mTimeZoneCategoryCodeToString = map[TimeZoneCategory]string{
 //                                              This represents an error condition.
 //
 //  TextName()                      1           Signals that the Time Zone is identified
-//                                              by a standard IANA Text Name.
+//                                              by a standard IANA Text Name. Examples:
+//                                                "America/Chicago"
+//                                                "Asia/Amman"
+//                                                "Atlantic/Bermuda"
+//                                                "Australia/Sydney"
+//                                                "Europe/Rome"
 //
 //  UtcOffset()                     2           Signals that the Time Zone is identified
 //                                              by a valid UTC Offset and has no associated
-//                                              text name.
-//
+//                                              text name. Examples:
+//                                                "+07"
+//                                                "+10"
 // For easy access to these enumeration values, use the global variable
 // 'TzCat'.
 //

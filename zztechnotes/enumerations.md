@@ -69,3 +69,26 @@
     None      :  0
     Static    :  1
     Variable  :  2
+
+## Global Variable Access Listing
+
+1. LocationNameType
+    var LocNameType LocationNameType
+
+2. TDurCalcType
+    var TDurCalc TDurCalcType
+
+3. TimeZoneCategory
+    var TzCat TimeZoneCategory
+
+4. TimeZoneClass
+    var TzClass TimeZoneClass
+
+5. TimeZoneConversionType
+    var TzConvertType TimeZoneConversionType
+
+6. TimeZoneType
+    var TzType TimeZoneType
+    
+7. TimeZoneUtcOffsetStatus
+    var TzUtcStatus TimeZoneUtcOffsetStatus

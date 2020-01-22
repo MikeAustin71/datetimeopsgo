@@ -50,6 +50,15 @@ type TimeZoneSpecification struct {
 	//                                          TzClass.None()
 	//                                          TzClass.AlternateTimeZone()
 	//                                          TzClass.OriginalTimeZone()
+	timeZoneCategory       TimeZoneCategory // Enumeration of Time Zone Category:
+	//                                          TzCat.None()
+	//                                          TzCat.TextName()
+	//                                          TzCat.UtcOffset()
+	timeZoneUtcOffsetStatus TimeZoneUtcOffsetStatus // Enumeration of Time Zone UTC Offset Status:
+	//                                                  TzUtcStatus.None()
+	//                                                  TzUtcStatus.Static()
+	//                                                  TzUtcStatus.Variable()
+	//
 	lock sync.Mutex // Used for implementing thread safe operations.
 }
 
@@ -408,6 +417,40 @@ func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
 	return tzSpec.tagDescription
 }
 
+// GetTimeZoneCategory - Returns the Time Zone Category description .
+// Time Zone Category is an enumeration identifying the time zone by
+// category of time zone name.
+//
+// Possible Values:
+//  TzCat.None()       -  Signals that Time Zone Category is uninitialized.
+//                        This represents an error condition.
+//
+//  TzCat.TextName()   -  Signals that the Time Zone is identified
+//                        by a standard IANA Text Name. Examples:
+//                          "America/Chicago"
+//                          "Asia/Amman"
+//                          "Atlantic/Bermuda"
+//                          "Australia/Sydney"
+//                          "Europe/Rome"
+//
+//  TzCat.UtcOffset()  -  Signals that the Time Zone is identified
+//                        by a valid UTC Offset and has no associated
+//                        text name. Examples:
+//                          "+07"
+//                          "+10"
+//
+// For easy access to these enumeration values, use the global variable
+// 'TzCat'.
+//
+func (tzSpec *TimeZoneSpecification) GetTimeZoneCategory() TimeZoneCategory {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.timeZoneCategory
+}
+
 // GetTimeZoneClass - Returns the Time Zone Class description.
 // Time Zone Class is an enumeration identifying the time zone
 // status.
@@ -418,6 +461,9 @@ func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
 //                                        Time Zone Abbreviation
 // TimeZoneClass(0).OriginalTimeZone()  - Original Valid Time Zone
 //
+// For easy access to these enumeration values, use the global variable
+// 'TzClass'. Example: TzClass.AlternateTimeZone()
+//
 func (tzSpec *TimeZoneSpecification) GetTimeZoneClass() TimeZoneClass {
 
 	tzSpec.lock.Lock()
@@ -427,8 +473,8 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneClass() TimeZoneClass {
 	return tzSpec.timeZoneClass
 }
 
-// GetOriginalTzName - Returns the time zone name, also
-// known as the Time Zone 'Location' Name.
+// GetTimeZoneName - Returns the time zone name, also known
+// as the Time Zone 'Location' Name.
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneName() string {
 
@@ -450,6 +496,9 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneName() string {
 //  TzType.Local()     - Identifies this as a 'Local' Time Zone
 //  TzType.UtcOffset() - Identifies this time zone a UTC Offset
 //
+// For easy access to these enumeration values, use the global variable
+// 'TzType'. Example: TzType.Military()
+//
 func (tzSpec *TimeZoneSpecification) GetTimeZoneType() TimeZoneType {
 
 	tzSpec.lock.Lock()
@@ -459,7 +508,46 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneType() TimeZoneType {
 	return tzSpec.timeZoneType
 }
 
-// GetOriginalUtcOffset - returns a text string representing the
+// GetTimeZoneUtcOffsetStatus - Returns a description of the UTC Offset
+// Status for this time zone. Some Time Zones have a constant UTC Offset
+// throughout the year. Others, primarily those which observe Daylight
+// Savings Time have a UTC Offset which varies at different times of the
+// year.
+//
+// Possible return types.
+//
+// TzUtcStatus.None()                   Signals that Time Zone UTC Offset
+//                                      Status is uninitialized and contains
+//                                      no significant or valid value. This
+//                                      is an error condition.
+//
+// TzUtcStatus.Static()                 Signals that the UTC Offset associated
+//                                      with a given Time Zone is constant
+//                                      throughout the year and never changes.
+//                                      Typically, this means that Daylight
+//                                      Savings Time is NOT observed in the
+//                                      specified Time Zone.
+//
+// TzUtcStatus.Variable()               Signals that the UTC Offset associated
+//                                      with a given Time Zone is not constant,
+//                                      and varies at least once during the year.
+//                                      This usually means that Daylight Savings
+//                                      Time is observed within the designated
+//                                      Time Zone.
+//
+// For easy access to these enumeration values, use the global variable
+// 'TzUtcStatus'. Example: TzUtcStatus.Variable()
+//
+func (tzSpec *TimeZoneSpecification) GetTimeZoneUtcOffsetStatus() TimeZoneUtcOffsetStatus {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.timeZoneUtcOffsetStatus
+}
+
+// GetUtcOffset - returns a text string representing the
 // offset from UTC for this time zone.
 //
 //  Examples: "-0600", "+0200"
@@ -502,7 +590,7 @@ func (tzSpec *TimeZoneSpecification) GetZoneLabel() string {
 	return tzSpec.zoneLabel
 }
 
-// GetOriginalZoneName - Returns the 'Zone Name'. 'Zone Name' is the
+// GetZoneName - Returns the 'Zone Name'. 'Zone Name' is the
 // the Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
 //
 func (tzSpec *TimeZoneSpecification) GetZoneName() string {
@@ -514,7 +602,7 @@ func (tzSpec *TimeZoneSpecification) GetZoneName() string {
 	return tzSpec.zoneName
 }
 
-// GetOriginalZoneOffset - Returns data field 'zoneOffset'. This is
+// GetZoneOffset - Returns data field 'zoneOffset'. This is
 // a text string representing the offset from UTC for this
 // time zone. The returned offset string consists of two
 // components, the hours and minutes of offset and the time
