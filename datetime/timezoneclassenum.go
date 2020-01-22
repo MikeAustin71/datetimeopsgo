@@ -81,6 +81,11 @@ var lockTimeZoneClass sync.Mutex
 // This method is part of the standard enumeration.
 //
 func (tzClass TimeZoneClass) None() TimeZoneClass {
+
+	lockTimeZoneClass.Lock()
+
+	defer lockTimeZoneClass.Unlock()
+
 	return TimeZoneClass(0)
 }
 
@@ -100,6 +105,11 @@ func (tzClass TimeZoneClass) None() TimeZoneClass {
 // This method is part of the standard enumeration.
 //
 func (tzClass TimeZoneClass) AlternateTimeZone() TimeZoneClass {
+
+	lockTimeZoneClass.Lock()
+
+	defer lockTimeZoneClass.Unlock()
+
 	return TimeZoneClass(1)
 }
 
@@ -121,6 +131,11 @@ func (tzClass TimeZoneClass) AlternateTimeZone() TimeZoneClass {
 // This method is part of the standard enumeration.
 //
 func (tzClass TimeZoneClass) OriginalTimeZone() TimeZoneClass {
+
+	lockTimeZoneClass.Lock()
+
+	defer lockTimeZoneClass.Unlock()
+
 	return TimeZoneClass(2)
 }
 
@@ -254,7 +269,8 @@ func (tzClass TimeZoneClass) XParseString(
 
 		if !ok {
 			return TimeZoneClass(0),
-				errors.New(ePrefix + "Invalid TimeZoneClass Code!")
+				errors.New(ePrefix +
+					"\nInvalid TimeZoneClass Code!\n")
 		}
 
 	} else {
@@ -266,7 +282,8 @@ func (tzClass TimeZoneClass) XParseString(
 
 		if !ok {
 			return TimeZoneClass(0),
-				errors.New(ePrefix + "Invalid TimeZoneClass Code!")
+				errors.New(ePrefix +
+					"\nInvalid TimeZoneClass Code!\n")
 		}
 
 	}

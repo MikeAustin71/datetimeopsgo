@@ -243,7 +243,8 @@ func (tzCat TimeZoneCategory) XParseString(
 
 		if !ok {
 			return TimeZoneCategory(0),
-				errors.New(ePrefix + "Invalid TimeZoneCategory Code!")
+				errors.New(ePrefix +
+					"\nInvalid Time Zone Category Code!\n")
 		}
 
 	} else {
@@ -255,7 +256,8 @@ func (tzCat TimeZoneCategory) XParseString(
 
 		if !ok {
 			return TimeZoneCategory(0),
-				errors.New(ePrefix + "Invalid TimeZoneCategory Code!")
+				errors.New(ePrefix +
+					"\nInvalid Time Zone Category Code!\n")
 		}
 
 	}

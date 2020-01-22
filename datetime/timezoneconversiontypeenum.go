@@ -263,7 +263,8 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 
 		if !ok {
 			return TzConvertType.None(),
-				errors.New(ePrefix + "Invalid TimeZoneConversionType Code!")
+				errors.New(ePrefix +
+					"\nInvalid TimeZoneConversionType Code!\n")
 		}
 
 	} else {
@@ -274,7 +275,8 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 
 		if !ok {
 			return TzConvertType.None(),
-				errors.New(ePrefix + "Invalid TimeZoneConversionType Code!")
+				errors.New(ePrefix +
+					"\nInvalid TimeZoneConversionType Code!\n")
 		}
 
 	}
@@ -295,6 +297,21 @@ func (tzConvertType TimeZoneConversionType) XValue() TimeZoneConversionType {
 	defer lockTimeZoneConversionType.Unlock()
 
 	return tzConvertType
+}
+
+// XValueInt - Returns the integer value of the TimeZoneConversionType
+// instance.
+//
+// This is a standard utility method and is not part of the valid
+// enumerations for this type.
+//
+func (tzConvertType TimeZoneConversionType) XValueInt() int {
+
+	lockTimeZoneConversionType.Lock()
+
+	defer lockTimeZoneConversionType.Unlock()
+
+	return int(tzConvertType)
 }
 
 // TzConvertType - public global variable of

@@ -35,9 +35,10 @@ var mLocationNameTypeCodeToString = map[LocationNameType] string {
 //                           Time Zone
 //   Method                  Type Code
 //    Name                   Constant      Description
-//  ______________________________________________________________________
+//  ________________________________________________________________________
+//
 //   None()                     0          LocationNameType is uninitialized
-//                                          and has no significant value.
+//                                         and has no significant value.
 //
 //   NonConvertibleTimeZone     1          Tests have established that this
 //                                         time zone cannot be used to
@@ -246,7 +247,8 @@ func (locType LocationNameType) XParseString(
 
 		if !ok {
 			return LocationNameType(0),
-				errors.New(ePrefix + "Invalid LocationNameType Code!")
+				errors.New(ePrefix +
+					"\nInvalid LocationNameType Code!\n")
 		}
 
 	} else {
@@ -257,7 +259,8 @@ func (locType LocationNameType) XParseString(
 
 		if !ok {
 			return LocationNameType(0),
-				errors.New(ePrefix + "Invalid LocationNameType Code!")
+				errors.New(ePrefix +
+					"\nInvalid LocationNameType Code!\n")
 		}
 	}
 

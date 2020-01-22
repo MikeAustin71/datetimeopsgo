@@ -470,6 +470,38 @@ func TestTimeZoneClass_10(t *testing.T) {
 
 }
 
+func TestTimeZoneClass_11(t *testing.T) {
+
+	textString := "z"
+
+	_, err :=
+		TimeZoneClass(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from " +
+			"TimeZoneClass(0).XParseString(textString, false)\n" +
+			"because textString consists of only one character and is INVALID!\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneClass_12(t *testing.T) {
+
+	textString := "Z"
+
+	_, err :=
+		TimeZoneClass(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from " +
+			"TimeZoneClass(0).XParseString(textString, true)\n" +
+			"because textString consists of only one upper-case character and is INVALID!\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
 func TestTimeZoneConversionType_01(t *testing.T) {
 
 	testTimeZoneConversionType := TimeZoneConversionType(-1)
@@ -704,3 +736,280 @@ func TestTimeZoneConversionType_15(t *testing.T) {
 		return
 	}
 }
+
+func TestTimeZoneConversionType_16(t *testing.T) {
+
+	testTimeZoneConversionType := TimeZoneConversionType(0).Relative()
+
+	intVal := testTimeZoneConversionType.XValueInt()
+
+	if 2 != intVal {
+		t.Errorf("Error: Expected testTimeZoneConversionType.XValueInt()='2'\n" +
+			"Instead, testTimeZoneConversionType.XValueInt()='%v'\n",
+			intVal)
+	}
+}
+
+func TestTimeZoneConversionType_17(t *testing.T) {
+
+	testTimeZoneConversionType := TimeZoneConversionType(0).Absolute()
+
+	intVal := testTimeZoneConversionType.XValueInt()
+
+	if 1 != intVal {
+		t.Errorf("Error: Expected testTimeZoneConversionType.XValueInt()='1'\n" +
+			"Instead, testTimeZoneConversionType.XValueInt()='%v'\n",
+			intVal)
+	}
+}
+
+func TestTimeZoneType_01(t *testing.T) {
+
+	testTimeZoneType := TimeZoneType(-1)
+
+	isError := false
+
+	if testTimeZoneType < TimeZoneType(0).None() {
+		isError = true
+	}
+
+	if !isError {
+		t.Error("ERROR: Expected isError='true' because\n" +
+			"'testTimeZoneType'= -1.\n" +
+			"However, NO ERROR WAS RETURNED!\n")
+	}
+
+}
+
+func TestTimeZoneType_02(t *testing.T) {
+
+	testTimeZoneType := TimeZoneType(4)
+
+	isError := false
+
+	if testTimeZoneType > TimeZoneType(0).Military() {
+		isError = true
+	}
+
+	if !isError {
+		t.Error("ERROR: Expected isError='true' because\n" +
+			"'testTimeZoneType'= +4.\n" +
+			"However, NO ERROR WAS RETURNED!\n")
+	}
+
+}
+
+func TestTimeZoneType_03(t *testing.T) {
+
+	testTimeZoneType := TzType.Iana()
+
+	testString := testTimeZoneType.String()
+
+	if testString != "Iana" {
+		t.Errorf("Error: Expected String() to return 'Iana'\n" +
+			"because testTimeZoneType='TzType.Iana()'\n" +
+			"However, String()='%v'\n", testString)
+	}
+}
+
+func TestTimeZoneType_04(t *testing.T) {
+
+	testTimeZoneType := TimeZoneType(0).Local()
+
+	testString := testTimeZoneType.String()
+
+	if testString != "Local" {
+		t.Errorf("Error: Expected String() to return 'Local'\n" +
+			"because testTimeZoneType='TimeZoneType(0).Local()'\n" +
+			"However, String()='%v'\n", testString)
+	}
+}
+
+func TestTimeZoneType_05(t *testing.T) {
+
+	testTimeZoneType := TimeZoneType(0).Military()
+
+	testString := testTimeZoneType.String()
+
+	if testString != "Military" {
+		t.Errorf("Error: Expected String() to return 'Military'\n" +
+			"because testTimeZoneType='TimeZoneType(0).Military()'\n" +
+			"However, String()='%v'\n", testString)
+	}
+}
+
+func TestTimeZoneType_06(t *testing.T) {
+
+	testTimeZoneType := TimeZoneType(-5)
+
+	actualValue := testTimeZoneType.String()
+
+	if actualValue != "" {
+		t.Errorf("Error: Expected String() to return an Empty String\n" +
+			"because testTimeZoneType='TimeZoneType(-5)'\n" +
+			"However, testTimeZoneType='%v'\n", actualValue)
+	}
+}
+
+func TestTimeZoneType_07(t *testing.T) {
+
+	textString := "Military"
+
+	actualValue, err :=
+		TimeZoneType(0).XParseString(textString, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneType(0).XParseString(textString, true)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if TimeZoneType(0).Military() != actualValue {
+		t.Errorf("Error: Expected actualValue=TimeZoneType(0).Military()\n" +
+			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+}
+
+func TestTimeZoneType_08(t *testing.T) {
+
+	textString := "iana"
+
+	actualValue, err :=
+		TimeZoneType(0).XParseString(textString, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneType(0).XParseString(textString, false)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if TimeZoneType(0).Iana() != actualValue {
+		t.Errorf("Error: Expected actualValue=TimeZoneType(0).Iana()\n" +
+			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+}
+
+func TestTimeZoneType_09(t *testing.T) {
+
+	textString := "UTC"
+
+	actualValue, err :=
+		TimeZoneType(0).XParseString(textString, true)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneType(0).XParseString(textString, true)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if TimeZoneType(0).Iana() != actualValue {
+		t.Errorf("Error: Expected actualValue=TimeZoneType(0).Iana()\n" +
+			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+}
+
+func TestTimeZoneType_10(t *testing.T) {
+
+	textString := "utc"
+
+	actualValue, err :=
+		TimeZoneType(0).XParseString(textString, false)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneType(0).XParseString(textString, false)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if TimeZoneType(0).Iana() != actualValue {
+		t.Errorf("Error: Expected actualValue=TimeZoneType(0).Iana()\n" +
+			"Instead, actualValue='%v'\n", actualValue.String())
+	}
+}
+
+func TestTimeZoneType_11(t *testing.T) {
+
+	textString := "XRayzyxwVuTS"
+
+	_, err :=
+		TimeZoneType(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from TimeZoneType(0).XParseString(textString, true)\n" +
+			"because 'textString' is an INVALID string value.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneType_12(t *testing.T) {
+
+	textString := "xrayzyxwvuts"
+
+	_, err :=
+		TimeZoneType(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from TimeZoneType(0).XParseString(textString, false)\n" +
+			"because 'textString' is an INVALID string value.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneType_13(t *testing.T) {
+
+	textString := "Xr"
+
+	_, err :=
+		TimeZoneType(0).XParseString(textString, true)
+
+	if err == nil {
+		t.Error("Expected an error return from TimeZoneType(0).XParseString(textString, true)\n" +
+			"because 'textString' consists of only 2-characters.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneType_14(t *testing.T) {
+
+	textString := "xr"
+
+	_, err :=
+		TimeZoneType(0).XParseString(textString, false)
+
+	if err == nil {
+		t.Error("Expected an error return from TimeZoneType(0).XParseString(textString, false)\n" +
+			"because 'textString' consists of only two lower case characters.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestTimeZoneType_15(t *testing.T) {
+
+	testTimeZoneType := TimeZoneType(0).Iana()
+
+	intVal := testTimeZoneType.XValueInt()
+
+	if 1 != intVal {
+		t.Errorf("Error: Expected testTimeZoneType.XValueInt()='1'\n" +
+			"Instead, testTimeZoneType.XValueInt()='%v'\n",
+			intVal)
+	}
+}
+
+func TestTimeZoneType_16(t *testing.T) {
+
+	testTimeZoneType := TimeZoneType(0).Military()
+
+	intVal := testTimeZoneType.XValueInt()
+
+	if 3 != intVal {
+		t.Errorf("Error: Expected testTimeZoneType.XValueInt()='3'\n" +
+			"Instead, testTimeZoneType.XValueInt()='%v'\n",
+			intVal)
+	}
+}
+
