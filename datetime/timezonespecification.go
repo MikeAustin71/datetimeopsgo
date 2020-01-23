@@ -680,8 +680,6 @@ func (tzSpec TimeZoneSpecification) New(
 	militaryTimeZoneLetter string,
 	zoneLabel              string,
 	tagDescription         string,
-	locationNameType       LocationNameType,
-	timeZoneType           TimeZoneType,
 	timeZoneClass          TimeZoneClass,
 	ePrefix string) (TimeZoneSpecification, error) {
 
@@ -699,8 +697,6 @@ func (tzSpec TimeZoneSpecification) New(
 		militaryTimeZoneLetter,
 		zoneLabel,
 		tagDescription,
-		locationNameType,
-		timeZoneType,
 		timeZoneClass,
 		ePrefix)
 
@@ -734,8 +730,6 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 	militaryTimeZoneName   string,
 	zoneLabel              string,
 	tagDescription         string,
-	locationNameType       LocationNameType,
-	timeZoneType           TimeZoneType,
 	timeZoneClass          TimeZoneClass,
 	ePrefix string) error {
 
@@ -761,7 +755,8 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 
 	tzMech := TimeZoneMechanics{}
   var err error
-	
+
+
 	tzSpec.zoneName,
 		tzSpec.zoneOffset,
 		tzSpec.utcOffset,
@@ -774,19 +769,101 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 		tzSpec.locationPtr,
 		tzSpec.locationName,
 		err = tzMech.CalcUtcZoneOffsets(referenceDateTime, ePrefix)
-	
-	 if err != nil {
-	 	return err
-	 }
-	
+
+
+	var timeZoneType TimeZoneType
+	var ok bool
+
+	if err != nil {
+		tzSpecUtil.empty(tzSpec)
+		return err
+	}
+
+	locNameType := LocationNameType(0).ConvertibleTimeZone()
+
+	dtMech := dateTimeMechanics{}
+
+	// Test For Location Name Type
+	_, err = dtMech.loadTzLocationPtr(tzSpec.locationName, ePrefix)
+
+	if err != nil {
+		locNameType = LocationNameType(0).NonConvertibleTimeZone()
+	}
+
+	// Test for Time Zone Type
+	if len(militaryTimeZoneName) > 0 ||
+			len(militaryTimeZoneLetter) > 0 {
+
+		var foundMilTextName string
+
+		milTzDat := MilitaryTimeZoneData{}
+
+		foundMilTextName, ok = milTzDat.MilTzLetterToTextName(militaryTimeZoneLetter)
+
+		if !ok {
+
+			tzSpecUtil.empty(tzSpec)
+
+			return fmt.Errorf(ePrefix +
+				"\nInput parameter 'militaryTimeZoneLetter' is Invalid!\n" +
+				"militaryTimeZoneLetter='%v'\n", militaryTimeZoneLetter)
+		}
+
+		if foundMilTextName != militaryTimeZoneName {
+
+			tzSpecUtil.empty(tzSpec)
+
+			return fmt.Errorf(ePrefix +
+				"\nInput parameter 'militaryTimeZoneName' is Invalid!\n" +
+				"militaryTimeZoneName='%v'\n" +
+				"The correct military Time Zone Name is '%v'\n",
+				militaryTimeZoneName, foundMilTextName)
+		}
+
+		timeZoneType = TzType.Military()
+
+	} else if strings.ToLower(tzSpec.locationName) == "local" {
+
+		timeZoneType = TzType.Local()
+
+	} else {
+
+		timeZoneType = TzType.Iana()
+
+	}
+
+	// Test for Time Zone Utc Offset Status
+	var tzUtcOffsetStatus TimeZoneUtcOffsetStatus
+
+	tzUtcOffsetStatus, err = tzMech.GetTimeZoneUtcOffsetStatus(tzSpec.locationPtr, ePrefix)
+
+	if err != nil {
+		tzSpecUtil.empty(tzSpec)
+		return err
+	}
+
+	// Test for Time Zone Category
+	var tzCategory TimeZoneCategory
+
+	firstLetter := tzSpec.locationName[0:1]
+
+	if firstLetter == "+" ||
+		firstLetter == "-" {
+		tzCategory = TimeZoneCategory(0).UtcOffset()
+	} else {
+		tzCategory = TimeZoneCategory(0).TextName()
+	}
+
 	tzSpec.referenceDateTime = referenceDateTime
 	tzSpec.zoneLabel = zoneLabel
 	tzSpec.militaryTimeZoneLetter = militaryTimeZoneLetter
 	tzSpec.militaryTimeZoneName = militaryTimeZoneName
 	tzSpec.tagDescription = tagDescription
-	tzSpec.locationNameType = locationNameType
-	tzSpec.timeZoneType = timeZoneType
+	tzSpec.locationNameType = locNameType
+	tzSpec.timeZoneCategory = tzCategory
 	tzSpec.timeZoneClass = timeZoneClass
+	tzSpec.timeZoneType = timeZoneType
+	tzSpec.timeZoneUtcOffsetStatus = tzUtcOffsetStatus
 
 	return nil
 }

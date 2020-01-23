@@ -580,13 +580,9 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 		return tzSpec, err
 	}
 
-	timeZoneType := TzType.Iana()
-
 	if tzAbbrRef.Location == "Military" {
-
 		milTzLetter = tzAbbrRef.Abbrv
 		milTzName = tzAbbrRef.AbbrvDescription
-		timeZoneType = TzType.Military()
 	}
 
 	dtMech2 := dateTimeMechanics{}
@@ -628,8 +624,6 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 			milTzName,
 			timeZoneLabel,
 			"",
-			LocNameType.ConvertibleTimeZone(),
-			timeZoneType,
 			TzClass.AlternateTimeZone(),
 			ePrefix)
 
@@ -690,8 +684,6 @@ for i:=0; i < lenTZones; i++ {
 		milTzName,
 		timeZoneLabel,
 		"",
-		LocNameType.ConvertibleTimeZone(),
-		timeZoneType,
 		TzClass.AlternateTimeZone(),
 		ePrefix)
 
@@ -834,8 +826,6 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 			"",
 			timeZoneLabel,
 			"",
-			LocNameType.ConvertibleTimeZone(),
-			TzType.Iana(),
 			TzClass.AlternateTimeZone(),
 			ePrefix)
 
@@ -965,8 +955,6 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 		"",
 		timeZoneLabel,
 		"",
-		LocNameType.ConvertibleTimeZone(),
-		TzType.Iana(),
 		TzClass.AlternateTimeZone(),
 		ePrefix)
 
@@ -1033,7 +1021,6 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 
 	ianaTimeZoneName := ""
 	var ianaLocationPtr  *time.Location
-	timeZoneType := TzType.None()
 	tzSpec = TimeZoneSpecification{}
 	err = nil
 
@@ -1083,12 +1070,6 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 
 	if err2 == nil {
 
-		if strings.ToLower(ianaTimeZoneName) == "local" {
-			timeZoneType = TzType.Local()
-		} else {
-			timeZoneType = TzType.Iana()
-		}
-
 		tzSpec = TimeZoneSpecification{}
 		err = tzSpec.SetTimeZone(
 			dateTime,
@@ -1096,8 +1077,6 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 			"",
 			timeZoneLabel,
 			"",
-			LocNameType.ConvertibleTimeZone(),
-			timeZoneType,
 			TzClass.OriginalTimeZone(),
 			ePrefix)
 
@@ -1517,16 +1496,6 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 	}
 
 	// The time zone loaded successfully!
-	var tzType TimeZoneType
-
-	if strings.ToLower(timeZoneName) == "local" {
-
-		tzType = TzType.Local()
-
-	} else {
-
-		tzType = TzType.Iana()
-	}
 
 	if timeConversionType == TzConvertType.Absolute() {
 
@@ -1549,12 +1518,84 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 		milTzName,
 		"Original Time Zone",
 		"",
-		LocNameType.ConvertibleTimeZone(),
-		tzType,
 		TzClass.OriginalTimeZone(),
 		ePrefix)
 
 	return tzSpec, err
+}
+
+// GetTimeZoneUtcOffsetStatus - Analyzes the Time Zone Location
+// provided by input parameter, 'locationPtr', a pointer to a
+// Location Name or Time Zone Name (*time.Location). If the UTC
+// offset varies during June and December, the method returns
+// TimeZoneUtcOffsetStatus(0).Variable(). Otherwise the method
+// returns TimeZoneUtcOffsetStatus(0).Static() indicating that
+// the UTC Offset for the specified time zone is constant and
+// does NOT vary throughout the year.
+//
+// Generally, if a Time Zone has a constant UTC Offset throughout
+// the year, it does NOT observe Daylight Savings Time. On the
+// other hand, a time zone with a variable UTC Offset probably
+// observes Daylight Savings Time.
+//
+func (tzMech *TimeZoneMechanics) GetTimeZoneUtcOffsetStatus(
+	locationPtr *time.Location,
+	ePrefix string) (TimeZoneUtcOffsetStatus, error) {
+
+	ePrefix += "TimeZoneMechanics.GetTimeZoneUtcOffsetStatus() "
+
+	tzMech.lock.Lock()
+
+	defer tzMech.lock.Unlock()
+
+	if locationPtr == nil {
+		return TimeZoneUtcOffsetStatus(0).None(),
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "locationPtr",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'locationPtr' is a 'nil' pointer!",
+				err:                 nil,
+			}
+	}
+
+	dtJune := time.Date(
+		time.Now().Year(),
+		time.Month(6),
+		15,
+		10,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	dtDec := time.Date(
+		time.Now().Year(),
+		time.Month(12),
+		15,
+		10,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	dtJuneStr :=
+		dtJune.Format("2006-01-02 15:04:05 -0700 MST")
+
+	lenLeadOffsetStr := len("2006-01-02 15:04:05 ")
+
+	juneUtcOffset := dtJuneStr[lenLeadOffsetStr : lenLeadOffsetStr+5]
+
+	dtDecStr :=
+		dtDec.Format("2006-01-02 15:04:05 -0700 MST")
+
+	decUtcOffset := dtDecStr[lenLeadOffsetStr : lenLeadOffsetStr+5]
+
+	if juneUtcOffset == decUtcOffset {
+		return TimeZoneUtcOffsetStatus(0).Static(), nil
+	}
+
+	return TimeZoneUtcOffsetStatus(0).Variable(), nil
 }
 
 // GetTzAbbrvLookupIdFromDateTime - Returns a Time Zone Abbreviation
@@ -1849,8 +1890,6 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 		milTzName,
 		"Original Time Zone",
 		"",
-		LocNameType.ConvertibleTimeZone(),
-		TzType.Military(),
 		TzClass.OriginalTimeZone(),
 		ePrefix)
 
