@@ -508,7 +508,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 			"%v", err.Error())
 	}
 
-	_, err = dtMech.loadTzLocationPtr(
+	_, err = dtMech.LoadTzLocationPtr(
 		dateTime.Location().String(),
 		ePrefix)
 

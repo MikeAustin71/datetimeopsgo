@@ -103,14 +103,14 @@ func (dtMech *DateTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
 	return tzSpec.referenceDateTime, nil
 }
 
-// allocateSecondsToHrsMinSecs - Useful in calculating offset hours,
+// AllocateSecondsToHrsMinSecs - Useful in calculating offset hours,
 // minutes and seconds from UTC+0000. A total signed seconds value
 // is passed as an input parameter. This method then breaks down
 // hours, minutes and seconds as positive integer values. The sign
 // of the hours, minutes and seconds is returned in the 'sign'
 // parameter as +1 or -1.
 //
-func (dtMech *DateTimeMechanics) allocateSecondsToHrsMinSecs(
+func (dtMech *DateTimeMechanics) AllocateSecondsToHrsMinSecs(
 	signedTotalSeconds int) (hours, minutes, seconds, sign int) {
 
 	dtMech.lock.Lock()
@@ -168,7 +168,7 @@ func (dtMech *DateTimeMechanics) allocateSecondsToHrsMinSecs(
 //  Returned UTC Offset:  '-0600'
 //  Returned Time Zone Abbreviation: 'CST'
 //
-func (dtMech *DateTimeMechanics) getUtcOffsetTzAbbrvFromDateTime(
+func (dtMech *DateTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
 	utcOffset,
@@ -207,7 +207,7 @@ func (dtMech *DateTimeMechanics) getUtcOffsetTzAbbrvFromDateTime(
 	return utcOffset, tzAbbrv, err
 }
 
-// loadTzLocationPtr - Provides a single method for calling
+// LoadTzLocationPtr - Provides a single method for calling
 // time.LoadLocation(). This method may be altered in the future
 // to load time zones from an internal file thus affording
 // consistency in time zone definitions without relying on
@@ -216,7 +216,7 @@ func (dtMech *DateTimeMechanics) getUtcOffsetTzAbbrvFromDateTime(
 // If successful, this method returns a *time.Location or
 // location pointer to a valid time zone.
 //
-func (dtMech *DateTimeMechanics) loadTzLocationPtr(
+func (dtMech *DateTimeMechanics) LoadTzLocationPtr(
 	timeZoneName string,
 	ePrefix string) (*time.Location, error) {
 
@@ -224,7 +224,7 @@ func (dtMech *DateTimeMechanics) loadTzLocationPtr(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix += "DateTimeMechanics.loadTzLocationPtr() "
+	ePrefix += "DateTimeMechanics.LoadTzLocationPtr() "
 
 	if len(timeZoneName) == 0 {
 		return nil,
@@ -251,7 +251,7 @@ func (dtMech *DateTimeMechanics) loadTzLocationPtr(
 }
 
 
-// relativeTimeToTimeNameZoneConversion - Converts a time value
+// RelativeTimeToTimeNameZoneConversion - Converts a time value
 // to its equivalent time in another time zone specified by input
 // parameter string, 'timeZoneName'.
 //
@@ -290,7 +290,7 @@ func (dtMech *DateTimeMechanics) loadTzLocationPtr(
 //          "Delta"   or "D"
 //          "Zulu"    or "Z"
 //
-func (dtMech *DateTimeMechanics) relativeTimeToTimeNameZoneConversion(
+func (dtMech *DateTimeMechanics) RelativeTimeToTimeNameZoneConversion(
 	dateTime time.Time,
 	timeZoneName string,
 	ePrefix string) (time.Time, error) {
@@ -299,7 +299,7 @@ func (dtMech *DateTimeMechanics) relativeTimeToTimeNameZoneConversion(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix += "DateTimeMechanics.relativeTimeToTimeNameZoneConversion() "
+	ePrefix += "DateTimeMechanics.RelativeTimeToTimeNameZoneConversion() "
 
 	if dateTime.IsZero() {
 		return time.Time{},

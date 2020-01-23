@@ -683,11 +683,11 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	dtMech := DateTimeMechanics{}
 
-	_, err = dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
+	_, err = dtMech.LoadTzLocationPtr(timeZoneName, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned by dtMech.loadTzLocationPtr(timeZoneName, ePrefix).\n"+
+			"\nError returned by dtMech.LoadTzLocationPtr(timeZoneName, ePrefix).\n"+
 			"INVALID 'timeZoneName'!\n"+
 			"tzl='%v'\ntimeZoneName='%v'\n"+
 			"Error='%v'\n",
