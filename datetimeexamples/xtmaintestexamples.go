@@ -1306,13 +1306,13 @@ func (mc MainCodeExamples) mainCodeEx032() {
 		return
 	}
 
-	dtUtil := dt.DTimeUtility{}
+	dtMech := dt.DTimeMechanics{}
 
-	dt2, err := dtUtil.AbsoluteTimeToTimeZoneNameConversion(dt1, dt.TZones.America.New_York(),ePrefix)
+	dt2, err := dtMech.AbsoluteTimeToTimeZoneNameConversion(dt1, dt.TZones.America.New_York(),ePrefix)
 
 	if err != nil {
 		fmt.Printf(ePrefix +
-			"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dt1, dt.TZones.America.New_York())\n" +
+			"\nError returned by dtMech.AbsoluteTimeToTimeZoneDefConversion(dt1, dt.TZones.America.New_York())\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1375,13 +1375,13 @@ func (mc MainCodeExamples) mainCodeEx031() {
 		return
 	}
 
-	dtUtil := dt.DTimeUtility{}
+	dtMech := dt.DTimeMechanics{}
 
-	dt2, err := dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dt1, tzDefDto)
+	dt2, err := dtMech.AbsoluteTimeToTimeZoneDefConversion(dt1, tzDefDto)
 
 	if err != nil {
 		fmt.Printf(ePrefix +
-			"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dt1, tzDefDto)\n" +
+			"\nError returned by dtMech.AbsoluteTimeToTimeZoneDefConversion(dt1, tzDefDto)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

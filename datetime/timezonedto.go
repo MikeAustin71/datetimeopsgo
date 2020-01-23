@@ -916,7 +916,7 @@ func (tzDto *TimeZoneDto) IsValidTimeZone(
 
 	ePrefix := "TimeZoneDto.IsValidTimeZone() "
 
-	dTimeUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
 	var err error
 	var tzSpec TimeZoneSpecification
@@ -924,7 +924,7 @@ func (tzDto *TimeZoneDto) IsValidTimeZone(
 
 
 	tzSpec,
-		err = dTimeUtil.GetTimeZoneFromName(
+		err = dtMech.GetTimeZoneFromName(
 			dateTime,
 			tZone,
 			TzConvertType.Absolute(),
@@ -2059,10 +2059,10 @@ func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 		tZoneLocation = "Local"
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
 	tzSpec,
-	err := dtUtil.GetTimeZoneFromName(
+	err := dtMech.GetTimeZoneFromName(
 		tIn,
 		tZoneLocation,
 		timeConversionType,
@@ -2072,7 +2072,7 @@ func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 		return time.Time{}, err
 	}
 
-	return tzSpec.referenceDateTime, nil
+	return tzSpec.GetReferenceDateTime(), nil
 }
 
 // SetDateTimeFormatStr - Sets the value of the TimeZoneDto.DateTimeFmt field.

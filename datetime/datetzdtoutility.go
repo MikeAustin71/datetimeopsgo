@@ -681,13 +681,13 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	timeZoneName = dtUtil.PreProcessTimeZoneLocation(timeZoneName)
 
-	dtMech := DateTimeMechanics{}
+	dtMech := DTimeMechanics{}
 
-	_, err = dtMech.LoadTzLocationPtr(timeZoneName, ePrefix)
+	_, err = dtMech.LoadTzLocation(timeZoneName, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned by dtMech.LoadTzLocationPtr(timeZoneName, ePrefix).\n"+
+			"\nError returned by dtMech.LoadTzLocation(timeZoneName, ePrefix).\n"+
 			"INVALID 'timeZoneName'!\n"+
 			"tzl='%v'\ntimeZoneName='%v'\n"+
 			"Error='%v'\n",
@@ -784,12 +784,12 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 
 	if timeZoneConversionType == TzConvertType.Absolute() {
 		// FmtDateTimeTzNanoYMD = "2006-01-02 15:04:05.000000000 -0700 MST"
-		dtUtil := DTimeUtility{}
-		targetDateTime, err = dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime, tZoneDefDto)
+		dtMech := DTimeMechanics{}
+		targetDateTime, err = dtMech.AbsoluteTimeToTimeZoneDefConversion(dateTime, tZoneDefDto)
 
 		if err != nil {
 			return fmt.Errorf(ePrefix+
-				"\nError returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dateTime,tZoneDefDto)\n"+
+				"\nError returned by dtMech.AbsoluteTimeToTimeZoneDefConversion(dateTime,tZoneDefDto)\n"+
 				"dateTime='%v'\ntZoneDefDto='%v'\nError='%v'\n",
 				dateTime.Format(FmtDateTimeTzNanoYMD), tZoneDefDto.GetOriginalLocationName(), err.Error())
 		}

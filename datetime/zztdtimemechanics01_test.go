@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestDTimeUtility_AbsoluteTimeToTimeZoneDtoConversion_01(t *testing.T) {
+func TestDTimeMechanics_AbsoluteTimeToTimeZoneDefConversion_01(t *testing.T) {
 
 	t1Str := "2014-02-15 19:54:30.038175584 -0600 CST"
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
@@ -32,12 +32,12 @@ func TestDTimeUtility_AbsoluteTimeToTimeZoneDtoConversion_01(t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
-	dt2, err := dtUtil.AbsoluteTimeToTimeZoneDtoConversion(dt1, tzDefDto)
+	dt2, err := dtMech.AbsoluteTimeToTimeZoneDefConversion(dt1, tzDefDto)
 
 	if err != nil {
-		t.Errorf("Error returned by dtUtil.AbsoluteTimeToTimeZoneDtoConversion" +
+		t.Errorf("Error returned by dtMech.AbsoluteTimeToTimeZoneDefConversion" +
 			"(dt1, tzDefDto)\n" +
 			"dt1='%v'\n" +
 			"tzDefDto='%v'\n" +
@@ -54,7 +54,7 @@ func TestDTimeUtility_AbsoluteTimeToTimeZoneDtoConversion_01(t *testing.T) {
 	}
 }
 
-func TestDTimeUtility_GetTimeZoneFromDateTime_01 (t *testing.T) {
+func TestDTimeMechanics_GetTimeZoneFromDateTime_01 (t *testing.T) {
 
 	pacificTime := "2017-04-29 17:54:30 -0700 PDT"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
@@ -66,15 +66,15 @@ func TestDTimeUtility_GetTimeZoneFromDateTime_01 (t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
 	var tzSpec TimeZoneSpecification
 
 	tzSpec,
-		err = dtUtil.GetTimeZoneFromDateTime(tPacificIn, "")
+		err = dtMech.GetTimeZoneFromDateTime(tPacificIn, "")
 
 	if err != nil {
-		t.Errorf("Error returned by dtUtil.GetTimeZoneFromDateTime(tPacificIn, \"\")\n" +
+		t.Errorf("Error returned by dtMech.GetTimeZoneFromDateTime(tPacificIn, \"\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -93,7 +93,7 @@ func TestDTimeUtility_GetTimeZoneFromDateTime_01 (t *testing.T) {
 	}
 }
 
-func TestDTimeUtility_GetTimeZoneFromDateTime_02 (t *testing.T) {
+func TestDTimeMechanics_GetTimeZoneFromDateTime_02 (t *testing.T) {
 
 	pacificTime := "2017-12-15 17:54:30 -0800 PST"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
@@ -105,15 +105,15 @@ func TestDTimeUtility_GetTimeZoneFromDateTime_02 (t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
 	var tzSpec TimeZoneSpecification
 
 	tzSpec,
-		err = dtUtil.GetTimeZoneFromDateTime(tPacificIn, "")
+		err = dtMech.GetTimeZoneFromDateTime(tPacificIn, "")
 
 	if err != nil {
-		t.Errorf("Error returned by dtUtil.GetTimeZoneFromDateTime(tPacificIn, \"\")\n" +
+		t.Errorf("Error returned by dtMech.GetTimeZoneFromDateTime(tPacificIn, \"\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -132,7 +132,7 @@ func TestDTimeUtility_GetTimeZoneFromDateTime_02 (t *testing.T) {
 	}
 }
 
-func TestDTimeUtility_GetTimeZoneFromDateTime_03 (t *testing.T) {
+func TestDTimeMechanics_GetTimeZoneFromDateTime_03 (t *testing.T) {
 
 	pacificTime := "2017-12-15 17:54:30 -0800 PST"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
@@ -144,20 +144,20 @@ func TestDTimeUtility_GetTimeZoneFromDateTime_03 (t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
 	tPacificIn = time.Time{}
 
 	_,
-		err = dtUtil.GetTimeZoneFromDateTime(tPacificIn, "")
+		err = dtMech.GetTimeZoneFromDateTime(tPacificIn, "")
 
 	if err == nil {
-		t.Error("Error: Expected an error return from dtUtil.GetTimeZoneFromDateTime(tPacificIn, \"\")\n" +
+		t.Error("Error: Expected an error return from dtMech.GetTimeZoneFromDateTime(tPacificIn, \"\")\n" +
 			"because 'tPacificIn' has a ZERO value. However, NO ERROR WAS RETURNED!!\n")
 	}
 }
 
-func TestDTimeUtility_GetTimeZoneFromName_01(t *testing.T) {
+func TestDTimeMechanics_GetTimeZoneFromName_01(t *testing.T) {
 
 	pacificTime := "2019-12-15 17:54:30 -0800 PST"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
@@ -170,19 +170,19 @@ func TestDTimeUtility_GetTimeZoneFromName_01(t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
 	var tzSpec TimeZoneSpecification
 
 	tzSpec,
-		err = dtUtil.GetTimeZoneFromName(
+		err = dtMech.GetTimeZoneFromName(
 			tPacificIn,
 			TZones.America.New_York(),
 			TzConvertType.Relative(),
 			"")
 
 	if err != nil {
-		t.Errorf("Error returned by dtUtil." +
+		t.Errorf("Error returned by dtMech." +
 			"GetTimeZoneFromName(tPacificIn,TZones.America.New_York()," +
 			"TzConvertType.Relative(),\"\")\n" +
 			"Error='%v'\n", err.Error())
@@ -190,9 +190,8 @@ func TestDTimeUtility_GetTimeZoneFromName_01(t *testing.T) {
 	}
 
 	var easternStdTimeZone *time.Location
-
 	easternStdTimeZone,
-	err = DTimeUtility{}.LoadTzLocation(TZones.America.New_York(),"")
+	err = dtMech.LoadTzLocation(TZones.America.New_York(),"")
 
 	if err != nil {
 		t.Errorf("Error returned by DTimeUtility{}.LoadTzLocation(" +
@@ -212,7 +211,7 @@ func TestDTimeUtility_GetTimeZoneFromName_01(t *testing.T) {
 
 }
 
-func TestDTimeUtility_GetTimeZoneFromName_02(t *testing.T) {
+func TestDTimeMechanics_GetTimeZoneFromName_02(t *testing.T) {
 
 	pacificTime := "2019-12-15 17:54:30 -0800 PST"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
@@ -225,24 +224,24 @@ func TestDTimeUtility_GetTimeZoneFromName_02(t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 
 	tPacificIn = time.Time{}
 
 	_,
-		err = dtUtil.GetTimeZoneFromName(
+		err = dtMech.GetTimeZoneFromName(
 			tPacificIn,
 			TZones.America.New_York(),
 			TzConvertType.Relative(),
 			"")
 
 	if err == nil {
-		t.Error("Error: Expected an error return from dtUtil.GetTimeZoneFromName(dateTime,...)\n" +
+		t.Error("Error: Expected an error return from dtMech.GetTimeZoneFromName(dateTime,...)\n" +
 			"because 'dateTime' is a ZERO XValue! However, NO ERROR WAS RETURNED!\n")
 	}
 }
 
-func TestDTimeUtility_GetTimeZoneFromName_03(t *testing.T) {
+func TestDTimeMechanics_GetTimeZoneFromName_03(t *testing.T) {
 
 	pacificTime := "2019-12-15 17:54:30 -0800 PST"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
@@ -255,22 +254,22 @@ func TestDTimeUtility_GetTimeZoneFromName_03(t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 	timeZone := ""
 	_,
-		err = dtUtil.GetTimeZoneFromName(
+		err = dtMech.GetTimeZoneFromName(
 			tPacificIn,
 			timeZone,
 			TzConvertType.Relative(),
 			"")
 
 	if err == nil {
-		t.Error("Error: Expected an error return from dtUtil.GetTimeZoneFromName(timeZone,...)\n" +
+		t.Error("Error: Expected an error return from dtMech.GetTimeZoneFromName(timeZone,...)\n" +
 			"because 'timeZone' is an EMPTY string! However, NO ERROR WAS RETURNED!\n")
 	}
 }
 
-func TestDTimeUtility_GetTimeZoneFromName_04(t *testing.T) {
+func TestDTimeMechanics_GetTimeZoneFromName_04(t *testing.T) {
 
 	pacificTime := "2019-12-15 17:54:30 -0800 PST"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
@@ -283,16 +282,16 @@ func TestDTimeUtility_GetTimeZoneFromName_04(t *testing.T) {
 		return
 	}
 
-	dtUtil := DTimeUtility{}
+	dtMech := DTimeMechanics{}
 	_,
-		err = dtUtil.GetTimeZoneFromName(
+		err = dtMech.GetTimeZoneFromName(
 			tPacificIn,
 			TZones.America.New_York(),
 			TzConvertType.None(),
 			"")
 
 	if err == nil {
-		t.Error("Error: Expected an error return from dtUtil.GetTimeZoneFromName(TimeZoneConversionType,...)\n" +
+		t.Error("Error: Expected an error return from dtMech.GetTimeZoneFromName(TimeZoneConversionType,...)\n" +
 			"because 'TimeZoneConversionType' is equal to 'NONE'! However, NO ERROR WAS RETURNED!\n")
 	}
 }

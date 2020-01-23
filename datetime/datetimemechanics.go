@@ -8,10 +8,83 @@ import (
 	"time"
 )
 
-type DateTimeMechanics struct {
+type DTimeMechanics struct {
 	lock sync.Mutex
 }
 
+// AbsoluteTimeToTimeZoneDefConversion - Converts a given time to
+// another time zone using the 'Absolute' conversion method.
+// This means that the years, months, days, hours, minutes,
+// seconds and nanoseconds of the original 'dateTime' are not
+// changed. That time value is simply assigned to another
+// designated time zone. The target time zone is derived from
+// input parameter 'timeZoneDefDto', an instance of type
+// 'TimeZoneDefinition'.
+//
+// For example, assume that 'dateTime' represents 10:00AM in USA
+// time zone 'Central Standard Time'.  Using the 'Absolute'
+// conversion method, and converting this time value to the USA
+// Eastern Standard Time Zone would result in a date time of
+// 10:00AM EST or Eastern Standard Time. The time value of
+// 10:00AM is not changed, it is simply assigned to another
+// time zone.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+// dateTime            time.Time
+//                      - The date time to be converted.
+//
+// timeZoneDefDto TimeZoneDefinition
+//                      - A properly initialized 'TimeZoneDefinition'
+//                        object encapsulating the time zone to which
+//                       'dateTime' will be converted.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+// time.Time  - The date time converted to the time zone specified in
+//              in input parameter 'timeZoneDefDto'.
+//
+// error      - If the method completes successfully this value is set
+//              to 'nil'. If an error is encountered, the returned error
+//              value encapsulates an appropriate error message.
+//
+func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneDefConversion(
+	dateTime time.Time,
+	timeZoneDefDto TimeZoneDefinition) (time.Time, error) {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix := "DTimeMechanics.AbsoluteTimeToTimeZoneDefConversion() "
+
+	if dateTime.IsZero() {
+		return time.Time{},
+			errors.New(ePrefix +
+				"\nError: Input parameter 'dateTime' is zero!")
+	}
+
+
+	if err := timeZoneDefDto.IsValid(); err != nil {
+		return time.Time{},
+			fmt.Errorf(ePrefix +
+				"Input parameter 'timeZoneDefDto' is Invalid!\n" +
+				"Error='%v'\n", err.Error())
+	}
+
+	return time.Date(dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+		dateTime.Second(),
+		dateTime.Nanosecond(),
+		timeZoneDefDto.GetOriginalLocationPtr()), nil
+}
 
 // AbsoluteTimeToTimeZoneNameConversion - Converts a given time to
 // another time zone using the 'Absolute' conversion method.
@@ -50,7 +123,7 @@ type DateTimeMechanics struct {
 //              to 'nil'. If an error is encountered, the returned error
 //              value encapsulates an appropriate error message.
 //
-func (dtMech *DateTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
+func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
 	dateTime time.Time,
 	timeZoneName string,
 	ePrefix string) (time.Time, error) {
@@ -59,7 +132,7 @@ func (dtMech *DateTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix += "DateTimeMechanics.AbsoluteTimeToTimeZoneNameConversion() "
+	ePrefix += "DTimeMechanics.AbsoluteTimeToTimeZoneNameConversion() "
 
 	if dateTime.IsZero() {
 		return time.Time{},
@@ -110,7 +183,7 @@ func (dtMech *DateTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
 // of the hours, minutes and seconds is returned in the 'sign'
 // parameter as +1 or -1.
 //
-func (dtMech *DateTimeMechanics) AllocateSecondsToHrsMinSecs(
+func (dtMech *DTimeMechanics) AllocateSecondsToHrsMinSecs(
 	signedTotalSeconds int) (hours, minutes, seconds, sign int) {
 
 	dtMech.lock.Lock()
@@ -148,6 +221,141 @@ func (dtMech *DateTimeMechanics) AllocateSecondsToHrsMinSecs(
 	return hours, minutes, seconds, sign
 }
 
+// GetTimeZoneFromDateTime - Analyzes a date time object
+// and returns a valid time zone in the form of a
+// 'TimeZoneSpecification' instance.
+//
+// Because date time objects (time.Time) do not support
+// Military Time Zones; therefore, Military Time Zones
+// are never returned by this method.
+//
+func (dtMech *DTimeMechanics) GetTimeZoneFromDateTime(
+	dateTime time.Time,
+	ePrefix string) (
+	tzSpec TimeZoneSpecification,
+	err error) {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix += "DTimeMechanics.GetTimeZoneFromName() "
+
+	tzMech := TimeZoneMechanics{}
+
+	return tzMech.GetTimeZoneFromDateTime(dateTime, ePrefix)
+}
+
+// GetTimeZoneFromName - Analyzes a time zone name passed
+// through input parameter, 'timeZoneName'. If valid, the
+// method populates and returns a 'TimeZoneSpecification'
+// instance.
+//
+// This method will accept and successfully process one
+// of three types of time zones:
+//
+//   (1) The time zone "Local", which Golang accepts as
+//       the time zone currently configured on the host
+//       computer.
+//
+//   (2) IANA Time Zone - A valid IANA Time Zone from the
+//       IANA database.
+//       See https://golang.org/pkg/time/#LoadLocation
+//       and https://www.iana.org/time-zones to ensure that
+//       the IANA Time Zone Database is properly configured
+//       on your system.
+//
+//       IANA Time Zone Examples:
+//         "America/New_York"
+//         "America/Chicago"
+//         "America/Denver"
+//         "America/Los_Angeles"
+//         "Pacific/Honolulu"
+//         "Etc/UTC" = GMT or UTC
+//
+//    (3) A Military Time Zone
+//        Reference:
+//         https://en.wikipedia.org/wiki/List_of_military_time_zones
+//         http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//         https://www.timeanddate.com/time/zones/military
+//         https://www.timeanddate.com/worldclock/timezone/alpha
+//         https://www.timeanddate.com/time/map/
+//
+//        Examples:
+//          "Alpha"   or "A"
+//          "Bravo"   or "B"
+//          "Charlie" or "C"
+//          "Delta"   or "D"
+//          "Zulu"    or "Z"
+//
+// If the time zone "Zulu" is passed to this method, it will be
+// classified as a Military Time Zone.
+//
+func (dtMech *DTimeMechanics) GetTimeZoneFromName(
+	dateTime time.Time,
+	timeZoneName string,
+	timeConversionType TimeZoneConversionType,
+	ePrefix string) (
+	tzSpec TimeZoneSpecification,
+	err error) {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix += "DTimeUtility.DTimeMechanics() "
+
+	tzSpec = TimeZoneSpecification{}
+	err = nil
+
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' has " +
+				"a Zero value!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
+	if timeConversionType < TzConvertType.Absolute() ||
+		timeConversionType > TzConvertType.Relative() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input Parameter 'timeConversionType' " +
+				"contains an invalid value!",
+			err:                 nil,
+		}
+		return tzSpec, err
+	}
+
+	if len(timeZoneName) == 0 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneName",
+			inputParameterValue: "",
+			errMsg:              "Input parameter is an EMPTY String!",
+			err:                 nil,
+		}
+
+		return tzSpec, err
+	}
+
+	tzMech := TimeZoneMechanics{}
+
+	return tzMech.GetTimeZoneFromName(
+		dateTime,
+		timeZoneName,
+		timeConversionType,
+		ePrefix)
+}
+
 // GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time,
 // date time, input parameter and extracts and returns the
 // 5-character UTC offset and the time zone abbreviation.
@@ -168,7 +376,7 @@ func (dtMech *DateTimeMechanics) AllocateSecondsToHrsMinSecs(
 //  Returned UTC Offset:  '-0600'
 //  Returned Time Zone Abbreviation: 'CST'
 //
-func (dtMech *DateTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
+func (dtMech *DTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (
 	utcOffset,
@@ -183,7 +391,7 @@ func (dtMech *DateTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	tzAbbrv = ""
 	err = nil
 
-	ePrefix += "DateTimeMechanics.GetUtcOffsetTzAbbrvFromDateTime() "
+	ePrefix += "DTimeMechanics.GetUtcOffsetTzAbbrvFromDateTime() "
 
 	if dateTime.IsZero() {
 		err = errors.New(ePrefix +
@@ -207,7 +415,7 @@ func (dtMech *DateTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	return utcOffset, tzAbbrv, err
 }
 
-// LoadTzLocationPtr - Provides a single method for calling
+// LoadTzLocation - Provides a single method for calling
 // time.LoadLocation(). This method may be altered in the future
 // to load time zones from an internal file thus affording
 // consistency in time zone definitions without relying on
@@ -216,7 +424,7 @@ func (dtMech *DateTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 // If successful, this method returns a *time.Location or
 // location pointer to a valid time zone.
 //
-func (dtMech *DateTimeMechanics) LoadTzLocationPtr(
+func (dtMech *DTimeMechanics) LoadTzLocation(
 	timeZoneName string,
 	ePrefix string) (*time.Location, error) {
 
@@ -224,7 +432,7 @@ func (dtMech *DateTimeMechanics) LoadTzLocationPtr(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix += "DateTimeMechanics.LoadTzLocationPtr() "
+	ePrefix += "DTimeMechanics.LoadTzLocation() "
 
 	if len(timeZoneName) == 0 {
 		return nil,
@@ -249,7 +457,6 @@ func (dtMech *DateTimeMechanics) LoadTzLocationPtr(
 
 	return locPtr, nil
 }
-
 
 // RelativeTimeToTimeNameZoneConversion - Converts a time value
 // to its equivalent time in another time zone specified by input
@@ -290,7 +497,7 @@ func (dtMech *DateTimeMechanics) LoadTzLocationPtr(
 //          "Delta"   or "D"
 //          "Zulu"    or "Z"
 //
-func (dtMech *DateTimeMechanics) RelativeTimeToTimeNameZoneConversion(
+func (dtMech *DTimeMechanics) RelativeTimeToTimeNameZoneConversion(
 	dateTime time.Time,
 	timeZoneName string,
 	ePrefix string) (time.Time, error) {
@@ -299,7 +506,7 @@ func (dtMech *DateTimeMechanics) RelativeTimeToTimeNameZoneConversion(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix += "DateTimeMechanics.RelativeTimeToTimeNameZoneConversion() "
+	ePrefix += "DTimeMechanics.RelativeTimeToTimeNameZoneConversion() "
 
 	if dateTime.IsZero() {
 		return time.Time{},

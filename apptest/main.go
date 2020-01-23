@@ -458,9 +458,9 @@ func (mt mainTest) mainTest057() {
 
 	mt.mainPrintHdr(ePrefix , "-")
 
-	dtUtil := dt.DTimeUtility{}
+	dtMech := dt.DTimeMechanics{}
 
-	locPtr, err := dtUtil.LoadTzLocation(dt.TZones.Asia.Vladivostok(), ePrefix)
+	locPtr, err := dtMech.LoadTzLocation(dt.TZones.Asia.Vladivostok(), ePrefix)
 
 	if err != nil {
 		fmt.Printf("Error='%v'\n", err.Error())
@@ -533,16 +533,16 @@ func (mt mainTest) mainTest056() {
 
 	mt.mainPrintHdr(ePrefix , "-")
 
-	dtUtil := dt.DTimeUtility{}
+	dtMech := dt.DTimeMechanics{}
 	locUSCentral, err :=
-		dtUtil.LoadTzLocation(dt.TZones.US.Central(), ePrefix)
+		dtMech.LoadTzLocation(dt.TZones.US.Central(), ePrefix)
 
 	if err != nil {
 		fmt.Printf("Error='%v'\n", err.Error())
 		return
 	}
 
-	locTokyo, err := dtUtil.LoadTzLocation(dt.TZones.Asia.Tokyo(), ePrefix)
+	locTokyo, err := dtMech.LoadTzLocation(dt.TZones.Asia.Tokyo(), ePrefix)
 
 	if err != nil {
 		fmt.Printf("Error='%v'", err.Error())

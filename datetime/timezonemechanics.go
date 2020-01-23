@@ -509,7 +509,7 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 	tzSpec = TimeZoneSpecification{}
 	err = nil
 
-	ePrefix += "DateTimeMechanics.ConvertTzAbbreviationToTimeZone() "
+	ePrefix += "DTimeMechanics.ConvertTzAbbreviationToTimeZone() "
 
 	if len(tzAbbrvLookupKey) == 0 {
 		err = &InputParameterError{
@@ -585,13 +585,13 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 		milTzName = tzAbbrRef.AbbrvDescription
 	}
 
-	dtMech2 := DateTimeMechanics{}
+	dtMech2 := DTimeMechanics{}
 	var err2 error
 
-	//LoadTzLocationPtr(
+	//LoadTzLocation(
 	if lenTZones == 1 {
 
-		ianaLocationPtr, err2 = dtMech2.LoadTzLocationPtr(tZones[0], ePrefix)
+		ianaLocationPtr, err2 = dtMech2.LoadTzLocation(tZones[0], ePrefix)
 
 		if err2 != nil {
 
@@ -651,7 +651,7 @@ for i:=0; i < lenTZones; i++ {
 		ianaTimeZoneName = tZones[0]
 	}
 
-	ianaLocationPtr, err2 = dtMech2.LoadTzLocationPtr(ianaTimeZoneName, ePrefix)
+	ianaLocationPtr, err2 = dtMech2.LoadTzLocation(ianaTimeZoneName, ePrefix)
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix +
@@ -785,7 +785,7 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 		return staticTimeZone, err
 	}
 
-	dtMech := DateTimeMechanics{}
+	dtMech := DTimeMechanics{}
 
 	if utcOffsetAbbrv == "+00"    ||
 			utcOffsetAbbrv == "-00"   ||
@@ -793,7 +793,7 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 			utcOffsetAbbrv == "-0000" {
 
 		// TZones.Etc.UTC()
-		locPtr, err2 := dtMech.LoadTzLocationPtr(TZones.Etc.UTC(),ePrefix)
+		locPtr, err2 := dtMech.LoadTzLocation(TZones.Etc.UTC(),ePrefix)
 
 		if err2 != nil {
 			err = fmt.Errorf(ePrefix + "\n" +
@@ -925,7 +925,7 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 		return staticTimeZone, err
 	}
 
-	locPtr, err2 := dtMech.LoadTzLocationPtr(timeZoneName, ePrefix)
+	locPtr, err2 := dtMech.LoadTzLocation(timeZoneName, ePrefix)
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix + "\n" +
@@ -1063,10 +1063,10 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 
 	ianaTimeZoneName = ianaLocationPtr.String()
 
-	dtMech := DateTimeMechanics{}
+	dtMech := DTimeMechanics{}
 	var err2 error
 
-	ianaLocationPtr, err2 = dtMech.LoadTzLocationPtr(ianaTimeZoneName, ePrefix)
+	ianaLocationPtr, err2 = dtMech.LoadTzLocation(ianaTimeZoneName, ePrefix)
 
 	if err2 == nil {
 
@@ -1179,9 +1179,9 @@ err = nil
 	var err2 error
 	var tzAbbrv, utcOffset string
 	tzMech2 := TimeZoneMechanics{}
-	dtMech := DateTimeMechanics{}
+	dtMech := DTimeMechanics{}
 
-	_, err2 = dtMech.LoadTzLocationPtr(
+	_, err2 = dtMech.LoadTzLocation(
 		dateTime.Location().String(),
 		ePrefix)
 
@@ -1435,10 +1435,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 	tzSpec = TimeZoneSpecification{}
 	err = nil
 
-	dtMech := DateTimeMechanics{}
+	dtMech := DTimeMechanics{}
 
 	ianaLocationPtr, err2 =
-		dtMech.LoadTzLocationPtr(timeZoneName,ePrefix)
+		dtMech.LoadTzLocation(timeZoneName,ePrefix)
 
 	if err2 != nil {
 
@@ -1844,10 +1844,10 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 	var err2 error
 	err = nil
-	dtMech := DateTimeMechanics{}
+	dtMech := DTimeMechanics{}
 
 	equivalentIanaLocationPtr, err2 =
-		dtMech.LoadTzLocationPtr(equivalentIanaTimeZone, ePrefix)
+		dtMech.LoadTzLocation(equivalentIanaTimeZone, ePrefix)
 
 	if err2 != nil {
 		err = fmt.Errorf(ePrefix+

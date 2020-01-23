@@ -497,7 +497,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 	var err error
 	var tzSpec1, tzSpec2 TimeZoneSpecification
 
-	dtMech := DateTimeMechanics{}
+	dtMech := DTimeMechanics{}
 
 	utcOffset, tzAbbrv, err =
 		tzMech.GetUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
@@ -508,7 +508,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 			"%v", err.Error())
 	}
 
-	_, err = dtMech.LoadTzLocationPtr(
+	_, err = dtMech.LoadTzLocation(
 		dateTime.Location().String(),
 		ePrefix)
 
