@@ -280,18 +280,22 @@ func (tzSpec *TimeZoneSpecification) GetLocationName() string {
 //
 // Possible return values:
 //
-//    ConvertibleAbbreviation    - Time Zone Zone Location Name is an
-//                                 abbreviation which is valid and
-//                                 convertible across all other time
-//                                 zones.
+//  LocationNameType(0).None()
+//                               - The Time Zone is uninitialized. This
+//                                 is an error condition.
 //
-//    NonConvertibleTimeZone - The Time Zone Location Name cannot
+//  LocationNameType(0).NonConvertibleTimeZone()
+//                               - The Time Zone Location Name cannot
 //                                 be converted to other time zones.
 //
-//    ConvertibleTimeZone    - The Time Zone Name is a complete
+//  LocationNameType(0).ConvertibleTimeZone()
+//                               - The Time Zone Name is a complete
 //                                 and valid time zone name which is
 //                                 convertible across all other
 //                                 time zones.
+//
+// For easy access to these enumeration values, use the global variable,
+// 'LocNameType'. Example: LocNameType.ConvertibleTimeZone()
 //
 func (tzSpec *TimeZoneSpecification) GetLocationNameType() LocationNameType {
 
@@ -422,25 +426,26 @@ func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
 // category of time zone name.
 //
 // Possible Values:
-//  TzCat.None()       -  Signals that Time Zone Category is uninitialized.
-//                        This represents an error condition.
 //
-//  TzCat.TextName()   -  Signals that the Time Zone is identified
-//                        by a standard IANA Text Name. Examples:
-//                          "America/Chicago"
-//                          "Asia/Amman"
-//                          "Atlantic/Bermuda"
-//                          "Australia/Sydney"
-//                          "Europe/Rome"
+//  TimeZoneCategory(0).None()       -  Signals that Time Zone Category is uninitialized.
+//                                      This represents an error condition.
 //
-//  TzCat.UtcOffset()  -  Signals that the Time Zone is identified
-//                        by a valid UTC Offset and has no associated
-//                        text name. Examples:
-//                          "+07"
-//                          "+10"
+//  TimeZoneCategory(0).TextName()   -  Signals that the Time Zone is identified
+//                                      by a standard IANA Text Name. Examples:
+//                                        "America/Chicago"
+//                                        "Asia/Amman"
+//                                        "Atlantic/Bermuda"
+//                                        "Australia/Sydney"
+//                                        "Europe/Rome"
+//
+//  TimeZoneCategory(0).UtcOffset()   -  Signals that the Time Zone is identified
+//                                       by a valid UTC Offset and has no associated
+//                                       text name. Examples:
+//                                         "+07"
+//                                         "+10"
 //
 // For easy access to these enumeration values, use the global variable
-// 'TzCat'.
+// 'TzCat'. Example: TzCat.None()
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneCategory() TimeZoneCategory {
 
@@ -456,9 +461,12 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneCategory() TimeZoneCategory {
 // status.
 //
 // Possible Values:
+//
 // TimeZoneClass(0).None()              - An Error Condition
+//
 // TimeZoneClass(0).AlternateTimeZone() - Generated Time Zone from
 //                                        Time Zone Abbreviation
+//
 // TimeZoneClass(0).OriginalTimeZone()  - Original Valid Time Zone
 //
 // For easy access to these enumeration values, use the global variable
@@ -491,9 +499,9 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneName() string {
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneSpecFlags() (
 	LocationNameType,
-	TimeZoneType,
-	TimeZoneClass,
 	TimeZoneCategory,
+	TimeZoneClass,
+	TimeZoneType,
 	TimeZoneUtcOffsetStatus) {
 
 	tzSpec.lock.Lock()
@@ -501,9 +509,9 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneSpecFlags() (
 	defer tzSpec.lock.Unlock()
 
 	return tzSpec.locationNameType,
-					tzSpec.timeZoneType,
-					tzSpec.timeZoneClass,
 					tzSpec.timeZoneCategory,
+					tzSpec.timeZoneClass,
+					tzSpec.timeZoneType,
 					tzSpec.timeZoneUtcOffsetStatus
 }
 
@@ -513,10 +521,14 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneSpecFlags() (
 //
 // Possible return types.
 //
-//  TzType.Iana()      - Identifies an IANA Time Zone
-//  TzType.Military()  - Identifies a Military Time Zone
-//  TzType.Local()     - Identifies this as a 'Local' Time Zone
-//  TzType.UtcOffset() - Identifies this time zone a UTC Offset
+//  TimeZoneType(0).None()      - Time Zone type is uninitialized
+//                                and has no significant value.
+//
+//  TimeZoneType(0).Iana()      - Identifies an IANA Time Zone
+//
+//  TimeZoneType(0).Local()     - Identifies this as a 'Local' Time Zone
+//
+//  TimeZoneType(0).Military()  - Identifies a Military Time Zone
 //
 // For easy access to these enumeration values, use the global variable
 // 'TzType'. Example: TzType.Military()
@@ -538,24 +550,27 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneType() TimeZoneType {
 //
 // Possible return types.
 //
-// TzUtcStatus.None()                   Signals that Time Zone UTC Offset
-//                                      Status is uninitialized and contains
-//                                      no significant or valid value. This
-//                                      is an error condition.
+// TimeZoneUtcOffsetStatus(0).None()
+//               - Signals that Time Zone UTC Offset
+//                 Status is uninitialized and contains
+//                 no significant or valid value. This
+//                 is an error condition.
 //
-// TzUtcStatus.Static()                 Signals that the UTC Offset associated
-//                                      with a given Time Zone is constant
-//                                      throughout the year and never changes.
-//                                      Typically, this means that Daylight
-//                                      Savings Time is NOT observed in the
-//                                      specified Time Zone.
+// TimeZoneUtcOffsetStatus(0).Static()
+//               - Signals that the UTC Offset associated
+//                 with a given Time Zone is constant
+//                 throughout the year and never changes.
+//                 Typically, this means that Daylight
+//                 Savings Time is NOT observed in the
+//                 specified Time Zone.
 //
-// TzUtcStatus.Variable()               Signals that the UTC Offset associated
-//                                      with a given Time Zone is not constant,
-//                                      and varies at least once during the year.
-//                                      This usually means that Daylight Savings
-//                                      Time is observed within the designated
-//                                      Time Zone.
+// TimeZoneUtcOffsetStatus(0).Variable()
+//               - Signals that the UTC Offset associated
+//                 with a given Time Zone is not constant,
+//                 and varies at least once during the year.
+//                 This usually means that Daylight Savings
+//                 Time is observed within the designated
+//                 Time Zone.
 //
 // For easy access to these enumeration values, use the global variable
 // 'TzUtcStatus'. Example: TzUtcStatus.Variable()
