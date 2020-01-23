@@ -156,8 +156,8 @@ func (dtUtil *DTimeUtility) AbsoluteTimeToTimeZoneNameConversion(
 			}
 	}
 
-	dtMech := dateTimeMechanics{}
-	return 	dtMech.absoluteTimeToTimeZoneNameConversion(
+	dtMech := DateTimeMechanics{}
+	return 	dtMech.AbsoluteTimeToTimeZoneNameConversion(
 		dateTime,
 		timeZoneName,
 		ePrefix)
@@ -411,7 +411,7 @@ func (dtUtil *DTimeUtility) GetUtcOffsetTzAbbrvFromDateTime(
 
 	ePrefix += "DTimeUtility.GetUtcOffsetTzAbbrvFromDateTime() "
 
-	dtMech := dateTimeMechanics{}
+	dtMech := DateTimeMechanics{}
 
 	return dtMech.getUtcOffsetTzAbbrvFromDateTime(dateTime, ePrefix)
 }
@@ -446,7 +446,7 @@ func (dtUtil DTimeUtility) LoadTzLocation(
 			}
 	}
 
-	dtMech := dateTimeMechanics{}
+	dtMech := DateTimeMechanics{}
 
 	return dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
 }
@@ -525,7 +525,7 @@ func (dtUtil *DTimeUtility) RelativeTimeToTimeNameZoneConversion(
 			}
 	}
 
-	dtMech := dateTimeMechanics{}
+	dtMech := DateTimeMechanics{}
 
 	return dtMech.relativeTimeToTimeNameZoneConversion(
 		dateTime,

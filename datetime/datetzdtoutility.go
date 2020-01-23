@@ -681,7 +681,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	timeZoneName = dtUtil.PreProcessTimeZoneLocation(timeZoneName)
 
-	dtMech := dateTimeMechanics{}
+	dtMech := DateTimeMechanics{}
 
 	_, err = dtMech.loadTzLocationPtr(timeZoneName, ePrefix)
 

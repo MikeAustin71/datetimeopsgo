@@ -218,7 +218,7 @@ func (tzSpec *TimeZoneSpecification) IsValid(ePrefix string) error {
 			tzSpec.locationPtr.String() , tzSpec.locationName)
 	}
 
-	dtMech := dateTimeMechanics{}
+	dtMech := DateTimeMechanics{}
 
 	locPtr, err := dtMech.loadTzLocationPtr(tzSpec.locationName, ePrefix)
 
@@ -828,7 +828,7 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 
 	locNameType := LocationNameType(0).ConvertibleTimeZone()
 
-	dtMech := dateTimeMechanics{}
+	dtMech := DateTimeMechanics{}
 
 	// Test For Location Name Type
 	_, err = dtMech.loadTzLocationPtr(tzSpec.locationName, ePrefix)
