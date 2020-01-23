@@ -40,20 +40,20 @@ type TimeZoneSpecification struct {
 	militaryTimeZoneName   string           // Full Military Time Zone text name. Examples: "Alpha", "Bravo", "Charlie", "Zulu"
 	militaryTimeZoneLetter string           // Single Alphabetic Character identifying a Military Time Zone.
 	tagDescription         string           // Unused - Available for classification, labeling or description by user.
+	timeZoneCategory       TimeZoneCategory // Enumeration of Time Zone Category:
+	//                                          TzCat.None()
+	//                                          TzCat.TextName()
+	//                                          TzCat.UtcOffset()
+	timeZoneClass          TimeZoneClass    // Enumeration of Time Zone Class:
+	//                                          TzClass.None()
+	//                                          TzClass.AlternateTimeZone()
+	//                                          TzClass.OriginalTimeZone()
 	timeZoneType           TimeZoneType     // Enumeration of Time Zone Type:
 	//                                          TzType.None()
 	//                                          TzType.Iana()
 	//                                          TzType.Military()
 	//                                          TzType.Local()
 	//                                          TzType.UtcOffset()
-	timeZoneClass          TimeZoneClass    // Enumeration of Time Zone Class:
-	//                                          TzClass.None()
-	//                                          TzClass.AlternateTimeZone()
-	//                                          TzClass.OriginalTimeZone()
-	timeZoneCategory       TimeZoneCategory // Enumeration of Time Zone Category:
-	//                                          TzCat.None()
-	//                                          TzCat.TextName()
-	//                                          TzCat.UtcOffset()
 	timeZoneUtcOffsetStatus TimeZoneUtcOffsetStatus // Enumeration of Time Zone UTC Offset Status:
 	//                                                  TzUtcStatus.None()
 	//                                                  TzUtcStatus.Static()
@@ -485,6 +485,28 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneName() string {
 	return tzSpec.locationName
 }
 
+
+// GetTimeZoneSpecFlags - Returns all internal flags for the
+// current TimeZoneSpecification instance.
+//
+func (tzSpec *TimeZoneSpecification) GetTimeZoneSpecFlags() (
+	LocationNameType,
+	TimeZoneType,
+	TimeZoneClass,
+	TimeZoneCategory,
+	TimeZoneUtcOffsetStatus) {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.locationNameType,
+					tzSpec.timeZoneType,
+					tzSpec.timeZoneClass,
+					tzSpec.timeZoneCategory,
+					tzSpec.timeZoneUtcOffsetStatus
+}
+
 // GetTimeZoneType - Returns the Time Zone Type description.
 // Time Zone Type is an enumeration identifying the time zone
 // source.
@@ -710,6 +732,11 @@ func (tzSpec TimeZoneSpecification) New(
 // TimeZoneSpecification instance.
 //
 func (tzSpec *TimeZoneSpecification) SetTagDescription(tagDescription string) {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
 	tzSpec.tagDescription = tagDescription
 }
 
@@ -718,6 +745,11 @@ func (tzSpec *TimeZoneSpecification) SetTagDescription(tagDescription string) {
 // by the user.
 //
 func (tzSpec *TimeZoneSpecification) SetZoneLabel() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
 	return tzSpec.zoneLabel
 }
 
