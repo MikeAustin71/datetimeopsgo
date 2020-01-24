@@ -583,17 +583,23 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	fmtStr := dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
-	dtUtil := DTimeUtility{}
+	dtUtil := TimeZoneMechanics{}
 
 	tzl := dtUtil.PreProcessTimeZoneLocation(timeZoneName)
 
-	_, err = time.LoadLocation(tzl)
+	if len(tzl) == 0 {
+		return fmt.Errorf(ePrefix +
+			"\nError: Input Parameter 'timeZoneName' " +
+			"resolved to an empty string!\n" +
+			"timeZoneName='%v'\n", timeZoneName)
+	}
+
+	dtMech := DTimeMechanics{}
+
+	_, err = dtMech.LoadTzLocation(tzl, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by time.LoadLocation(tzl).\nINVALID 'timeZoneName'!\n"+
-			"tzl='%v'\ntimeZoneName='%v'\nError='%v'\n",
-			tzl, timeZoneName, err.Error())
+		return err
 	}
 
 	var dt time.Time
@@ -677,9 +683,14 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
-	dtUtil := DTimeUtility{}
+	tzMech := TimeZoneMechanics{}
 
-	timeZoneName = dtUtil.PreProcessTimeZoneLocation(timeZoneName)
+	timeZoneName = tzMech.PreProcessTimeZoneLocation(timeZoneName)
+
+	if len(timeZoneName) == 0 {
+		return errors.New(ePrefix +
+			"\nError: Input Parameter 'timeZoneName' is an empty string!\n")
+	}
 
 	dtMech := DTimeMechanics{}
 
@@ -870,16 +881,21 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 			err.Error())
 	}
 
-	dtUtil := DTimeUtility{}
+	tzMech := TimeZoneMechanics{}
 
-	timeZoneLocation = dtUtil.PreProcessTimeZoneLocation(timeZoneLocation)
+	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
 
-	_, err = time.LoadLocation(timeZoneLocation)
+	if len(timeZoneLocation) == 0 {
+		return errors.New(ePrefix +
+			"\nError: Input Parameter 'timeZoneLocation' is an empty string!\n")
+	}
+
+	dtMech := DTimeMechanics{}
+	
+	_, err = dtMech.LoadTzLocation(timeZoneLocation, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by time.LoadLocation(timeZoneLocation).\n"+
-			"timeZoneLocation='%v'\nError='%v'\n", timeZoneLocation, err.Error())
+		return err
 	}
 
 	dTzUtil2 := dateTzDtoUtility{}

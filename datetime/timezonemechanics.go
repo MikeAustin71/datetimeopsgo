@@ -1895,3 +1895,47 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 	return tzSpec, err
 }
+
+// PreProcessTimeZoneLocation - Scans a time zone location
+// name string and attempts to correct errors.
+//
+// If input parameter 'timeZoneLocation' is an empty string,
+// this method returns an empty string. Otherwise the returned
+// string
+//
+func (tzMech *TimeZoneMechanics) PreProcessTimeZoneLocation(
+	timeZoneLocation string) string {
+
+	tzMech.lock.Lock()
+
+	defer tzMech.lock.Unlock()
+
+	timeZoneLocation =
+		strings.TrimLeft(strings.TrimRight(timeZoneLocation, " "), " ")
+
+	if len(timeZoneLocation) == 0 {
+		return timeZoneLocation
+	}
+
+	testZone := strings.ToLower(timeZoneLocation)
+
+	if testZone == "utc" {
+
+		timeZoneLocation = TZones.UTC()
+
+	} else if testZone == "uct" {
+
+		timeZoneLocation = TZones.UCT()
+
+	} else if testZone == "gmt" {
+
+		timeZoneLocation = TZones.Etc.GMT()
+
+	} else if testZone == "local" {
+
+		return TZones.Local()
+	}
+
+	return timeZoneLocation
+
+}

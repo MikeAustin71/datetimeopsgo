@@ -3433,17 +3433,21 @@ func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
 
 	ePrefix := "DateTzDto.SetNewTimeZone() "
 
-	dtUtil := DTimeUtility{}
+	tzMech := TimeZoneMechanics{}
 
-	tzl := dtUtil.PreProcessTimeZoneLocation(newTimeZoneLocation)
+	tzl := tzMech.PreProcessTimeZoneLocation(newTimeZoneLocation)
 
-	loc, err := time.LoadLocation(tzl)
+	if len(tzl) == 0 {
+		return errors.New("Error: Input Parameter, 'newTimeZoneLocation' " +
+			"resolved to an empty string!\n")
+	}
+
+	dtMech := DTimeMechanics{}
+
+	loc, err := dtMech.LoadTzLocation(tzl, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by time.LoadLocation(tzl).\n"+
-			"tzl='%v'\nnewTimeZoneLocation='%v'\nError='%v'\n",
-			tzl, newTimeZoneLocation, err.Error())
+		return err
 	}
 
 	newDateTime := dtz.dateTimeValue.In(loc)
