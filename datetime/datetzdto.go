@@ -2543,7 +2543,7 @@ func (dtz DateTzDto) NewNowUTC(
 //         }
 //
 //
-//   timeZoneLocation string - time zone location must be designated as one of
+//   timeZoneName string - time zone location must be designated as one of
 //                             two values:
 //
 //            (1) The string 'Local' - signals the designation of the local time zone
@@ -2653,9 +2653,9 @@ func (dtz DateTzDto) NewTimeDto(
 }
 
 // NewTz - returns a new DateTzDto instance based on a time.Time input parameter ('dateTime').
-// The caller is required to provide a Time Zone Location. Input parameter 'dateTime' will be
-// converted to this Time Zone before storing the converted 'dateTime' in the newly created
-// DateTzDto instance.
+// The caller is required to provide a Time Zone Location or Name. Input parameter 'dateTime'
+// will be converted to this Time Zone before storing the converted 'dateTime' in the newly
+// created DateTzDto instance.
 //
 // ------------------------------------------------------------------------
 //
@@ -2663,7 +2663,7 @@ func (dtz DateTzDto) NewTimeDto(
 //
 //   dateTime          time.Time - A date time value
 //
-//   timeZoneLocationName string - time zone location must be designated as one of
+//   timeZoneName         string - time zone location must be designated as one of
 //                                 two values:
 //
 //            (1) The string 'Local' - signals the designation of the local time zone
@@ -2687,6 +2687,14 @@ func (dtz DateTzDto) NewTimeDto(
 //                 constant declarations covering the more frequently used time
 //                 zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //                 time zone constants begin with the prefix 'TzIana'.
+//
+//   timeZoneConversionType TimeZoneConversionType
+//                           - TimeZoneConversionType is an enumeration with two
+//                             possible values: TimeZoneConversionType(0).Absolute()
+//                             or TimeZoneConversionType(0).Relative(). The 'Absolute'
+//                             conversion will produce same time value in a different
+//                             time zone. The 'Relative' conversion type will yield
+//                             a different equivalent time in a different time zone.
 //
 //   dateTimeFmtStr string   - A date time format string which will be used
 //                             to format and display 'dateTime'. Example:
@@ -2713,20 +2721,6 @@ func (dtz DateTzDto) NewTimeDto(
 //               The data fields of this new instance are initialized to zero
 //               values.
 //
-//               A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
-//
 //
 //   error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //               encountered this error Type will encapsulate an error message.
@@ -2749,11 +2743,15 @@ func (dtz DateTzDto) NewTimeDto(
 //
 func (dtz DateTzDto) NewTz(
 	dateTime time.Time,
-	timeZoneLocationName string,
+	timeZoneName string,
 	timeZoneConversionType TimeZoneConversionType,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
-	ePrefix := "DateTzDto.New() "
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	ePrefix := "DateTzDto.NewTz() "
 
 	if dateTime.IsZero() {
 		return DateTzDto{}, errors.New(ePrefix + "Error: Input parameter dateTime is Zero value!")
@@ -2766,7 +2764,7 @@ func (dtz DateTzDto) NewTz(
 	err := dTzUtil.setFromTimeTz(
 		&dtz2,
 		dateTime,
-		timeZoneLocationName,
+		timeZoneName,
 		timeZoneConversionType,
 		dateTimeFmtStr,
 		ePrefix)
