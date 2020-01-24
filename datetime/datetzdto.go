@@ -3072,6 +3072,7 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 func (dtz *DateTzDto) SetFromDateTime(dateTime time.Time, dateTimeFmtStr string) error {
 
 	dtz.lock.Lock()
+
 	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.SetFromDateTime() "
@@ -3373,19 +3374,6 @@ func (dtz *DateTzDto) String() string {
 // Input Parameter
 //
 //   dtz2 DateTzDto - A valid and populated instance of type DateTzDto.
-//                    A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
 //
 // ------------------------------------------------------------------------
 //
