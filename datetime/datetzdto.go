@@ -501,11 +501,12 @@ func (dtz *DateTzDto) AddDateToThis(
 	dur := int64(days) * DayNanoSeconds
 	newDt2 := newDt1.Add(time.Duration(dur))
 
-	dtz2, err := DateTzDto{}.New(newDt2, dtz.dateTimeFmt)
+	dtz2 := DateTzDto{}
+
+	err = dTzUtil.setFromDateTime( &dtz2, newDt2, dtz.dateTimeFmt, ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by DateTzDto{}.New(newDt2, dtz.dateTimeFmt). newDt='%v'  Error='%v'",
-			newDt2.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return err
 	}
 
 	dTzUtil.copyIn(dtz, &dtz2)
