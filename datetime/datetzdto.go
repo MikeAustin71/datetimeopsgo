@@ -104,15 +104,15 @@ import (
 // ===============================
 //
 type DateTzDto struct {
-	tagDescription string      // Available for tags, classification, labeling or description
-	timeComponents TimeDto     // Associated Time Components (years, months, days, hours, minutes,
-	                           //    seconds etc.)
-	dateTimeValue  time.Time   // DateTime value for this DateTzDto Type
-	dateTimeFmt    string      // Date Time Format String. Default is
-	                           //    "2006-01-02 15:04:05.000000000 -0700 MST"
+	tagDescription string       // Available for tags, classification, labeling or description
+	timeComponents TimeDto      // Associated Time Components (years, months, days, hours, minutes,
+	                            //    seconds etc.)
+	dateTimeValue  time.Time    // DateTime value for this DateTzDto Type
+	dateTimeFmt    string       // Date Time Format String. Default is
+	                            //    "2006-01-02 15:04:05.000000000 -0700 MST"
 	timeZone TimeZoneDefinition // Contains a detailed definition and descriptions of the Time
 	//                             Zone and Time Zone Location associated with this date time.
-	lock        sync.Mutex     // Mutex used to ensure thread-safe operations.
+	lock        sync.Mutex      // Mutex used to ensure thread-safe operations.
 }
 
 // AddDate - Adds input parameters 'years, 'months' and 'days' to date time value of the
@@ -155,19 +155,6 @@ type DateTzDto struct {
 //              DateTzDto type updated to reflect the added input parameters,
 //              years, months and days.
 //
-//              A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//        tagDescription  string         // Unused, available for classification,
-//                                       //  labeling or description
-//        Time            TimeDto        // Associated Time Components
-//        DateTime        time.Time      // DateTime value for this DateTzDto Type
-//        DateTimeFmt     string         // Date Time Format String.
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//        TimeZone        TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //              encountered this error Type will encapsulate an error message.
@@ -275,20 +262,6 @@ func (dtz *DateTzDto) AddDate(
 //  DateTzDto - If successful the method returns a new, valid, fully populated
 //              DateTzDto type updated to reflect the addition of input
 //              parameters to the date time value of the current DateTzDto.
-//
-//              A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//        tagDescription  string         // Unused, available for classification,
-//                                       //  labeling or description
-//        Time            TimeDto        // Associated Time Components
-//        DateTime        time.Time      // DateTime value for this DateTzDto Type
-//        DateTimeFmt     string         // Date Time Format String.
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//        TimeZone        TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //              encountered this error Type will encapsulate an error message.
@@ -557,20 +530,6 @@ func (dtz *DateTzDto) AddDateToThis(
 //              time duration to the date time value of the current DateTzDto
 //              instance.
 //
-//              A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//        tagDescription  string         // Unused, available for classification,
-//                                       //  labeling or description
-//        Time            TimeDto        // Associated Time Components
-//        DateTime        time.Time      // DateTime value for this DateTzDto Type
-//        DateTimeFmt     string         // Date Time Format String.
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//        TimeZone        TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
-//
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //              encountered this error Type will encapsulate an error message.
 //
@@ -700,19 +659,7 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //
 //  DateTzDto - If successful the method returns a valid, fully populated
 //              DateTzDto type updated to reflect the subtracted 'TimeDto'
-//              input parameter. A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
+//              input parameter.
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //              encountered this error Type will encapsulate an error message.
@@ -848,19 +795,7 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //
 //  DateTzDto - If successful the method returns a new, valid, fully populated
 //              DateTzDto type updated to reflect the added input parameter
-//              'plusTimeDto'. A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
+//              'plusTimeDto'.
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //              encountered this error Type will encapsulate an error message.
@@ -1002,19 +937,8 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 //
 //  DateTzDto - If successful the method returns a valid, fully populated
 //              DateTzDto type updated to reflect the added time value
-//              input parameters. A DateTzDto structure is defined as follows:
+//              input parameters.
 //
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //              encountered this error Type will encapsulate an error message.
@@ -1068,8 +992,9 @@ func (dtz *DateTzDto) AddTime(
 					ePrefix)
 }
 
-// AddTimeToThis - Modifies the current DateTzTdo instance by adding input parameter
-// time components (hours, minutes, seconds etc.) to the current value.
+// AddTimeToThis - Modifies the current DateTzTdo instance by adding input
+// parameter time components (hours, minutes, seconds etc.) to the current
+// value.
 //
 // Note: This method WILL alter the value of the current DateTzDto instance.
 //
@@ -1167,20 +1092,6 @@ func (dtz *DateTzDto) AddTimeToThis(
 //                    into the data fields of the current DateTzDto
 //                    instance.
 //
-//      A DateTzDto struct is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//            Time        TimeDto        // Associated Time Components
-//            DateTime    time.Time      // DateTime value for this DateTzDto Type
-//            DateTimeFmt string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//            TimeZone    TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
-//
 // ------------------------------------------------------------------------
 //
 // Return Values
@@ -1199,6 +1110,7 @@ func (dtz *DateTzDto) AddTimeToThis(
 func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 
 	dtz.lock.Lock()
+
 	defer dtz.lock.Unlock()
 
 	dTzUtil := dateTzDtoUtility{}
@@ -1224,19 +1136,6 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 //
 //  DateTzDto - This method returns a new, valid, fully populated DateTzDto
 //              which is a deep copy of the current DateTzDto instance.
-//              A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description string          // Unused, available for classification,
-//                                       //  labeling or description
-//            Time        TimeDto        // Associated Time Components
-//            DateTime    time.Time      // DateTime value for this DateTzDto Type
-//            DateTimeFmt string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//            TimeZone    TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
 //
 // ------------------------------------------------------------------------
 //
@@ -1252,6 +1151,7 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 func (dtz *DateTzDto) CopyOut() DateTzDto {
 
 	dtz.lock.Lock()
+
 	defer dtz.lock.Unlock()
 
 	dTzUtil := dateTzDtoUtility{}
@@ -1264,6 +1164,7 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 func (dtz *DateTzDto) Empty() {
 
 	dtz.lock.Lock()
+
 	defer dtz.lock.Unlock()
 
 	dTzUtil := dateTzDtoUtility{}
@@ -1281,6 +1182,7 @@ func (dtz *DateTzDto) Empty() {
 func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 
 	dtz.lock.Lock()
+
 	defer dtz.lock.Unlock()
 
 	if dtz.tagDescription != dtz2.tagDescription ||
@@ -1305,6 +1207,7 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 
 	dtz.lock.Lock()
+
 	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.EqualUtcOffset() "
@@ -1463,7 +1366,7 @@ func (dtz *DateTzDto) GetDateTimeFmt() string {
 }
 
 // GetDateTimeSecText - Returns formatted
-// date time with seconds for display,
+// date time with seconds for display.
 //
 // ------------------------------------------------------------------------
 //
@@ -1480,7 +1383,7 @@ func (dtz *DateTzDto) GetDateTimeSecText() string {
 }
 
 // GetDateTimeStr - Returns a date time string
-// in the format 20170427211307. Useful in naming
+// in the format '20170427211307'. Useful in naming
 // files.
 func (dtz *DateTzDto) GetDateTimeStr() string {
 
@@ -1502,6 +1405,7 @@ func (dtz *DateTzDto) GetDateTimeStr() string {
 // ------------------------------------------------------------------------
 //
 //  EXAMPLE: Monday 2006-01-02 15:04:05.000000000 -0700 MST
+//
 func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 
 	dtz.lock.Lock()
@@ -1518,6 +1422,7 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 // ------------------------------------------------------------------------
 //
 //  EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
+//
 func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
 
 	dtz.lock.Lock()
@@ -1535,6 +1440,7 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
 // ------------------------------------------------------------------------
 //
 //  EXAMPLE: 2006-01-02 Monday 15:04:05.000000000 -0700 MST
+//
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
 
 	dtz.lock.Lock()
@@ -1571,6 +1477,7 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
 // ------------------------------------------------------------------------
 //
 //  EXAMPLE: "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
+//
 func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
 
 	dtz.lock.Lock()
@@ -1602,7 +1509,7 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 // 'tagDescription' is available to users for use as
 // a tag, label, classification or text description.
 //
-func (dtz *DateTzDto) GetDescription() string {
+func (dtz *DateTzDto) GetOriginalTagDescription() string {
 
 	dtz.lock.Lock()
 
@@ -1847,17 +1754,24 @@ func (dtz *DateTzDto) GetTimeComponents() TimeDto {
 //
 // TimeDto - A TimeDto structure is defined as follows:
 //
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
+//    type TimeDto struct {
+//       Years                int // Number of Years
+//       Months               int // Number of Months
+//       Weeks                int // Number of Weeks
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//       Hours                int // Number of Hours.
+//       Minutes              int // Number of Minutes
+//       Seconds              int // Number of Seconds
+//       Milliseconds         int // Number of Milliseconds
+//       Microseconds         int // Number of Microseconds
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
+//
 //
 // error - If successful the returned error Type is set equal to 'nil'. If errors are
 //         encountered this error Type will encapsulate an error message.
@@ -2006,19 +1920,7 @@ func (dtz *DateTzDto) IsValid() error {
 //
 //  DateTzDto - If successful this method returns a new DateTzDto instance.
 //
-//              A DateTzDto structure is defined as follows:
 //
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //              encountered this error Type will encapsulate an error message.
@@ -2039,6 +1941,10 @@ func (dtz *DateTzDto) IsValid() error {
 func (dtz DateTzDto) New(
 	dateTime time.Time,
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.New() "
 
@@ -2127,19 +2033,6 @@ func (dtz DateTzDto) New(
 //
 //   DateTzDto - If successful this method returns a new DateTzDto instance.
 //
-//               A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
 //
 //   error - If successful the returned error Type is set equal to 'nil'. If errors are
 //           encountered this error Type will encapsulate an error message.
@@ -2177,6 +2070,10 @@ func (dtz DateTzDto) NewDateTimeComponents(
 	nanosecond int,
 	timeZoneLocation,
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.NewDateTimeComponents() "
 

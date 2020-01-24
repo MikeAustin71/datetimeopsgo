@@ -584,7 +584,7 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 	fmt.Println("           DateTzDto")
 	fmt.Println("        Date Time Info")
 	fmt.Println("----------------------------------")
-	fmt.Println("  Description: ", dtz.GetDescription())
+	fmt.Println("  Description: ", dtz.GetOriginalTagDescription())
 	fmt.Println("         Year: ", dtz.GetTimeComponents().Years)
 	fmt.Println("        Month: ", dtz.GetTimeComponents().Months)
 	fmt.Println("        Weeks: ", dtz.GetTimeComponents().Weeks)
