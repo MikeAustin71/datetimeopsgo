@@ -2593,20 +2593,6 @@ func (dtz DateTzDto) NewNowUTC(
 //               The data fields of this new instance are initialized to zero
 //               values.
 //
-//               A DateTzDto structure is defined as follows:
-//
-//      type DateTzDto struct {
-//           Description  string         // Unused, available for classification,
-//                                       //  labeling or description
-//           Time         TimeDto        // Associated Time Components
-//           DateTime     time.Time      // DateTime value for this DateTzDto Type
-//           DateTimeFmt  string         // Date Time Format String. 
-//                                       //  Default is "2006-01-02 15:04:05.000000000 -0700 MST"
-//           TimeZone     TimeZoneDefinition // Contains a detailed description of the Time Zone
-//                                       //  and Time Zone Location
-//                                       // associated with this date time.
-//      }
-//
 //
 //   error     - If successful the returned error Type is set equal to 'nil'. If errors are
 //               encountered this error Type will encapsulate an error message.
@@ -2628,10 +2614,25 @@ func (dtz DateTzDto) NewNowUTC(
 //
 func (dtz DateTzDto) NewTimeDto(
 	tDto TimeDto,
-	timeZoneLocation string,
+	timeZoneName string,
 	dateTimeFormatStr string) (DateTzDto, error) {
 
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.NewTimeDto() "
+
+	if len(timeZoneName) == 0 {
+		return DateTzDto{},
+		&InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneName",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'timeZoneName' is an empty string!",
+			err:                 nil,
+		}
+	}
 
 	dtz2 := DateTzDto{}
 
@@ -2640,7 +2641,7 @@ func (dtz DateTzDto) NewTimeDto(
 	err := dTzUtil.setFromTimeDto(
 		&dtz2,
 		tDto,
-		timeZoneLocation,
+		timeZoneName,
 		dateTimeFormatStr,
 		ePrefix)
 
