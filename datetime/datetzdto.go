@@ -110,8 +110,8 @@ type DateTzDto struct {
 	dateTimeValue  time.Time   // DateTime value for this DateTzDto Type
 	dateTimeFmt    string      // Date Time Format String. Default is
 	                           //    "2006-01-02 15:04:05.000000000 -0700 MST"
-	timeZone TimeZoneDefinition // Contains a detailed description of the Time Zone and Time Zone
-	                           //    Location associated with this date time.
+	timeZone TimeZoneDefinition // Contains a detailed definition and descriptions of the Time
+	//                             Zone and Time Zone Location associated with this date time.
 	lock        sync.Mutex     // Mutex used to ensure thread-safe operations.
 }
 
@@ -218,10 +218,12 @@ func (dtz *DateTzDto) AddDate(
 		dateTimeFormatStr = dtz.dateTimeFmt
 	}
 
-	dtz2, err := DateTzDto{}.New(newDt2, dateTimeFormatStr)
+	dtz2 := DateTzDto{}
+
+	err = dTzUtil.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
 
 	if err != nil {
-		return DateTzDto{}, fmt.Errorf(ePrefix+"Error returned by DateTzDto{}.New(newDt2, dtz.DateTimeFmt). newDt='%v'  Error='%v'", newDt2.Format(FmtDateTimeYrMDayFmtStr), err.Error())
+		return DateTzDto{}, err
 	}
 
 	return dtz2, nil
@@ -1334,7 +1336,8 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 }
 
 // GetConvertibleTzAbbreviation - Returns the time zone abbreviation
-// for the Convertible Time Zone.
+// for the Convertible Time Zone. The time zone abbreviation for a
+// given time zone is also referred to as the 'zone name'.
 //
 // The Time Zone abbreviation may be  a series of characters,
 // like "EST", "CST" and "PDT" - or - if a time zone alphabetic,
