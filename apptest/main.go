@@ -947,19 +947,20 @@ func (mt mainTest) mainTest051() {
 			"Error='%v'\n", t1.Location().String(), err.Error())
 	}
 
-	dtUtil := dt.DTimeUtility{}
+	tzMech := dt.TimeZoneMechanics{}
 
 	var tzSpec dt.TimeZoneSpecification
 
 	tzSpec,
-	err = dtUtil.GetConvertibleTimeZoneFromDateTime(
+	err = tzMech.GetConvertibleTimeZoneFromDateTime(
 		t1,
 		dt.TzConvertType.Absolute(),
+		ePrefix,
 		ePrefix)
 
 	if err != nil {
 		fmt.Printf(ePrefix +
-			"\nError returned by dtUtil.GetConvertibleTimeZoneFromDateTime(t1, ePrefix)\n" +
+			"\nError returned by tzMech.GetConvertibleTimeZoneFromDateTime(t1, ePrefix)\n" +
 			"t1='%v'\n" +
 			"Error='%v'\n", t1.Format(fmtStr), err.Error())
 		return

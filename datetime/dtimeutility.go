@@ -62,42 +62,6 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 	return fmt.Errorf("%v", errStr)
 }
 
-
-// GetConvertibleTimeZoneFromDateTime - Receives a date time
-// (type time.Time) as an input parameter. 'dateTime' is parsed
-// and a valid, convertible time zone name and location pointer
-// are returned.  Note: Due to the structure of 'dateTime', a
-// military time zone is never returned. All returned time zones
-// are either IANA time zones or the 'Local' time zone designated
-// by golang and the host computer.
-//
-// If the initial time zone extracted from 'dateTime' is invalid,
-// the date time time zone abbreviation will be used to look up an
-// alternate, convertible time zone. Check the flags on the returned
-// 'Time Zone Specification'.
-//
-func (dtUtil *DTimeUtility) GetConvertibleTimeZoneFromDateTime(
-	dateTime time.Time,
-	timeConversionType TimeZoneConversionType,
-	ePrefix string) (
-	tzSpec TimeZoneSpecification,
-	err error) {
-
-	dtUtil.lock.Lock()
-
-	defer dtUtil.lock.Unlock()
-
-	ePrefix += "DTimeUtility.GetConvertibleTimeZoneFromDateTime() "
-
-	tzMech := TimeZoneMechanics{}
-
-	return tzMech.GetConvertibleTimeZoneFromDateTime(
-		dateTime,
-		timeConversionType,
-		"Convertible Time Zone",
-		ePrefix)
-}
-
 // GetUtcOffsetTzAbbrvFromDateTime - Receives a time.Time, date
 // time, input parameter and extracts and returns the
 // 5-character UTC offset and UTC offset.
