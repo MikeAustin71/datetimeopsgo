@@ -327,6 +327,9 @@ func (tDtoUtil *timeDtoUtility) copyOut(
 // (Years, months, weeks days, hours, seconds, etc.)
 // to absolute values.
 //
+// In other words, after this method completes, all
+// time component values will be positive.
+//
 func (tDtoUtil *timeDtoUtility) convertToAbsoluteValues(
 	tDto *TimeDto,
 	ePrefix string) {

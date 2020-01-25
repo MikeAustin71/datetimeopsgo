@@ -122,6 +122,10 @@ func (tDto *TimeDto) CopyIn(t2Dto TimeDto) {
 // ConvertToAbsoluteValues - Converts time components
 // (Years, months, weeks days, hours, seconds, etc.)
 // to absolute values.
+//
+// In other words, after this method completes, all
+// time component values will be positive.
+//
 func (tDto *TimeDto) ConvertToAbsoluteValues() {
 
 	tDto.lock.Lock()
@@ -133,11 +137,11 @@ func (tDto *TimeDto) ConvertToAbsoluteValues() {
 	tDtoUtil := timeDtoUtility{}
 
 	tDtoUtil.convertToAbsoluteValues(tDto, ePrefix)
-
 }
 
-// ConvertToNegativeValues - Multiplies time component
-// values by -1
+// ConvertToNegativeValues - When this method
+// completes, all time component values will
+// be negative.
 //
 func (tDto *TimeDto) ConvertToNegativeValues() {
 
@@ -239,8 +243,6 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 
 	ePrefix := "TimeDto.GetDateTime() "
 
-	tzMech := TimeZoneMechanics{}
-
 	dateTime := time.Date(tDto.Years,
 		time.Month(tDto.Months),
 		tDto.DateDays,
@@ -249,6 +251,8 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 		tDto.Seconds,
 		tDto.TotSubSecNanoseconds,
 		time.UTC)
+
+	tzMech := TimeZoneMechanics{}
 
 	tzSpec,
 	err := tzMech.GetTimeZoneFromName(
@@ -273,7 +277,7 @@ func (tDto *TimeDto) IsEmpty() bool {
 
 	defer tDto.lock.Unlock()
 
-	ePrefix := "TimeDto.GetDateTime() "
+	ePrefix := "TimeDto.IsEmpty() "
 
 	tDtoUtil := timeDtoUtility{}
 
@@ -318,9 +322,21 @@ func (tDto *TimeDto) IsValid() error {
 //            Microseconds:  0
 //             Nanoseconds:  0
 //
-func (tDto TimeDto) New(years, months, weeks, days, hours, minutes,
-	seconds, milliseconds, microseconds,
+func (tDto TimeDto) New(
+	years,
+	months,
+	weeks,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
 	nanoseconds int) (TimeDto, error) {
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
 
 	ePrefix := "TimeDto.New(...) "
 
