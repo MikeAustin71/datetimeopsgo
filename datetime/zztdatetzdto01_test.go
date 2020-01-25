@@ -509,6 +509,150 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 
 }
 
+func TestDateTzDto_GetConvertibleTzStatusFlags_01(t *testing.T) {
+
+	dTUtil := DTimeMechanics{}
+
+	tzPtr, err := dTUtil.LoadTzLocation(TZones.Europe.Paris(),"")
+
+	if err != nil {
+		t.Errorf("%v", err.Error())
+		return
+	}
+
+	dateTime := time.Date(
+		2019,
+		time.Month(6),
+		15,
+		11,
+		0,
+		0,
+		0,
+		tzPtr)
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	var dTzDto DateTzDto
+
+	dTzDto, err = DateTzDto{}.New(dateTime, fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.New(dateTime, fmtStr).\n" +
+			"dateTime='%v'\n" +
+			"Error='%v'\n", dateTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	locNameType,
+	tZCategory,
+	tzClass,
+	tZType,
+	TzUTCOffsetStatus := dTzDto.GetConvertibleTzStatusFlags()
+
+	if locNameType != LocNameType.ConvertibleTimeZone() {
+		t.Errorf("Error: Expected locNameType='ConvertibleTimeZone'.\n" +
+			"Instead, locNameType='%v'.\n", locNameType.String())
+		return
+	}
+
+	if tZCategory != TzCat.TextName() {
+		t.Errorf("Error: Expected tZCategory='TextName'.\n" +
+			"Instead, tZCategory='%v'.\n", tZCategory.String())
+		return
+	}
+
+	if tzClass != TzClass.OriginalTimeZone() {
+		t.Errorf("Error: Expected tZClass='OriginalTimeZone'.\n" +
+			"Instead, tzClass='%v'.\n", tzClass.String())
+		return
+	}
+
+	if tZType != TzType.Iana() {
+		t.Errorf("Error: Expected tZType='Iana'.\n" +
+			"Instead, tZType='%v'.\n", tZType.String())
+		return
+	}
+
+	if TzUTCOffsetStatus != TzUtcStatus.Variable() {
+		t.Errorf("Error: Expected TzUTCOffsetStatus='Variable'.\n" +
+			"Instead, TzUTCOffsetStatus='%v'.\n", TzUTCOffsetStatus.String())
+		return
+	}
+
+}
+
+func TestDateTzDto_GetOriginalTagDescription_01(t *testing.T) {
+
+	dTUtil := DTimeMechanics{}
+
+	tzPtr, err := dTUtil.LoadTzLocation(TZones.Europe.Paris(),"")
+
+	if err != nil {
+		t.Errorf("%v", err.Error())
+		return
+	}
+
+	dateTime := time.Date(
+		2019,
+		time.Month(6),
+		15,
+		11,
+		0,
+		0,
+		0,
+		tzPtr)
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	var dTzDto DateTzDto
+
+	dTzDto, err = DateTzDto{}.New(dateTime, fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.New(dateTime, fmtStr).\n" +
+			"dateTime='%v'\n" +
+			"Error='%v'\n", dateTime.Format(fmtStr), err.Error())
+		return
+	}
+
+	locNameType,
+	tZCategory,
+	tzClass,
+	tZType,
+	TzUTCOffsetStatus := dTzDto.GetOriginalTzStatusFlags()
+
+	if locNameType != LocNameType.ConvertibleTimeZone() {
+		t.Errorf("Error: Expected locNameType='ConvertibleTimeZone'.\n" +
+			"Instead, locNameType='%v'.\n", locNameType.String())
+		return
+	}
+
+	if tZCategory != TzCat.TextName() {
+		t.Errorf("Error: Expected tZCategory='TextName'.\n" +
+			"Instead, tZCategory='%v'.\n", tZCategory.String())
+		return
+	}
+
+	if tzClass != TzClass.OriginalTimeZone() {
+		t.Errorf("Error: Expected tZClass='OriginalTimeZone'.\n" +
+			"Instead, tzClass='%v'.\n", tzClass.String())
+		return
+	}
+
+	if tZType != TzType.Iana() {
+		t.Errorf("Error: Expected tZType='Iana'.\n" +
+			"Instead, tZType='%v'.\n", tZType.String())
+		return
+	}
+
+	if TzUTCOffsetStatus != TzUtcStatus.Variable() {
+		t.Errorf("Error: Expected TzUTCOffsetStatus='Variable'.\n" +
+			"Instead, TzUTCOffsetStatus='%v'.\n", TzUTCOffsetStatus.String())
+		return
+	}
+
+}
+
 func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 
 	locUSCentral, err := time.LoadLocation(TZones.US.Central())

@@ -58,7 +58,7 @@ import (
 // ============
 // 
 //   DateTzDto    - datetzdto.go
-//   TimeZoneDef  - timezonedef.go
+//   TimeZoneDef  - timezonedefinition.go
 //
 //
 // TimeZoneDto - Time Zone Data Transfer Object Type and Methods

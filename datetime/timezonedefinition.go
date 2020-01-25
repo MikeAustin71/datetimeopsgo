@@ -129,7 +129,7 @@ import (
 //   https://github.com/MikeAustin71/datetimeopsgo.git'
 //
 // This source code file is located at:
-//   MikeAustin71\datetimeopsgo\datetime\timezonedef.go
+//   MikeAustin71\datetimeopsgo\datetime\timezonedefinition.go
 //
 type TimeZoneDefinition struct {
 	originalTimeZone    TimeZoneSpecification // The Time Zone Specification originally submitted.
@@ -472,6 +472,22 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification 
 	defer tzdef.lock.Unlock()
 
 	return tzdef.convertibleTimeZone.CopyOut()
+}
+
+// GetTimeZoneAbbreviation - Returns the Time Zone abbreviation for the
+// Convertible Time Zone. The term 'Time Zone Abbreviation' is a synonym
+// for 'Zone Name'.
+//
+// Examples of Time Zone Abbreviations are:
+//  'EST', 'CST', 'PST', 'EDT', 'CDT', 'PDT'
+//
+func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneAbbreviation() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.convertibleTimeZone.GetTimeZoneAbbreviation()
 }
 
 // GetConvertibleTimeZoneCategory - Returns the Time Zone Category for
@@ -957,6 +973,23 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 	defer tzdef.lock.Unlock()
 
 	return tzdef.originalTimeZone.CopyOut()
+}
+
+// GetOriginalTimeZoneAbbreviation - Returns the Time Zone abbreviation for
+// the Original Time Zone.
+//
+// The term 'Time Zone Abbreviation' is a synonym for 'Zone Name'.
+//
+// Examples of Time Zone Abbreviations are:
+//  'EST', 'CST', 'PST', 'EDT', 'CDT', 'PDT'
+//
+func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneAbbreviation() string {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	return tzdef.originalTimeZone.GetTimeZoneAbbreviation()
 }
 
 // GetOriginalTimeZoneCategory - Returns the Time Zone Category for

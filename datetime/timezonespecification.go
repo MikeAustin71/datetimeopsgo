@@ -421,6 +421,22 @@ func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
 	return tzSpec.tagDescription
 }
 
+// GetTimeZoneAbbreviation - Returns the Time Zone abbreviation. The
+// term 'Time Zone Abbreviation' is a synonym for 'Zone Name'.
+//
+// Examples of Time Zone Abbreviations are:
+//  'EST', 'CST', 'PST', 'EDT', 'CDT', 'PDT'
+//
+func (tzSpec *TimeZoneSpecification) GetTimeZoneAbbreviation() string {
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	return tzSpec.zoneName
+
+}
+
 // GetTimeZoneCategory - Returns the Time Zone Category description .
 // Time Zone Category is an enumeration identifying the time zone by
 // category of time zone name.
@@ -628,7 +644,10 @@ func (tzSpec *TimeZoneSpecification) GetZoneLabel() string {
 }
 
 // GetZoneName - Returns the 'Zone Name'. 'Zone Name' is the
-// the Time Zone abbreviation. Examples: 'EST', 'CST', 'PST'
+// the Time Zone Abbreviation.
+//
+// Zone Name Examples:
+//   'EST', 'CST', 'PST', 'EDT', 'CDT', 'PDT'
 //
 func (tzSpec *TimeZoneSpecification) GetZoneName() string {
 
