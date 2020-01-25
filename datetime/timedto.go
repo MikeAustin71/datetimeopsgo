@@ -490,6 +490,10 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 // a DateTzDto input parameter.
 func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
 	ePrefix := "TimeDto.NewFromDateTzDto() "
 
 	tDto2 := TimeDto{}
