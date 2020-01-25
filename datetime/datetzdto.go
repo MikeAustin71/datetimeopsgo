@@ -184,8 +184,6 @@ func (dtz *DateTzDto) AddDate(
 
 	dtz.lock.Lock()
 
-	defer dtz.lock.Unlock()
-
 	ePrefix := "DateTzDto.AddDate() "
 
 	dTzUtil := dateTzDtoUtility{}
@@ -193,6 +191,7 @@ func (dtz *DateTzDto) AddDate(
 	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
 
 	if err != nil {
+		dtz.lock.Unlock()
 		return DateTzDto{}, err
 	}
 
@@ -209,11 +208,8 @@ func (dtz *DateTzDto) AddDate(
 
 	err = dTzUtil.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
 
-	if err != nil {
-		return DateTzDto{}, err
-	}
-
-	return dtz2, nil
+	dtz.lock.Unlock()
+	return dtz2, err
 }
 
 // AddDateTime - Adds date time components to the date time value of the
