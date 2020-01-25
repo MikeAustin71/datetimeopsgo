@@ -462,6 +462,10 @@ func (tDto *TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto) (TimeDto, error) {
 //
 func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
 	ePrefix := "TimeDto.NewFromDateTime() "
 
 	if dateTime.IsZero() {
