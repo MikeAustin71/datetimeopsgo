@@ -488,6 +488,7 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 
 // NewFromDateTzDto - Creates and returns a new TimeDto instance based on
 // a DateTzDto input parameter.
+//
 func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 
 	tDto.lock.Lock()
