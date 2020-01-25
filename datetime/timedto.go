@@ -377,6 +377,10 @@ func (tDto TimeDto) NewTimeElements(
 	seconds,
 	nanoseconds int) (TimeDto, error) {
 
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
 	ePrefix := "TimeDto.NewTimeElements(...) "
 
 	t2Dto := TimeDto{}
