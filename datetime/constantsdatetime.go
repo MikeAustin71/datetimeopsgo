@@ -13,7 +13,10 @@ Reference:
 */
 package datetime
 
-import "time"
+import (
+  "sync"
+  "time"
+)
 
 /*
  Date Time Constants
@@ -149,3 +152,10 @@ const (
   //	https://en.wikipedia.org/wiki/Gregorian_calendar
   GregorianYearNanoSeconds = int64(31556952000000000)
 )
+
+var lockDefaultDateTimeFormat sync.Mutex
+
+const (
+  DEFAULTDATETIMEFORMAT = "2006-01-02 15:04:05.000000000 -0700 MST"
+)
+

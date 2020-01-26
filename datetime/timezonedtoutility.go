@@ -12,6 +12,877 @@ type timeZoneDtoUtility struct {
 }
 
 
+// addDateTime - Adds input time elements to the time
+// value of the current TimeZoneDto instance.
+//
+// Input Parameters
+// ================
+// years        int  - Number of years added to current TimeZoneDto
+// months       int  - Number of months added to current TimeZoneDto
+// days         int  - Number of days added to current TimeZoneDto
+// hours        int  - Number of hours added to current TimeZoneDto
+// minutes      int  - Number of minutes added to current TimeZoneDto
+// seconds      int  - Number of seconds added to current TimeZoneDto
+// milliseconds int  - Number of milliseconds added to current TimeZoneDto
+// microseconds int  - Number of microseconds added to current TimeZoneDto
+// nanoseconds  int  - Number of nanoseconds added to current TimeZoneDto
+//
+// Note:  Date Time input parameters may be either negative or positive.
+//        Negative values will subtract time from the current TimeZoneDto
+//        instance.
+//
+// Returns
+// =======
+// There is only one return: an 'error' type.
+//
+// error -  If errors are encountered, this method returns an 'error'
+//          instance populated with an error message. If the method completes
+//          successfully, this error value is set to 'nil'
+//
+func (tZoneUtil *timeZoneDtoUtility) addDateTime(
+	tzDto *TimeZoneDto,
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.addDateTime() "
+
+	if tzDto == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'tzDto' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	tZoneUtil2 := timeZoneDtoUtility{}
+
+	err := tZoneUtil2.isValidTimeZoneDto(tzDto, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nThis current TimeZoneDto instance is INVALID!\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	tzDto.TimeIn, err = tzDto.TimeIn.AddDateTime(years, months, days, hours, minutes,
+		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzDto.TimeIn.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
+			"Error='%v'", err.Error())
+	}
+
+	tzDto.TimeOut, err = tzDto.TimeOut.AddDateTime(years, months, days, hours, minutes,
+		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzDto.TimeOut.AddDateTime(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
+			"Error='%v'", err.Error())
+	}
+
+	tzDto.TimeUTC, err = tzDto.TimeUTC.AddDateTime(years, months, days, hours, minutes,
+		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzDto.TimeUTC.addDateTime(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
+			"Error='%v'", err.Error())
+	}
+
+	tzDto.TimeLocal, err = tzDto.TimeLocal.AddDateTime(years, months, days, hours, minutes,
+		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by tzDto.TimeLocal.AddDate(years, months, days, hours, minutes, seconds, "+
+			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
+			"Error='%v'", err.Error())
+	}
+
+	return nil
+}
+
+// addDuration - Adds 'duration' to the time values maintained by the
+// current TimeZoneDto.
+//
+// Input Parameters
+// ================
+//
+// duration  time.Duration  - May be a positive or negative duration
+//                            value which is added to the time value
+//                            of the current TimeZoneDto instance.
+//
+// Note:   The time.Duration input parameter may be either negative
+//         or positive. Negative values will subtract time from
+//         the current TimeZoneDt instance.
+//
+// Returns
+// =======
+// There is only one return: an 'error' type.
+//
+// error -  If errors are encountered, this method returns an 'error'
+//          instance populated with an error message. If the method completes
+//          successfully, this error value is set to 'nil'
+//
+func (tZoneUtil *timeZoneDtoUtility) addDuration(
+	tzDto *TimeZoneDto,
+	duration time.Duration,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.addDuration() "
+
+	if tzDto == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'tzDto' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	timeZoneUtil2 := timeZoneDtoUtility{}
+
+	err := timeZoneUtil2.isValidTimeZoneDto(tzDto, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzDto2 := timeZoneUtil2.copyOut(tzDto, ePrefix)
+
+	tzDto2.TimeIn, err = tzDto2.TimeIn.AddDuration(duration, tzDto2.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned from tzDto2.TimeIn.AddDuration(duration). "+
+			"tzDto2.TimeIn.DateTime='%v'  Error='%v'",
+			tzDto2.TimeIn.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	tzDto2.TimeOut, err = tzDto2.TimeOut.AddDuration(duration, tzDto2.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned from tzDto2.TimeOut.AddDuration(duration).\n"+
+			"tzDto2.TimeOut.DateTime='%v'\n" +
+			"Error='%v'\n",
+			tzDto2.TimeOut.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	tzDto2.TimeUTC, err = tzDto2.TimeUTC.AddDuration(duration, tzDto2.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned from tzDto.TimeUTC.AddDuration(duration).\n"+
+			"tzDto2.TimeUTC.DateTime='%v'\n" +
+			"Error='%v'",
+			tzDto2.TimeUTC.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr),
+			err.Error())
+	}
+
+	tzDto2.TimeLocal, err = tzDto2.TimeLocal.AddDuration(duration, tzDto2.DateTimeFmt)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError returned from tzDto.TimeLocal.AddDuration(duration).\n"+
+			"tzDto.TimeLocal.DateTime='%v'\nError='%v'\n",
+			tzDto.TimeLocal.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
+	}
+
+	timeZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
+
+	return nil
+}
+
+
+// AddMinusTimeDto - This method receives a TimeDto input parameter. It
+// then proceeds to convert all time components to negative values and
+// subtracts those time components from the time values of the current
+// TimeZoneDto.
+//
+// Input Parameters:
+// =================
+//
+// timeDto TimeDto - A TimeDto type containing time components (i.e.
+//          years, months, weeks, days, hours, minutes,
+//          seconds etc.) to be subtracted from the current
+//          TimeZoneDto.
+//
+//         type TimeDto struct {
+//          Years          int // Number of Years
+//          Months         int // Number of Months
+//          Weeks          int // Number of Weeks
+//          WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours          int // Number of Hours.
+//          Minutes        int // Number of Minutes
+//          Seconds        int // Number of Seconds
+//          Milliseconds   int // Number of Milliseconds
+//          Microseconds   int // Number of Microseconds
+//          Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//         }
+//
+// Returns
+// =======
+// There is only one return: an 'error' type.
+//
+// error -  If errors are encountered, this method returns an 'error'
+//          instance populated with an error message. If the method completes
+//          successfully, this error value is set to 'nil'
+//
+func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
+	tzDto *TimeZoneDto,
+	timeDto TimeDto,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.convertTz() "
+
+	if tzDto == nil {
+		return &InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "tzDto",
+				inputParameterValue: "",
+				errMsg:              "Input Parameter 'tzDto' (TimeZoneDto) is a 'nil' pointer!",
+				err:                 nil,
+			}
+	}
+
+	err := timeDto.IsValid()
+
+	if err != nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeDto",
+			inputParameterValue: "",
+			errMsg:              fmt.Sprintf(
+				"Input prameter 'timeDto' is invalid!\n" +
+					"%v\n", err.Error()),
+			err:                 nil,
+		}
+	}
+
+	dateTzIn := tzDto.TimeIn.CopyOut()
+
+	err := dateTzIn.AddMinusTimeDtoToThis(timeDto)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by dateTzIn.AddMinusTimeDtoToThis(timeDto) "+
+			"Error='%v'", err.Error())
+	}
+
+	timeOutTimeZone := tzDto.TimeOut.GetOriginalTimeZone()
+
+	fmtStr := tzDto.TimeOut.GetDateTimeFmt()
+
+
+
+}
+
+
+// convertTz - Converts 'tIn' Date Time from existing time zone to a 'targetTz'
+// or target Time Zone. The results are stored and returned in a new
+// TimeZoneDto data structure. The current TimeZoneDto is NOT changed.
+//
+// The input time and output time are equivalent times adjusted for
+// different time zones.
+//
+// Input Parameters:
+//
+// tIn     time.Time  - initial time values
+//
+// targetTz  string   - time zone location must be designated as one of three
+//                      types of time zones:
+//
+//               (1) the string 'Local' - signals the designation of the
+//                   time zone location used by the host computer.
+//
+//               (2) IANA Time Zone Location -
+//                   See https://golang.org/pkg/time/#LoadLocation
+//                   and https://www.iana.org/time-zones to ensure that
+//                   the IANA Time Zone Database is properly configured
+//                   on your system. Note: IANA Time Zone Data base is
+//                   equivalent to 'tz database'.
+//                      Examples:
+//                        "America/New_York"
+//                        "America/Chicago"
+//                        "America/Denver"
+//                        "America/Los_Angeles"
+//                        "Pacific/Honolulu"
+//
+//               (3) A Military Time Zone
+//                   Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//                    https://www.timeanddate.com/worldclock/timezone/alpha
+//                    https://www.timeanddate.com/time/map/
+//
+//        Examples:
+//          "Alpha"   or "A"
+//          "Bravo"   or "B"
+//          "Charlie" or "C"
+//          "Delta"   or "D"
+//          "Zulu"    or "Z"
+//
+// dateTimeFmtStr string  - A date time format string which will be used
+//                          to format and display 'dateTime'. Example:
+//                          "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//                          If 'dateTimeFmtStr' is submitted as an
+//                          'empty string', a default date time format
+//                          string will be applied. The default date time
+//                          format string is:
+//                          TZDtoDefaultDateTimeFormatStr =
+//                          "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+//
+// There are two returns:
+//             (1) A TimeZoneDto instance
+//             (2) An error type
+//
+// (1) TimeZoneDto
+//     If successful, this method creates a new TimeZoneDto,
+//     populated with, TimeIn, TimeOut, TimeUTC and TimeLocal
+//     date time values plus time zone information.
+//
+//     A TimeZoneDto structure is defined as follows:
+//
+//     type TimeZoneDto struct {
+//      Description  string     // Unused - available for tagging, classification or
+//                              //   labeling.
+//      TimeIn       DateTzDto  // Original input time value
+//      TimeOut      DateTzDto  // TimeOut - 'TimeIn' value converted to TimeOut
+//      TimeUTC      DateTzDto  // TimeUTC (Universal Coordinated Time aka 'Zulu') value
+//                              //   equivalent to TimeIn
+//      TimeLocal    DateTzDto  // TimeIn value converted to the 'Local' Time Zone Location.
+//                              //   'Local' is the Time Zone Location used by the host computer.
+//      DateTimeFmt  string     // Date Time Format String. This format string is used to format
+//                              //  Date Time text displays. The Default format string is:
+//                              //   "2006-01-02 15:04:05.000000000 -0700 MST"
+//     }
+//
+//
+// (2) error - If errors are encountered, this method returns an error instance populated with
+//             a valid 'error' message. If the method completes successfully the returned error
+//             error type is set to 'nil'.
+//
+func (tZoneUtil *timeZoneDtoUtility) convertTz(
+	tzDto *TimeZoneDto,
+	tIn time.Time,
+	targetTimeZoneName,
+	dateTimeFmtStr,
+	ePrefix string) (TimeZoneDto, error) {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.convertTz() "
+
+	if tzDto == nil {
+		return TimeZoneDto{},
+		&InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'tzDto' (TimeZoneDto) is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tIn.IsZero() {
+		return TimeZoneDto{},
+		&InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tIn",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'tIn' has a zero value!",
+			err:                 nil,
+		}
+	}
+
+	tZoneUtil2 := timeZoneDtoUtility{}
+
+	isValidTimeZone,
+	_,
+	err :=
+	tZoneUtil2.isValidTimeZoneName(targetTimeZoneName, ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+	if !isValidTimeZone {
+		return TimeZoneDto{},
+			errors.New(ePrefix +
+				"\nError: 'targetTimeZoneName' is an invalid time zone!\n")
+	}
+
+	tzDtoOut := TimeZoneDto{}
+
+	tZoneUtil2.setDateTimeFormat(
+		&tzDtoOut,
+		dateTimeFmtStr,
+		ePrefix)
+
+	dateTimeFmtStr = tzDtoOut.DateTimeFmt
+
+	err = tZoneUtil2.setTimeIn(tIn, &tzDtoOut, ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+	err = tZoneUtil2.setTimeOut(
+		&tzDtoOut,
+		tIn,
+		targetTimeZoneName,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+	err = tZoneUtil2.setUTCTime(
+		&tzDtoOut,
+		tIn,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+	err = tZoneUtil2.setLocalTime(
+		&tzDtoOut,
+		tIn,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+	return tzDtoOut, nil
+}
+
+// copyIn - Copies input parameter TimeZoneDto data fields
+// into the current TimeZoneDto data fields.
+// When the method completes, the current TimeZoneDto and
+// the input parameter TimeZoneDto are equivalent.
+//
+// Input Parameters
+// ================
+//
+// tzdto2 TimeZoneDto - A TimeZoneDto instance. The data
+//           fields from this incoming TimeZoneDto
+//           will be copied to the data fields
+//           of the current TimeZoneDto.
+//
+// A TimeZoneDto structure is defined as follows:
+//
+//  type TimeZoneDto struct {
+//   Description  string       // Unused - available for tagging, classification or
+//                             //  labeling.
+//   TimeIn       DateTzDto    // Original input time value
+//   TimeOut      DateTzDto    // TimeOut - 'TimeIn' value converted to TimeOut
+//   TimeUTC      DateTzDto    // TimeUTC (Universal Coordinated Time aka 'Zulu') value
+//                             //   equivalent to TimeIn
+//   TimeLocal   DateTzDto     // TimeIn value converted to the 'Local' Time Zone Location.
+//                             //   'Local' is the Time Zone Location used by the host computer.
+//   DateTimeFmt   string      // Date Time Format String. This format string is used to format
+//                             //  Date Time text displays. The Default format string is:
+//                             //   "2006-01-02 15:04:05.000000000 -0700 MST"
+//  }
+//
+// Returns
+// =======
+//
+//  None
+//
+func (tZoneUtil *timeZoneDtoUtility) copyIn(
+	tzDto *TimeZoneDto,
+	tzDto2 *TimeZoneDto,
+	ePrefix string) {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.copyIn() "
+
+	if tzDto == nil {
+		panic(ePrefix +
+			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+	}
+
+	if tzDto2 == nil {
+		panic(ePrefix +
+			"\nError: Input parameter 'tzDto2' is a 'nil' pointer!\n")
+	}
+
+	tZoneUtil2 := timeZoneDtoUtility{}
+
+	tZoneUtil2.empty(tzDto, ePrefix)
+
+	tzDto.Description = tzDto2.Description
+	tzDto.TimeIn = tzDto2.TimeIn.CopyOut()
+	tzDto.TimeOut = tzDto2.TimeOut.CopyOut()
+	tzDto.TimeUTC = tzDto2.TimeUTC.CopyOut()
+	tzDto.TimeLocal = tzDto2.TimeLocal.CopyOut()
+	tzDto.DateTimeFmt = tzDto2.DateTimeFmt
+
+	return
+}
+
+
+// copyOut - Creates and returns a deep copy of the
+// current TimeZoneDto instance.
+//
+// Input Parameters
+// ================
+// None
+//
+// Returns
+// =======
+// There is only one return: A TimeZoneDto instance
+//
+// A TimeZoneDto structure is defined as follows:
+//
+//     type TimeZoneDto struct {
+//      Description  string     // Unused - available for tagging, classification or
+//                              //   labeling.
+//      TimeIn       DateTzDto  // Original input time value
+//      TimeOut      DateTzDto  // TimeOut - 'TimeIn' value converted to TimeOut
+//      TimeUTC      DateTzDto  // TimeUTC (Universal Coordinated Time aka 'Zulu') value
+//                              //   equivalent to TimeIn
+//      TimeLocal    DateTzDto  // TimeIn value converted to the 'Local' Time Zone Location.
+//                              //   'Local' is the Time Zone Location used by the host computer.
+//      DateTimeFmt  string     // Date Time Format String. This format string is used to format
+//                              //  Date Time text displays. The Default format string is:
+//                              //   "2006-01-02 15:04:05.000000000 -0700 MST"
+//     }
+//
+func (tZoneUtil *timeZoneDtoUtility) copyOut(
+	tzDto *TimeZoneDto,
+	ePrefix string) TimeZoneDto {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.copyOut() "
+
+	if tzDto == nil {
+		panic(ePrefix +
+			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+	}
+
+	tzu2 := TimeZoneDto{}
+
+	tzu2.Description = tzDto.Description
+	tzu2.TimeIn = tzDto.TimeIn.CopyOut()
+	tzu2.TimeOut = tzDto.TimeOut.CopyOut()
+	tzu2.TimeUTC = tzDto.TimeUTC.CopyOut()
+	tzu2.TimeLocal = tzDto.TimeLocal.CopyOut()
+	tzu2.DateTimeFmt = tzDto.DateTimeFmt
+
+	return tzu2
+}
+
+// empty - Clears or returns the 'TimeZoneDto'
+// object to an uninitialized or 'Empty' state.
+//
+func (tZoneUtil *timeZoneDtoUtility) empty(
+	tzDto *TimeZoneDto,
+	ePrefix string) {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.empty() "
+
+	if tzDto == nil {
+		panic(ePrefix +
+			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+	}
+
+	tzDto.Description = ""
+	tzDto.TimeIn = DateTzDto{}
+	tzDto.TimeOut = DateTzDto{}
+	tzDto.TimeUTC = DateTzDto{}
+	tzDto.TimeLocal = DateTzDto{}
+	tzDto.DateTimeFmt = ""
+
+	return
+}
+
+	// isValidTimeZoneDto - Analyzes the specified 'TimeZoneDto'
+// instance and returns an error if the instance is INVALID.
+//
+func (tZoneUtil *timeZoneDtoUtility) isValidTimeZoneDto(
+	tzDto *TimeZoneDto,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.isValidTimeZoneDto() "
+
+	if tzDto == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+	}
+
+	errorArray := make([]error, 0)
+
+	if err := tzDto.TimeIn.IsValid(); err != nil {
+		errorArray =
+			append(errorArray, fmt.Errorf(ePrefix+"\ntzDto.TimeIn is INVALID!\nError='%v'\n", err.Error()))
+	}
+
+	if err := tzDto.TimeOut.IsValid(); err != nil {
+		errorArray =
+			append(errorArray, fmt.Errorf(ePrefix+"\nError: TimeOut is INVALID!\nError='%v'\n", err.Error()))
+	}
+
+	if err := tzDto.TimeUTC.IsValid(); err != nil {
+		errorArray =
+			append(errorArray, fmt.Errorf(ePrefix+"\nError: TimeUTC is INVALID!\nError='%v'\n", err.Error()))
+	}
+
+	if err := tzDto.TimeLocal.IsValid(); err != nil {
+		errorArray =
+			append(errorArray, fmt.Errorf(ePrefix+"Error:\nTimeLocal is INVALID!\nError='%v'\n", err.Error()))
+	}
+
+	dtUtil := DTimeUtility{}
+
+	return dtUtil.ConsolidateErrors(errorArray)
+}
+
+func (tZoneUtil *timeZoneDtoUtility) isValidTimeZoneName(
+	timeZoneName string,
+	ePrefix string) (
+				isValidTimeZone bool,
+				timeZoneType TimeZoneType,
+				err error) {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.isValidTimeZoneName() "
+
+	isValidTimeZone = false
+	timeZoneType = TzType.None()
+	err = nil
+
+	if len(timeZoneName) == 0 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneName",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'timeZoneName' is an empty string!",
+			err:                 nil,
+		}
+
+		return isValidTimeZone, timeZoneType, err
+	}
+
+	dateTime := time.Now().In(time.UTC)
+
+	dtMech := DTimeMechanics{}
+	var tzSpec TimeZoneSpecification
+
+	tzSpec,
+		err = dtMech.GetTimeZoneFromName(
+		dateTime,
+		timeZoneName,
+		TzConvertType.Absolute(),
+		ePrefix)
+
+	if err != nil {
+		err = nil
+		return isValidTimeZone, timeZoneType, err
+	}
+
+	isValidTimeZone = true
+
+	timeZoneType = tzSpec.GetTimeZoneType()
+
+	return isValidTimeZone, timeZoneType, err
+}
+
+// NewAddDateTime - Receives a TimeZoneDto input parameter, 'tzuIn'
+// and returns a new TimeZoneDto instance equal to 'tzuIn' plus the
+// time value of the remaining time element input parameters.
+//
+// Input Parameters
+// ================
+// tzdtoIn   TimeZoneDto - Base TimeZoneDto object to
+//                which time elements will be added.
+// years    int  - Number of years added to 'tzuIn'
+// months    int  - Number of months added to 'tzuIn'
+// days     int  - Number of days added to 'tzuIn'
+// hours    int  - Number of hours added to 'tzuIn'
+// minutes   int  - Number of minutes added to 'tzuIn'
+// seconds   int  - Number of seconds added to 'tzuIn'
+// milliseconds int  - Number of milliseconds added to 'tzuIn'
+// microseconds int  - Number of microseconds added to 'tzuIn'
+// nanoseconds int  - Number of nanoseconds added to 'tzuIn'
+//
+// Note:  Input time element parameters may be either negative or positive.
+//     Negative values will subtract time from the returned TimeZoneDto instance.
+//
+// dateTimeFmtStr string  - A date time format string which will be used
+//               to format and display 'dateTime'. Example:
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//              If 'dateTimeFmtStr' is submitted as an
+//               'empty string', a default date time format
+//               string will be applied. The default date time
+//               format string is:
+//               TZDtoDefaultDateTimeFormatStr =
+//                 "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Returns
+// =======
+//  There are two return values:  (1) a TimeZoneDto Type
+//                (2) an Error type
+//
+// (1) TimeZoneDto -  If successful, this method returns a valid, populated TimeZoneDto
+//           instance which is equal to the time value of 'tzuIn' plus the other
+//           input parameter date-time elements. The TimeZoneDto structure
+//          is defined as follows:
+//
+//  type TimeZoneDto struct {
+//   Description  string       // Unused - available for tagging, classification or
+//                             //  labeling.
+//   TimeIn       DateTzDto    // Original input time value
+//   TimeOut      DateTzDto    // TimeOut - 'TimeIn' value converted to TimeOut
+//   TimeUTC      DateTzDto    // TimeUTC (Universal Coordinated Time aka 'Zulu') value
+//                             //   equivalent to TimeIn
+//   TimeLocal   DateTzDto     // TimeIn value converted to the 'Local' Time Zone Location.
+//                             //   'Local' is the Time Zone Location used by the host computer.
+//   DateTimeFmt   string      // Date Time Format String. This format string is used to format
+//                             //  Date Time text displays. The Default format string is:
+//                             //   "2006-01-02 15:04:05.000000000 -0700 MST"
+//  }
+//
+// (2) error - If errors are encountered, this method returns an error instance populated with
+//        a valid 'error' message. If the method completes successfully the returned error
+//       error type is set to 'nil'.
+//
+func (tZoneUtil *timeZoneDtoUtility) newAddDateTime(
+	tzDtoIn *TimeZoneDto,
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
+	dateTimeFmtStr,
+	ePrefix string) (TimeZoneDto, error) {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.newAddDateTime() "
+
+	if tzDtoIn == nil {
+		return TimeZoneDto{},
+		&InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDtoIn",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'tzDtoIn' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	tZoneUtil2 := timeZoneDtoUtility{}
+
+	err := tZoneUtil2.isValidTimeZoneDto(tzDtoIn, ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{},
+			fmt.Errorf(ePrefix+
+				"\nError: Input Parameter 'tzDtoIn' TimeZoneDto is INVALID!\n" +
+				"Error='%v'\n",
+				err.Error())
+	}
+
+	tzuOut := tZoneUtil2.copyOut(tzDtoIn, ePrefix)
+
+	if len(dateTimeFmtStr) == 0 {
+		dateTimeFmtStr = FmtDateTimeYrMDayFmtStr
+	}
+
+	tZoneUtil2.setDateTimeFormat(
+		&tzuOut,
+		dateTimeFmtStr,
+		ePrefix)
+
+	err = tZoneUtil2.addDateTime(
+		&tzuOut,
+		years,
+		months,
+		days,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds,
+		ePrefix)
+
+	return tzuOut, err
+}
+
 // newTzDto - Converts 'tIn' Date Time from existing time zone to a 'targetTz'
 // or target Time Zone. The results are stored and returned in a TimeZoneDto
 // data structure. TimeZoneDto.TimeIn stores the original 'tIn' Date Time,
@@ -176,52 +1047,48 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	return tzDtoOut, nil
 }
 
-
-// isValidTimeZoneDto - Analyzes the specified 'TimeZoneDto'
-// instance and returns an error if the instance is INVALID.
+// setDateTimeFormat - Sets the value of the TimeZoneDto.DateTimeFmt field.
 //
-func (tZoneUtil *timeZoneDtoUtility) isValidTimeZoneDto(
+// Input Parameter
+// ===============
+//
+//
+// dateTimeFmtStr string  - A date time format string which will be used
+//                          to format and display 'dateTime'. Example:
+//                          "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//                          If 'dateTimeFmtStr' is submitted as an
+//                          'empty string', a default date time format
+//                          string will be applied. The default date time
+//                          format string is:
+//                          DEFAULTDATETIMEFORMAT =
+//                          "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (tZoneUtil *timeZoneDtoUtility) setDateTimeFormat(
 	tzDto *TimeZoneDto,
-	ePrefix string) error {
+	dateTimeFormatStr,
+	ePrefix string) {
 
 	tZoneUtil.lock.Lock()
 
 	defer tZoneUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDtoUtility.isValidTimeZoneDto() "
+	ePrefix += "timeZoneDtoUtility.setDateTimeFormat() "
 
 	if tzDto == nil {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+		panic("Input Parameter is a 'nil' pointer!")
 	}
 
-	errorArray := make([]error, 0)
-
-	if err := tzDto.TimeIn.IsValid(); err != nil {
-		errorArray =
-			append(errorArray, fmt.Errorf(ePrefix+"\ntzDto.TimeIn is INVALID!\nError='%v'\n", err.Error()))
+	if len(dateTimeFormatStr) == 0 {
+		lockDefaultDateTimeFormat.Lock()
+		dateTimeFormatStr = DEFAULTDATETIMEFORMAT
+		lockDefaultDateTimeFormat.Unlock()
 	}
 
-	if err := tzDto.TimeOut.IsValid(); err != nil {
-		errorArray =
-			append(errorArray, fmt.Errorf(ePrefix+"\nError: TimeOut is INVALID!\nError='%v'\n", err.Error()))
-	}
+	tzDto.DateTimeFmt = dateTimeFormatStr
 
-	if err := tzDto.TimeUTC.IsValid(); err != nil {
-		errorArray =
-			append(errorArray, fmt.Errorf(ePrefix+"\nError: TimeUTC is INVALID!\nError='%v'\n", err.Error()))
-	}
-
-	if err := tzDto.TimeLocal.IsValid(); err != nil {
-		errorArray =
-			append(errorArray, fmt.Errorf(ePrefix+"Error:\nTimeLocal is INVALID!\nError='%v'\n", err.Error()))
-	}
-
-	dtUtil := DTimeUtility{}
-
-	return dtUtil.ConsolidateErrors(errorArray)
+	return
 }
-
 
 // setTimeIn - Assigns time and zone values to TimeZoneDto
 // field 'TimeIn'.
@@ -238,13 +1105,23 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 	ePrefix += "timeZoneDtoUtility.setTimeIn() "
 
 	if tzDto == nil {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter is a 'nil' pointer!",
+			err:                 nil,
+		}
 	}
 
 	if tIn.IsZero() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'tIn' has a value of 'zero'!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tIn",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tIn' has a value of 'zero'!",
+			err:                 nil,
+		}
 	}
 
 	// tzDto.TimeIn, err = DateTzDto{}.New(tIn, tzDto.DateTimeFmt)
@@ -271,7 +1148,9 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 }
 
 
-// setTimeOut - Assigns time and zone values to field 'TimeOut'
+// setTimeOut - Assigns time and zone values to field
+// 'TimeZoneDto.TimeOut'.
+//
 func (tZoneUtil *timeZoneDtoUtility) setTimeOut(
 	tzDto *TimeZoneDto,
 	tOut time.Time,
@@ -301,8 +1180,6 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOut(
 			"\nInput parameter 'tZoneConversionType' is INVALID.\n" +
 			"tZoneConversionType= TzConvertType.None()\n")
 	}
-
-	// tzDto.TimeOut, err = DateTzDto{}.New(tOut, tzDto.DateTimeFmt)
 
 	dTzUtil := dateTzDtoUtility{}
 

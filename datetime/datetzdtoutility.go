@@ -832,6 +832,70 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTz(
 	return nil
 }
 
+func (dTzUtil *dateTzDtoUtility) setFromTimeTzSpec(
+	dTz *DateTzDto,
+	dateTime time.Time,
+	timeZoneSpec TimeZoneSpecification,
+	timeZoneConversionType TimeZoneConversionType,
+	dateTimeFmtStr,
+	ePrefix string) error {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.setFromTimeTzSpec() "
+
+	if dTz == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dateTime.IsZero() {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
+	}
+
+	err := timeZoneSpec.IsValid(ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nInput parameter 'timeZoneSpec' is Invalid!\n" +
+			"Validation Error='%v'\n", err.Error())
+	}
+
+	timeZoneName := timeZoneSpec.GetLocationName()
+
+	if timeZoneSpec.timeZoneType == TzType.Military() {
+		timeZoneName = timeZoneSpec.militaryTimeZoneName
+	}
+
+
+	tZoneDefDto := TimeZoneDefinition{}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setFromTimeZoneName(
+		&tZoneDefDto,
+		dateTime,
+		timeZoneName,
+		timeZoneConversionType,
+		ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError: Invalid Time Zone Location Name!\n"+
+			"timeZoneLocationName='%v'\nError='%v'\n",
+			timeZoneLocationName, err.Error())
+	}
+
+	timeZoneDef.originalTimeZone = timeZoneSpec.CopyOut()
+
+	timeZoneDef.originalTimeZone.timeZoneClass = TzClass.OriginalTimeZone()
+
+	timeZoneDef.convertibleTimeZone
+}
+
 // setFromTimeDto - Receives data from a TimeDto input parameter
 // and sets all data fields of the current DateTzDto instance
 // accordingly. When the method completes, the values of the

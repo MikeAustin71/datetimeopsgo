@@ -184,6 +184,8 @@ func (dtz *DateTzDto) AddDate(
 
 	dtz.lock.Lock()
 
+	defer dtz.lock.Unlock()
+
 	ePrefix := "DateTzDto.AddDate() "
 
 	dTzUtil := dateTzDtoUtility{}
@@ -191,7 +193,6 @@ func (dtz *DateTzDto) AddDate(
 	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
 
 	if err != nil {
-		dtz.lock.Unlock()
 		return DateTzDto{}, err
 	}
 
@@ -208,7 +209,6 @@ func (dtz *DateTzDto) AddDate(
 
 	err = dTzUtil.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
 
-	dtz.lock.Unlock()
 	return dtz2, err
 }
 
@@ -1235,6 +1235,18 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 	return dtzUtcOffset == dtz2UtcOffset, nil
 }
 
+// GetConvertibleTimeZone - Returns the TimeZoneSpecification object
+// associated with the Convertible Time Zone.
+//
+func (dtz *DateTzDto) GetConvertibleTimeZone() TimeZoneSpecification {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	return dtz.timeZone.GetConvertibleTimeZone()
+}
+
 // GetConvertibleTzAbbreviation - Returns the time zone abbreviation
 // for the Convertible Time Zone. The time zone abbreviation for a
 // given time zone is also referred to as the 'zone name'.
@@ -1630,6 +1642,18 @@ func (dtz *DateTzDto) GetOriginalTagDescription() string {
 	defer dtz.lock.Unlock()
 
 	return dtz.tagDescription
+}
+
+// GetOriginalTimeZone - Returns the TimeZoneSpecification object
+// associated with the Original Time Zone.
+//
+func (dtz *DateTzDto) GetOriginalTimeZone() TimeZoneSpecification {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	return dtz.timeZone.GetOriginalTimeZone()
 }
 
 // GetOriginalTzAbbreviation - Returns the time zone abbreviation

@@ -709,3 +709,24 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 
 	return nil
 }
+
+func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
+	tzdef *TimeZoneDefinition,
+	dateTime time.Time,
+	tzSpec TimeZoneSpecification,
+	timeZoneConversionType TimeZoneConversionType,
+	ePrefix string) error {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.setFromTimeZoneName() "
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+
+}

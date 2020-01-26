@@ -1713,8 +1713,8 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 		return tzDefDto, err
 	}
 
-	if timeConversionType != TzConvertType.Absolute() &&
-		timeConversionType != TzConvertType.Relative() {
+	if timeConversionType < TzConvertType.Absolute() &&
+		timeConversionType > TzConvertType.Relative() {
 
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
@@ -1750,6 +1750,146 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 		ePrefix)
 
 	return tzDefDto, err
+}
+
+// NewForTimeZoneSpec - Creates and returns a new instance of
+// 'TimeZoneDefinition'. The new instance is based on a
+// 'TimeZoneSpecification' input parameter, 'tzSpec'.
+//
+//
+// Input Parameters
+// ================
+//
+// dateTime        time.Time    - This date time will be converted and
+//                                used in creating the returned
+//                                'TimeZoneDefinition' object. The type
+//                                of time conversion performed on this
+//                                date time value is determined by input
+//                                parameter, 'timeConversionType'.
+//
+// tzSpec TimeZoneSpecification - A valid 'TimeZoneSpecification' object.
+//                                The 'TimeZoneSpecification' object must
+//                                be set to one of these three types of time
+//                                zones:
+//
+//                                  1. A valid IANA Time Zone name.
+//
+//                                  2. The time zone "Local", which Golang
+//                                     accepts as the time zone currently
+//                                     configured on the host computer
+//                                     executing this code.
+//
+//                                  3. A valid Military Time Zone
+//
+// timeConversionType TimeZoneConversionType -
+//                                The enumeration type must be set to one of
+//                                two values:
+//                                   TimeZoneConversionType(0).Absolute()
+//                                   TimeZoneConversionType(0).Relative()
+//                                Note: You can also use the global variable
+//                                'TzConvertType' for easier access:
+//                                   TzConvertType.Absolute()
+//                                   TzConvertType.Relative()
+//
+//                                Absolute Time Conversion - Identifies the 'Absolute' time
+//                                to time zone conversion algorithm. This algorithm provides
+//                                that a time value in time zone 'X' will be converted to the
+//                                same time value in time zone 'Y'.
+//
+//                                For example, assume the time 10:00AM is associated with time
+//                                zone USA Central Standard time and that this time is to be
+//                                converted to USA Eastern Standard time. Applying the 'Absolute'
+//                                algorithm would convert ths time to 10:00AM Eastern Standard
+//                                time.  In this case the hours, minutes and seconds have not been
+//                                altered. 10:00AM in USA Central Standard Time has simply been
+//                                reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//                                Relative Time Conversion - Identifies the 'Relative' time to time
+//                                zone conversion algorithm. This algorithm provides that times in
+//                                time zone 'X' will be converted to their equivalent time in time
+//                                zone 'Y'.
+//
+//                                For example, assume the time 10:00AM is associated with time zone
+//                                USA Central Standard time and that this time is to be converted to
+//                                USA Eastern Standard time. Applying the 'Relative' algorithm would
+//                                convert ths time to 11:00AM Eastern Standard time. In this case the
+//                                hours, minutes and seconds have been changed to reflect an equivalent
+//                                time in the USA Eastern Standard Time Zone.
+//
+// Return Values
+// =============
+//
+// This method will return two values:
+//      (1) A Time Zone Definition (TimeZoneDefinition)
+//      (2) An 'error' type
+//
+//  (1) If successful, this method will return a valid, populated TimeZoneDefinition
+//      instance.
+//
+//  (2) If successful, this method will set the returned 'error' instance to 'nil'.
+//      If errors are encountered a valid error message will be returned in the
+//      error instance.
+//
+func (tzdef TimeZoneDefinition) NewForTimeZoneSpec(
+	dateTime time.Time,
+	tzSpec TimeZoneSpecification,
+	timeConversionType TimeZoneConversionType) (
+	tzDefDto TimeZoneDefinition,
+	err error) {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	ePrefix := "TimeZoneDefinition.NewForTimeZoneSpec() "
+
+	tzDefDto = TimeZoneDefinition{}
+
+	err = nil
+
+	if dateTime.IsZero() {
+		err =
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dateTime",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'dateTime' has a Zero Value!",
+				err:                 nil,
+			}
+
+		return tzDefDto, err
+	}
+
+	err2 := tzSpec.IsValid(ePrefix)
+
+	if err2 != nil {
+		err =
+		 &InputParameterError{
+			 ePrefix:             ePrefix,
+			 inputParameterName:  "tzSpec",
+			 inputParameterValue: "",
+			 errMsg:              fmt.Sprintf(
+			 	"Validation Error='%v'", err2.Error()),
+			 err:                 nil,
+		 }
+
+		 return tzDefDto, err
+	}
+
+	if timeConversionType < TzConvertType.Absolute() ||
+		timeConversionType > TzConvertType.Relative() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: "",
+			errMsg:              "Input 'timeConversionType' must be 'Absolute' or 'Relative'.",
+			err:                 nil,
+		}
+
+		return tzDefDto, err
+	}
+
+
 }
 
 // SetConvertibleTagDescription - Sets the Convertible Time Zone
