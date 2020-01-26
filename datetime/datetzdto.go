@@ -2944,13 +2944,44 @@ func (dtz DateTzDto) NewTimeDto(
 //                 zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //                 time zone constants begin with the prefix 'TzIana'.
 //
-//   timeZoneConversionType TimeZoneConversionType
-//                           - TimeZoneConversionType is an enumeration with two
-//                             possible values: TimeZoneConversionType(0).Absolute()
-//                             or TimeZoneConversionType(0).Relative(). The 'Absolute'
-//                             conversion will produce same time value in a different
-//                             time zone. The 'Relative' conversion type will yield
-//                             a different equivalent time in a different time zone.
+//   timeZoneConversionType TimeZoneConversionType -
+//                                This parameter determines the algorithm that will
+//                                be used to convert parameter 'dateTime' to the time
+//                                zone specified by parameter 'timeZoneName'.
+//
+//                                TimeZoneConversionType is an enumeration type which
+//                                must be set to one of two values:
+//                                   TimeZoneConversionType(0).Absolute()
+//                                   TimeZoneConversionType(0).Relative()
+//                                Note: You can also use the global variable
+//                                'TzConvertType' for easier access:
+//                                   TzConvertType.Absolute()
+//                                   TzConvertType.Relative()
+//
+//                                Absolute Time Conversion - Identifies the 'Absolute' time
+//                                to time zone conversion algorithm. This algorithm provides
+//                                that a time value in time zone 'X' will be converted to the
+//                                same time value in time zone 'Y'.
+//
+//                                For example, assume the time 10:00AM is associated with time
+//                                zone USA Central Standard time and that this time is to be
+//                                converted to USA Eastern Standard time. Applying the 'Absolute'
+//                                algorithm would convert ths time to 10:00AM Eastern Standard
+//                                time.  In this case the hours, minutes and seconds have not been
+//                                altered. 10:00AM in USA Central Standard Time has simply been
+//                                reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//                                Relative Time Conversion - Identifies the 'Relative' time to time
+//                                zone conversion algorithm. This algorithm provides that times in
+//                                time zone 'X' will be converted to their equivalent time in time
+//                                zone 'Y'.
+//
+//                                For example, assume the time 10:00AM is associated with time zone
+//                                USA Central Standard time and that this time is to be converted to
+//                                USA Eastern Standard time. Applying the 'Relative' algorithm would
+//                                convert ths time to 11:00AM Eastern Standard time. In this case the
+//                                hours, minutes and seconds have been changed to reflect an equivalent
+//                                time in the USA Eastern Standard Time Zone.
 //
 //   dateTimeFmtStr string   - A date time format string which will be used
 //                             to format and display 'dateTime'. Example:
@@ -3031,6 +3062,153 @@ func (dtz DateTzDto) NewTz(
 
 	return dtz2, nil
 }
+
+
+
+// NewTz - returns a new DateTzDto instance based on a time.Time input parameter ('dateTime').
+// The caller is required to provide a Time Zone Location or Name. Input parameter 'dateTime'
+// will be converted to this Time Zone before storing the converted 'dateTime' in the newly
+// created DateTzDto instance.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//   dateTime          time.Time - A date time value
+//
+//   timeZoneName         string -
+//            Time zone location must be designated as one of
+//            three types of time zones:
+//
+//            (1) The string 'Local' - signals the designation of the local time zone
+//                configured for the host computer executing this code.
+//
+//            (2) IANA Time Zone Location -
+//                See https://golang.org/pkg/time/#LoadLocation
+//                and https://www.iana.org/time-zones to ensure that
+//                the IANA Time Zone Database is properly configured
+//                on your system. Note: IANA Time Zone Data base is
+//                equivalent to 'tz database'.
+//
+//                   Examples:
+//                     "America/New_York"
+//                     "America/Chicago"
+//                     "America/Denver"
+//                     "America/Los_Angeles"
+//                     "Pacific/Honolulu"
+//
+//            (3) A valid Military Time Zone
+//                Military time zones are commonly used in
+//                aviation as well as at sea. They are also
+//                known as nautical or maritime time zones.
+//                Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//
+//             Note:
+//                 The source file 'timezonedata.go' contains over 600 constant
+//                 time zone declarations covering all IANA and Military Time
+//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//                 time zone constants begin with the prefix 'TZones'.
+//
+//   timeZoneConversionType TimeZoneConversionType -
+//            This parameter determines the algorithm that will
+//            be used to convert parameter 'dateTime' to the time
+//            zone specified by parameter 'timeZoneName'.
+//
+//            TimeZoneConversionType is an enumeration type which
+//            be used to convert parameter 'dateTime' to the time
+//            must be set to one of two values:
+//            This parameter determines the algorithm that will
+//               TimeZoneConversionType(0).Absolute()
+//               TimeZoneConversionType(0).Relative()
+//            Note: You can also use the global variable
+//            'TzConvertType' for easier access:
+//               TzConvertType.Absolute()
+//               TzConvertType.Relative()
+//
+//            Absolute Time Conversion - Identifies the 'Absolute' time
+//            to time zone conversion algorithm. This algorithm provides
+//            that a time value in time zone 'X' will be converted to the
+//            same time value in time zone 'Y'.
+//
+//            For example, assume the time 10:00AM is associated with time
+//            zone USA Central Standard time and that this time is to be
+//            converted to USA Eastern Standard time. Applying the 'Absolute'
+//            algorithm would convert ths time to 10:00AM Eastern Standard
+//            time.  In this case the hours, minutes and seconds have not been
+//            altered. 10:00AM in USA Central Standard Time has simply been
+//            reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//            Relative Time Conversion - Identifies the 'Relative' time to time
+//            zone conversion algorithm. This algorithm provides that times in
+//            time zone 'X' will be converted to their equivalent time in time
+//            zone 'Y'.
+//
+//            For example, assume the time 10:00AM is associated with time zone
+//            USA Central Standard time and that this time is to be converted to
+//            USA Eastern Standard time. Applying the 'Relative' algorithm would
+//            convert ths time to 11:00AM Eastern Standard time. In this case the
+//            hours, minutes and seconds have been changed to reflect an equivalent
+//            time in the USA Eastern Standard Time Zone.
+//
+//   dateTimeFmtStr string   -
+//            A date time format string which will be used
+//            to format and display 'dateTime'. Example:
+//            "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//            Date time format constants are found in the source
+//            file 'constantsdatetime.go'. These constants represent
+//            the more commonly used date time string formats. All
+//            Date Time format constants begin with the prefix
+//            'FmtDateTime'.
+//
+//            If 'dateTimeFmtStr' is submitted as an
+//            'empty string', a default date time format
+//            string will be applied. The default date time
+//            format string is:
+//              FmtDateTimeYrMDayFmtStr =
+//                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//   DateTzDto - If successful, this method returns a new DateTzDto instance.
+//               The data fields of this new instance are initialized to zero
+//               values.
+//
+//
+//   error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//               encountered this error Type will encapsulate an error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//   dtzDto, err := DateTzDto{}.NewTz(
+//         dateTime,
+//         TZones.US.Central(),
+//         FmtDateTimeYrMDayFmtStr)
+//
+//   Note: TZones.US.Central() = "America/Chicago"
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants.
+//         'TZones.US.Central() is located in 'timezonedata.dto'. 'FmtDateTimeYrMDayFmtStr'
+//         is located in source file 'constantsdatetime.go'.
+//
+func (dtz DateTzDto) NewTzSpec(
+	dateTime time.Time,
+	tzSpec TimeZoneSpecification,
+	timeZoneConversionType TimeZoneConversionType,
+	dateTimeFmtStr string) (DateTzDto, error) {
+		
+}
+
+
+
 
 // SetDateTimeFmt - Sets the DateTzDto data field 'DateTimeFmt'.
 // This string is used to format the DateTzDto DateTimeFmt field
@@ -3544,7 +3722,8 @@ func (dtz *DateTzDto) SetFromTimeTz(
 //   error - If successful the returned error Type is set equal to 'nil'. If errors are
 //           encountered this error Type will encapsulate an error message.
 //
-func (dtz *DateTzDto) SetNewTimeZone(newTimeZoneLocation string) error {
+func (dtz *DateTzDto) SetNewTimeZone(
+	newTimeZoneLocation string) error {
 
 	dtz.lock.Lock()
 
