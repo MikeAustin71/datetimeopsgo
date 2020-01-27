@@ -731,10 +731,15 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	return nil
 }
 
+// TODO Add method  setFromTimeZoneDefinition
 
 // setFromTimeZoneSpecification - Sets the data fields of the specified
 // TimeZoneDefinition instance based on a Time Zone Specification
 // object (TimeZoneSpecification).
+// The parameter, 'tZoneConversionType', is an instance
+// the type enumeration type TimeZoneConversionType.
+// This parameter will determine how 'tOut' will be
+// converted to the target time zone.
 //
 func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 	tzdef *TimeZoneDefinition,

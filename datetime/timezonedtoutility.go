@@ -293,18 +293,13 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 
 	dateTzIn := tzDto.TimeIn.CopyOut()
 
-	err := dateTzIn.AddMinusTimeDtoToThis(timeDto)
+	err = dateTzIn.AddMinusTimeDtoToThis(timeDto)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"Error returned by dateTzIn.AddMinusTimeDtoToThis(timeDto) "+
 			"Error='%v'", err.Error())
 	}
-
-	timeOutTimeZone := tzDto.TimeOut.GetOriginalTimeZone()
-
-	fmtStr := tzDto.TimeOut.GetDateTimeFmt()
-
 
 
 }
@@ -466,7 +461,7 @@ func (tZoneUtil *timeZoneDtoUtility) convertTz(
 		return TimeZoneDto{}, err
 	}
 
-	err = tZoneUtil2.setTimeOut(
+	err = tZoneUtil2.setTimeOutTz(
 		&tzDtoOut,
 		tIn,
 		targetTimeZoneName,
@@ -1001,7 +996,7 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	}
 
 	// Set tzDtoOut.TimeOut
-	err = dTzUtil.setFromTimeTz(
+	err = dTzUtil.setFromTimeTzName(
 		&tzDtoOut.TimeOut,
 		tIn,
 		targetTz,
@@ -1016,7 +1011,7 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	}
 
 	// Set tzDtoOut.TimeUTC
-	err = dTzUtil.setFromTimeTz(
+	err = dTzUtil.setFromTimeTzName(
 		&tzDtoOut.TimeUTC,
 		tIn,
 		TZones.UTC(),
@@ -1030,7 +1025,7 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 				"%v\n", err.Error())
 	}
 	// Set tzDtoOut.TimeLocal
-	err = dTzUtil.setFromTimeTz(
+	err = dTzUtil.setFromTimeTzName(
 		&tzDtoOut.TimeLocal,
 		tIn,
 		TZones.Local(),
@@ -1094,8 +1089,8 @@ func (tZoneUtil *timeZoneDtoUtility) setDateTimeFormat(
 // field 'TimeIn'.
 //
 func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
-	tIn time.Time,
 	tzDto *TimeZoneDto,
+	tIn time.Time,
 	ePrefix string) error {
 
 	tZoneUtil.lock.Lock()
@@ -1147,11 +1142,18 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 	return nil
 }
 
-
-// setTimeOut - Assigns time and zone values to field
-// 'TimeZoneDto.TimeOut'.
+// setTimeOutTz - Assigns date, time and time zone
+// values to field 'TimeZoneDto.TimeOut' which is
+// of type, 'DateTzDto'. The time zone conversion
+// relies on the parameter 'tOutTimeZoneName' which
+// must hold a valid time zone name.
 //
-func (tZoneUtil *timeZoneDtoUtility) setTimeOut(
+// The parameter, 'tZoneConversionType', is an instance
+// the type enumeration type TimeZoneConversionType.
+// This parameter will determine how 'tOut' will be
+// converted to the target time zone.
+//
+func (tZoneUtil *timeZoneDtoUtility) setTimeOutTz(
 	tzDto *TimeZoneDto,
 	tOut time.Time,
 	tOutTimeZoneName string,
@@ -1163,7 +1165,7 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOut(
 
 	defer tZoneUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDtoUtility.setTimeOut() "
+	ePrefix += "timeZoneDtoUtility.setTimeOutTz() "
 
 	if tzDto == nil {
 		return errors.New(ePrefix +
@@ -1181,11 +1183,21 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOut(
 			"tZoneConversionType= TzConvertType.None()\n")
 	}
 
+	if len(tOutTimeZoneName) == 0 {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tOutTimeZoneName",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tOutTimeZoneName' is an empty string!",
+			err:                 nil,
+		}
+	}
+
 	dTzUtil := dateTzDtoUtility{}
 
 	tzDtoOut := DateTzDto{}
 
-	err := dTzUtil.setFromTimeTz(
+	err := dTzUtil.setFromTimeTzName(
 		&tzDtoOut, tOut,
 		tOutTimeZoneName,
 		tZoneConversionType,
@@ -1196,6 +1208,118 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOut(
 		return fmt.Errorf( "tzDto.TimeOut configuration FAILED!\n" +
 			"%v", err.Error())
 	}
+
+	tzDto.TimeOut = tzDtoOut.CopyOut()
+
+	return nil
+}
+
+
+// setTimeOutTzSpec - Assigns date, time and time zone
+// values to field 'TimeZoneDto.TimeOut' which is
+// of type, 'DateTzDto'. The time zone conversion
+// relies on the parameter 'tOutTimeZoneDef' which
+// is of type, 'TimeZoneDefinition'.
+//
+// The parameter, 'tZoneConversionType', is an instance
+// the type enumeration type TimeZoneConversionType.
+// This parameter will determine how 'tOut' will be
+// converted to the target time zone.
+//
+func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzDef(
+	tzDto *TimeZoneDto,
+	tOut time.Time,
+	tOutTimeZoneDef TimeZoneDefinition,
+	tZoneConversionType TimeZoneConversionType,
+	dateTimeFormat string,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.setTimeOutTzSpec() "
+
+	if tzDto == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+	}
+
+	if tOut.IsZero() {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tOut' has a value of 'zero'!\n")
+	}
+
+	if tZoneConversionType == TzConvertType.None() {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tZoneConversionType' is INVALID.\n" +
+			"tZoneConversionType= TzConvertType.None()\n")
+	}
+
+	return nil
+}
+
+
+// setTimeOutTzSpec - Assigns date, time and time zone
+// values to field 'TimeZoneDto.TimeOut' which is
+// of type, 'DateTzDto'. The time zone conversion
+// relies on the parameter 'tOutTimeZoneSpec' which
+// is of type, 'TimeZoneSpecification'.
+//
+// The parameter, 'tZoneConversionType', is an instance
+// the type enumeration type TimeZoneConversionType.
+// This parameter will determine how 'tOut' will be
+// converted to the target time zone.
+//
+func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzSpec(
+	tzDto *TimeZoneDto,
+	tOut time.Time,
+	tOutTimeZoneSpec TimeZoneSpecification,
+	tZoneConversionType TimeZoneConversionType,
+	dateTimeFormat string,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.setTimeOutTzSpec() "
+
+	if tzDto == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+	}
+
+	if tOut.IsZero() {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tOut' has a value of 'zero'!\n")
+	}
+
+	if tZoneConversionType == TzConvertType.None() {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tZoneConversionType' is INVALID.\n" +
+			"tZoneConversionType= TzConvertType.None()\n")
+	}
+
+	err := tOutTimeZoneSpec.IsValid(ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nInput Parameter 'tOutTimeZoneSpec' is Invalid!\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	dTzUtil := dateTzDtoUtility{}
+
+	tzDtoOut := DateTzDto{}
+
+	err = dTzUtil.setFromTzSpec(
+		&tzDtoOut,
+		tOut,
+		tOutTimeZoneSpec,
+		tZoneConversionType,
+		dateTimeFormat,
+		ePrefix)
 
 	tzDto.TimeOut = tzDtoOut.CopyOut()
 
@@ -1239,7 +1363,7 @@ func (tZoneUtil *timeZoneDtoUtility) setUTCTime(
 
 	tzDtoUtc := DateTzDto{}
 
-	err := dTzUtil.setFromTimeTz(
+	err := dTzUtil.setFromTimeTzName(
 						&tzDtoUtc,
 						dateTime,
 						TZones.UTC(),
@@ -1293,7 +1417,7 @@ func (tZoneUtil *timeZoneDtoUtility) setLocalTime(
 
 	tzDtoLocal := DateTzDto{}
 
-	err := dTzUtil.setFromTimeTz(
+	err := dTzUtil.setFromTimeTzName(
 		&tzDtoLocal,
 		dateTime,
 		TZones.Local(),

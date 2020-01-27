@@ -321,7 +321,7 @@ func (tzDto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 
 	fmtStr := tzDto.TimeOut.GetDateTimeFmt()
 
-	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
+	tzDto2, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -329,7 +329,7 @@ func (tzDto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 			"Error='%v'", err.Error())
 	}
 
-	tzDto.CopyIn(tz2Dto)
+	tzDto.CopyIn(tzDto2)
 
 	return nil
 }
@@ -2068,10 +2068,10 @@ func (tzDto *TimeZoneDto) setTimeIn(tIn time.Time) error {
 	return nil
 }
 */
-// setTimeOut - Assigns time and zone values to field 'TimeOut'
+// setTimeOutTz - Assigns time and zone values to field 'TimeOut'
 func (tzDto *TimeZoneDto) setTimeOut(tOut time.Time) error {
 
-	ePrefix := "TimeZoneDto.setTimeOut()"
+	ePrefix := "TimeZoneDto.setTimeOutTz()"
 
 	var err error
 
@@ -2088,7 +2088,7 @@ func (tzDto *TimeZoneDto) setTimeOut(tOut time.Time) error {
 // setUTCTime - Assigns UTC Time and zone values to fields 'TimeUTC' and 'TimeUTCZone'
 func (tzDto *TimeZoneDto) setUTCTime(t time.Time) error {
 
-	ePrefix := "TimeZoneDto.setTimeOut()"
+	ePrefix := "TimeZoneDto.setTimeOutTz()"
 
 	var err error
 
