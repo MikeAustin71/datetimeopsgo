@@ -1,6 +1,8 @@
 package datetime
 
 import (
+	"fmt"
+	"strings"
 	"sync"
 	"time"
 )
@@ -16,7 +18,7 @@ type typeZoneSpecUtility struct {
 //
 func (tzSpecUtil *typeZoneSpecUtility) copyIn(
 	tzSpec *TimeZoneSpecification,
-	tzSpec2 TimeZoneSpecification)  {
+	tzSpec2 *TimeZoneSpecification)  {
 
 	tzSpecUtil.lock.Lock()
 
@@ -241,4 +243,252 @@ func (tzSpecUtil *typeZoneSpecUtility) equal(
 
 	return true
 
+}
+
+// SetTimeZone - Sets the data values of the input parameter
+// 'tzSpec', an instance of type TimeZoneSpecification.
+//
+func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
+	tzSpec *TimeZoneSpecification,
+	referenceDateTime      time.Time,
+	militaryTimeZoneLetter string,
+	militaryTimeZoneName   string,
+	zoneLabel              string,
+	tagDescription         string,
+	timeZoneClass          TimeZoneClass,
+	ePrefix string) error {
+
+
+	tzSpecUtil.lock.Lock()
+
+	defer tzSpecUtil.lock.Unlock()
+
+	ePrefix += "typeZoneSpecUtility.setFromTimeZoneSpec() "
+
+	if tzSpec == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzSpec",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzSpec' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if referenceDateTime.IsZero() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "referenceDateTime",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'referenceDateTime' has a Zero Value!",
+			err:                 nil,
+		}
+	}
+	tzSpecUtil2 := typeZoneSpecUtility{}
+
+	tzSpecUtil2.empty(tzSpec)
+
+	tzMech := TimeZoneMechanics{}
+	var err error
+
+
+	tzSpec.zoneName,
+		tzSpec.zoneOffset,
+		tzSpec.utcOffset,
+		tzSpec.zoneAbbrvLookupId,
+		tzSpec.offsetHours,
+		tzSpec.offsetMinutes,
+		tzSpec.offsetSeconds,
+		tzSpec.zoneSignValue,
+		tzSpec.zoneOffsetTotalSeconds,
+		tzSpec.locationPtr,
+		tzSpec.locationName,
+		err = tzMech.CalcUtcZoneOffsets(referenceDateTime, ePrefix)
+
+
+	var timeZoneType TimeZoneType
+	var ok bool
+
+	if err != nil {
+		tzSpecUtil.empty(tzSpec)
+		return err
+	}
+
+	locNameType := LocationNameType(0).ConvertibleTimeZone()
+
+	dtMech := DTimeMechanics{}
+
+	// Test For Location Name Type
+	_, err = dtMech.LoadTzLocation(tzSpec.locationName, ePrefix)
+
+	if err != nil {
+		locNameType = LocationNameType(0).NonConvertibleTimeZone()
+	}
+
+	// Test for Time Zone Type
+	if len(militaryTimeZoneName) > 0 ||
+		len(militaryTimeZoneLetter) > 0 {
+
+		var foundMilTextName string
+
+		milTzDat := MilitaryTimeZoneData{}
+
+		foundMilTextName, ok = milTzDat.MilTzLetterToTextName(militaryTimeZoneLetter)
+
+		if !ok {
+
+			tzSpecUtil.empty(tzSpec)
+
+			return fmt.Errorf(ePrefix +
+				"\nInput parameter 'militaryTimeZoneLetter' is Invalid!\n" +
+				"militaryTimeZoneLetter='%v'\n", militaryTimeZoneLetter)
+		}
+
+		if foundMilTextName != militaryTimeZoneName {
+
+			tzSpecUtil.empty(tzSpec)
+
+			return fmt.Errorf(ePrefix +
+				"\nInput parameter 'militaryTimeZoneName' is Invalid!\n" +
+				"militaryTimeZoneName='%v'\n" +
+				"The correct military Time Zone Name is '%v'\n",
+				militaryTimeZoneName, foundMilTextName)
+		}
+
+		timeZoneType = TzType.Military()
+
+	} else if strings.ToLower(tzSpec.locationName) == "local" {
+
+		timeZoneType = TzType.Local()
+
+	} else {
+
+		timeZoneType = TzType.Iana()
+
+	}
+
+	// Test for Time Zone Utc Offset Status
+	var tzUtcOffsetStatus TimeZoneUtcOffsetStatus
+
+	tzUtcOffsetStatus, err = tzMech.GetTimeZoneUtcOffsetStatus(tzSpec.locationPtr, ePrefix)
+
+	if err != nil {
+		tzSpecUtil2.empty(tzSpec)
+		return err
+	}
+
+	// Test for Time Zone Category
+	var tzCategory TimeZoneCategory
+
+	firstLetter := tzSpec.locationName[0:1]
+
+	if firstLetter == "+" ||
+		firstLetter == "-" {
+		tzCategory = TimeZoneCategory(0).UtcOffset()
+	} else {
+		tzCategory = TimeZoneCategory(0).TextName()
+	}
+
+	tzSpec.referenceDateTime = referenceDateTime
+	tzSpec.zoneLabel = zoneLabel
+	tzSpec.militaryTimeZoneLetter = militaryTimeZoneLetter
+	tzSpec.militaryTimeZoneName = militaryTimeZoneName
+	tzSpec.tagDescription = tagDescription
+	tzSpec.locationNameType = locNameType
+	tzSpec.timeZoneCategory = tzCategory
+	tzSpec.timeZoneClass = timeZoneClass
+	tzSpec.timeZoneType = timeZoneType
+	tzSpec.timeZoneUtcOffsetStatus = tzUtcOffsetStatus
+
+	return nil
+}
+
+// setFromTimeZoneSpec - Sets the data fields for
+// 'tzSpec' based on Time Zone Specification, 'tzSpecIn'.
+//
+func (tzSpecUtil *typeZoneSpecUtility) setFromTimeZoneSpec(
+	tzSpec *TimeZoneSpecification,
+	dateTime time.Time,
+	timeZoneConversionType TimeZoneConversionType,
+	tzSpecIn *TimeZoneSpecification,
+	ePrefix string) error {
+
+	tzSpecUtil.lock.Lock()
+
+	defer tzSpecUtil.lock.Unlock()
+
+	ePrefix += "typeZoneSpecUtility.setFromTimeZoneSpec() "
+
+	if tzSpec == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzSpec",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzSpec' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if dateTime.IsZero() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'dateTime' has a Zero Value!",
+			err:                 nil,
+		}
+	}
+
+	err := tzSpec.IsValid(ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nInput Parameter 'tzSpec' is Invalid!\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	err = tzSpecIn.IsValid(ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nInput Parameter 'tzSpecIn' is Invalid!\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	if timeZoneConversionType < TzConvertType.Absolute() ||
+		timeZoneConversionType > TzConvertType.Relative() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneConversionType",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter timeZoneConversionType must be 'Absolute' or 'Relative' !",
+			err:                 nil,
+		}
+	}
+
+	if timeZoneConversionType == TzConvertType.Absolute() {
+		dateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			tzSpecIn.locationPtr)
+	} else {
+		// Must be TzConvertType.Relative()
+
+		dateTime = dateTime.In(tzSpecIn.locationPtr)
+	}
+
+	tzSpecUtil2 := typeZoneSpecUtility{}
+
+	tzSpecUtil2.empty(tzSpec)
+
+	tzSpecUtil2.copyIn(tzSpec, tzSpecIn)
+
+	tzSpec.referenceDateTime = dateTime
+
+	return nil
 }

@@ -471,7 +471,9 @@ func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
 	dateTimeFmtStr = strings.TrimLeft(strings.TrimRight(dateTimeFmtStr, " "), " ")
 
 	if len(dateTimeFmtStr) == 0 {
-		return FmtDateTimeYrMDayFmtStr
+		lockDefaultDateTimeFormat.Lock()
+		dateTimeFmtStr = DEFAULTDATETIMEFORMAT
+		lockDefaultDateTimeFormat.Unlock()
 	}
 
 	return dateTimeFmtStr
@@ -867,8 +869,45 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
 	}
 
+	dTzUtil2 := dateTzDtoUtility{}
 
+	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
+	tzDefUtil :=timeZoneDefUtility{}
+
+	timeZoneDefOut := TimeZoneDefinition{}
+
+	err := tzDefUtil.setFromTimeZoneDefinition(
+		&timeZoneDefOut,
+		dateTime,
+		timeZoneConversionType,
+		timeZoneDef,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	dateTime =
+		timeZoneDefOut.originalTimeZone.referenceDateTime
+
+	tDto := TimeDto{}
+
+	tDtoUtil := timeDtoUtility{}
+
+	err = tDtoUtil.setFromDateTime(
+		&tDto,
+		dateTime,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	dTz.timeZone = timeZoneDef.CopyOut()
+	dTz.timeComponents = tDto.CopyOut()
+	dTz.dateTimeFmt = dateTimeFmtStr
+	dTz.dateTimeValue = dateTime
 
 	return nil
 }

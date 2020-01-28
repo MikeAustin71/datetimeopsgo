@@ -591,7 +591,13 @@ func TestTimeZoneUtility_IsValidTimeZone_01(t *testing.T) {
 
 	tzu := TimeZoneDto{}
 
-	isValidTz, tzType := tzu.IsValidTimeZone(tIn.Location().String())
+	isValidTz, tzType, err := tzu.IsValidTimeZone(tIn.Location().String())
+
+	if err != nil {
+		t.Errorf("Error returned by tzu.IsValidTimeZone(tIn.Location().String()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
 
 	if isValidTz == false {
 		t.Errorf("Expected Now() Location to yield 'Local' Time Zone isValidTz == VALID ('true')\n" +
@@ -615,7 +621,13 @@ func TestTimeZoneUtility_IsValidTimeZone02(t *testing.T) {
 
 	tzu := TimeZoneDto{}
 
-	isValidTz, tzType := tzu.IsValidTimeZone("America/Chicago")
+	isValidTz, tzType, err := tzu.IsValidTimeZone("America/Chicago")
+
+	if err != nil {
+		t.Errorf("Error returned by tzu.IsValidTimeZone(\"America/Chicago\")\n" +
+			"Error='%v'\n")
+	}
+
 
 	if isValidTz == false {
 		t.Error("Expected 'America/Chicago' to yield isValidTz = 'true', instead got", isValidTz)

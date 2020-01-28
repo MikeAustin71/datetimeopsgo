@@ -75,7 +75,7 @@ func (tzSpec *TimeZoneSpecification) CopyIn(tzSpec2 TimeZoneSpecification) {
 
 	tzSpecUtil := typeZoneSpecUtility{}
 
-	tzSpecUtil.copyIn(tzSpec, tzSpec2)
+	tzSpecUtil.copyIn(tzSpec, &tzSpec2)
 
 }
 
@@ -817,6 +817,17 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 
 	tzSpecUtil := typeZoneSpecUtility{}
 
+	return tzSpecUtil.setTimeZone(
+		tzSpec,
+		referenceDateTime,
+		militaryTimeZoneLetter,
+		militaryTimeZoneName,
+		zoneLabel,
+		tagDescription,
+		timeZoneClass,
+		ePrefix)
+
+	/*
 	tzSpecUtil.empty(tzSpec)
 
 	tzMech := TimeZoneMechanics{}
@@ -932,4 +943,5 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 	tzSpec.timeZoneUtcOffsetStatus = tzUtcOffsetStatus
 
 	return nil
+	*/
 }

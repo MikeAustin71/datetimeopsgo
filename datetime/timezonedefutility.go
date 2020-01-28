@@ -731,7 +731,131 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	return nil
 }
 
-// TODO Add method  setFromTimeZoneDefinition
+// setFromTimeZoneDefinition - Sets the date fields of an
+// input parameter TimeZoneDefinition instance based on
+// the values of a second TimeZoneDefinition parameter.
+//
+func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
+	tzdef *TimeZoneDefinition,
+	dateTime time.Time,
+	timeZoneConversionType TimeZoneConversionType,
+	timeZoneDef TimeZoneDefinition,
+	ePrefix string) error {
+
+		ePrefix += "timeZoneDefUtility.setFromTimeZoneDefinition() "
+
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	if dateTime.IsZero() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'dateTime' has a Zero Value!",
+			err:                 nil,
+		}
+	}
+
+	err := timeZoneDef.IsValid()
+
+	if err != nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneDef",
+			inputParameterValue: "",
+			errMsg:              fmt.Sprintf(
+				"%v", err.Error()),
+			err:                 nil,
+		}
+	}
+
+	if timeZoneConversionType < TzConvertType.Absolute() ||
+		timeZoneConversionType > TzConvertType.Relative() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneConversionType",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter timeZoneConversionType must be 'Absolute' or 'Relative' !",
+			err:                 nil,
+		}
+	}
+
+	var newDateTime time.Time
+
+	if timeZoneConversionType == TzConvertType.Absolute() {
+		newDateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			timeZoneDef.originalTimeZone.locationPtr)
+	} else {
+		// Must be TzConvertType.Relative()
+
+		newDateTime = dateTime.In(timeZoneDef.originalTimeZone.locationPtr)
+	}
+
+	tzSpecUtil := typeZoneSpecUtility{}
+
+	tzSpec1 := TimeZoneSpecification{}
+
+	err = tzSpecUtil.setFromTimeZoneSpec(
+		&tzSpec1,
+		newDateTime,
+		timeZoneConversionType,
+		&timeZoneDef.originalTimeZone,
+		ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\n Original Time Zone Error!\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+
+	if timeZoneConversionType == TzConvertType.Absolute() {
+		newDateTime = time.Date(
+			dateTime.Year(),
+			dateTime.Month(),
+			dateTime.Day(),
+			dateTime.Hour(),
+			dateTime.Minute(),
+			dateTime.Second(),
+			dateTime.Nanosecond(),
+			timeZoneDef.convertibleTimeZone.locationPtr)
+	} else {
+		// Must be TzConvertType.Relative()
+
+		newDateTime = dateTime.In(timeZoneDef.convertibleTimeZone.locationPtr)
+	}
+
+	tzSpec2 := TimeZoneSpecification{}
+
+	err = tzSpecUtil.setFromTimeZoneSpec(
+		&tzSpec2,
+		newDateTime,
+		timeZoneConversionType,
+		&timeZoneDef.convertibleTimeZone,
+		ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\n Convertible Time Zone Error!\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	timeZoneDef.originalTimeZone = tzSpec1.CopyOut()
+	timeZoneDef.convertibleTimeZone = tzSpec2.CopyOut()
+
+	return nil
+	}
 
 // setFromTimeZoneSpecification - Sets the data fields of the specified
 // TimeZoneDefinition instance based on a Time Zone Specification
