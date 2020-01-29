@@ -1180,25 +1180,6 @@ func (tzDto TimeZoneDto) NewAddDuration(
 	}
 
 	return tzuOut, nil
-	/*
-	err := tZoneUtil.isValidTimeZoneDto(&tzdtoIn, ePrefix)
-
-	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
-	}
-
-	tzuOut := tzdtoIn.CopyOut()
-
-	tzuOut.SetDateTimeFormatStr(dateTimeFmtStr)
-
-	err = tzuOut.AddDuration(duration)
-
-	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error returned by tzuOut.AddDuration(duration). Error='%v'", err.Error())
-	}
-
-	return tzuOut, nil
-	*/
 }
 
 // NewAddTime - returns a new TimeZoneDto equivalent to the input TimeZoneDto Plus time elements.
@@ -1206,77 +1187,96 @@ func (tzDto TimeZoneDto) NewAddDuration(
 // Input Parameters:
 // =================
 //
-// tzdtoIn TimeZoneDto   - The base TimeZoneDto to which
-//              time values will be added.
-// hours    int    - Number of hours to be added to tzuIn
-// minutes   int    - Number of minutes to be added to tzuIn
-// seconds   int    - Number of seconds to be added to tzuIn
-// milliseconds int    - Number of milliseconds to be added to tzuIn
-// microseconds int    - Number of microseconds to be added to tzuIn
-// nanoseconds int    - Number of nanoseconds to be added to tzuIn
+//   tzdtoIn TimeZoneDto - The base TimeZoneDto to which
+//                         time values will be added.
 //
-// Note: Negative time values may be used to subtract time from 'tzuIn'.
+//   hours        int    - Number of hours to be added to tzuIn
 //
-// dateTimeFmtStr string - A date time format string which will be used
-//              to format and display 'dateTime'. Example:
-//              "2006-01-02 15:04:05.000000000 -0700 MST"
+//   minutes      int    - Number of minutes to be added to tzuIn
 //
-//             If 'dateTimeFmtStr' is submitted as an
-//              'empty string', a default date time format
-//              string will be applied. The default date time
-//              format string is:
-//              TZDtoDefaultDateTimeFormatStr =
+//   seconds      int    - Number of seconds to be added to tzuIn
+//
+//   milliseconds int    - Number of milliseconds to be added to tzuIn
+//
+//   microseconds int    - Number of microseconds to be added to tzuIn
+//
+//   nanoseconds  int    - Number of nanoseconds to be added to tzuIn
+//
+//   Note: Negative time values may be used to subtract time from 'tzuIn'.
+//
+//   dateTimeFmtStr string - A date time format string which will be used
+//                to format and display 'dateTime'. Example:
 //                "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-// Returns
-// =======
+//               If 'dateTimeFmtStr' is submitted as an
+//                'empty string', a default date time format
+//                string will be applied. The default date time
+//                format string is:
+//                TZDtoDefaultDateTimeFormatStr =
+//                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// Return Values
+// =============
+//
 //  There are two return values:  (1) a TimeZoneDto Type
-//                (2) an Error type
+//                                (2) an Error type
 //
-//  TimeZoneDto -  The time input parameters are added to 'tzuIn to produce, populate and return
-//            a TimeZoneDto structure:
+//   TimeZoneDto -  The time input parameters are added to 'tzuIn to produce, populate and return
+//             a TimeZoneDto structure:
 //
-//    type TimeZoneDto struct {
-//         Description string     // Unused. Available for tagging and classification.
-//         TimeIn      time.Time    // Original input time value
-//         TimeInLoc   *time.Location  // Time Zone Location associated with TimeIn
-//         TimeOut     time.Time       // TimeOut - TimeIn value converted to TimeOut
-//                       //   based on a specific Time Zone Location.
+//             type TimeZoneDto struct {
+//                  Description string     // Unused. Available for tagging and classification.
+//                  TimeIn      time.Time    // Original input time value
+//                  TimeInLoc   *time.Location  // Time Zone Location associated with TimeIn
+//                  TimeOut     time.Time       // TimeOut - TimeIn value converted to TimeOut
+//                                //   based on a specific Time Zone Location.
 //
-//         TimeOutLoc  *time.Location // Time Zone Location associated with TimeOut
-//         TimeUTC     time.Time    // TimeUTC (Universal Coordinated Time) value
-//                           equivalent to TimeIn
+//                  TimeOutLoc  *time.Location // Time Zone Location associated with TimeOut
+//                  TimeUTC     time.Time    // TimeUTC (Universal Coordinated Time) value
+//                                    equivalent to TimeIn
 //
-//         TimeLocal  time.Time    // Equivalent to TimeIn value converted to the 'Local'
-//                       // Time Zone Location. 'Local' is the Time Zone Location
-//                       //  used by the host computer.
-//    }
+//                  TimeLocal  time.Time    // Equivalent to TimeIn value converted to the 'Local'
+//                                // Time Zone Location. 'Local' is the Time Zone Location
+//                                //  used by the host computer.
+//             }
 //
-// error - If the method completes successfully, the returned error instance is
-//     set to nil. If errors are encountered, the returned error object is populated
-//     with an error message.
+//   error - If the method completes successfully, the returned error instance is
+//           set to nil. If errors are encountered, the returned error object is populated
+//           with an error message.
 //
-func (tzDto TimeZoneDto) NewAddTime(tzdtoIn TimeZoneDto, hours, minutes, seconds, milliseconds, microseconds,
-	nanoseconds int, dateTimeFmtStr string) (TimeZoneDto, error) {
+func (tzDto TimeZoneDto) NewAddTime(
+	tzdtoIn TimeZoneDto,
+	hours, minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int,
+	dateTimeFmtStr string) (TimeZoneDto, error) {
+
+	tzDto.lock.Lock()
+
+	defer tzDto.lock.Unlock()
 
 	ePrefix := "TimeZoneDto.NewAddTime() "
 
 	tZoneUtil := timeZoneDtoUtility{}
 
-	err := tZoneUtil.isValidTimeZoneDto(&tzdtoIn, ePrefix)
+	tzuOut := tZoneUtil.copyOut(&tzdtoIn, ePrefix)
+
+	tZoneUtil.setDateTimeFormat(&tzuOut, dateTimeFmtStr, ePrefix)
+
+	err := tZoneUtil.addTime(
+		&tzuOut,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds,
+		ePrefix)
 
 	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf(ePrefix+"Error: Input Parameter 'tzdtoIn' is INVALID! Error='%v'", err.Error())
-	}
-
-	tzuOut := tzdtoIn.CopyOut()
-
-	tzuOut.SetDateTimeFormatStr(dateTimeFmtStr)
-
-	err = tzuOut.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
-
-	if err != nil {
-		return TimeZoneDto{}, fmt.Errorf("Error returned by tzuOut.AddTime(...). Error='%v'", err.Error())
+		return TimeZoneDto{}, err
 	}
 
 	return tzuOut, nil

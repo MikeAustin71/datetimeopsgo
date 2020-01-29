@@ -325,9 +325,7 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by dateTzIn.AddMinusTimeDtoToThis(timeDto) "+
-			"Error='%v'", err.Error())
+		return err
 	}
 
 	tzDto2 := TimeZoneDto{}
@@ -549,7 +547,7 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 
 	defer tZoneUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDtoUtility.addPlusTimeDto() "
+	ePrefix += "timeZoneDtoUtility.addTime() "
 
 	if tzDto == nil {
 		return &InputParameterError{
@@ -570,7 +568,6 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 			"\nInput Parameter 'TimeZoneDto' is INVALID!\n" +
 			"Validation Error='%v'", err.Error())
 	}
-
 
 	var dateTzIn DateTzDto
 
