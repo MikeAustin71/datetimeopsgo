@@ -204,6 +204,37 @@ func (tzDefUtil *timeZoneDefUtility) equalOffsetSeconds(
 	return true
 }
 
+// equalReferenceDateTimeComponents - Test the date time components
+// of a time definition (original time zone and convertible time zone)
+// to determine if they are equivalent.
+//
+// (tzdef.originaltimezone.referenceDateTime and
+// tzdef.convertibletimezone.referenceDateTime)
+//
+// Note: This only compares time components: Years, Months, Days,
+// Hours, Minutes, Seconds and Nanoseconds. This method does NOT
+// compare Time Zones.
+//
+func (tzDefUtil *timeZoneDefUtility) equalReferenceDateTimeComponents(
+tzdef *TimeZoneDefinition) bool {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	if tzdef == nil {
+		panic("timeZoneDefUtility.equalZoneLocation()\n" +
+			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	dtUtil := DTimeUtility{}
+
+	return dtUtil.EqualDateTimeComponents(
+		tzdef.originalTimeZone.referenceDateTime,
+		tzdef.convertibleTimeZone.referenceDateTime)
+}
+
+
 // equalZoneLocation - Compares two TimeZoneDefinition's and returns
 // 'true' if Time Zone Location Name, the Zone Name and Zone
 // Offsets match.
@@ -328,13 +359,13 @@ func (tzDefUtil *timeZoneDefUtility) isEmpty(
 	return false
 }
 
-// isValidTimeZoneDefDto - Analyzes the TimeZoneDefinition
+// isValidTimeZoneDef - Analyzes the TimeZoneDefinition
 // parameter, 'tzdef', instance to determine validity.
 //
 // This method returns 'true' if the TimeZoneDefinition
 // instance is valid.  Otherwise, it returns 'false'.
 //
-func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
+func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDef(
 	tzdef *TimeZoneDefinition,
 	ePrefix string) error {
 
@@ -342,7 +373,7 @@ func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDefDto(
 
 	tzDefUtil.lock.Unlock()
 
-	ePrefix += "timeZoneDefUtility.isValidTimeZoneDefDto() "
+	ePrefix += "timeZoneDefUtility.isValidTimeZoneDef() "
 
 	if tzdef == nil {
 		return errors.New(ePrefix +
@@ -421,30 +452,43 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeDto(
 		}
 	}
 
-	utcLocPtr, err := time.LoadLocation(TZones.UTC())
+	tDto2 := tDto.CopyOut()
+
+	err := tDto2.NormalizeTimeElements()
 
 	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"\nError returned by time.LoadLocation(TZones.UTC())\n" +
-			"Error='%v'\n", err.Error())
+		return fmt.Errorf(ePrefix+
+			"\nError returned by tDto2.NormalizeTimeElements().\nError='%v'\n",
+			err.Error())
 	}
 
-	dateTime := time.Date(tDto.Years,
-		time.Month(tDto.Months),
-		tDto.DateDays,
-		tDto.Hours,
-		tDto.Minutes,
-		tDto.Seconds,
-		tDto.TotSubSecNanoseconds,
-		utcLocPtr)
+	tDto2.ConvertToAbsoluteValues()
+
+	err = tDto2.IsValid()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"\nError: Input Parameter tDto (TimeDto) is INVALID.\nError='%v'\n",
+			err.Error())
+	}
+
+	dateTime := time.Date(
+		tDto2.Years,
+		time.Month(tDto2.Months),
+		tDto2.DateDays,
+		tDto2.Hours,
+		tDto2.Minutes,
+		tDto2.Seconds,
+		tDto2.TotSubSecNanoseconds,
+		time.UTC)
 
 	tzDefUtil2 := timeZoneDefUtility{}
 
 	return tzDefUtil2.setFromTimeZoneName(
 		tzdef,
 		dateTime,
-		timeZoneName,
 		TzConvertType.Absolute(),
+		timeZoneName,
 		ePrefix)
 }
 
@@ -655,8 +699,8 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 	tzdef *TimeZoneDefinition,
 	dateTime time.Time,
-	timeZoneName string,
 	timeZoneConversionType TimeZoneConversionType,
+	timeZoneName string,
 	ePrefix string) error {
 
 	tzDefUtil.lock.Lock()
@@ -744,7 +788,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
 
 		ePrefix += "timeZoneDefUtility.setFromTimeZoneDefinition() "
 
-
 	if tzdef == nil {
 		return errors.New(ePrefix +
 			"\nInput parameter 'tzdef' is nil!\n")
@@ -760,7 +803,9 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
 		}
 	}
 
-	err := timeZoneDef.IsValid()
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	err := tzDefUtil2.isValidTimeZoneDef(&timeZoneDef,ePrefix)
 
 	if err != nil {
 		return &InputParameterError{
@@ -802,60 +847,15 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
 		newDateTime = dateTime.In(timeZoneDef.originalTimeZone.locationPtr)
 	}
 
-	tzSpecUtil := typeZoneSpecUtility{}
 
-	tzSpec1 := TimeZoneSpecification{}
+	tzDefUtil2.copyIn(tzdef, &timeZoneDef)
 
-	err = tzSpecUtil.setFromTimeZoneSpec(
-		&tzSpec1,
-		newDateTime,
-		timeZoneConversionType,
-		&timeZoneDef.originalTimeZone,
-		ePrefix)
+	tzdef.originalTimeZone.referenceDateTime = newDateTime
 
-	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"\n Original Time Zone Error!\n" +
-			"Error='%v'\n", err.Error())
-	}
-
-
-	if timeZoneConversionType == TzConvertType.Absolute() {
-		newDateTime = time.Date(
-			dateTime.Year(),
-			dateTime.Month(),
-			dateTime.Day(),
-			dateTime.Hour(),
-			dateTime.Minute(),
-			dateTime.Second(),
-			dateTime.Nanosecond(),
-			timeZoneDef.convertibleTimeZone.locationPtr)
-	} else {
-		// Must be TzConvertType.Relative()
-
-		newDateTime = dateTime.In(timeZoneDef.convertibleTimeZone.locationPtr)
-	}
-
-	tzSpec2 := TimeZoneSpecification{}
-
-	err = tzSpecUtil.setFromTimeZoneSpec(
-		&tzSpec2,
-		newDateTime,
-		timeZoneConversionType,
-		&timeZoneDef.convertibleTimeZone,
-		ePrefix)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix +
-			"\n Convertible Time Zone Error!\n" +
-			"Error='%v'\n", err.Error())
-	}
-
-	timeZoneDef.originalTimeZone = tzSpec1.CopyOut()
-	timeZoneDef.convertibleTimeZone = tzSpec2.CopyOut()
+	tzdef.convertibleTimeZone.referenceDateTime = newDateTime
 
 	return nil
-	}
+}
 
 // setFromTimeZoneSpecification - Sets the data fields of the specified
 // TimeZoneDefinition instance based on a Time Zone Specification
@@ -868,8 +868,8 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
 func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 	tzdef *TimeZoneDefinition,
 	dateTime time.Time,
-	tzSpec TimeZoneSpecification,
 	timeZoneConversionType TimeZoneConversionType,
+	tzSpec TimeZoneSpecification,
 	ePrefix string) error {
 
 	tzDefUtil.lock.Lock()
@@ -893,18 +893,7 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 		}
 	}
 
-	err := tzSpec.IsValid(ePrefix)
-
-	if err != nil {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "tzSpec",
-			inputParameterValue: "",
-			errMsg:              fmt.Sprintf(
-				"%v", err.Error()),
-			err:                 nil,
-		}
-	}
+	tzDefUtil2 := timeZoneDefUtility{}
 
 	if timeZoneConversionType < TzConvertType.Absolute() ||
 		timeZoneConversionType > TzConvertType.Relative() {
@@ -917,8 +906,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 		}
 	}
 
+	var newDateTime time.Time
+
 	if timeZoneConversionType == TzConvertType.Absolute() {
-		dateTime = time.Date(
+		newDateTime = time.Date(
 			dateTime.Year(),
 			dateTime.Month(),
 			dateTime.Day(),
@@ -929,16 +920,11 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 			tzSpec.locationPtr)
 	} else {
 		// Must be TzConvertType.Relative()
-
-		dateTime = dateTime.In(tzSpec.locationPtr)
+		newDateTime = dateTime.In(tzSpec.locationPtr)
 	}
 
-	tzdef.originalTimeZone = tzSpec.CopyOut()
-	tzdef.originalTimeZone.timeZoneClass = TzClass.OriginalTimeZone()
-	tzdef.originalTimeZone.referenceDateTime = dateTime
-	tzdef.convertibleTimeZone = tzdef.originalTimeZone.CopyOut()
-	tzdef.originalTimeZone.zoneLabel = "Original Time Zone"
-	tzdef.convertibleTimeZone.zoneLabel = "Convertible Time Zone"
-
-	return nil
+	return tzDefUtil2.setFromDateTime(
+		tzdef,
+		newDateTime,
+		ePrefix)
 }

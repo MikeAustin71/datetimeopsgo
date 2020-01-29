@@ -14,6 +14,57 @@ type dateTzDtoUtility struct {
 	lock   sync.Mutex
 }
 
+
+func (dTzUtil *dateTzDtoUtility) addDate(
+	dTz *DateTzDto,
+	years,
+	months,
+	days int,
+	dateTimeFormatStr,
+	ePrefix string) (DateTzDto, error) {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.addDate() "
+
+
+	if dTz == nil {
+		return DateTzDto{},
+			errors.New(ePrefix +
+				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	dTzUtil2 :=dateTzDtoUtility{}
+
+	err := dTzUtil2.isValidDateTzDto(dTz, ePrefix)
+
+	if err != nil {
+		return DateTzDto{}, fmt.Errorf(ePrefix +
+			"\nInput parameter 'dTz' is Invalid!\n" +
+			"Validation Error='%v'\n", err.Error())
+	}
+
+	newDt1 := dTz.dateTimeValue.AddDate(
+		years,
+		months,
+		0)
+
+	dur := DayNanoSeconds * int64(days)
+	newDt2 := newDt1.Add(time.Duration(dur))
+
+	if dateTimeFormatStr == "" {
+		dateTimeFormatStr = dTz.dateTimeFmt
+	}
+
+	dtz2 := DateTzDto{}
+
+	err = dTzUtil.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
+
+	return dtz2, err
+}
+
 // addDateTime - Adds date time components to the date time value of the
 // current DateTzDto instance. The updated date time value is returned to
 // the calling function as a new DateTzDto instance.
@@ -29,7 +80,6 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 	milliseconds,
 	microseconds,
 	nanoseconds int,
-	dateTimeFormatStr,
 	ePrefix string) (DateTzDto, error) {
 
 	dTzUtil.lock.Lock()
@@ -60,7 +110,7 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 
 	dTz2 := DateTzDto{}
 
-	err := dTzUtil2.setFromDateTime(&dTz2, newDateTime, dateTimeFormatStr, ePrefix)
+	err := dTzUtil2.setFromDateTime(&dTz2, newDateTime, dTz.dateTimeFmt, ePrefix)
 
 	if err != nil {
 		return DateTzDto{}, err
@@ -479,6 +529,29 @@ func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
 	return dateTimeFmtStr
 }
 
+// setDateTimeFormat - Sets the Date Time Format
+// string in the 'dtz' object.
+func (dTzUtil *dateTzDtoUtility) setDateTimeFormat(
+	dtz *DateTzDto,
+	dateTimeFmtStr string,
+	ePrefix string) {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	if dtz == nil {
+		ePrefix += "dateTzDtoUtility.setDateTimeFormat() "
+		panic (ePrefix + "\nInput parameter 'dtz' is a 'nil' pointer!\n")
+	}
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	dtz.dateTimeFmt =
+		dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+}
+
+
 // setFromDateTime - Sets the values for DateTzDto fields encapsulated
 // in input parameter 'dTz'. The field values will be set
 // based on an input parameter 'dateTime' (Type time.time) and a
@@ -622,8 +695,8 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 	err = tzDefUtil.setFromTimeZoneName(
 		&timeZone,
 		dt,
-		timeZoneName,
 		TzConvertType.Absolute(),
+		timeZoneName,
 		ePrefix)
 
 	if err != nil {
@@ -726,8 +799,8 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 	err = tzDefUtil.setFromTimeZoneName(
 		&timeZone,
 		dt,
-		timeZoneName,
 		TzConvertType.Absolute(),
+		timeZoneName,
 		ePrefix)
 
 	if err != nil {
@@ -793,8 +866,8 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 	err = tzDefUtil.setFromTimeZoneName(
 		&tZoneDefDto,
 		dateTime,
-		timeZoneLocationName,
 		timeZoneConversionType,
+		timeZoneLocationName,
 		ePrefix)
 
 	if err != nil {
@@ -848,8 +921,8 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 	dTz *DateTzDto,
 	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
 	timeZoneDef TimeZoneDefinition,
-	timeZoneConversionType TimeZoneConversionType,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -860,13 +933,35 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 	ePrefix += "dateTzDtoUtility.setFromTzSpec() "
 
 	if dTz == nil {
-		return errors.New(ePrefix +
-			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dTz",
+			inputParameterValue: "Input parameter 'dTz' is a 'nil' pointer!",
+			errMsg:              "",
+			err:                 nil,
+		}
 	}
 
 	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' has a Zero Value!",
+			err:                 nil,
+		}
+	}
+
+	if timeConversionType < TzConvertType.Absolute() ||
+		timeConversionType > TzConvertType.Relative() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input parameter " +
+				"'timeConversionType' MUST be either 'Absolute' or 'Relative'!",
+			err:                 nil,
+		}
 	}
 
 	dTzUtil2 := dateTzDtoUtility{}
@@ -880,7 +975,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 	err := tzDefUtil.setFromTimeZoneDefinition(
 		&timeZoneDefOut,
 		dateTime,
-		timeZoneConversionType,
+		timeConversionType,
 		timeZoneDef,
 		ePrefix)
 
@@ -888,8 +983,6 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 		return err
 	}
 
-	dateTime =
-		timeZoneDefOut.originalTimeZone.referenceDateTime
 
 	tDto := TimeDto{}
 
@@ -904,10 +997,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 		return err
 	}
 
-	dTz.timeZone = timeZoneDef.CopyOut()
+	dTz.timeZone = timeZoneDefOut.CopyOut()
 	dTz.timeComponents = tDto.CopyOut()
 	dTz.dateTimeFmt = dateTimeFmtStr
-	dTz.dateTimeValue = dateTime
+	dTz.dateTimeValue = timeZoneDefOut.originalTimeZone.referenceDateTime
 
 	return nil
 }
@@ -967,8 +1060,8 @@ func (dTzUtil *dateTzDtoUtility) setFromTzSpec(
 	err = tzDefUtil.setFromTimeZoneSpecification(
 		&tzDef,
 		dateTime,
-		timeZoneSpec,
 		timeZoneConversionType,
+		timeZoneSpec,
 		ePrefix)
 
 	if err != nil {
@@ -1000,8 +1093,6 @@ func (dTzUtil *dateTzDtoUtility) setFromTzSpec(
 	return nil
 }
 
-// TODO - Add tZoneConversionType TimeZoneConversionType to method
-
 // setFromTimeDto - Receives data from a TimeDto input parameter
 // and sets all data fields of the current DateTzDto instance
 // accordingly. When the method completes, the values of the
@@ -1031,21 +1122,21 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 		return fmt.Errorf(ePrefix + "\nError: Input parameter 'tDto' date time elements equal ZERO!\n")
 	}
 
-	t2Dto := tDto.CopyOut()
+	tDto2 := tDto.CopyOut()
 
 	var err error
 
-	err = t2Dto.NormalizeTimeElements()
+	err = tDto2.NormalizeTimeElements()
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned by t2Dto.NormalizeTimeElements().\nError='%v'\n",
+			"\nError returned by tDto2.NormalizeTimeElements().\nError='%v'\n",
 			err.Error())
 	}
 
-	t2Dto.ConvertToAbsoluteValues()
+	tDto2.ConvertToAbsoluteValues()
 
-	if err = t2Dto.IsValid(); err != nil {
+	if err = tDto2.IsValid(); err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError: Input Parameter tDto (TimeDto) is INVALID.\nError='%v'\n",
 			err.Error())
@@ -1096,7 +1187,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 	dTzUtil2.empty(dTz)
 	dTz.dateTimeValue = dateTime
 	dTz.timeZone = timeZoneDef.CopyOut()
-	dTz.timeComponents = t2Dto.CopyOut()
+	dTz.timeComponents = tDto2.CopyOut()
 	dTz.dateTimeFmt = dateTimeFmtStr
 
 	return nil

@@ -305,33 +305,15 @@ func (tzDto *TimeZoneDto) AddDuration(duration time.Duration) error {
 //
 func (tzDto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 
+	tzDto.lock.Lock()
+
+	defer tzDto.lock.Unlock()
+
 	ePrefix := "TimeZoneDto.AddMinusTimeDto() "
 
-	dateTzIn := tzDto.TimeIn.CopyOut()
+	tZoneUtil := timeZoneDtoUtility{}
 
-	err := dateTzIn.AddMinusTimeDtoToThis(timeDto)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by dateTzIn.AddMinusTimeDtoToThis(timeDto) "+
-			"Error='%v'", err.Error())
-	}
-
-	timeZoneLocation := tzDto.TimeOut.GetOriginalTzName()
-
-	fmtStr := tzDto.TimeOut.GetDateTimeFmt()
-
-	tzDto2, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr) "+
-			"Error='%v'", err.Error())
-	}
-
-	tzDto.CopyIn(tzDto2)
-
-	return nil
+	return tZoneUtil.addMinusTimeDto(tzDto, timeDto, ePrefix)
 }
 
 // AddPlusTimeDto - This method receives a TimeDto input parameter. It
@@ -372,33 +354,15 @@ func (tzDto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 //
 func (tzDto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 
+	tzDto.lock.Lock()
+
+	defer tzDto.lock.Unlock()
+
 	ePrefix := "TimeZoneDto.AddPlusTimeDto() "
 
-	dateTzIn := tzDto.TimeIn.CopyOut()
+	tZoneUtil := timeZoneDtoUtility{}
 
-	err := dateTzIn.AddPlusTimeDtoToThis(timeDto)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by dateTzIn.AddPlusTimeDtoToThis(timeDto) "+
-			"Error='%v'", err.Error())
-	}
-
-	timeZoneLocation := tzDto.TimeOut.GetOriginalTzName()
-
-	fmtStr := tzDto.TimeOut.GetDateTimeFmt()
-
-	tz2Dto, err := TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned by TimeZoneDto{}.NewDateTz(dateTzIn, timeZoneLocation, fmtStr)\n"+
-			"Error='%v'\n", err.Error())
-	}
-
-	tzDto.CopyIn(tz2Dto)
-
-	return nil
+	return tZoneUtil.addPlusTimeDto(tzDto, timeDto, ePrefix)
 }
 
 // AddTime - Adds time elements to the time value of the current
@@ -426,7 +390,13 @@ func (tzDto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 //          instance populated with an error message. If the method completes
 //          successfully, this error value is set to 'nil'.
 //
-func (tzDto *TimeZoneDto) AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds int) error {
+func (tzDto *TimeZoneDto) AddTime(
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int) error {
 
 	ePrefix := "TimeZoneDto.AddTime() "
 
@@ -1427,7 +1397,7 @@ func (tzDto TimeZoneDto) NewDateTz(dateTzDtoIn DateTzDto, tZoneOutLocationName, 
 	return tzuOut, nil
 }
 
-func (tzDto TimeZoneDto) NewDateTzSpec(
+func (tzDto TimeZoneDto) NewFromTzSpec(
 	dateTimeIn time.Time,
 	tzSpec TimeZoneSpecification) (
 			TimeZoneDto,

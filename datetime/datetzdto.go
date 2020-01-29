@@ -186,30 +186,6 @@ func (dtz *DateTzDto) AddDate(
 
 	defer dtz.lock.Unlock()
 
-	ePrefix := "DateTzDto.AddDate() "
-
-	dTzUtil := dateTzDtoUtility{}
-
-	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
-
-	if err != nil {
-		return DateTzDto{}, err
-	}
-
-	newDt1 := dtz.dateTimeValue.AddDate(years, months, 0)
-
-	dur := DayNanoSeconds * int64(days)
-	newDt2 := newDt1.Add(time.Duration(dur))
-
-	if dateTimeFormatStr == "" {
-		dateTimeFormatStr = dtz.dateTimeFmt
-	}
-
-	dtz2 := DateTzDto{}
-
-	err = dTzUtil.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
-
-	return dtz2, err
 }
 
 // AddDateTime - Adds date time components to the date time value of the
@@ -306,8 +282,15 @@ func (dtz *DateTzDto) AddDateTime(
 
 	dTzUtil := dateTzDtoUtility{}
 
+	dTz2 := dTzUtil.copyOut(dtz)
+
+	dTzUtil.setDateTimeFormat(
+		&dTz2,
+		dateTimeFormatStr,
+		ePrefix)
+
 	return dTzUtil.addDateTime(
-		dtz,
+		&dTz2,
 		years,
 		months,
 		days,
@@ -317,9 +300,7 @@ func (dtz *DateTzDto) AddDateTime(
 		milliseconds,
 		microseconds,
 		nanoseconds,
-		dateTimeFormatStr,
 		ePrefix)
-
 }
 
 // AddDateTimeToThis - Adds date time components to the date time value of the current
@@ -398,7 +379,6 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 							milliseconds,
 							microseconds,
 							nanoseconds,
-							dtz.dateTimeFmt,
 							ePrefix)
 
 	if err != nil {
@@ -3266,11 +3246,12 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 
 	defer dtz.lock.Unlock()
 
-	if len(dateTimeFmtStr) == 0 {
-		dateTimeFmtStr = FmtDateTimeYrMDayFmtStr
-	}
+	dTzUtil := dateTzDtoUtility{}
 
-	dtz.dateTimeFmt = dateTimeFmtStr
+	dTzUtil.setDateTimeFormat(
+		dtz,
+		dateTimeFmtStr,
+		"DateTzDto.SetDateTimeFmt() ")
 
 }
 

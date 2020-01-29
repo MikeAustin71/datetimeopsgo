@@ -1403,7 +1403,7 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 
 	tzDefUtil := timeZoneDefUtility{}
 
-	return tzDefUtil.isValidTimeZoneDefDto(tzdef, ePrefix)
+	return tzDefUtil.isValidTimeZoneDef(tzdef, ePrefix)
 }
 
 // New - Creates and returns a new TimeZoneDefinition instance based on
@@ -1745,8 +1745,8 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	err = tzDefUtil.setFromTimeZoneName(
 		&tzDefDto,
 		dateTime,
-		timeZoneName,
 		timeConversionType,
+		timeZoneName,
 		ePrefix)
 
 	return tzDefDto, err
@@ -1767,44 +1767,6 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 //          of time conversion performed on this
 //          date time value is determined by input
 //          parameter, 'timeConversionType'.
-//
-// tzSpec TimeZoneSpecification -
-//          A valid 'TimeZoneSpecification' object.
-//          The 'TimeZoneSpecification' object must
-//          be set to one of these three types of time
-//          zones:
-//
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
-//
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
-//
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
-//
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
-//
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
 //
 // timeConversionType TimeZoneConversionType -
 //          This parameter determines the algorithm that will
@@ -1845,6 +1807,44 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 //          hours, minutes and seconds have been changed to reflect an equivalent
 //          time in the USA Eastern Standard Time Zone.
 //
+// tzSpec TimeZoneSpecification -
+//          A valid 'TimeZoneSpecification' object.
+//          The 'TimeZoneSpecification' object must
+//          be set to one of these three types of time
+//          zones:
+//
+//            (1) The string 'Local' - signals the designation of the local time zone
+//                configured for the host computer executing this code.
+//
+//            (2) IANA Time Zone Location -
+//                See https://golang.org/pkg/time/#LoadLocation
+//                and https://www.iana.org/time-zones to ensure that
+//                the IANA Time Zone Database is properly configured
+//                on your system. Note: IANA Time Zone Data base is
+//                equivalent to 'tz database'.
+//
+//                   Examples:
+//                     "America/New_York"
+//                     "America/Chicago"
+//                     "America/Denver"
+//                     "America/Los_Angeles"
+//                     "Pacific/Honolulu"
+//
+//            (3) A valid Military Time Zone
+//                Military time zones are commonly used in
+//                aviation as well as at sea. They are also
+//                known as nautical or maritime time zones.
+//                Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//
+//             Note:
+//                 The source file 'timezonedata.go' contains over 600 constant
+//                 time zone declarations covering all IANA and Military Time
+//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//                 time zone constants begin with the prefix 'TZones'.
+//
 // Return Values
 // =============
 //
@@ -1861,8 +1861,8 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 //
 func (tzdef TimeZoneDefinition) NewForTimeZoneSpec(
 	dateTime time.Time,
-	tzSpec TimeZoneSpecification,
-	timeConversionType TimeZoneConversionType) (
+	timeConversionType TimeZoneConversionType,
+	tzSpec TimeZoneSpecification) (
 	tzDefDto TimeZoneDefinition,
 	err error) {
 
@@ -1923,8 +1923,8 @@ func (tzdef TimeZoneDefinition) NewForTimeZoneSpec(
 	err = tzDefUtil.setFromTimeZoneSpecification(
 		&tzDefDto,
 		dateTime,
-		tzSpec,
 		timeConversionType,
+		tzSpec,
 		ePrefix)
 
 	return tzDefDto, err
@@ -1977,14 +1977,130 @@ func (tzdef *TimeZoneDefinition) SetFromDateTime(dateTime time.Time) error {
 
 }
 
+// SetFromTimeZoneDef - Sets the data fields of the current
+// TimeZoneDefinition instance based on another Time Zone
+// Definition object passed as an input parameter.
+//
+// Input Parameters
+// ================
+//
+// dateTime        time.Time    -
+//          This date time will be converted and
+//          used in creating the returned
+//          'TimeZoneDefinition' object. The type
+//          of time conversion performed on this
+//          date time value is determined by input
+//          parameter, 'timeConversionType'.
+//
+// timeConversionType TimeZoneConversionType -
+//          This parameter determines the algorithm that will
+//          be used to convert parameter 'dateTime' to the time
+//          zone specified by parameter 'TimeZoneDefinition'.
+//
+//          TimeZoneConversionType is an enumeration type which
+//          must be set to one of two values:
+//             TimeZoneConversionType(0).Absolute()
+//             TimeZoneConversionType(0).Relative()
+//          Note: You can also use the global variable
+//          'TzConvertType' for easier access:
+//             TzConvertType.Absolute()
+//             TzConvertType.Relative()
+//
+//          Absolute Time Conversion - Identifies the 'Absolute' time
+//          to time zone conversion algorithm. This algorithm provides
+//          that a time value in time zone 'X' will be converted to the
+//          same time value in time zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time
+//          zone USA Central Standard time and that this time is to be
+//          converted to USA Eastern Standard time. Applying the 'Absolute'
+//          algorithm would convert ths time to 10:00AM Eastern Standard
+//          time.  In this case the hours, minutes and seconds have not been
+//          altered. 10:00AM in USA Central Standard Time has simply been
+//          reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//          Relative Time Conversion - Identifies the 'Relative' time to time
+//          zone conversion algorithm. This algorithm provides that times in
+//          time zone 'X' will be converted to their equivalent time in time
+//          zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time zone
+//          USA Central Standard time and that this time is to be converted to
+//          USA Eastern Standard time. Applying the 'Relative' algorithm would
+//          convert ths time to 11:00AM Eastern Standard time. In this case the
+//          hours, minutes and seconds have been changed to reflect an equivalent
+//          time in the USA Eastern Standard Time Zone.
+//
+// timeZoneDef TimeZoneDefinition -
+//          A valid 'TimeZoneDefinition' object.
+//          The 'TimeZoneDefinition' object must
+//          be set to one of these three types of time
+//          zones:
+//
+//            (1) The string 'Local' - signals the designation of the local time zone
+//                configured for the host computer executing this code.
+//
+//            (2) IANA Time Zone Location -
+//                See https://golang.org/pkg/time/#LoadLocation
+//                and https://www.iana.org/time-zones to ensure that
+//                the IANA Time Zone Database is properly configured
+//                on your system. Note: IANA Time Zone Data base is
+//                equivalent to 'tz database'.
+//
+//                   Examples:
+//                     "America/New_York"
+//                     "America/Chicago"
+//                     "America/Denver"
+//                     "America/Los_Angeles"
+//                     "Pacific/Honolulu"
+//
+//            (3) A valid Military Time Zone
+//                Military time zones are commonly used in
+//                aviation as well as at sea. They are also
+//                known as nautical or maritime time zones.
+//                Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//
+//             Note:
+//                 The source file 'timezonedata.go' contains over 600 constant
+//                 time zone declarations covering all IANA and Military Time
+//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//                 time zone constants begin with the prefix 'TZones'.
+//
+func (tzdef *TimeZoneDefinition) SetFromTimeZoneDef(
+	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
+	timeZoneDef TimeZoneDefinition,
+) error {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	ePrefix := "TimeZoneDefinition.SetFromTimeZoneName() "
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	return tzDefUtil.setFromTimeZoneDefinition(
+		tzdef,
+		dateTime,
+		timeConversionType,
+		timeZoneDef,
+		ePrefix)
+
+}
+
 // SetFromTimeZoneName - Sets the data fields of the current
 // TimeZoneDefinition instance based on the time zone text name
 // passed as an input parameter.
 //
 func (tzdef *TimeZoneDefinition) SetFromTimeZoneName(
 	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
 	timeZoneName string,
-	timeConversionType TimeZoneConversionType) error {
+	) error {
 
 	tzdef.lock.Lock()
 
@@ -1997,8 +2113,8 @@ func (tzdef *TimeZoneDefinition) SetFromTimeZoneName(
 	return tzDefUtil.setFromTimeZoneName(
 		tzdef,
 		dateTime,
-		timeZoneName,
 		timeConversionType,
+		timeZoneName,
 		ePrefix)
 }
 
@@ -2018,8 +2134,8 @@ func (tzdef *TimeZoneDefinition) SetFromTimeZoneSpec(
 	return tzDefUtil.setFromTimeZoneSpecification(
 		tzdef,
 		dateTime,
-		tzSpec,
 		timeConversionType,
+		tzSpec,
 		ePrefix)
 
 }

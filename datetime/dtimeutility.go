@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"time"
 )
 
 type DTimeUtility struct {
@@ -59,4 +60,35 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 	}
 
 	return fmt.Errorf("%v", errStr)
+}
+
+// Compares two date times to determine if the
+// Years, Months, Days, Hours, Minutes, Seconds
+// and Nanoseconds are equivalent. This method
+// ignores time zones.
+func (dtUtil *DTimeUtility) EqualDateTimeComponents(
+	dateTime1 time.Time,
+	dateTime2 time.Time) bool {
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	if dateTime1.IsZero() &&
+		dateTime2.IsZero() {
+		return true
+	}
+
+	if dateTime1.Year() == dateTime2.Year() &&
+			dateTime1.Year() == dateTime2.Year() &&
+			dateTime1.Month() == dateTime2.Month() &&
+			dateTime1.Day() == dateTime2.Day() &&
+			dateTime1.Hour() == dateTime2.Hour() &&
+			dateTime1.Minute() == dateTime2.Minute() &&
+			dateTime1.Second() == dateTime2.Second() &&
+			dateTime1.Nanosecond() == dateTime2.Nanosecond() {
+		return true
+	}
+
+	return false
 }
