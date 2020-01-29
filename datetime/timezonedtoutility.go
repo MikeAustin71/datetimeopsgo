@@ -170,7 +170,15 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 	err := timeZoneUtil2.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
-		return err
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              fmt.Sprintf(
+				"Input Parameter 'tzDto' is INVALID!\n" +
+					"Validation Error='%v'", err.Error()),
+			err:                 nil,
+		}
 	}
 
 	tzDto2 := timeZoneUtil2.copyOut(tzDto, ePrefix)
@@ -641,6 +649,52 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 	tZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
 
 	return nil
+}
+
+// addTimeDurationDto - Adds time duration as expressed by input type 'TimeDurationDto'
+// to the time values passed in 'tzDto'.
+//
+func (tZoneUtil *timeZoneDtoUtility) addTimeDurationDto(
+	tzDto *TimeZoneDto,
+	durDto TimeDurationDto,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.addTimeDurationDto() "
+
+	if tzDto == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzDto' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	err := durDto.IsValid()
+
+	if err != nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "durDto",
+			inputParameterValue: "",
+			errMsg:              fmt.Sprintf(
+				"Input Parameter 'durDto' is INVALID!\n" +
+					"Validation Error='%v'", err.Error()),
+			err:                 nil,
+		}
+	}
+
+	tZoneUtil2 := timeZoneDtoUtility{}
+
+	return tZoneUtil2.addDuration(
+		tzDto,
+		durDto.TimeDuration,
+		ePrefix)
 }
 
 // convertTz - Converts 'tIn' Date Time from existing time zone to a 'targetTz'
@@ -1747,22 +1801,39 @@ func (tZoneUtil *timeZoneDtoUtility) setUTCTime(
 
 	defer tZoneUtil.lock.Unlock()
 
-	ePrefix += "TimeZoneDto.setUTCTime() "
+	ePrefix += "timeZoneDtoUtility.setUTCTime() "
 
 	if tzDto == nil {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzDto' is a 'nil' pointer!",
+			err:                 nil,
+		}
 	}
 
 	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'dateTime' has a value of 'zero'!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' has a value of 'zero'!",
+			err:                 nil,
+		}
 	}
 
-	if tZoneConversionType == TzConvertType.None() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'tZoneConversionType' is INVALID.\n" +
-			"tZoneConversionType= TzConvertType.None()\n")
+	if tZoneConversionType < TzConvertType.Absolute() ||
+		tZoneConversionType > TzConvertType.Relative() {
+
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "",
+			inputParameterValue: "tZoneConversionType",
+			errMsg:              "Input Parameter 'tZoneConversionType' " +
+				"MUST Be 'Absolute' or 'Relative'!",
+			err:                 nil,
+		}
 	}
 
 	// tzDto.TimeUTC, err = DateTzDto{}.New(dateTime.UTC(), tzDto.DateTimeFmt)
@@ -1806,21 +1877,38 @@ func (tZoneUtil *timeZoneDtoUtility) setLocalTime(
 
 	ePrefix += "timeZoneDtoUtility.SetLocalTime() "
 
+
 	if tzDto == nil {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'tzDto' is a 'nil' pointer!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzDto' is a 'nil' pointer!",
+			err:                 nil,
+		}
 	}
 
 	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'dateTime' has a value of 'zero'!\n")
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' has a value of 'zero'!",
+			err:                 nil,
+		}
 	}
 
 	if tZoneConversionType < TzConvertType.Absolute() ||
 		tZoneConversionType > TzConvertType.Relative() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'tZoneConversionType' is INVALID!\n" +
-			"'tZoneConversionType' Must Be 'Absolute' or 'Relative'.\n")
+
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "",
+			inputParameterValue: "tZoneConversionType",
+			errMsg:              "Input Parameter 'tZoneConversionType' " +
+				"MUST Be 'Absolute' or 'Relative'!",
+			err:                 nil,
+		}
 	}
 
 	dTzUtil := dateTzDtoUtility{}
