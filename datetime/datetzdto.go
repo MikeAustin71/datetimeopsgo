@@ -449,16 +449,9 @@ func (dtz *DateTzDto) AddDateToThis(
 
 	dTzUtil := dateTzDtoUtility{}
 
-	err := dTzUtil.isValidDateTzDto(dtz, ePrefix)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nThe current DateTzDto is INVALID!\n" +
-			"dtz.dateTimeValue='%v'\n",
-			dtz.dateTimeValue.Format(FmtDateTimeYrMDayFmtStr))
-	}
-
 	var dtz2 DateTzDto
+
+	var err error
 
 	dtz2, err = dTzUtil.addDate(
 		dtz,

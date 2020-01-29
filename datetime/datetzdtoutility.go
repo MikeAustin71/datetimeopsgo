@@ -107,7 +107,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 
 	dtz2 := DateTzDto{}
 
-	err = dTzUtil.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
+	err = dTzUtil2.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
 
 	return dtz2, err
 }
