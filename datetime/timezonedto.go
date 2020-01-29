@@ -1397,12 +1397,74 @@ func (tzDto TimeZoneDto) NewDateTz(dateTzDtoIn DateTzDto, tZoneOutLocationName, 
 	return tzuOut, nil
 }
 
+// NewFromTzSpec
 func (tzDto TimeZoneDto) NewFromTzSpec(
 	dateTimeIn time.Time,
-	tzSpec TimeZoneSpecification) (
+	tzSpec TimeZoneSpecification,
+	dateTimeFormatStr string) (
 			TimeZoneDto,
 			error) {
 
+	tzDto.lock.Lock()
+
+	defer tzDto.lock.Unlock()
+
+	ePrefix := "TimeZoneDto.NewFromTzSpec() "
+
+	tzDto2 := TimeZoneDto{}
+
+	tZoneUtil := timeZoneDtoUtility{}
+
+	tzDto2.DateTimeFmt = tZoneUtil.preProcessDateFormatStr(dateTimeFormatStr)
+
+	err := tZoneUtil.setTimeIn(
+		&tzDto2,
+		dateTimeIn,
+		dateTimeFormatStr,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+	err = tZoneUtil.setTimeOutTzSpec(
+		&tzDto2,
+		dateTimeIn,
+		TzConvertType.Relative(),
+		tzSpec,
+		dateTimeFormatStr,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+
+	err = tZoneUtil.setUTCTime(
+		&tzDto2,
+		dateTimeIn,
+		TzConvertType.Relative(),
+		dateTimeFormatStr,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+
+	err = tZoneUtil.setUTCTime(
+		&tzDto2,
+		dateTimeIn,
+		TzConvertType.Relative(),
+		dateTimeFormatStr,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDto{}, err
+	}
+
+
+	return tzDto2, nil
 }
 
 // NewTimeAddDate - returns a new TimeZoneDto. The TimeZoneDto is initialized

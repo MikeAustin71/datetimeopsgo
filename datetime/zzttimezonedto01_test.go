@@ -625,12 +625,14 @@ func TestTimeZoneUtility_IsValidTimeZone02(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error returned by tzu.IsValidTimeZone(\"America/Chicago\")\n" +
-			"Error='%v'\n")
+			"Error='%v'\n", err.Error())
+		return
 	}
 
 
 	if isValidTz == false {
 		t.Error("Expected 'America/Chicago' to yield isValidTz = 'true', instead got", isValidTz)
+		return
 	}
 
 	if tzType != tzType.Iana() {

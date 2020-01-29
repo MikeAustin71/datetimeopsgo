@@ -3,6 +3,7 @@ package datetime
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 )
@@ -281,6 +282,8 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 
 	tZoneUtil2 := timeZoneDtoUtility{}
 
+	dateTimeFormat := tZoneUtil2.preProcessDateFormatStr(tzDto.DateTimeFmt)
+
 	err := tZoneUtil2.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
@@ -324,6 +327,7 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 	err = tZoneUtil2.setTimeIn(
 		&tzDto2,
 		dateTzIn.dateTimeValue,
+		dateTimeFormat,
 		ePrefix)
 
 	if err != nil {
@@ -365,7 +369,6 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 	}
 
 	tZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
-
 
 	return nil
 }
@@ -447,6 +450,8 @@ func (tZoneUtil *timeZoneDtoUtility) addPlusTimeDto(
 
 	tZoneUtil2 := timeZoneDtoUtility{}
 
+	dateTimeFormat := tZoneUtil2.preProcessDateFormatStr(tzDto.DateTimeFmt)
+
 	err = tZoneUtil2.isValidTimeZoneDto(tzDto, ePrefix)
 
 	if err != nil {
@@ -474,6 +479,7 @@ func (tZoneUtil *timeZoneDtoUtility) addPlusTimeDto(
 	err = tZoneUtil2.setTimeIn(
 		&tzDto2,
 		dateTzIn.dateTimeValue,
+		dateTimeFormat,
 		ePrefix)
 
 	if err != nil {
@@ -519,6 +525,8 @@ func (tZoneUtil *timeZoneDtoUtility) addPlusTimeDto(
 	return nil
 }
 
+// Adds time to TimeZoneDto parameter, 'tzDto'.
+//
 func (tZoneUtil *timeZoneDtoUtility) addTime(
 	tzDto *TimeZoneDto,
 	hours,
@@ -561,6 +569,8 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 	tIn := tzDto.TimeIn.CopyOut()
 	dTzUtil := dateTzDtoUtility{}
 
+	dateTimeFormat := dTzUtil.preProcessDateFormatStr(tzDto.DateTimeFmt)
+
 	dateTzIn, err = dTzUtil.addTime(
 		&tIn,
 		hours,
@@ -569,7 +579,20 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 		milliseconds,
 		microseconds,
 		nanoseconds,
-		tzDto.DateTimeFmt,
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzDto2 := TimeZoneDto{}
+	tzDto2.DateTimeFmt = dateTimeFormat
+
+	err = tZoneUtil2.setTimeIn(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		dateTimeFormat,
 		ePrefix)
 
 	if err != nil {
@@ -577,6 +600,45 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 	}
 
 
+	err = tZoneUtil2.setTimeOutFromTimeZoneDef(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		TzConvertType.Relative(),
+		tzDto.TimeOut.GetTimeZoneDef(),
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+
+	err = tZoneUtil2.setUTCTime(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		TzConvertType.Relative(),
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+
+	err = tZoneUtil2.setLocalTime(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		TzConvertType.Relative(),
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzDto2.DateTimeFmt = dateTimeFormat
+
+	tZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
 
 	return nil
 }
@@ -724,14 +786,15 @@ func (tZoneUtil *timeZoneDtoUtility) convertTz(
 
 	tzDtoOut := TimeZoneDto{}
 
-	tZoneUtil2.setDateTimeFormat(
+	dateTimeFmtStr = tZoneUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+
+	tzDtoOut.DateTimeFmt = dateTimeFmtStr
+
+	err = tZoneUtil2.setTimeIn(
 		&tzDtoOut,
+		tIn,
 		dateTimeFmtStr,
 		ePrefix)
-
-	dateTimeFmtStr = tzDtoOut.DateTimeFmt
-
-	err = tZoneUtil2.setTimeIn(&tzDtoOut, tIn, ePrefix)
 
 	if err != nil {
 		return TimeZoneDto{}, err
@@ -1275,8 +1338,8 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	err = dTzUtil.setFromTimeTzName(
 		&tzDtoOut.TimeOut,
 		tIn,
-		targetTz,
 		TzConvertType.Relative(),
+		targetTz,
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -1290,8 +1353,8 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	err = dTzUtil.setFromTimeTzName(
 		&tzDtoOut.TimeUTC,
 		tIn,
-		TZones.UTC(),
 		TzConvertType.Relative(),
+		TZones.UTC(),
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -1304,8 +1367,8 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	err = dTzUtil.setFromTimeTzName(
 		&tzDtoOut.TimeLocal,
 		tIn,
-		TZones.Local(),
 		TzConvertType.Relative(),
+		TZones.Local(),
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -1316,6 +1379,26 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	}
 
 	return tzDtoOut, nil
+}
+
+// preProcessDateFormatStr - Provides a standardized method
+// for implementing a default date time format string.
+//
+func (tZoneUtil *timeZoneDtoUtility) preProcessDateFormatStr(
+	dateTimeFmtStr string) string {
+
+	tZoneUtil.lock.Lock()
+	defer tZoneUtil.lock.Unlock()
+
+	dateTimeFmtStr = strings.TrimLeft(strings.TrimRight(dateTimeFmtStr, " "), " ")
+
+	if len(dateTimeFmtStr) == 0 {
+		lockDefaultDateTimeFormat.Lock()
+		dateTimeFmtStr = DEFAULTDATETIMEFORMAT
+		lockDefaultDateTimeFormat.Unlock()
+	}
+
+	return dateTimeFmtStr
 }
 
 // setDateTimeFormat - Sets the value of the TimeZoneDto.DateTimeFmt field.
@@ -1367,6 +1450,7 @@ func (tZoneUtil *timeZoneDtoUtility) setDateTimeFormat(
 func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 	tzDto *TimeZoneDto,
 	tIn time.Time,
+	dateTimeFormatStr,
 	ePrefix string) error {
 
 	tZoneUtil.lock.Lock()
@@ -1395,7 +1479,9 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 		}
 	}
 
-	// tzDto.TimeIn, err = DateTzDto{}.New(tIn, tzDto.DateTimeFmt)
+	tZoneUtil2 := timeZoneDtoUtility{}
+
+	dateTimeFormatStr = tZoneUtil2.preProcessDateFormatStr(dateTimeFormatStr)
 
 	tzDtoIn := DateTzDto{}
 
@@ -1405,7 +1491,7 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 	err := dTzUtil.setFromDateTime(
 		&tzDtoIn,
 		tIn,
-		tzDto.DateTimeFmt,
+		dateTimeFormatStr,
 		ePrefix)
 
 	if err != nil {
@@ -1471,12 +1557,14 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTz(
 
 	dTzUtil := dateTzDtoUtility{}
 
+	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+
 	tzDtoOut := DateTzDto{}
 
 	err := dTzUtil.setFromTimeTzName(
 		&tzDtoOut, tOut,
-		tOutTimeZoneName,
 		tZoneConversionType,
+		tOutTimeZoneName,
 		dateTimeFormat,
 		ePrefix)
 
@@ -1554,6 +1642,9 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutFromTimeZoneDef(
 	}
 
 	dTzUtil := dateTzDtoUtility{}
+
+	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+
 	dTz := DateTzDto{}
 
 	err = dTzUtil.setFromTzDef(
@@ -1588,8 +1679,8 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutFromTimeZoneDef(
 func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzSpec(
 	tzDto *TimeZoneDto,
 	tOut time.Time,
-	tOutTimeZoneSpec TimeZoneSpecification,
 	tZoneConversionType TimeZoneConversionType,
+	tOutTimeZoneSpec TimeZoneSpecification,
 	dateTimeFormat string,
 	ePrefix string) error {
 
@@ -1624,6 +1715,8 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzSpec(
 	}
 
 	dTzUtil := dateTzDtoUtility{}
+
+	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
 
 	tzDtoOut := DateTzDto{}
 
@@ -1675,13 +1768,15 @@ func (tZoneUtil *timeZoneDtoUtility) setUTCTime(
 	// tzDto.TimeUTC, err = DateTzDto{}.New(dateTime.UTC(), tzDto.DateTimeFmt)
 	dTzUtil := dateTzDtoUtility{}
 
+	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+
 	tzDtoUtc := DateTzDto{}
 
 	err := dTzUtil.setFromTimeTzName(
 						&tzDtoUtc,
 						dateTime,
-						TZones.UTC(),
 						tZoneConversionType,
+						TZones.UTC(),
 						dateTimeFormat,
 						ePrefix)
 
@@ -1721,27 +1816,29 @@ func (tZoneUtil *timeZoneDtoUtility) setLocalTime(
 			"\nInput parameter 'dateTime' has a value of 'zero'!\n")
 	}
 
-	if tZoneConversionType == TzConvertType.None() {
+	if tZoneConversionType < TzConvertType.Absolute() ||
+		tZoneConversionType > TzConvertType.Relative() {
 		return errors.New(ePrefix +
-			"\nInput parameter 'tZoneConversionType' is INVALID.\n" +
-			"tZoneConversionType= TzConvertType.None()\n")
+			"\nInput parameter 'tZoneConversionType' is INVALID!\n" +
+			"'tZoneConversionType' Must Be 'Absolute' or 'Relative'.\n")
 	}
 
 	dTzUtil := dateTzDtoUtility{}
+
+	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
 
 	tzDtoLocal := DateTzDto{}
 
 	err := dTzUtil.setFromTimeTzName(
 		&tzDtoLocal,
 		dateTime,
-		TZones.Local(),
 		tZoneConversionType,
+		TZones.Local(),
 		dateTimeFormat,
 		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf("tzDto.TimeLocal configuration FAILED!\n" +
-			"%v", err.Error())
+		return err
 	}
 
 	tzDto.TimeLocal = tzDtoLocal.CopyOut()

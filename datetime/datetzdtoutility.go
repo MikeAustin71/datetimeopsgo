@@ -14,7 +14,55 @@ type dateTzDtoUtility struct {
 	lock   sync.Mutex
 }
 
-
+// addDate - Adds input parameters 'years, 'months' and 'days' to date time value
+// of the DateTzDto input parameter and returns the updated value in a new
+// 'DateTzDto' instance.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+// dTz *DateTzDto - Provides the base date to which input parameters 'years',
+//                  'months' and 'days' are added.
+//
+//  years             int   - Number of years to add to the current date.
+//  months            int   - Number of months to add to the current date.
+//  days              int   - Number of days to add to the current date.
+//
+//          Note: Date Component input parameters may be either negative
+//                or positive. Negative values will subtract time from
+//                the current DateTzDto instance.
+//
+//  dateTimeFmtStr string   - A date time format string which will be used
+//                            to format and display 'dateTime'. Example:
+//                            "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//                            Date time format constants are found in the source
+//                            file 'constantsdatetime.go'. These constants represent
+//                            the more commonly used date time string formats. All
+//                            Date Time format constants begin with the prefix
+//                            'FmtDateTime'.
+//
+//                            If 'dateTimeFmtStr' is submitted as an
+//                            'empty string', a default date time format
+//                            string will be applied. The default date time
+//                            format string is:
+//                              FmtDateTimeYrMDayFmtStr =
+//                                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  DateTzDto - If successful the method returns a new, valid, fully populated
+//              DateTzDto type updated to reflect the added input parameters,
+//              years, months and days.
+//
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) addDate(
 	dTz *DateTzDto,
 	years,
@@ -28,7 +76,6 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 	defer dTzUtil.lock.Unlock()
 
 	ePrefix += "dateTzDtoUtility.addDate() "
-
 
 	if dTz == nil {
 		return DateTzDto{},
@@ -836,8 +883,8 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 	dTz *DateTzDto,
 	dateTime time.Time,
-	timeZoneLocationName string,
 	timeZoneConversionType TimeZoneConversionType,
+	timeZoneLocationName string,
 	dateTimeFmtStr,
 	ePrefix string) error {
 

@@ -739,7 +739,9 @@ func TestDateTzDto_SetNewTimeZone_01(t *testing.T) {
 		return
 	}
 
-	err = dTz1.SetNewTimeZone(TZones.Asia.Tokyo())
+	err = dTz1.SetNewTimeZone(
+		TzConvertType.Relative(),
+		TZones.Asia.Tokyo())
 
 	if err != nil {
 		t.Errorf("Error returned by dTz1.SetNewTimeZone(TZones.Asia.Tokyo()). "+
@@ -797,8 +799,8 @@ func TestDateTzDto_SetFromTimeTz_01(t *testing.T) {
 
 	err = dTzDto.SetFromTimeTz(
 		t4Tokyo,
-		TZones.US.Central(),
 		TzConvertType.Relative(),
+		TZones.US.Central(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
