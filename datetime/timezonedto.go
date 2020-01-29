@@ -398,53 +398,23 @@ func (tzDto *TimeZoneDto) AddTime(
 	microseconds,
 	nanoseconds int) error {
 
+	tzDto.lock.Lock()
+
+	defer tzDto.lock.Unlock()
+
 	ePrefix := "TimeZoneDto.AddTime() "
 
 	tZoneUtil := timeZoneDtoUtility{}
 
-	err := tZoneUtil.isValidTimeZoneDto(tzDto, ePrefix)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"This TimeZoneDto instance is INVALID! Error='%v'", err.Error())
-	}
-
-	tzDto.TimeIn, err =
-		tzDto.TimeIn.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeIn.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt) "+
-			"Error='%v'", err.Error())
-	}
-
-	tzDto.TimeOut, err =
-		tzDto.TimeOut.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeOut.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt) "+
-			"Error='%v'", err.Error())
-	}
-
-	tzDto.TimeUTC, err =
-		tzDto.TimeUTC.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeUTC.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt) "+
-			"Error='%v'", err.Error())
-	}
-
-	tzDto.TimeLocal, err =
-		tzDto.TimeLocal.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeLocal.AddTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt) "+
-			"Error='%v'", err.Error())
-	}
-
-	return nil
+	return tZoneUtil.addTime(
+		tzDto,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds,
+		ePrefix)
 }
 
 // AddTimeDurationDto - Adds time duration as expressed by input type 'TimeDurationDto'
@@ -517,12 +487,12 @@ func (tzDto *TimeZoneDto) AddTimeDurationDto(durDto TimeDurationDto) error {
 //                    https://www.timeanddate.com/worldclock/timezone/alpha
 //                    https://www.timeanddate.com/time/map/
 //
-//        Examples:
-//          "Alpha"   or "A"
-//          "Bravo"   or "B"
-//          "Charlie" or "C"
-//          "Delta"   or "D"
-//          "Zulu"    or "Z"
+//                    Examples:
+//                      "Alpha"   or "A"
+//                      "Bravo"   or "B"
+//                      "Charlie" or "C"
+//                      "Delta"   or "D"
+//                      "Zulu"    or "Z"
 //
 // dateTimeFmtStr string  - A date time format string which will be used
 //                          to format and display 'dateTime'. Example:
@@ -1957,44 +1927,102 @@ func (tzDto TimeZoneDto) NewTimeAddTime(
 // zone is changed but the time value remains unchanged.
 // Input Parameters:
 //
-// tIn time.Time      - Initial time whose time zone will be changed to
+//   tIn time.Time    - Initial time whose time zone will be changed to
 //                      second input parameter, 'tZoneLocation'
 //
-// tZoneLocation string  - The first input time value, 'tIn' will have its time zone
-//                         changed to a new time zone location specified by this second
-//                         parameter, 'tZoneLocation'. This time zone location must be
-//                         designated as one of two values:
 //
-//               (1) the string 'Local' - signals the designation of the
-//                 time zone location used by the host computer.
+//   timeConversionType TimeZoneConversionType -
+//            This parameter determines the algorithm that will
+//            be used to convert parameter 'dateTime' to the time
+//            zone specified by parameter 'timeZoneName'.
 //
-//              (2) IANA Time Zone Location -
-//                 See https://golang.org/pkg/time/#LoadLocation
-//                 and https://www.iana.org/time-zones to ensure that
-//                 the IANA Time Zone Database is properly configured
-//                 on your system. Note: IANA Time Zone Data base is
-//                 equivalent to 'tz database'.
+//            TimeZoneConversionType is an enumeration type which
+//            be used to convert parameter 'dateTime' to the time
+//            must be set to one of two values:
+//            This parameter determines the algorithm that will
+//               TimeZoneConversionType(0).Absolute()
+//               TimeZoneConversionType(0).Relative()
+//            Note: You can also use the global variable
+//            'TzConvertType' for easier access:
+//               TzConvertType.Absolute()
+//               TzConvertType.Relative()
 //
-//                 Examples:
-//                  "America/New_York"
-//                  "America/Chicago"
-//                  "America/Denver"
-//                  "America/Los_Angeles"
-//                  "Pacific/Honolulu"
+//            Absolute Time Conversion - Identifies the 'Absolute' time
+//            to time zone conversion algorithm. This algorithm provides
+//            that a time value in time zone 'X' will be converted to the
+//            same time value in time zone 'Y'.
+//
+//            For example, assume the time 10:00AM is associated with time
+//            zone USA Central Standard time and that this time is to be
+//            converted to USA Eastern Standard time. Applying the 'Absolute'
+//            algorithm would convert ths time to 10:00AM Eastern Standard
+//            time.  In this case the hours, minutes and seconds have not been
+//            altered. 10:00AM in USA Central Standard Time has simply been
+//            reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//            Relative Time Conversion - Identifies the 'Relative' time to time
+//            zone conversion algorithm. This algorithm provides that times in
+//            time zone 'X' will be converted to their equivalent time in time
+//            zone 'Y'.
+//
+//            For example, assume the time 10:00AM is associated with time zone
+//            USA Central Standard time and that this time is to be converted to
+//            USA Eastern Standard time. Applying the 'Relative' algorithm would
+//            convert ths time to 11:00AM Eastern Standard time. In this case the
+//            hours, minutes and seconds have been changed to reflect an equivalent
+//            time in the USA Eastern Standard Time Zone.
+//
+// tZoneLocationName string
+//          - The first input time value, 'tIn' will have its time zone
+//            changed to a new time zone location specified by this second
+//            parameter, 'tZoneLocation'. This time zone location must be
+//            designated as one of three types of time zones:
+//
+//            (1) The string 'Local' - signals the designation of the local time zone
+//                configured for the host computer executing this code.
+//
+//            (2) IANA Time Zone Location -
+//                See https://golang.org/pkg/time/#LoadLocation
+//                and https://www.iana.org/time-zones to ensure that
+//                the IANA Time Zone Database is properly configured
+//                on your system. Note: IANA Time Zone Data base is
+//                equivalent to 'tz database'.
+//
+//                   Examples:
+//                     "America/New_York"
+//                     "America/Chicago"
+//                     "America/Denver"
+//                     "America/Los_Angeles"
+//                     "Pacific/Honolulu"
+//
+//            (3) A valid Military Time Zone
+//                Military time zones are commonly used in
+//                aviation as well as at sea. They are also
+//                known as nautical or maritime time zones.
+//                Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//
+//             Note:
+//                 The source file 'timezonedata.go' contains over 600 constant
+//                 time zone declarations covering all IANA and Military Time
+//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//                 time zone constants begin with the prefix 'TZones'.
 //
 func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 	tIn time.Time,
 	timeConversionType TimeZoneConversionType,
-	tZoneLocation string) (time.Time, error) {
+	tZoneLocationName string) (time.Time, error) {
 
 	ePrefix := "TimeZoneDto.ReclassifyTimeWithNewTz() "
 
-	if len(tZoneLocation) == 0 {
-		return time.Time{}, errors.New(ePrefix + "Error: Time Zone Location, 'tZoneLocation', is an EMPTY string!")
+	if len(tZoneLocationName) == 0 {
+		return time.Time{}, errors.New(ePrefix + "Error: Time Zone Location, 'tZoneLocationName', is an EMPTY string!")
 	}
 
-	if strings.ToLower(tZoneLocation) == "local" {
-		tZoneLocation = "Local"
+	if strings.ToLower(tZoneLocationName) == "local" {
+		tZoneLocationName = "Local"
 	}
 
 	dtMech := DTimeMechanics{}
@@ -2002,7 +2030,7 @@ func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 	tzSpec,
 	err := dtMech.GetTimeZoneFromName(
 		tIn,
-		tZoneLocation,
+		tZoneLocationName,
 		timeConversionType,
 		ePrefix)
 

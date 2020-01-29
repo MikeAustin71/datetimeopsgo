@@ -3114,7 +3114,7 @@ func (dtz DateTzDto) NewTz(
 //
 //   dateTime          time.Time - A date time value
 //
-//   timeZoneConversionType TimeZoneConversionType -
+//   timeConversionType TimeZoneConversionType -
 //            This parameter determines the algorithm that will
 //            be used to convert parameter 'dateTime' to the time
 //            zone specified by parameter 'timeZoneName'.
@@ -3240,7 +3240,7 @@ func (dtz DateTzDto) NewTz(
 //
 func (dtz DateTzDto) NewTzSpec(
 	dateTime time.Time,
-	timeZoneConversionType TimeZoneConversionType,
+	timeConversionType TimeZoneConversionType,
 	tzSpec TimeZoneSpecification,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
@@ -3258,7 +3258,7 @@ func (dtz DateTzDto) NewTzSpec(
 		&dTzOut,
 		dateTime,
 		tzSpec,
-		timeZoneConversionType,
+		timeConversionType,
 		dateTimeFmtStr,
 		ePrefix)
 
