@@ -123,14 +123,15 @@ func (tZoneUtil *timeZoneDtoUtility) addDateTime(
 }
 
 // addDuration - Adds 'duration' to the time values maintained by the
-// current TimeZoneDto.
+// by input parameter 'tzDto' and instance of type 'TimeZoneDto'.
 //
 // Input Parameters
 // ================
 //
-// duration  time.Duration  - May be a positive or negative duration
-//                            value which is added to the time value
-//                            of the current TimeZoneDto instance.
+// duration  time.Duration
+//         - May be a positive or negative duration
+//           value which is added to the time value
+//           of the current TimeZoneDto instance.
 //
 // Note:   The time.Duration input parameter may be either negative
 //         or positive. Negative values will subtract time from
@@ -138,6 +139,7 @@ func (tZoneUtil *timeZoneDtoUtility) addDateTime(
 //
 // Returns
 // =======
+//
 // There is only one return: an 'error' type.
 //
 // error -  If errors are encountered, this method returns an 'error'
@@ -181,8 +183,77 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 		}
 	}
 
-	tzDto2 := timeZoneUtil2.copyOut(tzDto, ePrefix)
+	dateTimeFormat := timeZoneUtil2.preProcessDateFormatStr(tzDto.DateTimeFmt)
 
+	dTzUtil := dateTzDtoUtility{}
+
+	var dateTzIn DateTzDto
+
+	dateTzIn, err = dTzUtil.addDuration(
+		&tzDto.TimeIn,
+		duration,
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzDto2 := TimeZoneDto{}
+
+	tZoneUtil2 := timeZoneDtoUtility{}
+
+	err = tZoneUtil2.setTimeIn(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tZoneUtil2.setTimeOutFromTimeZoneDef(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		TzConvertType.Relative(),
+		tzDto.TimeOut.GetTimeZoneDef(),
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tZoneUtil2.setUTCTime(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		TzConvertType.Relative(),
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tZoneUtil2.setLocalTime(
+		&tzDto2,
+		dateTzIn.dateTimeValue,
+		TzConvertType.Relative(),
+		dateTimeFormat,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzDto2.DateTimeFmt = dateTimeFormat
+
+	tZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
+
+	return nil
+
+	/*
 	tzDto2.TimeIn, err = tzDto2.TimeIn.AddDuration(duration, tzDto2.DateTimeFmt)
 
 	if err != nil {
@@ -225,6 +296,7 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 	timeZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
 
 	return nil
+	*/
 }
 
 // addMinusTimeDto - This method receives a TimeDto input parameter. It
@@ -628,7 +700,6 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 	if err != nil {
 		return err
 	}
-
 
 	err = tZoneUtil2.setLocalTime(
 		&tzDto2,
