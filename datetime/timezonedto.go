@@ -2331,9 +2331,9 @@ func (tzDto *TimeZoneDto) SetDateTimeFormatStr(dateTimeFmtStr string) {
 
 // Sub - Subtracts the input TimeZoneDto from the current TimeZoneDto
 // and returns the duration. Duration is calculated as:
-//       tzu.TimeLocal.Sub(tzu2.TimeLocal)
+//       tzu.TimeLocal.Sub(tzu2.TimeUTC)
 //
-// The TimeLocal field is used to compute duration for this method.
+// The TimeUTC field is used to compute duration for this method.
 //
 func (tzDto *TimeZoneDto) Sub(tzu2 TimeZoneDto) (time.Duration, error) {
 
@@ -2355,7 +2355,7 @@ func (tzDto *TimeZoneDto) Sub(tzu2 TimeZoneDto) (time.Duration, error) {
 		return time.Duration(0), fmt.Errorf(ePrefix+"Error: Input Parameter 'tzu2' is INVALID! Error='%v'", err.Error())
 	}
 
-	return tzDto.TimeLocal.Sub(tzu2.TimeLocal), nil
+	return tzDto.TimeUTC.Sub(tzu2.TimeUTC), nil
 }
 
 // TimeWithoutTimeZone - Returns a Time String containing

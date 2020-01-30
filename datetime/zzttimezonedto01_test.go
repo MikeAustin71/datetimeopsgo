@@ -825,37 +825,67 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 
 	if t2OutStr != tzu2OutStrTIn {
 		t.Errorf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
+		return
 	}
 
 	actualDuration, err := tzu2.Sub(tzu1)
 
 	if err != nil {
 		t.Errorf("Error returned by tzu2.Sub(tzu1). Error='%v'", err.Error())
+		return
 	}
 
-	expectedDuration := t2.Sub(t1)
+	utcPtr, err := time.LoadLocation(TZones.UTC())
+
+	if err != nil{
+		t.Errorf("Error return from time.LoadLocation(TZones.UTC()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1UTC := t1.In(utcPtr)
+
+	t2UTC := t2.In(utcPtr)
+
+	expectedDuration := t2UTC.Sub(t1UTC)
 
 	if expectedDuration != actualDuration {
-		t.Errorf("Error: Expected Duration='%v'. Instead, Actual Duration='%v'", expectedDuration, actualDuration)
+		t.Errorf("Error: Expected Duration='%v'.\n" +
+			"Instead, Actual Duration='%v'\n",
+			expectedDuration, actualDuration)
 	}
 }
 
 func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
 	// expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
-	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	t2str := "06/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
-	t12Dur := t2.Sub(t1)
+
+	utcPtr, err := time.LoadLocation(TZones.UTC())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TZones.UTC())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1Utc := t1.In(utcPtr)
+
+	t2Utc := t2.In(utcPtr)
+
+	t12Dur := t2Utc.Sub(t1Utc)
 
 	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast). Error='%v'", err.Error())
+		return
 	}
 
 	tzu2, err := TimeZoneDto{}.NewAddDateTime(tzu1, 3, 2, 15, 3,
