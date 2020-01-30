@@ -252,51 +252,6 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 	tZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
 
 	return nil
-
-	/*
-	tzDto2.TimeIn, err = tzDto2.TimeIn.AddDuration(duration, tzDto2.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned from tzDto2.TimeIn.AddDuration(duration). "+
-			"tzDto2.TimeIn.DateTime='%v'  Error='%v'",
-			tzDto2.TimeIn.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	tzDto2.TimeOut, err = tzDto2.TimeOut.AddDuration(duration, tzDto2.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned from tzDto2.TimeOut.AddDuration(duration).\n"+
-			"tzDto2.TimeOut.DateTime='%v'\n" +
-			"Error='%v'\n",
-			tzDto2.TimeOut.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	tzDto2.TimeUTC, err = tzDto2.TimeUTC.AddDuration(duration, tzDto2.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned from tzDto.TimeUTC.AddDuration(duration).\n"+
-			"tzDto2.TimeUTC.DateTime='%v'\n" +
-			"Error='%v'",
-			tzDto2.TimeUTC.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr),
-			err.Error())
-	}
-
-	tzDto2.TimeLocal, err = tzDto2.TimeLocal.AddDuration(duration, tzDto2.DateTimeFmt)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"\nError returned from tzDto.TimeLocal.AddDuration(duration).\n"+
-			"tzDto.TimeLocal.DateTime='%v'\nError='%v'\n",
-			tzDto.TimeLocal.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	timeZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
-
-	return nil
-	*/
 }
 
 // addMinusTimeDto - This method receives a TimeDto input parameter. It
