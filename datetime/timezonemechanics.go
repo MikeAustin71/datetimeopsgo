@@ -1386,21 +1386,24 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 		return tzSpec, err
 	}
 
-	if timeConversionType != TzConvertType.Relative() &&
-		timeConversionType != TzConvertType.Absolute() {
+	if timeConversionType < TzConvertType.Absolute() ||
+		timeConversionType > TzConvertType.Relative() {
 
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeConversionType",
 			inputParameterValue: timeConversionType.String(),
-			errMsg:              "Input parameter 'timeConversionType' value is Invalid!",
+			errMsg:              "Input parameter 'timeConversionType' value is Invalid!\n" +
+				"'timeConversionType' MUST Be 'Absolute' or 'Relative' ",
 			err:                 nil,
 		}
 
 		return tzSpec, err
 	}
 
-	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
+	tzMech2 := TimeZoneMechanics{}
+
+	timeZoneName = tzMech2.PreProcessTimeZoneLocation(timeZoneName)
 
 	if len(timeZoneName) == 0 {
 		err = &InputParameterError{
@@ -1413,8 +1416,6 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 
 		return tzSpec, err
 	}
-
-	tzMech2 := TimeZoneMechanics{}
 
 	var err2 error
 

@@ -1,9 +1,7 @@
 package datetime
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 	"sync"
 	"time"
 )
@@ -2186,12 +2184,13 @@ func (tzDto TimeZoneDto) NewTimeAddTime(
 // zone is changed but the time value remains unchanged.
 // Input Parameters:
 //
-//   tIn time.Time    - Initial time whose time zone will be changed to
-//                      second input parameter, 'tZoneLocation'
+//   tIn time.Time
+//          - Initial time whose time zone will be changed to
+//            second input parameter, 'tZoneLocation'
 //
 //
-//   timeConversionType TimeZoneConversionType -
-//            This parameter determines the algorithm that will
+//   timeConversionType TimeZoneConversionType
+//          - This parameter determines the algorithm that will
 //            be used to convert parameter 'dateTime' to the time
 //            zone specified by parameter 'timeZoneName'.
 //
@@ -2274,20 +2273,16 @@ func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 	timeConversionType TimeZoneConversionType,
 	tZoneLocationName string) (time.Time, error) {
 
+	tzDto.lock.Lock()
+
+	defer tzDto.lock.Unlock()
+
 	ePrefix := "TimeZoneDto.ReclassifyTimeWithNewTz() "
 
-	if len(tZoneLocationName) == 0 {
-		return time.Time{}, errors.New(ePrefix + "Error: Time Zone Location, 'tZoneLocationName', is an EMPTY string!")
-	}
-
-	if strings.ToLower(tZoneLocationName) == "local" {
-		tZoneLocationName = "Local"
-	}
-
-	dtMech := DTimeMechanics{}
+	tzMech := TimeZoneMechanics{}
 
 	tzSpec,
-	err := dtMech.GetTimeZoneFromName(
+	err := tzMech.GetTimeZoneFromName(
 		tIn,
 		tZoneLocationName,
 		timeConversionType,
