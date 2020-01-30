@@ -2179,12 +2179,14 @@ func (tzDto TimeZoneDto) NewTimeAddTime(
 	return tzuOut, nil
 }
 
-// ReclassifyTimeWithNewTz - Receives a valid time (time.Time) value and changes the existing time zone
-// to that specified in the 'tZone' parameter. During this time reclassification operation, the time
-// zone is changed but the time value remains unchanged.
-// Input Parameters:
+// ReclassifyTimeWithNewTz - Receives a valid time (time.Time)
+// value and changes the existing time zone to that specified
+// in the 'tZoneLocationName' parameter.
 //
-//   tIn time.Time
+// Input Parameters
+// ================
+//
+//   dateTime time.Time
 //          - Initial time whose time zone will be changed to
 //            second input parameter, 'tZoneLocation'
 //
@@ -2269,7 +2271,7 @@ func (tzDto TimeZoneDto) NewTimeAddTime(
 //                 time zone constants begin with the prefix 'TZones'.
 //
 func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
-	tIn time.Time,
+	dateTime time.Time,
 	timeConversionType TimeZoneConversionType,
 	tZoneLocationName string) (time.Time, error) {
 
@@ -2283,7 +2285,7 @@ func (tzDto *TimeZoneDto) ReclassifyTimeWithNewTz(
 
 	tzSpec,
 	err := tzMech.GetTimeZoneFromName(
-		tIn,
+		dateTime,
 		tZoneLocationName,
 		timeConversionType,
 		ePrefix)

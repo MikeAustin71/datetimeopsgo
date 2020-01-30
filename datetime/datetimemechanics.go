@@ -458,6 +458,124 @@ func (dtMech *DTimeMechanics) LoadTzLocation(
 	return locPtr, nil
 }
 
+// ReclassifyTimeWithNewTz - Receives a valid time (time.Time)
+// value and changes the existing time zone to that specified
+// in parameter 'tZoneLocationName'.
+//
+// Input Parameters
+// ================
+//
+//   dateTime time.Time
+//          - Initial time whose time zone will be changed to
+//            target time zone input parameter, 'tZoneLocationName'
+//
+//
+//   timeConversionType TimeZoneConversionType
+//          - This parameter determines the algorithm that will
+//            be used to convert parameter 'dateTime' to the time
+//            zone specified by parameter 'timeZoneName'.
+//
+//            TimeZoneConversionType is an enumeration type which
+//            be used to convert parameter 'dateTime' to the time
+//            must be set to one of two values:
+//            This parameter determines the algorithm that will
+//               TimeZoneConversionType(0).Absolute()
+//               TimeZoneConversionType(0).Relative()
+//            Note: You can also use the global variable
+//            'TzConvertType' for easier access:
+//               TzConvertType.Absolute()
+//               TzConvertType.Relative()
+//
+//            Absolute Time Conversion - Identifies the 'Absolute' time
+//            to time zone conversion algorithm. This algorithm provides
+//            that a time value in time zone 'X' will be converted to the
+//            same time value in time zone 'Y'.
+//
+//            For example, assume the time 10:00AM is associated with time
+//            zone USA Central Standard time and that this time is to be
+//            converted to USA Eastern Standard time. Applying the 'Absolute'
+//            algorithm would convert ths time to 10:00AM Eastern Standard
+//            time.  In this case the hours, minutes and seconds have not been
+//            altered. 10:00AM in USA Central Standard Time has simply been
+//            reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//            Relative Time Conversion - Identifies the 'Relative' time to time
+//            zone conversion algorithm. This algorithm provides that times in
+//            time zone 'X' will be converted to their equivalent time in time
+//            zone 'Y'.
+//
+//            For example, assume the time 10:00AM is associated with time zone
+//            USA Central Standard time and that this time is to be converted to
+//            USA Eastern Standard time. Applying the 'Relative' algorithm would
+//            convert ths time to 11:00AM Eastern Standard time. In this case the
+//            hours, minutes and seconds have been changed to reflect an equivalent
+//            time in the USA Eastern Standard Time Zone.
+//
+// tZoneLocationName string
+//          - The first input time value, 'tIn' will have its time zone
+//            changed to a new time zone location specified by this second
+//            parameter, 'tZoneLocation'. This time zone location must be
+//            designated as one of three types of time zones:
+//
+//            (1) The string 'Local' - signals the designation of the local time zone
+//                configured for the host computer executing this code.
+//
+//            (2) IANA Time Zone Location -
+//                See https://golang.org/pkg/time/#LoadLocation
+//                and https://www.iana.org/time-zones to ensure that
+//                the IANA Time Zone Database is properly configured
+//                on your system. Note: IANA Time Zone Data base is
+//                equivalent to 'tz database'.
+//
+//                   Examples:
+//                     "America/New_York"
+//                     "America/Chicago"
+//                     "America/Denver"
+//                     "America/Los_Angeles"
+//                     "Pacific/Honolulu"
+//
+//            (3) A valid Military Time Zone
+//                Military time zones are commonly used in
+//                aviation as well as at sea. They are also
+//                known as nautical or maritime time zones.
+//                Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//
+//             Note:
+//                 The source file 'timezonedata.go' contains over 600 constant
+//                 time zone declarations covering all IANA and Military Time
+//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//                 time zone constants begin with the prefix 'TZones'.
+//
+func (dtMech *DTimeMechanics) ReclassifyTimeWithNewTz(
+	dateTime time.Time,
+	timeConversionType TimeZoneConversionType,
+	tZoneLocationName string) (time.Time, error) {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix := "DTimeMechanics.ReclassifyTimeWithNewTz() "
+
+	tzMech := TimeZoneMechanics{}
+
+	tzSpec,
+	err := tzMech.GetTimeZoneFromName(
+		dateTime,
+		tZoneLocationName,
+		timeConversionType,
+		ePrefix)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return tzSpec.GetReferenceDateTime(), nil
+}
+
 // RelativeTimeToTimeNameZoneConversion - Converts a time value
 // to its equivalent time in another time zone specified by input
 // parameter string, 'timeZoneName'.
