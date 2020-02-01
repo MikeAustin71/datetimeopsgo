@@ -10,13 +10,328 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest064()
+	mainTest{}.mainTest067()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest067() {
+	t1str := "2020-03-08 01:00:00.000000000 -0600 CST"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	funcName := "mainTest067()"
+
+	lineLen := 65
+	titles := []string{funcName,
+		"Edge Of Daylight Time",
+	"Adding 2-Hours"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	lineBreak := strings.Repeat("-", lineLen)
+	lineBreak2 := strings.Repeat("*", lineLen)
+	t1, _ := time.Parse(fmtStr, t1str)
+
+	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Pacific(), fmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var pacificPtr, utcPtr, localPtr *time.Location
+
+	pacificPtr, err = time.LoadLocation(dt.TZones.US.Pacific())
+
+	if err != nil {
+		fmt.Printf("Error returned from " +
+			"time.LoadLocation(dt.TZones.US.Pacific()).\n" +
+			"dt.TZones.US.Pacific()='%v'\n" +
+			"Error='%v'\n", dt.TZones.US.Pacific(), err.Error())
+		return
+	}
+
+	utcPtr, err = time.LoadLocation(dt.TZones.UTC())
+
+	if err != nil {
+		fmt.Printf("Error returned from " +
+			"time.LoadLocation(dt.TZones.UTC()).\n" +
+			"dt.TZones.UTC()='%v'\n" +
+			"Error='%v'\n", dt.TZones.UTC(), err.Error())
+		return
+	}
+
+	localPtr, err = time.LoadLocation(dt.TZones.Local())
+
+	if err != nil {
+		fmt.Printf("Error returned from " +
+			"time.LoadLocation(dt.TZones.Local()).\n" +
+			"dt.TZones.UTC()='%v'\n" +
+			"Error='%v'\n", dt.TZones.Local(), err.Error())
+		return
+	}
+
+	t1In := t1
+	t1Out := t1.In(pacificPtr)
+	t1Utc := t1.In(utcPtr)
+	t1Local := t1.In(localPtr)
+	fmt.Println(lineBreak)
+	fmt.Println(lineBreak)
+	fmt.Println("   Calculated t1 In: ", t1In.Format(fmtStr))
+	fmt.Println("  Calculated t1 Out: ", t1Out.Format(fmtStr) )
+	fmt.Println("  Calculated t1 UTC: ", t1Utc.Format(fmtStr) )
+	fmt.Println("Calculated t1 Local: ", t1Local.Format(fmtStr) )
+	fmt.Println(lineBreak)
+	fmt.Println()
+	ex.PrintOutTimeZoneDtoFields(tzu1, "tzu1 - Before Time Addition")
+	fmt.Println(lineBreak2)
+	fmt.Println()
+
+	err = tzu1.AddTime(
+		2,
+		0,
+		0,
+		0,
+		0,
+		0)
+
+	if err != nil {
+		fmt.Printf("Error returned by tzu1.AddTime(Add 2-hours)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+	fmt.Println(lineBreak2)
+	ex.PrintOutTimeZoneDtoFields(tzu1, "tzu1 - After 2-Hour Addition")
+	fmt.Println(lineBreak2)
+	fmt.Println()
+}
+
+func (mt mainTest) mainTest066() {
+	t1str := "2014-02-15 19:54:30.000000000 -0500 CST"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	funcName := "mainTest066()"
+
+	lineLen := 65
+	titles := []string{funcName,
+		"Time Zone Dto Comparison" }
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	lineBreak := strings.Repeat("-", lineLen)
+	lineBreak2 := strings.Repeat("*", lineLen)
+
+	t1, _ := time.Parse(fmtStr, t1str)
+	t1OutStr := t1.Format(fmtStr)
+	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Pacific(), fmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var pacificPtr, utcPtr, localPtr *time.Location
+
+	pacificPtr, err = time.LoadLocation(dt.TZones.US.Pacific())
+
+	if err != nil {
+		fmt.Printf("Error returned from " +
+			"time.LoadLocation(dt.TZones.US.Pacific()).\n" +
+			"dt.TZones.US.Pacific()='%v'\n" +
+			"Error='%v'\n", dt.TZones.US.Pacific(), err.Error())
+		return
+	}
+
+	utcPtr, err = time.LoadLocation(dt.TZones.UTC())
+
+	if err != nil {
+		fmt.Printf("Error returned from " +
+			"time.LoadLocation(dt.TZones.UTC()).\n" +
+			"dt.TZones.UTC()='%v'\n" +
+			"Error='%v'\n", dt.TZones.UTC(), err.Error())
+		return
+	}
+
+	localPtr, err = time.LoadLocation(dt.TZones.Local())
+
+	if err != nil {
+		fmt.Printf("Error returned from " +
+			"time.LoadLocation(dt.TZones.Local()).\n" +
+			"dt.TZones.UTC()='%v'\n" +
+			"Error='%v'\n", dt.TZones.Local(), err.Error())
+		return
+	}
+
+	t1Out := t1.In(pacificPtr)
+	t1Utc := t1.In(utcPtr)
+	t1Local := t1.In(localPtr)
+
+	fmt.Println(lineBreak)
+	fmt.Println("   Expected t1 In: ", t1.Format(fmtStr))
+	fmt.Println("  Expected t1 Out: ", t1Out.Format(fmtStr) )
+	fmt.Println("  Expected t1 UTC: ", t1Utc.Format(fmtStr) )
+	fmt.Println("Expected t1 Local: ", t1Local.Format(fmtStr) )
+	fmt.Println(lineBreak)
+	fmt.Println()
+	ex.PrintOutTimeZoneDtoFields(tzu1, "tzu1")
+	fmt.Println(lineBreak)
+	fmt.Println()
+
+
+	tzu1OutStrTIn := tzu1.TimeIn.GetDateTimeValue().Format(fmtStr)
+
+	if t1OutStr != tzu1OutStrTIn {
+		fmt.Printf("Error: Expected tzu1OutStrTIn='%v'.  Instead, tzu1OutStrTIn='%v'", t1OutStr, tzu1OutStrTIn)
+	}
+
+	t2 := t1.AddDate(3, 2, 15)
+	// t2OutStr := t2.Format(fmtStr)
+
+	tzu2, err := dt.TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtStr)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t2Out := t2.In(pacificPtr)
+	t2Utc := t2.In(utcPtr)
+	t2Local := t2.In(localPtr)
+
+	t3Utc := t1Utc.AddDate(3, 2, 15)
+
+	fmt.Println(lineBreak2)
+	fmt.Println("   Expected t2 In: ", t2.Format(fmtStr))
+	fmt.Println("  Expected t2 Out: ", t2Out.Format(fmtStr) )
+	fmt.Println("  Expected t2 UTC: ", t2Utc.Format(fmtStr) )
+	fmt.Println("Expected t2 Local: ", t2Local.Format(fmtStr) )
+	fmt.Println("      t3Utc Added: ", t3Utc.Format(fmtStr))
+	fmt.Println(lineBreak)
+	fmt.Println()
+	ex.PrintOutTimeZoneDtoFields(tzu2, "tzu2")
+	fmt.Println(lineBreak2)
+
+
+	/*
+		tzu2OutStrTIn := tzu2.TimeIn.GetDateTimeValue().Format(fmtStr)
+
+		if t2OutStr != tzu2OutStrTIn {
+			fmt.Printf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
+			return
+		}
+
+		actualDuration, err := tzu2.Sub(tzu1)
+
+		if err != nil {
+			fmt.Printf("Error returned by tzu2.Sub(tzu1). Error='%v'", err.Error())
+			return
+		}
+
+		utcPtr, err := time.LoadLocation(dt.TZones.UTC())
+
+		if err != nil{
+			fmt.Printf("Error return from time.LoadLocation(TZones.UTC()).\n" +
+				"Error='%v'\n", err.Error())
+			return
+		}
+
+		t1UTC := t1.In(utcPtr)
+
+		t2UTC := t2.In(utcPtr)
+
+		expectedDuration := t2UTC.Sub(t1UTC)
+
+		if expectedDuration != actualDuration {
+			fmt.Printf("Error: Expected Duration='%v'.\n" +
+				"Instead, Actual Duration='%v'\n",
+				expectedDuration, actualDuration)
+		}
+
+		*/
+
+}
+
+func (mt mainTest) mainTest065() {
+
+	funcName := "mainTest065()"
+	lineLen := 65
+	titles := []string{funcName,
+											"UTC Duration Comparison" }
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	t1str := "2014-02-14 19:54:30.000000000 -0600 CST"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	t1, err := time.Parse(fmtStr, t1str)
+
+	if err != nil {
+		fmt.Printf("Error returned by time.Parse(fmtStr, t1str)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var utcPtr *time.Location
+
+	utcPtr, err = time.LoadLocation(dt.TZones.UTC())
+
+	if err != nil{
+		fmt.Printf("Error return from time.LoadLocation(TZones.UTC()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	equalHeader := strings.Repeat("=", 65)
+	fmt.Println(equalHeader)
+	fmt.Println("   t1 Start Date Time: ", t1.Format(fmtStr))
+	t1Utc := t1.In(utcPtr)
+	fmt.Println("     t1 UTC Date Time: ", t1Utc.Format(fmtStr))
+	fmt.Println(equalHeader)
+	fmt.Println()
+
+	t2 := t1.AddDate(3, 2, 15)
+	fmt.Println(equalHeader)
+	fmt.Println("   t2 Start Date Time: ", t2.Format(fmtStr))
+	t2Utc := t2.In(utcPtr)
+	fmt.Println("     t2 UTC Date Time: ", t2Utc.Format(fmtStr))
+	fmt.Println(equalHeader)
+	fmt.Println()
+
+	t1_2BaseDuration := t2.Sub(t1)
+	fmt.Println("  t1-t2 Base Duration: ", t1_2BaseDuration.String())
+
+	t1_2UtcDuration := t2Utc.Sub(t1Utc)
+	fmt.Println("   t1-t2 Utc Duration: ", t1_2UtcDuration.String())
+	fmt.Println(equalHeader)
+	fmt.Println()
+
+
+	titles = []string{funcName,
+		"Successful Completion" }
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
 }
 
 func (mt mainTest) mainTest064() {

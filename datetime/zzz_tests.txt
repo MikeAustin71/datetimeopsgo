@@ -19,7 +19,7 @@
 === RUN   TestDateTzDto_CopyOut
 --- PASS: TestDateTzDto_CopyOut (0.00s)
 === RUN   TestDateTzDto_GetConvertibleTzStatusFlags_01
---- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.00s)
+--- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.09s)
 === RUN   TestDateTzDto_GetOriginalTagDescription_01
 --- PASS: TestDateTzDto_GetOriginalTagDescription_01 (0.00s)
 === RUN   TestDateTzDto_GetTimeDto_01
@@ -95,7 +95,7 @@
 === RUN   TestCustomDateTimeFormat
 --- PASS: TestCustomDateTimeFormat (0.00s)
 === RUN   TestDurationTriad_GetYearMthDaysTimeAbbrv
---- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.00s)
+--- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.02s)
 === RUN   TestDurationTriad_GetYearsMthsWeeksTimeAbbrv
 --- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_NewAutoEnd_01
@@ -203,14 +203,14 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.53s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.10s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.19s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.01s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.00s)
+--- PASS: TestDtfmtTestSuite (4.31s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.14s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.05s)
     --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.01s)
 === RUN   TestTDurCalcType_01
 --- PASS: TestTDurCalcType_01 (0.00s)
@@ -384,7 +384,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.08s)
+--- PASS: TestTimeDuroTestSuite (0.06s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
@@ -505,11 +505,9 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneUtility_NewAddDuration_01
 --- PASS: TestTimeZoneUtility_NewAddDuration_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddDate_01
---- FAIL: TestTimeZoneUtility_NewAddDate_01 (0.00s)
-    zzttimezonedto01_test.go:853: Error: Expected Duration='28079h0m0s'. Instead, Actual Duration='28080h0m0s'
+--- PASS: TestTimeZoneUtility_NewAddDate_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddDateTime_01
---- FAIL: TestTimeZoneUtility_NewAddDateTime_01 (0.00s)
-    zzttimezonedto01_test.go:911: Error expected tzu1-tzu2 Duration='28082h4m2s'.  Instead, Duration='28083h4m2s'
+--- PASS: TestTimeZoneUtility_NewAddDateTime_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddTime_01
 --- PASS: TestTimeZoneUtility_NewAddTime_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewTimeAddDate_01
@@ -526,6 +524,5 @@ Processed 67 sample dates successfully!
 --- PASS: TestTimeZoneUtility_ReclassifyTimeWithNewTz (0.00s)
 === RUN   TestTimeZoneUtility_ReclassifyTimeAsMountain
 --- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.00s)
-FAIL
-exit status 1
-FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	11.372s
+PASS
+ok  	github.com/MikeAustin71/datetimeopsgo/datetime	11.748s

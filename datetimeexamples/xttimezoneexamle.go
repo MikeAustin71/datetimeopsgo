@@ -322,7 +322,7 @@ func Tex011() {
 	tzuEast := dt.TimeZoneDto{}
 	tzuEast.CopyIn(tzuOut)
 	tzuEast.Description = "CDT to Eastern Time Zone Conversion"
-	PrintOutTimeZoneFields(tzuEast)
+	PrintOutTimeZoneDtoFields(tzuEast,"tzuEast")
 
 	tzuLocal, err := tz.ConvertTz(tzuEast.TimeOut.GetDateTimeValue(), "Local", fmtstr)
 
@@ -332,7 +332,7 @@ func Tex011() {
 	}
 
 	tzuLocal.Description = "Eastern to Local Conversion using 'Local' tz"
-	PrintOutTimeZoneFields(tzuLocal)
+	PrintOutTimeZoneDtoFields(tzuLocal, "tzuLocal")
 
 }
 
@@ -610,102 +610,52 @@ func PrintOutDateTzDtoFields(dtz dt.DateTzDto) {
 // TimeZoneDefinition input parameter.
 func PrintOutTimeZoneDefFields(tzDef dt.TimeZoneDefinition) {
 
-	var milTzLetter, milTzName string
-	var err error
+	originalTimeZone := tzDef.GetOriginalTimeZone()
+	PrintOutTimeZoneSpecFields(originalTimeZone, "Original Time Zone")
 
-	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
-
-	milTzLetter, err = tzDef.GetMilitaryTimeZoneLetter()
-
-	if err != nil {
-		milTzLetter = "Empty String"
-	}
-
-	milTzName, err = tzDef.GetMilitaryTimeZoneName()
-
-	if err != nil {
-		milTzName = "Empty String"
-	}
-
-	offsetSignChar,
-	_,
-	offsetHours,
-	offsetMinutes,
-	offsetSeconds := tzDef.GetOriginalOffsetElements()
-
-	fmt.Println("-----------------------------------------------")
-	fmt.Println("              Original Time Zone               ")
-	fmt.Println("-----------------------------------------------")
-	fmt.Println("      Reference Date Time: ", tzDef.GetOriginalDateTime().Format(fmtStr))
-	fmt.Println("                 ZoneName: ", tzDef.GetOriginalZoneName())
-	fmt.Println("               ZoneOffset: ", tzDef.GetOriginalZoneOffset())
-	fmt.Println("               UTC Offset: ", tzDef.GetOriginalUtcOffset())
-	fmt.Println("        ZoneOffsetSeconds:", tzDef.GetOriginalZoneOffsetTotalSeconds())
-	fmt.Println("                 ZoneSign: ", offsetSignChar)
-	fmt.Println("              OffsetHours: ", offsetHours)
-	fmt.Println("            OffsetMinutes: ", offsetMinutes)
-	fmt.Println("            OffsetSeconds: ", offsetSeconds)
-	fmt.Println("          Location String: ", tzDef.GetOriginalLocationPtr().String())
-	fmt.Println("            Location Name: ", tzDef.GetOriginalLocationName())
-	fmt.Println("       Location Name Type: ", tzDef.GetOriginalLocationNameType().String())
-	fmt.Println("Military Time Zone Letter: ", milTzLetter)
-	fmt.Println("  Military Time Zone Name: ", milTzName)
-	fmt.Println("          Tag Description: ", tzDef.GetOriginalTagDescription())
-	fmt.Println( "          Time Zone Type: ", tzDef.GetOriginalTimeZoneType().String())
-	fmt.Println("          Time Zone Class: ", tzDef.GetOriginalTimeZoneClass())
-	fmt.Println("-----------------------------------------------")
-	fmt.Println("              Convertible Time Zone            ")
-	fmt.Println("-----------------------------------------------")
-
-	offsetSignChar,
-	_,
-	offsetHours,
-	offsetMinutes,
-	offsetSeconds = tzDef.GetConvertibleOffsetElements()
-
-	fmt.Println("      Reference Date Time: ", tzDef.GetConvertibleDateTime().Format(fmtStr))
-	fmt.Println("                 ZoneName: ", tzDef.GetConvertibleZoneName())
-	fmt.Println("               ZoneOffset: ", tzDef.GetConvertibleZoneOffset())
-	fmt.Println("               UTC Offset: ", tzDef.GetConvertibleUtcOffset())
-	fmt.Println("        ZoneOffsetSeconds:", tzDef.GetConvertibleZoneOffsetTotalSeconds())
-	fmt.Println("                 ZoneSign: ", offsetSignChar)
-	fmt.Println("              OffsetHours: ", offsetHours)
-	fmt.Println("            OffsetMinutes: ", offsetMinutes)
-	fmt.Println("            OffsetSeconds: ", offsetSeconds)
-	fmt.Println("          Location String: ", tzDef.GetConvertibleLocationPtr().String())
-	fmt.Println("            Location Name: ", tzDef.GetConvertibleLocationName())
-	fmt.Println("       Location Name Type: ", tzDef.GetConvertibleLocationNameType().String())
-	fmt.Println("Military Time Zone Letter: ", milTzLetter)
-	fmt.Println("  Military Time Zone Name: ", milTzName)
-	fmt.Println("          Tag Description: ", tzDef.GetConvertibleTagDescription())
-	fmt.Println( "          Time Zone Type: ", tzDef.GetConvertibleTimeZoneType().String())
-	fmt.Println("          Time Zone Class: ", tzDef.GetConvertibleTimeZoneClass())
-	fmt.Println("-----------------------------------------------")
 	fmt.Println()
 
+	convertibleTimeZone := tzDef.GetConvertibleTimeZone()
+	PrintOutTimeZoneSpecFields(convertibleTimeZone, "Convertible Time Zone")
+	fmt.Println()
 }
 
-// PrintOutTimeZoneFields
-func PrintOutTimeZoneFields(tz dt.TimeZoneDto) {
+// PrintOutTimeZoneDtoFields
+func PrintOutTimeZoneDtoFields(tz dt.TimeZoneDto, labelTitle string) {
+
 	tz.SetDateTimeFormatStr(dt.FmtDateTimeYrMDayFmtStr)
 	fmt.Println()
-	fmt.Println("*********************************")
+	lineLen := 60
+
+
+	titles := []string{"TimeZoneDto", labelTitle}
+
+	PrintMainHeader(titles, lineLen,"*","*")
+
+	asteriskHeader := strings.Repeat("*", lineLen)
+	plusHeader := strings.Repeat("+", lineLen)
+
 	fmt.Println("     Description: ", tz.Description)
+	fmt.Println(plusHeader)
 	fmt.Println("          TimeIn: ", tz.TimeIn.String())
 	fmt.Println("      TimeIn Time Zone")
 	PrintOutTimeZoneDefFields(tz.TimeIn.GetTimeZoneDef())
+	fmt.Println(plusHeader)
 	fmt.Println()
 	fmt.Println("         TimeOut: ", tz.TimeOut.String())
 	fmt.Println("      TimeOut Time Zone")
 	PrintOutTimeZoneDefFields(tz.TimeOut.GetTimeZoneDef())
+	fmt.Println(plusHeader)
 	fmt.Println()
-	fmt.Println("       Time UTC : ", tz.TimeUTC.String())
+	fmt.Println("        Time UTC: ", tz.TimeUTC.String())
 	fmt.Println("      TimeUTC Time Zone")
 	PrintOutTimeZoneDefFields(tz.TimeUTC.GetTimeZoneDef())
+	fmt.Println(plusHeader)
 	fmt.Println()
-	fmt.Println("       TimeLocal: ", tz.TimeLocal.String())
+	fmt.Println("      Time Local: ", tz.TimeLocal.String())
 	fmt.Println("      TimeLocal Time Zone")
 	PrintOutTimeZoneDefFields(tz.TimeLocal.GetTimeZoneDef())
+	fmt.Println(asteriskHeader)
 	fmt.Println()
 
 }
@@ -741,38 +691,53 @@ func PrintOutTimeZoneSpecFields(tzSpec dt.TimeZoneSpecification, tzSpecLabel str
 	offsetMinutes,
 	offsetSeconds := tzSpec.GetOffsetElements()
 
-	fmtStr := "01/02/2006 15:04:05 -0700 MST"
-	fmt.Println("===============================================")
-	fmt.Println("       Time Zone Specification Fields          ")
-	fmt.Println("===============================================")
-	fmt.Println("-----------------------------------------------")
-	fmt.Println(tzSpecLabel)
-	fmt.Println("-----------------------------------------------")
-	fmt.Println("      Reference Date Time: ", tzSpec.GetReferenceDateTime().Format(fmtStr))
-	fmt.Println("                 ZoneName: ", tzSpec.GetZoneName())
-	fmt.Println("               ZoneOffset: ", tzSpec.GetZoneOffset())
-	fmt.Println("               UTC Offset: ", tzSpec.GetUtcOffset())
-	fmt.Println("        ZoneOffsetSeconds:", tzSpec.GetZoneOffsetTotalSeconds())
-	fmt.Println("                 ZoneSign: ", tzSpec.GetZoneSignChar())
-	fmt.Println("              OffsetHours: ", offsetHours)
-	fmt.Println("            OffsetMinutes: ", offsetMinutes)
-	fmt.Println("            OffsetSeconds: ", offsetSeconds)
-	fmt.Println("          Location String: ", tzSpec.GetLocationPointer().String())
-	fmt.Println("            Location Name: ", tzSpec.GetLocationName())
-	fmt.Println("       Location Name Type: ", tzSpec.GetLocationNameType().String())
-	fmt.Println("Military Time Zone Letter: ", tzSpec.GetMilitaryTimeZoneLetter())
-	fmt.Println("  Military Time Zone Name: ", tzSpec.GetMilitaryTimeZoneName())
-	fmt.Println("          Tag Description: ", tzSpec.GetTagDescription())
-	fmt.Println( "          Time Zone Type: ", tzSpec.GetTimeZoneType().String())
-	fmt.Println("          Time Zone Class: ", tzSpec.GetTimeZoneClass().String())
-	fmt.Println("===============================================")
+	LocationNameType,
+		TimeZoneCategory,
+		TimeZoneClass,
+		TimeZoneType,
+		TimeZoneUtcOffsetStatus := tzSpec.GetTimeZoneSpecFlags()
+
+		lineLen := 65
+		equalHeader := strings.Repeat("=", lineLen)
+		hyphenHeader := strings.Repeat("-", lineLen)
+		mainHeaderTxt := "Time Zone Specification Fields"
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	titles := []string{mainHeaderTxt, tzSpecLabel}
+
+	PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"-")
+
+	fmt.Println("        Reference Date Time: ", tzSpec.GetReferenceDateTime().Format(fmtStr))
+	fmt.Println("                   ZoneName: ", tzSpec.GetZoneName())
+	fmt.Println("Zone Abbreviation Lookup Id: ", tzSpec.GetZoneAbbrvLookupId())
+	fmt.Println("                 ZoneOffset: ", tzSpec.GetZoneOffset())
+	fmt.Println("                 UTC Offset: ", tzSpec.GetUtcOffset())
+	fmt.Println("          ZoneOffsetSeconds:", tzSpec.GetZoneOffsetTotalSeconds())
+	fmt.Println("                   ZoneSign: ", tzSpec.GetZoneSignChar())
+	fmt.Println("                OffsetHours: ", offsetHours)
+	fmt.Println("              OffsetMinutes: ", offsetMinutes)
+	fmt.Println("              OffsetSeconds: ", offsetSeconds)
+	fmt.Println("            Location String: ", tzSpec.GetLocationPointer().String())
+	fmt.Println("              Location Name: ", tzSpec.GetLocationName())
+	fmt.Println("         Location Name Type: ", LocationNameType.String())
+	fmt.Println("  Military Time Zone Letter: ", tzSpec.GetMilitaryTimeZoneLetter())
+	fmt.Println("    Military Time Zone Name: ", tzSpec.GetMilitaryTimeZoneName())
+	fmt.Println("                 Zone Label: ", tzSpec.GetZoneLabel())
+	fmt.Println("            Tag Description: ", tzSpec.GetTagDescription())
+	fmt.Println("             Time Zone Type: ", TimeZoneType.String())
+	fmt.Println("            Time Zone Class: ", TimeZoneClass.String())
+	fmt.Println("         Time Zone Category: ", TimeZoneCategory.String())
+	fmt.Println("Time Zone UTC Offset Status: ", TimeZoneUtcOffsetStatus.String())
+	fmt.Println(hyphenHeader)
+	fmt.Println(equalHeader)
 
 }
 
 func PrintOutDateTimeTimeZoneFields(dt time.Time, dtLabel string) {
-	fmt.Println("=========================================")
-	fmt.Println("     Time Zone Fields From time.Time     ")
-	fmt.Println("=========================================")
 
 	zoneName, zoneOffsetSeconds := dt.Zone()
 
@@ -844,6 +809,12 @@ func PrintOutDateTimeTimeZoneFields(dt time.Time, dtLabel string) {
 		dtLabel = xSpacer + dtLabel + ": "
 	}
 
+	lineLen := 60
+
+	titles := []string{"Time Zone Fields From time.Time"}
+
+	PrintMainHeader(
+		titles, lineLen, "=", "=")
 	fmt.Print()
 	fmt.Println(dtLabel, dt.Format(fmtStr))
 	fmt.Println("              Zone Name: ", zoneName)
@@ -881,4 +852,59 @@ func ExampleDurationLocalUTCTime() {
 	fmt.Println("  t1OutStr: ", t1OutStr)
 	fmt.Println("  t2OutStr: ", t2OutStr)
 	fmt.Println("t2LocalStr: ", t2LocalStr)
+}
+
+func PrintMainHeader(
+	titles []string,
+	fieldLen int,
+	topLineChar string,
+	bottomLineChar string) {
+
+		if fieldLen < 1 {
+			return
+		}
+
+	if len(topLineChar) > 0 {
+		fmt.Println(strings.Repeat(topLineChar, fieldLen))
+	}
+
+	for i:= 0 ; i < len(titles); i++ {
+
+		_,
+		leftSpacer := ComputeCenterLeftMargin(titles[i], fieldLen)
+
+		fmt.Println(leftSpacer + titles[i])
+
+	}
+
+	if len(bottomLineChar) > 0 {
+		fmt.Println(strings.Repeat(topLineChar, fieldLen))
+	}
+}
+
+func ComputeCenterLeftMargin(
+	titleStr string,
+	fieldLen int) (leftMarginLen int, leftSpacer string) {
+
+		leftMarginLen = 0
+		leftSpacer = ""
+		lenTitleStr := len(titleStr)
+
+		if fieldLen < 1 ||
+			lenTitleStr  < 1 ||
+			lenTitleStr >= fieldLen {
+			return leftMarginLen, leftSpacer
+		}
+
+		totalMargin := fieldLen - lenTitleStr
+
+		if totalMargin % 2 == 0 {
+			leftMarginLen = totalMargin / 2
+		} else {
+			leftMarginLen = (totalMargin / 2) + 1
+		}
+
+		leftSpacer = strings.Repeat(" ", leftMarginLen)
+
+		return leftMarginLen, leftSpacer
 }

@@ -75,49 +75,78 @@ func (tZoneUtil *timeZoneDtoUtility) addDateTime(
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nThis current TimeZoneDto instance is INVALID!\n" +
+			"\nThis current TimeZoneDto instance is INVALID!\n"+
 			"Error='%v'\n", err.Error())
 	}
 
-	tzDto.TimeIn, err = tzDto.TimeIn.AddDateTime(years, months, days, hours, minutes,
-		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+	dtMech := DTimeMechanics{}
+
+	newUtcDateTime := dtMech.AddDateTime(
+		tzDto.TimeUTC.dateTimeValue,
+		years,
+		months,
+		days,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds)
+
+	tzDto2 := TimeZoneDto{}
+
+	dateTimeFormat := tZoneUtil2.preProcessDateFormatStr(tzDto.DateTimeFmt)
+
+	err = tZoneUtil2.setTimeInTzDef(
+		&tzDto2,
+		newUtcDateTime,
+		TzConvertType.Relative(),
+		tzDto.TimeIn.GetTimeZoneDef(),
+		dateTimeFormat,
+		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeIn.AddDateTime(years, months, days, hours, minutes, seconds, "+
-			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
-			"Error='%v'", err.Error())
+		return err
 	}
 
-	tzDto.TimeOut, err = tzDto.TimeOut.AddDateTime(years, months, days, hours, minutes,
-		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+	err = tZoneUtil2.setTimeOutFromTimeZoneDef(
+		&tzDto2,
+		newUtcDateTime,
+		TzConvertType.Relative(),
+		tzDto.TimeOut.GetTimeZoneDef(),
+		dateTimeFormat,
+		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeOut.AddDateTime(years, months, days, hours, minutes, seconds, "+
-			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
-			"Error='%v'", err.Error())
+		return err
 	}
 
-	tzDto.TimeUTC, err = tzDto.TimeUTC.AddDateTime(years, months, days, hours, minutes,
-		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+
+	err = tZoneUtil2.setUTCTime(
+		&tzDto2,
+		newUtcDateTime,
+		TzConvertType.Absolute(),
+		dateTimeFormat,
+		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeUTC.addDateTime(years, months, days, hours, minutes, seconds, "+
-			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
-			"Error='%v'", err.Error())
+		return err
 	}
 
-	tzDto.TimeLocal, err = tzDto.TimeLocal.AddDateTime(years, months, days, hours, minutes,
-		seconds, milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt)
+	err = tZoneUtil2.setLocalTime(
+		&tzDto2,
+		newUtcDateTime,
+		TzConvertType.Relative(),
+		dateTimeFormat,
+		ePrefix)
 
 	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tzDto.TimeLocal.AddDate(years, months, days, hours, minutes, seconds, "+
-			"milliseconds, microseconds, nanoseconds, tzDto.DateTimeFmt). "+
-			"Error='%v'", err.Error())
+		return err
 	}
+
+	tzDto2.DateTimeFmt = dateTimeFormat
+
+	tZoneUtil2.copyIn(tzDto, &tzDto2, ePrefix)
 
 	return nil
 }
@@ -596,34 +625,29 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 			"Validation Error='%v'", err.Error())
 	}
 
-	var dateTzIn DateTzDto
+	dtMech := DTimeMechanics{}
 
-	tIn := tzDto.TimeIn.CopyOut()
-	dTzUtil := dateTzDtoUtility{}
-
-	dateTimeFormat := dTzUtil.preProcessDateFormatStr(tzDto.DateTimeFmt)
-
-	dateTzIn, err = dTzUtil.addTime(
-		&tIn,
+	newDateTime := dtMech.AddDateTime(
+		tzDto.TimeUTC.dateTimeValue,
+		0,
+		0,
+		0,
 		hours,
 		minutes,
 		seconds,
 		milliseconds,
 		microseconds,
-		nanoseconds,
-		dateTimeFormat,
-		ePrefix)
-
-	if err != nil {
-		return err
-	}
+		nanoseconds)
 
 	tzDto2 := TimeZoneDto{}
-	tzDto2.DateTimeFmt = dateTimeFormat
 
-	err = tZoneUtil2.setTimeIn(
+	dateTimeFormat := tZoneUtil2.preProcessDateFormatStr(tzDto.DateTimeFmt)
+
+	err = tZoneUtil2.setTimeInTzDef(
 		&tzDto2,
-		dateTzIn.dateTimeValue,
+		newDateTime,
+		TzConvertType.Relative(),
+		tzDto.TimeIn.GetTimeZoneDef(),
 		dateTimeFormat,
 		ePrefix)
 
@@ -634,7 +658,7 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 
 	err = tZoneUtil2.setTimeOutFromTimeZoneDef(
 		&tzDto2,
-		dateTzIn.dateTimeValue,
+		newDateTime,
 		TzConvertType.Relative(),
 		tzDto.TimeOut.GetTimeZoneDef(),
 		dateTimeFormat,
@@ -647,8 +671,8 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 
 	err = tZoneUtil2.setUTCTime(
 		&tzDto2,
-		dateTzIn.dateTimeValue,
-		TzConvertType.Relative(),
+		newDateTime,
+		TzConvertType.Absolute(),
 		dateTimeFormat,
 		ePrefix)
 
@@ -658,7 +682,7 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 
 	err = tZoneUtil2.setLocalTime(
 		&tzDto2,
-		dateTzIn.dateTimeValue,
+		newDateTime,
 		TzConvertType.Relative(),
 		dateTimeFormat,
 		ePrefix)
@@ -1255,9 +1279,9 @@ func (tZoneUtil *timeZoneDtoUtility) newAddDateTime(
 		}
 	}
 
-	tZoneUtil2 := timeZoneDtoUtility{}
+	tZoneDtoUtil2 := timeZoneDtoUtility{}
 
-	err := tZoneUtil2.isValidTimeZoneDto(tzDtoIn, ePrefix)
+	err := tZoneDtoUtil2.isValidTimeZoneDto(tzDtoIn, ePrefix)
 
 	if err != nil {
 		return TimeZoneDto{},
@@ -1267,18 +1291,14 @@ func (tZoneUtil *timeZoneDtoUtility) newAddDateTime(
 				err.Error())
 	}
 
-	tzuOut := tZoneUtil2.copyOut(tzDtoIn, ePrefix)
+	tzuOut := tZoneDtoUtil2.copyOut(tzDtoIn, ePrefix)
 
-	if len(dateTimeFmtStr) == 0 {
-		dateTimeFmtStr = FmtDateTimeYrMDayFmtStr
-	}
-
-	tZoneUtil2.setDateTimeFormat(
+	tZoneDtoUtil2.setDateTimeFormat(
 		&tzuOut,
 		dateTimeFmtStr,
 		ePrefix)
 
-	err = tZoneUtil2.addDateTime(
+	err = tZoneDtoUtil2.addDateTime(
 		&tzuOut,
 		years,
 		months,
@@ -1449,69 +1469,6 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 	}
 
 	return tzDto2, nil
-
-
-	/*
-		dTzUtil := dateTzDtoUtility{}
-	// Set tzDtoOut.TimeIn
-	err := dTzUtil.setFromDateTime(
-		&tzDtoOut.TimeIn,
-		tIn,
-		dateTimeFmtStr,
-		ePrefix)
-
-	if err != nil {
-		return TimeZoneDto{},
-			fmt.Errorf("tzDtoOut.TimeIn configuration FAILED!\n" +
-				"%v", err.Error())
-	}
-
-	// Set tzDtoOut.TimeOut
-	err = dTzUtil.setFromTimeTzName(
-		&tzDtoOut.TimeOut,
-		tIn,
-		TzConvertType.Relative(),
-		targetTz,
-		dateTimeFmtStr,
-		ePrefix)
-
-	if err != nil {
-		return TimeZoneDto{},
-			fmt.Errorf("tzDtoOut.TimeOut configuration FAILED!\n" +
-				"%v", err.Error())
-	}
-
-	// Set tzDtoOut.TimeUTC
-	err = dTzUtil.setFromTimeTzName(
-		&tzDtoOut.TimeUTC,
-		tIn,
-		TzConvertType.Relative(),
-		TZones.UTC(),
-		dateTimeFmtStr,
-		ePrefix)
-
-	if err != nil {
-		return TimeZoneDto{},
-			fmt.Errorf("tzDtoOut.TimeUTC configuration FAILED!\n" +
-				"%v\n", err.Error())
-	}
-	// Set tzDtoOut.TimeLocal
-	err = dTzUtil.setFromTimeTzName(
-		&tzDtoOut.TimeLocal,
-		tIn,
-		TzConvertType.Relative(),
-		TZones.Local(),
-		dateTimeFmtStr,
-		ePrefix)
-
-	if err != nil {
-		return TimeZoneDto{},
-			fmt.Errorf("tzDtoOut.TimeLocal configuration FAILED!\n" +
-				"%v\n", err.Error())
-	}
-
-	return tzDtoOut, nil
-	*/
 }
 
 // preProcessDateFormatStr - Provides a standardized method
@@ -1635,6 +1592,71 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 	tzDto.TimeIn = tzDtoIn.CopyOut()
 
 	return nil
+}
+
+// setTimeInTzDef - Assigns time and zone values to TimeZoneDto
+// field 'TimeIn'. Input parameter 'tIn' is first converted
+// to the target time zone designated by 'targetTzSpec'.
+//
+func (tZoneUtil *timeZoneDtoUtility) setTimeInTzDef(
+	tzDto *TimeZoneDto,
+	tIn time.Time,
+	timeConversionType TimeZoneConversionType,
+	targetTzDef TimeZoneDefinition,
+	dateTimeFormatStr,
+	ePrefix string) error {
+
+	tZoneUtil.lock.Lock()
+
+	defer tZoneUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDtoUtility.setTimeInTzDef() "
+
+	if tzDto == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzDto",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tIn.IsZero() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tIn",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tIn' has a value of 'zero'!",
+			err:                 nil,
+		}
+	}
+
+	err := targetTzDef.IsValid()
+
+	if err != nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "targetTzDef",
+			inputParameterValue: "",
+			errMsg:              fmt.Sprintf(
+				"Input Parameter 'targetTzDef' is INVALID!\n" +
+					"Validation Error='%v'\n", err.Error()),
+			err:                 nil,
+		}
+	}
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTzDef(
+		&tzDto.TimeIn,
+		tIn,
+		timeConversionType,
+		targetTzDef,
+		dateTimeFormatStr,
+		ePrefix)
+
+	return err
 }
 
 // setTimeOutTz - Assigns date, time and time zone

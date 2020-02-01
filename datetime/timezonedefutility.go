@@ -847,7 +847,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
 		newDateTime = dateTime.In(timeZoneDef.originalTimeZone.locationPtr)
 	}
 
-
 	tzDefUtil2.copyIn(tzdef, &timeZoneDef)
 
 	tzdef.originalTimeZone.referenceDateTime = newDateTime

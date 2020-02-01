@@ -791,12 +791,12 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 }
 
 func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
-	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1str := "2014-02-15 19:54:30.000000000 -0600 CST"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	t1, _ := time.Parse(fmtstr, t1str)
-	t1OutStr := t1.Format(fmtstr)
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
+	t1, _ := time.Parse(fmtStr, t1str)
+	t1OutStr := t1.Format(fmtStr)
+	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
@@ -804,24 +804,47 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 		return
 	}
 
-	tzu1OutStrTIn := tzu1.TimeIn.GetDateTimeValue().Format(fmtstr)
+	tzu1OutStrTIn := tzu1.TimeIn.GetDateTimeValue().Format(fmtStr)
 
 	if t1OutStr != tzu1OutStrTIn {
 		t.Errorf("Error: Expected tzu1OutStrTIn='%v'.  Instead, tzu1OutStrTIn='%v'", t1OutStr, tzu1OutStrTIn)
 	}
 
-	t2 := t1.AddDate(3, 2, 15)
-	t2OutStr := t2.Format(fmtstr)
+	var utcPtr, centralTzPtr *time.Location
 
-	tzu2, err := TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)
+	utcPtr, err = time.LoadLocation(TZones.UTC())
 
-	if err != nil {
-		t.Errorf("Error returned by TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtstr)\n" +
+	if err != nil{
+		t.Errorf("Error return from time.LoadLocation(TZones.UTC()).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
 
-	tzu2OutStrTIn := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
+	centralTzPtr, err = time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil{
+		t.Errorf("Error return from time.LoadLocation(TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1Utc := t1.In(utcPtr)
+
+	t2Utc := t1Utc.AddDate(3, 2, 15)
+
+	t2Central := t2Utc.In(centralTzPtr)
+
+	t2OutStr := t2Central.Format(fmtStr)
+
+	tzu2, err := TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeZoneDto{}.NewAddDate(tzu1, 3, 2, 15, fmtStr)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	tzu2OutStrTIn := tzu2.TimeIn.GetDateTimeValue().Format(fmtStr)
 
 	if t2OutStr != tzu2OutStrTIn {
 		t.Errorf("Error: Expected tzu2OutStrTIn='%v'.  Instead, tzu2OutStrTIn='%v'", t2OutStr, tzu2OutStrTIn)
@@ -835,19 +858,7 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 		return
 	}
 
-	utcPtr, err := time.LoadLocation(TZones.UTC())
-
-	if err != nil{
-		t.Errorf("Error return from time.LoadLocation(TZones.UTC()).\n" +
-			"Error='%v'\n", err.Error())
-		return
-	}
-
-	t1UTC := t1.In(utcPtr)
-
-	t2UTC := t2.In(utcPtr)
-
-	expectedDuration := t2UTC.Sub(t1UTC)
+	expectedDuration := t2Utc.Sub(t1Utc)
 
 	if expectedDuration != actualDuration {
 		t.Errorf("Error: Expected Duration='%v'.\n" +
@@ -859,15 +870,14 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
 	// expected := "3-Years 2-Months 15-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
-	t2str := "06/30/2017 22:58:32.000000000 -0500 CDT"
-	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	t1, _ := time.Parse(fmtstr, t1str)
+	t1, _ := time.Parse(fmtStr, t1str)
 
-	t2, _ := time.Parse(fmtstr, t2str)
-	t2OutStr := t2.Format(fmtstr)
+	var utcPtr, centralPtr *time.Location
+	var err error
 
-	utcPtr, err := time.LoadLocation(TZones.UTC())
+	utcPtr, err = time.LoadLocation(TZones.UTC())
 
 	if err != nil {
 		t.Errorf("Error returned by time.LoadLocation(TZones.UTC())\n" +
@@ -875,21 +885,55 @@ func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
 		return
 	}
 
+	centralPtr, err = time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TZones.America.Chicago())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
 	t1Utc := t1.In(utcPtr)
 
-	t2Utc := t2.In(utcPtr)
+	dtMech := DTimeMechanics{}
+
+	t2Utc := dtMech.AddDateTime(
+		t1Utc,
+		3,
+		2,
+		15,
+		3,
+		4,
+		2,
+		0,
+		0,
+		0)
+
+	t2Out := t2Utc.In(centralPtr)
+
+	t2OutStr := t2Out.Format(fmtStr)
 
 	t12Dur := t2Utc.Sub(t1Utc)
 
-	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Eastern(), fmtstr)
+	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Eastern(), fmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast). Error='%v'", err.Error())
 		return
 	}
 
-	tzu2, err := TimeZoneDto{}.NewAddDateTime(tzu1, 3, 2, 15, 3,
-		4, 2, 0, 0, 0, fmtstr)
+	tzu2, err := TimeZoneDto{}.NewAddDateTime(
+		tzu1,
+		3,
+		2,
+		15,
+		3,
+		4,
+		2,
+		0,
+		0,
+		0,
+		fmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneDto{}.NewAddDateTime(tzu1, 3,2, 15, 3, 4, 2,0, 0, 0).\n" +
@@ -897,7 +941,7 @@ func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
 		return
 	}
 
-	tzu2TimeInStr := tzu2.TimeIn.GetDateTimeValue().Format(fmtstr)
+	tzu2TimeInStr := tzu2.TimeIn.GetDateTimeValue().Format(fmtStr)
 
 	if t2OutStr != tzu2TimeInStr {
 		t.Errorf("Error: Expected tzu2.TimeIn='%v'.  Instead, tzu2.TimeIn='%v'. ", t2OutStr, tzu2TimeInStr)

@@ -176,6 +176,49 @@ func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
 	return tzSpec.referenceDateTime, nil
 }
 
+// Adds date and time values to an existing date time,
+// 'baseDateTime'.
+//
+func (dtMech *DTimeMechanics) AddDateTime(
+	baseDateTime time.Time,
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int) time.Time {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	var newDate time.Time
+
+	if years > 0 ||
+			months > 0 {
+
+		newDate = baseDateTime.AddDate(years, months, 0)
+
+	} else {
+
+		newDate = baseDateTime
+
+	}
+
+	totNanoSecs := int64(days) * DayNanoSeconds
+	totNanoSecs += int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	return newDate.Add(time.Duration(totNanoSecs))
+}
+
 // AllocateSecondsToHrsMinSecs - Useful in calculating offset hours,
 // minutes and seconds from UTC+0000. A total signed seconds value
 // is passed as an input parameter. This method then breaks down
@@ -458,7 +501,7 @@ func (dtMech *DTimeMechanics) LoadTzLocation(
 	return locPtr, nil
 }
 
-// ReclassifyTimeWithNewTz - Receives a valid time (time.Time)
+// ConvertTimeToNewTimeZoneName - Receives a valid time (time.Time)
 // value and changes the existing time zone to that specified
 // in parameter 'tZoneLocationName'.
 //
@@ -549,7 +592,7 @@ func (dtMech *DTimeMechanics) LoadTzLocation(
 //                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //                 time zone constants begin with the prefix 'TZones'.
 //
-func (dtMech *DTimeMechanics) ReclassifyTimeWithNewTz(
+func (dtMech *DTimeMechanics) ConvertTimeToNewTimeZoneName(
 	dateTime time.Time,
 	timeConversionType TimeZoneConversionType,
 	tZoneLocationName string) (time.Time, error) {
@@ -558,7 +601,7 @@ func (dtMech *DTimeMechanics) ReclassifyTimeWithNewTz(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix := "DTimeMechanics.ReclassifyTimeWithNewTz() "
+	ePrefix := "DTimeMechanics.ConvertTimeToNewTimeZoneName() "
 
 	tzMech := TimeZoneMechanics{}
 

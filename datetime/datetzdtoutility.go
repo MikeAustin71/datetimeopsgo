@@ -965,6 +965,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 	return nil
 }
 
+// setFromTzDef - Uses a 'TimeZoneDefinition' instance
+// to configure time and time zone data in parameter,
+// 'dTz'.
+//
 func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 	dTz *DateTzDto,
 	dateTime time.Time,
