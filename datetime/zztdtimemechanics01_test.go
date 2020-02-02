@@ -6,6 +6,105 @@ import (
 	"time"
 )
 
+func TestDTimeMechanics_AddDateTimeByUtc_01(t *testing.T) {
+	//t1str := "2020-03-07 03:00:00.000000000 -0500 EST"
+
+	easternTzPtr, err := time.LoadLocation(TZones.America.New_York())
+
+	if err != nil {
+		t.Errorf("Error returned by " +
+			"time.LoadLocation(dt.TZones.America.New_York())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2020,
+		time.Month(3),
+		7,
+		3,
+		0,
+		0,
+		0,
+		easternTzPtr)
+
+	expectedStr := "2020-03-08 04:00:00.000000000 -0400 EDT"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	dtMech := DTimeMechanics{}
+
+	t2 := dtMech.AddDateTimeByUtc(
+		t1,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0)
+
+	t2OutStr := t2.Format(fmtStr)
+
+	if expectedStr != t2OutStr {
+		t.Errorf("Error: After addition of 1-Day,\n" +
+			"expected result date time='%v'\n" +
+			"Instead, result date time='%v'\n",
+			expectedStr, t2OutStr)
+	}
+}
+
+func TestDTimeMechanics_AddDateTime_01(t *testing.T) {
+	//t1str := "2020-03-07 03:00:00.000000000 -0500 EST"
+
+	easternTzPtr, err := time.LoadLocation(TZones.America.New_York())
+
+	if err != nil {
+		t.Errorf("Error returned by " +
+			"time.LoadLocation(dt.TZones.America.New_York())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2020,
+		time.Month(3),
+		7,
+		3,
+		0,
+		0,
+		0,
+		easternTzPtr)
+
+	expectedStr := "2020-03-08 04:00:00.000000000 -0400 EDT"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	dtMech := DTimeMechanics{}
+
+	t2 := dtMech.AddDateTime(
+		t1,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0)
+
+	t2OutStr := t2.Format(fmtStr)
+
+	if expectedStr != t2OutStr {
+		t.Errorf("Error: After addition of 1-Day,\n" +
+			"expected result date time='%v'\n" +
+			"Instead, result date time='%v'\n",
+			expectedStr, t2OutStr)
+	}
+}
+
+
 func TestDTimeMechanics_AbsoluteTimeToTimeZoneDefConversion_01(t *testing.T) {
 
 	t1Str := "2014-02-15 19:54:30.038175584 -0600 CST"
