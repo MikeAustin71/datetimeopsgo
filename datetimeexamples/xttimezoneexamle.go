@@ -737,7 +737,25 @@ func PrintOutTimeZoneSpecFields(tzSpec dt.TimeZoneSpecification, tzSpecLabel str
 
 }
 
-func PrintOutDateTimeTimeZoneFields(dt time.Time, dtLabel string) {
+// PrintOutDateTimeTimeZoneFields - Prints date, time
+// and time zone fields to the console for a time.Time
+// value. Note: If 'lineLen' is less than '65', it will
+// be automatically defaulted to '65'. Maximum value for
+// 'lineLen' is '85'.
+//
+func PrintOutDateTimeTimeZoneFields(
+	dt time.Time,
+	mainTitles []string,
+	lineLen int,
+	fmtStr string) {
+
+	if lineLen < 65 {
+		lineLen = 65
+	}
+
+	if lineLen > 85 {
+		lineLen = 85
+	}
 
 	zoneName, zoneOffsetSeconds := dt.Zone()
 
@@ -786,37 +804,19 @@ func PrintOutDateTimeTimeZoneFields(dt time.Time, dtLabel string) {
 	utcOffset := fmt.Sprintf("UTC" + offsetSignStr +
 		"%02d%02d", offsetHours, offsetMinutes)
 
-	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
-
-	/*
-	abbreviationLookUp := fmt.Sprintf(
-		zoneName + offsetSignStr +
-			"%02d%02d", offsetHours, offsetMinutes)
-*/
-
 	abbreviationLookUp := zoneName + utcOffset[3:]
 
-	fieldLen := len("    Total Offset Seconds:")
-
-	lenDtLabel := len(dtLabel) + 2
-
-	if lenDtLabel == 0 {
-		dtLabel = "        Input Date Time: "
-	} else if lenDtLabel >= fieldLen {
-		dtLabel += ": "
-	} else {
-		xSpacer := strings.Repeat(" ", fieldLen - lenDtLabel)
-		dtLabel = xSpacer + dtLabel + ": "
-	}
-
-	lineLen := 60
-
-	titles := []string{"Time Zone Fields From time.Time"}
-
 	PrintMainHeader(
-		titles, lineLen, "=", "=")
+		mainTitles,
+		lineLen,
+		"=",
+		"-")
+
+
+	lineBreak := strings.Repeat("=", lineLen)
+
 	fmt.Print()
-	fmt.Println(dtLabel, dt.Format(fmtStr))
+	fmt.Println("        Date Time Value: ", dt.Format(fmtStr))
 	fmt.Println("              Zone Name: ", zoneName)
 	fmt.Println("    Abbreviation Lookup: ", abbreviationLookUp)
 	fmt.Println("              Zone Sign: ", offsetSignStr)
@@ -827,7 +827,8 @@ func PrintOutDateTimeTimeZoneFields(dt time.Time, dtLabel string) {
 	fmt.Println("             UTC Offset: ", utcOffset)
 	fmt.Println("       Location Pointer: ", locationPtrStr)
 	fmt.Println("          Location Name: ", locationName)
-	fmt.Println("=========================================")
+	fmt.Println(lineBreak)
+	fmt.Println(lineBreak)
 	fmt.Println()
 
 }
@@ -878,7 +879,7 @@ func PrintMainHeader(
 	}
 
 	if len(bottomLineChar) > 0 {
-		fmt.Println(strings.Repeat(topLineChar, fieldLen))
+		fmt.Println(strings.Repeat(bottomLineChar, fieldLen))
 	}
 }
 

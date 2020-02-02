@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest067()
+	mainTest{}.mainTest069()
 
 }
 
@@ -19,8 +19,329 @@ type mainTest struct {
 	output string
 }
 
+func (mt mainTest) mainTest070() {
+	//t1str := "2020-03-07 03:00:00.000000000 -0500 EST"
+
+	easternTzPtr, err := time.LoadLocation(dt.TZones.America.New_York())
+
+	if err != nil {
+		fmt.Printf("Error returned by " +
+			"time.LoadLocation(dt.TZones.America.New_York())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2020,
+		time.Month(3),
+		7,
+		3,
+		0,
+		0,
+		0,
+		easternTzPtr)
+
+	expectedStr := "2020-03-08 04:00:00.000000000 -0400 EDT"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	funcName := "mainTest070()"
+
+	lineLen := 70
+	titles := []string{funcName,
+		"Testing DateTimeOps DateTimeMechanics AddDateTimeByUtc",
+		"Adding 1-Day To Date Time With IANA Time Zone",
+	"Notice That Actual Matches Expected Result",}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+
+	titles = []string{"Time-1 (t1)",
+		"Starting Date 1-day before Daylight Standard Time"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t1,
+		titles,
+		lineLen,
+		fmtStr)
+
+	dtMech := dt.DTimeMechanics{}
+
+	t2 := dtMech.AddDateTimeByUtc(
+		t1,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0)
+
+	titles = []string{"Time-2 (t2)",
+		"Actual Date 1-day After Daylight Standard Time",
+		"Includes added value of 1-Day"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t2,
+		titles,
+		lineLen,
+		fmtStr)
+
+	lineBreak := strings.Repeat("*", lineLen)
+	fmt.Println()
+	fmt.Println(lineBreak)
+	fmt.Println("        Starting Date Time: ", t1.Format(fmtStr))
+	fmt.Println("  Actual After 1-Day Added: ", t2.Format(fmtStr))
+	fmt.Println("Expected After 1-Day Added: ", expectedStr)
+	fmt.Println(lineBreak)
+	fmt.Println()
+
+	titles = []string{funcName, "Successful Completion!"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+}
+
+func (mt mainTest) mainTest069() {
+	// t1str := "2020-03-07 03:00:00.000000000 -0500 EST"
+	// EST Time Zone Fails
+
+	easternTzPtr, err := time.LoadLocation(dt.TZones.America.New_York())
+
+	if err != nil {
+		fmt.Printf("Error returned by " +
+			"time.LoadLocation(dt.TZones.America.New_York())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2020,
+		time.Month(3),
+		7,
+		3,
+		0,
+		0,
+		0,
+		easternTzPtr)
+
+	expectedStr := "2020-03-08 04:00:00.000000000 -0400 EDT"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	funcName := "mainTest069()"
+
+	lineLen := 70
+	titles := []string{funcName,
+		"Testing DateTimeOps DateTimeMechanics AddDateTimeByUtc",
+		"Adding 1-Day",
+		"Notice That Actual Matches Expected Result",
+		"When Using IANA Convertible Time Zone"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	titles = []string{"Time-1 (t1)",
+		"Starting Date 1-day before Daylight Standard Time"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t1,
+		titles,
+		lineLen,
+		fmtStr)
+
+	dtMech := dt.DTimeMechanics{}
+
+	t2 := dtMech.AddDateTimeByUtc(
+		t1,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0)
+
+	titles = []string{"Time-2 (t2)",
+		"Actual Date 1-day After Daylight Standard Time",
+		"Includes added value of 1-Day"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t2,
+		titles,
+		lineLen,
+		fmtStr)
+
+	lineBreak := strings.Repeat("*", lineLen)
+	fmt.Println()
+	fmt.Println(lineBreak)
+	fmt.Println("        Starting Date Time: ", t1.Format(fmtStr))
+	fmt.Println("  Actual After 1-Day Added: ", t2.Format(fmtStr))
+	fmt.Println("Expected After 1-Day Added: ", expectedStr)
+	fmt.Println(lineBreak)
+
+	var funcResult string
+
+	if t2.Format(fmtStr) != expectedStr {
+		titles = []string{"FAILURE!","Expected Date Time Does NOT Match Actual Date Time!"}
+		ex.PrintMainHeader(
+			titles,
+			lineLen,
+			"",
+			"*")
+
+		funcResult = "@@ FAILURE @@"
+
+	} else {
+		titles = []string{"SUCCESS!","Expected Date Time DOES Match Actual Date Time!"}
+		ex.PrintMainHeader(
+			titles,
+			lineLen,
+			"",
+			"*")
+
+		funcResult = "Successful Completion!"
+	}
+
+	fmt.Println()
+
+	titles = []string{funcName, funcResult}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+}
+
+func (mt mainTest) mainTest068() {
+	// 8 Mar 2020 - Daylight Saving Time Starts
+	// When local standard time is about to reach
+	// Sunday, 8 March 2020, 02:00:00 clocks are turned forward 1 hour to
+	//Sunday, 8 March 2020, 03:00:00 local daylight time instead.
+
+	// t1str := "2020-03-07 03:01:00.000000000 -0500 EST"
+
+
+	easternTzPtr, err := time.LoadLocation(dt.TZones.America.New_York())
+
+	if err != nil {
+		fmt.Printf("Error returned by " +
+			"time.LoadLocation(dt.TZones.America.New_York())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1 := time.Date(
+		2020,
+		time.Month(3),
+		7,
+		3,
+		0,
+		0,
+		0,
+		easternTzPtr)
+
+	expectedStr := "2020-03-08 04:00:00.000000000 -0400 EDT"
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	funcName := "mainTest068()"
+
+	lineLen := 70
+	titles := []string{funcName,
+		"Testing Golang DateTime Package AddDate",
+		"Adding 1-Day",
+		"Notice that the Final Date is WRONG!"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	titles = []string{"Time-1 (t1)",
+		"Starting Date 1-day before Daylight Standard Time"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t1,
+		titles,
+		lineLen,
+		fmtStr)
+
+	t2 := t1.AddDate(0, 0, 1)
+
+	titles = []string{"Time-2 (t2)",
+		"Actual Date 1-day After Daylight Standard Time",
+	"Includes added value of 1-Day"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t2,
+		titles,
+		lineLen,
+		fmtStr)
+
+	lineBreak := strings.Repeat("*", lineLen)
+	fmt.Println()
+	fmt.Println(lineBreak)
+	fmt.Println("        Starting Date Time: ", t1.Format(fmtStr))
+	fmt.Println("  Actual After 1-Day Added: ", t2.Format(fmtStr))
+	fmt.Println("Expected After 1-Day Added: ", expectedStr)
+	fmt.Println(lineBreak)
+
+	var funcResult string
+
+	if t2.Format(fmtStr) != expectedStr {
+		titles = []string{"Expected Date Time Does NOT Match Actual Date Time!"}
+		ex.PrintMainHeader(
+			titles,
+			lineLen,
+			"",
+			"*")
+
+		funcResult = "@@ FAILURE @@"
+
+	} else {
+		titles = []string{"Expected Date Time DOES Match Actual Date Time!"}
+		ex.PrintMainHeader(
+			titles,
+			lineLen,
+			"",
+			"*")
+
+		funcResult = "Successful Completion!"
+	}
+
+	fmt.Println()
+
+	titles = []string{funcName, funcResult}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+}
+
 func (mt mainTest) mainTest067() {
-	t1str := "2020-03-08 01:00:00.000000000 -0600 CST"
+
+// 8 Mar 2020 - Daylight Saving Time Starts
+// When local standard time is about to reach
+// Sunday, 8 March 2020, 02:00:00 clocks are turned forward 1 hour to
+//Sunday, 8 March 2020, 03:00:00 local daylight time instead.
+
+		t1str := "2020-03-08 01:00:00.000000000 -0600 CST"
 	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
 	funcName := "mainTest067()"
 
@@ -400,6 +721,8 @@ func (mt mainTest) mainTest062() {
 
 	mt.mainPrintHdr(ePrefix , "-")
 
+	lineLen := 65
+
 	utcOffset := "2020-01-19 04:21:18 +0700 +07"
 	fmtStr := "2006-01-02 15:04:05 -0700 MST"
 
@@ -428,13 +751,24 @@ func (mt mainTest) mainTest062() {
 
 	originalTzSpec := tzDef.GetOriginalTimeZone()
 	
-	ex.PrintOutDateTimeTimeZoneFields(originalTzSpec.GetReferenceDateTime(), "Original TZ Date Time")
+	ex.PrintOutDateTimeTimeZoneFields(
+		originalTzSpec.GetReferenceDateTime(),
+		[]string{"Original TZ Date Time"},
+		lineLen,
+		fmtStr)
+
+
 	ex.PrintOutTimeZoneSpecFields(originalTzSpec, "Original Time Zone")
 
 
 	convertibleTzSpec := tzDef.GetConvertibleTimeZone()
 	
-	ex.PrintOutDateTimeTimeZoneFields(convertibleTzSpec.GetReferenceDateTime(), "Convertible TZ Date Time")
+	ex.PrintOutDateTimeTimeZoneFields(
+		convertibleTzSpec.GetReferenceDateTime(),
+		[]string{"Convertible TZ Date Time"},
+		lineLen,
+		fmtStr)
+
 	ex.PrintOutTimeZoneSpecFields(convertibleTzSpec, "Convertible Time Zone")
 
 	actualOriginalTz := tzDef.GetOriginalTimeZoneName()
@@ -589,6 +923,7 @@ func (mt mainTest) mainTest061() {
 func (mt mainTest) mainTest060() {
 
 	ePrefix := "mainTest060()"
+	lineLen := 65
 
 	mt.mainPrintHdr(ePrefix , "-")
 	mt.mainPrintHdr("TimeZoneDto" , "-")
@@ -609,7 +944,10 @@ func (mt mainTest) mainTest060() {
 	fmt.Println("t1OutStr: ", t1OutStr)
 
 	ex.PrintOutDateTimeTimeZoneFields(
-		tzu1.TimeIn.GetDateTimeValue(), "Initial tzu1.TimeIn")
+		tzu1.TimeIn.GetDateTimeValue(),
+		[]string{"Initial tzu1.TimeIn"},
+		lineLen,
+		fmtStr)
 
 	t2, _ := time.Parse(fmtStr, t2str)
 	t2OutStr := t2.Format(fmtStr)
@@ -748,6 +1086,7 @@ func (mt mainTest) mainTest059() {
 
 func (mt mainTest) mainTest058() {
 	ePrefix := "mainTest058()"
+	lineLen := 65
 
 	mt.mainPrintHdr(ePrefix , "-")
 	mt.mainPrintHdr("ConvertTzAbbreviationToTimeZone" , "-")
@@ -775,9 +1114,16 @@ func (mt mainTest) mainTest058() {
 		return
 	}
 
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
 	fmt.Println("staticTimeZone: ", staticTimeZone.GetLocationName())
 	fmt.Println()
-	ex.PrintOutDateTimeTimeZoneFields(staticTimeZone.GetReferenceDateTime(), "staticTimeZone")
+	ex.PrintOutDateTimeTimeZoneFields(
+		staticTimeZone.GetReferenceDateTime(),
+		[]string{"staticTimeZone"},
+		lineLen,
+		fmtStr)
+
 	ex.PrintOutTimeZoneSpecFields(staticTimeZone, "staticTimeZone")
 
 	var tzSpec dt.TimeZoneSpecification
@@ -798,7 +1144,12 @@ func (mt mainTest) mainTest058() {
 		return
 	}
 
-	ex.PrintOutDateTimeTimeZoneFields(tzSpec.GetReferenceDateTime(), "tzSpec")
+	ex.PrintOutDateTimeTimeZoneFields(
+		tzSpec.GetReferenceDateTime(),
+		[]string{"tzSpec"},
+		lineLen,
+		fmtStr)
+
 	ex.PrintOutTimeZoneSpecFields(tzSpec, "tzSpec")
 
 
@@ -809,6 +1160,7 @@ func (mt mainTest) mainTest058() {
 func (mt mainTest) mainTest057() {
 
 	ePrefix := "mainTest057()"
+	lineLen := 65
 
 	mt.mainPrintHdr(ePrefix , "-")
 
@@ -866,7 +1218,11 @@ func (mt mainTest) mainTest057() {
 		return
 	}
 
-	ex.PrintOutDateTimeTimeZoneFields(t2, "t2 Parse Result")
+	ex.PrintOutDateTimeTimeZoneFields(
+		t2,
+		[]string{"t2 Parse Result"},
+		lineLen,
+		fmtStr)
 
 	tzDef, err = dt.TimeZoneDefinition{}.New(t2)
 
@@ -1025,7 +1381,7 @@ func (mt mainTest) mainTest055() {
 func (mt mainTest) mainTest054() {
 
 	ePrefix := "mainTest054()"
-
+	lineLen := 65
 	mt.mainPrintHdr(ePrefix , "-")
 
 	// t1EdtStr :=  "06/20/2019 09:58:32 -0400 EDT"
@@ -1048,7 +1404,11 @@ func (mt mainTest) mainTest054() {
 		return
 	}
 
-	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+	ex.PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1 Initial Date Time"},
+		lineLen,
+		fmtStr)
 
 	t2 := time.Date(
 		2019,
@@ -1060,7 +1420,11 @@ func (mt mainTest) mainTest054() {
 		0,
 		t1.Location())
 
-	ex.PrintOutDateTimeTimeZoneFields(t2, "t2 Date Time")
+	ex.PrintOutDateTimeTimeZoneFields(
+		t2,
+		[]string{"t2 Date Time"},
+		lineLen,
+		fmtStr)
 
 	pacificTz := dt.TZones.America.Los_Angeles()
 
@@ -1083,7 +1447,11 @@ func (mt mainTest) mainTest054() {
 		0,
 		pacificTzPtr)
 
-	ex.PrintOutDateTimeTimeZoneFields(t3, "t3 Date Time")
+	ex.PrintOutDateTimeTimeZoneFields(
+		t3,
+		[]string{"t3 Date Time"},
+		lineLen,
+		fmtStr)
 
 }
 
@@ -1252,7 +1620,7 @@ func (mt mainTest) mainTest052() {
 
 func (mt mainTest) mainTest051() {
 	ePrefix := "mainTest051()"
-
+	lineLen := 65
 	mt.mainPrintHdr(ePrefix , "-")
 
 	timeZone := dt.TZones.Local()
@@ -1290,7 +1658,11 @@ func (mt mainTest) mainTest051() {
 		return
 	}
 
-	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+	ex.PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1 Initial Date Time"},
+		lineLen,
+		fmtStr)
 
 	_, err = time.LoadLocation(t1.Location().String())
 
@@ -1350,7 +1722,7 @@ func (mt mainTest) mainTest050() {
 	 =========================================
  */
 	ePrefix := "mainTest050()"
-
+	lineLen := 65
 	mt.mainPrintHdr(ePrefix , "-")
 
 	// "Asia/Ho_Chi_Minh"
@@ -1379,7 +1751,13 @@ if err != nil {
 		0,
 		tzLocPtr)
 
-	ex.PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1 Initial Date Time"},
+		lineLen,
+		fmtStr)
 
 }
 

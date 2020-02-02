@@ -15,7 +15,7 @@ type MainCodeExamples struct {
 func (mc MainCodeExamples) mainCodeEx049() {
 
 	ePrefix := "mainCodeEx049()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	// t1EdtStr :=  "06/20/2019 09:58:32 -0400 EDT"
@@ -38,14 +38,18 @@ func (mc MainCodeExamples) mainCodeEx049() {
 		return
 	}
 
-	PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+	PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1 Initial Date Time"},
+		lineLen,
+		fmtStr)
 
 }
 
 func (mc MainCodeExamples) mainCodeEx048() {
 
 	ePrefix := "mainCodeEx048()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	// t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
@@ -70,7 +74,11 @@ func (mc MainCodeExamples) mainCodeEx048() {
 		return
 	}
 
-	PrintOutDateTimeTimeZoneFields(t1, "t1 Initial Date Time")
+	PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1 Initial Date Time"},
+		lineLen,
+		fmtStr)
 
 	locNamePtr := t1.Location()
 	locName := locNamePtr.String()
@@ -235,7 +243,11 @@ func (mc MainCodeExamples) mainCodeEx048() {
 			locName)
 	}
 
-	PrintOutDateTimeTimeZoneFields(t1, "t1 Final Date Time")
+	PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1 Final Date Time"},
+		lineLen,
+		fmtStr)
 }
 
 
@@ -243,7 +255,7 @@ func (mc MainCodeExamples) mainCodeEx048() {
 func (mc MainCodeExamples) mainCodeEx047() {
 	// CET is a valid time zone
 	ePrefix := "mainCodeEx047()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	// t1EdtStr :=  "06/20/2019 09:58:32.000000000 -0400 EDT"
@@ -266,7 +278,11 @@ func (mc MainCodeExamples) mainCodeEx047() {
 		return
 	}
 
-	PrintOutDateTimeTimeZoneFields(t1Edt, "t1 EST Date Time")
+	PrintOutDateTimeTimeZoneFields(
+		t1Edt,
+		[]string{"t1 EST Date Time"},
+		lineLen,
+		fmtStr)
 
 	newTimeZoneName := "MST"
 
@@ -283,14 +299,18 @@ func (mc MainCodeExamples) mainCodeEx047() {
 	t2Cdt := t1Edt.In(newTimeZoneLocPtr)
 
 
-	PrintOutDateTimeTimeZoneFields(t2Cdt, "t1 CDT Date Time")
+	PrintOutDateTimeTimeZoneFields(
+		t2Cdt,
+		[]string{"t1 CDT Date Time"},
+		lineLen,
+		fmtStr)
 
 }
 
 func (mc MainCodeExamples) mainCodeEx046() {
 
 	ePrefix := "mainCodeEx046()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	tstr1 := "12/29/2019 17:54:30 -0800 PST"
@@ -317,10 +337,17 @@ func (mc MainCodeExamples) mainCodeEx046() {
 		return
 	}
 
-	PrintOutDateTimeTimeZoneFields(tIn1, "tIn1")
+	PrintOutDateTimeTimeZoneFields(
+		tIn1,
+		[]string{"tIn1"},
+		lineLen,
+		fmtStr)
 
-	PrintOutDateTimeTimeZoneFields(tIn2, "tIn2")
-
+	PrintOutDateTimeTimeZoneFields(
+		tIn2,
+		[]string{"tIn2"},
+		lineLen,
+		fmtStr)
 
 	tstr1TimeZone := tstr1[tzLeadLen:]
 
@@ -357,16 +384,24 @@ func (mc MainCodeExamples) mainCodeEx046() {
 
 	t2ConvertedByT1 := tIn2.In(tstr1TimeZoneLocPtr)
 
-	PrintOutDateTimeTimeZoneFields(t1ConvertedByT2, "t1ConvertedByT2")
+	PrintOutDateTimeTimeZoneFields(
+		t1ConvertedByT2,
+		[]string{"t1ConvertedByT2"},
+		lineLen,
+		fmtStr)
 
-	PrintOutDateTimeTimeZoneFields(t2ConvertedByT1, "t2ConvertedByT1")
+	PrintOutDateTimeTimeZoneFields(
+		t2ConvertedByT1,
+		[]string{"t2ConvertedByT1"},
+		lineLen,
+		fmtStr)
 
 }
 
 func (mc MainCodeExamples) mainCodeEx045() {
 
 	ePrefix := "mainCodeEx045()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	tstr1 := "06/29/2019 19:54:30 -0500 CDT"
@@ -393,9 +428,17 @@ func (mc MainCodeExamples) mainCodeEx045() {
 		return
 	}
 
-	PrintOutDateTimeTimeZoneFields(tIn1, "tIn1")
+	PrintOutDateTimeTimeZoneFields(
+		tIn1,
+		[]string{"tIn1"},
+		lineLen,
+		fmtStr)
 
-	PrintOutDateTimeTimeZoneFields(tIn2, "tIn2")
+	PrintOutDateTimeTimeZoneFields(
+		tIn2,
+		[]string{"tIn2"},
+		lineLen,
+		fmtStr)
 
 	tstr1TimeZone := tstr1[tzLeadLen:]
 
@@ -431,16 +474,24 @@ func (mc MainCodeExamples) mainCodeEx045() {
 
 	t2ConvertedByT1 := tIn2.In(tstr1TimeZoneLocPtr)
 
-	PrintOutDateTimeTimeZoneFields(t1ConvertedByT2, "t1ConvertedByT2")
+	PrintOutDateTimeTimeZoneFields(
+		t1ConvertedByT2,
+		[]string{"t1ConvertedByT2"},
+		lineLen,
+		fmtStr)
 
-	PrintOutDateTimeTimeZoneFields(t2ConvertedByT1, "t2ConvertedByT1")
+	PrintOutDateTimeTimeZoneFields(
+		t2ConvertedByT1,
+		[]string{"t2ConvertedByT1"},
+		lineLen,
+		fmtStr)
 
 }
 
 func (mc MainCodeExamples) mainCodeEx044() {
 
 	ePrefix := "mainCodeEx044()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	tstr1 := "06/29/2019 19:54:30 -0500 CDT"
@@ -469,9 +520,17 @@ func (mc MainCodeExamples) mainCodeEx044() {
 		return
 	}
 
-	PrintOutDateTimeTimeZoneFields(tIn1, "tIn1")
+	PrintOutDateTimeTimeZoneFields(
+		tIn1,
+		[]string{"tIn1"},
+		lineLen,
+		fmtStr)
 
-	PrintOutDateTimeTimeZoneFields(tIn2, "tIn2")
+	PrintOutDateTimeTimeZoneFields(
+		tIn2,
+		[]string{"tIn2"},
+		lineLen,
+		fmtStr)
 
 
 	tIn1V2 := time.Date(
@@ -484,7 +543,11 @@ func (mc MainCodeExamples) mainCodeEx044() {
 		0,
 		tIn2.Location())
 
-	PrintOutDateTimeTimeZoneFields(tIn1V2, "tIn1V2")
+	PrintOutDateTimeTimeZoneFields(
+		tIn1V2,
+		[]string{"tIn1V2"},
+		lineLen,
+		fmtStr)
 
 	tIn2V2 := time.Date(
 		2019,
@@ -496,7 +559,11 @@ func (mc MainCodeExamples) mainCodeEx044() {
 		0,
 		tIn1.Location())
 
-	PrintOutDateTimeTimeZoneFields(tIn2V2, "tIn2V2")
+	PrintOutDateTimeTimeZoneFields(
+		tIn2V2,
+		[]string{"tIn2V2"},
+		lineLen,
+		fmtStr)
 
 	currTz := tstr2[tzLeadLen:]
 
@@ -538,13 +605,17 @@ func (mc MainCodeExamples) mainCodeEx044() {
 	}
 
 	convertedTIn1 := tIn1.In(newTZonePtr)
-	PrintOutDateTimeTimeZoneFields(convertedTIn1, "convertedTIn1")
+	PrintOutDateTimeTimeZoneFields(
+		convertedTIn1,
+		[]string{"convertedTIn1"},
+		lineLen,
+		fmtStr)
 
 }
 
 func (mc MainCodeExamples) mainCodeEx043() {
 	ePrefix := "mainCodeEx043()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	tzName := "EST"
@@ -569,7 +640,11 @@ func (mc MainCodeExamples) mainCodeEx043() {
 
 	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	PrintOutDateTimeTimeZoneFields(t1, "t1")
+	PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1"},
+		lineLen,
+		fmtStr)
 
 	t1V2str := "06/30/2019 22:58:32.000000000 -0400 EDT"
 
@@ -582,7 +657,11 @@ func (mc MainCodeExamples) mainCodeEx043() {
 		return
 	}
 
-	PrintOutDateTimeTimeZoneFields(t1V2, "t1V2")
+	PrintOutDateTimeTimeZoneFields(
+		t1V2,
+		[]string{"t1V2"},
+		lineLen,
+		fmtStr)
 
 }
 
@@ -815,7 +894,7 @@ func (mc MainCodeExamples) mainCodeEx039() {
 func (mc MainCodeExamples) mainCodeEx038() {
 
 	ePrefix := "mainCodeEx038()"
-
+	lineLen := 65
 	mc.mainPrintHdr(ePrefix , "-")
 
 	t1str := "06/30/2019 22:58:32.000000000 -0400 EDT"
@@ -851,9 +930,17 @@ func (mc MainCodeExamples) mainCodeEx038() {
 		0,
 		easternLocPtr)
 
-	PrintOutDateTimeTimeZoneFields(t1, "t1 Date Time")
+	PrintOutDateTimeTimeZoneFields(
+		t1,
+		[]string{"t1 Date Time"},
+		lineLen,
+		fmtStr)
 
-	PrintOutDateTimeTimeZoneFields(t2, "t2 Date Time")
+	PrintOutDateTimeTimeZoneFields(
+		t2,
+		[]string{"t2 Date Time"},
+		lineLen,
+		fmtStr)
 
 
 }
