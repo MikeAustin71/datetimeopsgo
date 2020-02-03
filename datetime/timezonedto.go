@@ -878,7 +878,7 @@ func (tzDto TimeZoneDto) New(
 	defer tzDto.lock.Unlock()
 
 	ePrefix := "TimeZoneDto.New() "
-	tZoneUtil := timeZoneDtoUtility{}
+	tZoneDtoUtil := timeZoneDtoUtility{}
 
 	if tIn.IsZero() {
 		return TimeZoneDto{},
@@ -902,7 +902,7 @@ func (tzDto TimeZoneDto) New(
 			}
 	}
 
-	return tZoneUtil.newTzDto( tIn, timeZoneOutLocationName, dateTimeFmtStr, ePrefix)
+	return tZoneDtoUtil.newTzDto( tIn, timeZoneOutLocationName, dateTimeFmtStr, ePrefix)
 }
 
 // NewAddDate - receives four parameters: a TimeZoneDto 'tzuIn' and integer values for

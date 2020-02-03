@@ -1915,7 +1915,7 @@ func (tzMech *TimeZoneMechanics) PreProcessTimeZoneLocation(
 		strings.TrimLeft(strings.TrimRight(timeZoneLocation, " "), " ")
 
 	if len(timeZoneLocation) == 0 {
-		return timeZoneLocation
+		return TZones.UTC()
 	}
 
 	testZone := strings.ToLower(timeZoneLocation)

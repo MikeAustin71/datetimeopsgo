@@ -10,13 +10,74 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest069()
+	mainTest{}.mainTest071()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest071() {
+	// TestDurationTriad_NewStartTimeMinusTime_01
+	// \datetime\zztdurationtriad01_test.go
+	//
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	timeDto := dt.TimeDto{
+		Years: 3, 
+		Months: 2, 
+		Weeks: 2, 
+		WeekDays: 1, 
+		Hours: 3, 
+		Minutes: 4, 
+		Seconds: 2}
+
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
+			t2,
+			timeDto,
+			dt.TZones.US.Central(),
+			dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.",
+			t1OutStr, dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+		fmt.Printf("Error- Expected End Time %v. Instead, got %v.",
+			t2OutStr, dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t12Dur != dur.BaseTime.TimeDuration {
+		fmt.Printf("Error- Expected Time Duration %v. Instead, got %v",
+			t12Dur, dur.BaseTime.TimeDuration)
+	}
+
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+
 }
 
 func (mt mainTest) mainTest070() {

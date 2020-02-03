@@ -83,7 +83,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
-	dTzUtil2 :=dateTzDtoUtility{}
+	dTzUtil2 := dateTzDtoUtility{}
 
 	err := dTzUtil2.isValidDateTzDto(dTz, ePrefix)
 
@@ -93,6 +93,21 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 			"Validation Error='%v'\n", err.Error())
 	}
 
+	dtMech := DTimeMechanics{}
+
+	newDt1 := dtMech.AddDateTimeByUtc(
+		dTz.dateTimeValue,
+		years,
+		months,
+		days,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0)
+
+	/*
 	newDt1 := dTz.dateTimeValue.AddDate(
 		years,
 		months,
@@ -100,6 +115,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 
 	dur := DayNanoSeconds * int64(days)
 	newDt2 := newDt1.Add(time.Duration(dur))
+*/
 
 	if dateTimeFormatStr == "" {
 		dateTimeFormatStr = dTz.dateTimeFmt
@@ -107,7 +123,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 
 	dtz2 := DateTzDto{}
 
-	err = dTzUtil2.setFromDateTime( &dtz2, newDt2, dateTimeFormatStr, ePrefix)
+	err = dTzUtil2.setFromDateTime( &dtz2, newDt1, dateTimeFormatStr, ePrefix)
 
 	return dtz2, err
 }
@@ -141,6 +157,33 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
+	dtMech := DTimeMechanics{}
+
+	newDateTime := dtMech.AddDateTimeByUtc(
+		dTz.dateTimeValue,
+		years,
+		months,
+		days,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds)
+
+	dTzUtil2 := dateTzDtoUtility{}
+
+	dTz2 := DateTzDto{}
+
+	err := dTzUtil2.setFromDateTime(&dTz2, newDateTime, dTz.dateTimeFmt, ePrefix)
+
+	if err != nil {
+		return DateTzDto{}, err
+	}
+
+	return dTz2, nil
+
+/*
 	newDate := dTz.dateTimeValue.AddDate(years, months, 0)
 
 	totNanoSecs := int64(days) * DayNanoSeconds
@@ -164,6 +207,7 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 	}
 
 	return dTz2, nil
+	*/
 }
 
 // addDuration - Adds Duration to the DateTime XValue of the input
@@ -246,25 +290,28 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 
 	tDto.ConvertToNegativeValues()
 
-	dt1 := dTz.dateTimeValue.AddDate(tDto.Years,
+	dtMech := DTimeMechanics{}
+
+	dt2 := dtMech.AddDateTimeByUtc(
+		dTz.dateTimeValue,
+		tDto.Years,
 		tDto.Months,
-		0)
-
-	totNanosecs := int64(tDto.DateDays) * DayNanoSeconds
-	totNanosecs += int64(tDto.Hours) * HourNanoSeconds
-	totNanosecs += int64(tDto.Minutes) * MinuteNanoSeconds
-	totNanosecs += int64(tDto.Seconds) * SecondNanoseconds
-	totNanosecs += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	totNanosecs += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	totNanosecs += int64(tDto.Nanoseconds)
-
-	dt2 := dt1.Add(time.Duration(totNanosecs))
+		tDto.DateDays,
+		tDto.Hours,
+		tDto.Minutes,
+		tDto.Seconds,
+		tDto.Milliseconds,
+		tDto.Microseconds,
+		tDto.Nanoseconds)
 
 	dtz2 := DateTzDto{}
 	dTzUtil2 := dateTzDtoUtility{}
 
-	err = dTzUtil2.setFromDateTime(&dtz2,
+	err = dTzUtil2.setFromTzDef(
+		&dtz2,
 		dt2,
+		TzConvertType.Relative(),
+		dTz.timeZone.CopyOut(),
 		dTz.dateTimeFmt,
 		ePrefix)
 
@@ -981,7 +1028,7 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 
 	defer dTzUtil.lock.Unlock()
 
-	ePrefix += "dateTzDtoUtility.setFromTzSpec() "
+	ePrefix += "dateTzDtoUtility.setFromTzDef() "
 
 	if dTz == nil {
 		return &InputParameterError{

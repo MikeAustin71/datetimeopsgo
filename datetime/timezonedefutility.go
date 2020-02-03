@@ -429,6 +429,67 @@ func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
 	return true
 }
 
+func (tzDefUtil *timeZoneDefUtility) newFromDateTime(
+	dateTime time.Time,
+	ePrefix string) (TimeZoneDefinition, error) {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.newFromTimeZoneName() "
+
+	tzDefOut := TimeZoneDefinition{}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	err := tzDefUtil2.setFromDateTime(
+		&tzDefOut,
+		dateTime,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDefinition{}, err
+	}
+
+	return tzDefOut, nil
+}
+
+
+// newFromTimeZoneName - Returns a new 'TimeZoneDefinition'
+// object created from 'dateTime' and 'timeZoneLocationName'.
+//
+func (tzDefUtil *timeZoneDefUtility) newFromTimeZoneName(
+	dateTime time.Time,
+	timeZoneLocationName string,
+	timeZoneConversionType TimeZoneConversionType,
+	ePrefix string) (TimeZoneDefinition, error) {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.newFromTimeZoneName() "
+
+	tzDefOut := TimeZoneDefinition{}
+
+	tzDefUtil2 := timeZoneDefUtility{}
+
+	err := tzDefUtil2.setFromTimeZoneName(
+		&tzDefOut,
+		dateTime,
+		timeZoneConversionType,
+		timeZoneLocationName,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneDefinition{}, err
+	}
+
+	return tzDefOut, nil
+}
+
+
 // SetFromDateTimeComponents - Re-initializes the values of a
 // 'TimeZoneDefinition' instance based on time components (i.e.
 // years, months, days, hours, minutes, seconds and nanoseconds)

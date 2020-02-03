@@ -269,6 +269,26 @@ func (dtMech *DTimeMechanics) AddDateTimeByUtc(
 	return resultDateTime.In(baseDateTime.Location())
 }
 
+// AddDurationByUtc - Receives a base date time and
+// converts that date time to its UTC equivalent. Then,
+// the time duration is added. After the addition
+// operation the new date is converted back to the
+// original time zone and returned.
+//
+func (dtMech *DTimeMechanics) AddDurationByUtc(
+	baseDateTime time.Time,
+	timeDuration time.Duration) time.Time {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	utcEquivalentDateTime := baseDateTime.In(time.UTC)
+
+	utcTimePlusDuration := utcEquivalentDateTime.Add(timeDuration)
+
+	return utcTimePlusDuration.In(baseDateTime.Location())
+}
 // AllocateSecondsToHrsMinSecs - Useful in calculating offset hours,
 // minutes and seconds from UTC+0000. A total signed seconds value
 // is passed as an input parameter. This method then breaks down
@@ -312,6 +332,26 @@ func (dtMech *DTimeMechanics) AllocateSecondsToHrsMinSecs(
 	seconds = remainingSeconds
 
 	return hours, minutes, seconds, sign
+}
+
+func (dtMech *DTimeMechanics) GetDurationFromTimeComponents(
+	days ,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int) time.Duration {
+
+	totNanosecs := int64(days) * DayNanoSeconds
+	totNanosecs += int64(hours) * HourNanoSeconds
+	totNanosecs += int64(minutes) * MinuteNanoSeconds
+	totNanosecs += int64(seconds) * SecondNanoseconds
+	totNanosecs += int64(milliseconds) * MilliSecondNanoseconds
+	totNanosecs += int64(microseconds) * MicroSecondNanoseconds
+	totNanosecs += int64(nanoseconds)
+
+	return time.Duration(totNanosecs)
 }
 
 // GetTimeZoneFromDateTime - Analyzes a date time object
@@ -759,4 +799,26 @@ func (dtMech *DTimeMechanics) RelativeTimeToTimeNameZoneConversion(
 	}
 
 	return tzSpec.referenceDateTime, nil
+}
+
+// PreProcessDateFormatStr - If parameter, 'dateTimeFmtStr'
+// is determined, a default value is substituted.
+//
+func (dtMech *DTimeMechanics) PreProcessDateFormatStr(
+	dateTimeFmtStr string) string {
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+
+	dateTimeFmtStr = strings.TrimLeft(strings.TrimRight(dateTimeFmtStr, " "), " ")
+
+	if len(dateTimeFmtStr) == 0 {
+		lockDefaultDateTimeFormat.Lock()
+		dateTimeFmtStr = DEFAULTDATETIMEFORMAT
+		lockDefaultDateTimeFormat.Unlock()
+	}
+
+	return dateTimeFmtStr
 }

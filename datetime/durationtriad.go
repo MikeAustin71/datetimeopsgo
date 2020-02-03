@@ -179,38 +179,37 @@ type DurationTriad struct {
 //
 // Input Parameter
 //
-//	duIn DurationTriad - An instance of type 'DurationTriad'. The data fields
-//	                     of input parameter 'duIn' will be copied to the
-//	                     the data fields of the current DurationTriad instance.
-//	                     The type of copy operation performed is a 'deep' copy.
+//  duIn DurationTriad - An instance of type 'DurationTriad'. The data fields
+//                       of input parameter 'duIn' will be copied to the
+//                       the data fields of the current DurationTriad instance.
+//                       The type of copy operation performed is a 'deep' copy.
 //
-//	                     When this operation completes, 'duIn' and the current
-//	                     'DurationTriad' instance will be equivalent.
+//                       When this operation completes, 'duIn' and the current
+//                       'DurationTriad' instance will be equivalent.
 //
-//	                     A DurationTriad Structure is defined as follows:
+//                       A DurationTriad Structure is defined as follows:
 //
-//	                     type DurationTriad struct {
-//	                       BaseTime  TimeDurationDto
-//	                       LocalTime TimeDurationDto
-//	                       UTCTime   TimeDurationDto
-//	                      }
+//                       type DurationTriad struct {
+//                         BaseTime  TimeDurationDto
+//                         LocalTime TimeDurationDto
+//                         UTCTime   TimeDurationDto
+//                        }
 //
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
-//	None.
+//  None.
 //
-func (durT *DurationTriad) CopyIn(duIn DurationTriad) {
-	durT.Empty()
-	durT.BaseTime = duIn.BaseTime.CopyOut()
-	durT.LocalTime = duIn.LocalTime.CopyOut()
-	durT.UTCTime = duIn.UTCTime.CopyOut()
+func (durT *DurationTriad) CopyIn(durTIn DurationTriad) {
 
+	durTUtil := durationTriadUtility{}
+
+	durTUtil.copyIn(durT, &durTIn, "DurationTriad.CopyIn() ")
 	return
 }
 
-// copyOut - Creates and returns a new DurationTriad instance. The deep
+// CopyOut - Creates and returns a new DurationTriad instance. The deep
 // copy operation copies all data elements from the current
 // DurationTriad instance to the new DurationTriad instance which is
 // returned to the calling function.
@@ -220,54 +219,54 @@ func (durT *DurationTriad) CopyIn(duIn DurationTriad) {
 //
 // Input Parameters
 //
-//	None.
+//  None.
 //
 // ------------------------------------------------------------------------
 //
 // Return XValue
 //
-//	DurationTriad - Upon completion, this method returns a new instance of
-//	                Type DurationTriad which is, in all respects, an exact
-//	                copy of the current DurationTriad instance.
+//  DurationTriad - Upon completion, this method returns a new instance of
+//                  Type DurationTriad which is, in all respects, an exact
+//                  copy of the current DurationTriad instance.
 //
-//	                A DurationTriad Structure is defined as follows:
+//                  A DurationTriad Structure is defined as follows:
 //
-//	                type DurationTriad struct {
-//	                  BaseTime  TimeDurationDto
-//	                  LocalTime TimeDurationDto
-//	                  UTCTime   TimeDurationDto
-//	                }
+//                  type DurationTriad struct {
+//                    BaseTime  TimeDurationDto
+//                    LocalTime TimeDurationDto
+//                    UTCTime   TimeDurationDto
+//                  }
 //
 func (durT *DurationTriad) CopyOut() DurationTriad {
-	duOut := DurationTriad{}
-	duOut.BaseTime = durT.BaseTime.CopyOut()
-	duOut.LocalTime = durT.LocalTime.CopyOut()
-	duOut.UTCTime = durT.UTCTime.CopyOut()
 
-	return duOut
+	durTUtil := durationTriadUtility{}
+	
+	return durTUtil.copyOut(durT, "DurationTriad.CopyOut() ")
 }
 
-// Empty - This method initializes
-// all of the fields in the current
-// DurationTriad structure to their
-// zero values.
+// Empty - This method initializes all of the data fields in
+// the current DurationTriad structure to their zero or
+// uninitialized values.
 //
 // ------------------------------------------------------------------------
 //
 // Input Parameters
 //
-//	None.
+// None.
 //
 // ------------------------------------------------------------------------
 //
 // Return Values
 //
-//	None.
+// None.
 //
 func (durT *DurationTriad) Empty() {
-	durT.BaseTime.Empty()
-	durT.LocalTime.Empty()
-	durT.UTCTime.Empty()
+
+	durTUtil := durationTriadUtility{}
+
+	durTUtil.empty(durT, "DurationTriad.Empty() ")
+
+	return
 }
 
 // Equal - This method may be used to determine if two
@@ -342,25 +341,9 @@ func (durT *DurationTriad) IsValid() error {
 
 	ePrefix := "DurationTriad.IsValid() "
 
-	err := durT.BaseTime.IsValid()
+	durTUtil := durationTriadUtility{}
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+"INVALID durT.BaseTime. Error='%v'", err.Error())
-	}
-
-	err = durT.LocalTime.IsValid()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"INVALID durT.LocalTime. Error='%v'", err.Error())
-	}
-
-	err = durT.UTCTime.IsValid()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"INVALID durT.UTCTime. Error='%v'", err.Error())
-	}
-
-	return nil
+	return durTUtil.isValid(durT, ePrefix)
 }
 
 
@@ -1174,9 +1157,29 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 
 	ePrefix := "DurationTriad.NewEndTimeMinusTimeDtoTz() "
 
-	du2 := DurationTriad{}
+	durTUtil := durationTriadUtility{}
 
-	err := du2.SetEndTimeMinusTimeDtoCalcTz(endDateTime,
+	durTriadOut := DurationTriad{}
+
+	err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
+		&durTriadOut,
+		endDateTime,
+		minusTimeDto,
+		TDurCalcType(0).StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return DurationTriad{}, err
+	}
+
+	return durTriadOut, nil
+
+	/*
+		du2 := DurationTriad{}
+	err := du2.SetEndTimeMinusTimeDtoCalcTz(
+		endDateTime,
 		minusTimeDto,
 		TDurCalcType(0).StdYearMth(),
 		timeZoneLocation,
@@ -1189,6 +1192,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 	}
 
 	return du2, nil
+	*/
 }
 
 // NewStartTimeDuration - Returns a New DurationTriad based on 'startDateTz'
@@ -3016,145 +3020,149 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 // For most purposes, the calculation type 'TDurCalcType(0).StdYearMth()' will
 // suffice. For details see Type 'TDurCalcType' which is located in
 // source file:
-// 			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//   MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 // ------------------------------------------------------------------------
 //
 // Input Parameters
 //
-//	endDateTime   time.Time - The ending date time value from which TimeDto
-//	                           parameter 'minusTimeDto' will be subtracted
-//	                           in order to compute the Starting Date Time.
+// endDateTime   time.Time - The ending date time value from which TimeDto
+//                            parameter 'minusTimeDto' will be subtracted
+//                            in order to compute the Starting Date Time.
 //
-//	minusTimeDto  TimeDto   - An instance of TimeDto containing time values,
-//	                           (Years, Months, weeks, days, hours, minutes etc.)
-//	                           which will be subtracted from input parameter
-//	                           'endDateTime' in order to compute the Starting
-//	                           Date Time and Time Duration.
+// minusTimeDto  TimeDto   - An instance of TimeDto containing time values,
+//                            (Years, Months, weeks, days, hours, minutes etc.)
+//                            which will be subtracted from input parameter
+//                            'endDateTime' in order to compute the Starting
+//                            Date Time and Time Duration.
 //
-//	                          type TimeDto struct {
-//	                            Years                  int // Number of Years
-//	                            Months                 int // Number of Months
-//	                            Weeks                  int // Number of Weeks
-//	                            WeekDays               int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//	                            DateDays               int // Total Number of Days. Weeks x 7 plus WeekDays
-//	                            Hours                  int // Number of Hours.
-//	                            Minutes                int // Number of Minutes
-//	                            Seconds                int // Number of Seconds
-//	                            Milliseconds           int // Number of Milliseconds
-//	                            Microseconds           int // Number of Microseconds
-//	                            Nanoseconds            int // Remaining Nanoseconds after Milliseconds & Microseconds
-//	                            TotSubSecNanoseconds   int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//	                                                       // plus remaining Nanoseconds
-//	                           }
+//                           type TimeDto struct {
+//                             Years                  int // Number of Years
+//                             Months                 int // Number of Months
+//                             Weeks                  int // Number of Weeks
+//                             WeekDays               int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//                             DateDays               int // Total Number of Days. Weeks x 7 plus WeekDays
+//                             Hours                  int // Number of Hours.
+//                             Minutes                int // Number of Minutes
+//                             Seconds                int // Number of Seconds
+//                             Milliseconds           int // Number of Milliseconds
+//                             Microseconds           int // Number of Microseconds
+//                             Nanoseconds            int // Remaining Nanoseconds after Milliseconds & Microseconds
+//                             TotSubSecNanoseconds   int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                                        // plus remaining Nanoseconds
+//                            }
 //
-//	                           Type 'TimeDto' is located in source file:
-//	                           	MikeAustin71\datetimeopsgo\datetime\timedto.go
+//                            Type 'TimeDto' is located in source file:
+//                             MikeAustin71\datetimeopsgo\datetime\timedto.go
 //
-//	tDurCalcType  TDurCalcType - Specifies the calculation type to be used in allocating
-//				     time duration:
+// tDurCalcType  TDurCalcType - Specifies the calculation type to be used in allocating
+//         time duration:
 //
-//				TDurCalcType(0).StdYearMth()	- Default - standard year, month week,
-//					  			    day time calculation.
+//    TDurCalcType(0).StdYearMth() - Default - standard year, month week,
+//              day time calculation.
 //
-//				TDurCalcTypeCUMMONTHS	- Computes cumulative months - no Years.
+//    TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
 //
-//				TDurCalcTypeCUMWEEKS	- Computes cumulative weeks. No Years or months
+//    TDurCalcTypeCUMWEEKS - Computes cumulative weeks. No Years or months
 //
-//				TDurCalcTypeCUMDAYS	- Computes cumulative days. No Years, months or weeks.
+//    TDurCalcTypeCUMDAYS - Computes cumulative days. No Years, months or weeks.
 //
-//				TDurCalcTypeCUMHOURS	- Computes cumulative hours. No Years, months, weeks or days.
+//    TDurCalcTypeCUMHOURS - Computes cumulative hours. No Years, months, weeks or days.
 //
-//				TDurCalcTypeCUMMINUTES	- Computes cumulative minutes. No Years, months, weeks, days
-//							  or hours.
+//    TDurCalcTypeCUMMINUTES - Computes cumulative minutes. No Years, months, weeks, days
+//         or hours.
 //
-//				TDurCalcTypeCUMSECONDS	- Computes cumulative seconds. No Years, months, weeks, days,
-//							  hours or minutes.
+//    TDurCalcTypeCUMSECONDS - Computes cumulative seconds. No Years, months, weeks, days,
+//         hours or minutes.
 //
-//				TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//							   Used for very large duration values.
+//    TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
+//          Used for very large duration values.
 //
-//				Type 'TDurCalcType' is located in source file:
-//					MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//    Type 'TDurCalcType' is located in source file:
+//     MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 //
-//	timeZoneLocation string - time zone location must be designated as one of
-//	                          two values:
+// timeZoneLocation string - time zone location must be designated as one of
+//                           three types of time zones:
 //
-//				(1) The string 'Local' - signals the designation of the local time zone
-//				    location for the host computer.
+//               (1) the string 'Local' - signals the designation of the
+//                   time zone location used by the host computer.
 //
-//				(2) IANA Time Zone Location -
-//				    See https://golang.org/pkg/time/#LoadLocation
-//				    and https://www.iana.org/time-zones to ensure that
-//				    the IANA Time Zone Database is properly configured
-//				    on your system. Note: IANA Time Zone Data base is
-//				    equivalent to 'tz database'.
+//               (2) IANA Time Zone Location -
+//                   See https://golang.org/pkg/time/#LoadLocation
+//                   and https://www.iana.org/time-zones to ensure that
+//                   the IANA Time Zone Database is properly configured
+//                   on your system. Note: IANA Time Zone Data base is
+//                   equivalent to 'tz database'.
+//                      Examples:
+//                        "America/New_York"
+//                        "America/Chicago"
+//                        "America/Denver"
+//                        "America/Los_Angeles"
+//                        "Pacific/Honolulu"
 //
-//				    Examples:
-//				      "America/New_York"
-//				      "America/Chicago"
-//				      "America/Denver"
-//				      "America/Los_Angeles"
-//				      "Pacific/Honolulu"
+//               (3) A Military Time Zone
+//                   Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//                    https://www.timeanddate.com/worldclock/timezone/alpha
+//                    https://www.timeanddate.com/time/map/
 //
-//				     The source file 'constantsdatetime.go' contains a number of
-//				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//				     time zone constants begin with the prefix 'TzIana'.
+//                    Examples:
+//                      "Alpha"   or "A"
+//                      "Bravo"   or "B"
+//                      "Charlie" or "C"
+//                      "Delta"   or "D"
+//                      "Zulu"    or "Z"
 //
-//	         The source file 'constantsdatetime.go' contains a number of
-//	         constant declarations covering the more frequently used time
-//	         zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//	         time zone constants begin with the prefix 'TzIana'.
+// dateTimeFmtStr string   - A date time format string which will be used
+//                           to format and display 'dateTime'. Example:
+//                           "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	dateTimeFmtStr string   - A date time format string which will be used
-//	                          to format and display 'dateTime'. Example:
-//	                          "2006-01-02 15:04:05.000000000 -0700 MST"
+//                           Date time format constants are found in the source
+//                           file 'constantsdatetime.go'. These constants represent
+//                           the more commonly used date time string formats. All
+//                           Date Time format constants begin with the prefix
+//                           'FmtDateTime'.
 //
-//	                          Date time format constants are found in the source
-//	                          file 'constantsdatetime.go'. These constants represent
-//	                          the more commonly used date time string formats. All
-//	                          Date Time format constants begin with the prefix
-//	                          'FmtDateTime'.
-//
-//	                          If 'dateTimeFmtStr' is submitted as an
-//	                          'empty string', a default date time format
-//	                          string will be applied. The default date time
-//	                          format string is:
-//	                            FmtDateTimeYrMDayFmtStr =
-//	                                "2006-01-02 15:04:05.000000000 -0700 MST"
+//                           If 'dateTimeFmtStr' is submitted as an
+//                           'empty string', a default date time format
+//                           string will be applied. The default date time
+//                           format string is:
+//                             FmtDateTimeYrMDayFmtStr =
+//                                 "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
 // Return XValue
 //
-//	error    - If this method completes successfully, the returned error
-//	           Type is set equal to 'nil'. If an error condition is encountered,
-//	           this method will return an error Type which encapsulates an
-//	           appropriate error message.
+// error    - If this method completes successfully, the returned error
+//            Type is set equal to 'nil'. If an error condition is encountered,
+//            this method will return an error Type which encapsulates an
+//            appropriate error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-//	dt  := DurationTriad{}
-//	err := dt.SetEndTimeMinusTimeDtoCalcTz(
-//	       startDateTime,
-//	       minusTimeDto,
-//	       TDurCalcType(0).StdYearMth(),
-//	       TZones.US.Central(),
-//	       FmtDateTimeYrMDayFmtStr)
+// dt  := DurationTriad{}
+// err := dt.SetEndTimeMinusTimeDtoCalcTz(
+//        startDateTime,
+//        minusTimeDto,
+//        TDurCalcType(0).StdYearMth(),
+//        TZones.US.Central(),
+//        FmtDateTimeYrMDayFmtStr)
 //
 //
-//	Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
-//				source file 'timedurationdto.go'.
+// Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
+//    source file 'timedurationdto.go'.
 //
-//	      TZones.US.Central() = "America/Chicago"
-//	      FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       TZones.US.Central() = "America/Chicago"
+//       FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'constantsdatetime.go'.
+//       'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
+//       source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 	endDateTime time.Time,
@@ -3165,6 +3173,18 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 
 	ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
 
+	durTUtil := durationTriadUtility{}
+
+	return durTUtil.setEndTimeMinusTimeDtoCalcTz(
+		durT,
+		endDateTime,
+		minusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
+
+/*
 	fmtStr := durT.preProcessDateFormatStr(dateTimeFmtStr)
 
 	tzLoc := durT.preProcessTimeZoneLocation(timeZoneLocation)
@@ -3248,7 +3268,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 	}
 
 	return nil
-
+*/
 }
 
 // SetEndTimeMinusTimeDtoTz - Calculate duration values based on an Ending Date Time and
