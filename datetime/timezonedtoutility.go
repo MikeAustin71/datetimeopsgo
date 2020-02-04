@@ -721,8 +721,9 @@ func (tZoneUtil *timeZoneDtoUtility) addTimeDurationDto(
 			err:                 nil,
 		}
 	}
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	err := durDto.IsValid()
+	err := tDurDtoUtil.isValid(&durDto, ePrefix)
 
 	if err != nil {
 		return &InputParameterError{

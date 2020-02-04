@@ -1221,6 +1221,27 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 	return dtzUtcOffset == dtz2UtcOffset, nil
 }
 
+// GetBestConvertibleTimeZone - If the Original Time Zone qualifies as
+// a fully convertible time zone, this method will return the Time Zone
+// Specification for the Original Time Zone.
+//
+// If the Original Time Zone does NOT qualify as a fully convertible Time
+// Zone, this method will return the Time Zone Specification for the
+// Convertible Time Zone.
+//
+// A convertible time zone is one which has a date time (time.Time) Location
+// Name configured as a fully formed time zone name which can be used to
+// accurately convert date times to other time zones across the globe.
+//
+func (dtz *DateTzDto) GetBestConvertibleTimeZone() TimeZoneSpecification {
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	return dtz.timeZone.GetBestConvertibleTimeZone()
+}
+
 // GetConvertibleTimeZone - Returns the TimeZoneSpecification object
 // associated with the Convertible Time Zone.
 //

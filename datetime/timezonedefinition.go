@@ -301,6 +301,32 @@ func (tzdef *TimeZoneDefinition) EqualZoneLocation(tzdef2 TimeZoneDefinition) bo
 	return true
 }
 
+// GetBestConvertibleTimeZone - If the Original Time Zone qualifies as
+// a fully convertible time zone, this method will return the Time Zone
+// Specification for the Original Time Zone.
+//
+// If the Original Time Zone does NOT qualify as a fully convertible Time
+// Zone, this method will return the Time Zone Specification for the
+// Convertible Time Zone.
+//
+// A convertible time zone is a date time (time.Time) Location Name
+// configured as a fully formed time zone name which can be used to
+// accurately convert date times to other time zones across the globe.
+//
+func (tzdef *TimeZoneDefinition) GetBestConvertibleTimeZone() TimeZoneSpecification {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	if tzdef.originalTimeZone.locationNameType == LocNameType.ConvertibleTimeZone() {
+		return tzdef.originalTimeZone.CopyOut()
+	}
+
+	return tzdef.convertibleTimeZone.CopyOut()
+}
+
+
 // GetConvertibleDateTime - Returns the Convertible Time Zone reference
 // date time value.
 //
@@ -1751,6 +1777,133 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 
 	return tzDefDto, err
 }
+
+// NewTzSpecFromTzName - Creates a 'TimeZoneDefinition' object
+// and then returns the first convertible time zone specification.
+//
+// A 'TimeZoneDefinition' consists of two time zone specifications,
+// an Original Time Zone and a Convertible Time Zone. The
+// 'TimeZoneDefinition' instance is created based on input parameter
+// 'timeZoneName'.
+//
+// If the Original Time Zone is NOT convertible, the Convertible
+// Time Zone Specification is returned.  Otherwise, the Original
+// Time Zone Specification is returned.
+//
+// A convertible time zone means that the Time Zone Location Name
+// is a fully formed time zone name which can be used to accurately
+// convert date times to other time zones across the globe.
+//
+// The 'timeZoneName' string must be set to one of three values:
+//
+//   1. A valid IANA Time Zone name.
+//
+//   2. The time zone "Local", which Golang accepts as the time
+//      zone currently configured on the host computer.
+//
+//   3. A valid Military Time Zone which can be submitted either as
+//      a single alphabetic character or as a full Military Time
+//      zone name.
+//
+// Return Values
+// =============
+//
+// This method will return two values:
+//      (1) A Time Zone Specification (TimeZoneSpecification)
+//      (2) An 'error' type
+//
+//  (1) If successful, this method will return a valid, populated
+//      'TimeZoneSpecification' object representing a 'convertible'
+//      time zone.
+//
+//  (2) If successful, this method will set the returned 'error' instance to 'nil'.
+//      If errors are encountered a valid error message will be returned in the
+//      error instance.
+//
+//      If neither the Original Time Zone nor the Convertible Time Zone qualify as
+//      'Convertible', an error is returned.
+//
+func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
+	dateTime time.Time,
+	timeZoneName string,
+	timeConversionType TimeZoneConversionType) (
+	TimeZoneSpec TimeZoneSpecification,
+	err error) {
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	ePrefix := "TimeZoneDefinition.NewTzSpecFromTzName() "
+
+	err = nil
+	TimeZoneSpec = TimeZoneSpecification{}
+
+	if dateTime.IsZero() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "dateTime",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'dateTime' has a Zero value!",
+			err:                 nil,
+		}
+
+		return TimeZoneSpec, err
+	}
+
+	if timeConversionType < TzConvertType.Absolute() &&
+		timeConversionType > TzConvertType.Relative() {
+
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeConversionType",
+			inputParameterValue: timeConversionType.String(),
+			errMsg:              "Input Parameter 'timeConversionType' " +
+				"contains an invalid value!",
+			err:                 nil,
+		}
+
+		return TimeZoneSpec, err
+	}
+
+	if len(timeZoneName) == 0 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeZoneName",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'timeZoneName' is an empty string!",
+			err:                 nil,
+		}
+
+		return TimeZoneSpec, err
+	}
+
+	tzDefUtil := timeZoneDefUtility{}
+	tzDef := TimeZoneDefinition{}
+
+	err = tzDefUtil.setFromTimeZoneName(
+		&tzDef,
+		dateTime,
+		timeConversionType,
+		timeZoneName,
+		ePrefix)
+
+	if err != nil {
+		return TimeZoneSpec, err
+	}
+
+	if tzDef.originalTimeZone.locationNameType ==
+			LocNameType.ConvertibleTimeZone() {
+
+		TimeZoneSpec = tzDef.originalTimeZone.CopyOut()
+	} else {
+		TimeZoneSpec = tzDef.convertibleTimeZone.CopyOut()
+	}
+
+	return TimeZoneSpec, err
+}
+
+
 
 // NewForTimeZoneSpec - Creates and returns a new instance of
 // 'TimeZoneDefinition'. The new instance is based on a
