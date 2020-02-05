@@ -1497,9 +1497,13 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.New(startTime, endTime, FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.New(
+//                                   startTime,
+//                                   endTime,
+//                                   FmtDateTimeYrMDayFmtStr)
 //
-//  Note: FmtDateTimeYrMDayFmtStr' is a constant available in constantsdatetime.go
+//  Note: FmtDateTimeYrMDayFmtStr' is a constant available in source file:
+//        'constantsdatetime.go'
 //
 func (tDur TimeDurationDto) New(
 	startDateTime,
@@ -1517,6 +1521,10 @@ func (tDur TimeDurationDto) New(
 			errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
 				"input parameters are ZERO!")
 	}
+
+	dtMech := DTimeMechanics{}
+
+	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	tzStartLocation := startDateTime.Location().String()
 
@@ -1860,26 +1868,27 @@ func (tDur TimeDurationDto) NewAutoStart(
 //
 // endDateTz  DateTzDto - Contains the ending date time used in time duration calculations.
 //
-// dateTimeFmtStr string  - A date time format string which will be used
-//               to format and display 'dateTime'. Example:
-//               "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr string
+//            - A date time format string which will be used
+//              to format and display 'dateTime'. Example:
+//              "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //              If 'dateTimeFmtStr' is submitted as an
-//               'empty string', a default date time format
-//               string will be applied. The default date time
-//               format string is:
+//              'empty string', a default date time format
+//              string will be applied. The default date time
+//              format string is:
 //               FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // Example Usage:
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewStartEndDateTzDto(
-//            startDateTz,
-//            endDateTz,
-//            FmtDateTimeYrMDayFmtStr)
+//                                   startDateTz,
+//                                   endDateTz,
+//                                   FmtDateTimeYrMDayFmtStr)
 //
-//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in
-//        constantsdatetime.go
+//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in source
+//        source file, "constantsdatetime.go".
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDto(
 	startDateTz,
@@ -1991,8 +2000,8 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 //                  - Computes Years based on average length of a Gregorian Year
 //                    Used for very large duration values.
 //
-//           Type 'TDurCalcType' is located in source file:
-//            MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//              Type 'TDurCalcType' is located in source file:
+//                 MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // timeZoneLocation string 
 //            - Designates the standard Time Zone location Name by which
@@ -2061,11 +2070,11 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewStartEndDateTzDtoCalcTz(
-//            startDateTz,
-//            endDateTz,
-//            TDurCalcType(0).StdYearMth(),
-//            TZones.US.Central(),
-//            FmtDateTimeYrMDayFmtStr)
+//                                    startDateTz,
+//                                    endDateTz,
+//                                    TDurCalcType(0).StdYearMth(),
+//                                    TZones.US.Central(),
+//                                    FmtDateTimeYrMDayFmtStr)
 //
 //  Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //         standard year month day time duration allocation.
@@ -5382,76 +5391,106 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(startDateTime,
 // Input Parameters:
 // =================
 //
-// startDateTime	time.Time	- Starting time
+// startDateTime time.Time - Starting time
 //
-// endDateTime		time.Time - Ending time
+// endDateTime  time.Time - Ending time
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
-//														time duration:
+// tDurCalcType TDurCalcType
+//            - Specifies the calculation type to be used in allocating
+//              time duration:
 //
-//					TDurCalcType(0).StdYearMth() 		- Default - standard year, month week,
-// 																			day time calculation.
+//     TDurCalcType(0).StdYearMth()     - Default - standard year, month week,
+//                                        day time calculation.
 //
-//					TDurCalcType(0).CumMonths() 		- Computes cumulative months - no Years.
+//     TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
 //
-//					TDurCalcType(0).CumWeeks()  		- Computes cumulative weeks. No Years or months
+//     TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
 //
-//					TDurCalcType(0).CumDays()				- Computes cumulative days. No Years, months or weeks.
+//     TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcType(0).CumHours()			- Computes cumulative hours. No Years, months, weeks or days.
+//     TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcType(0).CumMinutes() 		- Computes cumulative minutes. No Years, months, weeks, days
-//												   						or hours.
+//     TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
+//                     or hours.
 //
-//					TDurCalcType(0).CumSeconds() 		- Computes cumulative seconds. No Years, months, weeks, days,
-//												    					hours or minutes.
+//     TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
+//                                        hours or minutes.
 //
-//					TDurCalcType(0).GregorianYears() 	- Computes Years based on average length of a Gregorian Year
-//																		 	Used for very large duration values.
+//     TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
+//                                        Used for very large duration values.
 //
-// 										Type 'TDurCalcType' is located in source file:
-//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//           Type 'TDurCalcType' is located in source file:
+//             MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
-// timeZoneLocation	string	- Designates the standard Time Zone location by which
-//														time duration will be compared. This ensures that
-//														'oranges are compared to oranges and apples are compared
-//														to apples' with respect to start time and end time duration
-// 														calculations.
+// timeZoneLocation string
+//            - Designates the standard Time Zone location by which
+//              time duration will be compared. This ensures that
+//              'oranges are compared to oranges and apples are compared
+//              to apples' with respect to start time and end time duration
+//              calculations.
 //
-// 														Time zone location must be designated as one of three values.
+//              If 'timeZoneLocation' is passed as an empty string, it
+//              will be automatically defaulted to the 'UTC' time zone.
+//              Reference Universal Coordinated Time:
+//                 https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-// 														(1) the string 'Local' - signals the designation of the local time zone
-//																location for the host computer.
+//              Time zone location must be designated as one of three types of
+//              time zones.
 //
-//														(2) IANA Time Zone Location -
-// 																See https://golang.org/pkg/time/#LoadLocation
-// 																and https://www.iana.org/time-zones to ensure that
-// 																the IANA Time Zone Database is properly configured
-// 																on your system. Note: IANA Time Zone Data base is
-// 																equivalent to 'tz database'.
-//																Examples:
-//																	"America/New_York"
-//																	"America/Chicago"
-//																	"America/Denver"
-//																	"America/Los_Angeles"
-//																	"Pacific/Honolulu"
-//																	"Etc/UTC" = ZULU, GMT or UTC - Default
+//              (1) The time zone "Local", which Golang accepts as
+//                  the time zone currently configured on the host
+//                  computer.
 //
-//														 (3)	If 'timeZoneLocation' is submitted as an empty string,
-//																	it will default to "Etc/UTC" = ZULU, GMT, UTC
+//              (2) IANA Time Zone - A valid IANA Time Zone from the
+//                  IANA database.
+//                  See https://golang.org/pkg/time/#LoadLocation
+//                  and https://www.iana.org/time-zones to ensure that
+//                  the IANA Time Zone Database is properly configured
+//                  on your system.
 //
-// dateTimeFmtStr string		- A date time format string which will be used
-//															to format and display 'dateTime'. Example:
-//															"2006-01-02 15:04:05.000000000 -0700 MST"
+//                  IANA Time Zone Examples:
+//                    "America/New_York"
+//                    "America/Chicago"
+//                    "America/Denver"
+//                    "America/Los_Angeles"
+//                    "Pacific/Honolulu"
+//                    "Etc/UTC" = GMT or UTC
 //
-//														If 'dateTimeFmtStr' is submitted as an
-//															'empty string', a default date time format
-//															string will be applied. The default date time
-//															format string is:
-//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//              (3) A Military Time Zone
+//                  Reference:
+//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                    https://www.timeanddate.com/time/zones/military
+//                    https://www.timeanddate.com/worldclock/timezone/alpha
+//                    https://www.timeanddate.com/time/map/
 //
-func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(startDateTime,
-	endDateTime time.Time, tDurCalcType TDurCalcType, timeZoneLocation, dateTimeFmtStr string) error {
+//                   Examples:
+//                     "Alpha"   or "A"
+//                     "Bravo"   or "B"
+//                     "Charlie" or "C"
+//                     "Delta"   or "D"
+//                     "Zulu"    or "Z"
+//
+//                     If the time zone "Zulu" is passed to this method, it will be
+//                     classified as a Military Time Zone.
+//
+// dateTimeFmtStr string
+//            - A date time format string which will be used
+//              to format and display 'dateTime'. Example:
+//              "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//              If 'dateTimeFmtStr' is submitted as an
+//              'empty string', a default date time format
+//              string will be applied. The default date time
+//              format string is:
+//              FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(
+	startDateTime,
+	endDateTime time.Time,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
 	ePrefix := "TimeDurationDto.SetStartEndTimesTz() "
 
@@ -5960,6 +5999,7 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(startDateTime time.Ti
 	return nil
 }
 
+// XX
 // calcTimeDurationAllocations - Examines the input parameter 'calcType' and
 // then determines which type of time duration allocation calculation will be
 // applied to the data fields of the current TimeDurationDto instance.
@@ -6420,8 +6460,8 @@ func (tDur *TimeDurationDto) calcTypeCUMWEEKS() error {
 // represented by years duration using input parameters 'tDur.StartTimeDateTz' and
 // 'tDur.EndTimeDateTz'.
 //
-// NOTE:	Before calling this method, ensure that tDur.StartTimeDateTz,
-//				tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+// NOTE: Before calling this method, ensure that tDur.StartTimeDateTz,
+//       tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
 //
 func (tDur *TimeDurationDto) calcYearsFromDuration() error {
 
@@ -6483,12 +6523,12 @@ func (tDur *TimeDurationDto) calcYearsFromDuration() error {
 // using the start and end dates, 'tDur.StartTimeDateTz' and
 // 'tDur.EndTimeDateTz.DateTime'.
 //
-// NOTE:	(1) Before calling this method, ensure that tDur.StartTimeDateTz,
-//						tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//           tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
 //
-//				(2) Before calling this method, ensure that the following method is called
-//						first:
-//										TimeDurationDto.calcYearsFromDuration
+//       (2) Before calling this method, ensure that the following method is called
+//           first:
+//              TimeDurationDto.calcYearsFromDuration
 //
 func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 
@@ -6553,13 +6593,13 @@ func (tDur *TimeDurationDto) calcMonthsFromDuration() error {
 // Calculates 'tDur.DateDays', 'tDur.DateDaysNanosecs', 'tDur.Weeks', 'tDur.WeeksNanosecs',
 // 'tDur.WeekDays' and 'tDur.WeekDaysNanosecs'.
 //
-// NOTE:	(1) Before calling this method, ensure that TimeDurationDto.StartTimeDateTz,
-//						TimeDurationDto.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+// NOTE: (1) Before calling this method, ensure that TimeDurationDto.StartTimeDateTz,
+//           TimeDurationDto.EndTimeDateTz and tDur.TimeDuration are properly initialized.
 //
-//				(2) Before calling this method, ensure that the following methods are called
-//						first, in sequence:
-//							TimeDurationDto.calcYearsFromDuration
-//							TimeDurationDto.calcMonthsFromDuration
+//       (2) Before calling this method, ensure that the following methods are called
+//           first, in sequence:
+//             TimeDurationDto.calcYearsFromDuration
+//             TimeDurationDto.calcMonthsFromDuration
 //
 func (tDur *TimeDurationDto) calcDateDaysWeeksFromDuration() error {
 
