@@ -5082,43 +5082,17 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 //
 func (tDur *TimeDurationDto) SetAutoEnd() error {
 
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
 	ePrefix := "TimeDurationDto.SetAutoEnd() "
 
-	endDateTime := time.Now().Local()
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	locName := tDur.StartTimeDateTz.GetOriginalTzName()
-
-	_, err := time.LoadLocation(locName)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by time.LoadLocation(locName) "+
-			"locName='%v'  Error='%v' ",
-			locName, err.Error())
-	}
-
-	startDateTime := tDur.StartTimeDateTz.GetDateTimeValue()
-
-	fmtStr := tDur.StartTimeDateTz.GetDateTimeFmt()
-
-	calcType := tDur.CalcType
-
-	err = tDur.SetStartEndTimesCalcTz(startDateTime,
-		endDateTime,
-		calcType,
-		locName,
-		fmtStr)
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+
-			"Error returned by tDur.SetStartEndTimesCalcTz() "+
-			"startDateTime='%v'  endDateTime='%v'  Error='%v'",
-			startDateTime.Format(FmtDateTimeYrMDayFmtStr),
-			endDateTime.Format(FmtDateTimeYrMDayFmtStr),
-			err.Error())
-	}
-
-	return nil
+	return tDurDtoUtil.setAutoEnd(
+							tDur,
+							ePrefix)
 }
 
 // SetEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration

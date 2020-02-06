@@ -1204,6 +1204,109 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 	return nil
 }
 
+// setAutoEnd - When called, this method automatically sets the ending date
+// time and re-calculates the time duration for the current TimeDurationDto
+// instance.
+//
+// Ending date time is assigned the value returned by time.Now(). This ending
+// date time is converted to the specified Time Zone specified by the Time Zone
+// Location associated with the current starting date time value.
+//
+// When used together, the two methods 'NewAutoStart' and this method, 'SetAutoEnd'
+// function as a stop watch feature. Simply calling these functions can set
+// the starting date time and later the ending date time to measure elapsed time, or
+// time duration.
+//
+// The time duration calculation type is taken from the current TimeDurationDto
+// calculation type setting.
+//
+func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.setStartEndTimesCalcTz() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'tDur' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	tDurDtoUtil2 := timeDurationDtoUtility{}
+
+	err := tDurDtoUtil2.isValid(tDur, ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nInput Parameter 'tDur' is INVALID!\n" +
+			"Validation Error='%v'\n", err.Error())
+	}
+
+	startDateTime := tDur.StartTimeDateTz.dateTimeValue
+
+	endDateTime := time.Now().Local()
+
+	tzDef := tDur.StartTimeDateTz.timeZone.CopyOut()
+
+	dtMech := DTimeMechanics{}
+
+	dTzUtil := dateTzDtoUtility{}
+
+	tDur2 := TimeDurationDto{}
+
+	dateTimeFmtStr := dtMech.PreProcessDateFormatStr(tDur.StartTimeDateTz.dateTimeFmt)
+
+	err = dTzUtil.setFromTzDef(
+		&tDur2.StartTimeDateTz,
+		startDateTime,
+		TzConvertType.Relative(),
+		tzDef,
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = dTzUtil.setFromTzDef(
+		&tDur2.EndTimeDateTz,
+		endDateTime,
+		TzConvertType.Relative(),
+		tzDef,
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDur2.TimeDuration =
+			tDur2.EndTimeDateTz.dateTimeValue.Sub(
+				tDur2.StartTimeDateTz.dateTimeValue)
+
+	calcType := tDur.CalcType
+
+	err = tDurDtoUtil2.calcTimeDurationAllocations(
+		&tDur2,
+		calcType,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtil2.copyIn(tDur, &tDur2, ePrefix)
+
+	return nil
+}
 
 // SetEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration
 // based on an ending date time and the time components contained in a TimeDto.
