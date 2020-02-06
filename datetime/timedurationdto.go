@@ -5031,7 +5031,8 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 //           Type 'TDurCalcType' is located in source file:
 //            MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
-func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(tDurCalcType TDurCalcType) error {
+func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(
+	tDurCalcType TDurCalcType) error {
 
 	tDur.lock.Lock()
 
