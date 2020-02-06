@@ -838,6 +838,32 @@ func (durCalc TDurCalcType) String() string {
 	return result
 }
 
+// XFirstValidCalcType - Returns the value of the First TDurCalcType.
+// The first TDurCalcType is 'StdYearMth'.
+//
+func (durCalc TDurCalcType) XFirstValidCalcType() TDurCalcType {
+
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
+	return TDurCalcType(1)
+}
+
+
+// XLastValidCalcType - Returns the value of the Last TDurCalcType.
+// The Last TDurCalcType Value is 'GregorianYears'.
+//
+func (durCalc TDurCalcType) XLastValidCalcType() TDurCalcType {
+
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
+	return TDurCalcType(11)
+}
+
+
 // XParseString - Receives a string and attempts to match it with
 // the string value of a supported enumeration. If successful, a
 // new instance of TDurCalcType is returned set to the value of the

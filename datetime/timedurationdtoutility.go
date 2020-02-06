@@ -121,58 +121,21 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyOut(
 	return t2Dur
 }
 
-
-// calcTimeDurationAllocations - Examines the input parameter 'calcType' and
-// then determines which type of time duration allocation calculation will be
-// applied to the data fields of the current TimeDurationDto instance.
-func (tDurDtoUtil *timeDurationDtoUtility) calcTimeDurationAllocations(
-	tDur *TimeDurationDto,
-	calcType TDurCalcType,
-	ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcTimeDurationAllocations() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	switch calcType {
-
-	case TDurCalcType(0).StdYearMth():
-		return tDur.calcTypeSTDYEARMTH()
-
-	case TDurCalcType(0).CumMonths():
-		return tDur.calcTypeCUMMONTHS()
-
-	case TDurCalcType(0).CumWeeks():
-		return tDur.calcTypeCUMWEEKS()
-
-	case TDurCalcType(0).CumDays():
-		return tDurDtoUtilX2.calcTypeCUMDays(tDur, ePrefix)
-
-	case TDurCalcType(0).CumHours():
-		return tDur.calcTypeCUMHours()
-
-	case TDurCalcType(0).CumMinutes():
-		return tDur.calcTypeCUMMINUTES()
-
-	case TDurCalcType(0).CumSeconds():
-		return tDur.calcTypeCUMSECONDS()
-
-	case TDurCalcType(0).GregorianYears():
-		return tDur.calcTypeGregorianYears()
-	}
-
-	return fmt.Errorf(ePrefix+
-		"Error: Invalid TDurCalcType. calcType='%v'", calcType.String())
-}
-
-// calcTypeCUMDays - Calculates Cumulative Days. Years, months and weeks are consolidated
-// and counted as cumulative days. The Data Fields for years, months, weeks and week days
-// are set to zero.  All cumulative days are allocated to the data field, 'DateDays'.
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMDays(
+// calcDateDaysWeeksFromDuration - Calculates the Days associated
+// with the duration for this TimeDurationDto.
+//
+// Calculates 'tDur.DateDays', 'tDur.DateDaysNanosecs', 'tDur.Weeks', 'tDur.WeeksNanosecs',
+// 'tDur.WeekDays' and 'tDur.WeekDaysNanosecs'.
+//
+// NOTE: (1) Before calling this method, ensure that TimeDurationDto.StartTimeDateTz,
+//           TimeDurationDto.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+//
+//       (2) Before calling this method, ensure that the following methods are called
+//           first, in sequence:
+//             TimeDurationDto.calcYearsFromDuration
+//             TimeDurationDto.calcMonthsFromDuration
+//
+func (tDurDtoUtil *timeDurationDtoUtility) calcDateDaysWeeksFromDuration(
 	tDur *TimeDurationDto,
 	ePrefix string) error {
 
@@ -180,55 +143,64 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMDays(
 
 	defer tDurDtoUtil.lock.Unlock()
 
-	ePrefix += "TimeDurationDto.calcTypeCUMDays() "
-
-	tDurDtoUtil2 := timeDurationDtoUtility{}
-
-	tDurDtoUtil2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).CumDays()
+	ePrefix += "timeDurationDtoUtility.calcDateDaysWeeksFromDuration() "
 
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
 		return nil
 	}
+
+	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs
+
+	// Calculate DateDays
+	tDur.DateDays = 0
+	tDur.DateDaysNanosecs = 0
 
 	if rd >= DayNanoSeconds {
 		tDur.DateDays = rd / DayNanoSeconds
-		tDur.DateDaysNanosecs = tDur.DateDays * DayNanoSeconds
+		tDur.DateDaysNanosecs = DayNanoSeconds * tDur.DateDays
 	}
 
-	err := tDur.calcHoursMinSecs()
+	// Calculate Weeks and WeekDays
+	tDur.Weeks = 0
+	tDur.WeeksNanosecs = 0
+	tDur.WeekDays = 0
+	tDur.WeekDaysNanosecs = 0
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
+	if tDur.DateDays > 0 {
 
-	err = tDur.calcNanoseconds()
+		if tDur.DateDays >= 7 {
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
+			tDur.Weeks = tDur.DateDays / int64(7)
+			tDur.WeeksNanosecs = WeekNanoSeconds * tDur.Weeks
 
-	err = tDur.calcSummaryTimeElements()
+		}
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
+		tDur.WeekDays = tDur.DateDays - (tDur.Weeks * 7)
+		tDur.WeekDaysNanosecs = tDur.WeekDays * DayNanoSeconds
+
 	}
 
 	return nil
 }
 
-
-// calcTypeCUMHours - Calculates Cumulative Hours. Years, months, weeks, week days,
-// date days and hours are consolidated and included in cumulative hours. Values for years,
-// months, weeks, week days and date days are ignored and set to zero. Time duration is
-// allocated over cumulative hours plus minutes, seconds, milliseconds, microseconds and
-// nanoseconds.
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMHours(
+// calcHoursMinSecs - Calculates Hours, Minute, and
+// Seconds of duration using startTime, tDur.StartTimeDateTz,
+// and endTime, tDur.EndTimeDateTz.DateTime.
+//
+//
+// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//           TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
+//           are properly initialized.
+//
+//       (2) Before calling this method, ensure that the following methods are called
+//           first, in sequence:
+//             TimeDurationDto.calcYearsFromDuration
+//             TimeDurationDto.calcMonthsFromDuration
+//             TimeDurationDto.calcDateDaysWeeksFromDuration
+//
+func (tDurDtoUtil *timeDurationDtoUtility) calcHoursMinSecs(
 	tDur *TimeDurationDto,
 	ePrefix string) error {
 
@@ -236,60 +208,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMHours(
 
 	defer tDurDtoUtil.lock.Unlock()
 
-	ePrefix += "TimeDurationDto.calcTypeCUMHours() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	tDurDtoUtilX2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).CumHours()
-
-	if tDur.TimeDuration == 0 {
-		return nil
-	}
-
-	err := tDur.calcHoursMinSecs()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcNanoseconds()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	return nil
-}
-
-// calcTypeGregorianYears - Allocates Years using the number of nanoseconds in a
-// standard or average GregorianYear
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeGregorianYears(
-tDur *TimeDurationDto,
-ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcTypeGregorianYears() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	tDurDtoUtilX2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).GregorianYears()
+	ePrefix += "timeDurationDtoUtility.calcHoursMinSecs() "
 
 	rd := int64(tDur.TimeDuration)
 
@@ -297,197 +216,31 @@ ePrefix string) error {
 		return nil
 	}
 
-	if rd >= GregorianYearNanoSeconds {
-		tDur.Years = rd / GregorianYearNanoSeconds
-		tDur.YearsNanosecs = tDur.Years * GregorianYearNanoSeconds
+	if tDur.DateDays > 0 {
+		rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs +
+			tDur.DateDaysNanosecs
+	} else {
+		rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs +
+			tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
 	}
 
-	err := tDur.calcMonthsFromDuration()
+	tDur.Hours = 0
+	tDur.HoursNanosecs = 0
+	tDur.Minutes = 0
+	tDur.MinutesNanosecs = 0
+	tDur.Seconds = 0
+	tDur.SecondsNanosecs = 0
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
+	if rd >= HourNanoSeconds {
+		tDur.Hours = rd / HourNanoSeconds
+		tDur.HoursNanosecs = HourNanoSeconds * tDur.Hours
+		rd -= tDur.HoursNanosecs
 	}
-
-	err = tDur.calcDateDaysWeeksFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcHoursMinSecs()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcNanoseconds()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	return nil
-}
-
-
-// calcTypeCUMMINUTES - Calculates Cumulative Minutes. Years, months, weeks, week days,
-// date days, hours and minutes are consolidated and included in cumulative minutes.
-// Values for years, months, weeks, week days, date days and hours are ignored and set
-// to zero. Time duration is allocated over cumulative minutes plus seconds, milliseconds,
-// microseconds and nanoseconds.
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMMINUTES(
-	tDur *TimeDurationDto,
-	ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcTypeCUMHours() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	tDurDtoUtilX2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).CumMinutes()
-
-	if tDur.TimeDuration == 0 {
-		return nil
-	}
-
-	rd := int64(tDur.TimeDuration)
 
 	if rd >= MinuteNanoSeconds {
 		tDur.Minutes = rd / MinuteNanoSeconds
-		tDur.MinutesNanosecs = tDur.Minutes * MinuteNanoSeconds
+		tDur.MinutesNanosecs = MinuteNanoSeconds * tDur.Minutes
 		rd -= tDur.MinutesNanosecs
-	}
-
-	if rd >= SecondNanoseconds {
-		tDur.Seconds = rd / SecondNanoseconds
-		tDur.SecondsNanosecs = tDur.Seconds * SecondNanoseconds
-		rd -= tDur.SecondsNanosecs
-	}
-
-	if rd >= MilliSecondNanoseconds {
-		tDur.Milliseconds = rd / MilliSecondNanoseconds
-		tDur.MillisecondsNanosecs = tDur.Milliseconds * MilliSecondNanoseconds
-		rd -= tDur.MillisecondsNanosecs
-	}
-
-	if rd >= MicroSecondNanoseconds {
-		tDur.Microseconds = rd / MicroSecondNanoseconds
-		tDur.MillisecondsNanosecs = tDur.Microseconds * MicroSecondNanoseconds
-		rd -= tDur.MicrosecondsNanosecs
-	}
-
-	tDur.Nanoseconds = rd
-
-	err := tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	return nil
-
-}
-
-
-// Data Fields for Years is always set to Zero. Years
-// and months are consolidated and counted as cumulative
-// months.
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMMONTHS(
-	tDur *TimeDurationDto,
-	ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcTypeCUMWEEK() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	tDurDtoUtilX2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).CumMonths()
-
-	err := tDur.calcMonthsFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcDateDaysWeeksFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcHoursMinSecs()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcNanoseconds()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	return nil
-
-}
-
-// calcTypeCUMSECONDS - Calculates Cumulative Seconds of
-// time duration.
-//
-// tDur.CalcType = TDurCalcType(0).CumSeconds()
-//
-// Years, months, weeks, weekdays, date days, hours and
-// minutes are ignored and set to zero. Time is accumulated
-// in seconds, milliseconds, microseconds and nanoseconds.
-//
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMSECONDS(
-	tDur *TimeDurationDto,
-	ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcTypeCUMSECONDS() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	tDurDtoUtilX2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).CumSeconds()
-
-	rd := int64(tDur.TimeDuration)
-
-	if rd == 0 {
-		return nil
 	}
 
 	if rd >= SecondNanoseconds {
@@ -495,6 +248,56 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMSECONDS(
 		tDur.SecondsNanosecs = SecondNanoseconds * tDur.Seconds
 		rd -= tDur.SecondsNanosecs
 	}
+
+	return nil
+}
+
+// calcNanoseconds - Calculates 'tDur.Milliseconds', 'tDur.MillisecondsNanosecs',
+// 'tDur.Microseconds', 'tDur.MicrosecondsNanosecs',  and 'tDur.Nanoseconds'.
+//
+// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//           TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
+//           are properly initialized.
+//
+//       (2) Before calling this method, ensure that the following methods are called
+//           first, in sequence:
+//             TimeDurationDto.calcYearsFromDuration
+//             TimeDurationDto.calcMonthsFromDuration
+//             TimeDurationDto.calcDateDaysWeeksFromDuration
+//             TimeDurationDto.calcHoursMinSecs
+//
+func (tDurDtoUtil *timeDurationDtoUtility) calcNanoseconds(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcNanoseconds() "
+
+	rd := int64(tDur.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
+
+	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs
+
+	if tDur.DateDaysNanosecs > 0 {
+		rd -= tDur.DateDaysNanosecs
+	} else {
+		rd -= tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
+	}
+
+	rd -= tDur.HoursNanosecs +
+		tDur.MinutesNanosecs + tDur.SecondsNanosecs
+
+	tDur.Milliseconds = 0
+	tDur.MillisecondsNanosecs = 0
+	tDur.Microseconds = 0
+	tDur.MicrosecondsNanosecs = 0
+	tDur.Nanoseconds = 0
 
 	if rd >= MilliSecondNanoseconds {
 		tDur.Milliseconds = rd / MilliSecondNanoseconds
@@ -509,202 +312,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMSECONDS(
 	}
 
 	tDur.Nanoseconds = rd
-
-	return nil
-}
-
-// calcTypeSTDYEARMTH - Performs Duration calculations for
-// TDurCalcType == TDurCalcType(0).StdYearMth()
-//
-// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation.
-// All data fields in the TimeDto are populated in the duration
-// allocation.
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeSTDYEARMTH(
-	tDur *TimeDurationDto,
-	ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcTypeSTDYEARMTH() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	tDurDtoUtilX2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).StdYearMth()
-
-	err := tDur.calcYearsFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcYearsFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcMonthsFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcMonthsFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcDateDaysWeeksFromDuration()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcDateDaysWeeksFromDuration(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcHoursMinSecs()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcNanoseconds()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	return nil
-}
-
-// calcTypeCUMWEEKS - Data Fields for Years and Months are always set to zero.
-// Years and Months are consolidated and counted as equivalent Weeks.
-func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCUMWEEKS(
-	tDur *TimeDurationDto,
-	ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcTypeCUMWEEKS() "
-
-	tDurDtoUtilX2 := timeDurationDtoUtility{}
-
-	tDurDtoUtilX2.emptyTimeFields(
-		tDur,
-		ePrefix)
-
-	tDur.CalcType = TDurCalcType(0).CumWeeks()
-
-	rd := int64(tDur.TimeDuration)
-
-	if rd >= WeekNanoSeconds {
-
-		tDur.Weeks = rd / WeekNanoSeconds
-		tDur.WeeksNanosecs = tDur.Weeks * WeekNanoSeconds
-		rd -= tDur.WeeksNanosecs
-	}
-
-	if rd >= DayNanoSeconds {
-		tDur.WeekDays = rd / DayNanoSeconds
-		tDur.WeekDaysNanosecs = tDur.WeekDays * DayNanoSeconds
-		rd -= tDur.WeekDaysNanosecs
-	}
-
-	tDur.DateDays = tDur.Weeks * int64(7)
-	tDur.DateDays += tDur.WeekDays
-	tDur.DateDaysNanosecs = tDur.WeeksNanosecs + tDur.WeekDaysNanosecs
-
-	err := tDur.calcHoursMinSecs()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcHoursMinSecs(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcNanoseconds()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcNanoseconds(). Error='%v'", err.Error())
-	}
-
-	err = tDur.calcSummaryTimeElements()
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by tDur.calcSummaryTimeElements(). Error='%v'", err.Error())
-	}
-
-	// For Cumulative Weeks calculation and presentations, set Date Days to zero
-	tDur.DateDays = 0
-	tDur.DateDaysNanosecs = 0
-
-	return nil
-}
-
-// calcYearsFromDuration - Calculates number of years duration and nanoseconds
-// represented by years duration using input parameters 'tDur.StartTimeDateTz' and
-// 'tDur.EndTimeDateTz'.
-//
-// NOTE: Before calling this method, ensure that tDur.StartTimeDateTz,
-//       tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
-//
-func (tDurDtoUtil *timeDurationDtoUtility) calcYearsFromDuration(
-	tDur *TimeDurationDto,
-	ePrefix string) error {
-
-	tDurDtoUtil.lock.Lock()
-
-	defer tDurDtoUtil.lock.Unlock()
-
-	ePrefix += "TimeDurationDto.calcYearsFromDuration() "
-
-	years := int64(0)
-	yearNanosecs := int64(0)
-	startTime := tDur.StartTimeDateTz.dateTimeValue
-	endTime := tDur.EndTimeDateTz.dateTimeValue
-
-	if endTime.Before(startTime) {
-		return errors.New(ePrefix + "Error: 'endTime' precedes, is less than, startTime!")
-	}
-
-	if startTime.Location().String() != endTime.Location().String() {
-		return fmt.Errorf(ePrefix+"Error: 'startTime' and 'endTime' Time Zone Location do NOT match! "+
-			"startTimeZoneLocation='%v'  endTimeZoneLocation='%v'",
-			startTime.Location().String(), endTime.Location().String())
-	}
-
-	yearDateTime := startTime
-
-	i := 0
-
-	for yearDateTime.Before(endTime) {
-
-		i++
-
-		yearDateTime = startTime.AddDate(i, 0, 0)
-
-	}
-
-	i--
-
-	if i > 0 {
-
-		years = int64(i)
-
-		yearDateTime = startTime.AddDate(i, 0, 0)
-
-		duration := yearDateTime.Sub(startTime)
-
-		yearNanosecs = int64(duration)
-
-	} else {
-
-		years = 0
-
-		yearNanosecs = 0
-	}
-
-	tDur.Years = years
-	tDur.YearsNanosecs = yearNanosecs
 
 	return nil
 }
@@ -728,7 +335,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 
 	defer tDurDtoUtil.lock.Unlock()
 
-	ePrefix += "TimeDurationDto.calcMonthsFromDuration() "
+	ePrefix += "timeDurationDtoUtility.calcMonthsFromDuration() "
 
 	startTime := tDur.StartTimeDateTz.dateTimeValue
 	endTime := tDur.EndTimeDateTz.dateTimeValue
@@ -738,7 +345,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 	}
 
 	if startTime.Location().String() !=
-					endTime.Location().String() {
+		endTime.Location().String() {
 
 		return fmt.Errorf(ePrefix +
 			"Error: 'startTime' and 'endTime' Time Zone Location do NOT match!\n"+
@@ -788,26 +395,30 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 	return nil
 }
 
-// calcDateDaysWeeksFromDuration - Calculates the Days associated
-// with the duration for this TimeDurationDto.
+// calcSummaryTimeElements - Calculates totals for Date, Time and
+// sub-second nanoseconds.
 //
-// Calculates 'tDur.DateDays', 'tDur.DateDaysNanosecs', 'tDur.Weeks', 'tDur.WeeksNanosecs',
-// 'tDur.WeekDays' and 'tDur.WeekDaysNanosecs'.
-//
-// NOTE: (1) Before calling this method, ensure that TimeDurationDto.StartTimeDateTz,
-//           TimeDurationDto.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+//           TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
+//           are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following methods are called
 //           first, in sequence:
 //             TimeDurationDto.calcYearsFromDuration
 //             TimeDurationDto.calcMonthsFromDuration
+//             TimeDurationDto.calcDateDaysWeeksFromDuration
+//             TimeDurationDto.calcHoursMinSecs
+//             TimeDurationDto.calcNanoseconds
 //
-func (tDurDtoUtil *timeDurationDtoUtility) calcDateDaysWeeksFromDuration(
-	tDur *TimeDurationDto) error {
+func (tDurDtoUtil *timeDurationDtoUtility) calcSummaryTimeElements(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
 
 	tDurDtoUtil.lock.Lock()
 
 	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcSummaryTimeElements() "
 
 	rd := int64(tDur.TimeDuration)
 
@@ -815,36 +426,657 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcDateDaysWeeksFromDuration(
 		return nil
 	}
 
-	rd -= tDur.YearsNanosecs + tDur.MonthsNanosecs
+	tDur.TotDateNanoseconds = 0
+	tDur.TotTimeNanoseconds = 0
+	tDur.TotSubSecNanoseconds = 0
 
-	// Calculate DateDays
-	tDur.DateDays = 0
-	tDur.DateDaysNanosecs = 0
+	tDur.TotDateNanoseconds = tDur.YearsNanosecs
+	tDur.TotDateNanoseconds += tDur.MonthsNanosecs
+
+	if tDur.DateDaysNanosecs == 0 {
+		tDur.TotDateNanoseconds += tDur.WeeksNanosecs
+		tDur.TotDateNanoseconds += tDur.WeekDaysNanosecs
+	} else {
+		tDur.TotDateNanoseconds += tDur.DateDaysNanosecs
+	}
+
+	tDur.TotSubSecNanoseconds = tDur.MillisecondsNanosecs
+	tDur.TotSubSecNanoseconds += tDur.MicrosecondsNanosecs
+	tDur.TotSubSecNanoseconds += tDur.Nanoseconds
+
+	tDur.TotTimeNanoseconds = tDur.HoursNanosecs
+	tDur.TotTimeNanoseconds += tDur.MinutesNanosecs
+	tDur.TotTimeNanoseconds += tDur.SecondsNanosecs
+	tDur.TotTimeNanoseconds += tDur.TotSubSecNanoseconds
+
+	return nil
+}
+
+// calcTimeDurationAllocations - Examines the input parameter 'calcType' and
+// then determines which type of time duration allocation calculation will be
+// applied to the data fields of the current TimeDurationDto instance.
+func (tDurDtoUtil *timeDurationDtoUtility) calcTimeDurationAllocations(
+	tDur *TimeDurationDto,
+	calcType TDurCalcType,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTimeDurationAllocations() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	switch calcType {
+
+	case TDurCalcType(0).StdYearMth():
+		return tDurDtoUtilX2.calcTypeStdYearMth(
+			tDur,
+			ePrefix)
+
+	case TDurCalcType(0).CumMonths():
+		return tDurDtoUtilX2.calcTypeCumMonths(
+			tDur,
+			ePrefix)
+
+	case TDurCalcType(0).CumWeeks():
+		return tDurDtoUtilX2.calcTypeCumWeeks(
+			tDur,
+			ePrefix)
+
+	case TDurCalcType(0).CumDays():
+		return tDurDtoUtilX2.calcTypeCumDays(tDur, ePrefix)
+
+	case TDurCalcType(0).CumHours():
+		return tDurDtoUtilX2.calcTypeCumHours(tDur, ePrefix)
+
+	case TDurCalcType(0).CumMinutes():
+		return tDurDtoUtilX2.calcTypeCumMinutes(tDur, ePrefix)
+
+	case TDurCalcType(0).CumSeconds():
+		return tDurDtoUtilX2.calcTypeCumSeconds(tDur, ePrefix)
+
+	case TDurCalcType(0).GregorianYears():
+		return tDurDtoUtilX2.calcTypeGregorianYears(tDur, ePrefix)
+	}
+
+	return fmt.Errorf(ePrefix+
+		"\nError: Invalid TDurCalcType.\ncalcType='%v'\n", calcType.String())
+}
+
+// calcTypeCumDays - Calculates Cumulative Days. Years, months and weeks are consolidated
+// and counted as cumulative days. The Data Fields for years, months, weeks and week days
+// are set to zero.  All cumulative days are allocated to the data field, 'DateDays'.
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumDays(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeCumDays() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	tDur2 := tDurDtoUtilX2.copyOut(tDur, ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).CumDays()
+
+	rd := int64(tDur2.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
 
 	if rd >= DayNanoSeconds {
-		tDur.DateDays = rd / DayNanoSeconds
-		tDur.DateDaysNanosecs = DayNanoSeconds * tDur.DateDays
+		tDur2.DateDays = rd / DayNanoSeconds
+		tDur2.DateDaysNanosecs = tDur2.DateDays * DayNanoSeconds
 	}
 
-	// Calculate Weeks and WeekDays
-	tDur.Weeks = 0
-	tDur.WeeksNanosecs = 0
-	tDur.WeekDays = 0
-	tDur.WeekDaysNanosecs = 0
+	err := tDurDtoUtilX2.calcHoursMinSecs(
+		&tDur2, 
+		ePrefix)
 
-	if tDur.DateDays > 0 {
+	if err != nil {
+		return err
+	}
 
-		if tDur.DateDays >= 7 {
+	err = tDurDtoUtilX2.calcNanoseconds(
+		&tDur2, 
+		ePrefix)
 
-			tDur.Weeks = tDur.DateDays / int64(7)
-			tDur.WeeksNanosecs = WeekNanoSeconds * tDur.Weeks
+	if err != nil {
+		return err
+	}
 
-		}
+	err = tDurDtoUtilX2.calcSummaryTimeElements(
+		&tDur2, 
+		ePrefix)
 
-		tDur.WeekDays = tDur.DateDays - (tDur.Weeks * 7)
-		tDur.WeekDaysNanosecs = tDur.WeekDays * DayNanoSeconds
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+	
+	return nil
+}
+
+// calcTypeCumHours - Calculates Cumulative Hours. Years, months, weeks, week days,
+// date days and hours are consolidated and included in cumulative hours. Values for years,
+// months, weeks, week days and date days are ignored and set to zero. Time duration is
+// allocated over cumulative hours plus minutes, seconds, milliseconds, microseconds and
+// nanoseconds.
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumHours(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeCumHours() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	tDur2 := tDurDtoUtilX2.copyOut(
+		tDur,
+		ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).CumHours()
+
+	if tDur2.TimeDuration == 0 {
+		return nil
+	}
+
+	err := tDurDtoUtilX2.calcHoursMinSecs(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcNanoseconds(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcSummaryTimeElements(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+	
+	return nil
+}
+
+
+// calcTypeCumMinutes - Calculates Cumulative Minutes. Years, months, weeks, week days,
+// date days, hours and minutes are consolidated and included in cumulative minutes.
+// Values for years, months, weeks, week days, date days and hours are ignored and set
+// to zero. Time duration is allocated over cumulative minutes plus seconds, milliseconds,
+// microseconds and nanoseconds.
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMinutes(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeCumMinutes() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	tDur2 := tDurDtoUtilX2.copyOut(
+		tDur,
+		ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).CumMinutes()
+
+	if tDur2.TimeDuration == 0 {
+		return nil
+	}
+
+	rd := int64(tDur2.TimeDuration)
+
+	if rd >= MinuteNanoSeconds {
+		tDur2.Minutes = rd / MinuteNanoSeconds
+		tDur2.MinutesNanosecs = tDur2.Minutes * MinuteNanoSeconds
+		rd -= tDur2.MinutesNanosecs
+	}
+
+	if rd >= SecondNanoseconds {
+		tDur2.Seconds = rd / SecondNanoseconds
+		tDur2.SecondsNanosecs = tDur2.Seconds * SecondNanoseconds
+		rd -= tDur2.SecondsNanosecs
+	}
+
+	if rd >= MilliSecondNanoseconds {
+		tDur2.Milliseconds = rd / MilliSecondNanoseconds
+		tDur2.MillisecondsNanosecs = tDur2.Milliseconds * MilliSecondNanoseconds
+		rd -= tDur2.MillisecondsNanosecs
+	}
+
+	if rd >= MicroSecondNanoseconds {
+		tDur2.Microseconds = rd / MicroSecondNanoseconds
+		tDur2.MillisecondsNanosecs = tDur2.Microseconds * MicroSecondNanoseconds
+		rd -= tDur2.MicrosecondsNanosecs
+	}
+
+	tDur2.Nanoseconds = rd
+
+	err := tDurDtoUtilX2.calcSummaryTimeElements(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+	
+	return nil
+}
+
+
+// Data Fields for Years is always set to Zero. Years
+// and months are consolidated and counted as cumulative
+// months.
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMonths(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeCumMonths() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	tDur2 := tDurDtoUtilX2.copyOut(
+		tDur,
+		ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).CumMonths()
+
+	err := tDurDtoUtilX2.calcMonthsFromDuration(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcDateDaysWeeksFromDuration(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcHoursMinSecs(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcNanoseconds(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcSummaryTimeElements(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+	
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+	
+	return nil
+}
+
+// calcTypeCumSeconds - Calculates Cumulative Seconds of
+// time duration.
+//
+// tDur.CalcType = TDurCalcType(0).CumSeconds()
+//
+// Years, months, weeks, weekdays, date days, hours and
+// minutes are ignored and set to zero. Time is accumulated
+// in seconds, milliseconds, microseconds and nanoseconds.
+//
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumSeconds(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeCumSeconds() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	tDur2 := tDurDtoUtilX2.copyOut(
+		tDur,
+		ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).CumSeconds()
+
+	rd := int64(tDur2.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
+
+	if rd >= SecondNanoseconds {
+		tDur2.Seconds = rd / SecondNanoseconds
+		tDur2.SecondsNanosecs = SecondNanoseconds * tDur2.Seconds
+		rd -= tDur2.SecondsNanosecs
+	}
+
+	if rd >= MilliSecondNanoseconds {
+		tDur2.Milliseconds = rd / MilliSecondNanoseconds
+		tDur2.MillisecondsNanosecs = MilliSecondNanoseconds * tDur2.Milliseconds
+		rd -= tDur2.MillisecondsNanosecs
+	}
+
+	if rd >= MicroSecondNanoseconds {
+		tDur2.Microseconds = rd / MicroSecondNanoseconds
+		tDur2.MicrosecondsNanosecs = MicroSecondNanoseconds * tDur2.Microseconds
+		rd -= tDur2.MicrosecondsNanosecs
+	}
+
+	tDur2.Nanoseconds = rd
+
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+
+	return nil
+}
+
+// calcTypeCumWeeks - Data Fields for Years and Months are always set to zero.
+// Years and Months are consolidated and counted as equivalent Weeks.
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumWeeks(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeCumWeeks() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	tDur2 := tDurDtoUtilX2.copyOut(
+		tDur,
+		ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).CumWeeks()
+
+	rd := int64(tDur2.TimeDuration)
+
+	if rd >= WeekNanoSeconds {
+
+		tDur2.Weeks = rd / WeekNanoSeconds
+		tDur2.WeeksNanosecs = tDur2.Weeks * WeekNanoSeconds
+		rd -= tDur2.WeeksNanosecs
+	}
+
+	if rd >= DayNanoSeconds {
+		tDur2.WeekDays = rd / DayNanoSeconds
+		tDur2.WeekDaysNanosecs = tDur2.WeekDays * DayNanoSeconds
+		rd -= tDur2.WeekDaysNanosecs
+	}
+
+	tDur2.DateDays = tDur2.Weeks * int64(7)
+	tDur2.DateDays += tDur2.WeekDays
+	tDur2.DateDaysNanosecs = tDur2.WeeksNanosecs + tDur2.WeekDaysNanosecs
+
+	err := tDurDtoUtilX2.calcHoursMinSecs(
+		&tDur2, 
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcNanoseconds(
+		&tDur2,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcSummaryTimeElements(
+		&tDur2,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	// For Cumulative Weeks calculation and presentations, set Date Days to zero
+	tDur2.DateDays = 0
+	tDur2.DateDaysNanosecs = 0
+
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+
+	return nil
+}
+
+// calcTypeGregorianYears - Allocates Years using the number of nanoseconds in a
+// standard or average GregorianYear
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeGregorianYears(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeGregorianYears() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+
+	tDur2 := tDurDtoUtilX2.copyOut(
+		tDur,
+		ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).GregorianYears()
+
+	rd := int64(tDur2.TimeDuration)
+
+	if rd == 0 {
+		return nil
+	}
+
+	if rd >= GregorianYearNanoSeconds {
+		tDur2.Years = rd / GregorianYearNanoSeconds
+		tDur2.YearsNanosecs = tDur2.Years * GregorianYearNanoSeconds
+	}
+
+	err := tDurDtoUtilX2.calcMonthsFromDuration(
+					&tDur2,
+					ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcDateDaysWeeksFromDuration(
+		&tDur2,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcHoursMinSecs(
+		&tDur2,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcNanoseconds(
+		&tDur2,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcSummaryTimeElements(
+		&tDur2,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+
+	return nil
+}
+
+// calcTypeStdYearMth - Performs Duration calculations for
+// TDurCalcType == TDurCalcType(0).StdYearMth()
+//
+// TDurCalcTypeYEARMTH - Standard Year, Month, Weeks, Days calculation.
+// All data fields in the TimeDto are populated in the duration
+// allocation.
+func (tDurDtoUtil *timeDurationDtoUtility) calcTypeStdYearMth(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcTypeStdYearMth() "
+
+	tDurDtoUtilX2 := timeDurationDtoUtility{}
+	
+	tDur2 := tDurDtoUtilX2.copyOut(
+						tDur,
+						ePrefix)
+
+	tDur2.CalcType = TDurCalcType(0).StdYearMth()
+
+	err := tDurDtoUtilX2.calcYearsFromDuration(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcMonthsFromDuration(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcDateDaysWeeksFromDuration(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcHoursMinSecs(&tDur2, ePrefix)
+
+	if err != nil {
+		return nil
+	}
+
+	err = tDurDtoUtilX2.calcNanoseconds(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtilX2.calcSummaryTimeElements(&tDur2, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtilX2.copyIn(tDur, &tDur2, ePrefix)
+	
+	return err
+}
+
+// calcYearsFromDuration - Calculates number of years duration and nanoseconds
+// represented by years duration using input parameters 'tDur.StartTimeDateTz' and
+// 'tDur.EndTimeDateTz'.
+//
+// NOTE: Before calling this method, ensure that tDur.StartTimeDateTz,
+//       tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
+//
+func (tDurDtoUtil *timeDurationDtoUtility) calcYearsFromDuration(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.calcYearsFromDuration() "
+
+	years := int64(0)
+	yearNanosecs := int64(0)
+	startTime := tDur.StartTimeDateTz.dateTimeValue
+	endTime := tDur.EndTimeDateTz.dateTimeValue
+
+	if endTime.Before(startTime) {
+		return errors.New(ePrefix + 
+			"\nError: 'endTime' precedes, is less than, startTime!\n")
+	}
+
+	if startTime.Location().String() != endTime.Location().String() {
+		return fmt.Errorf(ePrefix+
+			"\nError: 'startTime' and 'endTime' Time Zone Location do NOT match!\n"+
+			"startTimeZoneLocation='%v'\n" +
+			"endTimeZoneLocation='%v'\n",
+			startTime.Location().String(), endTime.Location().String())
+	}
+
+	yearDateTime := startTime
+
+	i := 0
+
+	for yearDateTime.Before(endTime) {
+
+		i++
+
+		yearDateTime = startTime.AddDate(i, 0, 0)
 
 	}
+
+	i--
+
+	if i > 0 {
+
+		years = int64(i)
+
+		yearDateTime = startTime.AddDate(i, 0, 0)
+
+		duration := yearDateTime.Sub(startTime)
+
+		yearNanosecs = int64(duration)
+
+	} else {
+
+		years = 0
+
+		yearNanosecs = 0
+	}
+
+	tDur.Years = years
+	tDur.YearsNanosecs = yearNanosecs
 
 	return nil
 }
@@ -1084,13 +1316,14 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 	endDateTime time.Time,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation,
-	dateTimeFmtStr string) error {
+	dateTimeFmtStr,
+	ePrefix string) error {
 
 		tDurDtoUtil.lock.Lock()
 
-		tDurDtoUtil.lock.Unlock()
+		defer tDurDtoUtil.lock.Unlock()
 
-		ePrefix := "timeDurationDtoUtility.setStartEndTimesCalcTz() "
+		ePrefix += "timeDurationDtoUtility.setStartEndTimesCalcTz() "
 
 	if tDur == nil {
 		return &InputParameterError{
@@ -1108,8 +1341,16 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 			"input parameters are ZERO!\n")
 	}
 
-	if tDurCalcType < TDurCalc.StdYearMth() ||
-		tDurCalcType > TDurCalc.GregorianYears() {
+	// If endDateTime is less than startDateTime
+	// reverse the order.
+	if endDateTime.Before(startDateTime) {
+		tempDateTime := startDateTime
+		startDateTime = endDateTime
+		endDateTime = tempDateTime
+	}
+
+	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
+		tDurCalcType > TDurCalc.XLastValidCalcType() {
 		return &InputParameterError{
 				ePrefix:             ePrefix,
 				inputParameterName:  "tDurCalcType",
@@ -1146,7 +1387,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 
 	err = dTzUtil.setFromTimeTzName(
 		&endDateTzDto,
-		startDateTime,
+		endDateTime,
 		TzConvertType.Relative(),
 		timeZoneLocation,
 		dateTimeFmtStr,
@@ -1160,24 +1401,137 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 
 	timeDuration =
 		endDateTzDto.dateTimeValue.Sub(
-			startDateTzDto.dateTimeValue)
+					startDateTzDto.dateTimeValue)
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
 	tDur2 := TimeDurationDto{}
 
-
 	tDur2.StartTimeDateTz =
-		startDateTzDto.CopyOut()
+			startDateTzDto.CopyOut()
 
 	tDur2.EndTimeDateTz =
-		endDateTzDto.CopyOut()
+			endDateTzDto.CopyOut()
 
 	tDur2.TimeDuration = timeDuration
 
+	err = tDurDtoUtil2.calcTimeDurationAllocations(
+		&tDur2,
+		tDurCalcType,
+		ePrefix)
 
+	if err != nil {
+		return err
+	}
 
-	tDurDtoUtil2.empty(tDur, ePrefix)
+	tDurDtoUtil2.copyIn(tDur, &tDur2, ePrefix)
+
+	return nil
+}
+
+func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationCalcTz(
+	tDur *TimeDurationDto,
+	startDateTime time.Time,
+	duration time.Duration,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.setStartTimeDurationCalcTz() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'tDur' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	if startDateTime.IsZero() && duration == 0 {
+		return errors.New(ePrefix +
+			"\nError: Both 'startDateTime' and 'duration' " +
+			"input parameters are ZERO!\n")
+	}
+
+	tzMech := TimeZoneMechanics{}
+
+	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
+
+	dtMech := DTimeMechanics{}
+
+	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
+
+	var endDateTime time.Time
+
+	if duration < 0 {
+		endDateTime = startDateTime
+
+		startDateTime = endDateTime.Add(duration)
+
+		duration = duration * -1
+
+	} else {
+
+		endDateTime = startDateTime.Add(duration)
+
+	}
+
+	var err error
+	var startDateTzDto, endDateTzDto DateTzDto
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTimeTzName(
+		&startDateTzDto,
+		startDateTime,
+		TzConvertType.Relative(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = dTzUtil.setFromTimeTzName(
+		&endDateTzDto,
+		endDateTime,
+		TzConvertType.Relative(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDur2 := TimeDurationDto{}
+
+	tDur2.StartTimeDateTz = startDateTzDto
+
+	tDur2.EndTimeDateTz = endDateTzDto
+
+	tDur2.TimeDuration = duration
+
+	tDurDtoUtil2 := timeDurationDtoUtility{}
+
+	err = tDurDtoUtil2.calcTimeDurationAllocations(
+		&tDur2,
+		tDurCalcType,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtil2.copyIn(tDur, &tDur2, ePrefix)
 
 	return nil
 }
