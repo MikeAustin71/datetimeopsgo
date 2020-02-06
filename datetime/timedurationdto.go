@@ -5001,39 +5001,50 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 // datedays, hour, minutes, seconds, milliseconds, microseconds and nanoseconds) depending
 // on the value of the 'TDurCalcType' input parameter.
 //
-// Input Parameter
-// ===============
+// Input Parameters
+// ================
 //
-// tDurCalcType TDurCalcType-	Specifies the calculation type to be used in allocating
-//														time duration:
+// tDurCalcType TDurCalcType
+//            - Specifies the calculation type to be used in allocating
+//              time duration:
 //
-//					TDurCalcType(0).StdYearMth() 		- Default - standard year, month week,
-// 																			day time calculation.
+//     TDurCalcType(0).StdYearMth()     - Default - standard year, month week,
+//                                        day time calculation.
 //
-//					TDurCalcType(0).CumMonths() 		- Computes cumulative months - no Years.
+//     TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
 //
-//					TDurCalcType(0).CumWeeks()  		- Computes cumulative weeks. No Years or months
+//     TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
 //
-//					TDurCalcType(0).CumDays()				- Computes cumulative days. No Years, months or weeks.
+//     TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
 //
-//					TDurCalcType(0).CumHours()			- Computes cumulative hours. No Years, months, weeks or days.
+//     TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
 //
-//					TDurCalcType(0).CumMinutes() 		- Computes cumulative minutes. No Years, months, weeks, days
-//												   						or hours.
+//     TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
+//                                        or hours.
 //
-//					TDurCalcType(0).CumSeconds() 		- Computes cumulative seconds. No Years, months, weeks, days,
-//												    					hours or minutes.
+//     TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
+//                                        hours or minutes.
 //
-//					TDurCalcType(0).GregorianYears() 	- Computes Years based on average length of a Gregorian Year
-//																		 	Used for very large duration values.
+//     TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
+//                                        Used for very large duration values.
 //
-// 										Type 'TDurCalcType' is located in source file:
-//												MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//           Type 'TDurCalcType' is located in source file:
+//            MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
-func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(calcType TDurCalcType) error {
+func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(tDurCalcType TDurCalcType) error {
 
-	return tDur.calcTimeDurationAllocations(calcType)
+	tDur.lock.Lock()
 
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.ReCalcTimeDurationAllocation() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.reCalcTimeDurationAllocation(
+		tDur,
+		tDurCalcType,
+		ePrefix)
 }
 
 // ReCalcEndDateTimeToNow - Recomputes time duration values for the
@@ -5043,25 +5054,18 @@ func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(calcType TDurCalcType)
 // The Time Zone Location is derived from the existing starting date
 // time, 'tDur.StartTimeDateTz'.  The Calculation type is taken from
 // the existing calculation type, 'tDur.CalcType'.
+//
 func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 
+	tDur.lock.Lock()
+	
+	defer tDur.lock.Unlock()
+	
 	ePrefix := "TimeDurationDto.ReCalcEndDateTimeToNow() "
+	
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	eTime := time.Now().In(tDur.StartTimeDateTz.GetOriginalTzLocationPtr())
-
-	calcType := tDur.CalcType
-
-	err := tDur.SetStartEndTimesCalcTz(tDur.StartTimeDateTz.GetDateTimeValue(),
-			eTime,
-			calcType,
-			tDur.StartTimeDateTz.GetOriginalTzName(),
-			tDur.StartTimeDateTz.GetDateTimeFmt())
-
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz: Error='%v'", err.Error())
-	}
-
-	return nil
+	return tDurDtoUtil.reCalcEndDateTimeToNow(tDur, ePrefix)
 }
 
 // SetAutoEnd - When called, this method automatically sets the ending date
