@@ -4522,85 +4522,91 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(startDateTime DateTz
 // For the purposes of this time duration calculation, the Time Zone Location is
 // extracted from the input parameter, 'startDateTime'.
 //
-// Note: 	This method applies the standard Time Duration allocation, 'TDurCalcType(0).StdYearMth()'.
-// 				This means that duration is allocated over years, months, weeks, weekdays, date days,
-//				hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
-// 				See Type 'TDurCalcType' for details.
+// Note: This method applies the standard Time Duration allocation, 'TDurCalcType(0).StdYearMth()'.
+//       This means that duration is allocated over years, months, weeks, weekdays, date days,
+//       hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
+//       See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
 // =================
 //
-// startDateTime	time.Time	-   Starting date time. The ending date time will be computed
-// 															by adding the time components of the 'plusTimeDto' to
-// 															'startDateTime'.
+// startDateTime time.Time
+//            - Starting date time. The ending date time will be computed
+//              by adding the time components of the 'plusTimeDto' to
+//              'startDateTime'.
 //
-// plusTimeDto		TimeDto 	- 	Time components (Years, months, weeks, days, hours etc.)
-//															which will be added to 'startDateTime' to compute
-//															time duration and ending date time.
+// plusTimeDto  TimeDto
+//            - Time components (Years, months, weeks, days, hours etc.)
+//              which will be added to 'startDateTime' to compute
+//              time duration and ending date time.
 //
-//									type TimeDto struct {
-//										Years          int // Number of Years
-//										Months         int // Number of Months
-//										Weeks          int // Number of Weeks
-//										WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//										DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//										Hours          int // Number of Hours.
-//										Minutes        int // Number of Minutes
-//										Seconds        int // Number of Seconds
-//										Milliseconds   int // Number of Milliseconds
-//										Microseconds   int // Number of Microseconds
-//										Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//										TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//																			// 	plus remaining Nanoseconds
-//									}
+//              type TimeDto struct {
+//               Years          int // Number of Years
+//               Months         int // Number of Months
+//               Weeks          int // Number of Weeks
+//               WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//               DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
+//               Hours          int // Number of Hours.
+//               Minutes        int // Number of Minutes
+//               Seconds        int // Number of Seconds
+//               Milliseconds   int // Number of Milliseconds
+//               Microseconds   int // Number of Microseconds
+//               Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//               TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                        //  plus remaining Nanoseconds
+//              }
 //
 //
-// dateTimeFmtStr string		- A date time format string which will be used
-//															to format and display 'dateTime'. Example:
-//															"2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr string
+//            - A date time format string which will be used
+//              to format and display 'dateTime'. Example:
+//              "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//														If 'dateTimeFmtStr' is submitted as an
-//															'empty string', a default date time format
-//															string will be applied. The default date time
-//															format string is:
-//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//              If 'dateTimeFmtStr' is submitted as an
+//              'empty string', a default date time format
+//              string will be applied. The default date time
+//              format string is:
+//                FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDto(startTime,
-// 																			plusTimeDto,
-// 																				FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDto(
+//                    startTime,
+//                    plusTimeDto,
+//                    FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'FmtDateTimeYrMDayFmtStr' are constants available in constantsdatetime.go
+//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in constantsdatetime.go
 //
-func (tDur TimeDurationDto) NewStartTimePlusTimeDto(startDateTime time.Time,
-	plusTimeDto TimeDto, dateTimeFmtStr string) (TimeDurationDto, error) {
+func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
 
 	ePrefix := "TimeDurationDto.NewStartTimePlusTimeDto() "
 
-	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
-		return TimeDurationDto{},
-			errors.New(ePrefix + "Error: Both 'startDateTime' and 'plusTimeDto' " +
-				"input parameters are ZERO/EMPTY!")
-	}
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	timeZoneLocation := startDateTime.Location().String()
+	tDur2 := TimeDurationDto{}
 
-	t2Dur := TimeDurationDto{}
-
-	err := t2Dur.SetStartTimePlusTimeDtoCalcTz(startDateTime,
-		plusTimeDto,
-		TDurCalcType(0).StdYearMth(),
-		timeZoneLocation,
-		dateTimeFmtStr)
+	err := tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
+										&tDur2,
+										startDateTime,
+										plusTimeDto,
+										TDurCalcType(0).StdYearMth(),
+										startDateTime.Location().String(),
+										dateTimeFmtStr,
+										ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimePlusTimeDtoCalcTz(...) Error='%v'", err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	return t2Dur, nil
+	return tDur2, err
 }
 
 // NewStartTimePlusTimeDtoCalcTz - Creates and returns a new TimeDurationDto setting
