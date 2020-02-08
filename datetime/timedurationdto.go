@@ -4116,7 +4116,8 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 //                   duration,
 //                   FmtDateTimeYrMDayFmtStr)
 //
-//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, constantsdatetime.go
+//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant value available in source
+//        file, constantsdatetime.go
 //
 func (tDur TimeDurationDto) NewStartTimeDurationDateDto(
 	startDateTimeTz DateTzDto,
@@ -4139,18 +4140,18 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(
 		timeZoneLocation = timeZone.locationName
 	}
 
-	tDurDtoUtil := timeDurationDtoUtility{}
-
 	tDur2 := TimeDurationDto{}
 
+	tDurDtoUtil := timeDurationDtoUtility{}
+
 	err := tDurDtoUtil.setStartTimeDurationDateDtoCalcTz(
-		&tDur2,
-		startDateTimeTz,
-		duration,
-		TDurCalcType(0).StdYearMth(),
-		timeZoneLocation,
-		dateTimeFmtStr,
-		ePrefix)
+						&tDur2,
+						startDateTimeTz,
+						duration,
+						TDurCalc.StdYearMth(),
+						timeZoneLocation,
+						dateTimeFmtStr,
+						ePrefix)
 
 	if err != nil {
 		return TimeDurationDto{}, err
