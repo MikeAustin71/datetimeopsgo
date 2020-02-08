@@ -2225,10 +2225,9 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationCalcTz(
 //
 // timeZoneLocation string
 //            - Designates the standard Time Zone location by which
-//              time duration will be compared. This ensures that
-//              'oranges are compared to oranges and apples are compared
-//              to apples' with respect to start time and end time duration
-//              calculations.
+//              time duration will be compared. This ensures 'oranges
+//              are compared to oranges and apples are compared to apples'
+//              with respect to start time and end time duration calculations.
 //
 //              If 'timeZoneLocation' is passed as an empty string, it
 //              will be automatically defaulted to the 'UTC' time zone.
