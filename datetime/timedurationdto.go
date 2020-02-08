@@ -4079,67 +4079,84 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(startDateTime time.Time,
 //
 // Time Zone location is derived from 'startDateTime'.
 //
-// Note: 	This method applies the standard Time Duration allocation calculation type,
-// 				'TDurCalcType(0).StdYearMth()'. This means that duration is allocated over years,
-// 				months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
-// 				microseconds and nanoseconds.	See Type 'TDurCalcType' for details.
+// Note: This method applies the standard Time Duration allocation calculation type,
+//       'TDurCalcType(0).StdYearMth()'. This means that duration is allocated over years,
+//       months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
+//       microseconds and nanoseconds. See Type 'TDurCalcType' for details.
 //
 // Input Parameters:
 // =================
 //
-// startDateTime	DateTzDto	- Starting date time for the duration calculation
+// startDateTime DateTzDto
+//            - Starting date time for the duration calculation
 //
-// duration		time.Duration - Amount of time to be added to or subtracted from
-//														'startDateTime'. Note: If duration is a negative value
-//														'startDateTime' is converted to ending date time and
-//														actual starting date time is computed by subtracting
-//														duration.
+// duration  time.Duration
+//            - Amount of time to be added to or subtracted from
+//              'startDateTime'. Note: If duration is a negative value
+//              'startDateTime' is converted to ending date time and
+//              actual starting date time is computed by subtracting
+//              duration.
 //
-// dateTimeFmtStr string		- A date time format string which will be used
-//															to format and display 'dateTime'. Example:
-//															"2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr string
+//            - A date time format string which will be used
+//              to format and display 'dateTime'. Example:
+//              "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//														If 'dateTimeFmtStr' is submitted as an
-//															'empty string', a default date time format
-//															string will be applied. The default date time
-//															format string is:
-//															FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//              If 'dateTimeFmtStr' is submitted as an
+//              'empty string', a default date time format
+//              string will be applied. The default date time
+//              format string is:
+//                FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDto(startTime, duration, FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDto(
+//                   startTime,
+//                   duration,
+//                   FmtDateTimeYrMDayFmtStr)
 //
-//		Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, constantsdatetime.go
+//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in source file, constantsdatetime.go
 //
-func (tDur TimeDurationDto) NewStartTimeDurationDateDto(startDateTime DateTzDto,
-	duration time.Duration, dateTimeFmtStr string) (TimeDurationDto, error) {
+func (tDur TimeDurationDto) NewStartTimeDurationDateDto(
+	startDateTimeTz DateTzDto,
+	duration time.Duration,
+	dateTimeFmtStr string) (TimeDurationDto, error) {
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
 
-	if startDateTime.GetDateTimeValue().IsZero() &&
-		duration == 0 {
-		return TimeDurationDto{},
-			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
-				"input parameters are ZERO!")
+	timeZone := startDateTimeTz.GetBestConvertibleTimeZone()
+
+	var timeZoneLocation string
+
+	if timeZone.timeZoneType == TzType.Military() {
+		timeZoneLocation = timeZone.militaryTimeZoneName
+	} else {
+		timeZoneLocation = timeZone.locationName
 	}
 
-	timeZoneLocation := startDateTime.GetOriginalTzName()
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	t2Dur := TimeDurationDto{}
+	tDur2 := TimeDurationDto{}
 
-	err := t2Dur.SetStartTimeDurationDateDtoCalcTz(startDateTime,
+	err := tDurDtoUtil.setStartTimeDurationDateDtoCalcTz(
+		&tDur2,
+		startDateTimeTz,
 		duration,
 		TDurCalcType(0).StdYearMth(),
 		timeZoneLocation,
-		dateTimeFmtStr)
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartTimeDurationCalcTz(...) Error='%v'", err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	return t2Dur, nil
+	return tDur2, nil
 }
 
 // NewStartTimeDurationDateDtoTz - Creates and returns a new TimeDurationDto based on input
