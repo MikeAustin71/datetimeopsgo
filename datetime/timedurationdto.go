@@ -1746,7 +1746,6 @@ func (tDur TimeDurationDto) NewAutoEnd(
 //                  If the time zone "Zulu" is passed to this method, it will be
 //                  classified as a Military Time Zone.
 //
-//
 // dateTimeFmtStr string
 //             - A date time format string which will be used
 //               to format and display 'dateTime'. Example:
@@ -1765,8 +1764,12 @@ func (tDur TimeDurationDto) NewAutoEnd(
 //                   TZones.US.Central(),
 //                   FmtDateTimeYrMDayFmtStr)
 //
-//  Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-//        constantsdatetime.go
+//   Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
 func (tDur TimeDurationDto) NewAutoStart(
 	timeZoneLocation,
@@ -1776,53 +1779,28 @@ func (tDur TimeDurationDto) NewAutoStart(
 
 	defer tDur.lock.Unlock()
 
-	ePrefix := "TimeDurationDto) NewAutoStart"
-	tzMech := TimeZoneMechanics{}
+	ePrefix := "TimeDurationDto.NewAutoStart() "
 
-	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	dtMech := DTimeMechanics{}
+	tDur2 := TimeDurationDto{}
 
-	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
+	startEndTime := time.Now().UTC()
 
-	tzSpec,
-	err := TimeZoneDefinition{}.NewTzSpecFromTzName(
-		time.Now().UTC(),
+	err := tDurDtoUtil.setStartEndTimesCalcTz(
+		&tDur2,
+		startEndTime,
+		startEndTime,
+		TDurCalc.StdYearMth(),
 		timeZoneLocation,
-		TzConvertType.Relative())
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"\nError: 'timeZoneLocation' input parameter is INVALID! "+
-				"'timeZoneLocation'='%v'\n" +
-				"Error='%v'\n",
-				timeZoneLocation, err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	s1Time := time.Now().UTC()
-
-	startDateTime := s1Time.In(tzSpec.locationPtr)
-
-	endDateTime := startDateTime
-
-	t2Dur := TimeDurationDto{}
-
-	err = t2Dur.SetStartEndTimesCalcTz(startDateTime,
-		endDateTime,
-		TDurCalcType(0).StdYearMth(),
-		tzSpec.locationName,
-		dateTimeFmtStr)
-
-	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"Error returned by SetStartEndTimesCalcTz(...) "+
-				"startDateTime='%v'  Error='%v'",
-				startDateTime.Format(FmtDateTimeYrMDayFmtStr), err.Error())
-	}
-
-	return t2Dur, nil
+	return tDur2, nil
 }
 
 // NewStartEndDateTzDto - Creates and returns a new TimeDurationDto populated with
