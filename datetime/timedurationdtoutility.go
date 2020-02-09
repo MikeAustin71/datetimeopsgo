@@ -1414,7 +1414,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 
 	defer tDurDtoUtil.lock.Unlock()
 
-	ePrefix += "timeDurationDtoUtility.setStartEndTimesCalcTz() "
+	ePrefix += "timeDurationDtoUtility.setAutoEnd() "
 
 	if tDur == nil {
 		return &InputParameterError{
@@ -2151,6 +2151,55 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 
 	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
+
+	tDur2 := TimeDurationDto{}
+
+	tZoneDef := startDateTimeTz.timeZone.CopyOut()
+
+	err = dTzUtil.setFromTzDef(
+		&tDur2.StartTimeDateTz,
+		startDateTimeTz.dateTimeValue,
+		TzConvertType.Relative(),
+		tZoneDef,
+		dateTimeFmtStr,
+		ePrefix + "Input Parameter 'startDateTimeTz' Error. ")
+
+	if err != nil {
+		return err
+	}
+
+
+	err = dTzUtil.setFromTzDef(
+		&tDur2.StartTimeDateTz,
+		endDateTimeTz.dateTimeValue,
+		TzConvertType.Relative(),
+		tZoneDef,
+		dateTimeFmtStr,
+		ePrefix + "Input Parameter 'endDateTimeTz' Error. ")
+
+	if err != nil {
+		return err
+	}
+
+
+	tDur2.TimeDuration =
+		tDur2.EndTimeDateTz.dateTimeValue.Sub(
+			tDur2.StartTimeDateTz.dateTimeValue)
+
+	tDurDtoUtil2 := timeDurationDtoUtility{}
+
+	err = tDurDtoUtil2.calcTimeDurationAllocations(
+		&tDur2,
+		tDurCalcType,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tDurDtoUtil2.copyIn(tDur, &tDur2, ePrefix)
+
+	return nil
 }
 
 // setStartTimeDurationCalcTz - Sets start time, end time and duration for the

@@ -289,6 +289,7 @@ func (dtMech *DTimeMechanics) AddDurationByUtc(
 
 	return utcTimePlusDuration.In(baseDateTime.Location())
 }
+
 // AllocateSecondsToHrsMinSecs - Useful in calculating offset hours,
 // minutes and seconds from UTC+0000. A total signed seconds value
 // is passed as an input parameter. This method then breaks down
@@ -334,6 +335,38 @@ func (dtMech *DTimeMechanics) AllocateSecondsToHrsMinSecs(
 	return hours, minutes, seconds, sign
 }
 
+// ComputeDurationUtc - Computes time duration by first
+// converting parameters 'startTime' and 'EndTime' to UTC
+// Time Zone.
+//
+func (dtMech *DTimeMechanics) ComputeDurationUtc(
+	startTime,
+	endTime time.Time,
+	ePrefix string) (time.Duration, error) {
+
+	if endTime.Before(startTime) {
+		return time.Duration(0),
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "startTime",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'endTime' is less than 'startTime'!",
+				err:                 nil,
+			}
+	}
+
+	startTimeUtc := startTime.In(time.UTC)
+
+	endTimeUtc := endTime.In(time.UTC)
+
+	return endTimeUtc.Sub(startTimeUtc), nil
+}
+
+// GetDurationFromTimeComponents - Receives time components
+// such as days, hours, minutes, seconds, milliseconds,
+// microseconds and nanoseconds and returns time duration
+// (time.Duration)
+//
 func (dtMech *DTimeMechanics) GetDurationFromTimeComponents(
 	days ,
 	hours,

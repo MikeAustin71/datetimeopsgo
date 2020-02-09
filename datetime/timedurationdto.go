@@ -1479,9 +1479,11 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 // Input Parameters:
 // =================
 //
-// startDateTime time.Time - Starting date time
+// startDateTime time.Time
+//            - Starting date time
 //
-// endDateTime  time.Time - Ending date time
+// endDateTime  time.Time
+//            - Ending date time
 //
 // dateTimeFmtStr string  
 //             - A date time format string which will be used
@@ -1516,31 +1518,24 @@ func (tDur TimeDurationDto) New(
 
 	ePrefix := "TimeDurationDto.New() "
 
-	if startDateTime.IsZero() && endDateTime.IsZero() {
-		return TimeDurationDto{},
-			errors.New(ePrefix + "Error: Both 'startDateTime' and 'endDateTime' " +
-				"input parameters are ZERO!")
-	}
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	dtMech := DTimeMechanics{}
+	tDur2 := TimeDurationDto{}
 
-	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
-
-	tzStartLocation := startDateTime.Location().String()
-
-	t2Dur := TimeDurationDto{}
-
-	err := t2Dur.SetStartEndTimesCalcTz(startDateTime, endDateTime, TDurCalcType(0).StdYearMth(), tzStartLocation, dateTimeFmtStr)
+	err := tDurDtoUtil.setStartEndTimesCalcTz(
+		&tDur2,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+"Error returned by t2Dur.SetStartEndTimesCalcTz(startDateTime, "+
-				"endDateTime, tzStartLocation, dateTimeFmtStr). "+
-				"tzStartLocation='%v'  Error='%v'",
-				tzStartLocation, err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	return t2Dur, nil
+	return tDur2, nil
 }
 
 // NewAutoEnd - Creates and returns a new TimeDurationDto populated with
@@ -1566,8 +1561,8 @@ func (tDur TimeDurationDto) New(
 // Input Parameters:
 // =================
 //
-// startDateTime  time.Time  - Starting time
-//
+// startDateTime  time.Time
+//  - Starting date time
 //
 // timeZoneLocation  string
 //  - Designates the standard Time Zone location by which
@@ -1639,8 +1634,12 @@ func (tDur TimeDurationDto) New(
 //                                     TZones.US.Central(),
 //                                     FmtDateTimeYrMDayFmtStr)
 //
-//    Note: 'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants defined in
-//               constantsdatetime.go
+//   Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
 func (tDur TimeDurationDto) NewAutoEnd(
 	startDateTime time.Time,
@@ -5490,10 +5489,10 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(
 	
 	tDurDtoUtil := timeDurationDtoUtility{}
 	
-	return tDurDtoUtil.setStartEndTimesCalcTz(
+	return tDurDtoUtil.setStartEndTimesDateDtoCalcTz(
 			tDur,
-			startDateTimeTz.dateTimeValue,
-			endDateTimeTz.dateTimeValue,
+			startDateTimeTz,
+			endDateTimeTz,
 			tDurCalcType,
 			timeZoneLocation,
 			dateTimeFmtStr,
