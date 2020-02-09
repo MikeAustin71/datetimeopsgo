@@ -1651,46 +1651,25 @@ func (tDur TimeDurationDto) NewAutoEnd(
 	defer tDur.lock.Unlock()
 
 	ePrefix := "TimeDurationDto.NewAutoEnd() "
-	
-	tzMech := TimeZoneMechanics{}
 
-	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	dtMech := DTimeMechanics{}
-	
-	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
+	tDur2 := TimeDurationDto{}
 
-	tzSpec,
-	err := TimeZoneDefinition{}.NewTzSpecFromTzName(
+	err := tDurDtoUtil.setStartEndTimesCalcTz(
+		&tDur2,
 		startDateTime,
+		time.Now().UTC(),
+		TDurCalc.StdYearMth(),
 		timeZoneLocation,
-		TzConvertType.Relative())
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"\nError: 'timeZoneLocation' input parameter is INVALID! "+
-				"'timeZoneLocation'='%v'\n" +
-				"Error='%v'\n",
-				timeZoneLocation, err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	t2Dur := TimeDurationDto{}
-
-	err = t2Dur.SetStartEndTimesCalcTz(
-		tzSpec.referenceDateTime, 
-		time.Now().UTC().In(tzSpec.locationPtr), 
-		TDurCalcType(0).StdYearMth(),
-		tzSpec.locationName,
-		dateTimeFmtStr)
-
-	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix+"Error returned from "+
-			"SetStartEndTimesCalcTz(startDateTime, endDateTime, timeZoneLocation, dateTimeFmtStr)."+
-			"Error='%v'", err.Error())
-	}
-
-	return t2Dur, nil
+	return tDur2, nil
 }
 
 // NewAutoStart - Creates and returns a new TimeDurationDto instance. Starting date time is
