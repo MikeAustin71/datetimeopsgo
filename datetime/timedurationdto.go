@@ -5381,9 +5381,9 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(
 // Input Parameters:
 // =================
 //
-// startDateTime DateTzDto - Starting time
+// startDateTime DateTzDto - Starting date time
 //
-// endDateTime   DateTzDto - Ending time
+// endDateTime   DateTzDto - Ending date time
 //
 // tDurCalcType TDurCalcType
 //            - Specifies the calculation type to be used in allocating
@@ -5476,8 +5476,8 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(
 //                 FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(
-	startDateTime,
-	endDateTime DateTzDto,
+	startDateTimeTz,
+	endDateTimeTz DateTzDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
@@ -5492,8 +5492,8 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(
 	
 	return tDurDtoUtil.setStartEndTimesCalcTz(
 			tDur,
-			startDateTime.dateTimeValue,
-			endDateTime.dateTimeValue,
+			startDateTimeTz.dateTimeValue,
+			endDateTimeTz.dateTimeValue,
 			tDurCalcType,
 			timeZoneLocation,
 			dateTimeFmtStr,
