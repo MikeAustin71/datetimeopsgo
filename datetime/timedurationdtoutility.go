@@ -2086,7 +2086,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 
 	defer tDurDtoUtil.lock.Unlock()
 
-	ePrefix += "timeDurationDtoUtility.setStartTimeDurationCalcTz() "
+	ePrefix += "timeDurationDtoUtility.setStartEndTimesDateDtoCalcTz() "
 
 	if tDur == nil {
 		return &InputParameterError{

@@ -306,6 +306,22 @@ func (tzSpec *TimeZoneSpecification) GetLocationNameType() LocationNameType {
 	return tzSpec.locationNameType
 }
 
+// GetMilitaryOrStdTimeZoneName - If the Time Zone Specification object
+// is configured as a 'Military' Time Zone, the Military Time Zone Name
+// is returned. If the Time Zone Specification object is configured as a
+// 'Local' time zone, the time zone name 'Local' is returned. Finally,
+// if the Time Zone Specification object is configured as an 'IANA' time
+// zone, the appropriate 'IANA' time zone name is returned.
+//
+func (tzSpec *TimeZoneSpecification) GetMilitaryOrStdTimeZoneName() string {
+
+	if tzSpec.timeZoneType == TzType.Military() {
+		return tzSpec.militaryTimeZoneName
+	}
+
+	return tzSpec.locationName
+}
+
 // GetMilitaryTimeZoneName - Returns a string containing the military
 // time zone name, if applicable. If the current TimeZoneSpecification
 // instance does not define a military time zone, this return value
