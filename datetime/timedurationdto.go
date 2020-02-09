@@ -3497,7 +3497,10 @@ func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(
 // =================
 //
 // startDateTime time.Time
-//            - Starting date time for the duration calculation
+//            - Starting date time for the duration calculation.
+//              Note: The Time Zone extracted from 'startDateTime'
+//              is used in calculating both starting date time and
+//              ending date time.
 //
 // duration  time.Duration
 //            - Amount of time to be added to or subtracted from
@@ -3539,53 +3542,24 @@ func (tDur TimeDurationDto) NewStartTimeDuration(
 
 	ePrefix := "TimeDurationDto.NewStartTimeDuration() "
 
-	if startDateTime.IsZero() && duration == 0 {
-		return TimeDurationDto{},
-			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
-				"input parameters are ZERO!")
-	}
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	dtMech := DTimeMechanics{}
+	tDur2 := TimeDurationDto{}
 
-	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
-
-	var err error
-
-	var tzSpec TimeZoneSpecification
-
-	tzSpec,
-		err = TimeZoneDefinition{}.NewTzSpecFromTzName(
+	err := tDurDtoUtil.setStartTimeDurationCalcTz(
+		&tDur2,
 		startDateTime,
+		duration,
+		TDurCalc.StdYearMth(),
 		startDateTime.Location().String(),
-		TzConvertType.Relative())
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"\nError: Time Zone is INVALID! "+
-				"'startDateTime.Location()'='%v'\n" +
-				"Error='%v'\n",
-				startDateTime.Location().String(), err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	t2Dur := TimeDurationDto{}
-
-	err = t2Dur.SetStartTimeDurationCalcTz(
-		startDateTime, 
-		duration, 
-		TDurCalcType(0).StdYearMth(),
-		tzSpec.locationName,
-		dateTimeFmtStr)
-
-	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"Error returned by t2Dur.SetStartTimeDurationCalcTz(...)\n" +
-				"Error='%v'\n", err.Error())
-	}
-
-	return t2Dur, nil
-
+	return tDur2, nil
 }
 
 // NewStartTimeDurationTz - Creates and returns a new TimeDurationDto based on input parameters
