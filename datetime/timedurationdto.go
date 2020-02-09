@@ -3590,8 +3590,8 @@ func (tDur TimeDurationDto) NewStartTimeDuration(
 
 // NewStartTimeDurationTz - Creates and returns a new TimeDurationDto based on input parameters
 // 'startDateTime', time duration and 'timeZoneLocation'. 'startDateTime' is converted to the
-// specified 'timeZoneLocation' and the duration value is added to it in order to compute the
-// ending date time.
+// specified 'timeZoneLocation'. The duration value is added to 'startDateTime' in order to
+// compute the ending date time.
 //
 // If 'duration' is a negative value 'startDateTime' is converted to ending date time and the
 //  actual starting date time is computed by subtracting duration.
@@ -3705,57 +3705,24 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(
 
 	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
 
-	tzMech := TimeZoneMechanics{}
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
+	tDur2 := TimeDurationDto{}
 
-	dtMech := DTimeMechanics{}
-
-	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
-
-	var err error
-
-	if startDateTime.IsZero() && duration == 0 {
-		return TimeDurationDto{},
-			errors.New(ePrefix + "Error: Both 'startDateTime' and 'duration' " +
-				"input parameters are ZERO!")
-	}
-
-
-	var tzSpec TimeZoneSpecification
-
-	tzSpec,
-		err = TimeZoneDefinition{}.NewTzSpecFromTzName(
+	err := tDurDtoUtil.setStartTimeDurationCalcTz(
+		&tDur2,
 		startDateTime,
+		duration,
+		TDurCalc.StdYearMth(),
 		timeZoneLocation,
-		TzConvertType.Relative())
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"\nError: 'timeZoneLocation' input parameter is INVALID! "+
-				"'timeZoneLocation'='%v'\n" +
-				"Error='%v'\n",
-				timeZoneLocation, err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	t2Dur := TimeDurationDto{}
-
-	err = t2Dur.SetStartTimeDurationCalcTz(
-		startDateTime, 
-		duration, 
-		TDurCalcType(0).StdYearMth(), 
-		tzSpec.locationName, 
-		dateTimeFmtStr)
-
-	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"\nError returned by t2Dur.SetStartTimeDurationCalcTz(...)\n" +
-				"Error='%v'\n", err.Error())
-	}
-
-	return t2Dur, nil
+	return tDur2, nil
 }
 
 // NewStartTimeDurationCalcTz - Creates and returns a new TimeDurationDto based on input
