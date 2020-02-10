@@ -2083,72 +2083,74 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
 // Input Parameters:
 // =================
 //
-// startDateTz  DateTzDto  - Contains the starting date time used in time duration calculations
+// startDateTz  DateTzDto
+//     - Contains the starting date time used in time duration calculations
 //
-// endDateTz    DateTzDto - Contains the ending date time used in time duration calculations.
+// endDateTz    DateTzDto
+//     - Contains the ending date time used in time duration calculations.
 //
 // timeZoneLocation  string  
-//              - Designates the standard Time Zone location by which
-//                time duration will be compared. This ensures that
-//                'oranges are compared to oranges and apples are compared
-//                to apples' with respect to start time and end times used in
-//                time duration calculations.
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end times used in
+//       time duration calculations.
 //
-//                If 'timeZoneLocation' is passed as an empty string, it
-//                will be automatically defaulted to the 'UTC' time zone.
-//                Reference Universal Coordinated Time: 
-//                   https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                Time zone location must be designated as one of three types
-//                of time zones.
+//       Time zone location must be designated as one of three types
+//       of time zones.
 //
-//                (1) The time zone "Local", which Golang accepts as
-//                    the time zone currently configured on the host
-//                    computer.
-//                
-//                (2) IANA Time Zone - A valid IANA Time Zone from the
-//                    IANA database.
-//                    See https://golang.org/pkg/time/#LoadLocation
-//                    and https://www.iana.org/time-zones to ensure that
-//                    the IANA Time Zone Database is properly configured
-//                    on your system.
-//                
-//                    IANA Time Zone Examples:
-//                      "America/New_York"
-//                      "America/Chicago"
-//                      "America/Denver"
-//                      "America/Los_Angeles"
-//                      "Pacific/Honolulu"
-//                      "Etc/UTC" = GMT or UTC
-//                
-//                (3) A Military Time Zone
-//                    Reference:
-//                      https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                      http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                      https://www.timeanddate.com/time/zones/military
-//                      https://www.timeanddate.com/worldclock/timezone/alpha
-//                      https://www.timeanddate.com/time/map/
-//                
-//                     Examples:
-//                       "Alpha"   or "A"
-//                       "Bravo"   or "B"
-//                       "Charlie" or "C"
-//                       "Delta"   or "D"
-//                       "Zulu"    or "Z"
-//                
-//                       If the time zone "Zulu" is passed to this method, it will be
-//                       classified as a Military Time Zone.
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
+//
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system.
+//
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
+//
+//       (3) A Military Time Zone
+//           Reference:
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
+//
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
+//
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
 //
 // dateTimeFmtStr string    
-//              - A date time format string which will be used
-//                to format and display 'dateTime'. Example:
-//                "2006-01-02 15:04:05.000000000 -0700 MST"
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                If 'dateTimeFmtStr' is submitted as an
-//                'empty string', a default date time format
-//                string will be applied. The default date time
-//                format string is:
-//                FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // Example Usage:
 // ==============
@@ -2178,80 +2180,24 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
 
 	ePrefix := "TimeDurationDto.NewStartEndDateTzDtoTz() "
 
-	tzMech := TimeZoneMechanics{}
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
+	tDur2 := TimeDurationDto{}
 
-	dtMech := DTimeMechanics{}
-
-	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
-
-	var err error
-
-	err = startDateTz.IsValid()
-
-	if err != nil {
-		return TimeDurationDto{},
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "startDateTz",
-				inputParameterValue: "",
-				errMsg:   fmt.Sprintf(
-					"Input Parameter 'startDateTz' is INVALID!\n" +
-						"Validation Error='%v'", err.Error()),
-				err:                 nil,
-			}
-	}
-
-	err = endDateTz.IsValid()
-
-	if err != nil {
-		return TimeDurationDto{},
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "endDateTz",
-				inputParameterValue: "",
-				errMsg:   fmt.Sprintf(
-					"Input Parameter 'endDateTz' is INVALID!\n" +
-						"Validation Error='%v'", err.Error()),
-				err:                 nil,
-			}
-	}
-
-	var tzSpec TimeZoneSpecification
-
-	tzSpec,
-		err = TimeZoneDefinition{}.NewTzSpecFromTzName(
-		startDateTz.dateTimeValue,
+	err := tDurDtoUtil.setStartEndTimesDateDtoCalcTz(
+		&tDur2,
+		startDateTz,
+		endDateTz,
+		TDurCalc.StdYearMth(),
 		timeZoneLocation,
-		TzConvertType.Relative())
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"\nError: 'timeZoneLocation' input parameter is INVALID! "+
-				"'timeZoneLocation'='%v'\n" +
-				"Error='%v'\n",
-				timeZoneLocation, err.Error())
+		return TimeDurationDto{}, err
 	}
 
-	t2Dur := TimeDurationDto{}
-
-	err = t2Dur.SetStartEndTimesCalcTz(
-		startDateTz.dateTimeValue,
-		endDateTz.dateTimeValue,
-		TDurCalcType(0).StdYearMth(),
-		tzSpec.locationName,
-		dateTimeFmtStr)
-
-	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix+
-				"Error returned by SetStartEndTimesCalcTz(). Error='%v' ",
-				err.Error())
-	}
-
-	return t2Dur, nil
+	return tDur2, nil
 }
 
 // NewStartEndTimesTz - Creates and returns a new TimeDurationDto populated with
