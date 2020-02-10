@@ -1,9 +1,11 @@
 package datetime
 
-import "testing"
+import (
+	"testing"
+)
 
 
-func TestLocationNameType_01 (t *testing.T) {
+func TestLocationNameType_None_01 (t *testing.T) {
 
 	testLocNameType := LocationNameType(-1)
 
