@@ -3563,77 +3563,77 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(
 // =================
 //
 // startDateTime time.Time
-//            - Starting date time
+//     - Starting date time
 //
 // duration  time.Duration
-//            - Amount of time to be added to or subtracted from
-//              'startDateTime'. Note: If duration is a negative value
-//              'startDateTime' is converted to ending date time and
-//              actual starting date time is computed by subtracting
-//              duration.
+//     - Amount of time to be added to or subtracted from
+//       'startDateTime'. Note: If duration is a negative value
+//       'startDateTime' is converted to ending date time and
+//       actual starting date time is computed by subtracting
+//       duration.
 //
 // timeZoneLocation string
-//            - Designates the standard Time Zone location by which
-//              time duration will be compared. This ensures that
-//              'oranges are compared to oranges and apples are compared
-//              to apples' with respect to start time and end time duration
-//              calculations.
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//              If 'timeZoneLocation' is passed as an empty string, it
-//              will be automatically defaulted to the 'UTC' time zone.
-//              Reference Universal Coordinated Time:
-//                 https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//              Time zone location must be designated as one of three types of
-//              time zones.
+//       Time zone location must be designated as one of three types of
+//       time zones.
 //
-//              (1) The time zone "Local", which Golang accepts as
-//                  the time zone currently configured on the host
-//                  computer.
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
 //
-//              (2) IANA Time Zone - A valid IANA Time Zone from the
-//                  IANA database.
-//                  See https://golang.org/pkg/time/#LoadLocation
-//                  and https://www.iana.org/time-zones to ensure that
-//                  the IANA Time Zone Database is properly configured
-//                  on your system.
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system.
 //
-//                  IANA Time Zone Examples:
-//                    "America/New_York"
-//                    "America/Chicago"
-//                    "America/Denver"
-//                    "America/Los_Angeles"
-//                    "Pacific/Honolulu"
-//                    "Etc/UTC" = GMT or UTC
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
 //
-//              (3) A Military Time Zone
-//                  Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
-//                    https://www.timeanddate.com/worldclock/timezone/alpha
-//                    https://www.timeanddate.com/time/map/
+//       (3) A Military Time Zone
+//           Reference:
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
 //
-//                   Examples:
-//                     "Alpha"   or "A"
-//                     "Bravo"   or "B"
-//                     "Charlie" or "C"
-//                     "Delta"   or "D"
-//                     "Zulu"    or "Z"
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
 //
-//                     If the time zone "Zulu" is passed to this method, it will be
-//                     classified as a Military Time Zone.
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
 //
-// dateTimeFmtStr string
-//            - A date time format string which will be used
-//              to format and display 'dateTime'. Example:
-//              "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr     string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//              If 'dateTimeFmtStr' is submitted as an
-//              'empty string', a default date time format
-//              string will be applied. The default date time
-//              format string is:
-//                 FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//          FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // Example Usage:
 // ==============
@@ -3701,17 +3701,17 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(
 // Input Parameters:
 // =================
 //
-// startDateTime DateTzDto
+// startDateTime   DateTzDto
 //            - Starting date time for the duration calculation
 //
-// duration  time.Duration
+// duration    time.Duration
 //            - Amount of time to be added to or subtracted from
 //              'startDateTime'. Note: If duration is a negative value
 //              'startDateTime' is converted to ending date time and
 //              actual starting date time is computed by subtracting
 //              duration.
 //
-// timeZoneLocation string
+// timeZoneLocation   string
 //            - Designates the standard Time Zone location by which
 //              time duration will be compared. This ensures that
 //              'oranges are compared to oranges and apples are compared
@@ -3764,49 +3764,53 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(
 //                     classified as a Military Time Zone.
 //
 // tDurCalcType TDurCalcType
-//            - Specifies the calculation type to be used in allocating
-//              time duration:
+//     - Specifies the calculation type to be used in allocating
+//       time duration:
 //
-//     TDurCalcType(0).StdYearMth()   - Default - standard year, month week,
-//                    day time calculation.
+//       TDurCalcType(0).StdYearMth()   - Default - standard year, month week,
+//                      day time calculation.
 //
-//     TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
+//       TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
 //
-//     TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
+//       TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
 //
-//     TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
+//       TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
 //
-//     TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
+//       TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
 //
-//     TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
-//                                        or hours.
+//       TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
+//                                          or hours.
 //
-//     TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
-//                                        hours or minutes.
+//       TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
+//                                          hours or minutes.
 //
-//     TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
-//                                        Used for very large duration values.
+//       TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
+//                                          Used for very large duration values.
 //
 //           Type 'TDurCalcType' is located in source file:
 //            MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
-// dateTimeFmtStr string
-//            - A date time format string which will be used
-//              to format and display 'dateTime'. Example:
-//              "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr     string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//              If 'dateTimeFmtStr' is submitted as an
-//              'empty string', a default date time format
-//              string will be applied. The default date time
-//              format string is:
-//                FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //
 // Example Usage:
 // ==============
 //
-// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTzCalc(startTime, duration,
-//           TZones.US.Central(), TDurCalcType(0).StdYearMth(), FmtDateTimeYrMDayFmtStr)
+// tDurDto, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTzCalc(
+//                                   startTime,
+//                                   duration,
+//                                   TZones.US.Central(),
+//                                   TDurCalcType(0).StdYearMth(),
+//                                   FmtDateTimeYrMDayFmtStr)
 //
 //
 //  Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
@@ -3871,51 +3875,53 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(
 // Input Parameters:
 // =================
 //
-// startDateTime   DateTz 
-//            - Starting date time for the duration calculation
+// startDateTime      DateTz
+//     - Starting date time for the duration calculation
 //
-// duration time.Duration
-//            - Amount of time to be added to or subtracted from
-//              'startDateTime'. Note: If duration is a negative value
-//              'startDateTime' is converted to ending date time and
-//              actual starting date time is computed by subtracting
-//              duration.
+// duration    time.Duration
+//     - Amount of time to be added to or subtracted from
+//       'startDateTime'. Note: If duration is a negative value
+//       'startDateTime' is converted to ending date time and
+//       actual starting date time is computed by subtracting
+//       duration.
 //
-// tDurCalcType TDurCalcType- Specifies the calculation type to be used in allocating
-//              time duration:
+// tDurCalcType TDurCalcType
+//     - Specifies the calculation type to be used in allocating
+//       time duration:
 //
-//     TDurCalcType(0).StdYearMth()     - Default - standard year, month week,
-//                                        day time calculation.
+//       TDurCalcType(0).StdYearMth()     - Default - standard year, month week,
+//                                          day time calculation.
 //
-//     TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
+//       TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
 //
-//     TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
+//       TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
 //
-//     TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
+//       TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
 //
-//     TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
+//       TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
 //
-//     TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
-//                                        or hours.
+//       TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
+//                                          or hours.
 //
-//     TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
-//                                        hours or minutes.
+//       TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
+//                                          hours or minutes.
 //
-//     TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
-//                                        Used for very large duration values.
+//       TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
+//                                          Used for very large duration values.
 //
 //           Type 'TDurCalcType' is located in source file:
 //            MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
-// dateTimeFmtStr string  - A date time format string which will be used
-//               to format and display 'dateTime'. Example:
-//               "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr     string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//              If 'dateTimeFmtStr' is submitted as an
-//               'empty string', a default date time format
-//               string will be applied. The default date time
-//               format string is:
-//               FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //
 // Example Usage:
@@ -3946,15 +3952,9 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(
 
 	tDurDtoUtil := timeDurationDtoUtility{}
 
-	timeZone := startDateTime.GetBestConvertibleTimeZone()
-
-	var timeZoneLocationName string
-
-	if timeZone.timeZoneType == TzType.Military() {
-		timeZoneLocationName = timeZone.militaryTimeZoneName
-	} else {
-		timeZoneLocationName = timeZone.locationName
-	}
+	timeZoneLocation := startDateTime.
+												GetBestConvertibleTimeZone().
+												GetMilitaryOrStdTimeZoneName()
 
 	tDur2 := TimeDurationDto{}
 
@@ -3963,7 +3963,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(
 		startDateTime,
 		duration,
 		tDurCalcType,
-		timeZoneLocationName,
+		timeZoneLocation,
 		dateTimeFmtStr,
 		ePrefix)
 
