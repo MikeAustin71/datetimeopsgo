@@ -3361,52 +3361,52 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(
 // =================
 //
 // startDateTime   time.Time
-//            - Starting date time for the duration calculation
+//     - Starting date time for the duration calculation
 //
 // duration    time.Duration
-//            - Amount of time to be added to or subtracted from
-//              'startDateTime'. Note: If duration is a negative value
-//              'startDateTime' is converted to ending date time and
-//              actual starting date time is computed by subtracting
-//              duration.
+//     - Amount of time to be added to or subtracted from
+//       'startDateTime'. Note: If duration is a negative value
+//       'startDateTime' is converted to ending date time and
+//       actual starting date time is computed by subtracting
+//       duration.
 //
 // tDurCalcType TDurCalcType
-//            - Specifies the calculation type to be used in allocating
-//              time duration:
+//     - Specifies the calculation type to be used in allocating
+//       time duration:
 //
-//     TDurCalcType(0).StdYearMth()     - Default - standard year, month week,
-//                                        day time calculation.
+//       TDurCalcType(0).StdYearMth()     - Default - standard year, month week,
+//                                          day time calculation.
 //
-//     TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
+//       TDurCalcType(0).CumMonths()      - Computes cumulative months - no Years.
 //
-//     TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
+//       TDurCalcType(0).CumWeeks()       - Computes cumulative weeks. No Years or months
 //
-//     TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
+//       TDurCalcType(0).CumDays()        - Computes cumulative days. No Years, months or weeks.
 //
-//     TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
+//       TDurCalcType(0).CumHours()       - Computes cumulative hours. No Years, months, weeks or days.
 //
-//     TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
-//                                        or hours.
+//       TDurCalcType(0).CumMinutes()     - Computes cumulative minutes. No Years, months, weeks, days
+//                                          or hours.
 //
-//     TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
-//                                        hours or minutes.
+//       TDurCalcType(0).CumSeconds()     - Computes cumulative seconds. No Years, months, weeks, days,
+//                                          hours or minutes.
 //
-//     TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
-//                                        Used for very large duration values.
+//       TDurCalcType(0).GregorianYears() - Computes Years based on average length of a Gregorian Year
+//                                          Used for very large duration values.
 //
-//           Type 'TDurCalcType' is located in source file:
-//            MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//             Type 'TDurCalcType' is located in source file:
+//              MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
-// dateTimeFmtStr string
-//            - A date time format string which will be used
-//              to format and display 'dateTime'. Example:
-//              "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr     string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//              If 'dateTimeFmtStr' is submitted as an
-//              'empty string', a default date time format
-//              string will be applied. The default date time
-//              format string is:
-//                 FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//          FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //
 // Example Usage:
@@ -3476,25 +3476,25 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(
 // =================
 //
 // startDateTime DateTzDto
-//            - Starting date time for the duration calculation
+//     - Starting date time for the duration calculation
 //
 // duration  time.Duration
-//            - Amount of time to be added to or subtracted from
-//              'startDateTime'. Note: If duration is a negative value
-//              'startDateTime' is converted to ending date time and
-//              actual starting date time is computed by subtracting
-//              duration.
+//     - Amount of time to be added to or subtracted from
+//       'startDateTime'. Note: If duration is a negative value
+//       'startDateTime' is converted to ending date time and
+//       actual starting date time is computed by subtracting
+//       duration.
 //
-// dateTimeFmtStr string
-//            - A date time format string which will be used
-//              to format and display 'dateTime'. Example:
-//              "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr   string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//              If 'dateTimeFmtStr' is submitted as an
-//              'empty string', a default date time format
-//              string will be applied. The default date time
-//              format string is:
-//                FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // Example Usage:
 // ==============
@@ -3516,17 +3516,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(
 
 	defer tDur.lock.Unlock()
 
-	ePrefix := "TimeDurationDto.NewStartTimeDurationTz() "
+	ePrefix := "TimeDurationDto.NewStartTimeDurationDateDto() "
 
-	timeZone := startDateTimeTz.GetBestConvertibleTimeZone()
-
-	var timeZoneLocation string
-
-	if timeZone.timeZoneType == TzType.Military() {
-		timeZoneLocation = timeZone.militaryTimeZoneName
-	} else {
-		timeZoneLocation = timeZone.locationName
-	}
+	timeZoneLocation :=
+		startDateTimeTz.
+			GetBestConvertibleTimeZone().
+			GetMilitaryOrStdTimeZoneName()
 
 	tDur2 := TimeDurationDto{}
 
