@@ -17,7 +17,7 @@ import (
 //
 // The Type includes a starting date time, ending date time, a time
 // duration value specifying the time span between starting and ending
-// date time and a breakdown of time duration by a series of time
+// date time, and a breakdown of time duration by a series of time
 // components including years, months, weeks, days, hours, minutes,
 // seconds, milliseconds, microseconds and nanoseconds.
 //
@@ -1463,41 +1463,62 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 }
 
 // New - Creates and returns a new TimeDurationDto based on starting
-// and ending date times.  Because, time zone location is crucial to
-// completely accurate duration calculations, the time zone of the
-// starting date time, 'startDateTime' is applied to parameter,
-// 'endDateTime' before making the duration calculation.
+// and ending date times.
 //
-// Note:  This method applies the standard Time Duration allocation, 'TDurCalcType(0).StdYearMth()'.
-//        This means that duration is allocated over years, months, weeks, weekdays, date days,
-//        hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
-//        For details, see Type 'TDurCalcType' in this source file: 
-//          MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+// Because, time zone location is crucial to completely accurate
+// duration calculations, the time zone of the starting date time,
+// 'startDateTime' is applied to parameter, 'endDateTime' before
+// making the duration calculation.
+//
+// This method applies the standard Time Duration allocation,
+// 'TDurCalcType(0).StdYearMth()'. This means that duration
+// is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and
+// nanoseconds. For details, see Type 'TDurCalcType' in this
+// source file:
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+// __________________________________________________________________________
 //
 // Input Parameters:
-// =================
 //
 // startDateTime time.Time
-//            - Starting date time
+//     - Starting date time
 //
-// endDateTime  time.Time
-//            - Ending date time
+// endDateTime   time.Time
+//     - Ending date time
 //
-// dateTimeFmtStr string  
-//             - A date time format string which will be used
-//               to format and display 'dateTime'. Example:
-//               "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr   string
+//      - A date time format string which will be used
+//        to format and display 'dateTime'. Example:
+//        "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//               If 'dateTimeFmtStr' is submitted as an
-//               'empty string', a default date time format
-//               string will be applied. The default date time
-//               format string is:
-//               FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//        If 'dateTimeFmtStr' is submitted as an
+//        'empty string', a default date time format
+//        string will be applied. The default date time
+//        format string is:
+//        FmtDateTimeYrMDayFmtStr =
+//           "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+// TimeDurationDto
+//     - If this method proceeds to successful completion, a valid
+//       and fully populated 'TimeDurationDto' instance is returned.
+//
+// error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+//
+// __________________________________________________________________________
 //
 // Example Usage:
-// ==============
 //
-// tDurDto, err := TimeDurationDto{}.New(
+//  tDurDto, err := TimeDurationDto{}.New(
 //                                   startTime,
 //                                   endTime,
 //                                   FmtDateTimeYrMDayFmtStr)
@@ -1557,10 +1578,12 @@ func (tDur TimeDurationDto) New(
 //         file: MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // Input Parameters:
+//
 // =================
 //
 // startDateTime  time.Time
 //  - Starting date time
+//
 //
 // timeZoneLocation  string
 //  - Designates the standard Time Zone location by which
@@ -1614,17 +1637,35 @@ func (tDur TimeDurationDto) New(
 //          If the time zone "Zulu" is passed to this method, it will be
 //          classified as a Military Time Zone.
 //
-// dateTimeFmtStr string    - A date time format string which will be used
-//                            to format and display 'dateTime'. Example:
-//                            "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                            If 'dateTimeFmtStr' is submitted as an
-//                            'empty string', a default date time format
-//                            string will be applied. The default date time
-//                            format string is:
-//                            FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+// dateTimeFmtStr    string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//          FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+// Return Values:
+//
+// ==============
+//
+// TimeDurationDto
+//     - If this method proceeds to successful completion, a valid
+//       and fully populated 'TimeDurationDto' instance is returned.
+//
+// error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
 //
 // Example Usage:
+//
 // ==============
 //
 // tDurDto, err := TimeDurationDto{}.NewAutoEnd(
@@ -1815,8 +1856,8 @@ func (tDur TimeDurationDto) NewAutoStart(
 // For details, see Type 'TDurCalcType' in this source file:
 //        MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
-// Input Parameters
-// ================
+// Input Parameters:
+// =================
 //
 // startDateTz DateTzDto
 //            - Contains the starting date time used in time duration calculations
@@ -3049,8 +3090,8 @@ func (tDur TimeDurationDto) NewStartTimeDuration(
 //       hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
 //       See Type 'TDurCalcType' for details.
 //
-// Input Parameters
-// ================
+// Input Parameters:
+// =================
 //
 // startDateTime time.Time
 //     - Starting date time for the duration calculation
