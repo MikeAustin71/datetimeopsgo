@@ -211,7 +211,7 @@ func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
 //
 //  bool - If 'true' it signals that all relevant data fields in
 //         in the current 'TimeDurationDto' instance (tDur) are
-//         empty or set to their zero values.
+//         empty, or set to their zero values.
 //
 func (tDur *TimeDurationDto) IsEmpty() bool {
 
@@ -219,39 +219,17 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 
 	defer tDur.lock.Unlock()
 
-	if tDur.StartTimeDateTz.IsEmpty() &&
-		tDur.EndTimeDateTz.IsEmpty() &&
-		tDur.TimeDuration == 0 &&
-		tDur.Years == 0 &&
-		tDur.YearsNanosecs == 0 &&
-		tDur.Months == 0 &&
-		tDur.MonthsNanosecs == 0 &&
-		tDur.Weeks == 0 &&
-		tDur.WeeksNanosecs == 0 &&
-		tDur.WeekDays == 0 &&
-		tDur.WeekDaysNanosecs == 0 &&
-		tDur.DateDays == 0 &&
-		tDur.DateDaysNanosecs == 0 &&
-		tDur.Hours == 0 &&
-		tDur.HoursNanosecs == 0 &&
-		tDur.Minutes == 0 &&
-		tDur.MinutesNanosecs == 0 &&
-		tDur.Seconds == 0 &&
-		tDur.SecondsNanosecs == 0 &&
-		tDur.Milliseconds == 0 &&
-		tDur.MillisecondsNanosecs == 0 &&
-		tDur.Microseconds == 0 &&
-		tDur.MicrosecondsNanosecs == 0 &&
-		tDur.Nanoseconds == 0 &&
-		tDur.TotSubSecNanoseconds == 0 &&
-		tDur.TotDateNanoseconds == 0 &&
-		tDur.TotTimeNanoseconds == 0 {
+	ePrefix := "TimeDurationDto.IsEmpty() "
 
-		tDur.CalcType = TDurCalcType(0).None()
-		return true
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	isEmpty, err := tDurDtoUtil.isEmpty(tDur, ePrefix)
+
+	if err != nil {
+		return false
 	}
 
-	return false
+	return isEmpty
 }
 
 // IsValid - Returns an error value signaling whether
@@ -284,6 +262,26 @@ func (tDur *TimeDurationDto) IsValid() error {
 // 'cumulative days' format. This format always shows zero years and
 // zero months. It consolidates years, months and days and presents them
 // as cumulative days.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new,
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumDays()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
 func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 
 	tDur.lock.Lock()
@@ -301,25 +299,41 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumDays())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumDays(),
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"\nError returned by ReCalcTimeDurationAllocation(" +
-				"TDurCalcType(0).CumDays())\n"+
-				" Error='%v'\n", err.Error())
+		return TimeDurationDto{}, err
 	}
 
 	return t2Dur, nil
 }
 
-// GetCumDaysTimeStr - Returns duration formatted as
-// days, hours, minutes, seconds, milliseconds, microseconds,
-// and nanoseconds. Years, months and weeks are always excluded and
-// included in cumulative 'days'.
+// GetCumDaysTimeStr - Returns duration formatted as days, hours,
+// minutes, seconds, milliseconds, microseconds, and nanoseconds.
+// Years, months and weeks are always excluded and included in
+// cumulative 'days'.
 //
-// Example:
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative days. See Example String below.
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+// Example Return String:
 //
 // 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
@@ -339,13 +353,13 @@ func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumDays())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumDays(),
+		ePrefix)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumDays())\n"+
-			" Error='%v'\n", err.Error())
+		return "", err
 	}
 
 	str := ""

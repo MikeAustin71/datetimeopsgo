@@ -1188,26 +1188,30 @@ func (tDurDtoUtil *timeDurationDtoUtility) emptyTimeFields(
 //
 // Input Parameters:
 //
-//  t1Dur TimeDurationDto - A TimeDurationDto object which will be 
-//                          compared to the t2Dur TimeDurationDto
-//                          instance to determine if the two are 
-//                          equivalent. 
+//  t1Dur TimeDurationDto
+//     - A TimeDurationDto object which will be
+//       compared to the t2Dur TimeDurationDto
+//       instance to determine if the two are
+//       equivalent.
 //
-//  t2Dur TimeDurationDto - A TimeDurationDto object which will be 
-//                          compared to the t1Dur TimeDurationDto
-//                          instance to determine if the two are 
-//                          equivalent. 
+//  t2Dur TimeDurationDto
+//     - A TimeDurationDto object which will be
+//       compared to the t1Dur TimeDurationDto
+//       instance to determine if the two are
+//       equivalent.
 //
-//  ePrefix  string
-//            - The error prefix containing the names of all
-//              the methods executed up to this point.
+//  ePrefix        string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
 //
 // __________________________________________________________________________
 //
 // Return Values:
 //
 //  bool  - If 'true' it signals that all relevant data fields in
-//          'tDur' and 'tDur2' are equivalent.
+//          't1Dur' and 'tDur2' are equivalent. If data fields are
+//          NOT equal or if an error is encountered, this value is
+//          set to 'false'.
 //
 //  error - If either or both of 't1Dur' and 't2Dur' constitute nil pointers
 //          the returned error object is configured with an appropriate
@@ -1279,6 +1283,92 @@ func (tDurDtoUtil *timeDurationDtoUtility) equal(
 	}
 
 	return true, nil
+}
+
+// isEmpty() - Returns 'true' if the passed TimeDurationDto instance
+// is uninitialized and consists entirely of zero values.
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  t Dur TimeDurationDto
+//     - A TimeDurationDto object which will be
+//       will be analyzed to determine if all of
+//       its constituent data fields are empty or
+//       contain a zero value.
+//
+//  ePrefix        string
+//     - The error prefix containing the names of
+//       all the methods executed up to this point.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  bool  - If 'true' it signals that all relevant data fields in
+//          'tDur'are empty or contain a zero value. If any of the
+//          data fields are populated, or if an error is encountered,
+//          this value is set to 'false'.
+//
+//  error - If 'tDur' is a nil pointer the returned error object is
+//          configured with an appropriate error message.
+//
+func (tDurDtoUtil *timeDurationDtoUtility) isEmpty(
+	tDur *TimeDurationDto,
+	ePrefix string) (bool, error) {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.isEmpty() "
+
+	if tDur == nil {
+		return false,
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "tDur",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'tDur' is a 'nil' pointer!",
+				err:                 nil,
+			}
+	}
+
+
+	if tDur.StartTimeDateTz.IsEmpty() &&
+		tDur.EndTimeDateTz.IsEmpty() &&
+		tDur.TimeDuration == 0 &&
+		tDur.Years == 0 &&
+		tDur.YearsNanosecs == 0 &&
+		tDur.Months == 0 &&
+		tDur.MonthsNanosecs == 0 &&
+		tDur.Weeks == 0 &&
+		tDur.WeeksNanosecs == 0 &&
+		tDur.WeekDays == 0 &&
+		tDur.WeekDaysNanosecs == 0 &&
+		tDur.DateDays == 0 &&
+		tDur.DateDaysNanosecs == 0 &&
+		tDur.Hours == 0 &&
+		tDur.HoursNanosecs == 0 &&
+		tDur.Minutes == 0 &&
+		tDur.MinutesNanosecs == 0 &&
+		tDur.Seconds == 0 &&
+		tDur.SecondsNanosecs == 0 &&
+		tDur.Milliseconds == 0 &&
+		tDur.MillisecondsNanosecs == 0 &&
+		tDur.Microseconds == 0 &&
+		tDur.MicrosecondsNanosecs == 0 &&
+		tDur.Nanoseconds == 0 &&
+		tDur.TotSubSecNanoseconds == 0 &&
+		tDur.TotDateNanoseconds == 0 &&
+		tDur.TotTimeNanoseconds == 0 {
+
+		tDur.CalcType = TDurCalcType(0).None()
+		return true, nil
+	}
+
+	return false, nil
 }
 
 // isValid - Returns an error value signaling whether
