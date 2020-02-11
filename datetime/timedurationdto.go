@@ -76,6 +76,13 @@ type TimeDurationDto struct {
 //
 // When this method completes, the current TimeDurationDto will
 // equal in all respects to the incoming TimeDurationDto.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  -- NONE --
+//
 func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
 
 	tDur.lock.Lock()
@@ -92,6 +99,15 @@ func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
 
 // copyOut - Returns a deep copy of the current
 // TimeDurationDto instance.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a valid
+//       and fully populated 'TimeDurationDto' instance is returned.
+//
 func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 
 	tDur.lock.Lock()
@@ -105,8 +121,15 @@ func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 						"TimeDurationDto.CopyOut() ")
 }
 
-// Empty - Resets all of the current TimeDurationDto
-// data fields to their zero or uninitialized values.
+// Empty - Resets all current TimeDurationDto data
+// fields to their zero or uninitialized values.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//   -- NONE --
+//
 func (tDur *TimeDurationDto) Empty() {
 
 	tDur.lock.Lock()
@@ -120,8 +143,15 @@ func (tDur *TimeDurationDto) Empty() {
 		"TimeDurationDto.Empty() ")
 }
 
-// EmptyTimeFields - Sets all of the data fields
-// associated with time duration allocation to zero.
+// EmptyTimeFields - Sets all data fields associated
+// with time duration allocation to zero.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//   -- NONE --
+//
 func (tDur *TimeDurationDto) EmptyTimeFields() {
 
 	tDur.lock.Lock()
@@ -138,6 +168,14 @@ func (tDur *TimeDurationDto) EmptyTimeFields() {
 
 // Equal - Compares two TimeDurationDto instances to determine
 // if they are equivalent.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  bool - If 'true' it signals that all relevant data fields in
+//         'tDur' and 'tDur2' are equivalent.
+//
 func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
 
 	tDur.lock.Lock()
@@ -182,6 +220,14 @@ func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
 
 // IsEmpty() - Returns 'true' if the current TimeDurationDto
 // instance is uninitialized and consists entirely of zero values.
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  bool - If 'true' it signals that all relevant data fields in
+//         in the current 'TimeDurationDto' instance (tDur) are
+//         empty or set to their zero values.
+//
 func (tDur *TimeDurationDto) IsEmpty() bool {
 
 	tDur.lock.Lock()
@@ -225,6 +271,15 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 
 // IsValid - Returns an error value signaling whether
 // the current TimeDurationDto data fields are valid.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error - If the current 'TimeDurationDto' instance is valid and populated,
+//          the returned 'error' is set to nil. If the instance is invalid,
+//          the returned 'error' object contains an appropriate error message.
+//
 func (tDur *TimeDurationDto) IsValid() error {
 
 	tDur.lock.Lock()
@@ -267,7 +322,23 @@ func (tDur TimeDurationDto) GetDurationFromTime(
 // GetDurationFromDays - returns a time Duration value
 // based on the number of days passed into this method.
 // No changes are made to or stored in the existing
-// TimeDurationDto data structures.
+// TimeDurationDto data fields.
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  days int64 - A number of days which will be converted to
+//               a time.Duration value.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  time.Duration - The value of this returned 'time.Duration' object is
+//                  equivalent to the number of 24-hour days specified
+//                  by input parameter 'days'.
+//
 func (tDur TimeDurationDto) GetDurationFromDays(days int64) time.Duration {
 
 	tDur.lock.Lock()
@@ -282,6 +353,22 @@ func (tDur TimeDurationDto) GetDurationFromDays(days int64) time.Duration {
 // based on the number of hours passed into this method.
 // No changes are made to or stored in the existing
 // TimeDurationDto data structures.
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  hours int64 - The number of hours which will be converted to
+//                a time.Duration value.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  time.Duration - The value of this returned 'time.Duration' object is
+//                  equivalent to the number of 60-minute hours specified
+//                  by input parameter 'hours'.
+//
 func (tDur TimeDurationDto) GetDurationFromHours(hours int64) time.Duration {
 
 	tDur.lock.Lock()
@@ -296,6 +383,22 @@ func (tDur TimeDurationDto) GetDurationFromHours(hours int64) time.Duration {
 // based on the number of minutes passed into this method.
 // No changes are made to or stored in the existing
 // TimeDurationDto data structures.
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  minutes int64 - The number of minutes which will be converted to
+//                  a time.Duration value.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  time.Duration - The value of this returned 'time.Duration' object is
+//                  equivalent to the number of 60-second minutes specified
+//                  by input parameter 'minutes'.
+//
 func (tDur TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration {
 
 	tDur.lock.Lock()
@@ -310,6 +413,22 @@ func (tDur TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration 
 // based on the number of seconds passed to this method.
 // No changes are made to or stored in the existing
 // TimeDurationDto data structures.
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  minutes int64 - The number of seconds which will be converted to
+//                  a time.Duration value.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  time.Duration - The value of this returned 'time.Duration' object is
+//                  equivalent to the number seconds specified by input
+//                  parameter 'seconds'.
+//
 func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration {
 
 	tDur.lock.Lock()
@@ -321,11 +440,19 @@ func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration 
 
 // GetElapsedTimeStr - Provides a quick means for formatting Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
-// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
-// Microseconds and Nanoseconds.
+// Nanoseconds. At a minimum, only Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds are displayed in the returned string.
 //
-// This method only returns date time elements with value greater than zero.
-// As a minimum, the string will display Nanoseconds.
+// The time.Duration value used to format this display is taken from the
+// internal data field of the current 'TimeDurationDto' object,
+// 'tDur.TimeDuration'.
+//
+// This method only returns date time elements with value greater than
+// zero. If all values are zero, the string will display Nanoseconds.
+//
+// The data fields of the current TimeDurationDto instance (tDur) are
+// NOT modified by this method
+// __________________________________________________________________________
 //
 // Example Return:
 //
@@ -347,13 +474,13 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	if t2Dur.CalcType != TDurCalcType(0).StdYearMth() {
-		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).StdYearMth())
-		if err != nil {
-			return fmt.Sprintf(ePrefix +
-				"\nError returned by t2Dur.ReCalcTimeDurationAllocation("+
-				"TDurCalcType(0).StdYearMth())\nError='%v'\n", err.Error())
-		}
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.StdYearMth(),
+		ePrefix)
+
+	if err != nil {
+		return fmt.Sprintf("%v\n", err.Error())
 	}
 
 	str := ""
@@ -408,7 +535,7 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 
 // GetElapsedMinutesStr - Provides a quick means for formatting Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
-// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Nanoseconds. At a minimum, only Hours, Minutes, Seconds, Milliseconds,
 // Microseconds and Nanoseconds.
 //
 // This method only returns years, months, days or hours if those values
@@ -1619,10 +1746,10 @@ func (tDur TimeDurationDto) New(
 //            "Etc/UTC" = GMT or UTC
 //
 //      (3) A Military Time Zone
-//             In addition to military operations, Military
-//             time zones are commonly used in aviation as
-//             well as at sea. They are also known as nautical
-//             or maritime time zones.
+//            In addition to military operations, Military
+//            time zones are commonly used in aviation as
+//            well as at sea. They are also known as nautical
+//            or maritime time zones.
 //          Reference:
 //            https://en.wikipedia.org/wiki/List_of_military_time_zones
 //            http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
@@ -1769,16 +1896,16 @@ func (tDur TimeDurationDto) NewAutoEnd(
 //              "Etc/UTC" = GMT or UTC
 //
 //         (3) A Military Time Zone
-//             In addition to military operations, Military
-//             time zones are commonly used in aviation as
-//             well as at sea. They are also known as nautical
-//             or maritime time zones.
+//               In addition to military operations, Military
+//               time zones are commonly used in aviation as
+//               well as at sea. They are also known as nautical
+//               or maritime time zones.
 //             Reference:
-//              https://en.wikipedia.org/wiki/List_of_military_time_zones
-//              http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//              https://www.timeanddate.com/time/zones/military
-//              https://www.timeanddate.com/worldclock/timezone/alpha
-//              https://www.timeanddate.com/time/map/
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//               https://www.timeanddate.com/worldclock/timezone/alpha
+//               https://www.timeanddate.com/time/map/
 //
 //             Examples:
 //               "Alpha"   or "A"
