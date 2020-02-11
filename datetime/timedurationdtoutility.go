@@ -1170,11 +1170,122 @@ func (tDurDtoUtil *timeDurationDtoUtility) emptyTimeFields(
 
 }
 
+// Equal - Compares two TimeDurationDto instances to determine
+// if they are equivalent.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  bool - If 'true' it signals that all relevant data fields in
+//         'tDur' and 'tDur2' are equivalent.
+//
+
+// Equal - Compares two TimeDurationDto instances to determine
+// if they are equivalent.
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  t1Dur TimeDurationDto - A TimeDurationDto object which will be 
+//                          compared to the t2Dur TimeDurationDto
+//                          instance to determine if the two are 
+//                          equivalent. 
+//
+//  t2Dur TimeDurationDto - A TimeDurationDto object which will be 
+//                          compared to the t1Dur TimeDurationDto
+//                          instance to determine if the two are 
+//                          equivalent. 
+//
+//  ePrefix  string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  bool  - If 'true' it signals that all relevant data fields in
+//          'tDur' and 'tDur2' are equivalent.
+//
+//  error - If either or both of 't1Dur' and 't2Dur' constitute nil pointers
+//          the returned error object is configured with an appropriate
+//          error message.
+//
+func (tDurDtoUtil *timeDurationDtoUtility) equal(
+	t1Dur, 
+	t2Dur *TimeDurationDto,
+	ePrefix string) (bool, error) {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.equal() "
+
+	if t1Dur == nil {
+		return false, 
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "t1Dur",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 't1Dur' is a 'nil' pointer!",
+				err:                 nil,
+			}
+	}
+
+	if t2Dur == nil {
+		return false, 
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "t2Dur",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 't2Dur' is a 'nil' pointer!",
+				err:                 nil,
+			}
+	}
+
+	if !t1Dur.StartTimeDateTz.Equal(t2Dur.StartTimeDateTz) ||
+		!t1Dur.EndTimeDateTz.Equal(t2Dur.EndTimeDateTz) ||
+		t1Dur.TimeDuration != t2Dur.TimeDuration ||
+		t1Dur.CalcType != t2Dur.CalcType ||
+		t1Dur.Years != t2Dur.Years ||
+		t1Dur.YearsNanosecs != t2Dur.YearsNanosecs ||
+		t1Dur.Months != t2Dur.Months ||
+		t1Dur.MonthsNanosecs != t2Dur.MonthsNanosecs ||
+		t1Dur.Weeks != t2Dur.Weeks ||
+		t1Dur.WeeksNanosecs != t2Dur.WeeksNanosecs ||
+		t1Dur.WeekDays != t2Dur.WeekDays ||
+		t1Dur.WeekDaysNanosecs != t2Dur.WeekDaysNanosecs ||
+		t1Dur.DateDays != t2Dur.DateDays ||
+		t1Dur.DateDaysNanosecs != t2Dur.DateDaysNanosecs ||
+		t1Dur.Hours != t2Dur.Hours ||
+		t1Dur.HoursNanosecs != t2Dur.HoursNanosecs ||
+		t1Dur.Minutes != t2Dur.Minutes ||
+		t1Dur.MinutesNanosecs != t2Dur.MinutesNanosecs ||
+		t1Dur.Seconds != t2Dur.Seconds ||
+		t1Dur.SecondsNanosecs != t2Dur.SecondsNanosecs ||
+		t1Dur.Milliseconds != t2Dur.Milliseconds ||
+		t1Dur.MillisecondsNanosecs != t2Dur.MillisecondsNanosecs ||
+		t1Dur.Microseconds != t2Dur.Microseconds ||
+		t1Dur.MicrosecondsNanosecs != t2Dur.MicrosecondsNanosecs ||
+		t1Dur.Nanoseconds != t2Dur.Nanoseconds ||
+		t1Dur.TotSubSecNanoseconds != t2Dur.TotSubSecNanoseconds ||
+		t1Dur.TotDateNanoseconds != t2Dur.TotDateNanoseconds ||
+		t1Dur.TotTimeNanoseconds != t2Dur.TotTimeNanoseconds {
+
+		return false, nil
+	}
+
+	return true, nil
+}
+
 // isValid - Returns an error value signaling whether
 // the data fields of input parameter 'tDur' are valid.
+// __________________________________________________________________________
 //
-// Input Parameter
-// ===============
+// Input Parameters:
 //
 // tDur     *TimeDurationDto
 //           - The data fields of this TimeDurationDto object will be
@@ -1183,6 +1294,17 @@ func (tDurDtoUtil *timeDurationDtoUtility) emptyTimeFields(
 // ePrefix  string
 //            - The error prefix containing the names of all
 //              the methods executed up to this point.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  error - If the 'tDur' TimeDurationDto is invalid, this returned
+//          error object is configured with an appropriate error
+//          message. 
+//
+//          If the 'tDur' TimeDurationDto is valid, this returned
+//          error object is set to 'nil'.
 //
 func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 	tDur *TimeDurationDto,
