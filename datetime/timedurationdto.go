@@ -317,6 +317,9 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 // Years, months and weeks are always excluded and included in
 // cumulative 'days'.
 //
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
 // __________________________________________________________________________
 //
 // Return Values:
@@ -332,11 +335,9 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 //
 // __________________________________________________________________________
 //
-// Example Usage:
+//  Example Return String:
 //
-// Example Return String:
-//
-// 97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//  97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 
@@ -447,7 +448,28 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 // Instead, years, months, days and hours are consolidated and
 // presented as cumulative hours.
 //
-// Example: 152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// This method will NOT modify the internal data fields of the
+// current TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative hours. See Example String below.
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+//  Example Return String:
+//
+//  152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
 func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 
 	tDur.lock.Lock()
@@ -464,13 +486,13 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumHours())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumHours(),
+		ePrefix)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumHours())\n"+
-			"Error='%v'\n", err.Error())
+		return "", err
 	}
 
 	str := ""
@@ -490,7 +512,7 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 	return str, nil
 }
 
-// GetCumMinutesStr - Returns a new TimeDurationDto calculated and configured
+// GetCumMinutesCalcDto - Returns a new TimeDurationDto calculated and configured
 // for cumulative minutes. This means that years, months, days and hours are
 // set to a zero value.
 //
