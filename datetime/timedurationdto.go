@@ -517,10 +517,33 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 // set to a zero value.
 //
 // Instead, years, months, days, hours and minutes are all consolidated
-// and presented as minutes.
+// and presented as cumulative minutes.
 //
-// Example:
-//	"527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumMinutes()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Accumulation Format:
+//
+//	  "527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 
@@ -540,13 +563,13 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumMinutes())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumMinutes(),
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumMinutes())\n"+
-			" Error='%v'\n", err.Error())
+		return TimeDurationDto{}, err
 	}
 
 	return t2Dur, nil
