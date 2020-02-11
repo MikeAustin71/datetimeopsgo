@@ -265,12 +265,13 @@ func (tDur *TimeDurationDto) IsValid() error {
 //
 // This method will NOT modify the internal data fields of the current
 // TimeDurationDto instance, 'tDur'.
+//
 // __________________________________________________________________________
 //
 // Return Values:
 //
 //  TimeDurationDto
-//     - If this method proceeds to successful completion, a new,
+//     - If this method proceeds to successful completion, a new
 //       valid and fully populated 'TimeDurationDto' instance will
 //       be returned.
 //
@@ -384,10 +385,30 @@ func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 // GetCumHoursCalcDto - Returns a new TimeDurationDto. The time
 // values of the current TimeDurationDto are recalculated for
 // 'cumulative hours'.
-
+//
 // This means that years, months and days are ignored and set to
 // a zero value.  Instead, years, months, days and hours are
 // consolidated and stored as cumulative hours.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumHours()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
 //
 func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 
@@ -395,7 +416,7 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 
 	defer tDur.lock.Unlock()
 
-	ePrefix := "TimeDurationDto) GetCumHoursCalcDto() "
+	ePrefix := "TimeDurationDto.GetCumHoursCalcDto() "
 
 	if int64(tDur.TimeDuration) == 0 {
 		return TimeDurationDto{},
@@ -407,13 +428,13 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumHours())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumHours(),
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumHours())\n"+
-			"Error='%v'\n", err.Error())
+		return TimeDurationDto{}, err
 	}
 
 	return t2Dur, nil
