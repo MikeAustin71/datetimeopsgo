@@ -335,7 +335,7 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 //
 // __________________________________________________________________________
 //
-//  Example Return String:
+// Example Return String:
 //
 //  97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
@@ -466,7 +466,7 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 //
 // __________________________________________________________________________
 //
-//  Example Return String:
+// Example Return String:
 //
 //  152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
@@ -581,8 +581,27 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 // Instead, years, months, days, hours and minutes are all consolidated
 // and presented as minutes.
 //
-// Example:
-//	"527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
+// This method will NOT modify the internal data fields of the
+// current TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative hours. See Example String below.
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Return String:
+//
+//  "527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumMinutesStr() (string, error) {
 
@@ -600,12 +619,13 @@ func (tDur *TimeDurationDto) GetCumMinutesStr() (string, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumMinutes())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumMinutes(),
+		ePrefix)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(TDurCalcType(0).CumMinutes())\n"+
-			" Error='%v'\n", err.Error())
+		return "", err
 	}
 
 	str := ""
