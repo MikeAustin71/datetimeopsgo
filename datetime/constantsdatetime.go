@@ -37,9 +37,8 @@ This source file contains a series of constants useful in managing
 date time.
 
 Types of constants defined here include:
-	1. Date Time string formats
-  2. Iana Time Zone designations
-  3. Common Time conversion constants
+  1. Date Time string formats
+  2. Common Time conversion constants
 
 */
 const (

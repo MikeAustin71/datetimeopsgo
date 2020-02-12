@@ -62,17 +62,18 @@ import (
 // to any of the 619 time zones using dot operators and intellisense (a.k.a. intelligent code completion).
 // 
 // Examples:
-// TZones.America.Argentina().Buenos_Aires() - America/Argentina/Buenos_Aires Time Zone
-// TZones.America.Chicago()                  - America/Chicago USA Central Time Zone
-// TZones.America.New_York()                 - America/New_York USA Eastern Time Zone
-// TZones.America.Denver()                   - America/Denver USA Mountain Time Zone
-// TZones.America.Los_Angeles()              - America/Los_Angeles USA Pacific Time Zone
-// TZones.Europe.London()                    - Europe/London Time Zone
-// TZones.Europe.Paris()                     - Europe/Paris  Time Zone
-// TZones.Asia.Shanghai()                    - Asia/Shanghai Time Zone
-// TZones.Local()                            - Time Zone used on host computer
-// TZones.UTC()                              - Coordinated Universal Time, UTC+0000
-// TZones.Zulu()                             - Military Time Zone, UTC+0000.
+//
+//  TZones.America.Argentina().Buenos_Aires() - America/Argentina/Buenos_Aires Time Zone
+//  TZones.America.Chicago()                  - America/Chicago USA Central Time Zone
+//  TZones.America.New_York()                 - America/New_York USA Eastern Time Zone
+//  TZones.America.Denver()                   - America/Denver USA Mountain Time Zone
+//  TZones.America.Los_Angeles()              - America/Los_Angeles USA Pacific Time Zone
+//  TZones.Europe.London()                    - Europe/London Time Zone
+//  TZones.Europe.Paris()                     - Europe/Paris  Time Zone
+//  TZones.Asia.Shanghai()                    - Asia/Shanghai Time Zone
+//  TZones.Local()                            - Time Zone used on host computer
+//  TZones.UTC()                              - Coordinated Universal Time, UTC+0000
+//  TZones.Zulu()                             - Military Time Zone, UTC+0000.
 //
 // 'TimeZones' has been adapted to function as an enumeration of valid time zone
 // values. Since Go does not directly support enumerations, the 'TimeZones' type
@@ -85,25 +86,43 @@ import (
 //
 // A complete alphabetic listing of all 619 time zones is provided at the end
 // of this source file.
+//
 // ----------------------------------------------------------------------------
+//
 //                           IANA Time Zones by Region                         
 //
-//                                         Time
-//                                        Zones
-// --------------------------------------------------------------
-// Africa..................................  54
-// America................................. 166
-// Antarctica..............................  12
-// Asia....................................  99
-// Atlantic................................  12
-// Australia...............................  23
-// Europe..................................  63
-// Indian..................................  11
-// Pacific.................................  43
-// Etc.....................................  35
-// Other...................................  75
-// ==============================================================
-// .............................Total       593
+//                                          Number
+//                                            Of
+//                                           Time
+//                                           Zones
+//
+//  --------------------------------------------------------------
+//
+//  Africa..................................  54
+//
+//  America................................. 166
+//
+//  Antarctica..............................  12
+//
+//  Asia....................................  99
+//
+//  Atlantic................................  12
+//
+//  Australia...............................  23
+//
+//  Europe..................................  63
+//
+//  Indian..................................  11
+//
+//  Pacific.................................  43
+//
+//  Etc.....................................  35
+//
+//  Other...................................  75
+//
+//  ==============================================================
+//
+//  .............................Total       593
 // 
 //
 //
@@ -200,7 +219,17 @@ func (tZones TimeZones) UTC()  string { return "UTC" }
 func (tZones TimeZones) Zulu()  string { return "UTC" }
 
 
-
+// TZones - public global variable of
+// type, 'TimeZones'.
+//
+// This variable serves as an easier, short hand
+// technique for accessing TimeZones values.
+//
+// Usage:
+//  TZones.Local()
+//  TZones.America.Chicago()
+//  TZones.UTC()
+//
 var TZones = TimeZones{}
 
 

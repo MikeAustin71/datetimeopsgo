@@ -343,6 +343,8 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 //
 // Example Return String:
 //
+//  97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
 func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 
 	tDur.lock.Lock()
@@ -685,7 +687,7 @@ func (tDur *TimeDurationDto) GetCumMinutesTimeStr() (string, error) {
 //
 // Example Cumulative Months-Days Format:
 //
-// "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
+//  "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumMonthsDaysCalcDto() (TimeDurationDto, error) {
 
@@ -744,7 +746,7 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysCalcDto() (TimeDurationDto, error) 
 //
 // Example Return String:
 //
-// "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
+//  "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 
@@ -827,7 +829,7 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 //
 // Example Cumulative Seconds Format:
 //
-// "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+//  "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 
@@ -881,7 +883,7 @@ func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 //
 // Example Return String:
 //
-// "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+//  "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 
@@ -922,11 +924,100 @@ func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 }
 
 
+// GetCumNanosecondsCalcDto - Returns a new TimeDurationDto. The time
+// values of the current TimeDurationDto are recalculated for
+// 'cumulative nanoseconds' and returned as the new TimeDurationDto
+// object.
+//
+// This means that years, months, days, seconds, milliseconds and
+// microseconds are ignored and set to a zero value.  Instead,
+// months, days, seconds, milliseconds, microseconds and nanoseconds
+// are consolidated and stored as cumulative nanoseconds.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumNanoseconds()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Cumulative Nanoseconds Format:
+//
+//  "832-Nanoseconds"
+//
+func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error) {
 
-// GetCumNanosecondsDurationStr - Returns duration formatted as
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.GetCumNanosecondsCalcDto() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"\nError: Time Duration is ZERO value!\n")
+	}
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
+
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumNanoseconds(),
+		ePrefix)
+
+	if err != nil {
+		return TimeDurationDto{}, err
+	}
+
+	return t2Dur, nil
+}
+
+// GetCumNanosecondsTimeStr - Returns duration formatted as
 // Nanoseconds. DisplayStr shows Nanoseconds expressed as a
 // 64-bit integer value.
-func (tDur *TimeDurationDto) GetCumNanosecondsDurationStr() string {
+//
+// This means that years, months, days, seconds, milliseconds and
+// microseconds are ignored and set to a zero value.  Instead,
+// years, months, days, seconds, milliseconds, microseconds and
+// nanoseconds are consolidated and stored as cumulative
+// nanoseconds.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative nanoseconds. See Example String
+//       below.
+// __________________________________________________________________________
+//
+// Example Return String:
+//
+//  "832-Nanoseconds"
+//
+func (tDur *TimeDurationDto) GetCumNanosecondsTimeStr() string {
 
 	tDur.lock.Lock()
 
@@ -940,11 +1031,37 @@ func (tDur *TimeDurationDto) GetCumNanosecondsDurationStr() string {
 
 // GetCumWeeksCalcDto - Returns a new TimeDurationDto re-calculated for 'Cumulative Weeks'.
 // The time values of the current TimeDurationDto are converted to cumulative weeks and
-// stored in the returned TimeDurationDto.
+// stored in the returned 'TimeDurationDto' instance.
 //
 // 'Cumulative Weeks' means that Years and Months are ignored and assigned zero values.
 // Instead, Years, Months and Weeks are consolidated and stored as cumulative Weeks,
 // WeekDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumWeeks()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Cumulative Weeks Format:
+//
+//  126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 
@@ -963,13 +1080,13 @@ func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumWeeks())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumWeeks(),
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumWeeks())\n"+
-			" Error='%v'\n", err.Error())
+		return TimeDurationDto{}, err
 	}
 
 	return t2Dur, nil
@@ -983,7 +1100,7 @@ func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 // Hours.
 //
 // Example DisplayStr
-// 126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//  126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 
