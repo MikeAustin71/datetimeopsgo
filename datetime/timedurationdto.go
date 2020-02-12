@@ -797,11 +797,37 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 // for 'cumulative seconds'.
 //
 // The time values of the current TimeDurationDto are re-calculated and
-// returned in the new TimeDurationDTo as 'cumulative seconds'.
+// returned as the new TimeDurationDTo as 'cumulative seconds'.
 // This means that Years, months, weeks, week days, date days, hours,
 // and minutes are ignored and assigned a zero value. Instead,
 // time duration is consolidated and presented as 'cumulative seconds'
 // including seconds, milliseconds, microseconds and nanoseconds.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumSeconds()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Cumulative Seconds Format:
+//
+// "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 
@@ -819,13 +845,13 @@ func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumSeconds())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumSeconds(),
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumSeconds())\n"+
-			"Error='%v'\n", err.Error())
+		return TimeDurationDto{}, err
 	}
 
 	return t2Dur, nil
@@ -834,6 +860,7 @@ func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 // GetCumSecondsTimeStr - Returns a formatted time string presenting
 // time duration as cumulative seconds. The display shows Seconds,
 // Milliseconds, Microseconds and Nanoseconds.
+// "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 
 	tDur.lock.Lock()
