@@ -1381,7 +1381,7 @@ func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration 
 //
 // __________________________________________________________________________
 //
-// Return Values:
+// Return Value:
 //
 //  string
 //     - A string containing the time duration for the current TimeDurationDto
@@ -1885,7 +1885,21 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 // GetDefaultDurationStr - Returns duration formatted
 // as nanoseconds. The DisplayStr shows the default
 // string value for duration.
-// Example: 61h26m46.864197832s
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
+// __________________________________________________________________________
+//
+// Example Return:
+//
+//  "61h26m46.864197832sz"
+//
 func (tDur *TimeDurationDto) GetDefaultDurationStr() string {
 
 	tDur.lock.Lock()
@@ -1908,6 +1922,26 @@ func (tDur *TimeDurationDto) GetDefaultDurationStr() string {
 // https://en.wikipedia.org/wiki/Year
 // Source: https://en.wikipedia.org/wiki/Gregorian_calendar
 //
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).GregorianYears()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
 func (tDur *TimeDurationDto) GetGregorianYearCalcDto() (TimeDurationDto, error) {
 
 	tDur.lock.Lock()
@@ -1924,13 +1958,13 @@ func (tDur *TimeDurationDto) GetGregorianYearCalcDto() (TimeDurationDto, error) 
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).GregorianYears())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.GregorianYears(),
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).GregorianYears())\n"+
-			"Error='%v'\n", err.Error())
+		return TimeDurationDto{}, err
 	}
 
 	return t2Dur, nil
