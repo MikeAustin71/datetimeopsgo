@@ -283,6 +283,12 @@ func (tDur *TimeDurationDto) IsValid() error {
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
 //
+// __________________________________________________________________________
+//
+// Example Cumulative Days Format:
+//
+//  97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
 func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 
 	tDur.lock.Lock()
@@ -336,8 +342,6 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 // __________________________________________________________________________
 //
 // Example Return String:
-//
-//  97-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 
@@ -410,6 +414,12 @@ func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 //     - If this method proceeds to successful completion, the returned
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Cumulative Hours Format:
+//
+//  152-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 
@@ -541,9 +551,9 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 //
 // __________________________________________________________________________
 //
-// Example Accumulation Format:
+// Example Cumulative Minutes Format:
 //
-//	  "527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
+//   "527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 
@@ -575,7 +585,7 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 	return t2Dur, nil
 }
 
-// GetCumMinutesStr - Returns duration formatted as cumulative
+// GetCumMinutesTimeStr - Returns duration formatted as cumulative
 // minutes. This format ignores years, months, days and hours.
 //
 // Instead, years, months, days, hours and minutes are all consolidated
@@ -603,13 +613,13 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 //
 //  "527-Minutes 37-Seconds 18-Milliseconds 256-Microseconds 852-Nanoseconds"
 //
-func (tDur *TimeDurationDto) GetCumMinutesStr() (string, error) {
+func (tDur *TimeDurationDto) GetCumMinutesTimeStr() (string, error) {
 
 	tDur.lock.Lock()
 
 	defer tDur.lock.Unlock()
 
-	ePrefix := "TimeDurationDto.GetCumMinutesStr() "
+	ePrefix := "TimeDurationDto.GetCumMinutesTimeStr() "
 
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds", nil
@@ -643,21 +653,47 @@ func (tDur *TimeDurationDto) GetCumMinutesStr() (string, error) {
 	return str, nil
 }
 
-// GetCumMonthsCalcDto - Returns a new TimeDurationDto calculated
+// GetCumMonthsDaysCalcDto - Returns a new TimeDurationDto calculated
 // for 'cumulative months'.
 //
 // The time values of the current TimeDurationDto are re-calculated and
-// returned in the new TimeDurationDTo as 'cumulative months'.
+// returned as a new TimeDurationDTo as 'cumulative months'.
 // This means that Years are ignored and assigned a zero value. Instead,
 // Years and Months are consolidated and presented as 'cumulative months'.
 //
-func (tDur *TimeDurationDto) GetCumMonthsCalcDto() (TimeDurationDto, error) {
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumMonths()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Cumulative Months-Days Format:
+//
+// "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
+//
+func (tDur *TimeDurationDto) GetCumMonthsDaysCalcDto() (TimeDurationDto, error) {
 
 	tDur.lock.Lock()
 
 	defer tDur.lock.Unlock()
 
-	ePrefix := "TimeDurationDto.GetCumMonthsCalcDto() "
+	ePrefix := "TimeDurationDto.GetCumMonthsDaysCalcDto() "
 
 	if int64(tDur.TimeDuration) == 0 {
 		return TimeDurationDto{}, nil
@@ -667,16 +703,16 @@ func (tDur *TimeDurationDto) GetCumMonthsCalcDto() (TimeDurationDto, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumMonths())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumMonths(),
+		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{}, fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(TDurCalcType(0).CumMonths())\n"+
-			"Error='%v'\n", err.Error())
+		return TimeDurationDto{}, err
 	}
 
 	return t2Dur, nil
-
 }
 
 // GetCumMonthsDaysTimeStr - Returns Cumulative Months Display
@@ -684,7 +720,31 @@ func (tDur *TimeDurationDto) GetCumMonthsCalcDto() (TimeDurationDto, error) {
 // Microseconds and Nanoseconds.
 //
 // Years are ignored and assigned a zero value. Instead, years and
-// months are consolidated and presented as cumulative months.
+// months are consolidated and presented as cumulative months and
+// days.
+//
+// This method will NOT modify the internal data fields of the
+// current TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative months/days. See Example String
+//       below.
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Return String:
+//
+// "3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds"
 //
 func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 
@@ -702,13 +762,13 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumMonths())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumMonths(),
+		ePrefix)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumMonths())\n"+
-			"Error='%v'\n", err.Error())
+		return "", err
 	}
 
 	str := ""
