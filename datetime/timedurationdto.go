@@ -1667,15 +1667,15 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 
 }
 
-// GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
-// DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
-// Nanoseconds. At a minimum, only Hours, Minutes, Seconds, Milliseconds,
-// Microseconds and Nanoseconds will be included in the returned display
-// string.
+// GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of time duration
+// as Years, Months, DateDays, Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds. At a minimum, only Hours, Minutes,
+// Seconds, Milliseconds, Microseconds and Nanoseconds will be included
+// in the returned display string.
 //
 // This method only returns date time elements with value greater than
-// zero. If all values are zero, the string will display Hours, Minutes,
-// Seconds, Milliseconds, Microseconds and Nanoseconds.
+// zero. If all values are zero, the string will still display Hours,
+// Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds.
 //
 // The data fields of the current TimeDurationDto instance (tDur) are
 // NOT modified by this method
@@ -1917,15 +1917,36 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 	return str
 }
 
-// GetYearsMthsWeeksTimeStr - Example Return:
-// 12-Years 3-Months 2-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// GetYearsMthsWeeksTimeStr - Returns a string containing time duration
+// formatted as Years, Months, Weeks, WeekDays, Hours, Minutes, Seconds,
+// Milliseconds, Microseconds and Nanoseconds.
 //
-// At a minimum only Weeks, WeekDays, Hours, Minutes, Seconds,
-// Milliseconds, Microseconds and Nanoseconds are displayed.
+// This method only returns date time elements with value greater than
+// zero. However, if all values are zero, the returned string will still
+// display Weeks, Week-Days, Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
 //
-// Example return when Years, and Months are zero:
+// The data fields of the current TimeDurationDto instance (tDur) are
+// NOT modified by this method
 //
-// 3-Weeks 2-WeekDays 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
+// __________________________________________________________________________
+//
+// Example Return:
+//
+//  12-Years 3-Months 2-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+//  At a minimum Weeks, WeekDays, Hours, Minutes, Seconds, Milliseconds,
+//  Microseconds and Nanoseconds are always displayed.
+//
+//  3-Weeks 2-WeekDays 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 
@@ -1943,15 +1964,13 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	if t2Dur.CalcType != TDurCalcType(0).StdYearMth() {
-		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).StdYearMth())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.StdYearMth(),
+		ePrefix)
 
-		if err != nil {
-			return fmt.Sprintf(ePrefix +
-				"\nError returned by t2Dur.ReCalcTimeDurationAllocation(" +
-				"TDurCalcType(0).StdYearMth()).\n"+
-				"Error='%v'\n", err.Error())
-		}
+	if err != nil {
+		return fmt.Sprintf("%v\n", err.Error())
 	}
 
 	str := ""
