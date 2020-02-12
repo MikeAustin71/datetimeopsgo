@@ -1692,7 +1692,7 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 //
 // Example Return:
 //
-// 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//  0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 
@@ -1716,7 +1716,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 		ePrefix)
 
 	if err != nil {
-		return fmt.Sprintf("%v", err.Error())
+		return fmt.Sprintf("%v\n", err.Error())
 	}
 
 	str := ""
@@ -1746,23 +1746,40 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
 
 	return str
-
 }
 
 // GetYearMthDaysTimeStr - Calculates Duration and breakdowns
-// time elements by Years, Months, Date Days, hours, minutes,
-// seconds, milliseconds, microseconds and nanoseconds.
+// time elements by Years, Months, Date Days, Hours, Minutes,
+// Seconds, Milliseconds, Microseconds and Nanoseconds.
 //
-// Example DisplayStr
-// ==================
+// Years, Months and Date Days are only included in the
+// returned display string if their values are greater than
+// zero. In contrast, Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds will always be included in
+// the returned display string even if they have zero values.
 //
-// Years Months DateDays Time Duration - Example Return:
+// The data fields of the current TimeDurationDto instance (tDur) are
+// NOT modified by this method
 //
-// 12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// __________________________________________________________________________
 //
-// If Years, Months and Days have a zero value, only the time components will be displayed.
-// Example:
-//		13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
+// __________________________________________________________________________
+//
+// Example Return:
+//
+//  12-Years 3-Months 2-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
+//  If Years, Months and Days have a zero value, only the time components will be displayed as
+//  shown in the following example:
+//
+//   13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
+//
 func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 
 	tDur.lock.Lock()
@@ -1779,16 +1796,13 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	if t2Dur.CalcType != TDurCalcType(0).StdYearMth() {
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.StdYearMth(),
+		ePrefix)
 
-		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).StdYearMth())
-
-		if err != nil {
-			return fmt.Sprintf(ePrefix +
-				"\nError returned by t2Dur.ReCalcTimeDurationAllocation(" +
-				"TDurCalcType(0).StdYearMth()).\n"+
-				"Error='%v'\n", err.Error())
-		}
+	if err != nil {
+		return fmt.Sprintf("%v\n", err.Error())
 	}
 
 	str := ""
