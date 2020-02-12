@@ -475,29 +475,21 @@ func (durT DurationTriad) New(
 
 	ePrefix := "DurationTriad.New() "
 
-	if startDateTime.IsZero() && endDateTime.IsZero() {
-		return DurationTriad{},
-			errors.New(ePrefix + "Both 'startDateTime' and 'endDateTime' input parameters are ZERO!")
-	}
-
-	locName := startDateTime.Location().String()
-
 	t2Dur := DurationTriad{}
 
-	err := t2Dur.SetStartEndTimesCalcTz(startDateTime,
+	durTUtil := durationTriadUtility{}
+
+	err := durTUtil.setStartEndTimesCalcTz(
+		&t2Dur,
+		startDateTime,
 		endDateTime,
-		TDurCalcType(0).StdYearMth(),
-		locName,
-		dateTimeFmtStr)
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return DurationTriad{},
-			fmt.Errorf(ePrefix+
-				"Error returned by SetStartEndTimesCalcTz(...) "+
-				"startDateTime='%v'  endDateTime='%v'  Error='%v'",
-				startDateTime.Format(FmtDateTimeYrMDayFmtStr),
-				endDateTime.Format(FmtDateTimeYrMDayFmtStr),
-				err.Error())
+		return DurationTriad{}, err
 	}
 
 	return t2Dur, nil
