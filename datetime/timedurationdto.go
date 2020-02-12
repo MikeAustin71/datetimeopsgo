@@ -600,7 +600,7 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 //
 //  string
 //     - A string containing the time duration for the current TimeDurationDto
-//       object (tDur) formatted as cumulative hours. See Example String below.
+//       object (tDur) formatted as cumulative minutes. See Example String below.
 //
 //  error
 //     - If this method proceeds to successful completion, the returned
@@ -860,7 +860,29 @@ func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 // GetCumSecondsTimeStr - Returns a formatted time string presenting
 // time duration as cumulative seconds. The display shows Seconds,
 // Milliseconds, Microseconds and Nanoseconds.
+//
+// This method will NOT modify the internal data fields of the
+// current TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative seconds. See Example String below.
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Return String:
+//
 // "62-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+//
 func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 
 	tDur.lock.Lock()
@@ -877,13 +899,13 @@ func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumSeconds())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumSeconds(),
+		ePrefix)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumSeconds())\n"+
-			"Error='%v'\n", err.Error())
+		return "", err
 	}
 
 	str := ""
@@ -898,6 +920,8 @@ func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 
 	return str, nil
 }
+
+
 
 // GetCumNanosecondsDurationStr - Returns duration formatted as
 // Nanoseconds. DisplayStr shows Nanoseconds expressed as a
