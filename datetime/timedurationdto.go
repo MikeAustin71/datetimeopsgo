@@ -795,6 +795,111 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 
 }
 
+// GetCumNanosecondsCalcDto - Returns a new TimeDurationDto. The time
+// values of the current TimeDurationDto are recalculated for
+// 'cumulative nanoseconds' and returned as the new TimeDurationDto
+// object.
+//
+// This means that years, months, days, seconds, milliseconds and
+// microseconds are ignored and set to a zero value.  Instead,
+// months, days, seconds, milliseconds, microseconds and nanoseconds
+// are consolidated and stored as cumulative nanoseconds.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  TimeDurationDto
+//     - If this method proceeds to successful completion, a new
+//       valid and fully populated 'TimeDurationDto' instance will
+//       be returned.
+//
+//       The new, returned TimeDurationDto instance will have a
+//       calculation type of 'TDurCalcType(0).CumNanoseconds()'
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Cumulative Nanoseconds Format:
+//
+//  "832-Nanoseconds"
+//
+func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error) {
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.GetCumNanosecondsCalcDto() "
+
+	if int64(tDur.TimeDuration) == 0 {
+		return TimeDurationDto{},
+			fmt.Errorf(ePrefix +
+				"\nError: Time Duration is ZERO value!\n")
+	}
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
+
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumNanoseconds(),
+		ePrefix)
+
+	if err != nil {
+		return TimeDurationDto{}, err
+	}
+
+	return t2Dur, nil
+}
+
+// GetCumNanosecondsTimeStr - Returns duration formatted as
+// Nanoseconds. DisplayStr shows Nanoseconds expressed as a
+// 64-bit integer value.
+//
+// This means that years, months, days, seconds, milliseconds and
+// microseconds are ignored and set to a zero value.  Instead,
+// years, months, days, seconds, milliseconds, microseconds and
+// nanoseconds are consolidated and stored as cumulative
+// nanoseconds.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative nanoseconds. See Example String
+//       below.
+// __________________________________________________________________________
+//
+// Example Return String:
+//
+//  "832-Nanoseconds"
+//
+func (tDur *TimeDurationDto) GetCumNanosecondsTimeStr() string {
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	str := fmt.Sprintf("%v-Nanoseconds", int64(tDur.TimeDuration))
+
+	return str
+
+}
+
 // GetCumSecondsCalcDto - Returns a new TimeDurationDto calculated
 // for 'cumulative seconds'.
 //
@@ -921,112 +1026,6 @@ func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.Nanoseconds)
 
 	return str, nil
-}
-
-
-// GetCumNanosecondsCalcDto - Returns a new TimeDurationDto. The time
-// values of the current TimeDurationDto are recalculated for
-// 'cumulative nanoseconds' and returned as the new TimeDurationDto
-// object.
-//
-// This means that years, months, days, seconds, milliseconds and
-// microseconds are ignored and set to a zero value.  Instead,
-// months, days, seconds, milliseconds, microseconds and nanoseconds
-// are consolidated and stored as cumulative nanoseconds.
-//
-// This method will NOT modify the internal data fields of the current
-// TimeDurationDto instance, 'tDur'.
-//
-// __________________________________________________________________________
-//
-// Return Values:
-//
-//  TimeDurationDto
-//     - If this method proceeds to successful completion, a new
-//       valid and fully populated 'TimeDurationDto' instance will
-//       be returned.
-//
-//       The new, returned TimeDurationDto instance will have a
-//       calculation type of 'TDurCalcType(0).CumNanoseconds()'
-//
-//  error
-//     - If this method proceeds to successful completion, the returned
-//       error instance is set to 'nil'. If an error is encountered, the
-//       error object is populated with an appropriate error message.
-//
-// __________________________________________________________________________
-//
-// Example Cumulative Nanoseconds Format:
-//
-//  "832-Nanoseconds"
-//
-func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error) {
-
-	tDur.lock.Lock()
-
-	defer tDur.lock.Unlock()
-
-	ePrefix := "TimeDurationDto.GetCumNanosecondsCalcDto() "
-
-	if int64(tDur.TimeDuration) == 0 {
-		return TimeDurationDto{},
-			fmt.Errorf(ePrefix +
-				"\nError: Time Duration is ZERO value!\n")
-	}
-
-	tDurDtoUtil := timeDurationDtoUtility{}
-
-	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
-
-	err := tDurDtoUtil.reCalcTimeDurationAllocation(
-		&t2Dur,
-		TDurCalc.CumNanoseconds(),
-		ePrefix)
-
-	if err != nil {
-		return TimeDurationDto{}, err
-	}
-
-	return t2Dur, nil
-}
-
-// GetCumNanosecondsTimeStr - Returns duration formatted as
-// Nanoseconds. DisplayStr shows Nanoseconds expressed as a
-// 64-bit integer value.
-//
-// This means that years, months, days, seconds, milliseconds and
-// microseconds are ignored and set to a zero value.  Instead,
-// years, months, days, seconds, milliseconds, microseconds and
-// nanoseconds are consolidated and stored as cumulative
-// nanoseconds.
-//
-// This method will NOT modify the internal data fields of the current
-// TimeDurationDto instance, 'tDur'.
-//
-// __________________________________________________________________________
-//
-// Return Values:
-//
-//  string
-//     - A string containing the time duration for the current TimeDurationDto
-//       object (tDur) formatted as cumulative nanoseconds. See Example String
-//       below.
-// __________________________________________________________________________
-//
-// Example Return String:
-//
-//  "832-Nanoseconds"
-//
-func (tDur *TimeDurationDto) GetCumNanosecondsTimeStr() string {
-
-	tDur.lock.Lock()
-
-	defer tDur.lock.Unlock()
-
-	str := fmt.Sprintf("%v-Nanoseconds", int64(tDur.TimeDuration))
-
-	return str
-
 }
 
 // GetCumWeeksCalcDto - Returns a new TimeDurationDto re-calculated for 'Cumulative Weeks'.
@@ -1167,8 +1166,46 @@ func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 	return str, nil
 }
 
-// GetDurationFromTime - Calculates and returns a cumulative duration based on
-// input parameters consisting of time elements.
+// GetDurationFromTime - Calculates and returns a cumulative
+// time duration based on time component input parameters
+// consisting of hours, minutes, seconds, milliseconds,
+// microseconds and nanoseconds.
+//
+// Any combination of non-zero input parameters will be
+// accumulated and converted to a valid time duration value.
+//
+// This method will NOT modify the internal data fields of the current
+// TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  hours          int
+//     - Number of hours to be accumulated in the summary time duration
+//
+//  minutes        int
+//     - Number of minutes to be accumulated in the summary time duration
+//
+//  seconds        int
+//     - Number of seconds to be accumulated in the summary time duration
+//
+//  milliseconds   int
+//     - Number of milliseconds to be accumulated in the summary time duration
+//
+//  microseconds   int
+//     - Number of microseconds to be accumulated in the summary time duration
+//
+//  nanoseconds    int
+//     - Number of nanoseconds to be accumulated in the summary time duration
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  time.Duration - A time.Duration value which represents the sum of
+//                  all input values.
+//
 func (tDur TimeDurationDto) GetDurationFromTime(
 	hours,
 	minutes,
@@ -1198,12 +1235,16 @@ func (tDur TimeDurationDto) GetDurationFromTime(
 // No changes are made to or stored in the existing
 // TimeDurationDto data fields.
 //
+// This method will NOT modify the internal data fields
+// of the current TimeDurationDto instance, 'tDur'.
+//
 // __________________________________________________________________________
 //
 // Input Parameters:
 //
-//  days int64 - A number of days which will be converted to
-//               a time.Duration value.
+//  days int64
+//     - A number of days which will be converted to
+//       a time.Duration value.
 //
 // __________________________________________________________________________
 //
@@ -1227,6 +1268,9 @@ func (tDur TimeDurationDto) GetDurationFromDays(days int64) time.Duration {
 // based on the number of hours passed into this method.
 // No changes are made to or stored in the existing
 // TimeDurationDto data structures.
+//
+// This method will NOT modify the internal data fields
+// of the current TimeDurationDto instance, 'tDur'.
 //
 // __________________________________________________________________________
 //
@@ -1258,6 +1302,9 @@ func (tDur TimeDurationDto) GetDurationFromHours(hours int64) time.Duration {
 // No changes are made to or stored in the existing
 // TimeDurationDto data structures.
 //
+// This method will NOT modify the internal data fields of
+// the current TimeDurationDto instance, 'tDur'.
+//
 // __________________________________________________________________________
 //
 // Input Parameters:
@@ -1288,6 +1335,9 @@ func (tDur TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration 
 // No changes are made to or stored in the existing
 // TimeDurationDto data structures.
 //
+// This method will NOT modify the internal data fields
+// of the current TimeDurationDto instance, 'tDur'.
+//
 // __________________________________________________________________________
 //
 // Input Parameters:
@@ -1315,7 +1365,9 @@ func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration 
 // GetElapsedTimeStr - Provides a quick means for formatting Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
 // Nanoseconds. At a minimum, only Hours, Minutes, Seconds, Milliseconds,
-// Microseconds and Nanoseconds are displayed in the returned string.
+// Microseconds and Nanoseconds are displayed in the returned string. If
+// Years, Months and DateDays have zero values, they are excluded from the
+// display string.
 //
 // The time.Duration value used to format this display is taken from the
 // internal data field of the current 'TimeDurationDto' object,
@@ -1326,6 +1378,15 @@ func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration 
 //
 // The data fields of the current TimeDurationDto instance (tDur) are
 // NOT modified by this method
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
 // __________________________________________________________________________
 //
 // Example Return:
@@ -1418,6 +1479,19 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 // As a minimum the display string will show minutes, seconds, milliseconds,
 // microseconds and nanoseconds.
 //
+// The data fields of the current TimeDurationDto instance (tDur) are
+// NOT modified by this method
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
+// __________________________________________________________________________
+//
 // Example Return:
 //
 //  0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
@@ -1438,15 +1512,13 @@ func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	if t2Dur.CalcType != TDurCalcType(0).StdYearMth() {
-		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).StdYearMth())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.StdYearMth(),
+		ePrefix)
 
-		if err != nil {
-			return fmt.Sprintf(ePrefix +
-				"\nError returned by t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).StdYearMth()).\n"+
-				"Error='%v'\n", err.Error())
-		}
-
+	if err != nil {
+		return fmt.Sprintf("%v\n", err.Error())
 	}
 
 	str := ""
@@ -1485,7 +1557,7 @@ func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
-// Nanoseconds. At a minimum only Hours, Minutes, Seconds, Milliseconds,
+// Nanoseconds. At a minimum, only Hours, Minutes, Seconds, Milliseconds,
 // Microseconds and Nanoseconds.
 //
 // Abbreviated Years Mths DateDays Time Duration - Example Return:
