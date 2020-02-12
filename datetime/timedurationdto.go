@@ -2087,9 +2087,13 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 // calendar the average length of the calendar year (the mean year) across
 // the complete leap cycle of 400 Years is 365.2425 days.
 //
+// The Gregorian calendar was first applied on 15 October 1582. It represents
+// the primary calendar in use today across the globe. The name 'Gregorian'
+// derives from  Pope Gregory XIII who introduced the calendar.
+//
 // Sources:
-// https://en.wikipedia.org/wiki/Year
-// Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+//  https://en.wikipedia.org/wiki/Year
+//  https://en.wikipedia.org/wiki/Gregorian_calendar
 //
 // This method will NOT modify the internal data fields of the current
 // TimeDurationDto instance, 'tDur'.
@@ -2147,9 +2151,45 @@ func (tDur *TimeDurationDto) GetGregorianYearCalcDto() (TimeDurationDto, error) 
 // 59-minutes and 12 Seconds. For the Gregorian calendar the
 // average length of the calendar year (the mean year) across
 // the complete leap cycle of 400 Years is 365.2425 days.
+//
+// The Gregorian calendar was first applied on 15 October 1582. It
+// represents the primary calendar in use today across the globe.
+// The name 'Gregorian' derives from  Pope Gregory XIII who
+// introduced the calendar.
+//
 // Sources:
-// https://en.wikipedia.org/wiki/Year
-// Source: https://en.wikipedia.org/wiki/Gregorian_calendar
+//   https://en.wikipedia.org/wiki/Year
+//   https://en.wikipedia.org/wiki/Gregorian_calendar
+//
+// This method returns a string listing time values for Gregorian
+// Years, Months, Days, Hours, Minutes, Seconds, Milliseconds,
+// Microseconds and Nanoseconds.
+//
+// All specified time values are included in the returned display
+// string regardless of whether they have a zero value.
+//
+// The data fields of the current TimeDurationDto instance (tDur)
+// are NOT modified by this method
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Return:
+//
+//  3-Gregorian Years 2-Months 5-Days 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 
@@ -2167,13 +2207,13 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).GregorianYears())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.GregorianYears(),
+		ePrefix)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).GregorianYears())\n"+
-			"Error='%v'\n", err.Error())
+		return "", err
 	}
 
 	str := fmt.Sprintf("%v-Gregorian Years ", t2Dur.Years)
