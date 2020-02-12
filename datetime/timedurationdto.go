@@ -5432,7 +5432,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 //
 // Example Usage:
 //
-// tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(
+//  tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(
 //                    startTime,
 //                    plusTimeDto,
 //                    TDurCalcType(0).StdYearMth(),
