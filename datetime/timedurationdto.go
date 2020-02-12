@@ -2003,8 +2003,31 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 }
 
 // GetYrMthWkDayHrMinSecNanosecsStr - Returns duration formatted
-// as Year, Month, Day, Hour, Second and Nanoseconds.
-// Example: 3-Years 2-Months 3-Weeks 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
+// as Years, Months, Weeks, Week-Days, Hours, Minutes, Seconds
+// and Nanoseconds.
+//
+// If Years and Months have zero values, they are excluded from
+// the returned display string. However, Weeks, Week-Days, Hours,
+// Minutes, Seconds and Nanoseconds are always displayed even if
+// they have zero values.
+//
+// The data fields of the current TimeDurationDto instance (tDur)
+// are NOT modified by this method
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
+// __________________________________________________________________________
+//
+// Example Return:
+//
+//  3-Years 2-Months 3-Weeks 2-WeekDays 13-Hours 26-Minutes 46-Seconds 864197832-Nanoseconds
+//
 func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 
 	tDur.lock.Lock()
@@ -2021,23 +2044,24 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	if t2Dur.CalcType != TDurCalcType(0).StdYearMth() {
-		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).StdYearMth())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.StdYearMth(),
+		ePrefix)
 
-		if err != nil {
-			return fmt.Sprintf(ePrefix +
-				"\nError returned by t2Dur." +
-				"ReCalcTimeDurationAllocation(" +
-				"TDurCalcType(0).StdYearMth()).\n"+
-				"Error='%v'\n", err.Error())
-		}
+	if err != nil {
+		return fmt.Sprintf("%v\n", err.Error())
 	}
 
 	str := ""
 
-	str += fmt.Sprintf("%v-Years ", t2Dur.Years)
+	if t2Dur.Years > 0 {
+		str += fmt.Sprintf("%v-Years ", t2Dur.Years)
+	}
 
-	str += fmt.Sprintf("%v-Months ", t2Dur.Months)
+	if t2Dur.Months > 0 || str != "" {
+		str += fmt.Sprintf("%v-Months ", t2Dur.Months)
+	}
 
 	str += fmt.Sprintf("%v-Weeks ", t2Dur.Weeks)
 
