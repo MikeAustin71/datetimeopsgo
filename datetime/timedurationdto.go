@@ -1096,10 +1096,29 @@ func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 // Minutes, Seconds, Milliseconds, Microseconds and Nanoseconds. Years, Months and
 // Days are ignored and assigned a zero value.
 //
-// Instead, Years, Months, Days and Hours are consolidated and presented as cumulative
-// Hours.
+// Instead, Years, Months and Days are consolidated and presented as cumulative
+// Weeks.
 //
-// Example DisplayStr
+// This method will NOT modify the internal data fields of the
+// current TimeDurationDto instance, 'tDur'.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) formatted as cumulative weeks. See Example String below.
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Return String
+//
 //  126-Weeks 1-WeekDays 13-Hours 26-Minutes 46-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
 func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
@@ -1118,13 +1137,13 @@ func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumWeeks())
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.CumWeeks(),
+		ePrefix)
 
 	if err != nil {
-		return "", fmt.Errorf(ePrefix+
-			"\nError returned by ReCalcTimeDurationAllocation(" +
-			"TDurCalcType(0).CumWeeks())\n"+
-			" Error='%v'\n", err.Error())
+		return "", err
 	}
 
 	str := ""
