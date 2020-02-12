@@ -473,6 +473,10 @@ func (durT DurationTriad) New(
 	endDateTime time.Time,
 	dateTimeFmtStr string) (DurationTriad, error) {
 
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
 	ePrefix := "DurationTriad.New() "
 
 	t2Dur := DurationTriad{}
@@ -624,16 +628,22 @@ func (durT DurationTriad) New(
 //      FmtDateTimeYrMDayFmtStr)
 //
 //  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
-//        'constantsdatetime.go'
+//        TZones.US.Central() = "America/Chicago"
 //
 //        'TZones.US.Central()' is a constant available int source file,
 //         'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewAutoEnd(
 	startDateTime time.Time,
 	timeZoneLocation string,
 	dateTimeFmtStr string) (DurationTriad, error) {
+
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
 
 	ePrefix := "DurationTriad.NewAutoEnd() "
 
@@ -648,7 +658,7 @@ func (durT DurationTriad) NewAutoEnd(
 		startDateTime,
 		endDateTime,
 		TDurCalc.StdYearMth(),
-		startDateTime.Location().String(),
+		timeZoneLocation,
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -680,90 +690,131 @@ func (durT DurationTriad) NewAutoEnd(
 // file:
 //     MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//
+//  timeZoneLocation   string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time comparisons.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location must be designated as one of three types of
+//       time zones.
+//
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
+//
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system.
+//
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
+//
+//       (3) A Military Time Zone
+//             In addition to military operations, Military
+//             time zones are commonly used in aviation as
+//             well as at sea. They are also known as nautical
+//             or maritime time zones.
+//           Reference:
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
+//
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
+//
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
+//
+//  dateTimeFmtStr string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
+//
+//       A DurationTriad Structure is defined as follows:
+//
+//       type DurationTriad struct {
+//         BaseTime  TimeDurationDto
+//         LocalTime TimeDurationDto
+//         UTCTime   TimeDurationDto
+//       }
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
 // ------------------------------------------------------------------------
 //
-// Input Parameters
+// Example Usage:
 //
-//	timeZoneLocation string - time zone location must be designated as one of
-//	                          two values:
-//
-//				(1) The string 'Local' - signals the designation of the local time zone
-//				    location for the host computer.
-//
-//				(2) IANA Time Zone Location -
-//				    See https://golang.org/pkg/time/#LoadLocation
-//				    and https://www.iana.org/time-zones to ensure that
-//				    the IANA Time Zone Database is properly configured
-//				    on your system. Note: IANA Time Zone Data base is
-//				    equivalent to 'tz database'.
-//
-//				    Examples:
-//				      "America/New_York"
-//				      "America/Chicago"
-//				      "America/Denver"
-//				      "America/Los_Angeles"
-//				      "Pacific/Honolulu"
-//
-//				     The source file 'constantsdatetime.go' contains a number of
-//				     constant declarations covering the more frequently used time
-//				     zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//				     time zone constants begin with the prefix 'TzIana'.
-//
-//	dateTimeFmtStr string   - A date time format string which will be used
-//	                          to format and display 'dateTime'. Example:
-//	                          "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-//	                          Date time format constants are found in the source
-//	                          file 'constantsdatetime.go'. These constants represent
-//	                          the more commonly used date time string formats. All
-//	                          Date Time format constants begin with the prefix
-//	                          'FmtDateTime'.
-//
-//	                          If 'dateTimeFmtStr' is submitted as an
-//	                          'empty string', a default date time format
-//	                          string will be applied. The default date time
-//	                          format string is:
-//	                            FmtDateTimeYrMDayFmtStr =
-//	                                "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-// ------------------------------------------------------------------------
-//
-// Return Values
-//
-//	DurationTriad - Upon successful completion, this method will return
-//	                a new, populated DurationTriad instance.
-//
-//	                A DurationTriad Structure is defined as follows:
-//
-//	                type DurationTriad struct {
-//	                  BaseTime  TimeDurationDto
-//	                  LocalTime TimeDurationDto
-//	                  UTCTime   TimeDurationDto
-//	                }
-//
-//	error         - If this method completes successfully, the returned error
-//	                Type is set equal to 'nil'. If an error condition is encountered,
-//	                this method will return an error Type which encapsulates an
-//	                appropriate error message.
-//
-// ------------------------------------------------------------------------
-//
-// Usage
-//
-//	tDurDto, err := DurationTriad{}.NewAutoStart(
-//			TZones.US.Central(),
-//			FmtDateTimeYrMDayFmtStr)
+//  tDurDto, err := DurationTriad{}.NewAutoStart(
+//      TZones.US.Central(),
+//      FmtDateTimeYrMDayFmtStr)
 //
 //
-//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
-//	      TZones.US.Central() = "America/Chicago"
+//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//        TZones.US.Central() = "America/Chicago"
 //
-//	      'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//	      source file 'constantsdatetime.go'.
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewAutoStart(
 	timeZoneLocation string,
 	dateTimeFmtStr string) (DurationTriad, error) {
+
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
 
 	ePrefix := "DurationTriad.NewAutoStart() "
 
@@ -773,20 +824,19 @@ func (durT DurationTriad) NewAutoStart(
 
 	durT2 := DurationTriad{}
 
-	err := durT2.SetStartEndTimesCalcTz(
+	durTUtil := durationTriadUtility{}
+
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
 		startDateTime,
 		endDateTime,
-		TDurCalcType(0).StdYearMth(),
-		timeZoneLocation,
-		dateTimeFmtStr)
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return DurationTriad{},
-			fmt.Errorf(ePrefix+
-				"Error returned by SetStartEndTimesCalcTz() "+
-				"startDateTime='%v' Error='%v'",
-				startDateTime.Format(FmtDateTimeYrMDayFmtStr),
-				err.Error())
+		return DurationTriad{}, err
 	}
 
 	return durT2, nil
