@@ -1670,9 +1670,27 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of Years, Months,
 // DateDays, Hours, Minutes, Seconds, Milliseconds, Microseconds and
 // Nanoseconds. At a minimum, only Hours, Minutes, Seconds, Milliseconds,
-// Microseconds and Nanoseconds.
+// Microseconds and Nanoseconds will be included in the returned display
+// string.
 //
-// Abbreviated Years Mths DateDays Time Duration - Example Return:
+// This method only returns date time elements with value greater than
+// zero. If all values are zero, the string will display Hours, Minutes,
+// Seconds, Milliseconds, Microseconds and Nanoseconds.
+//
+// The data fields of the current TimeDurationDto instance (tDur) are
+// NOT modified by this method
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  string
+//     - A string containing the time duration for the current TimeDurationDto
+//       object (tDur) listing all non-zero time components as shown in the
+//       example below.
+// __________________________________________________________________________
+//
+// Example Return:
 //
 // 0-Hours 0-Minutes 0-Seconds 864-Milliseconds 197-Microseconds 832-Nanoseconds
 //
@@ -1692,17 +1710,13 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 
 	t2Dur := tDurDtoUtil.copyOut(tDur, ePrefix)
 
-	if t2Dur.CalcType != TDurCalcType(0).StdYearMth() {
+	err := tDurDtoUtil.reCalcTimeDurationAllocation(
+		&t2Dur,
+		TDurCalc.StdYearMth(),
+		ePrefix)
 
-		err := t2Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).StdYearMth())
-
-		if err != nil {
-			return fmt.Sprintf(ePrefix +
-				"\nError returned by t2Dur." +
-				"ReCalcTimeDurationAllocation(" +
-				"TDurCalcType(0).StdYearMth()).\n"+
-				"Error='%v'\n", err.Error())
-		}
+	if err != nil {
+		return fmt.Sprintf("%v", err.Error())
 	}
 
 	str := ""
