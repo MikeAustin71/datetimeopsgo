@@ -1715,14 +1715,15 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 	return nil
 }
 
-// SetEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration
-// based on an ending date time and the time components contained in a TimeDto.
+// setEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration
+// based on an ending date time, and the time components contained in a TimeDto.
 //
 // Starting date time is computed by subtracting the value of the TimeDto from
 // the ending date time input parameter, 'endDateTime'.
 //
+// __________________________________________________________________________
+//
 // Input Parameters:
-// =================
 //
 // tDur    *TimeDurationDto
 //           - The data fields of this TimeDurationDto object will be
