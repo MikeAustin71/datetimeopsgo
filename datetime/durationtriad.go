@@ -831,7 +831,7 @@ func (durT DurationTriad) NewAutoStart(
 		startDateTime,
 		endDateTime,
 		TDurCalc.StdYearMth(),
-		startDateTime.Location().String(),
+		timeZoneLocation,
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -853,112 +853,125 @@ func (durT DurationTriad) NewAutoStart(
 // This method will automatically apply time duration calculation type,'TDurCalcType(0).StdYearMth()'.
 // This is the default calculation type which formats time duration as years, months, days and time.
 // For a discussion of Duration Calculation types, see Type TDurCalcType located in source file:
-// 					'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
+//         'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
 //
-// ------------------------------------------------------------------------
+// __________________________________________________________________________
 //
-// Input Parameters
+// Input Parameters:
 //
-//	endDateTime	time.Time - Ending date time. The TimeDto parameter (minusTimeDto) will
-//	                        be subtracted from this date time in order to compute the
-//	                        starting date time.
+//  endDateTime  time.Time
+//     - Ending date time. The TimeDto parameter (minusTimeDto) will
+//       be subtracted from this date time in order to compute the
+//       starting date time.
 //
-//	minusTimeDto  TimeDto - Provides time values which will be subtracted from
-//	                        input parameter, 'endDateTime', in order to calculate
-//	                        start Date Time and time duration.
 //
-//	      A TimeDto structure is defined as follows:
+//  minusTimeDto   TimeDto
+//     - Provides time values which will be subtracted from
+//       input parameter, 'endDateTime', in order to calculate
+//       start Date Time and time duration.
 //
-//	      type TimeDto struct {
-//	        Years                int // Number of Years
-//	        Months               int // Number of Months
-//	        Weeks                int // Number of Weeks
-//	        WeekDays             int // Number of Week-WeekDays.
-//	                                 //   Total WeekDays/7 + Remainder WeekDays
-//	        DateDays             int // Total Number of Days.
-//	                                 //   Weeks x 7 plus WeekDays
-//	        Hours                int // Number of Hours.
-//	        Minutes              int // Number of Minutes
-//	        Seconds              int // Number of Seconds
-//	        Milliseconds         int // Number of Milliseconds
-//	        Microseconds         int // Number of Microseconds
-//	        Nanoseconds	         int // Remaining Nanoseconds after Milliseconds
-//	                                 //   and Microseconds
-//	        TotSubSecNanoseconds int // Total Nanoseconds:
-//	                                 //   Millisecond NanoSecs + Microsecond NanoSecs
-//	                                 //   plus remaining Nanoseconds
-//	      }
+//       A TimeDto structure is defined as follows:
 //
-//	      Type 'TimeDto' is located in source file:
-//	         datetimeopsgo\datetime\timedto.go
+//        type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays.
+//                                   //   Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days.
+//                                   //   Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds
+//                                   //   and Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds:
+//                                   //   Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //   plus remaining Nanoseconds
+//        }
 //
-//	dateTimeFmtStr string   - A date time format string which will be used
-//	                          to format and display 'dateTime'. Example:
-//	                          "2006-01-02 15:04:05.000000000 -0700 MST"
+//        Type 'TimeDto' is located in source file:
+//           datetimeopsgo\datetime\timedto.go
 //
-//	                          Date time format constants are found in the source
-//	                          file 'constantsdatetime.go'. These constants represent
-//	                          the more commonly used date time string formats. All
-//	                          Date Time format constants begin with the prefix
-//	                          'FmtDateTime'.
 //
-//	                          If 'dateTimeFmtStr' is submitted as an
-//	                          'empty string', a default date time format
-//	                          string will be applied. The default date time
-//	                          format string is:
-//	                            FmtDateTimeYrMDayFmtStr =
-//	                                "2006-01-02 15:04:05.000000000 -0700 MST"
+//  dateTimeFmtStr  string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-// ------------------------------------------------------------------------
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
 //
-// Return Values
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	DurationTriad	- Upon successful completion, this method will return
-//			  a new, populated DurationTriad instance.
+// __________________________________________________________________________
 //
-//	error		- If this method completes successfully, the returned error
-//			  Type is set equal to 'nil'. If an error condition is encountered,
-//			  this method will return an error Type which encapsulates an
-//			  appropriate error message.
+// Return Values:
 //
-// ------------------------------------------------------------------------
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
 //
-// Usage
 //
-//	du, err := DurationTriad{}.NewEndTimeMinusTimeDto(
-//					startDateTime,
-//					minusTimeDto,
-//					FmtDateTimeYrMDayFmtStr)
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
 //
-//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+// __________________________________________________________________________
 //
-//	      'FmtDateTimeYrMDayFmtStr' is a date format constant defined in
-//	      source file 'constantsdatetime.go'.
+// Example Usage:
+//
+//  du, err := DurationTriad{}.NewEndTimeMinusTimeDto(
+//          startDateTime,
+//          minusTimeDto,
+//          FmtDateTimeYrMDayFmtStr)
+//
+//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a date format constant defined in
+//        source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDto(
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	dateTimeFmtStr string) (DurationTriad, error) {
 
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
 	ePrefix := "DurationTriad.NewEndTimeMinusTimeDto() "
 
-	du2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-	locName := endDateTime.Location().String()
+	durTUtil := durationTriadUtility{}
 
-	err := du2.SetEndTimeMinusTimeDtoCalcTz(endDateTime,
+	err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
+		&durT2,
+		endDateTime,
 		minusTimeDto,
-		TDurCalcType(0).StdYearMth(),
-		locName,
-		dateTimeFmtStr)
+		TDurCalc.StdYearMth(),
+		endDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return DurationTriad{}, fmt.Errorf(ePrefix+
-			"Error returned from du2.SetEndTimeMinusTimeDtoCalcTz(...). "+
-			"Error='%v'", err.Error())
+		return DurationTriad{}, err
 	}
 
-	return du2, nil
+	return durT2, nil
 }
 
 // NewEndTimeMinusTimeDtoCalcTz - Returns a new DurationTriad based on two input parameters,
