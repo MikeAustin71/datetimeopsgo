@@ -1482,7 +1482,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 //
 // ------------------------------------------------------------------------
 //
-// Usage
+// Example Usage
 //
 //  tDurDto, err := TimeDurationDto{}.NewStartDateTzDuration(
 //      startTime,
@@ -1535,73 +1535,80 @@ func (durT DurationTriad) NewStartDateTzDuration(
 // seconds, milliseconds, microseconds and nanoseconds.
 //
 // For details on Type 'TDurCalcType', see source file:
-//			MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//      MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
-// ------------------------------------------------------------------------
+// __________________________________________________________________________
 //
-// Input Parameters
+// Input Parameters:
 //
-//	startDateTime	DateTzDto	- Starting date time
+//  startDateTime  DateTzDto
+//     - Starting date time
 //
-//	endDateTime	DateTzDto	- Ending date time
+//  endDateTime    DateTzDto
+//     - Ending date time
 //
-// ------------------------------------------------------------------------
+// __________________________________________________________________________
 //
-// Return Values
+// Return Values:
 //
-//	DurationTriad - Upon successful completion, this method will return
-//	                a new, populated DurationTriad instance.
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
 //
-//	                A DurationTriad Structure is defined as follows:
+//       A DurationTriad Structure is defined as follows:
 //
-//	                type DurationTriad struct {
-//	                  BaseTime  TimeDurationDto
-//	                  LocalTime TimeDurationDto
-//	                  UTCTime   TimeDurationDto
-//	                }
+//         type DurationTriad struct {
+//           BaseTime  TimeDurationDto
+//           LocalTime TimeDurationDto
+//           UTCTime   TimeDurationDto
+//         }
 //
-//	error         - If this method completes successfully, the returned error
-//	                Type is set equal to 'nil'. If an error condition is encountered,
-//	                this method will return an error Type which encapsulates an
-//	                appropriate error message.
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
 //
-// ------------------------------------------------------------------------
 //
-// Usage
+// __________________________________________________________________________
 //
-//	du, err := DurationTriad{}.NewStartEndDateTzDto(
-//				startTimeDateTz,
-//				endTimeDateTz)
+// Example Usage:
 //
+//
+//  du, err := DurationTriad{}.NewStartEndDateTzDto(
+//                             startTimeDateTz,
+//                             endTimeDateTz)
 //
 func (durT DurationTriad) NewStartEndDateTzDto(
-	startDateTime,
-	endDateTime DateTzDto) (DurationTriad, error) {
+	startDateTimeTz,
+	endDateTimeTz DateTzDto) (DurationTriad, error) {
 
 	ePrefix := "DurationTriad.NewStartEndDateTzDto() "
 
-	du2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-	tz := startDateTime.GetTimeZoneDef()
+	timeZoneLocation := startDateTimeTz.timeZone.
+				GetBestConvertibleTimeZone().
+				GetMilitaryOrStdTimeZoneName()
 
-	timeZoneLocation := tz.GetOriginalLocationName()
-	dateTimeFmtStr := startDateTime.GetDateTimeFmt()
+	dateTimeFmtStr := startDateTimeTz.GetDateTimeFmt()
 
-	err := du2.SetStartEndDateTzCalcTz(
-		startDateTime,
-		endDateTime,
-		TDurCalcType(0).StdYearMth(),
+	durTUtil := durationTriadUtility{}
+
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTimeTz.dateTimeValue,
+		endDateTimeTz.dateTimeValue,
+		TDurCalc.StdYearMth(),
 		timeZoneLocation,
-		dateTimeFmtStr)
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return DurationTriad{},
-			fmt.Errorf(ePrefix+
-				"Error returned from du2.SetStartEndDateTzCalcTz(...)."+
-				"Error='%v'", err)
+		return DurationTriad{}, err
 	}
 
-	return du2, nil
+	return durT2, nil
 }
 
 // NewStartEndDateTzDtoCalcTz - Returns a New DurationTriad based on two input
@@ -4390,7 +4397,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //
 // __________________________________________________________________________
 //
-// Return Values:
+// Return Value:
 //
 //  error
 //     - If this method completes successfully, the returned error

@@ -511,7 +511,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 //
 // Input Parameters:
 //
-// durT        *DurationTriad
+//  durT       *DurationTriad
 //     - The results of this calculation will be stored
 //       in this instance of 'DurationTriad'
 //
@@ -625,7 +625,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 //
-// ePrefix             string
+//  ePrefix            string
 //     - The error prefix containing the names of all
 //       the methods executed up to this point.
 //
@@ -746,6 +746,157 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 	return nil
 }
 
+// setStartTimeDurationCalcTz - Receives a starting date time and calculates
+// a time duration. The method then calculates the ending date time, duration
+// and populates the DurationTriad data fields.
+//
+// The method will except negative time durations. A negative duration means that
+// starting date time will be reclassified as ending date time with time duration
+// being subtracted from that ending date time to compute staring date time.
+//
+// The user is also required to submit input parameters to time zone location and
+// date time calculation type.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters:
+//
+//  durT       *DurationTriad
+//     - The results of this calculation will be stored
+//       in this instance of 'DurationTriad'
+//
+//  startDateTime   time.Time
+//     - Starting Date Time for duration calculation
+//
+//  duration    time.Duration
+//     - Time Duration added to 'startDateTime' in order to
+//       compute Ending Date Time
+//
+//  tDurCalcType TDurCalcType
+//     - Specifies the calculation type to be used in allocating
+//       time duration:
+//
+//       TDurCalcType(0).StdYearMth()
+//         - Default - standard year, month week, day time calculation.
+//
+//       TDurCalcType(0).CumMonths()
+//         - Computes cumulative months - no Years.
+//
+//       TDurCalcType(0).CumWeeks()
+//         - Computes cumulative weeks. No Years or months
+//
+//       TDurCalcType(0).CumDays()
+//         - Computes cumulative days. No Years, months or weeks.
+//
+//       TDurCalcType(0).CumHours()
+//         - Computes cumulative hours. No Years, months, weeks or days.
+//
+//       TDurCalcType(0).CumMinutes()
+//         - Computes cumulative minutes. No Years, months, weeks, days
+//           or hours.
+//
+//       TDurCalcType(0).CumSeconds()
+//         - Computes cumulative seconds. No Years, months, weeks, days,
+//           hours or minutes.
+//
+//       TDurCalcType(0).GregorianYears()
+//         - Computes Years based on average length of a Gregorian Year
+//           Used for very large duration values.
+//
+//           Type 'TDurCalcType' is located in source file:
+//              MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+//
+//  timeZoneLocation   string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time comparisons.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location must be designated as one of three types of
+//       time zones.
+//
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
+//
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system.
+//
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
+//
+//       (3) A Military Time Zone
+//             In addition to military operations, Military
+//             time zones are commonly used in aviation as
+//             well as at sea. They are also known as nautical
+//             or maritime time zones.
+//           Reference:
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
+//
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
+//
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
+//
+//
+//  dateTimeFmtStr     string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+//  ePrefix            string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
+//
 func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 	durT *DurationTriad,
 	startDateTime time.Time,
