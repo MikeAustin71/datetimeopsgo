@@ -757,7 +757,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 // The user is also required to submit input parameters to time zone location and
 // date time calculation type.
 //
-// ------------------------------------------------------------------------
+// __________________________________________________________________________
 //
 // Input Parameters:
 //
