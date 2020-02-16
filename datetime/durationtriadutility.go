@@ -632,7 +632,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 //
 // __________________________________________________________________________
 //
-// Return Value
+// Return Value:
 //
 //  error
 //     - If this method proceeds to successful completion, the returned
