@@ -699,7 +699,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		tDurCalcType,
 		timeZoneLocation,
 		dateTimeFmtStr,
-		ePrefix)
+		ePrefix + "BaseTime Failed- ")
 
 	if err != nil {
 		return err
@@ -712,7 +712,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		tDurCalcType,
 		TZones.Local(),
 		dateTimeFmtStr,
-		ePrefix)
+		ePrefix+ "LocalTime Failed- ")
 
 	if err != nil {
 		return err
@@ -725,7 +725,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		tDurCalcType,
 		TZones.UTC(),
 		dateTimeFmtStr,
-		ePrefix)
+		ePrefix+ "UTC Time Failed - ")
 
 	if err != nil {
 		return err
