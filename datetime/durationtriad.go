@@ -2391,94 +2391,108 @@ func (durT DurationTriad) NewStartEndTimesTz(
 // allocates time duration by years, months, weeks, days, hours, minutes, seconds,
 // milliseconds, microseconds and nanoseconds. For a discussion of Duration Calculation
 // types, see Type TDurCalcType located in source file:
-// 					'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
 //
-// ------------------------------------------------------------------------
+//      'MikeAustin71\datetimeopsgo\datetime\timedurationdto.go'
 //
-// Input Parameters
+// __________________________________________________________________________
 //
-//	startDateTime time.Time - Starting Date Time for duration calculation
-//
-//	duration  time.Duration - Time Duration added to 'startDatTime' in order to
-//	                          compute Ending Date Time
+// Input Parameters:
 //
 //
-//	dateTimeFmtStr string   - A date time format string which will be used
-//	                          to format and display 'dateTime'. Example:
-//	                          "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-//	                          Date time format constants are found in the source
-//	                          file 'constantsdatetime.go'. These constants represent
-//	                          the more commonly used date time string formats. All
-//	                          Date Time format constants begin with the prefix
-//	                          'FmtDateTime'.
-//
-//	                          If 'dateTimeFmtStr' is submitted as an
-//	                          'empty string', a default date time format
-//	                          string will be applied. The default date time
-//	                          format string is:
-//	                            FmtDateTimeYrMDayFmtStr =
-//	                                "2006-01-02 15:04:05.000000000 -0700 MST"
-//
-// ------------------------------------------------------------------------
-//
-// Return Values
-//
-//	DurationTriad - Upon successful completion, this method will return
-//	                a new, populated DurationTriad instance.
-//
-//	                A DurationTriad Structure is defined as follows:
-//
-//	                type DurationTriad struct {
-//	                  BaseTime  TimeDurationDto
-//	                  LocalTime TimeDurationDto
-//	                  UTCTime   TimeDurationDto
-//	                }
+//  startDateTime time.Time
+//     - Starting Date Time for duration calculation
 //
 //
-//	error         - If this method completes successfully, the returned error
-//	                Type is set equal to 'nil'. If an error condition is encountered,
-//	                this method will return an error Type which encapsulates an
-//	                appropriate error message.
+//  duration  time.Duration
+//     - Time Duration added to 'startDatTime' in order to
+//       compute Ending Date Time
 //
-// ------------------------------------------------------------------------
 //
-// Usage
+//  dateTimeFmtStr string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	tDurDto, err := TimeDurationDto{}.NewStartTimeDuration(
-//				startTime,
-//				duration,
-//				FmtDateTimeYrMDayFmtStr)
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
 //
-//	Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//	      'FmtDateTimeYrMDayFmtStr' is a constant defined in
-//	      source file 'constantsdatetime.go'.
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
+//
+//       A DurationTriad Structure is defined as follows:
+//
+//         type DurationTriad struct {
+//           BaseTime  TimeDurationDto
+//           LocalTime TimeDurationDto
+//           UTCTime   TimeDurationDto
+//         }
+//
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//
+//  tDurDto, err := TimeDurationDto{}.NewStartTimeDuration(
+//        startTime,
+//        duration,
+//        FmtDateTimeYrMDayFmtStr)
+//
+//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartTimeDuration(
 	startDateTime time.Time,
 	duration time.Duration,
 	dateTimeFmtStr string) (DurationTriad, error) {
 
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
 	ePrefix := "DurationTriad.NewStartTimeDuration() "
 
-	timeZoneLocation := startDateTime.Location().String()
+	durT2 := DurationTriad{}
 
-	du2 := DurationTriad{}
+	durTUtil := durationTriadUtility{}
 
-	err := du2.SetStartTimeDurationCalcTz(startDateTime,
+	err := durTUtil.setStartTimeDurationCalcTz(
+		&durT2,
+		startDateTime,
 		duration,
-		TDurCalcType(0).StdYearMth(),
-		timeZoneLocation,
-		dateTimeFmtStr)
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
-		return DurationTriad{}, fmt.Errorf(ePrefix+
-			"Error returned from du2.SetStartTimeDurationCalcTz(startDateTime, duration). "+
-			"Error='%v'", err.Error())
+		return DurationTriad{}, err
 	}
 
-	return du2, nil
+	return durT2, nil
 }
 
 // NewStartTimeDurationCalcTz - Returns a New DurationTriad based on 'startDateTime'
