@@ -1,11 +1,11 @@
 package datetime
 
 import (
-  "errors"
-  "fmt"
-  "strings"
-  "sync"
-  "time"
+	"errors"
+	"fmt"
+	"strings"
+	"sync"
+	"time"
 )
 
 /*
@@ -192,10 +192,10 @@ DurationTriad Structure
 
 */
 type DurationTriad struct {
-  BaseTime  TimeDurationDto
-  LocalTime TimeDurationDto
-  UTCTime   TimeDurationDto
-  lock      sync.Mutex
+	BaseTime  TimeDurationDto
+	LocalTime TimeDurationDto
+	UTCTime   TimeDurationDto
+	lock      sync.Mutex
 }
 
 // CopyIn - Receives and incoming DurationTriad instance. This method then
@@ -233,15 +233,15 @@ type DurationTriad struct {
 //
 func (durT *DurationTriad) CopyIn(durTIn DurationTriad) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  durTUtil.copyIn(durT, &durTIn, "DurationTriad.CopyIn() ")
+	durTUtil.copyIn(durT, &durTIn, "DurationTriad.CopyIn() ")
 
-  return
+	return
 }
 
 // CopyOut - Creates and returns a new DurationTriad instance. The deep
@@ -274,13 +274,13 @@ func (durT *DurationTriad) CopyIn(durTIn DurationTriad) {
 //
 func (durT *DurationTriad) CopyOut() DurationTriad {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  durT.lock.Unlock()
+	durT.lock.Unlock()
 
-  durTUtil := durationTriadUtility{}
-  
-  return durTUtil.copyOut(durT, "DurationTriad.CopyOut() ")
+	durTUtil := durationTriadUtility{}
+
+	return durTUtil.copyOut(durT, "DurationTriad.CopyOut() ")
 }
 
 // Empty - This method initializes all data fields in the
@@ -301,15 +301,15 @@ func (durT *DurationTriad) CopyOut() DurationTriad {
 //
 func (durT *DurationTriad) Empty() {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  durT.lock.Unlock()
+	durT.lock.Unlock()
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  durTUtil.empty(durT, "DurationTriad.Empty() ")
+	durTUtil.empty(durT, "DurationTriad.Empty() ")
 
-  return
+	return
 }
 
 // Equal - This method may be used to determine if two
@@ -348,18 +348,18 @@ func (durT *DurationTriad) Empty() {
 //
 func (durT *DurationTriad) Equal(duIn DurationTriad) bool {
 
-  durT.lock.Lock()
-  
-  defer durT.lock.Unlock()
+	durT.lock.Lock()
 
-  durTUtil := durationTriadUtility{}
+	defer durT.lock.Unlock()
 
-  areEqual, _ := durTUtil.equal(
-    durT, 
-    &duIn, 
-    "DurationTriad.Equal() ")
+	durTUtil := durationTriadUtility{}
 
-return areEqual
+	areEqual, _ := durTUtil.equal(
+		durT,
+		&duIn,
+		"DurationTriad.Equal() ")
+
+	return areEqual
 }
 
 // IsValid - Validates the current DurationTriad instance. If the current
@@ -385,11 +385,11 @@ return areEqual
 //
 func (durT *DurationTriad) IsValid() error {
 
-  ePrefix := "DurationTriad.IsValid() "
+	ePrefix := "DurationTriad.IsValid() "
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  return durTUtil.isValid(durT, ePrefix)
+	return durTUtil.isValid(durT, ePrefix)
 }
 
 // New - Creates and returns a new DurationTriad based on time duration calculations
@@ -469,34 +469,34 @@ func (durT *DurationTriad) IsValid() error {
 //        source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) New(
-  startDateTime time.Time,
-  endDateTime time.Time,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	endDateTime time.Time,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.New() "
+	ePrefix := "DurationTriad.New() "
 
-  t2Dur := DurationTriad{}
+	t2Dur := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &t2Dur,
-    startDateTime,
-    endDateTime,
-    TDurCalc.StdYearMth(),
-    startDateTime.Location().String(),
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&t2Dur,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return t2Dur, nil
+	return t2Dur, nil
 }
 
 // NewAutoEnd - Creates and returns a new DurationTriad instance. The
@@ -637,36 +637,36 @@ func (durT DurationTriad) New(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewAutoEnd(
-  startDateTime time.Time,
-  timeZoneLocation string,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	timeZoneLocation string,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewAutoEnd() "
+	ePrefix := "DurationTriad.NewAutoEnd() "
 
-  endDateTime := time.Now().Local()
+	endDateTime := time.Now().Local()
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &durT2,
-    startDateTime,
-    endDateTime,
-    TDurCalc.StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, err
+	return durT2, err
 }
 
 // NewAutoStart - Creates and returns a new DurationTriad instance. Starting date time is
@@ -809,37 +809,37 @@ func (durT DurationTriad) NewAutoEnd(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewAutoStart(
-  timeZoneLocation string,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	timeZoneLocation string,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewAutoStart() "
+	ePrefix := "DurationTriad.NewAutoStart() "
 
-  startDateTime := time.Now().Local()
+	startDateTime := time.Now().Local()
 
-  endDateTime := startDateTime
+	endDateTime := startDateTime
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &durT2,
-    startDateTime,
-    endDateTime,
-    TDurCalc.StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewEndTimeMinusTimeDto - Returns a new DurationTriad based on two input parameters,
@@ -944,34 +944,34 @@ func (durT DurationTriad) NewAutoStart(
 //        source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDto(
-  endDateTime time.Time,
-  minusTimeDto TimeDto,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	endDateTime time.Time,
+	minusTimeDto TimeDto,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewEndTimeMinusTimeDto() "
+	ePrefix := "DurationTriad.NewEndTimeMinusTimeDto() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
-    &durT2,
-    endDateTime,
-    minusTimeDto,
-    TDurCalc.StdYearMth(),
-    endDateTime.Location().String(),
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
+		&durT2,
+		endDateTime,
+		minusTimeDto,
+		TDurCalc.StdYearMth(),
+		endDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewEndTimeMinusTimeDtoCalcTz - Returns a new DurationTriad based on two input parameters,
@@ -1180,36 +1180,36 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
-  endDateTime time.Time,
-  minusTimeDto TimeDto,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	endDateTime time.Time,
+	minusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewEndTimeMinusTimeDtoCalcTz() "
+	ePrefix := "DurationTriad.NewEndTimeMinusTimeDtoCalcTz() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
-    &durT2,
-    endDateTime,
-    minusTimeDto,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
+		&durT2,
+		endDateTime,
+		minusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewEndTimeMinusTimeDtoTz - Returns a new DurationTriad based on two input parameters,
@@ -1378,35 +1378,35 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoCalcTz(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
-  endDateTime time.Time,
-  minusTimeDto TimeDto,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	endDateTime time.Time,
+	minusTimeDto TimeDto,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewEndTimeMinusTimeDtoTz() "
+	ePrefix := "DurationTriad.NewEndTimeMinusTimeDtoTz() "
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  durTriadOut := DurationTriad{}
+	durTriadOut := DurationTriad{}
 
-  err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
-    &durTriadOut,
-    endDateTime,
-    minusTimeDto,
-    TDurCalcType(0).StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
+		&durTriadOut,
+		endDateTime,
+		minusTimeDto,
+		TDurCalcType(0).StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durTriadOut, nil
+	return durTriadOut, nil
 }
 
 // NewStartTimeDuration - Returns a New DurationTriad based on 'startDateTz'
@@ -1477,39 +1477,39 @@ func (durT DurationTriad) NewEndTimeMinusTimeDtoTz(
 //      duration)
 //
 func (durT DurationTriad) NewStartDateTzDuration(
-  startDateTime DateTzDto,
-  duration time.Duration) (DurationTriad, error) {
+	startDateTime DateTzDto,
+	duration time.Duration) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartDateTzDuration() "
+	ePrefix := "DurationTriad.NewStartDateTzDuration() "
 
-  timeZoneLocation :=startDateTime.timeZone.
-    GetBestConvertibleTimeZone().
-    GetMilitaryOrStdTimeZoneName()
+	timeZoneLocation :=startDateTime.timeZone.
+		GetBestConvertibleTimeZone().
+		GetMilitaryOrStdTimeZoneName()
 
-  dateTimeFmtStr := startDateTime.dateTimeFmt
+	dateTimeFmtStr := startDateTime.dateTimeFmt
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartTimeDurationCalcTz(
-    &durT2,
-    startDateTime.dateTimeValue,
-    duration,
-    TDurCalc.StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartTimeDurationCalcTz(
+		&durT2,
+		startDateTime.dateTimeValue,
+		duration,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartEndDateTzDto - Returns a New DurationTriad based on two input
@@ -1572,39 +1572,39 @@ func (durT DurationTriad) NewStartDateTzDuration(
 //                             endTimeDateTz)
 //
 func (durT DurationTriad) NewStartEndDateTzDto(
-  startDateTimeTz,
-  endDateTimeTz DateTzDto) (DurationTriad, error) {
+	startDateTimeTz,
+	endDateTimeTz DateTzDto) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartEndDateTzDto() "
+	ePrefix := "DurationTriad.NewStartEndDateTzDto() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  timeZoneLocation := startDateTimeTz.timeZone.
-        GetBestConvertibleTimeZone().
-        GetMilitaryOrStdTimeZoneName()
+	timeZoneLocation := startDateTimeTz.timeZone.
+		GetBestConvertibleTimeZone().
+		GetMilitaryOrStdTimeZoneName()
 
-  dateTimeFmtStr := startDateTimeTz.GetDateTimeFmt()
+	dateTimeFmtStr := startDateTimeTz.GetDateTimeFmt()
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &durT2,
-    startDateTimeTz.dateTimeValue,
-    endDateTimeTz.dateTimeValue,
-    TDurCalc.StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTimeTz.dateTimeValue,
+		endDateTimeTz.dateTimeValue,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartEndDateTzDtoCalcTz - Returns a New DurationTriad based on two input
@@ -1789,36 +1789,36 @@ func (durT DurationTriad) NewStartEndDateTzDto(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
-  startDateTime,
-  endDateTime DateTzDto,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime,
+	endDateTime DateTzDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartEndDateTzDtoCalcTz() "
+	ePrefix := "DurationTriad.NewStartEndDateTzDtoCalcTz() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &durT2,
-    startDateTime.dateTimeValue,
-    endDateTime.dateTimeValue,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTime.dateTimeValue,
+		endDateTime.dateTimeValue,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartEndDateTzDtoTz - Returns a New DurationTriad based on two input
@@ -1961,35 +1961,35 @@ func (durT DurationTriad) NewStartEndDateTzDtoCalcTz(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartEndDateTzDtoTz(
-  startDateTime,
-  endDateTime DateTzDto,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime,
+	endDateTime DateTzDto,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartEndDateTzDtoTz() "
+	ePrefix := "DurationTriad.NewStartEndDateTzDtoTz() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &durT2,
-    startDateTime.dateTimeValue,
-    endDateTime.dateTimeValue,
-    TDurCalc.StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTime.dateTimeValue,
+		endDateTime.dateTimeValue,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartEndTimesCalcTz - Returns a New DurationTriad based on two input
@@ -2175,36 +2175,36 @@ func (durT DurationTriad) NewStartEndDateTzDtoTz(
 //        source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartEndTimesCalcTz(
-  startDateTime,
-  endDateTime time.Time,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime,
+	endDateTime time.Time,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartEndTimesCalcTz() "
+	ePrefix := "DurationTriad.NewStartEndTimesCalcTz() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &durT2,
-    startDateTime,
-    endDateTime,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTime,
+		endDateTime,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartEndTimesTz - Returns a New DurationTriad based on two input
@@ -2346,35 +2346,35 @@ func (durT DurationTriad) NewStartEndTimesCalcTz(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartEndTimesTz(
-  startDateTime,
-  endDateTime time.Time,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime,
+	endDateTime time.Time,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartEndTimesTz() "
+	ePrefix := "DurationTriad.NewStartEndTimesTz() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartEndTimesCalcTz(
-    &durT2,
-    startDateTime,
-    endDateTime,
-    TDurCalc.StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartEndTimesCalcTz(
+		&durT2,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartTimeDuration - Returns a New DurationTriad based on 'startDateTime'
@@ -2468,34 +2468,34 @@ func (durT DurationTriad) NewStartEndTimesTz(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartTimeDuration(
-  startDateTime time.Time,
-  duration time.Duration,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	duration time.Duration,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartTimeDuration() "
+	ePrefix := "DurationTriad.NewStartTimeDuration() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartTimeDurationCalcTz(
-    &durT2,
-    startDateTime,
-    duration,
-    TDurCalc.StdYearMth(),
-    startDateTime.Location().String(),
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartTimeDurationCalcTz(
+		&durT2,
+		startDateTime,
+		duration,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartTimeDurationCalcTz - Returns a New DurationTriad based on 'startDateTime'
@@ -2685,36 +2685,36 @@ func (durT DurationTriad) NewStartTimeDuration(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartTimeDurationCalcTz(
-  startDateTime time.Time,
-  duration time.Duration,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	duration time.Duration,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartTimeDurationCalcTz() "
+	ePrefix := "DurationTriad.NewStartTimeDurationCalcTz() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartTimeDurationCalcTz(
-    &durT2,
-    startDateTime,
-    duration,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartTimeDurationCalcTz(
+		&durT2,
+		startDateTime,
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartTimeDurationTz - Returns a New DurationTriad based on 'startDateTime'
@@ -2867,35 +2867,35 @@ func (durT DurationTriad) NewStartTimeDurationCalcTz(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartTimeDurationTz(
-  startDateTime time.Time,
-  duration time.Duration,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	duration time.Duration,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.NewStartTimeDurationTz() "
+	ePrefix := "DurationTriad.NewStartTimeDurationTz() "
 
-  durT2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  err := durTUtil.setStartTimeDurationCalcTz(
-    &durT2,
-    startDateTime,
-    duration,
-    TDurCalc.StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	err := durTUtil.setStartTimeDurationCalcTz(
+		&durT2,
+		startDateTime,
+		duration,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-  if err != nil {
-    return DurationTriad{}, err
-  }
+	if err != nil {
+		return DurationTriad{}, err
+	}
 
-  return durT2, nil
+	return durT2, nil
 }
 
 // NewStartTimePlusTimeDto - Returns a new DurationTriad based on two input
@@ -3006,30 +3006,33 @@ func (durT DurationTriad) NewStartTimeDurationTz(
 //        'constantsdatetime.go'
 //
 func (durT DurationTriad) NewStartTimePlusTimeDto(
-  startDateTime time.Time,
-  plusTimeDto TimeDto,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  ePrefix := "DurationTriad.NewStartTimePlusTimeDto() "
+	durT.lock.Lock()
+	defer durT.lock.Unlock()
 
-  timeZoneLocation := startDateTime.Location().String()
+	ePrefix := "DurationTriad.NewStartTimePlusTimeDto() "
 
-  du2 := DurationTriad{}
+	durT2 := DurationTriad{}
 
-  err := du2.SetStartTimePlusTimeDtoCalcTz(startDateTime,
-    plusTimeDto,
-    TDurCalcType(0).StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr)
+	durTUtil := durationTriadUtility{}
 
-  if err != nil {
-    return DurationTriad{},
-      fmt.Errorf(ePrefix+
-        "Error returned from du2.SetStartTimePlusTimeDtoCalcTz(startDateTime, plusTimeDto). "+
-        "Error='%v'", err)
-  }
+	err := durTUtil.setStartTimePlusTimeDtoCalcTz(
+		&durT2,
+		startDateTime,
+		plusTimeDto,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
-  return du2, nil
+	if err != nil {
+		return DurationTriad{}, err
+	}
+
+	return durT2, nil
 }
 
 // NewStartTimePlusTimeDtoCalcTz - Returns a new DurationTriad based on two input
@@ -3191,30 +3194,30 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 //        source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
-  startDateTime time.Time,
-  plusTimeDto TimeDto,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  ePrefix := "DurationTriad.NewStartTimePlusTimeDtoCalcTz() "
+	ePrefix := "DurationTriad.NewStartTimePlusTimeDtoCalcTz() "
 
-  du2 := DurationTriad{}
+	du2 := DurationTriad{}
 
-  err := du2.SetStartTimePlusTimeDtoCalcTz(startDateTime,
-    plusTimeDto,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr)
+	err := du2.SetStartTimePlusTimeDtoCalcTz(startDateTime,
+		plusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return DurationTriad{},
-      fmt.Errorf(ePrefix+
-        "Error returned from du2.SetStartTimePlusTimeDtoCalcTz(startDateTime, plusTimeDto). "+
-        "Error='%v'", err)
-  }
+	if err != nil {
+		return DurationTriad{},
+			fmt.Errorf(ePrefix+
+				"Error returned from du2.SetStartTimePlusTimeDtoCalcTz(startDateTime, plusTimeDto). "+
+				"Error='%v'", err)
+	}
 
-  return du2, nil
+	return du2, nil
 }
 
 // NewStartTimePlusTimeDtoTz - Returns a new DurationTriad based on two input parameters,
@@ -3338,22 +3341,22 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoCalcTz(
 //        source file 'constantsdatetime.go'.
 //
 func (durT DurationTriad) NewStartTimePlusTimeDtoTz(
-  startDateTime time.Time,
-  plusTimeDto TimeDto,
-  timeZoneLocation,
-  dateTimeFmtStr string) (DurationTriad, error) {
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	timeZoneLocation,
+	dateTimeFmtStr string) (DurationTriad, error) {
 
-  ePrefix := "DurationTriad.NewStartTimePlusTimeDtoTz() "
+	ePrefix := "DurationTriad.NewStartTimePlusTimeDtoTz() "
 
-  du2 := DurationTriad{}
+	du2 := DurationTriad{}
 
-  err := du2.SetStartTimePlusTimeDtoCalcTz(startDateTime, plusTimeDto, TDurCalcType(0).StdYearMth(), timeZoneLocation, dateTimeFmtStr)
+	err := du2.SetStartTimePlusTimeDtoCalcTz(startDateTime, plusTimeDto, TDurCalcType(0).StdYearMth(), timeZoneLocation, dateTimeFmtStr)
 
-  if err != nil {
-    return DurationTriad{}, fmt.Errorf(ePrefix+"Error returned from du2.SetStartTimePlusTimeDtoTz(startDateTime, plusTimeDto).\nError='%v'", err)
-  }
+	if err != nil {
+		return DurationTriad{}, fmt.Errorf(ePrefix+"Error returned from du2.SetStartTimePlusTimeDtoTz(startDateTime, plusTimeDto).\nError='%v'", err)
+	}
 
-  return du2, nil
+	return du2, nil
 }
 
 // SetAutoEnd - When called, this method automatically sets the ending date
@@ -3386,28 +3389,28 @@ func (durT DurationTriad) NewStartTimePlusTimeDtoTz(
 //  err := dt.SetAutoEnd()
 //
 func (durT *DurationTriad) SetAutoEnd() error {
-  ePrefix := "DurationTriad.SetAutoEnd() "
+	ePrefix := "DurationTriad.SetAutoEnd() "
 
-  endDateTime := time.Now().Local()
+	endDateTime := time.Now().Local()
 
-  calcType := durT.BaseTime.CalcType
-  startDateTime := durT.BaseTime.StartTimeDateTz.GetDateTimeValue()
+	calcType := durT.BaseTime.CalcType
+	startDateTime := durT.BaseTime.StartTimeDateTz.GetDateTimeValue()
 
-  tzLocName := durT.BaseTime.StartTimeDateTz.GetOriginalTzName()
-  fmtStr := durT.BaseTime.StartTimeDateTz.GetDateTimeFmt()
+	tzLocName := durT.BaseTime.StartTimeDateTz.GetOriginalTzName()
+	fmtStr := durT.BaseTime.StartTimeDateTz.GetDateTimeFmt()
 
-  err := durT.SetStartEndTimesCalcTz(startDateTime, endDateTime, calcType, tzLocName, fmtStr)
+	err := durT.SetStartEndTimesCalcTz(startDateTime, endDateTime, calcType, tzLocName, fmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error returned from SetStartEndTimesCalcTz() "+
-      "startDateTime='%v'  endDateTime='%v'  Error='%v'",
-      startDateTime.Format(FmtDateTimeYrMDayFmtStr),
-      endDateTime.Format(FmtDateTimeYrMDayFmtStr),
-      err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned from SetStartEndTimesCalcTz() "+
+			"startDateTime='%v'  endDateTime='%v'  Error='%v'",
+			startDateTime.Format(FmtDateTimeYrMDayFmtStr),
+			endDateTime.Format(FmtDateTimeYrMDayFmtStr),
+			err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetEndTimeMinusTimeDto - Calculates duration values based on an Ending Date Time and
@@ -3504,28 +3507,28 @@ func (durT *DurationTriad) SetAutoEnd() error {
 //        source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDto(
-  endDateTime time.Time,
-  minusTimeDto TimeDto,
-  dateTimeFmtStr string) error {
+	endDateTime time.Time,
+	minusTimeDto TimeDto,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
+	ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
 
-  timeZoneLocation := endDateTime.Location().String()
+	timeZoneLocation := endDateTime.Location().String()
 
-  err := durT.SetEndTimeMinusTimeDtoCalcTz(
-    endDateTime,
-    minusTimeDto,
-    TDurCalcType(0).StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr)
+	err := durT.SetEndTimeMinusTimeDtoCalcTz(
+		endDateTime,
+		minusTimeDto,
+		TDurCalcType(0).StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error returned by SetEndTimeMinusTimeDtoCalcTz Error='%v'",
-      err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by SetEndTimeMinusTimeDtoCalcTz Error='%v'",
+			err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetEndTimeMinusTimeDtoCalcTz - Calculates duration values based on an Ending Date Time and
@@ -3694,110 +3697,110 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 //       source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
-  endDateTime time.Time,
-  minusTimeDto TimeDto,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	endDateTime time.Time,
+	minusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
+	ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  return durTUtil.setEndTimeMinusTimeDtoCalcTz(
-    durT,
-    endDateTime,
-    minusTimeDto,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	return durTUtil.setEndTimeMinusTimeDtoCalcTz(
+		durT,
+		endDateTime,
+		minusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
-/*
-  fmtStr := durT.preProcessDateFormatStr(dateTimeFmtStr)
+	/*
+	   fmtStr := durT.preProcessDateFormatStr(dateTimeFmtStr)
 
-  tzLoc := durT.preProcessTimeZoneLocation(timeZoneLocation)
+	   tzLoc := durT.preProcessTimeZoneLocation(timeZoneLocation)
 
-  _, err := time.LoadLocation(tzLoc)
+	   _, err := time.LoadLocation(tzLoc)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error: TimeZoneLocation input parameter is INVALID! "+
-      "timeZoneLocation='%v' tzLoc='%v'  Error='%v'",
-      timeZoneLocation, tzLoc, err.Error())
-  }
+	   if err != nil {
+	     return fmt.Errorf(ePrefix+
+	       "Error: TimeZoneLocation input parameter is INVALID! "+
+	       "timeZoneLocation='%v' tzLoc='%v'  Error='%v'",
+	       timeZoneLocation, tzLoc, err.Error())
+	   }
 
-  baseTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(endDateTime,
-    minusTimeDto,
-    tDurCalcType,
-    tzLoc,
-    fmtStr)
+	   baseTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(endDateTime,
+	     minusTimeDto,
+	     tDurCalcType,
+	     tzLoc,
+	     fmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error computing baseTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). "+
-      "endDateTime='%v' Error='%v'",
-      endDateTime, err.Error())
-  }
+	   if err != nil {
+	     return fmt.Errorf(ePrefix+
+	       "Error computing baseTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). "+
+	       "endDateTime='%v' Error='%v'",
+	       endDateTime, err.Error())
+	   }
 
-  _, err = time.LoadLocation(TZones.Local())
+	   _, err = time.LoadLocation(TZones.Local())
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error: Local TimeZoneLocation input parameter is INVALID! "+
-      "timeZoneLocation='%v' Error='%v'",
-      TZones.Local(), err.Error())
-  }
+	   if err != nil {
+	     return fmt.Errorf(ePrefix+
+	       "Error: Local TimeZoneLocation input parameter is INVALID! "+
+	       "timeZoneLocation='%v' Error='%v'",
+	       TZones.Local(), err.Error())
+	   }
 
-  localTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(endDateTime,
-    minusTimeDto,
-    tDurCalcType,
-    TZones.Local(),
-    fmtStr)
+	   localTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(endDateTime,
+	     minusTimeDto,
+	     tDurCalcType,
+	     TZones.Local(),
+	     fmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error computing localTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). "+
-      "endDateTime='%v' Error='%v'",
-      endDateTime, err.Error())
-  }
+	   if err != nil {
+	     return fmt.Errorf(ePrefix+
+	       "Error computing localTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). "+
+	       "endDateTime='%v' Error='%v'",
+	       endDateTime, err.Error())
+	   }
 
-  _, err = time.LoadLocation(TZones.Local())
+	   _, err = time.LoadLocation(TZones.Local())
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error: UTC TimeZoneLocation input parameter is INVALID! "+
-      "timeZoneLocation='%v' Error='%v'",
-      TZones.Local(), err.Error())
-  }
+	   if err != nil {
+	     return fmt.Errorf(ePrefix+
+	       "Error: UTC TimeZoneLocation input parameter is INVALID! "+
+	       "timeZoneLocation='%v' Error='%v'",
+	       TZones.Local(), err.Error())
+	   }
 
-  utcTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(
-    endDateTime,
-    minusTimeDto,
-    tDurCalcType,
-    TZones.Local(),
-    fmtStr)
+	   utcTime, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(
+	     endDateTime,
+	     minusTimeDto,
+	     tDurCalcType,
+	     TZones.Local(),
+	     fmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error computing localTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). "+
-      "endDateTime='%v' Error='%v'",
-      endDateTime, err.Error())
-  }
+	   if err != nil {
+	     return fmt.Errorf(ePrefix+
+	       "Error computing localTime. TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(). "+
+	       "endDateTime='%v' Error='%v'",
+	       endDateTime, err.Error())
+	   }
 
-  durT.Empty()
-  durT.BaseTime = baseTime.CopyOut()
-  durT.LocalTime = localTime.CopyOut()
-  durT.UTCTime = utcTime.CopyOut()
+	   durT.Empty()
+	   durT.BaseTime = baseTime.CopyOut()
+	   durT.LocalTime = localTime.CopyOut()
+	   durT.UTCTime = utcTime.CopyOut()
 
-  err = durT.IsValid()
+	   err = durT.IsValid()
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+"Error: Duration Base Data INVALID! Error='%v'", err.Error())
-  }
+	   if err != nil {
+	     return fmt.Errorf(ePrefix+"Error: Duration Base Data INVALID! Error='%v'", err.Error())
+	   }
 
-  return nil
-*/
+	   return nil
+	*/
 }
 
 // SetEndTimeMinusTimeDtoTz - Calculate duration values based on an Ending Date Time and
@@ -3925,25 +3928,25 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 //        source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
-  endDateTime time.Time,
-  minusTimeDto TimeDto,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	endDateTime time.Time,
+	minusTimeDto TimeDto,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
+	ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
 
-  err := durT.SetEndTimeMinusTimeDtoCalcTz(endDateTime, minusTimeDto,
-    TDurCalcType(0).StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr)
+	err := durT.SetEndTimeMinusTimeDtoCalcTz(endDateTime, minusTimeDto,
+		TDurCalcType(0).StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error returned by SetEndTimeMinusTimeDtoCalcTz() "+
-      "Error='%v'", err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned by SetEndTimeMinusTimeDtoCalcTz() "+
+			"Error='%v'", err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetStartEndDateTzCalcTz - Calculates duration values and save the results in the current DurationTriad
@@ -4070,25 +4073,25 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoTz(
 //        source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartEndDateTzCalcTz(
-  startDateTime,
-  endDateTime DateTzDto,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	startDateTime,
+	endDateTime DateTzDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetStartEndDateTzCalcTz() "
+	ePrefix := "DurationTriad.SetStartEndDateTzCalcTz() "
 
-  err := durT.SetStartEndTimesCalcTz(startDateTime.GetDateTimeValue(),
-    endDateTime.GetDateTimeValue(),
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr)
+	err := durT.SetStartEndTimesCalcTz(startDateTime.GetDateTimeValue(),
+		endDateTime.GetDateTimeValue(),
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz(...). Error='%v'", err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz(...). Error='%v'", err.Error())
+	}
 
-  return nil
+	return nil
 
 }
 
@@ -4157,25 +4160,25 @@ func (durT *DurationTriad) SetStartEndDateTzCalcTz(
 //        source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartEndTimes(
-  startDateTime,
-  endDateTime time.Time,
-  dateTimeFmtStr string) error {
+	startDateTime,
+	endDateTime time.Time,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetStartEndTimes() "
+	ePrefix := "DurationTriad.SetStartEndTimes() "
 
-  locName := startDateTime.Location().String()
+	locName := startDateTime.Location().String()
 
-  err := durT.SetStartEndTimesCalcTz(startDateTime,
-    endDateTime,
-    TDurCalcType(0).StdYearMth(),
-    locName,
-    dateTimeFmtStr)
+	err := durT.SetStartEndTimesCalcTz(startDateTime,
+		endDateTime,
+		TDurCalcType(0).StdYearMth(),
+		locName,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz(...). Error='%v'", err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz(...). Error='%v'", err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetStartEndTimesCalcTz - Calculates duration values and save the results in the data fields
@@ -4337,28 +4340,28 @@ func (durT *DurationTriad) SetStartEndTimes(
 //        'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartEndTimesCalcTz(
-    startDateTime,
-    endDateTime time.Time,
-    tDurCalcType TDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr string) error {
+	startDateTime,
+	endDateTime time.Time,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.SetStartEndTimesCalcTz() "
+	ePrefix := "DurationTriad.SetStartEndTimesCalcTz() "
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-  return durTUtil.setStartEndTimesCalcTz(
-    durT,
-    startDateTime,
-    endDateTime,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	return durTUtil.setStartEndTimesCalcTz(
+		durT,
+		startDateTime,
+		endDateTime,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 }
 
 // SetStartEndTimesTz - Calculates duration values and save the results in the DurationTriad
@@ -4454,26 +4457,26 @@ func (durT *DurationTriad) SetStartEndTimesCalcTz(
 //        source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartEndTimesTz(
-  startDateTime,
-  endDateTime time.Time,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	startDateTime,
+	endDateTime time.Time,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetStartEndTimesTz() "
+	ePrefix := "DurationTriad.SetStartEndTimesTz() "
 
-  if startDateTime.IsZero() && endDateTime.IsZero() {
-    return errors.New(ePrefix +
-      "Error: Input parameters 'startDateTime' and 'endDateTime' are ZERO!")
-  }
+	if startDateTime.IsZero() && endDateTime.IsZero() {
+		return errors.New(ePrefix +
+			"Error: Input parameters 'startDateTime' and 'endDateTime' are ZERO!")
+	}
 
-  err := durT.SetStartEndTimesCalcTz(startDateTime, endDateTime, TDurCalcType(0).StdYearMth(),
-    timeZoneLocation, dateTimeFmtStr)
+	err := durT.SetStartEndTimesCalcTz(startDateTime, endDateTime, TDurCalcType(0).StdYearMth(),
+		timeZoneLocation, dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz()  Error='%v'", err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by SetStartEndTimesCalcTz()  Error='%v'", err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetStartTimeDuration - Receives a starting date time and proceeds to calculate
@@ -4544,31 +4547,31 @@ func (durT *DurationTriad) SetStartEndTimesTz(
 //        source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartTimeDuration(
-  startDateTime time.Time,
-  duration time.Duration,
-  dateTimeFmtStr string) error {
+	startDateTime time.Time,
+	duration time.Duration,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetStartTimeDuration() "
+	ePrefix := "DurationTriad.SetStartTimeDuration() "
 
-  if startDateTime.IsZero() {
-    return errors.New(ePrefix + "Error - Start Time is Zero!")
-  }
+	if startDateTime.IsZero() {
+		return errors.New(ePrefix + "Error - Start Time is Zero!")
+	}
 
-  timeZoneLocation := startDateTime.Location().String()
+	timeZoneLocation := startDateTime.Location().String()
 
-  err := durT.SetStartTimeDurationCalcTz(startDateTime,
-    duration,
-    TDurCalcType(0).StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr)
+	err := durT.SetStartTimeDurationCalcTz(startDateTime,
+		duration,
+		TDurCalcType(0).StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+
-      "Error returned bySetStartTimeDurationCalcTz()  Error='%v'",
-      err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+
+			"Error returned bySetStartTimeDurationCalcTz()  Error='%v'",
+			err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetStartTimeDurationCalcTz - Receives a starting date time and calculates
@@ -4736,28 +4739,28 @@ func (durT *DurationTriad) SetStartTimeDuration(
 //        'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartTimeDurationCalcTz(
-  startDateTime time.Time,
-  duration time.Duration,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	startDateTime time.Time,
+	duration time.Duration,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  durT.lock.Lock()
+	durT.lock.Lock()
 
-  defer durT.lock.Unlock()
+	defer durT.lock.Unlock()
 
-  ePrefix := "DurationTriad.SetStartTimeDurationCalcTz() "
+	ePrefix := "DurationTriad.SetStartTimeDurationCalcTz() "
 
-  durTUtil := durationTriadUtility{}
+	durTUtil := durationTriadUtility{}
 
-return durTUtil.setStartTimeDurationCalcTz(
-    durT,
-    startDateTime,
-    duration,
-    tDurCalcType,
-    timeZoneLocation,
-    dateTimeFmtStr,
-    ePrefix)
+	return durTUtil.setStartTimeDurationCalcTz(
+		durT,
+		startDateTime,
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 }
 
 // SetStartTimeDurationTz - Receives a starting date time and a time duration.
@@ -4850,21 +4853,21 @@ return durTUtil.setStartTimeDurationCalcTz(
 //        source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartTimeDurationTz(
-  startDateTime time.Time,
-  duration time.Duration,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	startDateTime time.Time,
+	duration time.Duration,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetStartTimeDurationTz() "
+	ePrefix := "DurationTriad.SetStartTimeDurationTz() "
 
-  err := durT.SetStartTimeDurationCalcTz(startDateTime, duration,
-    TDurCalcType(0).StdYearMth(), timeZoneLocation, dateTimeFmtStr)
+	err := durT.SetStartTimeDurationCalcTz(startDateTime, duration,
+		TDurCalcType(0).StdYearMth(), timeZoneLocation, dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+"ERROR: Duration Base Data is INVALID! Error='%v'", err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+"ERROR: Duration Base Data is INVALID! Error='%v'", err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetStartTimePlusTimeDto - Calculates time duration values based on a Starting Date Time
@@ -4960,27 +4963,27 @@ func (durT *DurationTriad) SetStartTimeDurationTz(
 //        source file 'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDto(
-  startDateTime time.Time,
-  plusTimeDto TimeDto,
-  dateTimeFmtStr string) error {
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetStartTimePlusTimeDto() "
+	ePrefix := "DurationTriad.SetStartTimePlusTimeDto() "
 
-  timeZoneLocation := startDateTime.Location().String()
+	timeZoneLocation := startDateTime.Location().String()
 
-  err := durT.SetStartTimePlusTimeDtoCalcTz(
-    startDateTime,
-    plusTimeDto,
-    TDurCalcType(0).StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr)
+	err := durT.SetStartTimePlusTimeDtoCalcTz(
+		startDateTime,
+		plusTimeDto,
+		TDurCalcType(0).StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+"Error returned by SetStartTimePlusTimeDtoCalcTz().  Error='%v'",
-      err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by SetStartTimePlusTimeDtoCalcTz().  Error='%v'",
+			err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 // SetStartTimePlusTimeDtoCalcTz - Calculates time duration values based on a Starting Date Time
@@ -5183,11 +5186,11 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 //        'constantsdatetime.go'
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
-  startDateTime time.Time,
-  plusTimeDto TimeDto,
-  tDurCalcType TDurCalcType,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
 	durT.lock.Lock()
 
@@ -5323,46 +5326,46 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 //        source file 'constantsdatetime.go'.
 //
 func (durT *DurationTriad) SetStartTimePlusTimeDtoTz(
-  startDateTime time.Time,
-  plusTimeDto TimeDto,
-  timeZoneLocation,
-  dateTimeFmtStr string) error {
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	timeZoneLocation,
+	dateTimeFmtStr string) error {
 
-  ePrefix := "DurationTriad.SetStartTimePlusTimeDtoTz() "
+	ePrefix := "DurationTriad.SetStartTimePlusTimeDtoTz() "
 
-  err := durT.SetStartTimePlusTimeDtoCalcTz(
-    startDateTime,
-    plusTimeDto,
-    TDurCalcType(0).StdYearMth(),
-    timeZoneLocation,
-    dateTimeFmtStr)
+	err := durT.SetStartTimePlusTimeDtoCalcTz(
+		startDateTime,
+		plusTimeDto,
+		TDurCalcType(0).StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr)
 
-  if err != nil {
-    return fmt.Errorf(ePrefix+"Error returned by SetStartTimePlusTimeDtoCalcTz(). Error='%v'",
-      err.Error())
-  }
+	if err != nil {
+		return fmt.Errorf(ePrefix+"Error returned by SetStartTimePlusTimeDtoCalcTz(). Error='%v'",
+			err.Error())
+	}
 
-  return nil
+	return nil
 }
 
 func (durT *DurationTriad) preProcessDateFormatStr(dateTimeFmtStr string) string {
 
-  if len(dateTimeFmtStr) == 0 {
-    return FmtDateTimeYrMDayFmtStr
-  }
+	if len(dateTimeFmtStr) == 0 {
+		return FmtDateTimeYrMDayFmtStr
+	}
 
-  return dateTimeFmtStr
+	return dateTimeFmtStr
 }
 
 func (durT *DurationTriad) preProcessTimeZoneLocation(timeZoneLocation string) string {
 
-  if len(timeZoneLocation) == 0 {
-    return TZones.UTC()
-  }
+	if len(timeZoneLocation) == 0 {
+		return TZones.UTC()
+	}
 
-  if strings.ToLower(timeZoneLocation) == "local" {
-    return "Local"
-  }
+	if strings.ToLower(timeZoneLocation) == "local" {
+		return "Local"
+	}
 
-  return timeZoneLocation
+	return timeZoneLocation
 }
