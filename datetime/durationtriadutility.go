@@ -1004,3 +1004,304 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 
 	return nil
 }
+
+
+// setStartTimePlusTimeDtoCalcTz - Calculates time duration values based on a Starting Date Time
+// plus time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
+// in the 'plusTimeDto' parameter. The 'plusTimeDto' parameter is added to 'startDateTime' to
+// calculate ending date time and duration.
+//
+// Values in the 'plusTimeDto' parameter are automatically converted to positive numeric
+// values before being added to parameter 'startDateTime'.
+//
+// True values for starting date time, ending date time and time duration are then stored in
+// the DurationTriad data structure.
+//
+// Input parameter, 'timeZoneLocation', is applied to both the starting and ending
+// date times before computing date time duration. This ensures accuracy in
+// time duration calculations.
+//
+// The allocation of time duration to years, months, weeks, days, hours etc.
+// is controlled by the input parameter calculation type, 'tDurCalcType'.
+// For most purposes, the calculation type 'TDurCalcType(0).StdYearMth()' will
+// suffice. For details see Type 'TDurCalcType' which is located in
+// source file:
+//       MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  durT       *DurationTriad
+//     - The results of this calculation will be stored
+//       in this instance of 'DurationTriad'
+//
+//  startDateTime   time.Time
+//     - Starting date time. Input parameter 'plusTimeDto'
+//       will be added to this starting date time in order
+//       to generate ending date time.
+//
+//  plusTimeDto       TimeDto
+//     - Provides time values which will be added to
+//       'startDateTime' in order to calculate duration.
+//
+//       type TimeDto struct {
+//         Years                  int // Number of Years
+//         Months                 int // Number of Months
+//         Weeks                  int // Number of Weeks
+//         WeekDays               int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//         DateDays               int // Total Number of Days. Weeks x 7 plus WeekDays
+//         Hours                  int // Number of Hours.
+//         Minutes                int // Number of Minutes
+//         Seconds                int // Number of Seconds
+//         Milliseconds           int // Number of Milliseconds
+//         Microseconds           int // Number of Microseconds
+//         Nanoseconds            int // Remaining Nanoseconds after Milliseconds & Microseconds
+//         TotSubSecNanoseconds   int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                    // plus remaining Nanoseconds
+//        }
+//
+//        Type 'TimeDto' is located in source file:
+//          MikeAustin71\datetimeopsgo\datetime\timedto.go
+//
+//
+//  tDurCalcType TDurCalcType
+//     - Specifies the calculation type to be used in allocating
+//       time duration:
+//
+//       TDurCalcType(0).StdYearMth()
+//         - Default - standard year, month week, day time calculation.
+//
+//       TDurCalcType(0).CumMonths()
+//         - Computes cumulative months - no Years.
+//
+//       TDurCalcType(0).CumWeeks()
+//         - Computes cumulative weeks. No Years or months
+//
+//       TDurCalcType(0).CumDays()
+//         - Computes cumulative days. No Years, months or weeks.
+//
+//       TDurCalcType(0).CumHours()
+//         - Computes cumulative hours. No Years, months, weeks or days.
+//
+//       TDurCalcType(0).CumMinutes()
+//         - Computes cumulative minutes. No Years, months, weeks, days
+//           or hours.
+//
+//       TDurCalcType(0).CumSeconds()
+//         - Computes cumulative seconds. No Years, months, weeks, days,
+//           hours or minutes.
+//
+//       TDurCalcType(0).GregorianYears()
+//         - Computes Years based on average length of a Gregorian Year
+//           Used for very large duration values.
+//
+//           Type 'TDurCalcType' is located in source file:
+//              MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+//
+//  timeZoneLocation   string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time comparisons.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location must be designated as one of three types of
+//       time zones.
+//
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
+//
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system.
+//
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
+//
+//       (3) A Military Time Zone
+//             In addition to military operations, Military
+//             time zones are commonly used in aviation as
+//             well as at sea. They are also known as nautical
+//             or maritime time zones.
+//           Reference:
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
+//
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
+//
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
+//
+//
+//  dateTimeFmtStr string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+//  ePrefix            string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
+func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
+	durT *DurationTriad,
+	startDateTime time.Time,
+	plusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
+	dateTimeFmtStr,
+	ePrefix string) error {
+
+	durTUtil.lock.Lock()
+
+	defer durTUtil.lock.Unlock()
+
+	ePrefix += "durationTriadUtility.setStartTimePlusTimeDtoCalcTz() "
+
+	if durT == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "durT",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'durT' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	err := plusTimeDto.IsValid()
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"Input Parameter 'plusTimeDto' is INVALID!\n" +
+			"Validation Error='%v'\n", err.Error())
+	}
+
+	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
+		return errors.New(ePrefix +
+			"\nError: Both 'startDateTime' and 'plusTimeDto' " +
+			"input parameters are ZERO/EMPTY!\n")
+	}
+
+	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
+		tDurCalcType > TDurCalc.XLastValidCalcType() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDurCalcType",
+			inputParameterValue: tDurCalcType.String(),
+			errMsg:  "Input Parameter 'tDurCalcType' is INVALID!",
+			err:                 nil,
+		}
+	}
+
+	dtMech := DTimeMechanics{}
+
+	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
+
+	tzMech := TimeZoneMechanics{}
+
+	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	tDur2 := DurationTriad{}
+
+	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
+		&tDur2.BaseTime,
+		startDateTime,
+		plusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix + "Base Time - ")
+
+	if err != nil {
+		return err
+	}
+
+
+	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
+		&tDur2.LocalTime,
+		startDateTime,
+		plusTimeDto,
+		tDurCalcType,
+		TZones.Local(),
+		dateTimeFmtStr,
+		ePrefix + "Local Time - ")
+
+	if err != nil {
+		return err
+	}
+
+	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
+		&tDur2.UTCTime,
+		startDateTime,
+		plusTimeDto,
+		tDurCalcType,
+		TZones.UTC(),
+		dateTimeFmtStr,
+		ePrefix + "UTC Time - ")
+
+	if err != nil {
+		return err
+	}
+
+	durTUtil2 := durationTriadUtility{}
+
+	err = durTUtil2.isValid(&tDur2, ePrefix + "'tDur2' Validity Check ")
+
+	if err != nil {
+		return err
+	}
+
+	durTUtil2.empty(durT, ePrefix)
+
+	durTUtil2.copyIn(durT, &tDur2, ePrefix)
+
+	return nil
+}
