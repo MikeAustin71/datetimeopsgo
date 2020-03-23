@@ -268,11 +268,11 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	dateTz1, err := DateTzDto{}.New(t1, FmtDateTimeYrMDayFmtStr)
+	dateTz1, err := DateTzDto{}.NewDateTime(t1, FmtDateTimeYrMDayFmtStr)
 
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
-	dateTz2, err := DateTzDto{}.New(t2, FmtDateTimeYrMDayFmtStr)
+	dateTz2, err := DateTzDto{}.NewDateTime(t2, FmtDateTimeYrMDayFmtStr)
 
 	dur, err := DurationTriad{}.NewStartEndDateTzDto(dateTz1, dateTz2)
 
@@ -427,11 +427,11 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	dateTz1, err := DateTzDto{}.New(t1, FmtDateTimeYrMDayFmtStr)
+	dateTz1, err := DateTzDto{}.NewDateTime(t1, FmtDateTimeYrMDayFmtStr)
 
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
-	dateTz2, err := DateTzDto{}.New(t2, FmtDateTimeYrMDayFmtStr)
+	dateTz2, err := DateTzDto{}.NewDateTime(t2, FmtDateTimeYrMDayFmtStr)
 
 	dur, err := DurationTriad{}.NewStartEndDateTzDtoTz(dateTz1, dateTz2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
@@ -587,11 +587,11 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 	t1OutStr := t1.Format(fmtstr)
-	dateTz1, err := DateTzDto{}.New(t1, FmtDateTimeYrMDayFmtStr)
+	dateTz1, err := DateTzDto{}.NewDateTime(t1, FmtDateTimeYrMDayFmtStr)
 
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
-	dateTz2, err := DateTzDto{}.New(t2, FmtDateTimeYrMDayFmtStr)
+	dateTz2, err := DateTzDto{}.NewDateTime(t2, FmtDateTimeYrMDayFmtStr)
 
 	dur, err := DurationTriad{}.NewStartEndDateTzDtoCalcTz(
 		dateTz1,

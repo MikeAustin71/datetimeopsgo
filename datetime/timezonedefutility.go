@@ -28,9 +28,17 @@ func (tzDefUtil *timeZoneDefUtility) copyIn(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	if tzdef2 == nil {
 		panic("timeZoneDefUtility.CopyIn()\n" +
 			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	if tzdef2.lock == nil {
+		tzdef2.lock = new(sync.Mutex)
 	}
 
 	tzDefUtil2 := timeZoneDefUtility{}
@@ -58,9 +66,14 @@ func (tzDefUtil *timeZoneDefUtility) copyOut(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef2 := TimeZoneDefinition{}
 	tzdef2.originalTimeZone = tzdef.originalTimeZone.CopyOut()
 	tzdef2.convertibleTimeZone = tzdef.convertibleTimeZone.CopyOut()
+	tzdef2.lock = new(sync.Mutex)
 
 	return tzdef2
 }
@@ -79,6 +92,11 @@ func (tzDefUtil *timeZoneDefUtility) empty(
 		panic("timeZoneDefUtility.empty()\n" +
 			"Error: 'tzdef' pointer is nil!\n")
 	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.originalTimeZone.Empty()
 	tzdef.convertibleTimeZone.Empty()
 
@@ -105,9 +123,17 @@ func (tzDefUtil *timeZoneDefUtility) equal(
 			"\nError: Input parameter 'tzdef' is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	if tzdef2 == nil {
 		panic("timeZoneDefUtility.equal() " +
 			"\nError: Input parameter 'tzdef2' is nil!")
+	}
+
+	if tzdef2.lock == nil {
+		tzdef2.lock = new(sync.Mutex)
 	}
 
 	tzDefUtil2 := timeZoneDefUtility{}
@@ -150,9 +176,17 @@ func (tzDefUtil *timeZoneDefUtility) equalLocations(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	if tzdef2 == nil {
 		panic("timeZoneDefUtility.equalZoneLocation()\n" +
 			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	if tzdef2.lock == nil {
+		tzdef2.lock = new(sync.Mutex)
 	}
 
 	 if tzdef.originalTimeZone.locationName != tzdef2.originalTimeZone.locationName {
@@ -186,9 +220,17 @@ func (tzDefUtil *timeZoneDefUtility) equalOffsetSeconds(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	if tzdef2 == nil {
 		panic("timeZoneDefUtility.equalZoneLocation()\n" +
 			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	if tzdef2.lock == nil {
+		tzdef2.lock = new(sync.Mutex)
 	}
 
 	if tzdef.originalTimeZone.zoneOffsetTotalSeconds !=
@@ -225,6 +267,10 @@ tzdef *TimeZoneDefinition) bool {
 	if tzdef == nil {
 		panic("timeZoneDefUtility.equalZoneLocation()\n" +
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
 	}
 
 	dtUtil := DTimeUtility{}
@@ -268,9 +314,17 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneLocation(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	if tzdef2 == nil {
 		panic("timeZoneDefUtility.equalZoneLocation()\n" +
 			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	if tzdef2.lock == nil {
+		tzdef2.lock = new(sync.Mutex)
 	}
 
 	if tzdef.originalTimeZone.locationName != 
@@ -315,9 +369,17 @@ func (tzDefUtil *timeZoneDefUtility) equalZoneOffsets(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	if tzdef2 == nil {
 		panic("timeZoneDefUtility.equalZoneOffsets()\n" +
 			"Error: Input parameter 'tzdef2' pointer is nil!\n")
+	}
+
+	if tzdef2.lock == nil {
+		tzdef2.lock = new(sync.Mutex)
 	}
 
 	if tzdef.originalTimeZone.zoneOffset !=
@@ -351,6 +413,10 @@ func (tzDefUtil *timeZoneDefUtility) isEmpty(
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	if tzdef.originalTimeZone.IsEmpty() &&
 		tzdef.convertibleTimeZone.IsEmpty() {
 		return true
@@ -378,6 +444,10 @@ func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDef(
 	if tzdef == nil {
 		return errors.New(ePrefix +
 			"\nError: Input parameter 'tzdef' is a 'nil' pointer!\n")
+	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
 	}
 
 	controlErrors := make([]error, 0)
@@ -420,6 +490,10 @@ func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
 	if tzdef == nil {
 		panic("timeZoneDefUtility.isValidFromDateTime()\n" +
 			"Error: Input parameter 'tzdef' pointer is nil!\n")
+	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
 	}
 
 	if dateTime.IsZero() {
@@ -513,6 +587,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeDto(
 		}
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tDto2 := tDto.CopyOut()
 
 	err := tDto2.NormalizeTimeElements()
@@ -577,6 +655,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 			errMsg:              "Input parameter 'tzdef' pointer is nil!",
 			err:                 nil,
 		}
+	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
 	}
 
 	if dateTime.IsZero() {
@@ -775,6 +857,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 			"\nInput parameter 'tzdef' is nil!\n")
 	}
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	timeZoneName = strings.TrimLeft(strings.TrimRight(timeZoneName, " "), " ")
 
 	if len(timeZoneName) == 0 {
@@ -852,6 +938,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
 	if tzdef == nil {
 		return errors.New(ePrefix +
 			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
 	}
 
 	if dateTime.IsZero() {
@@ -941,6 +1031,10 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 	if tzdef == nil {
 		return errors.New(ePrefix +
 			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
 	}
 
 	if dateTime.IsZero() {

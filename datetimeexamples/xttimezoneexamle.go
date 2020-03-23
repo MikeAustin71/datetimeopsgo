@@ -54,7 +54,7 @@ func Tex003() {
 	tzu, err := dt.TimeZoneDto{}.New(tCDT, dt.TZones.US.Pacific(), dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDto{}.New(tCDT, TZones.US.Pacific()) tCDT='%v'  Error='%v'\n", tCDT.Format(dt.FmtDateTimeYrMDayFmtStr), err.Error())
+		fmt.Printf("Error returned by TimeZoneDto{}.NewStartEndTimes(tCDT, TZones.US.Pacific()) tCDT='%v'  Error='%v'\n", tCDT.Format(dt.FmtDateTimeYrMDayFmtStr), err.Error())
 		return
 	}
 
@@ -385,10 +385,10 @@ func TimeZoneDefExample014() {
 	tBeijing := time.Date(2014, 2, 15, 19, 54, 30, 38175584, beijingLoc)
 	tUsPacific := time.Date(2014, 2, 15, 19, 54, 30, 38175584, usPacificLoc)
 
-	tzDef, err := dt.TimeZoneDefinition{}.New(tUsPacific)
+	tzDef, err := dt.TimeZoneDefinition{}.NewDateTime(tUsPacific)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefinition{}.New(tUsPacific). Error='%v'", err.Error())
+		fmt.Printf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(tUsPacific). Error='%v'", err.Error())
 		return
 	}
 
@@ -532,7 +532,7 @@ func TestExampleNewAddDate023() {
 	t1OutStr := t1.Format(fmtstr)
 	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Pacific(), fmtstr)
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific). Error='%v'", err.Error())
+		fmt.Printf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific). Error='%v'", err.Error())
 		return
 	}
 

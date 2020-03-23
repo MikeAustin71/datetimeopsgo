@@ -14,10 +14,10 @@ func TestDateTzDto_AddDate_01(t *testing.T) {
 
 	expectedOutDate := t1.Format(fmtstr)
 
-	dtz1, err := DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\n" +
 			"Error='%v'", err.Error())
 		return
 	}
@@ -51,10 +51,10 @@ func TestDateTzDto_AddDateToThis_01(t *testing.T) {
 
 	expectedOutDate := t1.Format(fmtstr)
 
-	dtz1, err := DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr). Error='%v'", err.Error())
 		return
 	}
 
@@ -90,10 +90,10 @@ func TestDateTzDto_AddDuration_01(t *testing.T) {
 
 	duration := t2.Sub(t1)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr). Error='%v'", err.Error())
 		return
 	}
 
@@ -129,10 +129,10 @@ func TestDateTzDto_AddDurationToThis_01(t *testing.T) {
 
 	duration := t2.Sub(t1)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v'", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr). Error='%v'", err.Error())
 		return
 	}
 
@@ -177,10 +177,10 @@ func TestDateTzDto_AddTime_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr). Error='%v' ", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr). Error='%v' ", err.Error())
 		return
 	}
 
@@ -232,10 +232,10 @@ func TestDateTzDto_AddTimeToThis_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -286,10 +286,10 @@ func TestDateTzDto_AddDateTime(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\n" +
 			"Error='%v' ", err.Error())
 		return
 	}
@@ -345,10 +345,10 @@ func TestDateTzDto_AddDateTimeToThis_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	dTz1, err := DateTzDto{}.New(t1, fmtstr)
+	dTz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\nError='%v'\n", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\nError='%v'\n", err.Error())
 		return
 	}
 
@@ -390,10 +390,10 @@ func TestDateTzDto_CopyIn_01(t *testing.T) {
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
 
-	dtz1, err := DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1, fmtstr).\nError='%v'\n", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\nError='%v'\n", err.Error())
 		return
 	}
 
@@ -403,10 +403,10 @@ func TestDateTzDto_CopyIn_01(t *testing.T) {
 		t.Errorf("Expected dtz1.String()='%v'. Instead, dtz1.String()='%v'", actualOutStr, t1OutStr)
 	}
 
-	dtz2, err := DateTzDto{}.New(t2, fmtstr)
+	dtz2, err := DateTzDto{}.NewDateTime(t2, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t2, fmtstr).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -433,10 +433,10 @@ func TestDateTzDto_CopyOut(t *testing.T) {
 	t1ExpectedZone, t1ExpectedZoneOffset := t1.Zone()
 	t1ExpectedLocationName := t1.Location().String()
 
-	dTzDtoInitial, err := DateTzDto{}.New(t1, FmtDateTimeYrMDayFmtStr)
+	dTzDtoInitial, err := DateTzDto{}.NewDateTime(t1, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t1).\nError='%v'\n", err.Error())
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t1).\nError='%v'\n", err.Error())
 		return
 	}
 
@@ -534,10 +534,10 @@ func TestDateTzDto_GetConvertibleTzStatusFlags_01(t *testing.T) {
 
 	var dTzDto DateTzDto
 
-	dTzDto, err = DateTzDto{}.New(dateTime, fmtStr)
+	dTzDto, err = DateTzDto{}.NewDateTime(dateTime, fmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(dateTime, fmtStr).\n" +
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(dateTime, fmtStr).\n" +
 			"dateTime='%v'\n" +
 			"Error='%v'\n", dateTime.Format(fmtStr), err.Error())
 		return
@@ -606,10 +606,10 @@ func TestDateTzDto_GetOriginalTagDescription_01(t *testing.T) {
 
 	var dTzDto DateTzDto
 
-	dTzDto, err = DateTzDto{}.New(dateTime, fmtStr)
+	dTzDto, err = DateTzDto{}.NewDateTime(dateTime, fmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(dateTime, fmtStr).\n" +
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(dateTime, fmtStr).\n" +
 			"dateTime='%v'\n" +
 			"Error='%v'\n", dateTime.Format(fmtStr), err.Error())
 		return
@@ -671,10 +671,10 @@ func TestDateTzDto_GetTimeDto_01(t *testing.T) {
 
 	t4USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
-	dTz1, err := DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)
+	dTz1, err := DateTzDto{}.NewDateTime(t4USCentral, FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)")
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(t4USCentral, FmtDateTimeYrMDayFmtStr)")
 		return
 	}
 

@@ -51,7 +51,7 @@ type TimeDto struct {
 	                         //  plus remaining Nanoseconds
 	TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
 	                         //  + Seconds + Milliseconds + Nanoseconds
-	lock          sync.Mutex // Used for coordinating thread safe operations.
+	lock          *sync.Mutex // Used for coordinating thread safe operations.
 }
 
 // AddTimeDto - Adds time to the current TimeDto. The amount of time added
@@ -72,6 +72,10 @@ type TimeDto struct {
 //
 func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto) error {
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	tDto.lock.Lock()
 	
 	defer tDto.lock.Unlock()
@@ -87,6 +91,10 @@ func (tDto *TimeDto) AddTimeDto(t2Dto TimeDto) error {
 // which precisely duplicates the current TimeDto
 // instance, and returns it to the calling function.
 func (tDto *TimeDto) CopyOut() TimeDto {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -105,6 +113,10 @@ func (tDto *TimeDto) CopyOut() TimeDto {
 // completes, 'tDto' will be equivalent to 'tDto2'.
 //
 func (tDto *TimeDto) CopyIn(t2Dto TimeDto) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -128,6 +140,10 @@ func (tDto *TimeDto) CopyIn(t2Dto TimeDto) {
 //
 func (tDto *TimeDto) ConvertToAbsoluteValues() {
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	tDto.lock.Lock()
 
 	defer tDto.lock.Unlock()
@@ -144,6 +160,10 @@ func (tDto *TimeDto) ConvertToAbsoluteValues() {
 // be negative.
 //
 func (tDto *TimeDto) ConvertToNegativeValues() {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -162,6 +182,10 @@ func (tDto *TimeDto) ConvertToNegativeValues() {
 // uninitialized or zero state.
 //
 func (tDto *TimeDto) Empty() {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -183,6 +207,10 @@ func (tDto *TimeDto) Empty() {
 //
 func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	tDto.lock.Lock()
 
 	defer tDto.lock.Unlock()
@@ -201,41 +229,61 @@ func (tDto *TimeDto) Equal(t2Dto TimeDto) bool {
 // Input Parameter
 // ===============
 //
-// timeZoneLocation string - time zone location must be designated as one of three values.
+//   timeZoneLocation  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//   (1) The string 'Local' - selects the local time zone
-//                            location for the host computer.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//   (2) IANA Time Zone Location -
-//      See https://golang.org/pkg/time/#LoadLocation
-//      and https://www.iana.org/time-zones to ensure that
-//      the IANA Time Zone Database is properly configured
-//      on your system. Note: IANA Time Zone Data base is
-//      equivalent to 'tz database'.
-//     Examples:
-//      "America/New_York"
-//      "America/Chicago"
-//      "America/Denver"
-//      "America/Los_Angeles"
-//      "Pacific/Honolulu"
-//      "Etc/UTC" = GMT or UTC
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//    (3) A Military Time Zone
-//        Reference:
-//         https://en.wikipedia.org/wiki/List_of_military_time_zones
-//         http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//         https://www.timeanddate.com/time/zones/military
-//         https://www.timeanddate.com/worldclock/timezone/alpha
-//         https://www.timeanddate.com/time/map/
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//        Examples:
-//          "Alpha"   or A
-//          "Bravo"   or B
-//          "Charlie" or C
-//          "Delta"   or D
-//          "Zulu"    or Z
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//               https://www.timeanddate.com/worldclock/timezone/alpha
+//               https://www.timeanddate.com/time/map/
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
 //
 func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -271,7 +319,12 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 // IsEmpty - Returns 'true' if all data fields in the current
 // TimeDto instance are equal to zero or equal to their
 // uninitialized values.
+//
 func (tDto *TimeDto) IsEmpty() bool {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -284,9 +337,15 @@ func (tDto *TimeDto) IsEmpty() bool {
 	return tDtoUtil.isEmpty(tDto, ePrefix)
 }
 
-// IsValid - Returns an error if the current tDto instance is invalid.
-// Otherwise, if successful, this method returns 'nil'.
+// IsValid - Returns an error if the current tDto instance
+// is invalid. Otherwise, if successful, this method returns
+// 'nil'.
+//
 func (tDto *TimeDto) IsValid() error {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -299,15 +358,35 @@ func (tDto *TimeDto) IsValid() error {
 	return tDtoUtil.isValidDateTimeDto(tDto, ePrefix)
 }
 
-// New - Returns a new TimeDto instance based on time element
-// input parameters.
+// New - Returns a new TimeDto instance where member variables
+// are initialized to their zero values.
+//
+func (tDto TimeDto) New() TimeDto {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	tDto2 := TimeDto{}
+
+	tDto2.lock = new(sync.Mutex)
+
+	return tDto2
+}
+
+// NewTimeComponents - Returns a new TimeDto instance based on granular
+// time component input parameters.
 //
 // Be advised that all time elements are normalized. That is, negative
 // time values are converted and stored as positive time elements suitable
 // for conversion to a date time.
 //
 // Example: Assume you entered a value of -8 weeks and all other
-// New() input parameters were zero value. The normalized TimeDto
+// NewStartEndTimes() input parameters were zero value. The normalized TimeDto
 // value would be converted and stored as:
 //
 //                   Years:  -1
@@ -322,7 +401,7 @@ func (tDto *TimeDto) IsValid() error {
 //            Microseconds:  0
 //             Nanoseconds:  0
 //
-func (tDto TimeDto) New(
+func (tDto TimeDto) NewTimeComponents(
 	years,
 	months,
 	weeks,
@@ -334,11 +413,15 @@ func (tDto TimeDto) New(
 	microseconds,
 	nanoseconds int) (TimeDto, error) {
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	tDto.lock.Lock()
 
 	defer tDto.lock.Unlock()
 
-	ePrefix := "TimeDto.New(...) "
+	ePrefix := "TimeDto.NewTimeComponents(...) "
 
 	t2Dto := TimeDto{}
 
@@ -376,6 +459,10 @@ func (tDto TimeDto) NewTimeElements(
 	minutes,
 	seconds,
 	nanoseconds int) (TimeDto, error) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -434,9 +521,13 @@ func (tDto TimeDto) NewTimeElements(
 //
 // Method 'NewAddTimeDtos' must be called with a pointer. Example:
 //  tDto := TimeDto{}
-// tResultDto, err := tDto.NewAddTimeDtos(t1Dto, t2Dto)
+//  tResultDto, err := tDto.NewAddTimeDtos(t1Dto, t2Dto)
 //
 func (tDto *TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto) (TimeDto, error) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -461,6 +552,10 @@ func (tDto *TimeDto) NewAddTimeDtos(t1Dto, t2Dto TimeDto) (TimeDto, error) {
 // a date time (time.Time) input parameter.
 //
 func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -491,6 +586,10 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 //
 func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	tDto.lock.Lock()
 
 	defer tDto.lock.Unlock()
@@ -516,6 +615,10 @@ func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 //
 func (tDto *TimeDto) NormalizeTimeElements() error {
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	tDto.lock.Lock()
 
 	defer tDto.lock.Unlock()
@@ -535,6 +638,10 @@ func (tDto *TimeDto) NormalizeTimeElements() error {
 // return value is set to true.
 //
 func (tDto *TimeDto) NormalizeDays() (bool, error) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -561,6 +668,10 @@ func (tDto *TimeDto) SetTimeElements(
 	milliseconds,
 	microseconds,
 	nanoseconds int) error {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -590,11 +701,15 @@ func (tDto *TimeDto) SetTimeElements(
 //
 func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 
-	ePrefix := "TimeDto.SetFromDateTimeComponents() "
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
 	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.SetFromDateTimeComponents() "
 
 	if dateTime.IsZero() {
 		return errors.New(ePrefix +
@@ -610,6 +725,10 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 // instance based on a DateTzDto input parameter.
 //
 func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 
@@ -640,6 +759,10 @@ func (tDto *TimeDto) SetFromDateTzDto(dTzDto DateTzDto) error {
 //
 //
 func (tDto *TimeDto) SubTimeDto(t2Dto TimeDto) error {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
 
 	tDto.lock.Lock()
 

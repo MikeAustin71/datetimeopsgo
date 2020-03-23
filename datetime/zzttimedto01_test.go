@@ -22,13 +22,13 @@ func TestTimeDto_AddTimeDto_01(t *testing.T) {
 	TotSubSecNanoseconds := 515539300
 	TotalTimeNanoseconds := int64(82712515539300)
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	t2Dto, err := TimeDto{}.New(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
+	t2Dto, err := TimeDto{}.NewTimeComponents(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
 
 	err = tDto.AddTimeDto(t2Dto)
 
@@ -121,7 +121,7 @@ func TestTimeDto_AddTimeDto_02(t *testing.T) {
 	TotalTimeNanoseconds := int64(time.Second)
 
 	tDto, err :=
-		TimeDto{}.New(
+		TimeDto{}.NewTimeComponents(
 			2019,
 			8,
 			0,
@@ -134,10 +134,10 @@ func TestTimeDto_AddTimeDto_02(t *testing.T) {
 			0)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	t2Dto, err := TimeDto{}.New(
+	t2Dto, err := TimeDto{}.NewTimeComponents(
 		0,
 		-2,
 		0,
@@ -224,10 +224,10 @@ func TestTimeDto_AddTimeDto_02(t *testing.T) {
 
 func TestTimeDto_CopyOut_01(t *testing.T) {
 
-	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	t0Dto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'", err.Error())
 		return
 	}
@@ -286,16 +286,16 @@ func TestTimeDto_CopyOut_01(t *testing.T) {
 
 func TestTimeDto_CopyIn_01(t *testing.T) {
 
-	t0Dto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	t0Dto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	tDto, err := TimeDto{}.New(2014, 9, 0, 14, 5, 5, 19, 850, 850, 850)
+	tDto, err := TimeDto{}.NewTimeComponents(2014, 9, 0, 14, 5, 5, 19, 850, 850, 850)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2014, 9, 0, 14, 5, 5,19,850,850,850).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2014, 9, 0, 14, 5, 5,19,850,850,850).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -354,10 +354,10 @@ func TestTimeDto_CopyIn_01(t *testing.T) {
 
 func TestTimeDto_ConvertToNegativeValues(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -415,10 +415,10 @@ func TestTimeDto_ConvertToNegativeValues(t *testing.T) {
 }
 
 func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -527,10 +527,10 @@ func TestTimeDto_ConvertToAbsoluteValues_01(t *testing.T) {
 
 func TestTimeDto_Empty(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -637,10 +637,10 @@ func TestTimeDto_Empty(t *testing.T) {
 
 func TestTimeDto_Equal_01(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -702,10 +702,10 @@ func TestTimeDto_Equal_01(t *testing.T) {
 
 func TestTimeDto_Equal_02(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -781,14 +781,14 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 	microsecond := 0
 	totNanoSecs := 515539300
 
-	tDto, err := TimeDto{}.New(year, month, 0, dateDay, hour, minute, second, millisecond, microsecond, totNanoSecs)
+	tDto, err := TimeDto{}.NewTimeComponents(year, month, 0, dateDay, hour, minute, second, millisecond, microsecond, totNanoSecs)
 
 	millisecond = 515
 	microsecond = 539
 	nanosecond := 300
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -883,10 +883,10 @@ func TestTimeDto_New_01(t *testing.T) {
 		Total Nanoseconds:  515539300
 		========================================
 	*/
-	tDto, err := TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -943,10 +943,10 @@ func TestTimeDto_New_01(t *testing.T) {
 
 func TestTimeDto_New_02(t *testing.T) {
 
-	tDto, err := TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
+	tDto, err := TimeDto{}.NewTimeComponents(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
 
 	if err != nil {
-		t.Errorf("Error returned from TimeDto{}.New()\nWeeks=-8.\nError='%v'\n", err.Error())
+		t.Errorf("Error returned from TimeDto{}.NewStartEndTimes()\nWeeks=-8.\nError='%v'\n", err.Error())
 		return
 	}
 

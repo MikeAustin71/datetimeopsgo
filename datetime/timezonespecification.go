@@ -59,7 +59,7 @@ type TimeZoneSpecification struct {
 	//                                                  TzUtcStatus.Static()
 	//                                                  TzUtcStatus.Variable()
 	//
-	lock sync.Mutex // Used for implementing thread safe operations.
+	lock *sync.Mutex       // Used for implementing thread safe operations.
 }
 
 // CopyIn - Copies the values of input parameter 'tzSpec2'
@@ -69,11 +69,15 @@ type TimeZoneSpecification struct {
 //
 func (tzSpec *TimeZoneSpecification) CopyIn(tzSpec2 TimeZoneSpecification) {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
 
-	tzSpecUtil := typeZoneSpecUtility{}
+	tzSpecUtil := timeZoneSpecUtility{}
 
 	tzSpecUtil.copyIn(tzSpec, &tzSpec2)
 
@@ -85,11 +89,15 @@ func (tzSpec *TimeZoneSpecification) CopyIn(tzSpec2 TimeZoneSpecification) {
 //
 func (tzSpec *TimeZoneSpecification) CopyOut() TimeZoneSpecification {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
 
-	tzSpecUtil := typeZoneSpecUtility{}
+	tzSpecUtil := timeZoneSpecUtility{}
 
 	return tzSpecUtil.copyOut(tzSpec)
 }
@@ -99,11 +107,15 @@ func (tzSpec *TimeZoneSpecification) CopyOut() TimeZoneSpecification {
 //
 func (tzSpec *TimeZoneSpecification) Empty() {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
 
-	tzSpecUtil := typeZoneSpecUtility{}
+	tzSpecUtil := timeZoneSpecUtility{}
 
 	tzSpecUtil.empty(tzSpec)
 
@@ -121,11 +133,15 @@ func (tzSpec *TimeZoneSpecification) Empty() {
 //
 func (tzSpec *TimeZoneSpecification) Equal( tzSpec2 TimeZoneSpecification) bool {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
 
-	tzSpecUtil := typeZoneSpecUtility{}
+	tzSpecUtil := timeZoneSpecUtility{}
 
 	return tzSpecUtil.equal(tzSpec, tzSpec2)
 }
@@ -135,64 +151,29 @@ func (tzSpec *TimeZoneSpecification) Equal( tzSpec2 TimeZoneSpecification) bool 
 // values.
 func (tzSpec *TimeZoneSpecification) IsEmpty() bool {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
 
-	if 	!tzSpec.referenceDateTime.IsZero() {
-		return false
-	}
+	ePrefix := "TimeZoneSpecification.IsEmpty()"
 
-	if 	tzSpec.zoneOffsetTotalSeconds != 0 ||
-		tzSpec.zoneSignValue != 0 ||
-		tzSpec.offsetHours != 0 ||
-		tzSpec.offsetMinutes != 0 ||
-		tzSpec.offsetSeconds != 0 {
-		return false
-	}
+	tzSpecUtil := timeZoneSpecUtility{}
 
-
-	if tzSpec.zoneLabel != "" ||
-	tzSpec.zoneName != "" ||
-	tzSpec.zoneOffset != "" ||
-	tzSpec.zoneAbbrvLookupId != "" ||
-	tzSpec.utcOffset != "" {
-		return false
-	}
-
-	if tzSpec.locationPtr != nil ||
-		tzSpec.locationName != "" {
-		return false
-	}
-
-	if tzSpec.militaryTimeZoneName != "" ||
-		tzSpec.militaryTimeZoneLetter != "" {
-		return false
-	}
-
-	if tzSpec.locationNameType != LocNameType.None(){
-		return false
-	}
-
-	if tzSpec.timeZoneType != TzType.None() {
-		return false
-	}
-
-	if tzSpec.timeZoneClass != TzClass.None() {
-		return false
-	}
-
-	if tzSpec.tagDescription != "" {
-		return false
-	}
-
-	return true
+	return tzSpecUtil.isEmpty(tzSpec, ePrefix)
 }
 
 // IsValid - Examines the data fields of the current
 // TimeZoneSpecification instance are valid.
 //
 func (tzSpec *TimeZoneSpecification) IsValid(ePrefix string) error {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -255,6 +236,10 @@ func (tzSpec *TimeZoneSpecification) IsValid(ePrefix string) error {
 //
 func (tzSpec *TimeZoneSpecification) GetLocationPointer() *time.Location {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -266,6 +251,10 @@ func (tzSpec *TimeZoneSpecification) GetLocationPointer() *time.Location {
 // Examples: "Local", "America/Chicago", "America/New_York"
 //
 func (tzSpec *TimeZoneSpecification) GetLocationName() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -299,6 +288,10 @@ func (tzSpec *TimeZoneSpecification) GetLocationName() string {
 //
 func (tzSpec *TimeZoneSpecification) GetLocationNameType() LocationNameType {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -315,6 +308,14 @@ func (tzSpec *TimeZoneSpecification) GetLocationNameType() LocationNameType {
 //
 func (tzSpec *TimeZoneSpecification) GetMilitaryOrStdTimeZoneName() string {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
 	if tzSpec.timeZoneType == TzType.Military() {
 		return tzSpec.militaryTimeZoneName
 	}
@@ -328,6 +329,10 @@ func (tzSpec *TimeZoneSpecification) GetMilitaryOrStdTimeZoneName() string {
 // is an empty string.
 //
 func (tzSpec *TimeZoneSpecification) GetMilitaryTimeZoneName() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -343,6 +348,10 @@ func (tzSpec *TimeZoneSpecification) GetMilitaryTimeZoneName() string {
 //
 func (tzSpec *TimeZoneSpecification) GetMilitaryTimeZoneLetter() string {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -354,34 +363,35 @@ func (tzSpec *TimeZoneSpecification) GetMilitaryTimeZoneLetter() string {
 // values which taken collectively identify the offset from
 // UTC for this time zone.
 //
-// ------------------------------------------------------------
+//
+// ------------------------------------------------------------------------
 //
 // Return Values
-// =============
 //
-// offsetSignChar string - Like return value offsetSignValue, this string
-//                         value signals whether the offset from UTC is West
-//                         or East of UTC. This string will always have one of
-//                         two values: "+" or "-". The plus sign ("+") signals
-//                         that the offset is East of UTC. The minus sign ("-")
-//                         signals that the offset is West of UTC.
 //
-// offsetSignValue int  - Similar to return value 'offsetSignChar' above except
-//                        that sign values are expressed as either a '-1' or positive
-//                        '1' integer value. -1 == West of UTC  +1 == East of UTC.
-//                        Apply this sign value to the offset hours, minutes and
-//                        seconds value returned below.
+//  offsetSignChar string - Like return value offsetSignValue, this string
+//                          value signals whether the offset from UTC is West
+//                          or East of UTC. This string will always have one of
+//                          two values: "+" or "-". The plus sign ("+") signals
+//                          that the offset is East of UTC. The minus sign ("-")
+//                          signals that the offset is West of UTC.
 //
-// offsetHours     int  - Normalized Offset Hours from UTC. Always a positive number,
-//                        refer to ZoneSign for correct sign value.
+//  offsetSignValue int  - Similar to return value 'offsetSignChar' above except
+//                         that sign values are expressed as either a '-1' or positive
+//                         '1' integer value. -1 == West of UTC  +1 == East of UTC.
+//                         Apply this sign value to the offset hours, minutes and
+//                         seconds value returned below.
 //
-// offsetMinutes   int  - Normalized Offset Minutes offset from UTC. Always a
-//                        positive number, refer to ZoneSign for the correct
-//                        sign value.
+//  offsetHours     int  - Normalized Offset Hours from UTC. Always a positive number,
+//                         refer to ZoneSign for correct sign value.
 //
-// offsetSeconds   int  - Normalized Offset Seconds offset from UTC. Always a
-//                        positive number, refer to ZoneSign for the correct
-//                        sign value.
+//  offsetMinutes   int  - Normalized Offset Minutes offset from UTC. Always a
+//                         positive number, refer to ZoneSign for the correct
+//                         sign value.
+//
+//  offsetSeconds   int  - Normalized Offset Seconds offset from UTC. Always a
+//                         positive number, refer to ZoneSign for the correct
+//                         sign value.
 //
 func (tzSpec *TimeZoneSpecification) GetOffsetElements() (
 	offsetSignChar string,
@@ -389,6 +399,10 @@ func (tzSpec *TimeZoneSpecification) GetOffsetElements() (
 	offsetHours,
 	offsetMinutes,
 	offsetSeconds int) {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -416,6 +430,10 @@ func (tzSpec *TimeZoneSpecification) GetOffsetElements() (
 //
 func (tzSpec *TimeZoneSpecification) GetReferenceDateTime() time.Time {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -429,6 +447,10 @@ func (tzSpec *TimeZoneSpecification) GetReferenceDateTime() time.Time {
 // to this TimeZoneSpecification instance.
 //
 func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -445,6 +467,10 @@ func (tzSpec *TimeZoneSpecification) GetTagDescription() string {
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneAbbreviation() string {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -457,7 +483,7 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneAbbreviation() string {
 // Time Zone Category is an enumeration identifying the time zone by
 // category of time zone name.
 //
-// Possible Values:
+// Possible Return Values:
 //
 //  TimeZoneCategory(0).None()       -  Signals that Time Zone Category is uninitialized.
 //                                      This represents an error condition.
@@ -481,6 +507,10 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneAbbreviation() string {
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneCategory() TimeZoneCategory {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -492,7 +522,7 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneCategory() TimeZoneCategory {
 // Time Zone Class is an enumeration identifying the time zone
 // status.
 //
-// Possible Values:
+// Possible Return Values:
 //
 // TimeZoneClass(0).None()              - An Error Condition
 //
@@ -506,6 +536,10 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneCategory() TimeZoneCategory {
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneClass() TimeZoneClass {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -517,6 +551,10 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneClass() TimeZoneClass {
 // as the Time Zone 'Location' Name.
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneName() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -535,6 +573,10 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneSpecFlags() (
 	TimeZoneClass,
 	TimeZoneType,
 	TimeZoneUtcOffsetStatus) {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -567,6 +609,10 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneSpecFlags() (
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneType() TimeZoneType {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -580,7 +626,7 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneType() TimeZoneType {
 // Savings Time have a UTC Offset which varies at different times of the
 // year.
 //
-// Possible return types.
+// Possible return values:
 //
 // TimeZoneUtcOffsetStatus(0).None()
 //               - Signals that Time Zone UTC Offset
@@ -609,6 +655,10 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneType() TimeZoneType {
 //
 func (tzSpec *TimeZoneSpecification) GetTimeZoneUtcOffsetStatus() TimeZoneUtcOffsetStatus {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -622,6 +672,10 @@ func (tzSpec *TimeZoneSpecification) GetTimeZoneUtcOffsetStatus() TimeZoneUtcOff
 //  Examples: "-0600", "+0200"
 //
 func (tzSpec *TimeZoneSpecification) GetUtcOffset() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -640,6 +694,10 @@ func (tzSpec *TimeZoneSpecification) GetUtcOffset() string {
 //
 func (tzSpec *TimeZoneSpecification) GetZoneAbbrvLookupId() string {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -651,6 +709,10 @@ func (tzSpec *TimeZoneSpecification) GetZoneAbbrvLookupId() string {
 // description field available for use by the user.
 //
 func (tzSpec *TimeZoneSpecification) GetZoneLabel() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -666,6 +728,10 @@ func (tzSpec *TimeZoneSpecification) GetZoneLabel() string {
 //   'EST', 'CST', 'PST', 'EDT', 'CDT', 'PDT'
 //
 func (tzSpec *TimeZoneSpecification) GetZoneName() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -684,6 +750,10 @@ func (tzSpec *TimeZoneSpecification) GetZoneName() string {
 //
 func (tzSpec *TimeZoneSpecification) GetZoneOffset() string {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -697,6 +767,10 @@ func (tzSpec *TimeZoneSpecification) GetZoneOffset() string {
 // Negative ('-') values identify seconds West of UTC.
 //
 func (tzSpec *TimeZoneSpecification) GetZoneOffsetTotalSeconds() int {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -715,6 +789,10 @@ func (tzSpec *TimeZoneSpecification) GetZoneOffsetTotalSeconds() int {
 // values for offset hours, minutes and seconds.
 //
 func (tzSpec *TimeZoneSpecification) GetZoneSignChar() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -737,6 +815,10 @@ func (tzSpec *TimeZoneSpecification) GetZoneSignChar() string {
 //
 func (tzSpec *TimeZoneSpecification) GetZoneSignValue() int {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -744,9 +826,42 @@ func (tzSpec *TimeZoneSpecification) GetZoneSignValue() int {
 	return tzSpec.zoneSignValue
 }
 
-// New - Returns a new instance of TimeZoneSpecification.
+// New - Returns a new TimeZoneSpecification instance with member
+// variables initialized to zero values.
 //
-func (tzSpec TimeZoneSpecification) New(
+func (tzSpec TimeZoneSpecification) New() TimeZoneSpecification {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()
+
+	tzSpec2 := TimeZoneSpecification{}
+
+	tzSpec2.lock = new(sync.Mutex)
+
+	tzSpec2.locationPtr = time.UTC
+
+	return tzSpec2
+}
+
+// NewRefDate - Returns a new instance of TimeZoneSpecification
+// based on a reference date time input parameter.
+//
+// Input parameter 'referenceDateTime' is used to extract the
+// time zone name. If parameters 'militaryTimeZoneName' or
+// 'militaryTimeZoneLetter' are populated, they will control
+// and an associated military time zone definition will be
+// created.
+//
+// Note: Input parameters zoneLabel and 'tagDescription' are
+// available to the user for adding descriptive narrative text
+// to this TimeZoneSpecification instance.
+//
+func (tzSpec TimeZoneSpecification) NewRefDate(
 	referenceDateTime      time.Time,
 	militaryTimeZoneName   string,
 	militaryTimeZoneLetter string,
@@ -755,15 +870,22 @@ func (tzSpec TimeZoneSpecification) New(
 	timeZoneClass          TimeZoneClass,
 	ePrefix string) (TimeZoneSpecification, error) {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
 
-	ePrefix += "TimeZoneSpecification.New() "
+	ePrefix += "TimeZoneSpecification.NewRefDate() "
+
+	tzSpecUtil := timeZoneSpecUtility{}
 
 	tzSpecOut := TimeZoneSpecification{}
 
-	err := tzSpecOut.SetTimeZone(
+	err := tzSpecUtil.setTimeZone(
+		&tzSpecOut,
 		referenceDateTime,
 		militaryTimeZoneName,
 		militaryTimeZoneLetter,
@@ -783,6 +905,10 @@ func (tzSpec TimeZoneSpecification) New(
 //
 func (tzSpec *TimeZoneSpecification) SetTagDescription(tagDescription string) {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -795,6 +921,10 @@ func (tzSpec *TimeZoneSpecification) SetTagDescription(tagDescription string) {
 // by the user.
 //
 func (tzSpec *TimeZoneSpecification) SetZoneLabel() string {
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
 
 	tzSpec.lock.Lock()
 
@@ -815,6 +945,10 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 	timeZoneClass          TimeZoneClass,
 	ePrefix string) error {
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	tzSpec.lock.Lock()
 
 	defer tzSpec.lock.Unlock()
@@ -831,7 +965,7 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 		}
 	}
 
-	tzSpecUtil := typeZoneSpecUtility{}
+	tzSpecUtil := timeZoneSpecUtility{}
 
 	return tzSpecUtil.setTimeZone(
 		tzSpec,
@@ -842,122 +976,4 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 		tagDescription,
 		timeZoneClass,
 		ePrefix)
-
-	/*
-	tzSpecUtil.empty(tzSpec)
-
-	tzMech := TimeZoneMechanics{}
-  var err error
-
-
-	tzSpec.zoneName,
-		tzSpec.zoneOffset,
-		tzSpec.utcOffset,
-		tzSpec.zoneAbbrvLookupId,
-		tzSpec.offsetHours,
-		tzSpec.offsetMinutes,
-		tzSpec.offsetSeconds,
-		tzSpec.zoneSignValue,
-		tzSpec.zoneOffsetTotalSeconds,
-		tzSpec.locationPtr,
-		tzSpec.locationName,
-		err = tzMech.CalcUtcZoneOffsets(referenceDateTime, ePrefix)
-
-
-	var timeZoneType TimeZoneType
-	var ok bool
-
-	if err != nil {
-		tzSpecUtil.empty(tzSpec)
-		return err
-	}
-
-	locNameType := LocationNameType(0).ConvertibleTimeZone()
-
-	dtMech := DTimeMechanics{}
-
-	// Test For Location Name Type
-	_, err = dtMech.LoadTzLocation(tzSpec.locationName, ePrefix)
-
-	if err != nil {
-		locNameType = LocationNameType(0).NonConvertibleTimeZone()
-	}
-
-	// Test for Time Zone Type
-	if len(militaryTimeZoneName) > 0 ||
-			len(militaryTimeZoneLetter) > 0 {
-
-		var foundMilTextName string
-
-		milTzDat := MilitaryTimeZoneData{}
-
-		foundMilTextName, ok = milTzDat.MilTzLetterToTextName(militaryTimeZoneLetter)
-
-		if !ok {
-
-			tzSpecUtil.empty(tzSpec)
-
-			return fmt.Errorf(ePrefix +
-				"\nInput parameter 'militaryTimeZoneLetter' is Invalid!\n" +
-				"militaryTimeZoneLetter='%v'\n", militaryTimeZoneLetter)
-		}
-
-		if foundMilTextName != militaryTimeZoneName {
-
-			tzSpecUtil.empty(tzSpec)
-
-			return fmt.Errorf(ePrefix +
-				"\nInput parameter 'militaryTimeZoneName' is Invalid!\n" +
-				"militaryTimeZoneName='%v'\n" +
-				"The correct military Time Zone Name is '%v'\n",
-				militaryTimeZoneName, foundMilTextName)
-		}
-
-		timeZoneType = TzType.Military()
-
-	} else if strings.ToLower(tzSpec.locationName) == "local" {
-
-		timeZoneType = TzType.Local()
-
-	} else {
-
-		timeZoneType = TzType.Iana()
-
-	}
-
-	// Test for Time Zone Utc Offset Status
-	var tzUtcOffsetStatus TimeZoneUtcOffsetStatus
-
-	tzUtcOffsetStatus, err = tzMech.GetTimeZoneUtcOffsetStatus(tzSpec.locationPtr, ePrefix)
-
-	if err != nil {
-		tzSpecUtil.empty(tzSpec)
-		return err
-	}
-
-	// Test for Time Zone Category
-	var tzCategory TimeZoneCategory
-
-	firstLetter := tzSpec.locationName[0:1]
-
-	if firstLetter == "+" ||
-		firstLetter == "-" {
-		tzCategory = TimeZoneCategory(0).UtcOffset()
-	} else {
-		tzCategory = TimeZoneCategory(0).TextName()
-	}
-
-	tzSpec.referenceDateTime = referenceDateTime
-	tzSpec.zoneLabel = zoneLabel
-	tzSpec.militaryTimeZoneLetter = militaryTimeZoneLetter
-	tzSpec.militaryTimeZoneName = militaryTimeZoneName
-	tzSpec.tagDescription = tagDescription
-	tzSpec.locationNameType = locNameType
-	tzSpec.timeZoneCategory = tzCategory
-	tzSpec.timeZoneClass = timeZoneClass
-	tzSpec.timeZoneType = timeZoneType
-	tzSpec.timeZoneUtcOffsetStatus = tzUtcOffsetStatus
-
-	return nil
-	*/
 }

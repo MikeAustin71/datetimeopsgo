@@ -2648,12 +2648,12 @@ func (mexic mexicoTimeZones) General() string {return "Mexico/General" }
 // UTC+9         I        (Tokyo, Australia)
 // UTC+10        K        (Brisbane, Australia)
 // UTC+11        L        (Sydney, Australia)
-// UTC+12        M        (Wellington, New Zealand)
+// UTC+12        M        (Wellington, NewStartEndTimes Zealand)
 // UTC-1         N        (Azores)
 // UTC-2         O        (Godthab, Greenland)
 // UTC-3         P        (Buenos Aires, Argentina)
 // UTC-4         Q        (Halifax, Nova Scotia)
-// UTC-5         R        (EST, New York, NY)
+// UTC-5         R        (EST, NewStartEndTimes York, NY)
 // UTC-6         S        (CST, Dallas, TX)
 // UTC-7         T        (MST, Denver, CO)
 // UTC-8         U        (PST, Los Angeles, CA)
@@ -2954,7 +2954,7 @@ func (milTz militaryTimeZones) Lima() string {return "Etc/GMT-11" }
 // Offset from Universal Coordinated Time (UTC) is computed at
 // UTC+12 hours. 
 //  
-// Time Zone Location: Wellington, New Zealand
+// Time Zone Location: Wellington, NewStartEndTimes Zealand
 // 
 // For a map of Military Time Zone Locations reference:
 //  
@@ -3074,7 +3074,7 @@ func (milTz militaryTimeZones) Quebec() string {return "Etc/GMT+4" }
 // Offset from Universal Coordinated Time (UTC) is computed at
 // UTC-5 hours. 
 //  
-// Time Zone Location: EST, New York, NY
+// Time Zone Location: EST, NewStartEndTimes York, NY
 // 
 // For a map of Military Time Zone Locations reference:
 //  

@@ -327,7 +327,7 @@ func (milDtDto *MilitaryDateTzDto) GetOpenDateTimeGroup() (string, error) {
 	return fmtDateTime, nil
 }
 
-// New - Creates and returns a new instance of MilitaryDateTzDto.
+// NewStartEndTimes - Creates and returns a new instance of MilitaryDateTzDto.
 // The values for the new returned instance are calculated from
 // the two input parameters 't' and 'militaryTz'.
 //
@@ -382,12 +382,12 @@ func (milDtDto *MilitaryDateTzDto) GetOpenDateTimeGroup() (string, error) {
 //
 // Usage
 //
-//  milDtTzDto, err := MilitaryDateTzDto{}.New(t, militaryTz)
+//  milDtTzDto, err := MilitaryDateTzDto{}.NewStartEndTimes(t, militaryTz)
 //
 func (milDtDto MilitaryDateTzDto) New(
 	t time.Time, militaryTz string) (MilitaryDateTzDto, error) {
 
-	ePrefix := "MilitaryDateTzDto.New() "
+	ePrefix := "MilitaryDateTzDto.NewStartEndTimes() "
 
 	newMilDateDto := MilitaryDateTzDto{}
 

@@ -9,7 +9,7 @@ import (
 )
 
 type DTimeMechanics struct {
-	lock sync.Mutex
+	lock *sync.Mutex
 }
 
 // AbsoluteTimeToTimeZoneDefConversion - Converts a given time to
@@ -56,6 +56,10 @@ func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneDefConversion(
 	dateTime time.Time,
 	timeZoneDefDto TimeZoneDefinition) (time.Time, error) {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
 	dtMech.lock.Lock()
 
 	defer dtMech.lock.Unlock()
@@ -67,7 +71,6 @@ func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneDefConversion(
 			errors.New(ePrefix +
 				"\nError: Input parameter 'dateTime' is zero!")
 	}
-
 
 	if err := timeZoneDefDto.IsValid(); err != nil {
 		return time.Time{},
@@ -127,6 +130,10 @@ func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
 	dateTime time.Time,
 	timeZoneName string,
 	ePrefix string) (time.Time, error) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
 
 	dtMech.lock.Lock()
 
@@ -191,6 +198,10 @@ func (dtMech *DTimeMechanics) AddDateTime(
 	microseconds,
 	nanoseconds int) time.Time {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
 	dtMech.lock.Lock()
 
 	defer dtMech.lock.Unlock()
@@ -237,6 +248,10 @@ func (dtMech *DTimeMechanics) AddDateTimeByUtc(
 	microseconds,
 	nanoseconds int) time.Time {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
 	dtMech.lock.Lock()
 
 	defer dtMech.lock.Unlock()
@@ -279,6 +294,10 @@ func (dtMech *DTimeMechanics) AddDurationByUtc(
 	baseDateTime time.Time,
 	timeDuration time.Duration) time.Time {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
 	dtMech.lock.Lock()
 
 	defer dtMech.lock.Unlock()
@@ -299,6 +318,10 @@ func (dtMech *DTimeMechanics) AddDurationByUtc(
 //
 func (dtMech *DTimeMechanics) AllocateSecondsToHrsMinSecs(
 	signedTotalSeconds int) (hours, minutes, seconds, sign int) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
 
 	dtMech.lock.Lock()
 
@@ -344,6 +367,14 @@ func (dtMech *DTimeMechanics) ComputeDurationUtc(
 	endTime time.Time,
 	ePrefix string) (time.Duration, error) {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
 	if endTime.Before(startTime) {
 		return time.Duration(0),
 			&InputParameterError{
@@ -376,6 +407,14 @@ func (dtMech *DTimeMechanics) GetDurationFromTimeComponents(
 	microseconds,
 	nanoseconds int) time.Duration {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
 	totNanosecs := int64(days) * DayNanoSeconds
 	totNanosecs += int64(hours) * HourNanoSeconds
 	totNanosecs += int64(minutes) * MinuteNanoSeconds
@@ -400,6 +439,10 @@ func (dtMech *DTimeMechanics) GetTimeZoneFromDateTime(
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
 
 	dtMech.lock.Lock()
 
@@ -464,6 +507,10 @@ func (dtMech *DTimeMechanics) GetTimeZoneFromName(
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
 
 	dtMech.lock.Lock()
 
@@ -549,6 +596,10 @@ func (dtMech *DTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	tzAbbrv string,
 	err error) {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
 	dtMech.lock.Lock()
 
 	defer dtMech.lock.Unlock()
@@ -593,6 +644,10 @@ func (dtMech *DTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 func (dtMech *DTimeMechanics) LoadTzLocation(
 	timeZoneName string,
 	ePrefix string) (*time.Location, error) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
 
 	dtMech.lock.Lock()
 
@@ -720,6 +775,10 @@ func (dtMech *DTimeMechanics) ConvertTimeToNewTimeZoneName(
 	timeConversionType TimeZoneConversionType,
 	tZoneLocationName string) (time.Time, error) {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
 	dtMech.lock.Lock()
 
 	defer dtMech.lock.Unlock()
@@ -786,6 +845,10 @@ func (dtMech *DTimeMechanics) RelativeTimeToTimeNameZoneConversion(
 	timeZoneName string,
 	ePrefix string) (time.Time, error) {
 
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
 	dtMech.lock.Lock()
 
 	defer dtMech.lock.Unlock()
@@ -839,6 +902,10 @@ func (dtMech *DTimeMechanics) RelativeTimeToTimeNameZoneConversion(
 //
 func (dtMech *DTimeMechanics) PreProcessDateFormatStr(
 	dateTimeFmtStr string) string {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
 
 	dtMech.lock.Lock()
 

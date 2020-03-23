@@ -211,7 +211,7 @@ func TestTimeDto_SubTimeDto_01(t *testing.T) {
 	TotalTimeNanoseconds := int64(time.Second)
 
 	tDto, err :=
-		TimeDto{}.New(
+		TimeDto{}.NewTimeComponents(
 			2019,
 			8,
 			0,
@@ -224,10 +224,10 @@ func TestTimeDto_SubTimeDto_01(t *testing.T) {
 			0)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
+		t.Errorf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'", err.Error())
 	}
 
-	t2Dto, err := TimeDto{}.New(
+	t2Dto, err := TimeDto{}.NewTimeComponents(
 		0,
 		2,
 		0,

@@ -1,0 +1,212 @@
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+
+
+//
+//    type TimeDto struct {
+//       Years                int // Number of Years
+//       Months               int // Number of Months
+//       Weeks                int // Number of Weeks
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//       Hours                int // Number of Hours.
+//       Minutes              int // Number of Minutes
+//       Seconds              int // Number of Seconds
+//       Milliseconds         int // Number of Milliseconds
+//       Microseconds         int // Number of Microseconds
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
+//
+//    Type 'TimeDto' is located in source file:
+//       datetimeopsgo\datetime\timedto.go
+//
+
+
+
+//
+//  tDurCalcType TDurCalcType
+//     - Specifies the calculation type to be used in allocating
+//       time duration:
+//
+//       TDurCalcType(0).StdYearMth()
+//         - Default - standard year, month week, day time calculation.
+//
+//       TDurCalcType(0).CumMonths()
+//         - Computes cumulative months - no Years.
+//
+//       TDurCalcType(0).CumWeeks()
+//         - Computes cumulative weeks. No Years or months
+//
+//       TDurCalcType(0).CumDays()
+//         - Computes cumulative days. No Years, months or weeks.
+//
+//       TDurCalcType(0).CumHours()
+//         - Computes cumulative hours. No Years, months, weeks or days.
+//
+//       TDurCalcType(0).CumMinutes()
+//         - Computes cumulative minutes. No Years, months, weeks, days
+//           or hours.
+//
+//       TDurCalcType(0).CumSeconds()
+//         - Computes cumulative seconds. No Years, months, weeks, days,
+//           hours or minutes.
+//
+//       TDurCalcType(0).GregorianYears()
+//         - Computes Years based on average length of a Gregorian Year
+//           Used for very large duration values.
+//
+//           Type 'TDurCalcType' is located in source file:
+//              MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+
+//
+//   timeConversionType TimeZoneConversionType -
+//          This parameter determines the algorithm that will
+//          be used to convert parameter 'dateTime' to the time
+//          zone specified by parameter 'tzSpec'.
+//
+//          TimeZoneConversionType is an enumeration type which
+//          must be set to one of two values:
+//             TimeZoneConversionType(0).Absolute()
+//             TimeZoneConversionType(0).Relative()
+//          Note: You can also use the global variable
+//          'TzConvertType' for easier access:
+//             TzConvertType.Absolute()
+//             TzConvertType.Relative()
+//
+//          Absolute Time Conversion - Identifies the 'Absolute' time
+//          to time zone conversion algorithm. This algorithm provides
+//          that a time value in time zone 'X' will be converted to the
+//          same time value in time zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time
+//          zone USA Central Standard time and that this time is to be
+//          converted to USA Eastern Standard time. Applying the 'Absolute'
+//          algorithm would convert ths time to 10:00AM Eastern Standard
+//          time.  In this case the hours, minutes and seconds have not been
+//          altered. 10:00AM in USA Central Standard Time has simply been
+//          reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//          Relative Time Conversion - Identifies the 'Relative' time to time
+//          zone conversion algorithm. This algorithm provides that times in
+//          time zone 'X' will be converted to their equivalent time in time
+//          zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time zone
+//          USA Central Standard time and that this time is to be converted to
+//          USA Eastern Standard time. Applying the 'Relative' algorithm would
+//          convert ths time to 11:00AM Eastern Standard time. In this case the
+//          hours, minutes and seconds have been changed to reflect an equivalent
+//          time in the USA Eastern Standard Time Zone.
+//
+
+
+//
+//   timeZoneLocation  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//               https://www.timeanddate.com/worldclock/timezone/alpha
+//               https://www.timeanddate.com/time/map/
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+
+//
+// Note:
+//         'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
+//         standard year month day time duration allocation.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//         TZones.US.Central() is equivalent to "America/Chicago"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
+	tzSpec.lock.Lock()
+
+	defer tzSpec.lock.Unlock()

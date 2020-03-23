@@ -8,7 +8,7 @@ import (
 )
 
 type TimeZoneMechanics struct {
-	lock sync.Mutex
+	lock *sync.Mutex
 }
 
 // AllocateOffsetSeconds - Designed to calculate offset hours,
@@ -25,6 +25,10 @@ func (tzMech *TimeZoneMechanics) AllocateOffsetSeconds(
 	minutes,
 	seconds,
 	sign int) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -68,6 +72,10 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 	tzIsConvertible bool,
 	convertibleDateTime time.Time,
 	err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -332,6 +340,10 @@ func (tzMech *TimeZoneMechanics) CalcUtcZoneOffsets(
 	locationName string,
 	err error) {
 
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
+
 	tzMech.lock.Lock()
 
 	defer tzMech.lock.Unlock()
@@ -497,6 +509,10 @@ func (tzMech *TimeZoneMechanics) ConvertTzAbbreviationToTimeZone(
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -714,6 +730,10 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 	ePrefix string) (
 	staticTimeZone TimeZoneSpecification,
 	err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -973,6 +993,10 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 func (tzMech *TimeZoneMechanics) IsTzAbbrvUtcOffset(
 	timeZoneAbbreviation string ) bool {
 
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
+
 	tzMech.lock.Lock()
 
 	defer tzMech.lock.Unlock()
@@ -1012,6 +1036,10 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -1145,6 +1173,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -1353,6 +1385,12 @@ err = nil
 // If the time zone "Zulu" is passed to this method, it will be
 // classified as a Military Time Zone.
 //
+// Note:
+// The source file 'timezonedata.go' contains over 600 constant
+// time zone declarations covering all IANA and Military Time
+// Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+// time zone constants begin with the prefix 'TZones'.
+//
 func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 	dateTime time.Time,
 	timeZoneName string,
@@ -1360,6 +1398,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -1543,11 +1585,15 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneUtcOffsetStatus(
 	locationPtr *time.Location,
 	ePrefix string) (TimeZoneUtcOffsetStatus, error) {
 
-	ePrefix += "TimeZoneMechanics.GetTimeZoneUtcOffsetStatus() "
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
 	defer tzMech.lock.Unlock()
+
+	ePrefix += "TimeZoneMechanics.GetTimeZoneUtcOffsetStatus() "
 
 	if locationPtr == nil {
 		return TimeZoneUtcOffsetStatus(0).None(),
@@ -1609,6 +1655,10 @@ func (tzMech *TimeZoneMechanics) GetTzAbbrvLookupIdFromDateTime(
 	tzAbbrvLookupId string,
 	err error) {
 
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
+
 	tzMech.lock.Lock()
 
 	defer tzMech.lock.Unlock()
@@ -1666,6 +1716,10 @@ func (tzMech *TimeZoneMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	ePrefix string) (
 	utcOffset,
 	tzAbbrv string, err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -1729,6 +1783,10 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 	ePrefix string) (
 	tzSpec TimeZoneSpecification,
 	err error) {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 
@@ -1906,6 +1964,10 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 //
 func (tzMech *TimeZoneMechanics) PreProcessTimeZoneLocation(
 	timeZoneLocation string) string {
+
+	if tzMech.lock == nil {
+		tzMech.lock = new(sync.Mutex)
+	}
 
 	tzMech.lock.Lock()
 

@@ -45,9 +45,17 @@ func (tDtoUtil *timeDtoUtility) addTimeDto(
 			"\nInput parameter 'tDto' is a nil pointer!")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	if t2Dto == nil {
 		panic(ePrefix +
 			"\nInput parameter 't2Dto' is a nil pointer!")
+	}
+
+	if t2Dto.lock == nil {
+		t2Dto.lock = new(sync.Mutex)
 	}
 
 	tDtoUtil2 := timeDtoUtility{}
@@ -85,6 +93,10 @@ func (tDtoUtil *timeDtoUtility) allocateWeeksAndDays(
 	if tDto == nil {
 		return fmt.Errorf(ePrefix +
 			"\nError: Input parameter 'tDto' is nil!\n")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	sign := 1
@@ -133,6 +145,10 @@ func (tDtoUtil *timeDtoUtility) allocateSeconds(
 	if tDto == nil {
 		return fmt.Errorf(ePrefix +
 			"\nError: Input parameter 'tDto' is nil!\n")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	sign := 1
@@ -192,6 +208,10 @@ func (tDtoUtil *timeDtoUtility) allocateTotalNanoseconds(
 	if tDto == nil {
 		return fmt.Errorf(ePrefix +
 			"\nError: Input parameter 'tDto' is nil!\n")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	sign := 1
@@ -258,9 +278,17 @@ func (tDtoUtil *timeDtoUtility) copyIn(
 			"\nError: Input parameter 'tDto' is nil!\n")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	if t2Dto == nil {
 		panic(ePrefix +
 			"\nError: Input parameter 't2Dto' is nil!\n")
+	}
+
+	if t2Dto.lock == nil {
+		t2Dto.lock = new(sync.Mutex)
 	}
 
 	tDtoUtil2 := timeDtoUtility{}
@@ -303,6 +331,10 @@ func (tDtoUtil *timeDtoUtility) copyOut(
 			"\nError: Input parameter 'tDto' is nil!\n")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	t2Dto := TimeDto{}
 
 	t2Dto.Years = tDto.Years
@@ -318,6 +350,7 @@ func (tDtoUtil *timeDtoUtility) copyOut(
 	t2Dto.Nanoseconds = tDto.Nanoseconds
 	t2Dto.TotSubSecNanoseconds = tDto.TotSubSecNanoseconds
 	t2Dto.TotTimeNanoseconds = tDto.TotTimeNanoseconds
+	t2Dto.lock = new(sync.Mutex)
 
 	return t2Dto
 }
@@ -343,6 +376,10 @@ func (tDtoUtil *timeDtoUtility) convertToAbsoluteValues(
 	if tDto == nil {
 		panic(ePrefix +
 			"\nError: Input parameter 'tDto' is nil!\n")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	if tDto.Years < 0 {
@@ -422,6 +459,10 @@ func (tDtoUtil *timeDtoUtility) convertToNegativeValues(
 			"\nError: Input parameter 'tDto' is nil!\n")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	tDtoUtil2 := timeDtoUtility{}
 
 	tDtoUtil2.convertToAbsoluteValues(tDto, ePrefix)
@@ -456,6 +497,10 @@ func (tDtoUtil *timeDtoUtility) empty(
 	if tDto == nil {
 		panic(ePrefix +
 			"\nError: Input parameter 'tDto' is nil!\n")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	tDto.Years = 0
@@ -494,9 +539,18 @@ func (tDtoUtil *timeDtoUtility) equalTimeDtos(
 		panic(ePrefix +
 			"\nError: Input parameter 'tDto' is a 'nil' pointer!\n")
 	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	if t2Dto == nil {
 		panic(ePrefix +
 			"\nError: Input parameter 't2Dto' is a 'nil' pointer!\n")
+	}
+
+	if t2Dto.lock == nil {
+		t2Dto.lock = new(sync.Mutex)
 	}
 
 	if tDto.Years != t2Dto.Years ||
@@ -537,6 +591,10 @@ func (tDtoUtil *timeDtoUtility) isEmpty(
 			"\nError: Input parameter 'tDto' pointer is nil!\n")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	if tDto.Years == 0 &&
 		tDto.Months == 0 &&
 		tDto.Weeks == 0 &&
@@ -571,6 +629,10 @@ func (tDtoUtil *timeDtoUtility) isValidDateTimeDto(
 	if tDto == nil {
 		return errors.New(ePrefix +
 			"\nError: Input parameter 'tDto' is a 'nil' pointer!")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	if tDto.Months < 1 || tDto.Months > 12 {
@@ -672,6 +734,10 @@ func (tDtoUtil *timeDtoUtility) normalizeDays(
 	if tDto == nil {
 		return false, errors.New(ePrefix +
 			"\nError: Input parameter 'tDto' is a 'nil' pointer!")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	if tDto.Years == 0 && tDto.Months == 0 {
@@ -794,6 +860,10 @@ func (tDtoUtil *timeDtoUtility) normalizeTimeElements(
 			"\nError: Input parameter 'tDto' is a 'nil' pointer!")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	carry := tDto.Nanoseconds / 1000
 	tDto.Nanoseconds -= carry * 1000
 
@@ -885,6 +955,10 @@ func (tDtoUtil *timeDtoUtility) setFromDateTime(
 			"Error: Input parameter 'tDto' is a 'nil' pointer!\n")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	if dateTime.IsZero() {
 		return errors.New(ePrefix +
 			"\nError: Input Parameter 'dateTime' has a ZERO XValue!\n")
@@ -940,6 +1014,10 @@ func (tDtoUtil *timeDtoUtility) setFromDateTzDto(
 	if tDto == nil {
 		return errors.New(ePrefix +
 			"\nError: Input parameter 'tDto' is a 'nil' pointer!")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
 	}
 
 	dTzUtil2 := dateTzDtoUtility{}
@@ -1012,6 +1090,10 @@ func (tDtoUtil *timeDtoUtility) setTimeElements(
 			"\nError: Input parameter 'tDto' is a 'nil' pointer!\n")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	if years == 0 &&
 		months == 0 &&
 		weeks == 0 &&
@@ -1039,6 +1121,7 @@ func (tDtoUtil *timeDtoUtility) setTimeElements(
 	t1Dto.Milliseconds = milliseconds
 	t1Dto.Microseconds = microseconds
 	t1Dto.Nanoseconds = nanoseconds
+	t1Dto.lock = new(sync.Mutex)
 
 	tDtoUtil2 := timeDtoUtility{}
 
@@ -1095,9 +1178,17 @@ func (tDtoUtil *timeDtoUtility) subTimeDto(
 			"\nInput parameter 'tDto' is a nil pointer!")
 	}
 
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
 	if t2Dto == nil {
 		panic(ePrefix +
 			"\nInput parameter 't2Dto' is a nil pointer!")
+	}
+
+	if t2Dto.lock == nil {
+		t2Dto.lock = new(sync.Mutex)
 	}
 
 	tDtoUtil2 := timeDtoUtility{}

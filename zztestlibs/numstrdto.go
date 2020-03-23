@@ -43,7 +43,7 @@ var CurrencySymbolsNumStrExamples = []rune{
 	'\U00000082', // South Africa Rand								21
 	'\U00006b72', // Sweden Krona											22
 	'\U000020a3', // Switzerland Franc								23
-	'\U00000024', // Taiwan New Dollar								24
+	'\U00000024', // Taiwan NewStartEndTimes Dollar								24
 	'\U000020ba', // TURKISH LIRA											25
 	'\U00066115', // Venezuela Bolivar								26
 	'\U00008363', // Viet Nam Dong										27
@@ -71,12 +71,12 @@ type NumStrDto struct {
 	NumStrOut          string
 }
 
-// New - Used to create NumStrDto types.
+// NewStartEndTimes - Used to create NumStrDto types.
 // This message initializes the NumStrDto
 // fields. This method will return the newly
 // create type (not a pointer to the type).
 // Example:
-// n := NumStrDto{}.New()
+// n := NumStrDto{}.NewStartEndTimes()
 // n2, err := n.ParseNumStr("123.456")
 //
 // Compare this method of object creation

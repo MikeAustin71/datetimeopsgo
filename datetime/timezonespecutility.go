@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type typeZoneSpecUtility struct {
+type timeZoneSpecUtility struct {
 	lock sync.Mutex
 }
 
@@ -16,7 +16,7 @@ type typeZoneSpecUtility struct {
 // TimeZoneSpecification (tzSpec). When completed 'tzSpec' will
 // have data field values identical to those of 'tzSpec2'
 //
-func (tzSpecUtil *typeZoneSpecUtility) copyIn(
+func (tzSpecUtil *timeZoneSpecUtility) copyIn(
 	tzSpec *TimeZoneSpecification,
 	tzSpec2 *TimeZoneSpecification)  {
 
@@ -25,8 +25,21 @@ func (tzSpecUtil *typeZoneSpecUtility) copyIn(
 	defer tzSpecUtil.lock.Unlock()
 
 	if tzSpec == nil {
-		panic("typeZoneSpecUtility.empty()\n" +
+		panic("timeZoneSpecUtility.empty()\n" +
 			"Error: Input parameter tzSpec is a 'nil' pointer!\n")
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
+	if tzSpec2 == nil {
+		panic("timeZoneSpecUtility.empty()\n" +
+			"Error: Input parameter tzSpec2 is a 'nil' pointer!\n")
+	}
+
+	if tzSpec2.lock == nil {
+		tzSpec2.lock = new(sync.Mutex)
 	}
 
 	tzSpec.zoneLabel               = tzSpec2.zoneLabel
@@ -51,10 +64,11 @@ func (tzSpecUtil *typeZoneSpecUtility) copyIn(
 	tzSpec.timeZoneCategory        = tzSpec2.timeZoneCategory
 	tzSpec.timeZoneUtcOffsetStatus = tzSpec2.timeZoneUtcOffsetStatus
 }
-	// CopyOut - Returns a deep copy of the current Time Zone
+
+// CopyOut - Returns a deep copy of the current Time Zone
 // Specification object as a new instance of 'TimeZoneSpecification'.
 //
-func (tzSpecUtil *typeZoneSpecUtility) copyOut(
+func (tzSpecUtil *timeZoneSpecUtility) copyOut(
 	tzSpec *TimeZoneSpecification) TimeZoneSpecification {
 
 	tzSpecUtil.lock.Lock()
@@ -62,8 +76,12 @@ func (tzSpecUtil *typeZoneSpecUtility) copyOut(
 	defer tzSpecUtil.lock.Unlock()
 
 	if tzSpec == nil {
-		panic("typeZoneSpecUtility.empty()\n" +
+		panic("timeZoneSpecUtility.empty()\n" +
 			"Error: Input parameter tzSpec is a 'nil' pointer!\n")
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
 	}
 
 	tzSpec2 := TimeZoneSpecification{}
@@ -90,6 +108,8 @@ func (tzSpecUtil *typeZoneSpecUtility) copyOut(
 	tzSpec2.timeZoneCategory        = tzSpec.timeZoneCategory
 	tzSpec2.timeZoneUtcOffsetStatus = tzSpec.timeZoneUtcOffsetStatus
 
+	tzSpec2.lock = new(sync.Mutex)
+
 	return tzSpec2
 }
 
@@ -97,7 +117,7 @@ func (tzSpecUtil *typeZoneSpecUtility) copyOut(
 // of a TimeZoneSpecification instance to their uninitialized
 // or zero values.
 //
-func (tzSpecUtil *typeZoneSpecUtility) empty(
+func (tzSpecUtil *timeZoneSpecUtility) empty(
 	tzSpec *TimeZoneSpecification) {
 
 	tzSpecUtil.lock.Lock()
@@ -105,8 +125,12 @@ func (tzSpecUtil *typeZoneSpecUtility) empty(
 	defer tzSpecUtil.lock.Unlock()
 
 	if tzSpec == nil {
-		panic("typeZoneSpecUtility.empty()\n" +
+		panic("timeZoneSpecUtility.empty()\n" +
 			"Error: Input parameter tzSpec is a 'nil' pointer!\n")
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
 	}
 
 	tzSpec.zoneLabel               = ""
@@ -143,7 +167,7 @@ func (tzSpecUtil *typeZoneSpecUtility) empty(
 // zone label is NOT checked for equivalency
 // tagDescription is NOT checked for equivalency
 //
-func (tzSpecUtil *typeZoneSpecUtility) equal(
+func (tzSpecUtil *timeZoneSpecUtility) equal(
 	tzSpec *TimeZoneSpecification,
 	tzSpec2 TimeZoneSpecification) bool {
 
@@ -152,8 +176,12 @@ func (tzSpecUtil *typeZoneSpecUtility) equal(
 	defer tzSpecUtil.lock.Unlock()
 
 	if tzSpec == nil {
-		panic("typeZoneSpecUtility.empty()\n" +
+		panic("timeZoneSpecUtility.empty()\n" +
 			"Error: Input parameter tzSpec is a 'nil' pointer!\n")
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
 	}
 
 	if !tzSpec.referenceDateTime.Equal(tzSpec2.referenceDateTime) {
@@ -244,11 +272,83 @@ func (tzSpecUtil *typeZoneSpecUtility) equal(
 	return true
 
 }
+// isEmpty() returns a boolean value of 'true' if all
+// data field values are set to their empty or zero
+// values.
+//
+func (tzSpecUtil *timeZoneSpecUtility) isEmpty(
+	tzSpec * TimeZoneSpecification,
+	ePrefix string) bool {
+
+	tzSpecUtil.lock.Lock()
+
+	defer tzSpecUtil.lock.Unlock()
+
+	ePrefix += "timeZoneSpecUtility.setFromTimeZoneSpec() "
+
+	if tzSpec == nil {
+		panic(ePrefix + "\nError: " +
+			"Input parameter 'tzSpec' is a 'nil' pointer!\n")
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
+	if 	!tzSpec.referenceDateTime.IsZero() {
+		return false
+	}
+
+	if 	tzSpec.zoneOffsetTotalSeconds != 0 ||
+		tzSpec.zoneSignValue != 0 ||
+		tzSpec.offsetHours != 0 ||
+		tzSpec.offsetMinutes != 0 ||
+		tzSpec.offsetSeconds != 0 {
+		return false
+	}
+
+
+	if tzSpec.zoneLabel != "" ||
+		tzSpec.zoneName != "" ||
+		tzSpec.zoneOffset != "" ||
+		tzSpec.zoneAbbrvLookupId != "" ||
+		tzSpec.utcOffset != "" {
+		return false
+	}
+
+	if tzSpec.locationPtr != nil ||
+		tzSpec.locationName != "" {
+		return false
+	}
+
+	if tzSpec.militaryTimeZoneName != "" ||
+		tzSpec.militaryTimeZoneLetter != "" {
+		return false
+	}
+
+	if tzSpec.locationNameType != LocNameType.None(){
+		return false
+	}
+
+	if tzSpec.timeZoneType != TzType.None() {
+		return false
+	}
+
+	if tzSpec.timeZoneClass != TzClass.None() {
+		return false
+	}
+
+	if tzSpec.tagDescription != "" {
+		return false
+	}
+
+	return true
+}
 
 // SetTimeZone - Sets the data values of the input parameter
 // 'tzSpec', an instance of type TimeZoneSpecification.
 //
-func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
+func (tzSpecUtil *timeZoneSpecUtility) setTimeZone(
 	tzSpec *TimeZoneSpecification,
 	referenceDateTime      time.Time,
 	militaryTimeZoneLetter string,
@@ -258,12 +358,11 @@ func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
 	timeZoneClass          TimeZoneClass,
 	ePrefix string) error {
 
-
 	tzSpecUtil.lock.Lock()
 
 	defer tzSpecUtil.lock.Unlock()
 
-	ePrefix += "typeZoneSpecUtility.setFromTimeZoneSpec() "
+	ePrefix += "timeZoneSpecUtility.setFromTimeZoneSpec() "
 
 	if tzSpec == nil {
 		return &InputParameterError{
@@ -275,6 +374,10 @@ func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
 		}
 	}
 
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
 	if referenceDateTime.IsZero() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
@@ -284,13 +387,13 @@ func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
 			err:                 nil,
 		}
 	}
-	tzSpecUtil2 := typeZoneSpecUtility{}
+
+	tzSpecUtil2 := timeZoneSpecUtility{}
 
 	tzSpecUtil2.empty(tzSpec)
 
 	tzMech := TimeZoneMechanics{}
 	var err error
-
 
 	tzSpec.zoneName,
 		tzSpec.zoneOffset,
@@ -310,7 +413,7 @@ func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
 	var ok bool
 
 	if err != nil {
-		tzSpecUtil.empty(tzSpec)
+		tzSpecUtil2.empty(tzSpec)
 		return err
 	}
 
@@ -337,7 +440,7 @@ func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
 
 		if !ok {
 
-			tzSpecUtil.empty(tzSpec)
+			tzSpecUtil2.empty(tzSpec)
 
 			return fmt.Errorf(ePrefix +
 				"\nInput parameter 'militaryTimeZoneLetter' is Invalid!\n" +
@@ -346,7 +449,7 @@ func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
 
 		if foundMilTextName != militaryTimeZoneName {
 
-			tzSpecUtil.empty(tzSpec)
+			tzSpecUtil2.empty(tzSpec)
 
 			return fmt.Errorf(ePrefix +
 				"\nInput parameter 'militaryTimeZoneName' is Invalid!\n" +
@@ -406,7 +509,7 @@ func (tzSpecUtil *typeZoneSpecUtility) setTimeZone(
 // setFromTimeZoneSpec - Sets the data fields for
 // 'tzSpec' based on Time Zone Specification, 'tzSpecIn'.
 //
-func (tzSpecUtil *typeZoneSpecUtility) setFromTimeZoneSpec(
+func (tzSpecUtil *timeZoneSpecUtility) setFromTimeZoneSpec(
 	tzSpec *TimeZoneSpecification,
 	dateTime time.Time,
 	timeZoneConversionType TimeZoneConversionType,
@@ -417,7 +520,7 @@ func (tzSpecUtil *typeZoneSpecUtility) setFromTimeZoneSpec(
 
 	defer tzSpecUtil.lock.Unlock()
 
-	ePrefix += "typeZoneSpecUtility.setFromTimeZoneSpec() "
+	ePrefix += "timeZoneSpecUtility.setFromTimeZoneSpec() "
 
 	if tzSpec == nil {
 		return &InputParameterError{
@@ -427,6 +530,25 @@ func (tzSpecUtil *typeZoneSpecUtility) setFromTimeZoneSpec(
 			errMsg:              "Input parameter 'tzSpec' is a nil pointer!",
 			err:                 nil,
 		}
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
+
+	if tzSpecIn == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzSpecIn",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzSpecIn' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tzSpecIn.lock == nil {
+		tzSpecIn.lock = new(sync.Mutex)
 	}
 
 	if dateTime.IsZero() {
@@ -482,7 +604,7 @@ func (tzSpecUtil *typeZoneSpecUtility) setFromTimeZoneSpec(
 		dateTime = dateTime.In(tzSpecIn.locationPtr)
 	}
 
-	tzSpecUtil2 := typeZoneSpecUtility{}
+	tzSpecUtil2 := timeZoneSpecUtility{}
 
 	tzSpecUtil2.empty(tzSpec)
 

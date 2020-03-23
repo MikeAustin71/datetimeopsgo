@@ -892,11 +892,11 @@ func (dec *Decimal) MulTotal(d2 Decimal) error {
 	return nil
 }
 
-// New - Creates and returns a Decimal type.
+// NewStartEndTimes - Creates and returns a Decimal type.
 // The Decimal value is initialized to zero.
 //
 // Example Usage:
-//   d := Decimal{}.New()
+//   d := Decimal{}.NewStartEndTimes()
 //
 // This is the recommended procedure for creating
 // a Decimal type.
@@ -1044,7 +1044,7 @@ func (dec Decimal) NewNumStrPrecision(numStr string, precision uint, roundResult
 // value of '3', the resulting Decimal value would be 123.456.
 //
 // Example Usage:
-// d := Decimal{}.New()
+// d := Decimal{}.NewStartEndTimes()
 // d2, err := d.NumStrPrecisionToDecimal("123456", 3)
 // d2 is Now Equal to 123.456
 func (dec *Decimal) NumStrPrecisionToDecimal(str string, precision uint, roundResult bool) (Decimal, error) {
@@ -1153,7 +1153,7 @@ func (dec *Decimal) Pow(exponent int, maxPrecision int) (Decimal, error) {
 // zero ('0') will yield an integer of '123456'.
 //
 // Example usage:
-// d:= Decimal{}.New()
+// d:= Decimal{}.NewStartEndTimes()
 // iBig := big.NewInt(int64(123))
 // d.SetBigInt(iBig, 1)
 //
@@ -1193,7 +1193,7 @@ func (dec *Decimal) SetDecimalSeparator(decimalSeparator rune) error {
 // Decimal will be set to a value of '123.456'.
 //
 // Example usage:
-// d:= Decimal{}.New()
+// d:= Decimal{}.NewStartEndTimes()
 // d.SetInt(123456, 3)
 func (dec *Decimal) SetInt(iNum int, precision uint) error {
 
@@ -1288,7 +1288,7 @@ func (dec *Decimal) SetIntFracStrings(signVal int, intNum, fracNum string) error
 // value of zero ('0') will yield an integer value of '123456'.
 //
 // Example usage:
-// d:= Decimal{}.New()
+// d:= Decimal{}.NewStartEndTimes()
 // i64:= int64(123456)
 // d.SetInt64(i64, 3)
 func (dec *Decimal) SetInt64(i64 int64, precision uint) error {
@@ -1378,7 +1378,7 @@ func (dec *Decimal) SetThousandsSeparator(thousandsSeparator rune) error {
 // that of the passed-in float32 parameter.
 //
 // Example usage:
-// d:= Decimal{}.New()
+// d:= Decimal{}.NewStartEndTimes()
 // f32:= float32(123.456)
 // d.SetFloat(f32)
 func (dec *Decimal) SetFloat(f32 float32) error {
@@ -1412,7 +1412,7 @@ func (dec *Decimal) SetFloat(f32 float32) error {
 // that of the passed-in float64 parameter.
 //
 // Example usage:
-// d:= Decimal{}.New()
+// d:= Decimal{}.NewStartEndTimes()
 // f64:= float64(123.456)
 // d.SetFloat(f64)
 func (dec *Decimal) SetFloat64(f64 float64) error {
@@ -1446,7 +1446,7 @@ func (dec *Decimal) SetFloat64(f64 float64) error {
 // passed-in *big.Float parameter.
 //
 // Example usage:
-// d:= Decimal{}.New()
+// d:= Decimal{}.NewStartEndTimes()
 // bigFloat:= big.NewFloat(float64(123.456))
 // d.SetBigFloat(bigFloat)
 func (dec *Decimal) SetFloatBig(bigFloat *big.Float) error {
@@ -1483,7 +1483,7 @@ func (dec *Decimal) SetFloatBig(bigFloat *big.Float) error {
 // 123.456.
 //
 // Example Usage:
-// d:= Decimal{}.New()
+// d:= Decimal{}.NewStartEndTimes()
 // d.SetNumStrPrecision("123456", 3)
 // Resulting Decimal XValue = 123.456
 func (dec *Decimal) SetNumStrPrecision(str string, precision uint, roundResult bool) error {
@@ -1518,7 +1518,7 @@ func (dec *Decimal) SetNumStrPrecision(str string, precision uint, roundResult b
 // value to 123.456.
 //
 // Example Usage:
-// d := Decimal{}.New()
+// d := Decimal{}.NewStartEndTimes()
 // d.SetNumStr("123.456")
 // Decimal XValue = 123.456
 func (dec *Decimal) SetNumStr(str string) error {

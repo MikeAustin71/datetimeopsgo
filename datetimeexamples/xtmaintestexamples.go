@@ -229,7 +229,7 @@ func (mc MainCodeExamples) mainCodeEx048() {
 
 		if err != nil {
 			fmt.Printf(ePrefix +
-				"\nError loading New Time Zone!\n" +
+				"\nError loading NewStartEndTimes Time Zone!\n" +
 				"time.LoadLocation(newTZone)\n" +
 				"newTZone='%v'\nError='%v'\n",
 				newTZone, err.Error())
@@ -591,7 +591,7 @@ func (mc MainCodeExamples) mainCodeEx044() {
 
 	if newTZone == "" {
 		fmt.Println(ePrefix +
-			"\nError: New Time Zone Look Up failed!")
+			"\nError: NewStartEndTimes Time Zone Look Up failed!")
 		return
 	}
 
@@ -691,10 +691,10 @@ func (mc MainCodeExamples) mainCodeEx042() {
 	fmt.Println(" tIn: ", tIn.Format(fmtStr))
 	fmt.Println("tOut: ", tOut.Format(fmtStr))
 
-	dTzDtoIn, err := dt.DateTzDto{}.New(tIn, fmtStr)
+	dTzDtoIn, err := dt.DateTzDto{}.NewDateTime(tIn, fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.DateTzDto{}.New(tIn, fmtStr)\n" +
+		fmt.Printf("Error returned by dt.DateTzDto{}.NewStartEndTimes(tIn, fmtStr)\n" +
 			"tIn='%v'\n" +
 			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
 		return
@@ -758,10 +758,10 @@ func (mc MainCodeExamples) mainCodeEx041() {
 	fmt.Println(" tIn: ", tIn.Format(fmtStr))
 	fmt.Println("tOut: ", tOut.Format(fmtStr))
 
-	tzDefIn, err := dt.TimeZoneDefinition{}.New(tIn)
+	tzDefIn, err := dt.TimeZoneDefinition{}.NewDateTime(tIn)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(tIn)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(tIn)\n" +
 			"tIn='%v'\n" +
 			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
 		return
@@ -769,10 +769,10 @@ func (mc MainCodeExamples) mainCodeEx041() {
 
 	PrintOutTimeZoneDefFields(tzDefIn)
 
-	tzDefOut, err := dt.TimeZoneDefinition{}.New(tOut)
+	tzDefOut, err := dt.TimeZoneDefinition{}.NewDateTime(tOut)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(tOut)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(tOut)\n" +
 			"tOut='%v'\n" +
 			"Error='%v'\n", tIn.Format(fmtStr), err.Error())
 		return
@@ -853,10 +853,10 @@ func (mc MainCodeExamples) mainCodeEx039() {
 
 	fmtStr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
-	tzDef, err := dt.TimeZoneDefinition{}.New(t1)
+	tzDef, err := dt.TimeZoneDefinition{}.NewDateTime(t1)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(t1)\n" +
 			"t1='%v'\n" +
 			"Error='%v'\n", t1.Format(fmtStr), err.Error())
 		return
@@ -876,10 +876,10 @@ func (mc MainCodeExamples) mainCodeEx039() {
 		0,
 		tzLocPtr)
 
-	tzDef, err = dt.TimeZoneDefinition{}.New(t2)
+	tzDef, err = dt.TimeZoneDefinition{}.NewDateTime(t2)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t2)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(t2)\n" +
 			"t2='%v'\n" +
 			"Error='%v'\n",
 			t2.Format(fmtStr),t1.Format(fmtStr))
@@ -1137,10 +1137,10 @@ func (mc MainCodeExamples) mainCodeEx035() {
 	fmt.Println()
 
 	t2TzDefDtoDateTime, err :=
-		dt.TimeZoneDefinition{}.New(t1)
+		dt.TimeZoneDefinition{}.NewDateTime(t1)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(t1)\n" +
 			"t1='%v'\n" +
 			"Error='%v'\n", t1.Format(fmtstr), err.Error())
 		return
@@ -1156,7 +1156,7 @@ func (mc MainCodeExamples) mainCodeEx035() {
 		dt.TimeZoneDefinition{}.NewFromTimeZoneName(
 			t1,
 			tZoneName,
-			dt.TzConvertType.Relative(),)
+			dt.TzConvertType.Relative())
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewFromTimeZoneName(tZoneName)\n" +
@@ -1165,7 +1165,7 @@ func (mc MainCodeExamples) mainCodeEx035() {
 	}
 
 	t2TzDefDtoDateTime, err =
-		dt.TimeZoneDefinition{}.New(t1Dup)
+		dt.TimeZoneDefinition{}.NewDateTime(t1Dup)
 
 	mc.mainPrintHdr("       t1TzDefDtoDateTime Data" , "*")
 	fmt.Println("From: t1Dup")
@@ -1198,7 +1198,7 @@ func (mc MainCodeExamples) mainCodeEx034() {
 	tzu1, err := dt.TimeZoneDto{}.New(t2, dt.TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
+		fmt.Printf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsEast).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1270,10 +1270,10 @@ func (mc MainCodeExamples) mainCodeEx033() {
 		return
 	}
 
-	eTimeZoneDef, err := dt.TimeZoneDefinition{}.New(t4USCentral)
+	eTimeZoneDef, err := dt.TimeZoneDefinition{}.NewDateTime(t4USCentral)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefinition{}.New(t4USCentral)\n" +
+		fmt.Printf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(t4USCentral)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1528,10 +1528,10 @@ func (mc MainCodeExamples) mainCodeEx030() {
 
 	t2 := t1.In(tzLoc)
 
-	dtz1, err := dt.DateTzDto{}.New(t2, fmtstr)
+	dtz1, err := dt.DateTzDto{}.NewDateTime(t2, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
+		fmt.Printf("Error returned by DateTzDto{}.NewStartEndTimes(t2, fmtstr).\n" +
 			"t2='%v'\n" +
 			"Error='%v'\n", t2.Format(fmtstr), err.Error())
 		return
@@ -1596,10 +1596,10 @@ func (mc MainCodeExamples) mainCodeEx029() {
 
 	t2 := t1.In(tzLoc)
 
-	dtz1, err := dt.DateTzDto{}.New(t2, fmtstr)
+	dtz1, err := dt.DateTzDto{}.NewDateTime(t2, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
+		fmt.Printf("Error returned by DateTzDto{}.NewStartEndTimes(t2, fmtstr).\n" +
 			"t2='%v'\n" +
 			"Error='%v'\n", t2.Format(fmtstr), err.Error())
 		return
@@ -1664,10 +1664,10 @@ func (mc MainCodeExamples) mainCodeEx028() {
 
 	t2 := t1.In(tzLoc)
 
-	dtz1, err := dt.DateTzDto{}.New(t2, fmtstr)
+	dtz1, err := dt.DateTzDto{}.NewDateTime(t2, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DateTzDto{}.New(t2, fmtstr).\n" +
+		fmt.Printf("Error returned by DateTzDto{}.NewStartEndTimes(t2, fmtstr).\n" +
 			"t2='%v'\n" +
 			"Error='%v'\n", t2.Format(fmtstr), err.Error())
 		return
@@ -1713,10 +1713,10 @@ func (mc MainCodeExamples) mainCodeEx027() {
 
 	expectedOutDate := t1.Format(fmtstr)
 
-	dtz1, err := dt.DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := dt.DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
+		fmt.Printf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\n" +
 			"Error='%v'", err.Error())
 		return
 	}
@@ -1771,10 +1771,10 @@ func (mc MainCodeExamples) mainCodeEx027() {
 	var milTzDto dt.MilitaryDateTzDto
 	var dateTzDto dt.DateTzDto
 
-	milTzDto, err = dt.MilitaryDateTzDto{}.New(testTime, "Sierra")
+	milTzDto, err = dt.MilitaryDateTzDto{}.NewStartEndTimes(testTime, "Sierra")
 
 	if err != nil {
-		fmt.Printf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Sierra\")\n" +
+		fmt.Printf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"Sierra\")\n" +
 			"testTime='%v'\n" +
 			"Error='%v'\n", testTime.Format(fmtStr), err.Error())
 		return
@@ -1815,7 +1815,7 @@ func (mc MainCodeExamples) mainCodeEx025() {
 	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
+		fmt.Printf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsEast).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1870,7 +1870,7 @@ func (mc MainCodeExamples) mainCodeEx024() {
 
 	if err != nil {
 		fmt.Printf(ePrefix +
-			"\nError returned by MilitaryDateTzDto{}.New(testTime, \"Q\")\n" +
+			"\nError returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"Q\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1929,7 +1929,7 @@ func (mc MainCodeExamples) mainCodeEx023() {
 
 	if err != nil {
 		fmt.Printf(ePrefix +
-			"\nError returned by MilitaryDateTzDto{}.New(testTime, \"S\")\n" +
+			"\nError returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"S\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1987,7 +1987,7 @@ func (mc MainCodeExamples) mainCodeEx021() {
 		return
 	}
 
-	tzDef2, err := dt.TimeZoneDefinition{}.New(dtz.GetDateTimeValue())
+	tzDef2, err := dt.TimeZoneDefinition{}.NewDateTime(dtz.GetDateTimeValue())
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
 		return
@@ -2016,7 +2016,7 @@ func (mc MainCodeExamples) mainCodeEx020() {
 		return
 	}
 
-	tzDef, err := dt.TimeZoneDefinition{}.New(dtz.GetDateTimeValue())
+	tzDef, err := dt.TimeZoneDefinition{}.NewDateTime(dtz.GetDateTimeValue())
 
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
@@ -2030,7 +2030,7 @@ func (mc MainCodeExamples) mainCodeEx020() {
 		return
 	}
 
-	tzDef2, err := dt.TimeZoneDefinition{}.New(dtz2.GetDateTimeValue())
+	tzDef2, err := dt.TimeZoneDefinition{}.NewDateTime(dtz2.GetDateTimeValue())
 	if err != nil {
 		fmt.Printf("%v \n", err.Error())
 		return
@@ -2285,18 +2285,18 @@ func (mc MainCodeExamples) mainCodeEx016() {
 
 	t4USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
-	t4Dto, err := dt.TimeDto{}.New(year, month, 0, day, hour, minute,
+	t4Dto, err := dt.TimeDto{}.NewTimeComponents(year, month, 0, day, hour, minute,
 		second, 0, 0, nSecs)
 
 	if err != nil {
-		fmt.Printf("Error returned by t4USCentral TimeDto{}.New(). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by t4USCentral TimeDto{}.NewStartEndTimes(). Error='%v'\n", err.Error())
 		return
 	}
 
-	t4TZoneDef, err := dt.TimeZoneDefinition{}.New(t4USCentral)
+	t4TZoneDef, err := dt.TimeZoneDefinition{}.NewDateTime(t4USCentral)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefinition{}.New(t4USCentral). Error='%v'", err.Error())
+		fmt.Printf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(t4USCentral). Error='%v'", err.Error())
 		return
 	}
 
@@ -2309,20 +2309,20 @@ func (mc MainCodeExamples) mainCodeEx016() {
 
 	t5Tokyo := time.Date(2012, 9, 30, 11, 58, 48, 123456789, locTokyo)
 
-	t5Dto, err := dt.TimeDto{}.New(2012, 9, 0, 30, 11,
+	t5Dto, err := dt.TimeDto{}.NewTimeComponents(2012, 9, 0, 30, 11,
 		58, 48, 0, 0, 123456789)
 
 	if err != nil {
-		fmt.Printf("Error returned by t5Tokyo TimeDto{}.New(). Error='%v'", err.Error())
+		fmt.Printf("Error returned by t5Tokyo TimeDto{}.NewStartEndTimes(). Error='%v'", err.Error())
 		return
 	}
 
-	t5TZoneDef, err := dt.TimeZoneDefinition{}.New(t5Tokyo)
+	t5TZoneDef, err := dt.TimeZoneDefinition{}.NewDateTime(t5Tokyo)
 
-	dTz1, err := dt.DateTzDto{}.New(t5Tokyo, dt.FmtDateTimeYrMDayFmtStr)
+	dTz1, err := dt.DateTzDto{}.NewDateTime(t5Tokyo, dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DateTzDto{}.New(t4USCentral, FmtDateTimeYrMDayFmtStr)\n")
+		fmt.Printf("Error returned by DateTzDto{}.NewStartEndTimes(t4USCentral, FmtDateTimeYrMDayFmtStr)\n")
 		return
 	}
 
@@ -2897,10 +2897,10 @@ func (mc MainCodeExamples) mainCodeEx003() {
 
 func (mc MainCodeExamples) mainCodeEx002() {
 
-	tDto, err := dt.TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
+	tDto, err := dt.TimeDto{}.NewTimeComponents(0, 0, -8, 0, 0, 0, 0, 0, 0, 0)
 
 	if err != nil {
-		fmt.Printf("Error returned from TimeDto{}.New(0, 0, -8, 0, 0, 0, 0, 0, 0, 0 ) Error='%v' \n", err.Error())
+		fmt.Printf("Error returned from TimeDto{}.NewStartEndTimes(0, 0, -8, 0, 0, 0, 0, 0, 0, 0 ) Error='%v' \n", err.Error())
 	}
 
 	PrintOutTimeDtoFields(tDto)
@@ -2913,10 +2913,10 @@ func (mc MainCodeExamples) mainCodeEx001() {
 	t1 := time.Date(2014, time.Month(2), 15, 19, 54, 30, 158712300, loc)
 	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
 
-	tDto, err := dt.TimeDto{}.New(2014, 2, 0, 15, 19, 54, 30, 0, 0, 158712300)
+	tDto, err := dt.TimeDto{}.NewTimeComponents(2014, 2, 0, 15, 19, 54, 30, 0, 0, 158712300)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDto{}.New(year, month, ...). Error=%v \n", err.Error())
+		fmt.Printf("Error returned by dt.TimeDto{}.NewStartEndTimes(year, month, ...). Error=%v \n", err.Error())
 		return
 	}
 

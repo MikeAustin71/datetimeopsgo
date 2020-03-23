@@ -287,7 +287,7 @@ func (ns *NumStrUtility) ParseNumString(str string) (NumStrDto, error) {
 		nDto.NumStrIn = str
 
 		if len(nDto.NumStrIn) == 0 {
-			return nDto, errors.New("Zero length number string!")
+			return nDto, errors.NewStartEndTimes("Zero length number string!")
 		}
 
 		nDto.SignVal = 1

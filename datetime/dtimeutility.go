@@ -8,7 +8,7 @@ import (
 )
 
 type DTimeUtility struct {
-	lock sync.Mutex
+	lock *sync.Mutex
 }
 
 // ConsolidateErrors - Receives an array of errors and converts them
@@ -18,6 +18,10 @@ type DTimeUtility struct {
 // If the length of the error array is zero, this method returns nil.
 //
 func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
+
+	if dtUtil.lock == nil {
+		dtUtil.lock = new(sync.Mutex)
+	}
 
 	dtUtil.lock.Lock()
 
@@ -69,6 +73,10 @@ func (dtUtil *DTimeUtility) ConsolidateErrors(errs []error) error {
 func (dtUtil *DTimeUtility) EqualDateTimeComponents(
 	dateTime1 time.Time,
 	dateTime2 time.Time) bool {
+
+	if dtUtil.lock == nil {
+		dtUtil.lock = new(sync.Mutex)
+	}
 
 	dtUtil.lock.Lock()
 

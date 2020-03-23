@@ -28,10 +28,18 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyIn(
 			"\nError: Input Parameter 'tDur1' is a 'nil' pointer!")
 	}
 
+	if tDur1.lock == nil {
+		tDur1.lock = new(sync.Mutex)
+	}
+
 	if tDur2 == nil {
 		ePrefix += "timeDurationDtoUtility.copyIn() "
 		panic (ePrefix +
 			"\nError: Input Parameter 'tDur2' is a 'nil' pointer!")
+	}
+
+	if tDur2.lock == nil {
+		tDur2.lock = new(sync.Mutex)
 	}
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
@@ -87,6 +95,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyOut(
 			"\nError: Input Parameter 'tDur' is a 'nil' pointer!")
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	t2Dur := TimeDurationDto{}
 
 	t2Dur.StartTimeDateTz = tDur.StartTimeDateTz.CopyOut()
@@ -117,6 +129,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyOut(
 	t2Dur.TotSubSecNanoseconds = tDur.TotSubSecNanoseconds
 	t2Dur.TotDateNanoseconds = tDur.TotDateNanoseconds
 	t2Dur.TotTimeNanoseconds = tDur.TotTimeNanoseconds
+	t2Dur.lock = new(sync.Mutex)
 
 	return t2Dur
 }
@@ -144,6 +157,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcDateDaysWeeksFromDuration(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcDateDaysWeeksFromDuration() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	rd := int64(tDur.TimeDuration)
 
@@ -209,6 +236,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcHoursMinSecs(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcHoursMinSecs() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	rd := int64(tDur.TimeDuration)
 
@@ -276,6 +317,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcNanoseconds(
 
 	ePrefix += "timeDurationDtoUtility.calcNanoseconds() "
 
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
@@ -336,6 +391,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcMonthsFromDuration() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	startTime := tDur.StartTimeDateTz.dateTimeValue
 	endTime := tDur.EndTimeDateTz.dateTimeValue
@@ -420,6 +489,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcSummaryTimeElements(
 
 	ePrefix += "timeDurationDtoUtility.calcSummaryTimeElements() "
 
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	rd := int64(tDur.TimeDuration)
 
 	if rd == 0 {
@@ -465,6 +548,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTimeDurationAllocations(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcTimeDurationAllocations() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
@@ -517,6 +614,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumDays(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcTypeCumDays() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
@@ -579,6 +690,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumHours(
 
 	ePrefix += "timeDurationDtoUtility.calcTypeCumHours() "
 
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
 	tDur2 := tDurDtoUtilX2.copyOut(
@@ -629,6 +754,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMinutes(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcTypeCumMinutes() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
@@ -695,6 +834,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMonths(
 
 	ePrefix += "timeDurationDtoUtility.calcTypeCumMonths() "
 
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
 	tDur2 := tDurDtoUtilX2.copyOut(
@@ -757,6 +910,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumSeconds(
 
 	ePrefix += "timeDurationDtoUtility.calcTypeCumSeconds() "
 
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
 	tDur2 := tDurDtoUtilX2.copyOut(
@@ -807,6 +974,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumWeeks(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcTypeCumWeeks() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
@@ -879,6 +1060,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeGregorianYears(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcTypeGregorianYears() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 
@@ -960,6 +1155,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeStdYearMth(
 
 	ePrefix += "timeDurationDtoUtility.calcTypeStdYearMth() "
 
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	tDurDtoUtilX2 := timeDurationDtoUtility{}
 	
 	tDur2 := tDurDtoUtilX2.copyOut(
@@ -1025,6 +1234,20 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcYearsFromDuration(
 	defer tDurDtoUtil.lock.Unlock()
 
 	ePrefix += "timeDurationDtoUtility.calcYearsFromDuration() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDur' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	years := int64(0)
 	yearNanosecs := int64(0)
@@ -1095,6 +1318,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) empty(
 			"\nError: Input Parameter 'tDur' is a 'nil' pointer!")
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	tDur.StartTimeDateTz = DateTzDto{}
 	tDur.EndTimeDateTz = DateTzDto{}
 	tDur.TimeDuration = time.Duration(0)
@@ -1123,7 +1350,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) empty(
 	tDur.TotSubSecNanoseconds = 0
 	tDur.TotDateNanoseconds = 0
 	tDur.TotTimeNanoseconds = 0
-	
+
+	return
 }
 
 // emptyTimeFields - Sets time data fields to their zero
@@ -1141,6 +1369,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) emptyTimeFields(
 		ePrefix += "timeDurationDtoUtility.empty() "
 		panic(ePrefix +
 			"\nError: Input Parameter 'tDur' is a 'nil' pointer!")
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.Years = 0
@@ -1169,17 +1401,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) emptyTimeFields(
 	tDur.TotTimeNanoseconds = 0
 
 }
-
-// Equal - Compares two TimeDurationDto instances to determine
-// if they are equivalent.
-//
-// __________________________________________________________________________
-//
-// Return Value:
-//
-//  bool - If 'true' it signals that all relevant data fields in
-//         'tDur' and 'tDur2' are equivalent.
-//
 
 // Equal - Compares two TimeDurationDto instances to determine
 // if they are equivalent.
@@ -1239,6 +1460,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) equal(
 			}
 	}
 
+	if t1Dur.lock == nil {
+		t1Dur.lock = new(sync.Mutex)
+	}
+
 	if t2Dur == nil {
 		return false, 
 			&InputParameterError{
@@ -1248,6 +1473,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) equal(
 				errMsg:              "Input parameter 't2Dur' is a 'nil' pointer!",
 				err:                 nil,
 			}
+	}
+
+	if t2Dur.lock == nil {
+		t2Dur.lock = new(sync.Mutex)
 	}
 
 	if !t1Dur.StartTimeDateTz.Equal(t2Dur.StartTimeDateTz) ||
@@ -1335,6 +1564,9 @@ func (tDurDtoUtil *timeDurationDtoUtility) isEmpty(
 			}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
 
 	if tDur.StartTimeDateTz.IsEmpty() &&
 		tDur.EndTimeDateTz.IsEmpty() &&
@@ -1409,6 +1641,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 	if tDur == nil {
 		return fmt.Errorf(ePrefix +
 			"\nError: Input Parameter 'tDur' is a 'nil' pointer!")
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
 	}
 
 	if tDur.StartTimeDateTz.dateTimeValue.IsZero() &&
@@ -1501,6 +1737,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcTimeDurationAllocation(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
 		tDurCalcType > TDurCalc.XLastValidCalcType() {
 		return &InputParameterError{
@@ -1567,6 +1807,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcEndDateTimeToNow(
 			errMsg:              "Input Parameter 'tDur' is a 'nil' pointer!",
 			err:                 nil,
 		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
 	}
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
@@ -1647,6 +1891,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
 	err := tDurDtoUtil2.isValid(tDur, ePrefix)
@@ -1668,6 +1916,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 	dTzUtil := dateTzDtoUtility{}
 
 	tDur2 := TimeDurationDto{}
+
+	tDur2.lock = new(sync.Mutex)
 
 	dateTimeFmtStr := dtMech.PreProcessDateFormatStr(tDur.StartTimeDateTz.dateTimeFmt)
 
@@ -1871,6 +2121,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	err := minusTimeDto.IsValid()
 
 	if err != nil {
@@ -1905,6 +2159,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	tDur2 := TimeDurationDto {}
+
+	tDur2.lock = new(sync.Mutex)
 
 	dTzUtil := dateTzDtoUtility{}
 
@@ -2089,6 +2345,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	if startDateTime.IsZero() && endDateTime.IsZero() {
 		return errors.New(ePrefix +
 			"\nError: Both 'startDateTime' and 'endDateTime' " +
@@ -2123,6 +2383,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	tDur2 := TimeDurationDto{}
+
+	tDur2.lock = new(sync.Mutex)
 
 	dTzUtil := dateTzDtoUtility{}
 
@@ -2169,8 +2431,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 
 	return nil
 }
-
-
 
 // SetStartEndTimesDateDtoCalcTz - Sets data field values for the current
 // TimeDurationDto instance using a Start Date Time, End Date Time and a
@@ -2320,6 +2580,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	dTzUtil := dateTzDtoUtility{}
 
 	err := dTzUtil.isValidDateTzDto(
@@ -2376,6 +2640,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 
 	tDur2 := TimeDurationDto{}
 
+	tDur2.lock = new(sync.Mutex)
+
 	tZoneDef := startDateTimeTz.timeZone.CopyOut()
 
 	err = dTzUtil.setFromTzDef(
@@ -2390,7 +2656,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 		return err
 	}
 
-
 	err = dTzUtil.setFromTzDef(
 		&tDur2.StartTimeDateTz,
 		endDateTimeTz.dateTimeValue,
@@ -2402,7 +2667,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	if err != nil {
 		return err
 	}
-
 
 	tDur2.TimeDuration =
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
@@ -2569,6 +2833,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationCalcTz(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	if startDateTime.IsZero() && duration == 0 {
 		return errors.New(ePrefix +
 			"\nError: Both 'startDateTime' and 'duration' " +
@@ -2610,6 +2878,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationCalcTz(
 	}
 
 	tDur2 := TimeDurationDto{}
+
+	tDur2.lock = new(sync.Mutex)
 
 	dTzUtil := dateTzDtoUtility{}
 
@@ -2801,6 +3071,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationDateDtoCalcTz(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	if startDateTimeTz.dateTimeValue.IsZero() && duration == 0 {
 		return errors.New(ePrefix +
 			"\nError: Both 'startDateTimeTz' and 'duration' " +
@@ -2843,6 +3117,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationDateDtoCalcTz(
 	}
 
 	tDur2 := TimeDurationDto{}
+
+	tDur2.lock = new(sync.Mutex)
 
 	dTzUtil := dateTzDtoUtility{}
 
@@ -2888,7 +3164,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationDateDtoCalcTz(
 	return nil
 }
 
-// SetStartTimePlusTimeDtoCalcTz - Sets start date time, end date time and duration
+// setStartTimePlusTimeDtoCalcTz - Sets start date time, end date time and duration
 // based on a starting date time and the time components contained in a TimeDto.
 //
 // The time components of the TimeDto are added to the starting date time to compute
@@ -3046,6 +3322,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 		}
 	}
 
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
 	err := plusTimeDto.IsValid()
 
 	if err != nil {
@@ -3080,6 +3360,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	tDur2 := TimeDurationDto{}
+
+	tDur2.lock = new(sync.Mutex)
 
 	dTzUtil := dateTzDtoUtility{}
 

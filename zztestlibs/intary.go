@@ -141,7 +141,7 @@ type BackUpIntAry struct {
 	// http://www.xe.com/symbols.php
 }
 
-// New
+// NewStartEndTimes
 func (iBa BackUpIntAry) New() BackUpIntAry {
 	iAry := BackUpIntAry{}
 
@@ -2766,8 +2766,8 @@ func (ia *IntAry) Multiply(ia1, ia2, iaResult *IntAry, maxResultPrecision int) e
 	return nil
 }
 
-// New - Creates a new blank intAry object.
-// Usage: ia := intAry{}.New()
+// NewStartEndTimes - Creates a new blank intAry object.
+// Usage: ia := intAry{}.NewStartEndTimes()
 func (ia IntAry) New() IntAry {
 	iAry := IntAry{}
 	iAry.intAry = []uint8{}

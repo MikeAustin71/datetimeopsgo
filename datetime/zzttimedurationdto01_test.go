@@ -124,7 +124,7 @@ func (suite *timedurdtoTestSuite) TearDownTest() {
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_01() {
 
-	t1Dur, err := TimeDurationDto{}.New(suite.t2USCentral, suite.t3USCentral, suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimes(suite.t2USCentral, suite.t3USCentral, suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error:")
 
@@ -217,7 +217,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_02() {
 	// In this test, t3 is submitted with a Moscow time zone. It should be automatically
 	// converted to US Central time matching the first time component (start time).
 	// Results should be same as using suite.t3USCentral
-	t1Dur, err := TimeDurationDto{}.New(suite.t2USCentral, suite.t3EuropeMoscow, suite.fmtStr)
+	t1Dur, err := TimeDurationDto{}.NewStartEndTimes(suite.t2USCentral, suite.t3EuropeMoscow, suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error:")
 
@@ -472,11 +472,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesCalc_01() 
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDto_01() {
 
-	dTzStart, err := DateTzDto{}.New(suite.t2USCentral, suite.fmtStr)
-	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t2AsiaTokyo): ")
+	dTzStart, err := DateTzDto{}.NewDateTime(suite.t2USCentral, suite.fmtStr)
+	assert.Nil(suite.T(), err, "Error DateTzDto{}.NewStartEndTimes(suite.t2AsiaTokyo): ")
 
-	dTzEnd, err := DateTzDto{}.New(suite.t3AfricaCairo, suite.fmtStr)
-	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t2AsiaTokyo): ")
+	dTzEnd, err := DateTzDto{}.NewDateTime(suite.t3AfricaCairo, suite.fmtStr)
+	assert.Nil(suite.T(), err, "Error DateTzDto{}.NewStartEndTimes(suite.t2AsiaTokyo): ")
 
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateDto(dTzStart, dTzEnd, suite.fmtStr)
 
@@ -535,10 +535,10 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzC
 	// Time Zone. However, a standard timezone of US Central is specified. Also,
 	// The calculation type is specified as "Standard".
 
-	dTzStart, err := DateTzDto{}.New(suite.t2AsiaTokyo, suite.fmtStr)
-	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t2AsiaTokyo): ")
+	dTzStart, err := DateTzDto{}.NewDateTime(suite.t2AsiaTokyo, suite.fmtStr)
+	assert.Nil(suite.T(), err, "Error DateTzDto{}.NewStartEndTimes(suite.t2AsiaTokyo): ")
 
-	dTzEnd, err := DateTzDto{}.New(suite.t3AfricaCairo, suite.fmtStr)
+	dTzEnd, err := DateTzDto{}.NewDateTime(suite.t3AfricaCairo, suite.fmtStr)
 
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateTzDtoCalcTz(dTzStart, dTzEnd,
 		TDurCalcType(0).StdYearMth(), TZones.US.Central(), suite.fmtStr)
@@ -593,10 +593,10 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoCal
 	// Time Zone. However, a standard timezone of US Central is specified. Also,
 	// The calculation type is specified as "Standard".
 
-	dTzStart, err := DateTzDto{}.New(suite.t2USCentral, suite.fmtStr)
-	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t2AsiaTokyo): ")
+	dTzStart, err := DateTzDto{}.NewDateTime(suite.t2USCentral, suite.fmtStr)
+	assert.Nil(suite.T(), err, "Error DateTzDto{}.NewStartEndTimes(suite.t2AsiaTokyo): ")
 
-	dTzEnd, err := DateTzDto{}.New(suite.t3AfricaCairo, suite.fmtStr)
+	dTzEnd, err := DateTzDto{}.NewDateTime(suite.t3AfricaCairo, suite.fmtStr)
 
 	t1Dur, err := TimeDurationDto{}.NewStartEndTimesDateDtoCalc(dTzStart, dTzEnd, TDurCalcType(0).StdYearMth(), suite.fmtStr)
 
@@ -785,9 +785,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	dTz, err := DateTzDto{}.New(suite.t1USCentral, suite.fmtStr)
+	dTz, err := DateTzDto{}.NewDateTime(suite.t1USCentral, suite.fmtStr)
 
-	assert.Nil(suite.T(), err, "Error  DateTzDto{}.New(suite.t1USCentral, suite.fmtStr):")
+	assert.Nil(suite.T(), err, "Error  DateTzDto{}.NewStartEndTimes(suite.t1USCentral, suite.fmtStr):")
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDto(dTz, actualTimeDuration, suite.fmtStr)
 
@@ -821,9 +821,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDtoTz_01() {
 
-	dTz, err := DateTzDto{}.New(suite.t1USCentral, suite.fmtStr)
+	dTz, err := DateTzDto{}.NewDateTime(suite.t1USCentral, suite.fmtStr)
 
-	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t4USCentral, suite.fmtStr):")
+	assert.Nil(suite.T(), err, "Error DateTzDto{}.NewStartEndTimes(suite.t4USCentral, suite.fmtStr):")
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
@@ -860,9 +860,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	dTz, err := DateTzDto{}.New(suite.t1USCentral, suite.fmtStr)
+	dTz, err := DateTzDto{}.NewDateTime(suite.t1USCentral, suite.fmtStr)
 
-	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t1USCentral, suite.fmtStr):")
+	assert.Nil(suite.T(), err, "Error DateTzDto{}.NewStartEndTimes(suite.t1USCentral, suite.fmtStr):")
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoTzCalc(dTz, actualTimeDuration, TZones.US.Central(), TDurCalcType(0).StdYearMth(), suite.fmtStr)
 
@@ -898,9 +898,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	dTz, err := DateTzDto{}.New(suite.t1USCentral, suite.fmtStr)
+	dTz, err := DateTzDto{}.NewDateTime(suite.t1USCentral, suite.fmtStr)
 
-	assert.Nil(suite.T(), err, "Error DateTzDto{}.New(suite.t1USCentral, suite.fmtStr):")
+	assert.Nil(suite.T(), err, "Error DateTzDto{}.NewStartEndTimes(suite.t1USCentral, suite.fmtStr):")
 
 	t1Dur, err := TimeDurationDto{}.NewStartTimeDurationDateDtoCalc(dTz, actualTimeDuration, TDurCalcType(0).StdYearMth(), suite.fmtStr)
 
@@ -943,10 +943,10 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimePlusTimeDto_01
 	microsecond := 303
 	nanosecond := 848
 
-	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute, second,
+	tDto, err := TimeDto{}.NewTimeComponents(year, month, 0, day, hour, minute, second,
 		millisecond, microsecond, nanosecond)
 
-	assert.Nil(suite.T(), err, "Error TimeDto{}.New(year, month, ...):")
+	assert.Nil(suite.T(), err, "Error TimeDto{}.NewStartEndTimes(year, month, ...):")
 
 	tDur, err := TimeDurationDto{}.NewStartTimePlusTimeDto(suite.t1USCentral, tDto, suite.fmtStr)
 
@@ -968,10 +968,10 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeMinusTimeDto_0
 	microsecond := 303
 	nanosecond := 848
 
-	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute, second,
+	tDto, err := TimeDto{}.NewTimeComponents(year, month, 0, day, hour, minute, second,
 		millisecond, microsecond, nanosecond)
 
-	assert.Nil(suite.T(), err, "Error TimeDto{}.New(year, month, ...):")
+	assert.Nil(suite.T(), err, "Error TimeDto{}.NewStartEndTimes(year, month, ...):")
 
 	tDur, err := TimeDurationDto{}.NewEndTimeMinusTimeDto(suite.t4USCentral, tDto, suite.fmtStr)
 
@@ -983,9 +983,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeMinusTimeDto_0
 
 func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01() {
 
-	tDur, err := TimeDurationDto{}.New(suite.t1AsiaTokyo, suite.t2AsiaTokyo, suite.fmtStr)
+	tDur, err := TimeDurationDto{}.NewStartEndTimes(suite.t1AsiaTokyo, suite.t2AsiaTokyo, suite.fmtStr)
 
-	assert.Nil(suite.T(), err, "Error TimeDurationDto{}.New(...):")
+	assert.Nil(suite.T(), err, "Error TimeDurationDto{}.NewStartEndTimes(...):")
 
 	err = tDur.ReCalcEndDateTimeToNow()
 

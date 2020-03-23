@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestTimeZoneSpecification_01 (t testing.T) {
+func TestTimeZoneSpecification_01(t *testing.T) {
 
 	dateTime := time.Date(
 		2020,
@@ -86,7 +86,7 @@ func TestTimeZoneSpecification_01 (t testing.T) {
 	}
 }
 
-func TestTimeZoneSpecification_02 (t testing.T) {
+func TestTimeZoneSpecification_02 (t *testing.T) {
 
 	locPtr, err := time.LoadLocation(TZones.Europe.London())
 
@@ -192,7 +192,7 @@ func TestTimeZoneSpecification_02 (t testing.T) {
 }
 
 
-func TestTimeZoneSpecification_03 (t testing.T) {
+func TestTimeZoneSpecification_03 (t *testing.T) {
 
 	locPtr, err := time.LoadLocation(TZones.Asia.Vladivostok())
 
@@ -297,7 +297,7 @@ func TestTimeZoneSpecification_03 (t testing.T) {
 	}
 }
 
-func TestTimeZoneSpecification_04 (t testing.T) {
+func TestTimeZoneSpecification_04 (t *testing.T) {
 
 	dtStr := "12/30/2019 09:00:00.000000000 +0700 +07"
 

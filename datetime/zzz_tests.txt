@@ -1,7 +1,9 @@
 === RUN   TestDateTzDto_AddDate_01
---- PASS: TestDateTzDto_AddDate_01 (0.00s)
+    TestDateTzDto_AddDate_01: zztdatetzdto01_test.go:41: Error: Expected dtz2.String()='2019-08-27 19:54:30.038175584 -0500 CDT'. Instead, dtz2.String()='2019-08-27 20:54:30.038175584 -0500 CDT' 
+--- FAIL: TestDateTzDto_AddDate_01 (0.00s)
 === RUN   TestDateTzDto_AddDateToThis_01
---- PASS: TestDateTzDto_AddDateToThis_01 (0.00s)
+    TestDateTzDto_AddDateToThis_01: zztdatetzdto01_test.go:76: Error: Expected updated dtz1.String()='2019-08-27 19:54:30.038175584 -0500 CDT'. Instead, dtz1.String()='2019-08-27 20:54:30.038175584 -0500 CDT' 
+--- FAIL: TestDateTzDto_AddDateToThis_01 (0.00s)
 === RUN   TestDateTzDto_AddDuration_01
 --- PASS: TestDateTzDto_AddDuration_01 (0.00s)
 === RUN   TestDateTzDto_AddDurationToThis_01
@@ -11,19 +13,22 @@
 === RUN   TestDateTzDto_AddTimeToThis_01
 --- PASS: TestDateTzDto_AddTimeToThis_01 (0.00s)
 === RUN   TestDateTzDto_AddDateTime
---- PASS: TestDateTzDto_AddDateTime (0.00s)
+    TestDateTzDto_AddDateTime: zztdatetzdto01_test.go:318: Error: Expected updated dTz2.String()='2019-09-07 21:46:08.601568473 -0500 CDT'.
+        Instead, dTz2.String()='2019-09-07 22:46:08.601568473 -0500 CDT'.
+--- FAIL: TestDateTzDto_AddDateTime (0.00s)
 === RUN   TestDateTzDto_AddDateTimeToThis_01
---- PASS: TestDateTzDto_AddDateTimeToThis_01 (0.00s)
+    TestDateTzDto_AddDateTimeToThis_01: zztdatetzdto01_test.go:376: Error: Expected updated dTz1.String()='2019-09-07 21:46:08.601568473 -0500 CDT'. Instead, dTz1.String()='2019-09-07 22:46:08.601568473 -0500 CDT'.
+--- FAIL: TestDateTzDto_AddDateTimeToThis_01 (0.00s)
 === RUN   TestDateTzDto_CopyIn_01
 --- PASS: TestDateTzDto_CopyIn_01 (0.00s)
 === RUN   TestDateTzDto_CopyOut
 --- PASS: TestDateTzDto_CopyOut (0.00s)
 === RUN   TestDateTzDto_GetConvertibleTzStatusFlags_01
---- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.00s)
+--- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.09s)
 === RUN   TestDateTzDto_GetOriginalTagDescription_01
 --- PASS: TestDateTzDto_GetOriginalTagDescription_01 (0.00s)
 === RUN   TestDateTzDto_GetTimeDto_01
---- PASS: TestDateTzDto_GetTimeDto_01 (0.00s)
+--- PASS: TestDateTzDto_GetTimeDto_01 (0.02s)
 === RUN   TestDateTzDto_GetDateTimeTzNanoSecYMDDowText
 --- PASS: TestDateTzDto_GetDateTimeTzNanoSecYMDDowText (0.00s)
 === RUN   TestDateTzDto_NewDateTimeElements_01
@@ -43,7 +48,7 @@
 === RUN   TestDateTzDto_NewTimeDto_01
 --- PASS: TestDateTzDto_NewTimeDto_01 (0.00s)
 === RUN   TestDateTzDto_NewTz_01
---- PASS: TestDateTzDto_NewTz_01 (0.00s)
+--- PASS: TestDateTzDto_NewTz_01 (0.03s)
 === RUN   TestDateTzDto_SetFromDateTimeComponents_01
 --- PASS: TestDateTzDto_SetFromDateTimeComponents_01 (0.00s)
 === RUN   TestDateTzDto_SetNewTimeZone_01
@@ -99,449 +104,147 @@
 === RUN   TestCustomDateTimeFormat
 --- PASS: TestCustomDateTimeFormat (0.00s)
 === RUN   TestDurationTriad_GetYearMthDaysTimeAbbrv
---- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.00s)
+    TestDurationTriad_GetYearMthDaysTimeAbbrv: zztdurationtriad01_test.go:31: Expected: 0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds. Error - got 0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 135000000-Nanoseconds
+--- FAIL: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_GetYearsMthsWeeksTimeAbbrv
---- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.00s)
+    TestDurationTriad_GetYearsMthsWeeksTimeAbbrv: zztdurationtriad01_test.go:59: Expected: 0-Hours 1-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds. Error - got 0-Hours 1-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 135000000-Nanoseconds
+--- FAIL: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_NewAutoEnd_01
 --- PASS: TestDurationTriad_NewAutoEnd_01 (0.00s)
 === RUN   TestDurationTriad_NewAutoStart
---- PASS: TestDurationTriad_NewAutoStart (0.01s)
+--- PASS: TestDurationTriad_NewAutoStart (0.00s)
 === RUN   TestDurationTriad_NewStartTimeDuration_01
 --- PASS: TestDurationTriad_NewStartTimeDuration_01 (0.00s)
 === RUN   TestDurationTriad_NewStartDateTzDuration_01
---- PASS: TestDurationTriad_NewStartDateTzDuration_01 (0.01s)
+--- PASS: TestDurationTriad_NewStartDateTzDuration_01 (0.00s)
 === RUN   TestDurationTriad_NewStartEndDateTzDto_01
---- PASS: TestDurationTriad_NewStartEndDateTzDto_01 (0.00s)
+    TestDurationTriad_NewStartEndDateTzDto_01: zztdurationtriad01_test.go:330: Error - Expected WeekDays Duration: 1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 1170-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndDateTzDto_01: zztdurationtriad01_test.go:343: Error - Expected Hours Duration: 28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndDateTzDto_01: zztdurationtriad01_test.go:365: Error - Expected Weeks WeekDays Duration: 167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 167-Weeks 1-WeekDays 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+--- FAIL: TestDurationTriad_NewStartEndDateTzDto_01 (0.00s)
 === RUN   TestDurationTriad_NewStartEndDateTzDtoTz
---- PASS: TestDurationTriad_NewStartEndDateTzDtoTz (0.00s)
+    TestDurationTriad_NewStartEndDateTzDtoTz: zztdurationtriad01_test.go:490: Error - Expected WeekDays Duration: 1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 1170-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndDateTzDtoTz: zztdurationtriad01_test.go:503: Error - Expected Hours Duration: 28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndDateTzDtoTz: zztdurationtriad01_test.go:525: Error - Expected Weeks WeekDays Duration: 167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 167-Weeks 1-WeekDays 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+--- FAIL: TestDurationTriad_NewStartEndDateTzDtoTz (0.00s)
 === RUN   TestDurationTriad_NewStartEndDateTzDtoCalcTz
---- PASS: TestDurationTriad_NewStartEndDateTzDtoCalcTz (0.00s)
+    TestDurationTriad_NewStartEndDateTzDtoCalcTz: zztdurationtriad01_test.go:655: Error - Expected WeekDays Duration: 1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 1170-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndDateTzDtoCalcTz: zztdurationtriad01_test.go:668: Error - Expected Hours Duration: 28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndDateTzDtoCalcTz: zztdurationtriad01_test.go:690: Error - Expected Weeks WeekDays Duration: 167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 167-Weeks 1-WeekDays 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+--- FAIL: TestDurationTriad_NewStartEndDateTzDtoCalcTz (0.00s)
 === RUN   TestDurationTriad_NewStartEndTimes_01
---- PASS: TestDurationTriad_NewStartEndTimes_01 (0.00s)
+    TestDurationTriad_NewStartEndTimes_01: zztdurationtriad01_test.go:811: Error - Expected WeekDays Duration: 1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 1170-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndTimes_01: zztdurationtriad01_test.go:824: Error - Expected Hours Duration: 28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_NewStartEndTimes_01: zztdurationtriad01_test.go:846: Error - Expected Weeks WeekDays Duration: 167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 167-Weeks 1-WeekDays 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+--- FAIL: TestDurationTriad_NewStartEndTimes_01 (0.00s)
 === RUN   TestDurationTriad_NewStartTimeMinusTime_01
+    TestDurationTriad_NewStartTimeMinusTime_01: zztdurationtriad01_test.go:926: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 04/15/2017 19:54:30.000000000 -0500 CDT.
+    TestDurationTriad_NewStartTimeMinusTime_01: zztdurationtriad01_test.go:936: Error- Expected Time Duration 28082h4m2s. Instead, got 363h4m2s
+    TestDurationTriad_NewStartTimeMinusTime_01: zztdurationtriad01_test.go:945: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
 --- FAIL: TestDurationTriad_NewStartTimeMinusTime_01 (0.00s)
-    zztdurationtriad01_test.go:926: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 04/15/2017 19:54:30.000000000 -0500 CDT.
-    zztdurationtriad01_test.go:936: Error- Expected Time Duration 28082h4m2s. Instead, got 363h4m2s
-    zztdurationtriad01_test.go:945: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
 === RUN   TestDurationTriad_NewStartTimePlusTime_01
 --- PASS: TestDurationTriad_NewStartTimePlusTime_01 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes
---- PASS: TestDurationTriad_SetStartEndTimes (0.00s)
+    TestDurationTriad_SetStartEndTimes: zztdurationtriad02_test.go:83: Error - Expected WeekDays Duration: 1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 1170-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_SetStartEndTimes: zztdurationtriad02_test.go:97: Error - Expected Hours Duration: 28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+    TestDurationTriad_SetStartEndTimes: zztdurationtriad02_test.go:119: Error - Expected Weeks WeekDays Duration: 167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 167-Weeks 1-WeekDays 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+--- FAIL: TestDurationTriad_SetStartEndTimes (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_02
 --- PASS: TestDurationTriad_SetStartEndTimes_02 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_03
---- PASS: TestDurationTriad_SetStartEndTimes_03 (0.00s)
+    TestDurationTriad_SetStartEndTimes_03: zztdurationtriad02_test.go:281: Error - Expected YearsMthsWeeksTime Duration: 3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 864-Milliseconds 197-Microseconds 532-Nanoseconds. Instead, got 3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 864-Milliseconds 197-Microseconds 864000000-Nanoseconds
+--- FAIL: TestDurationTriad_SetStartEndTimes_03 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_04
 --- PASS: TestDurationTriad_SetStartEndTimes_04 (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTime
 --- PASS: TestDurationTriad_SetStartTimePlusTime (0.00s)
 === RUN   TestDurationTriad_SetStartTimeMinusTime
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:381: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 04/15/2017 19:54:30.000000000 -0500 CDT.
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:391: Error- Expected Time Duration 28082h4m2s. Instead, got 363h4m2s
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:400: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
 --- FAIL: TestDurationTriad_SetStartTimeMinusTime (0.00s)
-    zztdurationtriad02_test.go:381: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 04/15/2017 19:54:30.000000000 -0500 CDT.
-    zztdurationtriad02_test.go:391: Error- Expected Time Duration 28082h4m2s. Instead, got 363h4m2s
-    zztdurationtriad02_test.go:400: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
 === RUN   TestDurationTriad_SetStartTimeDuration
 --- PASS: TestDurationTriad_SetStartTimeDuration (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTimeDto_01
 --- PASS: TestDurationTriad_SetStartTimePlusTimeDto_01 (0.00s)
-=== RUN   TestDateTimeFormatUtility_ParseDateTimeStrings
-Item: 0  Date Time String : Saturday 11/12/2016 4:26 PM 
-Item: 1  Date Time String : 7-6-16 9:30AM 
-Item: 2  Date Time String : 7-6-2016 9:30AM 
-Item: 3  Date Time String : 7-06-2016 9:30AM 
-Item: 4  Date Time String : 07-6-2016 9:30AM 
-Item: 5  Date Time String : 07-06-2016 9:30AM 
-Item: 6  Date Time String : November 12, 2016 
-Item: 7  Date Time String : 11/12/2016 
-Item: 8  Date Time String : 12 Nov 2016 
-Item: 9  Date Time String : 12 November 2016 
-Item: 10  Date Time String : November 12, 11:26pm -0600 CST 2016 
-Item: 11  Date Time String : 12 November 2016 23:26:00 -0600 CST 
-Item: 12  Date Time String : November 12, 2016 11:6pm +0000 UTC 
-Item: 13  Date Time String : November 12, 2016 11:6 p m +0000 UTC 
-Item: 14  Date Time String : November 12, 2016 1:6pm +0000 UTC 
-Item: 15  Date Time String : November 12, 2016 1:06pm -0500 EST 
-Item: 16  Date Time String : 2016-11-12 13:6 -0500 EST 
-Item: 17  Date Time String : 5/31/2017 23:2:17 -0700 PDT 
-Item: 18  Date Time String : 2016-11-12 23:26:00 +0000 UTC 
-Item: 19  Date Time String : 2016-11-12 23:26:00Z 
-Item: 20  Date Time String : 2017-6-12 11:26 p.m. Z 
-Item: 21  Date Time String : 2017-11-26 16:26 -0600 CST 
-Item: 22  Date Time String : 2017-6-5 17:16 +0100 BST 
-Item: 23  Date Time String : 2017-6-05 17:16 +0100 BST 
-Item: 24  Date Time String : 2017-06-5 17:16 +0100 BST 
-Item: 25  Date Time String : 2017-06-05 17:16 +0100 BST 
-Item: 26  Date Time String : 11/12/16 4:26 PM 
-Item: 27  Date Time String : 11/12/16 4:4 P.M. 
-Item: 28  Date Time String : 11/12/16 4:4:4.012 AM 
-Item: 29  Date Time String : 11/1/16 4:4:04.012 A.M. 
-Item: 30  Date Time String : 11/1/2016 4:4:04.012 A.M. 
-Item: 31  Date Time String : 11/1/2016 4:4:04.012 A.M.  
-Item: 32  Date Time String : Monday June 5, 2017 17:24:46.064223400 -0500 CDT 
-Item: 33  Date Time String : 6-5-2017 17:30:17 -0700 PDT 
-Item: 34  Date Time String : 06-05-2017 17:30:17 -0700 PDT 
-Item: 35  Date Time String : 06-5-2017 17:30:17 -0700 PDT 
-Item: 36  Date Time String : 11/12/16 4:04:0.012 PM 
-Item: 37  Date Time String : 11/2/16 04:04:0.012 PM 
-Item: 38  Date Time String : 11/12/16 4:04:00.012 PM 
-Item: 39  Date Time String : 11/12/16 04:4:0.012 PM 
-Item: 40  Date Time String : 11/12/16 04:04:00.012 AM 
-Item: 41  Date Time String : 11/12/16 04:04:00.012 am 
-Item: 42  Date Time String : 11/12/16 04:04:00.012 A.M. 
-Item: 43  Date Time String : 11/12/16 04:4:0.012 P.M. 
-Item: 44  Date Time String : 11/12/2016 04:4:0.012 P.M. 
-Item: 45  Date Time String : 11/12/2016 04:4:0.012 PM. 
-Item: 46  Date Time String : 5/27/2017 11:42PM CDT 
-Item: 47  Date Time String : 06/1/2017 11:42 -0700 PDT 
-Item: 48  Date Time String : 2016-11-26 16:26 CDT -0600 
-Item: 49  Date Time String : 2016/11/26 16:2:3 PDT -0700 
-Item: 50  Date Time String : June 12th, 2016 4:26 PM 
-Item: 51  Date Time String : 05.03.2017 
-Item: 52  Date Time String : 5.03.2017 
-Item: 53  Date Time String : 5.3.2017 
-Item: 54  Date Time String : 5.3.'17 
-Item: 55  Date Time String : 2017.3.5 
-Item: 56  Date Time String : 6/27/2017 23:26:01 -0500 CDT 
-Item: 57  Date Time String : 23:26:01 -0500 CDT 
-Item: 58  Date Time String : 11-26-2016 16:26 -0600 CST 
-Item: 59  Date Time String : 11-26-2016 16:26:0 -0600 CST 
-Item: 60  Date Time String : Monday June 5th2017 17:24:46.064223400 -0500 CDT 
-Item: 61  Date Time String : 5/27/2017 11:42PMCDT 
-Item: 62  Date Time String : 06/1/2017 11:42 PM-0700 PDT 
-Item: 63  Date Time String : 06/1/2017 11:42:00   PM  -0700 PDT 
-Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT 
-Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
-Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
-Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.83s)
-=== RUN   TestDtfmtTestSuite
-=== RUN   TestDtfmtTestSuite/TestParseDateTimeString01
-=== RUN   TestDtfmtTestSuite/TestParseDateTimeString02
-=== RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.30s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.00s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.01s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.03s)
-=== RUN   TestTDurCalcType_01
---- PASS: TestTDurCalcType_01 (0.00s)
-=== RUN   TestTDurCalcType_02
---- PASS: TestTDurCalcType_02 (0.00s)
-=== RUN   TestTDurCalcType_03
---- PASS: TestTDurCalcType_03 (0.00s)
-=== RUN   TestTDurCalcType_04
---- PASS: TestTDurCalcType_04 (0.00s)
-=== RUN   TestTDurCalcType_05
---- PASS: TestTDurCalcType_05 (0.00s)
-=== RUN   TestTDurCalcType_06
---- PASS: TestTDurCalcType_06 (0.00s)
-=== RUN   TestTDurCalcTypeString_001
---- PASS: TestTDurCalcTypeString_001 (0.00s)
-=== RUN   TestTDurCalcTypeString_002
---- PASS: TestTDurCalcTypeString_002 (0.00s)
-=== RUN   TestTDurCalcTypeString_003
---- PASS: TestTDurCalcTypeString_003 (0.00s)
-=== RUN   TestTDurCalcTypeString_004
---- PASS: TestTDurCalcTypeString_004 (0.00s)
-=== RUN   TestTDurCalcTypeString_005
---- PASS: TestTDurCalcTypeString_005 (0.00s)
-=== RUN   TestTDurCalcTypeString_006
---- PASS: TestTDurCalcTypeString_006 (0.00s)
-=== RUN   TestTDurCalcTypeString_007
---- PASS: TestTDurCalcTypeString_007 (0.00s)
-=== RUN   TestTDurCalcTypeString_008
---- PASS: TestTDurCalcTypeString_008 (0.00s)
-=== RUN   TestTDurCalcTypeString_009
---- PASS: TestTDurCalcTypeString_009 (0.00s)
-=== RUN   TestTDurCalcTypeString_010
---- PASS: TestTDurCalcTypeString_010 (0.00s)
-=== RUN   TestTDurCalcTypeString_011
---- PASS: TestTDurCalcTypeString_011 (0.00s)
-=== RUN   TestTDurCalcTypeString_012
---- PASS: TestTDurCalcTypeString_012 (0.00s)
-=== RUN   TestTDurCalcTypeString_013
---- PASS: TestTDurCalcTypeString_013 (0.00s)
-=== RUN   TestTDurCalcTypeString_014
---- PASS: TestTDurCalcTypeString_014 (0.00s)
-=== RUN   TestTDurCalcTypeString_015
---- PASS: TestTDurCalcTypeString_015 (0.00s)
-=== RUN   TestTDurCalcTypeString_016
---- PASS: TestTDurCalcTypeString_016 (0.00s)
-=== RUN   TestTDurCalcTypeString_017
---- PASS: TestTDurCalcTypeString_017 (0.00s)
-=== RUN   TestTDurCalcTypeString_018
---- PASS: TestTDurCalcTypeString_018 (0.00s)
-=== RUN   TestTDurCalcTypeString_019
---- PASS: TestTDurCalcTypeString_019 (0.00s)
-=== RUN   TestTDurCalcTypeString_020
---- PASS: TestTDurCalcTypeString_020 (0.00s)
-=== RUN   TestTDurCalcTypeString_021
---- PASS: TestTDurCalcTypeString_021 (0.00s)
-=== RUN   TestTDurCalcTypeString_022
---- PASS: TestTDurCalcTypeString_022 (0.00s)
-=== RUN   TestTDurCalcTypeString_023
---- PASS: TestTDurCalcTypeString_023 (0.00s)
-=== RUN   TestTDurCalcTypeString_024
---- PASS: TestTDurCalcTypeString_024 (0.00s)
-=== RUN   TestTDurCalcTypeString_025
---- PASS: TestTDurCalcTypeString_025 (0.00s)
-=== RUN   TestTDurCalcTypeString_026
---- PASS: TestTDurCalcTypeString_026 (0.00s)
-=== RUN   TestTDurCalcTypeString_027
---- PASS: TestTDurCalcTypeString_027 (0.00s)
-=== RUN   TestTDurCalcTypeString_028
---- PASS: TestTDurCalcTypeString_028 (0.00s)
-=== RUN   TestTDurCalcTypeString_029
---- PASS: TestTDurCalcTypeString_029 (0.00s)
-=== RUN   TestTDurCalcTypeString_030
---- PASS: TestTDurCalcTypeString_030 (0.00s)
-=== RUN   TestTDurCalcTypeString_031
---- PASS: TestTDurCalcTypeString_031 (0.00s)
-=== RUN   TestTDurCalcTypeString_032
---- PASS: TestTDurCalcTypeString_032 (0.00s)
-=== RUN   TestTDurCalcTypeString_033
---- PASS: TestTDurCalcTypeString_033 (0.00s)
-=== RUN   TestTDurCalcTypeString_034
---- PASS: TestTDurCalcTypeString_034 (0.00s)
-=== RUN   TestTDurCalcTypeString_035
---- PASS: TestTDurCalcTypeString_035 (0.00s)
-=== RUN   TestTDurCalcTypeValue_001
---- PASS: TestTDurCalcTypeValue_001 (0.00s)
-=== RUN   TestTDurCalcTypeValue_002
---- PASS: TestTDurCalcTypeValue_002 (0.00s)
-=== RUN   TestTDurCalcTypeValue_003
---- PASS: TestTDurCalcTypeValue_003 (0.00s)
-=== RUN   TestTDurCalcTypeValue_004
---- PASS: TestTDurCalcTypeValue_004 (0.00s)
-=== RUN   TestTDurCalcTypeValue_005
---- PASS: TestTDurCalcTypeValue_005 (0.00s)
-=== RUN   TestTDurCalcTypeValue_006
---- PASS: TestTDurCalcTypeValue_006 (0.00s)
-=== RUN   TestTDurCalcTypeValue_007
---- PASS: TestTDurCalcTypeValue_007 (0.00s)
-=== RUN   TestTDurCalcTypeValue_008
---- PASS: TestTDurCalcTypeValue_008 (0.00s)
-=== RUN   TestTDurCalcTypeValue_009
---- PASS: TestTDurCalcTypeValue_009 (0.00s)
-=== RUN   TestTDurCalcTypeValue_010
---- PASS: TestTDurCalcTypeValue_010 (0.00s)
-=== RUN   TestTDurCalcTypeValue_011
---- PASS: TestTDurCalcTypeValue_011 (0.00s)
-=== RUN   TestTDurCalcTypeValue_012
---- PASS: TestTDurCalcTypeValue_012 (0.00s)
-=== RUN   TestTimeDto_AddTimeDto_01
---- PASS: TestTimeDto_AddTimeDto_01 (0.00s)
-=== RUN   TestTimeDto_AddTimeDto_02
---- PASS: TestTimeDto_AddTimeDto_02 (0.00s)
-=== RUN   TestTimeDto_CopyOut_01
---- PASS: TestTimeDto_CopyOut_01 (0.00s)
-=== RUN   TestTimeDto_CopyIn_01
---- PASS: TestTimeDto_CopyIn_01 (0.00s)
-=== RUN   TestTimeDto_ConvertToNegativeValues
---- PASS: TestTimeDto_ConvertToNegativeValues (0.00s)
-=== RUN   TestTimeDto_ConvertToAbsoluteValues_01
---- PASS: TestTimeDto_ConvertToAbsoluteValues_01 (0.00s)
-=== RUN   TestTimeDto_Empty
---- PASS: TestTimeDto_Empty (0.00s)
-=== RUN   TestTimeDto_Equal_01
---- PASS: TestTimeDto_Equal_01 (0.00s)
-=== RUN   TestTimeDto_Equal_02
---- PASS: TestTimeDto_Equal_02 (0.00s)
-=== RUN   TestTimeDto_GetDateTime_01
---- PASS: TestTimeDto_GetDateTime_01 (0.00s)
-=== RUN   TestTimeDto_New_01
---- PASS: TestTimeDto_New_01 (0.00s)
-=== RUN   TestTimeDto_New_02
---- PASS: TestTimeDto_New_02 (0.00s)
-=== RUN   TestTimeDto_NewFromDateTime_01
---- PASS: TestTimeDto_NewFromDateTime_01 (0.00s)
-=== RUN   TestTimeDto_NewFromDateTzDto_01
---- PASS: TestTimeDto_NewFromDateTzDto_01 (0.00s)
-=== RUN   TestTimeDto_NewTimeElements_01
---- PASS: TestTimeDto_NewTimeElements_01 (0.00s)
-=== RUN   TestTimeDto_NormalizeTimeElements_01
---- PASS: TestTimeDto_NormalizeTimeElements_01 (0.00s)
-=== RUN   TestTimeDto_NormalizeTimeElements_02
---- PASS: TestTimeDto_NormalizeTimeElements_02 (0.00s)
-=== RUN   TestTimeDto_NormalizeDays_01
---- PASS: TestTimeDto_NormalizeDays_01 (0.00s)
-=== RUN   TestTimeDto_SubTimeDto_01
---- PASS: TestTimeDto_SubTimeDto_01 (0.00s)
-=== RUN   TestTimeDuroTestSuite
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoTzCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDto_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTzCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTzCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTz_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDto_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTzCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_New_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_New_02
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_ReCalcEndDateTimeToNow_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_02
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.08s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTz_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_New_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_New_02 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_ReCalcEndDateTimeToNow_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_02 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02 (0.00s)
-=== RUN   TestTimeDurationDto_DaylightSavings_01
---- PASS: TestTimeDurationDto_DaylightSavings_01 (0.00s)
-=== RUN   TestTimeDurationDto_GetCumSecondsTimeStr_01
---- PASS: TestTimeDurationDto_GetCumSecondsTimeStr_01 (0.00s)
-=== RUN   TestTimeDurationDto_GetCumSecondsDto_01
---- PASS: TestTimeDurationDto_GetCumSecondsDto_01 (0.00s)
-=== RUN   TestTimeDurationDto_GetYearMthDaysTimeAbbrvStr
---- PASS: TestTimeDurationDto_GetYearMthDaysTimeAbbrvStr (0.00s)
-=== RUN   TestTimeDurationDto_GetYearsMthsWeeksTimeAbbrvStr
---- PASS: TestTimeDurationDto_GetYearsMthsWeeksTimeAbbrvStr (0.00s)
-=== RUN   TestTimeDurationDto_NewStartTimeDuration_01
---- PASS: TestTimeDurationDto_NewStartTimeDuration_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartEndTimes_01
---- PASS: TestTimeDurationDto_NewStartEndTimes_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01
---- PASS: TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartEndDateTzDtoTz_01
---- PASS: TestTimeDurationDto_NewStartEndDateTzDtoTz_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartEndDateTzDto_01
---- PASS: TestTimeDurationDto_NewStartEndDateTzDto_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartTimeMinusTime_01
---- FAIL: TestTimeDurationDto_NewStartTimeMinusTime_01 (0.00s)
-    zzttimedurationdto02_test.go:775: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 04/15/2017 19:54:30.000000000 -0500 CDT.
-    zzttimedurationdto02_test.go:785: Error- Expected Time Duration 28082h4m2s. Instead, got 363h4m2s
-    zzttimedurationdto02_test.go:794: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
-=== RUN   TestTimeDurationDto_NewStartTimePlusTime_01
---- PASS: TestTimeDurationDto_NewStartTimePlusTime_01 (0.00s)
-=== RUN   TestTimeDurationDto_SetStartEndTimes
---- PASS: TestTimeDurationDto_SetStartEndTimes (0.00s)
-=== RUN   TestTimeDurationDto_SetStartEndTimes_02
---- PASS: TestTimeDurationDto_SetStartEndTimes_02 (0.00s)
-=== RUN   TestTimeDurationDto_SetStartEndTimes_03
---- PASS: TestTimeDurationDto_SetStartEndTimes_03 (0.00s)
-=== RUN   TestTimeDurationDto_SetStartEndTimes_04
---- PASS: TestTimeDurationDto_SetStartEndTimes_04 (0.00s)
-=== RUN   TestTimeDurationDto_SetStartTimePlusTime
---- PASS: TestTimeDurationDto_SetStartTimePlusTime (0.00s)
-=== RUN   TestTimeDurationDto_SetStartTimeMinusTime
---- FAIL: TestTimeDurationDto_SetStartTimeMinusTime (0.00s)
-    zzttimedurationdto02_test.go:1132: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 04/15/2017 19:54:30.000000000 -0500 CDT.
-    zzttimedurationdto02_test.go:1142: Error- Expected Time Duration 28082h4m2s. Instead, got 363h4m2s
-    zzttimedurationdto02_test.go:1151: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
-=== RUN   TestTimeDurationDto_SetStartTimeDuration
---- PASS: TestTimeDurationDto_SetStartTimeDuration (0.00s)
-=== RUN   TestTimeZoneDefinition_New_01
---- PASS: TestTimeZoneDefinition_New_01 (0.00s)
-=== RUN   TestTimeZoneDefinition_CopyOut_01
---- PASS: TestTimeZoneDefinition_CopyOut_01 (0.00s)
-=== RUN   TestTimeZoneDefinition_CopyOut_02
---- PASS: TestTimeZoneDefinition_CopyOut_02 (0.00s)
-=== RUN   TestTimeZoneDefinition_Equal_01
---- PASS: TestTimeZoneDefinition_Equal_01 (0.00s)
-=== RUN   TestTimeZoneDefinition_Equal_02
---- PASS: TestTimeZoneDefinition_Equal_02 (0.00s)
-=== RUN   TestTimeZoneDefinition_Equal_03
---- PASS: TestTimeZoneDefinition_Equal_03 (0.00s)
-=== RUN   TestTimeZoneDefinition_GetConvertibleTimeZoneName_01
---- PASS: TestTimeZoneDefinition_GetConvertibleTimeZoneName_01 (0.00s)
-=== RUN   TestTimeZoneDefinition_GetConvertibleTimeZoneName_02
---- PASS: TestTimeZoneDefinition_GetConvertibleTimeZoneName_02 (0.00s)
-=== RUN   TestTimeZoneDto_AddTimeDurationDto_01
---- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.00s)
-=== RUN   TestTimeZoneDto_AddMinusTimeDto
---- FAIL: TestTimeZoneDto_AddMinusTimeDto (0.00s)
-    zzttimezonedto01_test.go:160: Error: Expected tzu2.TimeIn='02/15/2014 19:54:30.000000000 -0600 CST'.  Instead, tzu2.TimeIn='04/15/2017 19:54:30.000000000 -0500 CDT'. 
-    zzttimezonedto01_test.go:172: Error expected tzu1-tzu2 Duration='28082h4m2s'.  Instead, Duration='363h4m2s'
-=== RUN   TestTimeZoneDto_AddPlusTimeDto
---- PASS: TestTimeZoneDto_AddPlusTimeDto (0.00s)
-=== RUN   TestTimeZoneUtility_ConvertTz_01
---- PASS: TestTimeZoneUtility_ConvertTz_01 (0.01s)
-=== RUN   TestTimeZoneUtility_ConvertTz_02
---- PASS: TestTimeZoneUtility_ConvertTz_02 (0.00s)
-=== RUN   TestTimeZoneUtility_ConvertTz_03
---- PASS: TestTimeZoneUtility_ConvertTz_03 (0.00s)
-=== RUN   TestTimeZoneUtility_ConvertTz_04
---- PASS: TestTimeZoneUtility_ConvertTz_04 (0.00s)
-=== RUN   TestTimeZoneUtility_ConvertTz_05
---- PASS: TestTimeZoneUtility_ConvertTz_05 (0.00s)
-=== RUN   TestInvalidTargetTzInConversion
---- PASS: TestInvalidTargetTzInConversion (0.00s)
-=== RUN   TestTimeZoneUtility_GetLocationIn01
---- PASS: TestTimeZoneUtility_GetLocationIn01 (0.00s)
-=== RUN   TestTimeZoneUtility_GetLocationOut_01
---- PASS: TestTimeZoneUtility_GetLocationOut_01 (0.00s)
-=== RUN   TestTimeZoneUtility_GetZoneIn_01
---- PASS: TestTimeZoneUtility_GetZoneIn_01 (0.00s)
-=== RUN   TestTimeZoneUtility_GetZoneOut_01
---- PASS: TestTimeZoneUtility_GetZoneOut_01 (0.00s)
-=== RUN   TestTimeZoneUtility_IsValidTimeZone_01
---- PASS: TestTimeZoneUtility_IsValidTimeZone_01 (0.00s)
-=== RUN   TestTimeZoneUtility_IsValidTimeZone02
---- PASS: TestTimeZoneUtility_IsValidTimeZone02 (0.00s)
-=== RUN   TestTimeZoneUtility_Location_01
---- PASS: TestTimeZoneUtility_Location_01 (0.00s)
-=== RUN   TestTimeZoneUtility_Location_02
---- PASS: TestTimeZoneUtility_Location_02 (0.00s)
-=== RUN   TestTimeZoneUtility_New_01
---- PASS: TestTimeZoneUtility_New_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewAddDuration_01
---- PASS: TestTimeZoneUtility_NewAddDuration_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewAddDate_01
---- PASS: TestTimeZoneUtility_NewAddDate_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewAddDateTime_01
---- PASS: TestTimeZoneUtility_NewAddDateTime_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewAddTime_01
---- PASS: TestTimeZoneUtility_NewAddTime_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewTimeAddDate_01
---- PASS: TestTimeZoneUtility_NewTimeAddDate_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewTimeAddTime_01
---- PASS: TestTimeZoneUtility_NewTimeAddTime_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewTimeAddDateTime_01
---- PASS: TestTimeZoneUtility_NewTimeAddDateTime_01 (0.00s)
-=== RUN   TestTimeZoneUtility_NewTimeAddDuration_01
---- PASS: TestTimeZoneUtility_NewTimeAddDuration_01 (0.00s)
-=== RUN   TestTimeZoneUtility_ReclassifyTimeWithTzLocal
---- PASS: TestTimeZoneUtility_ReclassifyTimeWithTzLocal (0.00s)
-=== RUN   TestTimeZoneUtility_ReclassifyTimeWithNewTz
---- PASS: TestTimeZoneUtility_ReclassifyTimeWithNewTz (0.00s)
-=== RUN   TestTimeZoneUtility_ReclassifyTimeAsMountain
---- PASS: TestTimeZoneUtility_ReclassifyTimeAsMountain (0.00s)
-FAIL
-exit status 1
-FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	11.115s
+=== RUN   TestLocationNameType_None_01
+--- PASS: TestLocationNameType_None_01 (0.00s)
+=== RUN   TestLocationNameType_02
+--- PASS: TestLocationNameType_02 (0.00s)
+=== RUN   TestLocationNameType_03
+--- PASS: TestLocationNameType_03 (0.00s)
+=== RUN   TestLocationNameType_04
+--- PASS: TestLocationNameType_04 (0.00s)
+=== RUN   TestLocationNameType_05
+--- PASS: TestLocationNameType_05 (0.00s)
+=== RUN   TestLocationNameType_06
+--- PASS: TestLocationNameType_06 (0.00s)
+=== RUN   TestLocationNameType_07
+--- PASS: TestLocationNameType_07 (0.00s)
+=== RUN   TestLocationNameType_08
+--- PASS: TestLocationNameType_08 (0.00s)
+=== RUN   TestLocationNameType_09
+--- PASS: TestLocationNameType_09 (0.00s)
+=== RUN   TestLocationNameType_10
+--- PASS: TestLocationNameType_10 (0.00s)
+=== RUN   TestTimeZoneCategory_01
+--- PASS: TestTimeZoneCategory_01 (0.00s)
+=== RUN   TestTimeZoneCategory_02
+--- PASS: TestTimeZoneCategory_02 (0.00s)
+=== RUN   TestTimeZoneCategory_03
+--- PASS: TestTimeZoneCategory_03 (0.00s)
+=== RUN   TestTimeZoneCategory_04
+--- PASS: TestTimeZoneCategory_04 (0.00s)
+=== RUN   TestTimeZoneCategory_05
+--- PASS: TestTimeZoneCategory_05 (0.00s)
+=== RUN   TestTimeZoneCategory_06
+--- PASS: TestTimeZoneCategory_06 (0.00s)
+=== RUN   TestTimeZoneCategory_07
+--- PASS: TestTimeZoneCategory_07 (0.00s)
+=== RUN   TestTimeZoneCategory_08
+--- PASS: TestTimeZoneCategory_08 (0.00s)
+=== RUN   TestTimeZoneCategory_09
+--- PASS: TestTimeZoneCategory_09 (0.00s)
+=== RUN   TestTimeZoneCategory_10
+--- PASS: TestTimeZoneCategory_10 (0.00s)
+=== RUN   TestTimeZoneClass_01
+--- PASS: TestTimeZoneClass_01 (0.00s)
+=== RUN   TestTimeZoneClass_02
+--- PASS: TestTimeZoneClass_02 (0.00s)
+=== RUN   TestTimeZoneClass_03
+--- PASS: TestTimeZoneClass_03 (0.00s)
+=== RUN   TestTimeZoneClass_04
+--- PASS: TestTimeZoneClass_04 (0.00s)
+=== RUN   TestTimeZoneClass_05
+--- PASS: TestTimeZoneClass_05 (0.00s)
+=== RUN   TestTimeZoneClass_06
+--- PASS: TestTimeZoneClass_06 (0.00s)
+=== RUN   TestTimeZoneClass_07
+--- PASS: TestTimeZoneClass_07 (0.00s)
+=== RUN   TestTimeZoneClass_08
+--- PASS: TestTimeZoneClass_08 (0.00s)
+=== RUN   TestTimeZoneClass_09
+--- PASS: TestTimeZoneClass_09 (0.00s)
+=== RUN   TestTimeZoneClass_10
+--- PASS: TestTimeZoneClass_10 (0.00s)
+=== RUN   TestTimeZoneClass_11
+--- PASS: TestTimeZoneClass_11 (0.00s)
+=== RUN   TestTimeZoneClass_12
+--- PASS: TestTimeZoneClass_12 (0.00s)
+=== RUN   TestTimeZoneConversionType_01
+--- PASS: TestTimeZoneConversionType_01 (0.00s)
+=== RUN   TestTimeZoneConversionType_02
+--- PASS: TestTimeZoneConversionType_02 (0.00s)
+=== RUN   TestTimeZoneConversionType_03
+--- PASS: TestTimeZoneConversionType_03 (0.00s)
+=== RUN   TestTimeZoneConversionType_04
+--- PASS: TestTimeZoneConversionType_04 (0.00s)
+=== RUN   TestTimeZoneConversionType_05
+--- PASS: TestTimeZoneConversionType_05 (0.00s)
+=== RUN   TestTimeZoneConversionType_06
+--- PASS: TestTimeZoneConversionType_06 (0.00s)
+=== RUN   TestTimeZoneConversionType_07
+--- PASS: TestTimeZoneConversionType_07 (0.00s)
+=== RUN   TestTimeZoneConversionType_08
+exit status 2
+FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	60.006s

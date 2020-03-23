@@ -39,7 +39,7 @@ func TestMilitaryDateTzDto_01(t *testing.T) {
 	milDatTzDto, err = MilitaryDateTzDto{}.New(testTime, "Q")
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Q\")\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"Q\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -105,7 +105,7 @@ func TestMilitaryDateTzDto_02(t *testing.T) {
 	milDatTzDto, err = MilitaryDateTzDto{}.New(testTime, "Q")
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Q\")\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"Q\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -178,7 +178,7 @@ func TestMilitaryDateTzDto_New_01(t *testing.T) {
 	milDatTzDto, err = MilitaryDateTzDto{}.New(utcTime, "Z")
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Z\")\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"Z\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -304,10 +304,10 @@ func TestMilitaryDateTzDto_NewFromDateTzDto_01(t *testing.T) {
 
 	var dateTzDto DateTzDto
 
-	dateTzDto, err = DateTzDto{}.New(testTime, fmtStr)
+	dateTzDto, err = DateTzDto{}.NewDateTime(testTime, fmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DateTzDto{}.New(testTime, fmtStr)\n" +
+		t.Errorf("Error returned by DateTzDto{}.NewStartEndTimes(testTime, fmtStr)\n" +
 			"testTime='%v'\n" +
 			"Error='%v'\n", testTime.Format(fmtStr), err.Error())
 	}
@@ -360,7 +360,7 @@ func TestMilitaryDateTzDto_GeoLocation_01(t *testing.T) {
 	milDatTzDto, err := MilitaryDateTzDto{}.New(testTime, "Bravo")
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"B\")\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"B\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -404,7 +404,7 @@ func TestMilitaryDateTzDto_UtcOffset_01(t *testing.T) {
 	milDatTzDto, err := MilitaryDateTzDto{}.New(testTime, "Sierra")
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Sierra\")\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"Sierra\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -445,7 +445,7 @@ func TestMilitaryDateTzDto_EquivalentIanaTime_01(t *testing.T) {
 	milDatTzDto, err := MilitaryDateTzDto{}.New(testTime, "Romeo")
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"Romeo\")\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"Romeo\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -479,7 +479,7 @@ func TestMilitaryDateTzDto_TimeZoneName01(t *testing.T) {
 	milDatTzDto, err = MilitaryDateTzDto{}.New(testTime, "D")
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.New(testTime, \"D\")\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewStartEndTimes(testTime, \"D\")\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

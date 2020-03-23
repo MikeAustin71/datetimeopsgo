@@ -22,7 +22,7 @@ func ExampleTimeDuration001() {
 		dt.TDurCalcType(0).StdYearMth(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr).\n" +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimes(t1USCentral, t2USCentral, fmtStr).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -51,7 +51,7 @@ func ExampleTimeDuration002() {
 		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr).\n" +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimes(t1USCentral, t2USCentral, fmtStr).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -95,7 +95,7 @@ func ExampleTimeDuration003() {
 		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDurationDto{}.New(t1USCentral, t2USCentral, fmtStr).\n" +
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimes(t1USCentral, t2USCentral, fmtStr).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

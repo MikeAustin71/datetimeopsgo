@@ -110,7 +110,7 @@ func (mt mainTest) mainTest070() {
 	titles := []string{funcName,
 		"Testing DateTimeOps DateTimeMechanics AddDateTimeByUtc",
 		"Adding 1-Day To Date Time With IANA Time Zone",
-	"Notice That Actual Matches Expected Result",}
+	"Notice That Actual Matches Expected Result"}
 
 	ex.PrintMainHeader(
 		titles,
@@ -424,7 +424,7 @@ func (mt mainTest) mainTest067() {
 	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Pacific(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
+		fmt.Printf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -519,7 +519,7 @@ func (mt mainTest) mainTest066() {
 	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Pacific(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
+		fmt.Printf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -726,10 +726,10 @@ func (mt mainTest) mainTest064() {
 
 	expectedOutDate := t1.Format(fmtstr)
 
-	dtz1, err := dt.DateTzDto{}.New(t1, fmtstr)
+	dtz1, err := dt.DateTzDto{}.NewDateTime(t1, fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DateTzDto{}.New(t1, fmtstr).\n" +
+		fmt.Printf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\n" +
 			"Error='%v'", err.Error())
 		return
 	}
@@ -800,10 +800,10 @@ func (mt mainTest) mainTest062() {
 
 	var tzDef dt.TimeZoneDefinition
 
-	tzDef, err = dt.TimeZoneDefinition{}.New(utcOffsetTime)
+	tzDef, err = dt.TimeZoneDefinition{}.NewDateTime(utcOffsetTime)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefinition{}.New(utcOffsetTime)\n" +
+		fmt.Printf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(utcOffsetTime)\n" +
 			"utcOffsetTime= '%v'\n" +
 			"Error='%v'\n",
 			utcOffsetTime.Format(fmtStr), err.Error())
@@ -998,7 +998,7 @@ func (mt mainTest) mainTest060() {
 	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Pacific(), fmtStr)
 
 	if err != nil {
-		fmt.Printf("Error returned from TimeZoneDto{}.New(t1, TzUsPacific ). Error='%v'", err.Error())
+		fmt.Printf("Error returned from TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific ). Error='%v'", err.Error())
 		return
 	}
 
@@ -1250,7 +1250,7 @@ func (mt mainTest) mainTest057() {
 		dateTime, dt.TZones.Asia.Vladivostok(), dt.TzConvertType.Absolute())
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(dateTime, London Time)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(dateTime, London Time)\n" +
 			"dateTime='%v'\nError='%v'\n",
 			dateTime.Format(fmtStr), err.Error())
 		return
@@ -1285,10 +1285,10 @@ func (mt mainTest) mainTest057() {
 		lineLen,
 		fmtStr)
 
-	tzDef, err = dt.TimeZoneDefinition{}.New(t2)
+	tzDef, err = dt.TimeZoneDefinition{}.NewDateTime(t2)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(t1)\n" +
 			"t2='%v'\nError='%v'\n", t2.Format(fmtStr), err.Error())
 		return
 	}
@@ -1344,10 +1344,10 @@ func (mt mainTest) mainTest056() {
 			t4USCentral.Format(fmtstr), dTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	eTimeZoneDef, err := dt.TimeZoneDefinition{}.New(t4USCentral)
+	eTimeZoneDef, err := dt.TimeZoneDefinition{}.NewDateTime(t4USCentral)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeZoneDefinition{}.New(t4USCentral)\n" +
+		fmt.Printf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(t4USCentral)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -1425,10 +1425,10 @@ func (mt mainTest) mainTest055() {
 		return
 	}
 
-	tzDef, err := dt.TimeZoneDefinition{}.New(t1)
+	tzDef, err := dt.TimeZoneDefinition{}.NewDateTime(t1)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.New(t1)\n" +
+		fmt.Printf("Error returned by dt.TimeZoneDefinition{}.NewStartEndTimes(t1)\n" +
 			"t1='%v'\nError='%v'\n", t1.Format(fmtStr), err.Error())
 		return
 	}
@@ -1563,7 +1563,7 @@ func (mt mainTest) mainTest052() {
 	tzu1, err := dt.TimeZoneDto{}.New(t1, dt.TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned from TimeZoneDto{}.New(t1, TzUsPacific ).\n" +
+		fmt.Printf("Error returned from TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific ).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

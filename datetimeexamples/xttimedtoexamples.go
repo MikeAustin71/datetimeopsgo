@@ -9,10 +9,10 @@ import (
 // ExampleTimeDto001
 func ExampleTimeDto001() {
 
-	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	t0Dto, err := dt.TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'\n", err.Error())
 		return
 	}
 
@@ -21,7 +21,7 @@ func ExampleTimeDto001() {
 	fmt.Println("====================================")
 	PrintOutTimeDtoFields(t0Dto)
 
-	t2Dto, err := dt.TimeDto{}.New(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
+	t2Dto, err := dt.TimeDto{}.NewTimeComponents(0, 14, 0, 0, 0, 0, 0, 0, 0, 0)
 
 	err = t0Dto.AddTimeDto(t2Dto)
 
@@ -42,10 +42,10 @@ func ExampleTimeDto001() {
 // ExampleTimeDto002
 func ExampleTimeDto002() {
 
-	tDto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	tDto, err := dt.TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		fmt.Printf("Error: dt.TimeDto{}.New() Error='%v'", err.Error())
+		fmt.Printf("Error: dt.TimeDto{}.NewStartEndTimes() Error='%v'", err.Error())
 	}
 
 	fmt.Println("--------- TimeDto --------")
@@ -188,11 +188,11 @@ func ExampleTimeDto005() {
 	microsecond := 303
 	nanosecond := 848
 
-	tDto, err := dt.TimeDto{}.New(year, month, 0, day, hour, minute, second,
+	tDto, err := dt.TimeDto{}.NewTimeComponents(year, month, 0, day, hour, minute, second,
 		millisecond, microsecond, nanosecond)
 
 	if err != nil {
-		fmt.Printf("Error returned by dt.TimeDto{}.New(). Error='%v' \n", err.Error())
+		fmt.Printf("Error returned by dt.TimeDto{}.NewStartEndTimes(). Error='%v' \n", err.Error())
 		return
 	}
 
@@ -257,10 +257,10 @@ func ExampleTimeDto006() {
 // ExampleTimeDto007
 func ExampleTimeDto007() {
 
-	t0Dto, err := dt.TimeDto{}.New(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
+	t0Dto, err := dt.TimeDto{}.NewTimeComponents(2017, 4, 0, 30, 22, 58, 32, 0, 0, 515539300)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeDto{}.New(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by TimeDto{}.NewStartEndTimes(2017, 4, 0, 30, 22, 58,32,0,0,515539300). Error='%v'\n", err.Error())
 		return
 	}
 
@@ -269,10 +269,10 @@ func ExampleTimeDto007() {
 	fmt.Println("-----------------------------------------")
 	fmt.Println()
 
-	t2Dto, err := dt.TimeDto{}.New(0, 36, 0, 0, 0, 0, 0, 0, 0, 0)
+	t2Dto, err := dt.TimeDto{}.NewTimeComponents(0, 36, 0, 0, 0, 0, 0, 0, 0, 0)
 
 	if err != nil {
-		fmt.Printf("Error returned by TimeDto{}.New(0, 0, 0, 1, 0, 0,0,0,0,0). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by TimeDto{}.NewStartEndTimes(0, 0, 0, 1, 0, 0,0,0,0,0). Error='%v'\n", err.Error())
 		return
 	}
 

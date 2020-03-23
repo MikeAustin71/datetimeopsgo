@@ -51,30 +51,39 @@ import (
 // If you are unfamiliar with the concept of a time zone location, reference
 // 'https://golang.org/pkg/time/'. The concept of Time Zone Location is important
 // and several of the 'DateTzDto' methods use Time Zone Location. Time Zone location
-// must be designated as one of two values.
+// must be designated as one of three values.
 //
-//      (1) The string 'Local' - signals the designation of the local time zone
-//          location for the host computer.
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//      (2) IANA Time Zone Location -
-//          See https://golang.org/pkg/time/#LoadLocation
-//          and https://www.iana.org/time-zones to ensure that
-//          the IANA Time Zone Database is properly configured
-//          on your system. Note: IANA Time Zone Data base is
-//          equivalent to 'tz database'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//          Examples:
-//            "America/New_York"
-//            "America/Chicago"
-//            "America/Denver"
-//            "America/Los_Angeles"
-//            "Pacific/Honolulu"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//          The source file 'constantsdatetime.go' contains a number of
-//          constant declarations covering the more frequently used time
-//          zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//          time zone constants begin with the prefix 'TzIana'.
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
 //
 // A requirement for presentation of date time strings is a specific format
 // for displaying years, months, days, hours, minutes, seconds, milliseconds,
@@ -82,22 +91,23 @@ import (
 // to provide a date time format string, ('dateTimeFmtStr'). This format string
 // is used to configure date times for display purposes.
 //
-// dateTimeFmtStr string   - A date time format string which will be used
-//                           to format and display 'dateTime'. Example:
-//                           "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string will be used to format
+//         and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                           Date time format constants are found in the source
-//                           file 'constantsdatetime.go'. These constants represent
-//                           the more commonly used date time string formats. All
-//                           Date Time format constants begin with the prefix
-//                           'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                           If 'dateTimeFmtStr' is submitted as an
-//                           'empty string', a default date time format
-//                           string will be applied. The default date time
-//                           format string is:
-//                             FmtDateTimeYrMDayFmtStr =
-//                                 "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // DateTzDto Structure and Methods
 //
@@ -112,7 +122,7 @@ type DateTzDto struct {
 	//                             seconds etc.)
 	timeZone TimeZoneDefinition // Contains a detailed definition and descriptions of the Time
 	//                             Zone and Time Zone Location associated with this date time.
-	lock        sync.Mutex      // Mutex used to ensure thread-safe operations.
+	lock       *sync.Mutex      // Mutex used to ensure thread-safe operations.
 }
 
 // AddDate - Adds input parameters 'years, 'months' and 'days' to date time value of the
@@ -130,22 +140,23 @@ type DateTzDto struct {
 //                or positive. Negative values will subtract time from
 //                the current DateTzDto instance.
 //
-//  dateTimeFmtStr string   - A date time format string which will be used
-//                            to format and display 'dateTime'. Example:
-//                            "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                            Date time format constants are found in the source
-//                            file 'constantsdatetime.go'. These constants represent
-//                            the more commonly used date time string formats. All
-//                            Date Time format constants begin with the prefix
-//                            'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                            If 'dateTimeFmtStr' is submitted as an
-//                            'empty string', a default date time format
-//                            string will be applied. The default date time
-//                            format string is:
-//                              FmtDateTimeYrMDayFmtStr =
-//                                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -181,6 +192,10 @@ func (dtz *DateTzDto) AddDate(
 	months,
 	days int,
 	dateTimeFormatStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -221,22 +236,23 @@ func (dtz *DateTzDto) AddDate(
 //        or positive. Negative values will subtract time from
 //        the current DateTzDto instance.
 //
-//  dateTimeFmtStr string   - A date time format string which will be used
-//                            to format and display 'dateTime'. Example:
-//                            "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                            Date time format constants are found in the source
-//                            file 'constantsdatetime.go'. These constants represent
-//                            the more commonly used date time string formats. All
-//                            Date Time format constants begin with the prefix
-//                            'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                            If 'dateTimeFmtStr' is submitted as an
-//                            'empty string', a default date time format
-//                            string will be applied. The default date time
-//                            format string is:
-//                              FmtDateTimeYrMDayFmtStr =
-//                                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -284,6 +300,10 @@ func (dtz *DateTzDto) AddDateTime(
 	microseconds,
 	nanoseconds int,
 	dateTimeFormatStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -371,6 +391,10 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 	microseconds,
 	nanoseconds int) error {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -441,6 +465,10 @@ func (dtz *DateTzDto) AddDateToThis(
 	months,
 	days int) error {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -470,7 +498,7 @@ func (dtz *DateTzDto) AddDateToThis(
 	return nil
 }
 
-// AddDuration - Adds Duration to the DateTime XValue of the current
+// AddDuration - Adds Duration to the DateTime Value of the current
 // DateTzDto and returns a new DateTzDto instance with the updated
 // Date Time value.
 //
@@ -534,6 +562,10 @@ func (dtz *DateTzDto) AddDuration(
 	duration time.Duration,
 	dateTimeFmtStr string) (DateTzDto, error) {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -583,6 +615,10 @@ func (dtz *DateTzDto) AddDuration(
 //
 func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -618,21 +654,23 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //                         which will be subtracted from the date time value
 //                         of the current DateTzDto instance.
 //
-//        type TimeDto struct {
-//          Years          int // Number of Years
-//          Months         int // Number of Months
-//          Weeks          int // Number of Weeks
-//          WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//          DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//          Hours          int // Number of Hours.
-//          Minutes        int // Number of Minutes
-//          Seconds        int // Number of Seconds
-//          Milliseconds   int // Number of Milliseconds
-//          Microseconds   int // Number of Microseconds
-//          Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                 // plus remaining Nanoseconds
-//        }
+//    type TimeDto struct {
+//       Years                int // Number of Years
+//       Months               int // Number of Months
+//       Weeks                int // Number of Weeks
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//       Hours                int // Number of Hours.
+//       Minutes              int // Number of Minutes
+//       Seconds              int // Number of Seconds
+//       Milliseconds         int // Number of Milliseconds
+//       Microseconds         int // Number of Microseconds
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
 //
 //
 // ------------------------------------------------------------------------
@@ -656,6 +694,10 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //  dtz2, err := dtz.AddMinusTimeDto(minusTimeDto)
 //
 func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -683,21 +725,23 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //                         which will be subtracted from the date time value
 //                         of the current DateTzDto instance.
 //
-//      type TimeDto struct {
-//        Years          int // Number of Years
-//        Months         int // Number of Months
-//        Weeks          int // Number of Weeks
-//        WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//        DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//        Hours          int // Number of Hours.
-//        Minutes        int // Number of Minutes
-//        Seconds        int // Number of Seconds
-//        Milliseconds   int // Number of Milliseconds
-//        Microseconds   int // Number of Microseconds
-//        Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//        TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//              // plus remaining Nanoseconds
-//      }
+//    type TimeDto struct {
+//       Years                int // Number of Years
+//       Months               int // Number of Months
+//       Weeks                int // Number of Weeks
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//       Hours                int // Number of Hours.
+//       Minutes              int // Number of Minutes
+//       Seconds              int // Number of Seconds
+//       Milliseconds         int // Number of Milliseconds
+//       Microseconds         int // Number of Microseconds
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
 //
 // ------------------------------------------------------------------------
 //
@@ -716,6 +760,10 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //  err := dtz.AddMinusTimeDtoToThis(minusTimeDto)
 //
 func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -755,21 +803,23 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //                        of type DateTzDto. Note: The value of the current DateTzDto
 //                        will not be altered.
 //
-//      type TimeDto struct {
-//        Years    int // Number of Years
-//        Months    int // Number of Months
-//        Weeks    int // Number of Weeks
-//        WeekDays  int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//        DateDays  int // Total Number of Days. Weeks x 7 plus WeekDays
-//        Hours    int // Number of Hours.
-//        Minutes    int // Number of Minutes
-//        Seconds    int // Number of Seconds
-//        Milliseconds  int // Number of Milliseconds
-//        Microseconds  int // Number of Microseconds
-//        Nanoseconds  int // Remaining Nanoseconds after Milliseconds & Microseconds
-//        TotSubSecNanoseconds  int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                  //    plus remaining Nanoseconds
-//      }
+//    type TimeDto struct {
+//       Years                int // Number of Years
+//       Months               int // Number of Months
+//       Weeks                int // Number of Weeks
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//       Hours                int // Number of Hours.
+//       Minutes              int // Number of Minutes
+//       Seconds              int // Number of Seconds
+//       Milliseconds         int // Number of Milliseconds
+//       Microseconds         int // Number of Microseconds
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
 //
 // ------------------------------------------------------------------------
 //
@@ -792,6 +842,10 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //  dtz2, err := dtz.AddPlusTimeDto(plusTimeDto)
 //
 func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -820,21 +874,23 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 //                        current DateTzDto instance. Note: The value of the
 //                        current DateTzDto will be modified.
 //
-//      type TimeDto struct {
-//        Years    int // Number of Years
-//        Months    int // Number of Months
-//        Weeks    int // Number of Weeks
-//        WeekDays  int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//        DateDays  int // Total Number of Days. Weeks x 7 plus WeekDays
-//        Hours    int // Number of Hours.
-//        Minutes    int // Number of Minutes
-//        Seconds    int // Number of Seconds
-//        Milliseconds  int // Number of Milliseconds
-//        Microseconds  int // Number of Microseconds
-//        Nanoseconds  int // Remaining Nanoseconds after Milliseconds & Microseconds
-//        TotSubSecNanoseconds  int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                  //    plus remaining Nanoseconds
-//      }
+//    type TimeDto struct {
+//       Years                int // Number of Years
+//       Months               int // Number of Months
+//       Weeks                int // Number of Weeks
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//       Hours                int // Number of Hours.
+//       Minutes              int // Number of Minutes
+//       Seconds              int // Number of Seconds
+//       Milliseconds         int // Number of Milliseconds
+//       Microseconds         int // Number of Microseconds
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
 //
 // ------------------------------------------------------------------------
 //
@@ -853,6 +909,10 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 //  err := dtz.AddPlusTimeDtoToThis(plusTimeDto)
 //
 func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -896,22 +956,23 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 //        or positive. Negative values will subtract time from
 //        the current DateTzDto instance.
 //
-//  dateTimeFmtStr string   - A date time format string which will be used
-//                            to format and display 'dateTime'. Example:
-//                            "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                            Date time format constants are found in the source
-//                            file 'constantsdatetime.go'. These constants represent
-//                            the more commonly used date time string formats. All
-//                            Date Time format constants begin with the prefix
-//                            'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                            If 'dateTimeFmtStr' is submitted as an
-//                            'empty string', a default date time format
-//                            string will be applied. The default date time
-//                            format string is:
-//                              FmtDateTimeYrMDayFmtStr =
-//                                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -954,6 +1015,10 @@ func (dtz *DateTzDto) AddTime(
 	microseconds,
 	nanoseconds int,
 	dateTimeFormatStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 		dtz.lock.Lock()
 		defer dtz.lock.Unlock()
@@ -1032,6 +1097,10 @@ func (dtz *DateTzDto) AddTimeToThis(
 		microseconds,
 		nanoseconds int) error {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1091,6 +1160,10 @@ func (dtz *DateTzDto) AddTimeToThis(
 //
 func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1132,6 +1205,10 @@ func (dtz *DateTzDto) CopyIn(dtz2 DateTzDto) {
 //
 func (dtz *DateTzDto) CopyOut() DateTzDto {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1144,6 +1221,10 @@ func (dtz *DateTzDto) CopyOut() DateTzDto {
 // Empty - sets all values of the current DateTzDto
 // instance to their uninitialized or zero state.
 func (dtz *DateTzDto) Empty() {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1162,6 +1243,10 @@ func (dtz *DateTzDto) Empty() {
 // Otherwise, the method returns 'false'.
 //
 func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1187,6 +1272,10 @@ func (dtz *DateTzDto) Equal(dtz2 DateTzDto) bool {
 // instances have the same UTC offset value.
 //
 func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1235,6 +1324,10 @@ func (dtz *DateTzDto) EqualUtcOffset(dtz2 DateTzDto) (bool, error) {
 //
 func (dtz *DateTzDto) GetBestConvertibleTimeZone() TimeZoneSpecification {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1246,6 +1339,10 @@ func (dtz *DateTzDto) GetBestConvertibleTimeZone() TimeZoneSpecification {
 // associated with the Convertible Time Zone.
 //
 func (dtz *DateTzDto) GetConvertibleTimeZone() TimeZoneSpecification {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1265,6 +1362,10 @@ func (dtz *DateTzDto) GetConvertibleTimeZone() TimeZoneSpecification {
 //
 func (dtz *DateTzDto) GetConvertibleTzAbbreviation() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1277,6 +1378,10 @@ func (dtz *DateTzDto) GetConvertibleTzAbbreviation() string {
 // of type '*time.Location'.
 //
 func (dtz *DateTzDto) GetConvertibleTzLocationPtr() *time.Location {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1297,6 +1402,10 @@ func (dtz *DateTzDto) GetConvertibleTzLocationPtr() *time.Location {
 // be returned. (See DateTzDto.GetMilitaryTzName() )
 //
 func (dtz *DateTzDto) GetConvertibleTzName() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1417,6 +1526,10 @@ func (dtz *DateTzDto) GetConvertibleTzStatusFlags() (	LocationNameType,
 	TimeZoneType,
 	TimeZoneUtcOffsetStatus) {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1437,6 +1550,10 @@ func (dtz *DateTzDto) GetConvertibleTzStatusFlags() (	LocationNameType,
 //
 func (dtz *DateTzDto) GetConvertibleTzUtcOffset() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1448,6 +1565,10 @@ func (dtz *DateTzDto) GetConvertibleTzUtcOffset() string {
 // 'dateTimeValue' as a type time.Time.
 //
 func (dtz *DateTzDto) GetDateTimeValue() time.Time {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1465,6 +1586,10 @@ func (dtz *DateTzDto) GetDateTimeValue() time.Time {
 //
 func (dtz *DateTzDto) GetDateTimeEverything() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1478,6 +1603,10 @@ func (dtz *DateTzDto) GetDateTimeEverything() string {
 //
 func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1490,6 +1619,10 @@ func (dtz *DateTzDto) GetDateTimeNanoSecText() string {
 // variable, DateTzDto.dateTimeFmt.
 //
 func (dtz *DateTzDto) GetDateTimeFmt() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1507,6 +1640,10 @@ func (dtz *DateTzDto) GetDateTimeFmt() string {
 //
 func (dtz *DateTzDto) GetDateTimeSecText() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1519,6 +1656,10 @@ func (dtz *DateTzDto) GetDateTimeSecText() string {
 // in the format '20170427211307'. Useful in naming
 // files.
 func (dtz *DateTzDto) GetDateTimeStr() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1541,6 +1682,10 @@ func (dtz *DateTzDto) GetDateTimeStr() string {
 //
 func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1557,6 +1702,10 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 //  EXAMPLE: 01/02/2006 15:04:05.000000000 -0700 MST
 //
 func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1576,6 +1725,10 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecText() string {
 //
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1593,6 +1746,10 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDDowText() string {
 //  EXAMPLE: 2006-01-02 15:04:05.000000000 -0700 MST
 //
 func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1613,6 +1770,10 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecYMDText() string {
 //
 func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1629,6 +1790,10 @@ func (dtz *DateTzDto) GetDateTimeYMDAbbrvDowNano() string {
 //  EXAMPLE: "2006-01-02 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1644,6 +1809,10 @@ func (dtz *DateTzDto) GetDateTimeYrMDayTzFmtStr() string {
 //
 func (dtz *DateTzDto) GetOriginalTagDescription() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1655,6 +1824,10 @@ func (dtz *DateTzDto) GetOriginalTagDescription() string {
 // associated with the Original Time Zone.
 //
 func (dtz *DateTzDto) GetOriginalTimeZone() TimeZoneSpecification {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1673,6 +1846,10 @@ func (dtz *DateTzDto) GetOriginalTimeZone() TimeZoneSpecification {
 //
 func (dtz *DateTzDto) GetOriginalTzAbbreviation() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1685,6 +1862,10 @@ func (dtz *DateTzDto) GetOriginalTzAbbreviation() string {
 // of type '*time.Location'.
 //
 func (dtz *DateTzDto) GetOriginalTzLocationPtr() *time.Location {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1704,6 +1885,10 @@ func (dtz *DateTzDto) GetOriginalTzLocationPtr() *time.Location {
 // be returned. (See DateTzDto.GetMilitaryTzName() )
 //
 func (dtz *DateTzDto) GetOriginalTzName() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1824,6 +2009,10 @@ func (dtz *DateTzDto) GetOriginalTzStatusFlags() (	LocationNameType,
 	TimeZoneType,
 	TimeZoneUtcOffsetStatus) {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1843,6 +2032,10 @@ func (dtz *DateTzDto) GetOriginalTzStatusFlags() (	LocationNameType,
 //   "-0430"
 //
 func (dtz *DateTzDto) GetOriginalTzUtcOffset() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1882,6 +2075,10 @@ func (dtz *DateTzDto) GetOriginalTzUtcOffset() string {
 //     630pm on January 6th, 2012 in Fayetteville NC would read '061830RJAN12'
 //
 func (dtz *DateTzDto) GetMilitaryCompactDateTimeGroup() (string, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -1952,6 +2149,10 @@ func (dtz *DateTzDto) GetMilitaryCompactDateTimeGroup() (string, error) {
 //
 func (dtz *DateTzDto) GetMilitaryOpenDateTimeGroup() (string, error) {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -1986,12 +2187,39 @@ func (dtz *DateTzDto) GetMilitaryOpenDateTimeGroup() (string, error) {
 	return fmtDateTime, nil
 }
 
+
+// GetMilitaryOrStdTimeZoneName - If the Time Zone Specification object
+// is configured as a 'Military' Time Zone, the Military Time Zone Name
+// is returned. If the Time Zone Specification object is configured as a
+// 'Local' time zone, the time zone name 'Local' is returned. Finally,
+// if the Time Zone Specification object is configured as an 'IANA' time
+// zone, the appropriate 'IANA' time zone name is returned.
+//
+func (dtz *DateTzDto) GetMilitaryOrStdTimeZoneName() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	timeZoneLocation := dtz.timeZone.GetBestConvertibleTimeZone()
+
+	return timeZoneLocation.GetMilitaryOrStdTimeZoneName()
+}
+
 // GetTimeComponents - Returns a deep copy of DateTzDto
 // private member variable DateTzDto.timeComponents.
 // The private member variable is returned as a type
 // 'TimeDto'.
 //
 func (dtz *DateTzDto) GetTimeComponents() TimeDto {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2041,6 +2269,10 @@ func (dtz *DateTzDto) GetTimeComponents() TimeDto {
 //
 func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -2069,6 +2301,10 @@ func (dtz *DateTzDto) GetTimeDto() (TimeDto, error) {
 //    "Saturday April 29, 2017 19:54:30.123456489 -0500 CDT"
 func (dtz *DateTzDto) GetTimeStampEverything() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -2086,6 +2322,10 @@ func (dtz *DateTzDto) GetTimeStampEverything() string {
 //  "2006-01-02 Mon 15:04:05.000000000 -0700 MST"
 func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -2097,6 +2337,10 @@ func (dtz *DateTzDto) GetTimeStampYMDAbbrvDowNano() string {
 // member variable, 'timeZone', of type TimeZoneDefinition.
 //
 func (dtz *DateTzDto) GetTimeZoneDef() TimeZoneDefinition {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2113,6 +2357,10 @@ func (dtz *DateTzDto) GetTimeZoneDef() TimeZoneDefinition {
 // this method returns 'false'.
 //
 func (dtz *DateTzDto) IsEmpty() bool {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2139,6 +2387,10 @@ func (dtz *DateTzDto) IsEmpty() bool {
 // nil.
 func (dtz *DateTzDto) IsValid() error {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -2150,7 +2402,33 @@ func (dtz *DateTzDto) IsValid() error {
 	return dTzUtil.isValidDateTzDto(dtz, ePrefix)
 }
 
-// New - returns a new DateTzDto instance based on a time.Time ('dateTime')
+// New - Returns a new DateTzDto instance initialized
+// to zero values.
+//
+func (dtz DateTzDto) New() DateTzDto {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	dTz2 := DateTzDto{}
+
+	dTz2.lock = new(sync.Mutex)
+
+	dTz2.dateTimeValue = time.Time{}
+
+	dTz2.timeComponents = TimeDto{}.New()
+
+	dTz2.timeZone = TimeZoneDefinition{}.New()
+
+	return dTz2
+}
+
+// NewDateTime - returns a new DateTzDto instance based on a time.Time ('dateTime')
 // input parameter. The Time Zone Location is extracted from input parameter
 // 'dateTime'.
 //
@@ -2160,22 +2438,23 @@ func (dtz *DateTzDto) IsValid() error {
 //
 //  dateTime    time.Time   - A date time value
 //
-//  dateTimeFmtStr string   - A date time format string which will be used
-//                            to format and display 'dateTime'. Example:
-//                            "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                            Date time format constants are found in the source
-//                            file 'constantsdatetime.go'. These constants represent
-//                            the more commonly used date time string formats. All
-//                            Date Time format constants begin with the prefix
-//                            'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                            If 'dateTimeFmtStr' is submitted as an
-//                            'empty string', a default date time format
-//                            string will be applied. The default date time
-//                            format string is:
-//                              FmtDateTimeYrMDayFmtStr =
-//                                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -2193,23 +2472,29 @@ func (dtz *DateTzDto) IsValid() error {
 //
 // Usage
 //
-//   dtzDto, err := DateTzDto{}.New(dateTime, FmtDateTimeYrMDayFmtStr)
+//   dtzDto, err := DateTzDto{}.NewStartEndTimes(dateTime, FmtDateTimeYrMDayFmtStr)
 //
 //
-//   Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//   Note:
 //
-//         'FmtDateTimeYrMDayFmtStr' is a constant available in source file
-//         'constantsdatetime.go'.
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
-func (dtz DateTzDto) New(
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (dtz DateTzDto) NewDateTime(
 	dateTime time.Time,
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
 
-	ePrefix := "DateTzDto.New() "
+	ePrefix := "DateTzDto.NewDateTime() "
 
 	if dateTime.IsZero() {
 		return DateTzDto{}, errors.New(ePrefix +
@@ -2248,57 +2533,72 @@ func (dtz DateTzDto) New(
 //   microsecond        int  - microsecond number 0 - 999
 //   nanosecond         int  - nanosecond number  0 - 999
 //
-//   timeZoneLocationName string - time zone location, or time zone name, must
-//   be designated as one of three types values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//    dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -2312,9 +2612,9 @@ func (dtz DateTzDto) New(
 //
 // ------------------------------------------------------------------------
 //
-// Usage
+// Example Usage:
 //
-//      dtzDto, err := DateTzDto{}.New(
+//      dtzDto, err := DateTzDto{}.NewStartEndTimes(
 //                        year,
 //                        month,
 //                        day,
@@ -2325,11 +2625,17 @@ func (dtz DateTzDto) New(
 //                        TZones.US.Central(),
 //                        FmtDateTimeYrMDayFmtStr)
 //
-//   Note: TZones.US.Central() = "America/Chicago"
-//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//         source file 'constantsdatetime.go'.
+//   Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//         TZones.US.Central() is equivalent to "America/Chicago"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz DateTzDto) NewDateTimeComponents(
 	year,
@@ -2343,6 +2649,10 @@ func (dtz DateTzDto) NewDateTimeComponents(
 	nanosecond int,
 	timeZoneLocationName,
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2386,66 +2696,80 @@ func (dtz DateTzDto) NewDateTimeComponents(
 //
 // Input Parameter
 //
-//   year                int - year number
-//   month               int - month number       1 - 12
-//   day                 int - day number         1 - 31
-//   hour                int - hour number        0 - 24
-//   minute              int - minute number      0 - 59
-//   second              int - second number      0 - 59
-//   nanosecond          int - nanosecond number  0 - 999,999,999
+//  year                 int - year number
+//  month                int - month number       1 - 12
+//  day                  int - day number         1 - 31
+//  hour                 int - hour number        0 - 24
+//  minute               int - minute number      0 - 59
+//  second               int - second number      0 - 59
+//  nanosecond           int - nanosecond number  0 - 999,999,999
 //
-//   timeZoneLocationName string - time zone location or time zone name must
-//                                 be designated as one of three types of
-//                                 values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//  timeZoneLocationName string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -2473,11 +2797,16 @@ func (dtz DateTzDto) NewDateTimeComponents(
 //         TZones.US.Central(),
 //         FmtDateTimeYrMDayFmtStr)
 //
-//   Note: TZones.US.Central() = "America/Chicago"
-//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+// Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
 //
-//         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//         source file 'constantsdatetime.go'.
+//         TZones.US.Central() is equivalent to "America/Chicago"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz DateTzDto) NewDateTimeElements(
 		year,
@@ -2489,6 +2818,10 @@ func (dtz DateTzDto) NewDateTimeElements(
 		nanosecond int,
 		timeZoneLocationName,
 		dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2532,22 +2865,23 @@ func (dtz DateTzDto) NewDateTimeElements(
 //
 // Input Parameter
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -2574,6 +2908,10 @@ func (dtz DateTzDto) NewDateTimeElements(
 //
 func (dtz DateTzDto) NewNowLocal(
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2613,58 +2951,71 @@ func (dtz DateTzDto) NewNowLocal(
 //
 // Input Parameter
 //
-//   timeZoneLocationName string - time zone location, or time zone name,
-//                                 must be designated as one of three types
-//                                 of values:
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -2689,12 +3040,19 @@ func (dtz DateTzDto) NewNowLocal(
 //   Note: TZones.US.Central() = "America/Chicago"
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//         source file 'constantsdatetime.go'.
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
 func (dtz DateTzDto) NewNowTz(
 	timeZoneLocationName,
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2743,22 +3101,23 @@ func (dtz DateTzDto) NewNowTz(
 //
 // Input Parameter
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -2786,6 +3145,10 @@ func (dtz DateTzDto) NewNowTz(
 //
 func (dtz DateTzDto) NewNowUTC(
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2821,74 +3184,91 @@ func (dtz DateTzDto) NewNowUTC(
 //
 //   tDto             TimeDto - Time values used to construct the DateTzDto instance
 //
-//         type TimeDto struct {
-//            Years          int // Number of Years
-//            Months         int // Number of Months
-//            Weeks          int // Number of Weeks
-//            WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//            DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//            Hours          int // Number of Hours.
-//            Minutes        int // Number of Minutes
-//            Seconds        int // Number of Seconds
-//            Milliseconds   int // Number of Milliseconds
-//            Microseconds   int // Number of Microseconds
-//            Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
-//            TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                     // plus remaining Nanoseconds
-//         }
+//    type TimeDto struct {
+//       Years                int // Number of Years
+//       Months               int // Number of Months
+//       Weeks                int // Number of Weeks
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//       Hours                int // Number of Hours.
+//       Minutes              int // Number of Minutes
+//       Seconds              int // Number of Seconds
+//       Milliseconds         int // Number of Milliseconds
+//       Microseconds         int // Number of Microseconds
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
 //
 //
-//   timeZoneName string - time zone location must be designated as one of three types
-//                         of values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//   timeZoneName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -2911,16 +3291,26 @@ func (dtz DateTzDto) NewNowUTC(
 //            TZones.US.Central(),
 //            FmtDateTimeYrMDayFmtStr)
 //
-//   Note: TZones.US.Central() = "America/Chicago"
-//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
-//         source file 'constantsdatetime.go'.
+//   Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//         TZones.US.Central() is equivalent to "America/Chicago"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz DateTzDto) NewTimeDto(
 	tDto TimeDto,
 	timeZoneName string,
 	dateTimeFormatStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -2969,95 +3359,111 @@ func (dtz DateTzDto) NewTimeDto(
 //   dateTime          time.Time - A date time value
 //
 //   timeZoneName         string - time zone location, or time zone name, must be designated
-//                                 as one of three types of values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//   timeZoneLocation  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
 //
 //   timeZoneConversionType TimeZoneConversionType -
-//                                This parameter determines the algorithm that will
-//                                be used to convert parameter 'dateTime' to the time
-//                                zone specified by parameter 'timeZoneName'.
+//           This parameter determines the algorithm that will
+//           be used to convert parameter 'dateTime' to the time
+//           zone specified by parameter 'timeZoneName'.
 //
-//                                TimeZoneConversionType is an enumeration type which
-//                                must be set to one of two values:
-//                                   TimeZoneConversionType(0).Absolute()
-//                                   TimeZoneConversionType(0).Relative()
-//                                Note: You can also use the global variable
-//                                'TzConvertType' for easier access:
-//                                   TzConvertType.Absolute()
-//                                   TzConvertType.Relative()
+//           TimeZoneConversionType is an enumeration type which
+//           must be set to one of two values:
+//              TimeZoneConversionType(0).Absolute()
+//              TimeZoneConversionType(0).Relative()
+//           Note: You can also use the global variable
+//           'TzConvertType' for easier access:
+//              TzConvertType.Absolute()
+//              TzConvertType.Relative()
 //
-//                                Absolute Time Conversion - Identifies the 'Absolute' time
-//                                to time zone conversion algorithm. This algorithm provides
-//                                that a time value in time zone 'X' will be converted to the
-//                                same time value in time zone 'Y'.
+//           Absolute Time Conversion - Identifies the 'Absolute' time
+//           to time zone conversion algorithm. This algorithm provides
+//           that a time value in time zone 'X' will be converted to the
+//           same time value in time zone 'Y'.
 //
-//                                For example, assume the time 10:00AM is associated with time
-//                                zone USA Central Standard time and that this time is to be
-//                                converted to USA Eastern Standard time. Applying the 'Absolute'
-//                                algorithm would convert ths time to 10:00AM Eastern Standard
-//                                time.  In this case the hours, minutes and seconds have not been
-//                                altered. 10:00AM in USA Central Standard Time has simply been
-//                                reclassified as 10:00AM in USA Eastern Standard Time.
+//           For example, assume the time 10:00AM is associated with time
+//           zone USA Central Standard time and that this time is to be
+//           converted to USA Eastern Standard time. Applying the 'Absolute'
+//           algorithm would convert ths time to 10:00AM Eastern Standard
+//           time.  In this case the hours, minutes and seconds have not been
+//           altered. 10:00AM in USA Central Standard Time has simply been
+//           reclassified as 10:00AM in USA Eastern Standard Time.
 //
-//                                Relative Time Conversion - Identifies the 'Relative' time to time
-//                                zone conversion algorithm. This algorithm provides that times in
-//                                time zone 'X' will be converted to their equivalent time in time
-//                                zone 'Y'.
+//           Relative Time Conversion - Identifies the 'Relative' time to time
+//           zone conversion algorithm. This algorithm provides that times in
+//           time zone 'X' will be converted to their equivalent time in time
+//           zone 'Y'.
 //
-//                                For example, assume the time 10:00AM is associated with time zone
-//                                USA Central Standard time and that this time is to be converted to
-//                                USA Eastern Standard time. Applying the 'Relative' algorithm would
-//                                convert ths time to 11:00AM Eastern Standard time. In this case the
-//                                hours, minutes and seconds have been changed to reflect an equivalent
-//                                time in the USA Eastern Standard Time Zone.
+//           For example, assume the time 10:00AM is associated with time zone
+//           USA Central Standard time and that this time is to be converted to
+//           USA Eastern Standard time. Applying the 'Relative' algorithm would
+//           convert ths time to 11:00AM Eastern Standard time. In this case the
+//           hours, minutes and seconds have been changed to reflect an equivalent
+//           time in the USA Eastern Standard Time Zone.
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -3080,18 +3486,27 @@ func (dtz DateTzDto) NewTimeDto(
 //         TZones.US.Central(),
 //         FmtDateTimeYrMDayFmtStr)
 //
-//   Note: TZones.US.Central() = "America/Chicago"
-//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants.
-//         'TZones.US.Central() is located in 'timezonedata.dto'. 'FmtDateTimeYrMDayFmtStr'
-//         is located in source file 'constantsdatetime.go'.
+//   Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//         TZones.US.Central() is equivalent to "America/Chicago"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz DateTzDto) NewTz(
 	dateTime time.Time,
 	timeZoneName string,
 	timeZoneConversionType TimeZoneConversionType,
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -3121,8 +3536,6 @@ func (dtz DateTzDto) NewTz(
 
 	return dtz2, nil
 }
-
-
 
 // NewTzSpec - returns a new DateTzDto instance based on a time.Time input parameter ('dateTime').
 // The caller is required to provide a Time Zone Location or Name. Input parameter 'dateTime'
@@ -3177,58 +3590,58 @@ func (dtz DateTzDto) NewTz(
 //            time in the USA Eastern Standard Time Zone.
 //
 //   tzSpec TimeZoneSpecification -
-//            The Time Zone Specification must specify one of three types of
-//            time zones:
+//       The Time Zone Specification must specify one of three types of
+//       time zones:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
 //
-//   dateTimeFmtStr string   -
-//            A date time format string which will be used
-//            to format and display 'dateTime'. Example:
-//            "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//            Date time format constants are found in the source
-//            file 'constantsdatetime.go'. These constants represent
-//            the more commonly used date time string formats. All
-//            Date Time format constants begin with the prefix
-//            'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//            If 'dateTimeFmtStr' is submitted as an
-//            'empty string', a default date time format
-//            string will be applied. The default date time
-//            format string is:
-//              FmtDateTimeYrMDayFmtStr =
-//                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -3252,18 +3665,26 @@ func (dtz DateTzDto) NewTz(
 //         tzSpec,
 //         FmtDateTimeYrMDayFmtStr)
 //
-//   Note: TZones.US.Central() = "America/Chicago"
-//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//   Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
 //
-//         'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants.
-//         'TZones.US.Central() is located in 'timezonedata.dto'. 'FmtDateTimeYrMDayFmtStr'
-//         is located in source file 'constantsdatetime.go'.
+//         TZones.US.Central() is equivalent to "America/Chicago"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz DateTzDto) NewTzSpec(
 	dateTime time.Time,
 	timeConversionType TimeZoneConversionType,
 	tzSpec TimeZoneSpecification,
 	dateTimeFmtStr string) (DateTzDto, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -3294,22 +3715,23 @@ func (dtz DateTzDto) NewTzSpec(
 //
 // Input Parameter
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -3318,6 +3740,10 @@ func (dtz DateTzDto) NewTzSpec(
 //   None - This method sets the internal data field DateTzDto.dateTimeFmt
 //
 func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -3356,57 +3782,72 @@ func (dtz *DateTzDto) SetDateTimeFmt(dateTimeFmtStr string) {
 //   microsecond         int - microsecond number  0 - 999
 //   nanosecond          int - nanosecond number   0 - 999
 //
-//   timeZoneLocationName string - time zone location, or time zone name, must be
-//                                 designated as one of three values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -3427,6 +3868,10 @@ func (dtz *DateTzDto) SetFromDateTimeComponents(
 			nanosecond int,
 			timeZoneLocationName,
 			dateTimeFmtStr string) error {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -3473,57 +3918,72 @@ func (dtz *DateTzDto) SetFromDateTimeComponents(
 //   microsecond         int - microsecond number  0 - 999
 //   nanosecond          int - nanosecond number   0 - 999,999,999
 //
-//   timeZoneLocationName string - time zone location, or time zone name, must be
-//                                 designated as one of three types of values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -3542,6 +4002,10 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 	nanosecond int,
 	timeZoneLocationName,
 	dateTimeFmtStr string) error {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -3576,22 +4040,23 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 //   dateTime    time.Time   - A date time value
 //
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -3601,6 +4066,10 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 //           encountered this error Type will encapsulate an error message.
 //
 func (dtz *DateTzDto) SetFromDateTime(dateTime time.Time, dateTimeFmtStr string) error {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -3625,60 +4094,75 @@ func (dtz *DateTzDto) SetFromDateTime(dateTime time.Time, dateTimeFmtStr string)
 //
 //   tDto            TimeDto - A populated TimeDto instance
 //                             A TimeDto struct is defined as follows:
-//     type TimeDto struct {
+//
+//    type TimeDto struct {
 //       Years                int // Number of Years
 //       Months               int // Number of Months
 //       Weeks                int // Number of Weeks
-//       WeekDays             int // Number of Week-WeekDays.
-//                                //   Total WeekDays/7 + Remainder WeekDays
-//       DateDays             int // Total Number of Days.
-//                                //   Weeks x 7 plus WeekDays
+//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
 //       Hours                int // Number of Hours.
 //       Minutes              int // Number of Minutes
 //       Seconds              int // Number of Seconds
 //       Milliseconds         int // Number of Milliseconds
 //       Microseconds         int // Number of Microseconds
-//       Nanoseconds            int // Remaining Nanoseconds after Milliseconds & Microseconds
-//       TotSubSecNanoseconds int // Total Nanoseconds:
-//                                //   Millisecond NanoSecs + Microsecond NanoSecs
-//                                //   plus remaining Nanoseconds
-//     }
+//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                //  plus remaining Nanoseconds
+//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                //  + Seconds + Milliseconds + Nanoseconds
+//    }
 //
 //
-//   timeZoneLocationName string - time zone location, or time zone name must be designated
-//                                 as one of three types of values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
 //
 // ------------------------------------------------------------------------
 //
@@ -3691,11 +4175,15 @@ func (dtz *DateTzDto) SetFromTimeDto(
 	tDto TimeDto,
 	timeZoneLocationName string) error {
 
-	ePrefix := "DateTzDto.SetFromTimeDto() "
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
+
+	ePrefix := "DateTzDto.SetFromTimeDto() "
 
 	dTzUtil := dateTzDtoUtility{}
 
@@ -3758,58 +4246,72 @@ func (dtz *DateTzDto) SetFromTimeDto(
 //            hours, minutes and seconds have been changed to reflect an equivalent
 //            time in the USA Eastern Standard Time Zone.
 //
-//   timeZoneLocationName string - time zone location, or time zone name, must be
-//                                 designated as one of three types of time zone
-//                                 values:
 //
-//            (1) The string 'Local' - signals the designation of the local time zone
-//                configured for the host computer executing this code.
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//            (2) IANA Time Zone Location -
-//                See https://golang.org/pkg/time/#LoadLocation
-//                and https://www.iana.org/time-zones to ensure that
-//                the IANA Time Zone Database is properly configured
-//                on your system. Note: IANA Time Zone Data base is
-//                equivalent to 'tz database'.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//                   Examples:
-//                     "America/New_York"
-//                     "America/Chicago"
-//                     "America/Denver"
-//                     "America/Los_Angeles"
-//                     "Pacific/Honolulu"
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
 //
-//            (3) A valid Military Time Zone
-//                Military time zones are commonly used in
-//                aviation as well as at sea. They are also
-//                known as nautical or maritime time zones.
-//                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
 //
-//             Note:
-//                 The source file 'timezonedata.go' contains over 600 constant
-//                 time zone declarations covering all IANA and Military Time
-//                 Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//                 time zone constants begin with the prefix 'TZones'.
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
 //
-//   dateTimeFmtStr string   - A date time format string which will be used
-//                             to format and display 'dateTime'. Example:
-//                             "2006-01-02 15:04:05.000000000 -0700 MST"
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
 //
-//                             Date time format constants are found in the source
-//                             file 'constantsdatetime.go'. These constants represent
-//                             the more commonly used date time string formats. All
-//                             Date Time format constants begin with the prefix
-//                             'FmtDateTime'.
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
 //
-//                             If 'dateTimeFmtStr' is submitted as an
-//                             'empty string', a default date time format
-//                             string will be applied. The default date time
-//                             format string is:
-//                               FmtDateTimeYrMDayFmtStr =
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//   dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -3823,6 +4325,10 @@ func (dtz *DateTzDto) SetFromTimeTz(
 	timeZoneConversionType TimeZoneConversionType,
 	timeZoneLocationName string,
 	dateTimeFmtStr string) error {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -3949,6 +4455,10 @@ func (dtz *DateTzDto) SetNewTimeZone(
 	timeZoneConversionType TimeZoneConversionType,
 	newTimeZoneLocationName string) error {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -3966,7 +4476,7 @@ func (dtz *DateTzDto) SetNewTimeZone(
 
 	dTzUtil := dateTzDtoUtility{}
 
-	dTz2 := DateTzDto {}
+	dTz2 := DateTzDto{}
 
 	err := dTzUtil.setFromTimeTzName(
 		&dTz2,
@@ -3975,7 +4485,6 @@ func (dtz *DateTzDto) SetNewTimeZone(
 		newTimeZoneLocationName,
 		dtz.dateTimeFmt,
 		ePrefix)
-
 
 	if err !=nil {
 		return nil
@@ -3993,6 +4502,10 @@ func (dtz *DateTzDto) SetNewTimeZone(
 // label, classification or text description.
 //
 func (dtz *DateTzDto) SetTagDescription(tagDesc string) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -4013,6 +4526,10 @@ func (dtz *DateTzDto) SetTagDescription(tagDesc string) {
 // method DateTzDto.SetDateTimeFmt(), above.
 //
 func (dtz *DateTzDto) String() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 
@@ -4047,6 +4564,10 @@ func (dtz *DateTzDto) String() string {
 //
 func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dtz.lock.Lock()
 
 	defer dtz.lock.Unlock()
@@ -4069,12 +4590,16 @@ func (dtz *DateTzDto) Sub(dtz2 DateTzDto) time.Duration {
 //
 // ------------------------------------------------------------------------
 //
-// Return XValue
+// Return Value
 //   time.Duration - A time duration value representing the subtraction of the
 //                   input parameter t2 time value from the time value of the
 //                   current DateTzDto time value.
 //
 func (dtz *DateTzDto) SubDateTime(t2 time.Time) time.Duration {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
 
 	dtz.lock.Lock()
 

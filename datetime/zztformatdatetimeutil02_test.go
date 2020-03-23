@@ -125,7 +125,7 @@ func (suite *dtfmtTestSuite) TestParseDateTimeString04() {
 
 	t2, err := TimeZoneDto{}.New(t1, TZones.Asia.Vladivostok(), fmtstr)
 
-	assert.Nil(suite.T(), err, "Error from TimeZoneDto{}.New(t1, TZones.Asia.Vladivostok(), fmtstr)")
+	assert.Nil(suite.T(), err, "Error from TimeZoneDto{}.NewStartEndTimes(t1, TZones.Asia.Vladivostok(), fmtstr)")
 
 	s := fmt.Sprintf("t2.TimeOut.DateTime NOT EQUAL to dtz.DateTime.\n" +
 		"t2.TimeOut.DateTime='%v'  dtz.DateTime='%v'\n",

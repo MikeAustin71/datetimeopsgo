@@ -83,6 +83,10 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
 	dTzUtil2 := dateTzDtoUtility{}
 
 	err := dTzUtil2.isValidDateTzDto(dTz, ePrefix)
@@ -106,16 +110,6 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 		0,
 		0,
 		0)
-
-	/*
-	newDt1 := dTz.dateTimeValue.AddDate(
-		years,
-		months,
-		0)
-
-	dur := DayNanoSeconds * int64(days)
-	newDt2 := newDt1.Add(time.Duration(dur))
-*/
 
 	if dateTimeFormatStr == "" {
 		dateTimeFormatStr = dTz.dateTimeFmt
@@ -157,6 +151,10 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
 	dtMech := DTimeMechanics{}
 
 	newDateTime := dtMech.AddDateTimeByUtc(
@@ -182,32 +180,6 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 	}
 
 	return dTz2, nil
-
-/*
-	newDate := dTz.dateTimeValue.AddDate(years, months, 0)
-
-	totNanoSecs := int64(days) * DayNanoSeconds
-	totNanoSecs += int64(hours) * int64(time.Hour)
-	totNanoSecs += int64(minutes) * int64(time.Minute)
-	totNanoSecs += int64(seconds) * int64(time.Second)
-	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
-	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
-	totNanoSecs += int64(nanoseconds)
-
-	newDateTime := newDate.Add(time.Duration(totNanoSecs))
-
-	dTzUtil2 := dateTzDtoUtility{}
-
-	dTz2 := DateTzDto{}
-
-	err := dTzUtil2.setFromDateTime(&dTz2, newDateTime, dTz.dateTimeFmt, ePrefix)
-
-	if err != nil {
-		return DateTzDto{}, err
-	}
-
-	return dTz2, nil
-	*/
 }
 
 // addDuration - Adds Duration to the DateTime XValue of the input
@@ -230,6 +202,10 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 		return DateTzDto{},
 			errors.New(ePrefix +
 				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	newDateTime := dTz.dateTimeValue.Add(duration)
@@ -266,6 +242,10 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 		return DateTzDto{},
 			errors.New(ePrefix +
 				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	tDto := minusTimeDto.CopyOut()
@@ -344,6 +324,10 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
 	tDto := plusTimeDto.CopyOut()
 
 	err := tDto.NormalizeTimeElements()
@@ -417,6 +401,16 @@ func (dTzUtil *dateTzDtoUtility) addTime(
 
 	ePrefix += "dateTzDtoUtility.addTime() "
 
+	if dTz == nil {
+		return DateTzDto{},
+			errors.New(ePrefix +
+				"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
 	totNanoSecs := int64(hours) * int64(time.Hour)
 	totNanoSecs += int64(minutes) * int64(time.Minute)
 	totNanoSecs += int64(seconds) * int64(time.Second)
@@ -451,12 +445,23 @@ func (dTzUtil *dateTzDtoUtility) copyIn(
 	dTzUtil.lock.Lock()
 	defer dTzUtil.lock.Unlock()
 
-	dTzUtil2 := dateTzDtoUtility{}
-
-	if baseDtz == nil ||
-		incomingDtz == nil {
-		return
+	if baseDtz == nil {
+		panic("dateTzDtoUtility.copyIn() - baseDtz is a 'nil' pointer!")
 	}
+
+	if baseDtz.lock == nil {
+		baseDtz.lock = new(sync.Mutex)
+	}
+
+	if incomingDtz == nil {
+		panic("dateTzDtoUtility.copyIn() - incomingDtz is a 'nil' pointer!")
+	}
+
+	if incomingDtz.lock == nil {
+		incomingDtz.lock = new(sync.Mutex)
+	}
+
+	dTzUtil2 := dateTzDtoUtility{}
 
 	dTzUtil2.empty(baseDtz)
 
@@ -482,11 +487,16 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 	dTzUtil.lock.Lock()
 	defer dTzUtil.lock.Unlock()
 
-	dtz2 := DateTzDto{}
-
 	if dTz == nil {
-		return dtz2
+		panic("dateTzDtoUtility.copyOut() - Input " +
+			"parameter 'dTz' is a 'nil' pointer!\n")
 	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
+	dtz2 := DateTzDto{}
 
 	dtz2.tagDescription = dTz.tagDescription
 	dtz2.timeComponents = dTz.timeComponents.CopyOut()
@@ -499,6 +509,8 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 		dtz2.dateTimeValue = dTz.dateTimeValue
 		dtz2.timeZone = dTz.timeZone.CopyOut()
 	}
+
+	dtz2.lock = new(sync.Mutex)
 
 	return dtz2
 }
@@ -513,7 +525,12 @@ func (dTzUtil *dateTzDtoUtility) empty(dTz *DateTzDto) {
 	defer dTzUtil.lock.Unlock()
 
 	if dTz == nil {
-		return
+		panic("dateTzDtoUtility.empty() - " +
+			"Input parameter 'dTz' is a 'nil' pointer!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	dTz.tagDescription = ""
@@ -537,7 +554,12 @@ func (dTzUtil *dateTzDtoUtility) isEmptyDateTzDto(
 	defer dTzUtil.lock.Unlock()
 
 	if dTz == nil {
-		return true
+		panic("dateTzDtoUtility.isEmptyDateTzDto() - " +
+			"Input parameter 'dTz' is a 'nil' pointer!")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	if dTz.tagDescription == "" &&
@@ -569,6 +591,10 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 	if dTz == nil {
 		return errors.New(ePrefix +
 			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	dTzUtil2 := dateTzDtoUtility{}
@@ -639,6 +665,10 @@ func (dTzUtil *dateTzDtoUtility) setDateTimeFormat(
 		panic (ePrefix + "\nInput parameter 'dtz' is a 'nil' pointer!\n")
 	}
 
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
 	dTzUtil2 := dateTzDtoUtility{}
 
 	dtz.dateTimeFmt =
@@ -665,6 +695,10 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 	if dTz == nil {
 		return errors.New(ePrefix +
 			"\nError: Input Parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	if dateTime.IsZero() {
@@ -706,7 +740,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 	return nil
 }
 
-// SetFromDateTimeComponents - Sets the values of the Date Time fields
+// setFromDateTimeComponents - Sets the values of the Date Time fields
 // for the current DateTzDto instance based on time components
 // and a Time Zone Location.
 //
@@ -739,12 +773,16 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
-	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute,
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
+	tDto, err := TimeDto{}.NewTimeComponents(year, month, 0, day, hour, minute,
 		second, millisecond, microsecond, nanosecond)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"Error returned by TimeDto{}.New(year, month,...).  "+
+			"Error returned by TimeDto{}.NewStartEndTimes(year, month,...).  "+
 			"Error='%v'", err.Error())
 	}
 
@@ -839,12 +877,16 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
-	tDto, err := TimeDto{}.New(year, month, 0, day, hour, minute, second,
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
+	tDto, err := TimeDto{}.NewTimeComponents(year, month, 0, day, hour, minute, second,
 		0, 0, nanosecond)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned from TimeDto{}.New(year, month, ...).\n"+
+			"\nError returned from TimeDto{}.NewStartEndTimes(year, month, ...).\n"+
 			"Error='%v'\n", err.Error())
 	}
 
@@ -946,6 +988,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
 	if dateTime.IsZero() {
 		return errors.New(ePrefix +
 			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
@@ -1038,6 +1084,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 			errMsg:              "",
 			err:                 nil,
 		}
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	if dateTime.IsZero() {
@@ -1138,6 +1188,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTzSpec(
 			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
 	}
 
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
 	if dateTime.IsZero() {
 		return errors.New(ePrefix +
 			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
@@ -1211,6 +1265,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 	if dTz == nil {
 		return errors.New(ePrefix +
 			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
 	}
 
 	ePrefix += "dateTzDtoUtility.setFromTimeDto() "

@@ -16,7 +16,7 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned from TimeZoneDto{}.New(t1, TzUsPacific ). Error='%v'", err.Error())
+		t.Errorf("Error returned from TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific ). Error='%v'", err.Error())
 	}
 
 	t2, _ := time.Parse(fmtstr, t2str)
@@ -130,7 +130,7 @@ func TestTimeZoneDto_AddMinusTimeDto(t *testing.T) {
 	tzu1, err := TimeZoneDto{}.New(t2, TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
+		t.Errorf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsEast).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -191,7 +191,7 @@ func TestTimeZoneDto_AddPlusTimeDto(t *testing.T) {
 	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Eastern(), fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast).\n" +
+		t.Errorf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsEast).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -722,7 +722,7 @@ func TestTimeZoneUtility_NewAddDuration_01(t *testing.T) {
 	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned from TimeZoneDto{}.New(t1, TzUsPacific ). Error='%v'", err.Error())
+		t.Errorf("Error returned from TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific ). Error='%v'", err.Error())
 	}
 
 	t2, _ := time.Parse(fmtstr, t2str)
@@ -799,7 +799,7 @@ func TestTimeZoneUtility_NewAddDate_01(t *testing.T) {
 	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
+		t.Errorf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific).\n" +
 			"Error='%v'", err.Error())
 		return
 	}
@@ -918,7 +918,7 @@ func TestTimeZoneUtility_NewAddDateTime_01(t *testing.T) {
 	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Eastern(), fmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsEast). Error='%v'", err.Error())
+		t.Errorf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsEast). Error='%v'", err.Error())
 		return
 	}
 
@@ -968,7 +968,7 @@ func TestTimeZoneUtility_NewAddTime_01(t *testing.T) {
 	tzu1, err := TimeZoneDto{}.New(t1, TZones.US.Pacific(), fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDto{}.New(t1, TzUsPacific).\n" +
+		t.Errorf("Error returned by TimeZoneDto{}.NewStartEndTimes(t1, TzUsPacific).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

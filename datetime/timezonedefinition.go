@@ -27,14 +27,13 @@ import (
 // which can be used to convert date times to another time zone
 // anywhere in the world.
 //
-//
 // Why Two Time Zone Specifications?
 //
 // Providing two time zone specifications deals with errors which
 // may be introduced when using the Golang time package to parse
 // date time strings in order to generate date time objects (time.Time).
 // In the following example, assume you, and your computer, live in
-// New York, NewYork USA. (I'll explain later). Now, create a new
+// NewStartEndTimes York, NewYork USA. (I'll explain later). Now, create a new
 // date time object (time.Time) by parsing the following date time
 // string, "06/20/2019 09:58:32 -0700 PDT". This is a date time
 // using 'Pacific Daylight Time' or 'PDT'. Notice how the string
@@ -66,7 +65,7 @@ import (
 //   'PST' stands for 'Pacific Standard Time'.
 //
 //   Remember that I asked that you assume both you and your computer
-//   live in New York, New York USA. If in fact you lived in Los
+//   live in NewStartEndTimes York, NewStartEndTimes York USA. If in fact you lived in Los
 //   Angeles, California USA, parsing date time string,
 //   "06/20/2019 09:58:32 -0700 PDT", Golang would return a valid time
 //   zone of "Local", and the error described would not exist.
@@ -135,12 +134,16 @@ type TimeZoneDefinition struct {
 	originalTimeZone    TimeZoneSpecification // The Time Zone Specification originally submitted.
 	convertibleTimeZone TimeZoneSpecification // A version of the original time zone with a new fully
 	//                                         convertible time zone substituted.
-	lock sync.Mutex // Used for implementing thread safe operations.
+	lock *sync.Mutex // Used for implementing thread safe operations.
 }
 
 // CopyIn - Copies an incoming TimeZoneDefinition into the
 // data fields of the current TimeZoneDefinition instance.
 func (tzdef *TimeZoneDefinition) CopyIn(tzdef2 TimeZoneDefinition) {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -157,6 +160,10 @@ func (tzdef *TimeZoneDefinition) CopyIn(tzdef2 TimeZoneDefinition) {
 // TimeZoneDefinition instance.
 func (tzdef *TimeZoneDefinition) CopyOut() TimeZoneDefinition {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -169,6 +176,10 @@ func (tzdef *TimeZoneDefinition) CopyOut() TimeZoneDefinition {
 // Empty - Resets all field values for the current TimeZoneDefinition
 // instance to their uninitialized or 'zero' states.
 func (tzdef *TimeZoneDefinition) Empty() {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -187,6 +198,10 @@ func (tzdef *TimeZoneDefinition) Empty() {
 // the Convertible Time Zones must be equal.
 //
 func (tzdef *TimeZoneDefinition) Equal(tzdef2 TimeZoneDefinition) bool {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -208,6 +223,10 @@ func (tzdef *TimeZoneDefinition) Equal(tzdef2 TimeZoneDefinition) bool {
 // the Convertible Time Zones must be equal.
 //
 func (tzdef *TimeZoneDefinition) EqualOffsetSeconds(tzdef2 TimeZoneDefinition) bool {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -231,6 +250,10 @@ func (tzdef *TimeZoneDefinition) EqualOffsetSeconds(tzdef2 TimeZoneDefinition) b
 //
 func (tzdef *TimeZoneDefinition) EqualZoneOffsets(tzdef2 TimeZoneDefinition) bool {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -252,6 +275,10 @@ func (tzdef *TimeZoneDefinition) EqualZoneOffsets(tzdef2 TimeZoneDefinition) boo
 // and the Convertible Time Zone Locations must be equal.
 //
 func (tzdef *TimeZoneDefinition) EqualLocations(tzdef2 TimeZoneDefinition) bool {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -288,6 +315,10 @@ func (tzdef *TimeZoneDefinition) EqualLocations(tzdef2 TimeZoneDefinition) bool 
 //
 func (tzdef *TimeZoneDefinition) EqualZoneLocation(tzdef2 TimeZoneDefinition) bool {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -315,6 +346,10 @@ func (tzdef *TimeZoneDefinition) EqualZoneLocation(tzdef2 TimeZoneDefinition) bo
 //
 func (tzdef *TimeZoneDefinition) GetBestConvertibleTimeZone() TimeZoneSpecification {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -332,6 +367,10 @@ func (tzdef *TimeZoneDefinition) GetBestConvertibleTimeZone() TimeZoneSpecificat
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleDateTime() time.Time {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -346,6 +385,10 @@ return tzdef.convertibleTimeZone.GetReferenceDateTime()
 // The Time Zone 'Location' represents the Time Zone Name.
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleLocationPtr() *time.Location {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -362,6 +405,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleLocationPtr() *time.Location {
 // "America/New_York".
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleLocationName() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -396,6 +443,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleLocationName() string {
 // 'LocNameType'. Example: LocNameType.ConvertibleTimeZone()
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleLocationNameType() LocationNameType {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -444,6 +495,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleOffsetElements() (
 	offsetMinutes,
 	offsetSeconds int) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -464,6 +519,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleOffsetElements() (
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleOffsetSignValue() int {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -479,6 +538,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleOffsetSignValue() int {
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTagDescription() string {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -492,6 +555,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTagDescription() string {
 // 'TimeZoneSpecification.GetOriginalLocationNameType()' and inspect the result.
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -508,6 +575,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZone() TimeZoneSpecification 
 //  'EST', 'CST', 'PST', 'EDT', 'CDT', 'PDT'
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneAbbreviation() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -542,6 +613,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneAbbreviation() string {
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneCategory() TimeZoneCategory {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -565,6 +640,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneCategory() TimeZoneCatego
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneClass() TimeZoneClass {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -577,6 +656,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneClass() TimeZoneClass {
 // Convertible Time Zone.
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneName() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -697,6 +780,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneStatusFlags() (
 	TimeZoneType,
 	TimeZoneUtcOffsetStatus) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -720,6 +807,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneStatusFlags() (
 // 'TzType'. Example: TzType.Military()
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneType() TimeZoneType {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -757,6 +848,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneType() TimeZoneType {
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneUtcOffsetStatus() TimeZoneUtcOffsetStatus {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -770,6 +865,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleTimeZoneUtcOffsetStatus() TimeZon
 // Examples of the UTC offset format are: "-0600" or "+0200".
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleUtcOffset() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -789,6 +888,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleUtcOffset() string {
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleZoneOffset() string {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -803,6 +906,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleZoneOffset() string {
 // UTC. A negative value indicates that the offset is West of UTC.
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleZoneOffsetTotalSeconds() int {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -824,6 +931,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleZoneOffsetTotalSeconds() int {
 //
 func (tzdef *TimeZoneDefinition) GetConvertibleZoneName() string {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -836,6 +947,10 @@ func (tzdef *TimeZoneDefinition) GetConvertibleZoneName() string {
 //
 func (tzdef *TimeZoneDefinition) GetOriginalDateTime() time.Time {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -847,6 +962,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalDateTime() time.Time {
 // the original time zone (TimeZoneDefinition.originalTimeZone.locationPtr).
 //
 func (tzdef *TimeZoneDefinition) GetOriginalLocationPtr() *time.Location {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -864,6 +983,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationPtr() *time.Location {
 // "America/New_York".
 //
 func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -898,6 +1021,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalLocationName() string {
 // 'LocNameType'. Example: LocNameType.ConvertibleTimeZone()
 //
 func (tzdef *TimeZoneDefinition) GetOriginalLocationNameType() LocationNameType {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -946,6 +1073,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalOffsetElements() (
 	offsetMinutes,
 	offsetSeconds int) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -965,6 +1096,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalOffsetElements() (
 //
 func (tzdef *TimeZoneDefinition) GetOriginalOffsetSignValue() int {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -980,6 +1115,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalOffsetSignValue() int {
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTagDescription() string {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -993,6 +1132,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTagDescription() string {
 // If it not convertible, use TimeZoneDefinition.GetConvertibleTimeZone().
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1010,6 +1153,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZone() TimeZoneSpecification {
 //  'EST', 'CST', 'PST', 'EDT', 'CDT', 'PDT'
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneAbbreviation() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1044,6 +1191,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneAbbreviation() string {
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneCategory() TimeZoneCategory {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1067,6 +1218,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneCategory() TimeZoneCategory 
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneClass() TimeZoneClass {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1079,6 +1234,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneClass() TimeZoneClass {
 // Time Zone.
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneName() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1198,6 +1357,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneStatusFlags() (
 	TimeZoneType,
 	TimeZoneUtcOffsetStatus) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1221,6 +1384,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneStatusFlags() (
 // 'TzType'. Example: TzType.Military()
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneType() TimeZoneType {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1258,6 +1425,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneType() TimeZoneType {
 //
 func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneUtcOffsetStatus() TimeZoneUtcOffsetStatus {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1274,6 +1445,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalTimeZoneUtcOffsetStatus() TimeZoneUt
 //   "-0430"
 //
 func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1295,6 +1470,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalUtcOffset() string {
 //
 func (tzdef *TimeZoneDefinition) GetOriginalZoneName() string {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1313,6 +1492,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneName() string {
 //
 func (tzdef *TimeZoneDefinition) GetOriginalZoneOffset() string {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1327,6 +1510,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneOffset() string {
 // UTC. A negative value indicates that the offset is West of UTC.
 //
 func (tzdef *TimeZoneDefinition) GetOriginalZoneOffsetTotalSeconds() int {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1348,6 +1535,10 @@ func (tzdef *TimeZoneDefinition) GetOriginalZoneOffsetTotalSeconds() int {
 // Time Zone, this method will return an error.
 //
 func (tzdef *TimeZoneDefinition) GetMilitaryTimeZoneLetter() (string, error) {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1379,6 +1570,10 @@ func (tzdef *TimeZoneDefinition) GetMilitaryTimeZoneLetter() (string, error) {
 //
 func (tzdef *TimeZoneDefinition) GetMilitaryTimeZoneName() (string, error) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1403,6 +1598,10 @@ func (tzdef *TimeZoneDefinition) GetMilitaryTimeZoneName() (string, error) {
 //
 func (tzdef *TimeZoneDefinition) IsEmpty() bool {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1421,6 +1620,10 @@ func (tzdef *TimeZoneDefinition) IsEmpty() bool {
 //
 func (tzdef *TimeZoneDefinition) IsValid() error {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1432,7 +1635,31 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 	return tzDefUtil.isValidTimeZoneDef(tzdef, ePrefix)
 }
 
-// New - Creates and returns a new TimeZoneDefinition instance based on
+// New - Returns a new TimeZoneDefinition instance with
+// member variables initialized to zero values.
+//
+func (tzdef TimeZoneDefinition) New() TimeZoneDefinition {
+
+	if tzdef.lock == nil {
+	tzdef.lock = new(sync.Mutex)
+	}
+
+	tzdef.lock.Lock()
+
+	defer tzdef.lock.Unlock()
+
+	tzDef2 := TimeZoneDefinition{}
+
+	tzDef2.lock = new(sync.Mutex)
+
+	tzDef2.originalTimeZone = TimeZoneSpecification{}.New()
+
+	tzDef2.convertibleTimeZone = TimeZoneSpecification{}.New()
+
+	return tzDef2
+}
+
+// NewDateTime - Creates and returns a new TimeZoneDefinition instance based on
 // a 'dateTime (time.Time) input parameter.
 //
 // Input Parameter
@@ -1455,14 +1682,18 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 //      If errors are encountered a valid error message will be returned in the
 //      error instance.
 //
-func (tzdef TimeZoneDefinition) New(
+func (tzdef TimeZoneDefinition) NewDateTime(
 	dateTime time.Time) (TimeZoneDefinition, error) {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
 
-	ePrefix := "TimeZoneDefinition.New() "
+	ePrefix := "TimeZoneDefinition.NewDateTime() "
 
 	if dateTime.IsZero() {
 		return TimeZoneDefinition{},
@@ -1547,11 +1778,15 @@ func (tzdef TimeZoneDefinition) NewFromTimeComponents(
 	nanoseconds int,
 	timeZoneName string) (TimeZoneDefinition, error) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
 
-	ePrefix := "TimeZoneDefinition.NewFromTimeDto() "
+	ePrefix := "TimeZoneDefinition.NewFromTimeComponents() "
 
 	timeDto, err := TimeDto{}.NewTimeElements(
 		years,
@@ -1601,27 +1836,69 @@ func (tzdef TimeZoneDefinition) NewFromTimeComponents(
 // NewFromTimeDto - Creates and returns a new TimeZoneDefinition instance based on
 // a TimeDto and Time Zone Name input parameters.
 //
-// Input Parameter
-// ===============
+// ------------------------------------------------------------------------
 //
-//  timeDto     TimeDto  - The 'TimeDto' type contains time components such as years,
-//                         months, days, seconds and nanoseconds which is used to
-//                         construct a date time value (time.Time).
+// Input Parameters
 //
-//  timeZoneName string  - This string contains the name of a valid time zone.
-//                         The 'timeZoneName' string must be set to one of three values:
+//  timeDto      TimeDto
+//     - The 'TimeDto' type contains time components such as years,
+//       months, days, seconds and nanoseconds which is used to
+//       construct a date time value (time.Time).
 //
-//                         1. A valid IANA Time Zone name.
 //
-//                         2. The time zone "Local", which Golang accepts as the time
-//                            zone currently configured on the host computer.
+//   timeZoneName string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
 //
-//                         3. A valid Military Time Zone which can be submitted either as
-//                            a single alphabetic character Military Time Zone abbreviation
-//                            or as a full Military Time Zone name.
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//               https://www.timeanddate.com/worldclock/timezone/alpha
+//               https://www.timeanddate.com/time/map/
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+// ------------------------------------------------------------------------
 //
 // Return Values
-// =============
 //
 // This method will return two values:
 //      (1) A Time Zone Definition (TimeZoneDefinition)
@@ -1637,6 +1914,10 @@ func (tzdef TimeZoneDefinition) NewFromTimeComponents(
 func (tzdef TimeZoneDefinition) NewFromTimeDto(
 	timeDto TimeDto,
 	timeZoneName string) (TimeZoneDefinition, error) {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1686,19 +1967,110 @@ func (tzdef TimeZoneDefinition) NewFromTimeDto(
 // NewFromTimeZoneName - Creates and returns a new instance 'TimeZoneDefinition'.
 // The new instance is based on input parameter 'timeZoneName'.
 //
-// The 'timeZoneName' string must be set to one of three values:
+// ------------------------------------------------------------------------
 //
-//   1. A valid IANA Time Zone name.
+// Input Parameters
 //
-//   2. The time zone "Local", which Golang accepts as the time
-//      zone currently configured on the host computer.
+//   dateTime time.Time
+//     - A reference date time value which will be used in conjunction with
+//       parameter 'timeZoneName' to create the returned Time Zone Definition
+//       instance.
 //
-//   3. A valid Military Time Zone which can be submitted either as
-//      a single alphabetic character or as a full Military Time
-//      zone name.
+//
+//   timeZoneName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//               https://www.timeanddate.com/worldclock/timezone/alpha
+//               https://www.timeanddate.com/time/map/
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//
+//   timeConversionType TimeZoneConversionType -
+//          This parameter determines the algorithm that will
+//          be used to convert parameter 'dateTime' to the time
+//          zone specified by parameter 'tzSpec'.
+//
+//          TimeZoneConversionType is an enumeration type which
+//          must be set to one of two values:
+//             TimeZoneConversionType(0).Absolute()
+//             TimeZoneConversionType(0).Relative()
+//          Note: You can also use the global variable
+//          'TzConvertType' for easier access:
+//             TzConvertType.Absolute()
+//             TzConvertType.Relative()
+//
+//          Absolute Time Conversion - Identifies the 'Absolute' time
+//          to time zone conversion algorithm. This algorithm provides
+//          that a time value in time zone 'X' will be converted to the
+//          same time value in time zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time
+//          zone USA Central Standard time and that this time is to be
+//          converted to USA Eastern Standard time. Applying the 'Absolute'
+//          algorithm would convert ths time to 10:00AM Eastern Standard
+//          time.  In this case the hours, minutes and seconds have not been
+//          altered. 10:00AM in USA Central Standard Time has simply been
+//          reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//          Relative Time Conversion - Identifies the 'Relative' time to time
+//          zone conversion algorithm. This algorithm provides that times in
+//          time zone 'X' will be converted to their equivalent time in time
+//          zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time zone
+//          USA Central Standard time and that this time is to be converted to
+//          USA Eastern Standard time. Applying the 'Relative' algorithm would
+//          convert ths time to 11:00AM Eastern Standard time. In this case the
+//          hours, minutes and seconds have been changed to reflect an equivalent
+//          time in the USA Eastern Standard Time Zone.
+//
+//
+// ------------------------------------------------------------------------
 //
 // Return Values
-// =============
 //
 // This method will return two values:
 //      (1) A Time Zone Definition (TimeZoneDefinition)
@@ -1718,6 +2090,10 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	tzDefDto TimeZoneDefinition,
 	err error) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -1733,21 +2109,6 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 			inputParameterName:  "dateTime",
 			inputParameterValue: "",
 			errMsg:              "Input parameter 'dateTime' has a Zero value!",
-			err:                 nil,
-		}
-
-		return tzDefDto, err
-	}
-
-	if timeConversionType < TzConvertType.Absolute() &&
-		timeConversionType > TzConvertType.Relative() {
-
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "timeConversionType",
-			inputParameterValue: timeConversionType.String(),
-			errMsg:              "Input Parameter 'timeConversionType' " +
-				"contains an invalid value!",
 			err:                 nil,
 		}
 
@@ -1794,19 +2155,110 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 // is a fully formed time zone name which can be used to accurately
 // convert date times to other time zones across the globe.
 //
-// The 'timeZoneName' string must be set to one of three values:
+// ------------------------------------------------------------------------
 //
-//   1. A valid IANA Time Zone name.
+// Input Parameters
 //
-//   2. The time zone "Local", which Golang accepts as the time
-//      zone currently configured on the host computer.
+//   dateTime time.Time
+//     - A reference date time value which will be used in conjunction with
+//       parameter 'timeZoneName' to create the returned Time Zone Definition
+//       instance.
 //
-//   3. A valid Military Time Zone which can be submitted either as
-//      a single alphabetic character or as a full Military Time
-//      zone name.
+//
+//   timeZoneName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//               https://www.timeanddate.com/worldclock/timezone/alpha
+//               https://www.timeanddate.com/time/map/
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//
+//   timeConversionType TimeZoneConversionType -
+//          This parameter determines the algorithm that will
+//          be used to convert parameter 'dateTime' to the time
+//          zone specified by parameter 'tzSpec'.
+//
+//          TimeZoneConversionType is an enumeration type which
+//          must be set to one of two values:
+//             TimeZoneConversionType(0).Absolute()
+//             TimeZoneConversionType(0).Relative()
+//          Note: You can also use the global variable
+//          'TzConvertType' for easier access:
+//             TzConvertType.Absolute()
+//             TzConvertType.Relative()
+//
+//          Absolute Time Conversion - Identifies the 'Absolute' time
+//          to time zone conversion algorithm. This algorithm provides
+//          that a time value in time zone 'X' will be converted to the
+//          same time value in time zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time
+//          zone USA Central Standard time and that this time is to be
+//          converted to USA Eastern Standard time. Applying the 'Absolute'
+//          algorithm would convert ths time to 10:00AM Eastern Standard
+//          time.  In this case the hours, minutes and seconds have not been
+//          altered. 10:00AM in USA Central Standard Time has simply been
+//          reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//          Relative Time Conversion - Identifies the 'Relative' time to time
+//          zone conversion algorithm. This algorithm provides that times in
+//          time zone 'X' will be converted to their equivalent time in time
+//          zone 'Y'.
+//
+//          For example, assume the time 10:00AM is associated with time zone
+//          USA Central Standard time and that this time is to be converted to
+//          USA Eastern Standard time. Applying the 'Relative' algorithm would
+//          convert ths time to 11:00AM Eastern Standard time. In this case the
+//          hours, minutes and seconds have been changed to reflect an equivalent
+//          time in the USA Eastern Standard Time Zone.
+//
+//
+// ------------------------------------------------------------------------
 //
 // Return Values
-// =============
 //
 // This method will return two values:
 //      (1) A Time Zone Specification (TimeZoneSpecification)
@@ -1823,12 +2275,19 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 //      If neither the Original Time Zone nor the Convertible Time Zone qualify as
 //      'Convertible', an error is returned.
 //
+//      A 'Convertible' Time Zone Name is defined as a complete and valid time zone
+//      name which is convertible across all other global time zones.
+//
 func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
 	dateTime time.Time,
 	timeZoneName string,
 	timeConversionType TimeZoneConversionType) (
 	TimeZoneSpec TimeZoneSpecification,
 	err error) {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -1845,21 +2304,6 @@ func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
 			inputParameterName:  "dateTime",
 			inputParameterValue: "",
 			errMsg:              "Input parameter 'dateTime' has a Zero value!",
-			err:                 nil,
-		}
-
-		return TimeZoneSpec, err
-	}
-
-	if timeConversionType < TzConvertType.Absolute() &&
-		timeConversionType > TzConvertType.Relative() {
-
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "timeConversionType",
-			inputParameterValue: timeConversionType.String(),
-			errMsg:              "Input Parameter 'timeConversionType' " +
-				"contains an invalid value!",
 			err:                 nil,
 		}
 
@@ -1909,11 +2353,11 @@ func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
 // 'TimeZoneDefinition'. The new instance is based on a
 // 'TimeZoneSpecification' input parameter, 'tzSpec'.
 //
+// ------------------------------------------------------------------------
 //
 // Input Parameters
-// ================
 //
-// dateTime        time.Time    -
+//  dateTime        time.Time    -
 //          This date time will be converted and
 //          used in creating the returned
 //          'TimeZoneDefinition' object. The type
@@ -1921,7 +2365,7 @@ func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
 //          date time value is determined by input
 //          parameter, 'timeConversionType'.
 //
-// timeConversionType TimeZoneConversionType -
+//  timeConversionType TimeZoneConversionType -
 //          This parameter determines the algorithm that will
 //          be used to convert parameter 'dateTime' to the time
 //          zone specified by parameter 'tzSpec'.
@@ -1960,7 +2404,7 @@ func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
 //          hours, minutes and seconds have been changed to reflect an equivalent
 //          time in the USA Eastern Standard Time Zone.
 //
-// tzSpec TimeZoneSpecification -
+//  tzSpec TimeZoneSpecification -
 //          A valid 'TimeZoneSpecification' object.
 //          The 'TimeZoneSpecification' object must
 //          be set to one of these three types of time
@@ -1988,9 +2432,11 @@ func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
 //                aviation as well as at sea. They are also
 //                known as nautical or maritime time zones.
 //                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//                  https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                  http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                  https://www.timeanddate.com/time/zones/military
+//                  https://www.timeanddate.com/worldclock/timezone/alpha
+//                  https://www.timeanddate.com/time/map/
 //
 //             Note:
 //                 The source file 'timezonedata.go' contains over 600 constant
@@ -2018,6 +2464,10 @@ func (tzdef TimeZoneDefinition) NewForTimeZoneSpec(
 	tzSpec TimeZoneSpecification) (
 	tzDefDto TimeZoneDefinition,
 	err error) {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -2089,6 +2539,10 @@ func (tzdef TimeZoneDefinition) NewForTimeZoneSpec(
 //
 func (tzdef *TimeZoneDefinition) SetConvertibleTagDescription(tagDesc string) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -2102,6 +2556,10 @@ func (tzdef *TimeZoneDefinition) SetConvertibleTagDescription(tagDesc string) {
 //
 func (tzdef *TimeZoneDefinition) SetOriginalTagDescription(tagDesc string) {
 
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
 	tzdef.lock.Lock()
 
 	defer tzdef.lock.Unlock()
@@ -2112,7 +2570,12 @@ func (tzdef *TimeZoneDefinition) SetOriginalTagDescription(tagDesc string) {
 // SetFromDateTimeComponents - Re-initializes the values of the current
 // TimeZoneDefinition instance based on input parameter, 'dateTime'.
 //
-func (tzdef *TimeZoneDefinition) SetFromDateTime(dateTime time.Time) error {
+func (tzdef *TimeZoneDefinition) SetFromDateTime(
+	dateTime time.Time) error {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -2137,16 +2600,16 @@ func (tzdef *TimeZoneDefinition) SetFromDateTime(dateTime time.Time) error {
 // Input Parameters
 // ================
 //
-// dateTime        time.Time    -
-//          This date time will be converted and
+// dateTime        time.Time
+//       -  This date time will be converted and
 //          used in creating the returned
 //          'TimeZoneDefinition' object. The type
 //          of time conversion performed on this
 //          date time value is determined by input
 //          parameter, 'timeConversionType'.
 //
-// timeConversionType TimeZoneConversionType -
-//          This parameter determines the algorithm that will
+// timeConversionType TimeZoneConversionType
+//       -  This parameter determines the algorithm that will
 //          be used to convert parameter 'dateTime' to the time
 //          zone specified by parameter 'TimeZoneDefinition'.
 //
@@ -2184,8 +2647,8 @@ func (tzdef *TimeZoneDefinition) SetFromDateTime(dateTime time.Time) error {
 //          hours, minutes and seconds have been changed to reflect an equivalent
 //          time in the USA Eastern Standard Time Zone.
 //
-// timeZoneDef TimeZoneDefinition -
-//          A valid 'TimeZoneDefinition' object.
+// timeZoneDef TimeZoneDefinition
+//       -  A valid 'TimeZoneDefinition' object.
 //          The 'TimeZoneDefinition' object must
 //          be set to one of these three types of time
 //          zones:
@@ -2212,9 +2675,11 @@ func (tzdef *TimeZoneDefinition) SetFromDateTime(dateTime time.Time) error {
 //                aviation as well as at sea. They are also
 //                known as nautical or maritime time zones.
 //                Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
+//                  https://en.wikipedia.org/wiki/List_of_military_time_zones
+//                  http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//                  https://www.timeanddate.com/time/zones/military
+//                  https://www.timeanddate.com/worldclock/timezone/alpha
+//                  https://www.timeanddate.com/time/map/
 //
 //             Note:
 //                 The source file 'timezonedata.go' contains over 600 constant
@@ -2227,6 +2692,10 @@ func (tzdef *TimeZoneDefinition) SetFromTimeZoneDef(
 	timeConversionType TimeZoneConversionType,
 	timeZoneDef TimeZoneDefinition,
 ) error {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -2242,7 +2711,6 @@ func (tzdef *TimeZoneDefinition) SetFromTimeZoneDef(
 		timeConversionType,
 		timeZoneDef,
 		ePrefix)
-
 }
 
 // SetFromTimeZoneName - Sets the data fields of the current
@@ -2254,6 +2722,10 @@ func (tzdef *TimeZoneDefinition) SetFromTimeZoneName(
 	timeConversionType TimeZoneConversionType,
 	timeZoneName string,
 	) error {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 
@@ -2271,10 +2743,19 @@ func (tzdef *TimeZoneDefinition) SetFromTimeZoneName(
 		ePrefix)
 }
 
+
+// SetFromTimeZoneSpec - Sets the current TimeZoneDefinition
+// object using a date time, time zone specification and
+// a time zone conversion type flag.
+//
 func (tzdef *TimeZoneDefinition) SetFromTimeZoneSpec(
 	dateTime time.Time,
 	tzSpec TimeZoneSpecification,
 	timeConversionType TimeZoneConversionType) error {
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
 
 	tzdef.lock.Lock()
 

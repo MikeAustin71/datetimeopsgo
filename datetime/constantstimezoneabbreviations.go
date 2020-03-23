@@ -77,7 +77,7 @@ var tzAbbrvToTimeZonePriorityList = []string {
 			"Australia/Perth",
 			"Australia/Lord_Howe",
 			"Australia",
-			"NZ-CHAT",  // New Zealand
+			"NZ-CHAT",  // NewStartEndTimes Zealand
 			"Canada",
 			"Pacific/Easter",
 			"Pacific/Pitcairn",

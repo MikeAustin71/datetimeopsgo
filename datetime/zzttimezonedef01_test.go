@@ -22,10 +22,10 @@ func TestTimeZoneDefinition_New_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef, err := TimeZoneDefinition{}.New(tUsPacific)
+	tzDef, err := TimeZoneDefinition{}.NewDateTime(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(tUsPacific)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -109,10 +109,10 @@ func TestTimeZoneDefinition_CopyOut_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.NewDateTime(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(tUsPacific)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -209,10 +209,10 @@ func TestTimeZoneDefinition_CopyOut_02(t *testing.T) {
 	locationName := "America/Los_Angeles"
 	descStr := "America-Los_Angeles"
 
-	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.NewDateTime(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(tUsPacific)\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -305,10 +305,10 @@ func TestTimeZoneDefinition_Equal_01(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.NewDateTime(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific).\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(tUsPacific).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -405,10 +405,10 @@ func TestTimeZoneDefinition_Equal_02(t *testing.T) {
 	locationName := "US/Pacific"
 	descStr := "US-Pacific"
 
-	tzDef0, err := TimeZoneDefinition{}.New(tUsPacific)
+	tzDef0, err := TimeZoneDefinition{}.NewDateTime(tUsPacific)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(tUsPacific).\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(tUsPacific).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -507,10 +507,10 @@ func TestTimeZoneDefinition_Equal_03(t *testing.T) {
 	locationName := "America/Los_Angeles"
 	descStr := "America-Los_Angeles"
 
-	tzDef0, err := TimeZoneDefinition{}.New(tAmericaLA)
+	tzDef0, err := TimeZoneDefinition{}.NewDateTime(tAmericaLA)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(tAmericaLA).\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(tAmericaLA).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -607,10 +607,10 @@ func TestTimeZoneDefinition_GetConvertibleTimeZoneName_01(t *testing.T) {
 
 	var tzDef TimeZoneDefinition
 
-	tzDef, err = TimeZoneDefinition{}.New(utcOffsetTime)
+	tzDef, err = TimeZoneDefinition{}.NewDateTime(utcOffsetTime)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(utcOffsetTime)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(utcOffsetTime)\n" +
 			"utcOffsetTime= '%v'\n" +
 			"Error='%v'\n",
 			utcOffsetTime.Format(fmtStr), err.Error())
@@ -657,10 +657,10 @@ func TestTimeZoneDefinition_GetConvertibleTimeZoneName_02(t *testing.T) {
 
 	var tzDef TimeZoneDefinition
 
-	tzDef, err = TimeZoneDefinition{}.New(utcOffsetTime)
+	tzDef, err = TimeZoneDefinition{}.NewDateTime(utcOffsetTime)
 
 	if err != nil {
-		t.Errorf("Error returned by TimeZoneDefinition{}.New(utcOffsetTime)\n" +
+		t.Errorf("Error returned by TimeZoneDefinition{}.NewStartEndTimes(utcOffsetTime)\n" +
 			"utcOffsetTime= '%v'\n" +
 			"Error='%v'\n",
 			utcOffsetTime.Format(fmtStr), err.Error())

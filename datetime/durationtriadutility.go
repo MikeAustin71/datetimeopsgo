@@ -30,8 +30,16 @@ func(durTUtil *durationTriadUtility) copyIn(
 		panic(ePrefix + "Input Parameter 'durT1' is a nil pointer.")
 	}
 
+	if durT1.lock == nil {
+		durT1.lock = new(sync.Mutex)
+	}
+
 	if durT2 == nil{
 		panic(ePrefix + "Input Parameter 'durT2' is a nil pointer.")
+	}
+
+	if durT2.lock == nil {
+		durT2.lock = new(sync.Mutex)
 	}
 
 	durTUtil2 := durationTriadUtility{}
@@ -59,6 +67,10 @@ func(durTUtil *durationTriadUtility) copyOut(
 			"Error: Input parameter 'durT' is a 'nil' pointer!\n")
 	}
 
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
+	}
+
 	durationTriadOut := DurationTriad{}
 	durationTriadOut.BaseTime = durT.BaseTime.CopyOut()
 	durationTriadOut.LocalTime = durT.LocalTime.CopyOut()
@@ -81,6 +93,10 @@ func(durTUtil *durationTriadUtility) empty(
 
 	if durT == nil {
 		panic(ePrefix + "Input parameter 'durT' is a 'nil' pointer!")
+	}
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
 	}
 
 	durT.BaseTime.Empty()
@@ -150,6 +166,10 @@ ePrefix += "durationTriadUtility.equal() "
 				}
 }
 
+	if durT1.lock == nil {
+		durT1.lock = new(sync.Mutex)
+	}
+
 	if durT2 == nil {
 		return false,
 				&InputParameterError{
@@ -160,6 +180,10 @@ ePrefix += "durationTriadUtility.equal() "
 					err:                 nil,
 				}
 }
+
+	if durT2.lock == nil {
+		durT2.lock = new(sync.Mutex)
+	}
 
 	if durT1.BaseTime.Equal(durT2.BaseTime) &&
 			durT1.LocalTime.Equal(durT2.LocalTime) &&
@@ -194,6 +218,10 @@ func(durTUtil *durationTriadUtility) isValid(
 			errMsg:              "Input parameter 'durT' is a 'nil' pointer!",
 			err:                 nil,
 		}
+	}
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
 	}
 
 	err := durT.BaseTime.IsValid()
@@ -299,9 +327,6 @@ func(durTUtil *durationTriadUtility) isValid(
 //
 //    TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
 //          Used for very large duration values.
-//
-//    Type 'TDurCalcType' is located in source file:
-//     MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 //
 // timeZoneLocation string - time zone location must be designated as one of
@@ -413,6 +438,10 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 			errMsg:              "Input parameter 'durT' is a 'nil' pointer!",
 			err:                 nil,
 		}
+	}
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
 	}
 
 	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
@@ -662,6 +691,10 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 			errMsg:              "Input parameter 'durT' is a 'nil' pointer!",
 			err:                 nil,
 		}
+	}
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
 	}
 
 	if startDateTime.IsZero() && endDateTime.IsZero() {
@@ -920,6 +953,10 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 			errMsg:              "Input parameter 'durT' is a 'nil' pointer!",
 			err:                 nil,
 		}
+	}
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
 	}
 
 	if startDateTime.IsZero() && duration == 0 {
@@ -1212,6 +1249,10 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 			errMsg:              "Input parameter 'durT' is a 'nil' pointer!",
 			err:                 nil,
 		}
+	}
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
 	}
 
 	err := plusTimeDto.IsValid()

@@ -67,12 +67,12 @@ import (
 // UTC+9         I        (Tokyo, Australia)
 // UTC+10        K        (Brisbane, Australia)
 // UTC+11        L        (Sydney, Australia)
-// UTC+12        M        (Wellington, New Zealand)
+// UTC+12        M        (Wellington, NewStartEndTimes Zealand)
 // UTC-1         N        (Azores)
 // UTC-2         O        (Godthab, Greenland)
 // UTC-3         P        (Buenos Aires, Argentina)
 // UTC-4         Q        (Halifax, Nova Scotia)
-// UTC-5         R        (EST, New York, NY)
+// UTC-5         R        (EST, NewStartEndTimes York, NY)
 // UTC-6         S        (CST, Dallas, TX)
 // UTC-7         T        (MST, Denver, CO)
 // UTC-8         U        (PST, Los Angeles, CA)
@@ -357,12 +357,12 @@ var militaryTzToLocationMap = map[string]string{
 	"India"    :  "Tokyo, Australia",
 	"Kilo"     :  "Brisbane, Australia",
 	"Lima"     :  "Sydney, Australia",
-	"Mike"     :  "Wellington, New Zealand",
+	"Mike"     :  "Wellington, NewStartEndTimes Zealand",
 	"November" :  "Azores",
 	"Oscar"    :  "Godthab, Greenland",
 	"Papa"     :  "Buenos Aires, Argentina",
 	"Quebec"   :  "Halifax, Nova Scotia",
-	"Romeo"    :  "EST, New York, NY",
+	"Romeo"    :  "EST, NewStartEndTimes York, NY",
 	"Sierra"   :  "CST, Dallas, TX",
 	"Tango"    :  "MST, Denver, CO",
 	"Uniform"  :  "PST, Los Angeles, CA",
@@ -418,7 +418,7 @@ UTC-9: V (Juneau, AK)
 UTC-8: U (PST, Los Angeles, CA)
 UTC-7: T (MST, Denver, CO)
 UTC-6: S (CST, Dallas, TX)
-UTC-5: R (EST, New York, NY)
+UTC-5: R (EST, NewStartEndTimes York, NY)
 UTC-4: Q (Halifax, Nova Scotia
 UTC-3: P (Buenos Aires, Argentina)
 UTC-2: O (Godthab, Greenland)
@@ -435,7 +435,7 @@ UTC+8: H (Beijing, China)
 UTC+9: I (Tokyo, Australia)
 UTC+10: K (Brisbane, Australia)
 UTC+11: L (Sydney, Australia)
-UTC+12: M (Wellington, New Zealand)
+UTC+12: M (Wellington, NewStartEndTimes Zealand)
 
 var abbreviatedUsMilitaryTimeZones = [25]string{
   "Y",
@@ -483,12 +483,12 @@ var IanaUsMilitaryTimeZone = [25] string{
   "Asia/Tokyo",                      // UTC+9:  I (Tokyo, Australia)
   "Australia/Brisbane",              // UTC+10: K (Brisbane, Australia)
   "Australia/Sydney",                // UTC+11: L (Sydney, Australia)
-  "Pacific/Auckland" }               // UTC+12: M (Wellington, New Zealand)
+  "Pacific/Auckland" }               // UTC+12: M (Wellington, NewStartEndTimes Zealand)
   "Atlantic/Azores",                 // UTC-1:  N (Azores)
   "America/Godthab",                 // UTC-2:  O (Godthab, Greenland)
   "America/Argentina/Buenos_Aires",  // UTC-3:  P (Buenos Aires, Argentina)
   "America/Halifax",                 // UTC-4:  Q (Halifax, Nova Scotia
-  "America/New_York",                // UTC-5:  R (EST, New York, NY)
+  "America/New_York",                // UTC-5:  R (EST, NewStartEndTimes York, NY)
   "America/Chicago",                 // UTC-6:  S (CST, Dallas, TX)
   "America/Denver",                  // UTC-7:  T (MST, Denver, CO)
   "America/Los_Angeles",             // UTC-8:  U (PST, Los Angeles, CA)
