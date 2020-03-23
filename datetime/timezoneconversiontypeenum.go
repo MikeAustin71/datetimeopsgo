@@ -246,7 +246,7 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 	}
 
 	if lenValueStr < 4 {
-		return TzConvertType.None(),
+		return TimeZoneConversionType(0),
 			fmt.Errorf(ePrefix+
 				"\nInput parameter 'valueString' is INVALID!\n" +
 				"Length Less than 4-characters\n"+
@@ -262,7 +262,7 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 		timeZoneConvertType, ok = mTimeZoneConversionTypeStringToCode[valueString]
 
 		if !ok {
-			return TzConvertType.None(),
+			return TimeZoneConversionType(0),
 				errors.New(ePrefix +
 					"\nInvalid TimeZoneConversionType Code!\n")
 		}
@@ -274,7 +274,7 @@ func (tzConvertType TimeZoneConversionType) XParseString(
 		timeZoneConvertType, ok = mTimeZoneConversionTypeLwrCaseStringToCode[valueString]
 
 		if !ok {
-			return TzConvertType.None(),
+			return TimeZoneConversionType(0),
 				errors.New(ePrefix +
 					"\nInvalid TimeZoneConversionType Code!\n")
 		}
