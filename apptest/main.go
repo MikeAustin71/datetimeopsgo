@@ -10,13 +10,177 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest071()
+	mainTest{}.mainTest073()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest073() {
+	// Variation on:
+	// TestDateTzDto_AddDate_01
+	// datetime\zztdatetzdto01_test.go
+	lineLen := 70
+	titles := []string{"mainTest.mainTest073()",
+		"Testing AddDateTimeByUtc",
+		"Adding \"5-Years, 6-Months 12-Days\""}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+	locationPtr, err := time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	t1 := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	t1Utc := t1.In(time.UTC)
+
+	t1Result := t1.AddDate(5, 6, 12)
+
+	t2Utc := t1Utc.AddDate(5, 6, 12)
+
+	t2Result := t2Utc.In(locationPtr)
+
+	titles = []string{"t1 Result",
+		"Using Go Date Time Package Addition",
+		"Adding 5-Years, 6-Months 12-Days"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t1Result,
+		titles,
+		lineLen,
+		fmtStr)
+
+	titles = []string{"t2 Result",
+		"Using UTC Conversion",
+		"Adding 5-Years, 6-Months 12-Days"}
+
+	ex.PrintOutDateTimeTimeZoneFields(
+		t2Result,
+		titles,
+		lineLen,
+		fmtStr)
+
+timeDto := dt.TimeDto{
+	Years:                5,
+	Months:               6,
+	Weeks:                0,
+	WeekDays:             0,
+	DateDays:             12,
+	Hours:                0,
+	Minutes:              0,
+	Seconds:              0,
+	Milliseconds:         0,
+	Microseconds:         0,
+	Nanoseconds:          0,
+	TotSubSecNanoseconds: 0,
+	TotTimeNanoseconds:   0,
+}
+
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
+		t2Result,
+		timeDto,
+		dt.TZones.America.Chicago(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("\nCalculated Start Time: %v\n",
+		dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtStr))
+
+	fmt.Printf("\n    Actual Start Time: %v\n\n",
+		t1.Format(fmtStr))
+
+
+	fmt.Printf("\nCalculated End Time: %v\n",
+		dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtStr))
+
+	fmt.Printf("\n    Actual End Time: %v\n\n",
+		t2Result.Format(fmtStr))
+
+	fmt.Printf("\nCalculated UTC Start Time: %v\n",
+		dur.UTCTime.StartTimeDateTz.GetDateTimeValue().Format(fmtStr))
+
+	fmt.Printf("\n    Actual UTC Start Time: %v\n\n",
+		t1Utc.Format(fmtStr))
+
+	fmt.Printf("\nCalculated UTC End Time: %v\n",
+		dur.UTCTime.EndTimeDateTz.GetDateTimeValue().Format(fmtStr))
+
+	fmt.Printf("\n    Actual UTC End Time: %v\n\n",
+		t2Utc.Format(fmtStr))
+
+}
+
+func (mt mainTest) mainTest072() {
+	// TestDateTzDto_AddDate_01
+	// datetime\zztdatetzdto01_test.go
+
+
+	t1str := "2014-02-15 19:54:30.038175584 -0600 CST"
+	fmtstr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	expectedOutDate := t1.Format(fmtstr)
+
+	dtz1, err := dt.DateTzDto{}.NewDateTime(t1, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by DateTzDto{}.NewStartEndTimes(t1, fmtstr).\n" +
+			"Error='%v'", err.Error())
+		return
+	}
+
+	if expectedOutDate != dtz1.String() {
+		fmt.Printf("Error: Expected dtz1.String()='%v'. Instead, dtz1.String()='%v' ", expectedOutDate, dtz1.String())
+		return
+	}
+
+	t2 := t1.AddDate(5, 6, 12)
+
+	dtz2, err := dtz1.AddDate(5, 6, 12, fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedOutDate = t2.Format(fmtstr)
+
+	if expectedOutDate != dtz2.String() {
+		fmt.Printf("Error: Expected dtz2.String()='%v'.\n" +
+			"Instead, dtz2.String()='%v'\n", expectedOutDate, dtz2.String())
+		return
+	}
+
 }
 
 func (mt mainTest) mainTest071() {

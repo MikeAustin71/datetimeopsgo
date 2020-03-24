@@ -260,8 +260,8 @@ func (dtMech *DTimeMechanics) AddDateTimeByUtc(
 
 	baseDateTimeUtc = baseDateTime.In(time.UTC)
 
-	if years > 0 ||
-			months > 0 {
+	if years != 0 ||
+			months != 0 {
 
 		newDateTime = baseDateTimeUtc.AddDate(years, months, 0)
 

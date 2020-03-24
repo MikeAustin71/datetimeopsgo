@@ -31,14 +31,16 @@ func TestDateTzDto_AddDate_01(t *testing.T) {
 	dtz2, err := dtz1.AddDate(5, 6, 12, fmtstr)
 
 	if err != nil {
-		t.Errorf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr). Error='%v'", err.Error())
+		t.Errorf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
 		return
 	}
 
 	expectedOutDate = t2.Format(fmtstr)
 
 	if expectedOutDate != dtz2.String() {
-		t.Errorf("Error: Expected dtz2.String()='%v'. Instead, dtz2.String()='%v' ", expectedOutDate, dtz2.String())
+		t.Errorf("Error: Expected dtz2.String()='%v'.\n" +
+			"Instead, dtz2.String()='%v'\n", expectedOutDate, dtz2.String())
 	}
 
 }
