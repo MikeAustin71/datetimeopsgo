@@ -2629,6 +2629,27 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 		}
 	}
 
+	var compareResult int
+
+	compareResult, err = dTzUtil.compareDateTimeValue(
+		&startDateTimeTz,
+		&endDateTimeTz,
+		ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nError returned by dTzUtil.compareDateTimeValue().\n" +
+			"Error='%v'\n", err)
+	}
+
+	if compareResult > 0 {
+		return fmt.Errorf(ePrefix +
+			"\nError: Starting Date Time is greater than Ending Date Time!\n" +
+			"startDateTimeTz='%v'\nendDateTimeTz='%v'\n",
+			startDateTimeTz.dateTimeValue.Format(DEFAULTDATETIMEFORMAT),
+			endDateTimeTz.dateTimeValue.Format(DEFAULTDATETIMEFORMAT))
+	}
+
 	tzMech := TimeZoneMechanics{}
 
 	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
@@ -2636,7 +2657,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	dtMech := DTimeMechanics{}
 
 	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
-
 
 	tDur2 := TimeDurationDto{}
 
@@ -2657,7 +2677,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	}
 
 	err = dTzUtil.setFromTzDef(
-		&tDur2.StartTimeDateTz,
+		&tDur2.EndTimeDateTz,
 		endDateTimeTz.dateTimeValue,
 		TzConvertType.Relative(),
 		tZoneDef,

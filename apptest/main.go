@@ -136,6 +136,40 @@ timeDto := dt.TimeDto{
 	fmt.Printf("\n    Actual UTC End Time: %v\n\n",
 		t2Utc.Format(fmtStr))
 
+	fmt.Printf("\nCalculated BaseTime Duration: %v\n\n",
+		dur.BaseTime.GetYearMthDaysTimeAbbrvStr())
+
+	fmt.Printf("\n     Calculated UTC Duration: %v\n\n",
+		dur.UTCTime.GetYearMthDaysTimeAbbrvStr())
+
+	t2DurationDate := t1.Add(dur.UTCTime.TimeDuration)
+
+	fmt.Printf("\n t1 + UTCTime Durtion: %v\n\n",
+		t2DurationDate.Format(fmtStr))
+
+	timeDur :=t1Result.Sub(t1)
+
+	timeDurDto, err := dt.TimeDurationDto{}.NewStartTimeDuration(
+	t1,
+	timeDur,
+	fmtStr)
+
+	if err != nil {
+		fmt.Printf("Error retured by dt.TimeDurationDto{}.NewStartTimeDuration().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("\n                    t1 time: %v\n",
+		t1.Format(fmtStr))
+
+	fmt.Printf("\n             t1 result time: %v\n",
+		t1Result.Format(fmtStr))
+	
+	fmt.Printf("\n     Calculated t1 Duration: %v\n\n",
+		timeDurDto.GetYearMthDaysTimeAbbrvStr())
+
+
 }
 
 func (mt mainTest) mainTest072() {

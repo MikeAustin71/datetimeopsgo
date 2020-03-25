@@ -1129,6 +1129,42 @@ func (dtz *DateTzDto) AddTimeToThis(
 	return nil
 }
 
+// Compare - Compares the date time values of the current
+// DateTzDto object ('dtz') and the 'dtz2' DateTzDto object
+// passed as an input parameter. 
+//
+// If the 'dtz' date time value is is less than that of
+// 'dtz2', this method returns an integer value of '-1'
+// (minus one).
+//
+// If the 'dtz' date time value is equal to that of
+// 'dtz2', this method returns an integer value of '0'
+// (zero).
+//
+// If the 'dtz' date time value is is greater than that
+// of 'dtz2', this method returns an integer value of
+// '1' (plus one).
+//
+func (dtz *DateTzDto) Compare(dtz2 DateTzDto) (int, error) {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	ePrefix := "DateTzDto.Compare() "
+
+	dTzUtil := dateTzDtoUtility{}
+
+	return dTzUtil.compareDateTimeValue(
+					dtz,
+					&dtz2,
+					ePrefix)
+}
+
 // CopyIn - Receives an incoming DateTzDto and copies those data
 // fields to the current DateTzDto instance.
 //

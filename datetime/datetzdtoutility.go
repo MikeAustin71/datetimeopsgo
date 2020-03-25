@@ -515,6 +515,81 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 	return dtz2
 }
 
+// compareDateTimeValue - Compares the date time values
+// of two DateTzDto objects.
+//
+// If the 'dTz1' date time value is is less than that of
+// 'dTz2', this method returns an integer value of '-1'
+// (minus one).
+//
+// If the 'dTz1' date time value is equal to that of
+// 'dTz2', this method returns an integer value of '0'
+// (zero).
+//
+//
+// If the 'dTz1' date time values is is greater than
+// that of 'dTz2', this method returns an integer value
+// of '1' (plus one).
+//
+// Return Values
+// =============
+//
+// -1 = 'dTz1' is less than the date time value of 'dTz2'
+//  0 = 'dTz1' is equal to the date time value of 'dTz2'
+//  1 = 'dTz1' is greater than the date time value of 'dTz2'
+//
+func (dTzUtil *dateTzDtoUtility) compareDateTimeValue(
+	dTz1,
+	dTz2 *DateTzDto,
+	ePrefix string) (int, error) {
+
+	dTzUtil.lock.Lock()
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.compareDateTimeValue() "
+
+	if dTz1 == nil {
+		return -99,
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dTz1",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'dTz1' is a nil pointer!",
+				err:                 nil,
+			}
+	}
+
+	if dTz1.lock == nil {
+		dTz1.lock = new(sync.Mutex)
+	}
+
+
+	if dTz2 == nil {
+		return -99,
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "dTz2",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'dTz2' is a nil pointer!",
+				err:                 nil,
+			}
+	}
+
+	if dTz2.lock == nil {
+		dTz2.lock = new(sync.Mutex)
+	}
+
+	if dTz1.dateTimeValue.Before(dTz2.dateTimeValue) {
+		return -1, nil
+	}
+
+	if dTz1.dateTimeValue.After(dTz2.dateTimeValue) {
+		return 1, nil
+	}
+
+	return 0, nil
+}
+
 // empty - Receives a pointer to a type 'DateTzDto' and
 // proceeds to set all internal member variables to their
 // 'zero' or uninitialized values.
