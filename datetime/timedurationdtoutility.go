@@ -2639,7 +2639,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	if err != nil {
 		return fmt.Errorf(ePrefix +
 			"\nError returned by dTzUtil.compareDateTimeValue().\n" +
-			"Error='%v'\n", err)
+			"Error='%v'\n" +
+			"startDateTimeTz='%v'\nendDateTimeTz='%v'\n",
+			err,
+			startDateTimeTz.dateTimeValue.Format(DEFAULTDATETIMEFORMAT),
+			endDateTimeTz.dateTimeValue.Format(DEFAULTDATETIMEFORMAT))
 	}
 
 	if compareResult > 0 {
@@ -2662,7 +2666,21 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 
 	tDur2.lock = new(sync.Mutex)
 
-	tZoneDef := startDateTimeTz.timeZone.CopyOut()
+	tZoneDef := TimeZoneDefinition{}.New()
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setFromTimeZoneName(
+		&tZoneDef,
+		startDateTimeTz.dateTimeValue,
+		TzConvertType.Relative(),
+		timeZoneLocation,
+		ePrefix)
+
+	if err != nil {
+		return fmt.Errorf(ePrefix +
+			"\nParameter 'timeZoneLocation' is invalid!\n" +
+			"Error='%v'\n", err.Error())
+	}
 
 	err = dTzUtil.setFromTzDef(
 		&tDur2.StartTimeDateTz,
