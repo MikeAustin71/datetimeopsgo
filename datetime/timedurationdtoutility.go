@@ -2667,6 +2667,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	tDur2.lock = new(sync.Mutex)
 
 	tZoneDef := TimeZoneDefinition{}.New()
+
 	tzDefUtil := timeZoneDefUtility{}
 
 	err = tzDefUtil.setFromTimeZoneName(
