@@ -112,7 +112,10 @@ var mTDurCalcTypeCodeToString = map[TDurCalcType]string{
 //                        allocation is performed using standard Gregorian Years.
 //
 // For easy access to these enumeration values, use the global variable
-// 'TDurCalc'.
+// 'TDurCalc'. Example: TDurCalc.CumNanoseconds()
+//
+// Otherwise you will need to use the formal syntax:
+// TDurCalcType(0).CumNanoseconds()
 //
 type TDurCalcType int
 
@@ -808,6 +811,10 @@ func (durCalc TDurCalcType) GregorianYears() TDurCalcType {
 
 	return TDurCalcType(11)
 }
+
+// ===============================================================================
+//                     UTILITY METHODS
+// ===============================================================================
 
 // String - Returns a string with the name of the enumeration associated
 // with this instance of 'TDurCalcType'. 
