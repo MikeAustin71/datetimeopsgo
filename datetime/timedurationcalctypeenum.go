@@ -887,6 +887,7 @@ func (durCalc TDurCalcType) XLastValidCalcType() TDurCalcType {
 //                        enumeration string values. If 'valueString'
 //                        is equal to one of the enumeration names, this
 //                        method will proceed to successful completion
+//                        and return the correct enumeration value.
 //
 // caseSensitive   bool - If 'true' the search for enumeration names
 //                        will be case sensitive and will require an
@@ -908,14 +909,14 @@ func (durCalc TDurCalcType) XLastValidCalcType() TDurCalcType {
 //
 // error        - If this method completes successfully, the returned error
 //                Type is set equal to 'nil'. If an error condition is encountered,
-//                this method will return an error Type which encapsulates an
+//                this method will return an error type which encapsulates an
 //                appropriate error message.
 //
 // ------------------------------------------------------------------------
 //
 // Usage
 //
-// t, err := TDurCalcType(0).XParseString("StdYearMth")
+// t, err := TDurCalcType(0).XParseString("StdYearMth", true)
 //
 //     t is now equal to TDurCalcType(0).StdYearMth()
 //

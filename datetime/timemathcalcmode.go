@@ -1,11 +1,21 @@
 package datetime
 
-import "sync"
+import (
+	"fmt"
+	"strings"
+	"sync"
+)
 
 var mTimeMathCalcModeStringToCode = map[string]TimeMathCalcMode{
 	"None"           : TimeMathCalcMode(0),
 	"LocalTimeZone"  : TimeMathCalcMode(1),
 	"UtcTimeZone"    : TimeMathCalcMode(2),
+}
+
+var mTimeMathCalcModeLwrCaseStringToCode = map[string]TimeMathCalcMode{
+	"none"           :  TimeMathCalcMode(0),
+	"localtimezone"  :  TimeMathCalcMode(1),
+	"utctimezone"    :  TimeMathCalcMode(2),
 }
 
 var mTimeMathCalcModeToString = map[TimeMathCalcMode]string{
@@ -146,7 +156,7 @@ func (tMathMode TimeMathCalcMode) UtcTimeZone() TimeMathCalcMode {
 
 	defer lockTimeMathCalcMode.Unlock()
 
-	return TimeMathCalcMode(1)
+	return TimeMathCalcMode(2)
 }
 
 
@@ -183,10 +193,164 @@ func (tMathMode TimeMathCalcMode) String() string {
 	return result
 }
 
+// XFirstValidCalcType - Returns the value of the First TimeMathCalcMode
+// enumeration.
+//
+// The first Time Math Calculation Mode enumeration is 'LocalTimeZone'.
+//
+func (tMathMode TimeMathCalcMode) XFirstValidCalcType() TimeMathCalcMode {
 
+	lockTimeMathCalcMode.Lock()
 
-// TCalcMode - public global variable of
-// type TimeMathCalcMode.
+	defer lockTimeMathCalcMode.Unlock()
+
+	return TimeMathCalcMode(1)
+}
+
+// XLastValidCalcType - Returns the value of the Last TimeMathCalcMode
+// enumeration.
+//
+// The Last TimeMathCalcMode value is 'UtcTimeZone'.
+//
+func (tMathMode TimeMathCalcMode) XLastValidCalcType() TimeMathCalcMode {
+
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
+	return TimeMathCalcMode(2)
+}
+
+// XParseString - Receives a string and attempts to match it with
+// the string value of a supported enumeration. If successful, a
+// new instance of TimeMathCalcMode is returned set to the value of
+// the associated enumeration.
+//
+// This is a standard utility method and is not part of the valid
+// enumerations for this type.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+// valueString   string - A string which will be matched against the
+//                        enumeration string values. If 'valueString'
+//                        is equal to one of the enumeration names, this
+//                        method will proceed to successful completion
+//                        and return the correct enumeration value.
+//
+// caseSensitive   bool - If 'true', the search for enumeration names
+//                        will be case sensitive and will require an
+//                        exact match. Therefore, 'localtimezone' will
+//                        NOT match the enumeration name, 'LocalTimeZone'.
+//
+//                        If 'false', a case insensitive search is conducted
+//                        for the enumeration name. In this case, 'localtimezone'
+//                        will match match enumeration name 'LocalTimeZone'.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+// TimeMathCalcMode - Upon successful completion, this method will return a new
+//                    instance of 'TimeMathCalcMode' set to the value of the
+//                    enumeration matched by the string search performed on input
+//                    parameter, 'valueString'.
+//
+// error            - If this method completes successfully, the returned error
+//                    Type is set equal to 'nil'. If an error condition is encountered,
+//                    this method will return an error type which encapsulates an
+//                    appropriate error message.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+// t, err := TimeMathCalcMode(0).XParseString("LocalTimeZone", true)
+//
+//     t is now equal to TimeMathCalcMode(0).LocalTimeZone()
+//
+func (tMathMode TimeMathCalcMode) XParseString(
+	valueString string,
+	caseSensitive bool) (TimeMathCalcMode, error) {
+
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
+	ePrefix := "TimeMathCalcMode.XParseString() "
+
+	if len(valueString) < 4 {
+		return TimeMathCalcMode(0),
+			fmt.Errorf(ePrefix+
+				"\nInput parameter 'valueString' is INVALID!\n" +
+				"String length is less than '4'.\n" +
+				"valueString='%v'\n", valueString)
+	}
+
+	var ok bool
+	var timeMathCalcMode TimeMathCalcMode
+
+	if caseSensitive {
+
+		timeMathCalcMode, ok = mTimeMathCalcModeStringToCode[valueString]
+
+		if !ok {
+			return TimeMathCalcMode(0),
+				fmt.Errorf(ePrefix+
+					"\n'valueString' did NOT MATCH a TimeMathCalcMode.\n" +
+					"valueString='%v'\n", valueString)
+		}
+
+	} else {
+
+		timeMathCalcMode, ok = mTimeMathCalcModeLwrCaseStringToCode[strings.ToLower(valueString)]
+
+		if !ok {
+			return TimeMathCalcMode(0),
+				fmt.Errorf(ePrefix+
+					"\n'valueString' did NOT MATCH a TimeMathCalcMode.\n" +
+					"valueString='%v'\n", valueString)
+		}
+	}
+
+	return timeMathCalcMode, nil
+}
+
+// XValue - This method returns the enumeration value of the current TimeMathCalcMode
+// instance.
+//
+// This is a standard utility method and is not part of the valid enumerations
+// for this type.
+//
+//
+func (tMathMode TimeMathCalcMode) XValue() TimeMathCalcMode {
+
+	lockTimeMathCalcMode.Lock()
+
+	defer lockTimeMathCalcMode.Unlock()
+
+	return tMathMode
+}
+
+// XValueInt - This method returns the integer value of the current TDurCalcType
+// instance.
+//
+// This is a standard utility method and is not part of the valid enumerations
+// for this type.
+//
+//
+func (tMathMode TimeMathCalcMode) XValueInt() int {
+
+	lockTimeMathCalcMode.Lock()
+
+	defer lockTimeMathCalcMode.Unlock()
+
+	return int(tMathMode)
+}
+
+// TCalcMode - public global variable of type
+// TimeMathCalcMode.
 //
 // This variable serves as an easier, short hand
 // technique for accessing TimeMathCalcMode values.
