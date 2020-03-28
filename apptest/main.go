@@ -199,7 +199,12 @@ func (mt mainTest) mainTest072() {
 
 	t2 := t1.AddDate(5, 6, 12)
 
-	dtz2, err := dtz1.AddDate(5, 6, 12, fmtstr)
+	dtz2, err := dtz1.AddDate(
+		dt.TCalcMode.LocalTimeZone(),
+		5,
+		6,
+		12,
+		fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr).\n" +
@@ -938,7 +943,12 @@ func (mt mainTest) mainTest064() {
 
 	t2 := t1.AddDate(5, 6, 12)
 
-	dtz2, err := dtz1.AddDate(5, 6, 12, fmtstr)
+	dtz2, err := dtz1.AddDate(
+		dt.TCalcMode.LocalTimeZone(),
+		5,
+		6,
+		12,
+		fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr). Error='%v'", err.Error())

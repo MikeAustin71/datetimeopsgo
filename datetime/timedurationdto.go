@@ -2798,8 +2798,11 @@ func (tDur TimeDurationDto) NewAutoStart(
 //                                   endDateTz,
 //                                   FmtDateTimeYrMDayFmtStr)
 //
-//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in source
-//        file, "constantsdatetime.go".
+//  Note:
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewStartEndDateTzDto(
 	startDateTz,
@@ -3004,12 +3007,12 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 //  tDurDto, err := TimeDurationDto{}.NewStartEndDateTzDtoCalcTz(
 //                                    startDateTz,
 //                                    endDateTz,
-//                                    TDurCalcType(0).StdYearMth(),
+//                                    TDurCalc.StdYearMth(),
 //                                    TZones.US.Central(),
 //                                    FmtDateTimeYrMDayFmtStr)
 //
 // Note:
-//         'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
+//         'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
 //         standard year month day time duration allocation.
 //
 //        'TZones.US.Central()' is a constant available int source file,
@@ -5611,7 +5614,25 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(
 //
 // Input Parameters:
 //
-//  startDateTime time.Time
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
+//
+//  startDateTime   time.Time
 //     - Starting date time. The ending date time will be computed
 //       by adding the time components of the 'plusTimeDto' to
 //       'startDateTime'.
@@ -5679,13 +5700,24 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(
 // Example Usage:
 //
 //  tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDto(
+//                    TCalcMode.LocalTimeZone(),
 //                    startTime,
 //                    plusTimeDto,
 //                    FmtDateTimeYrMDayFmtStr)
 //
-//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant available in constantsdatetime.go
+//  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
+	timeCalcMode  TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -5706,6 +5738,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 
 	err := tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 										&tDur2,
+										timeCalcMode,
 										startDateTime,
 										plusTimeDto,
 										TDurCalcType(0).StdYearMth(),
@@ -5733,6 +5766,24 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 // __________________________________________________________________________
 //
 // Input Parameters:
+//
+//  timeCalcMode  TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
 //
 //  startDateTime   time.Time
 //     - Starting date time. The ending date time will be computed
@@ -5887,6 +5938,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 // Example Usage:
 //
 //  tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDtoCalcTz(
+//                    TCalcMode.LocalTimeZone(),
 //                    startTime,
 //                    plusTimeDto,
 //                    TDurCalcType(0).StdYearMth(),
@@ -5894,6 +5946,11 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 //                    FmtDateTimeYrMDayFmtStr)
 //
 // Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
 //         'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //         standard year month day time duration allocation.
 //
@@ -5908,6 +5965,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
+	timeCalcMode  TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
@@ -5930,6 +5988,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 
 	err := tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 		&tDur2,
+		timeCalcMode,
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
@@ -5964,7 +6023,25 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 //
 // Input Parameters:
 //
-//  endDateTime time.Time
+//  timeCalcMode  TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
+//
+//  endDateTime   time.Time
 //     - Ending date time. The starting date time will be computed
 //       by subtracting minusTimeDto from 'endDateTime'
 //
@@ -6031,14 +6108,24 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 // Example Usage:
 //
 //  tDurDto, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoTz(
+//                           TCalcMode.LocalTimeZone(),
 //                           endTime,
 //                           minusTimeDto,
 //                           FmtDateTimeYrMDayFmtStr)
 //
-//  Note: 'FmtDateTimeYrMDayFmtStr' is a constant defined in source file,
-//        constantsdatetime.go.
+//  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
+	timeCalcMode  TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
@@ -6059,6 +6146,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 
 	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		&tDur2,
+		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		TDurCalcType(0).StdYearMth(),
@@ -6086,6 +6174,24 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 // __________________________________________________________________________
 //
 // Input Parameters:
+//
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
 //
 //  endDateTime     time.Time
 //     - Ending date time. The starting date time will be computed
@@ -6238,12 +6344,17 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 // Example Usage:
 //
 //  tDurDto, err := TimeDurationDto{}.NewEndTimeMinusTimeDtoCalcTz(endTime,
+//                    TCalcMode.LocalTimeZone(),
 //                    minusTimeDto,
 //                    TDurCalcType(0).StdYearMth(),
 //                    TZones.US.Central()
 //                    FmtDateTimeYrMDayFmtStr)
 //
 // Note:
+//         'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//         Reference source code documentation at:
+//            datetime\timemathcalcmode.go
+//
 //         'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' and signals
 //         standard year month day time duration allocation.
 //
@@ -6258,6 +6369,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
+	timeCalcMode  TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
@@ -6280,6 +6392,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 
 	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 								&t2Dur,
+								timeCalcMode,
 								endDateTime,
 								minusTimeDto,
 								tDurCalcType,
@@ -6459,6 +6572,24 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //
 // Input Parameters:
 //
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
+//
 //  endDateTime     time.Time
 //     - Ending date time. The starting date time will be computed
 //       by subtracting minusTimeDto from 'endDateTime'
@@ -6601,7 +6732,39 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
 //
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetEndTimeMinusTimeDtoCalcTz(
+//                           TCalcMode.LocalTimeZone(),
+//                           endTime,
+//                           minusTimeDto,
+//                           TDurCalc.StdYearMth(),
+//                           TZones.US.Central(),
+//                           FmtDateTimeYrMDayFmtStr)
+//
+//  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
+//        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
+//        standard year month day time duration allocation.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
 func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(
+	timeCalcMode  TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto, 
 	tDurCalcType TDurCalcType, 
@@ -6622,6 +6785,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(
 
 	return tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		tDur,
+		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
@@ -6766,6 +6930,32 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(
 //     - If this method proceeds to successful completion, the returned
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
+//
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetStartEndTimesDateDtoCalcTz(
+//                           startDateTimeTz,
+//                           endDateTimeTz,
+//                           TDurCalc.StdYearMth(),
+//                           TZones.US.Central(),
+//                           FmtDateTimeYrMDayFmtStr)
+//
+//  Note:
+//        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
+//        standard year month day time duration allocation.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(
 	startDateTimeTz,
@@ -6926,6 +7116,29 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
 //
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetStartEndTimesCalcTz(
+//                           startDateTime,
+//                           endDateTime,
+//                           TZones.US.Central(),
+//                           FmtDateTimeYrMDayFmtStr)
+//
+//  Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//         'timezonedata.go'
+//
+//         TZones.US.Central() is equivalent to "America/Chicago"
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
 func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(
 	startDateTime,
 	endDateTime time.Time,
@@ -6968,17 +7181,17 @@ func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(
 //
 // Input Parameters:
 //
-//  startDateTime   time.Time
+//  startDateTime     time.Time
 //     - Starting date time for the duration calculation
 //
-//  duration    time.Duration
+//  duration          time.Duration
 //     - Amount of time to be added to or subtracted from
 //       'startDateTime'. Note: If duration is a negative value
 //       'startDateTime' is converted to ending date time and
 //       actual starting date time is computed by subtracting
 //       duration.
 //
-//  tDurCalcType TDurCalcType
+//  tDurCalcType      TDurCalcType
 //     - Specifies the calculation type to be used in allocating
 //       time duration:
 //
@@ -7088,6 +7301,31 @@ func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(
 //     - If this method proceeds to successful completion, the returned
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetStartTimeDurationCalcTz(
+//                           startDateTime,
+//                           duration,
+//                           TDurCalc.StdYearMth(),
+//                           TZones.US.Central(),
+//                           FmtDateTimeYrMDayFmtStr)
+//
+//  Note:
+//        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
+//        standard year month day time duration allocation.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(
 	startDateTime time.Time,
@@ -7254,6 +7492,31 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
 //
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetStartTimeDurationDateDtoCalcTz(
+//                           startDateTimeTz,
+//                           duration,
+//                           TDurCalc.StdYearMth(),
+//                           TZones.US.Central(),
+//                           FmtDateTimeYrMDayFmtStr)
+//
+//  Note:
+//        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
+//        standard year month day time duration allocation.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
 func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(
 	startDateTimeTz DateTzDto,
 	duration time.Duration,
@@ -7292,6 +7555,24 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(
 // __________________________________________________________________________
 //
 // Input Parameters:
+//
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
 //
 //  startDateTime   time.Time
 //     - Starting date time. The ending date time will be computed
@@ -7436,7 +7717,39 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
 //
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetStartTimePlusTimeDtoCalcTz(
+//                           TCalcMode.LocalTimeZone(),
+//                           startDateTime,
+//                           plusTimeDto,
+//                           TDurCalc.StdYearMth(),
+//                           TZones.US.Central(),
+//                           FmtDateTimeYrMDayFmtStr)
+//
+//  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
+//        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
+//        standard year month day time duration allocation.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
+//
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
 func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(
+	timeCalcMode  TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
@@ -7457,6 +7770,7 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(
 
 	return tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 								tDur,
+								timeCalcMode,
 								startDateTime,
 								plusTimeDto,
 								tDurCalcType,

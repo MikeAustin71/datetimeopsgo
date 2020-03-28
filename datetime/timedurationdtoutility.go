@@ -2098,6 +2098,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 //
 func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 	tDur *TimeDurationDto,
+	timeCalcMode  TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
@@ -2150,6 +2151,18 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 		}
 	}
 
+	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
+		timeCalcMode > TCalcMode.XLastValidCalcType() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeCalcMode",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'timeCalcMode' " +
+				"is invalid!",
+			err:                 nil,
+		}
+	}
+
 	tzMech := TimeZoneMechanics{}
 
 	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
@@ -2179,6 +2192,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 	tDur2.StartTimeDateTz, err =
 		dTzUtil.addMinusTimeDto(
 					&tDur2.EndTimeDateTz,
+					timeCalcMode,
 					minusTimeDto,
 					ePrefix)
 
@@ -3338,6 +3352,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationDateDtoCalcTz(
 //
 func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 	tDur *TimeDurationDto,
+	timeCalcMode TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
@@ -3390,6 +3405,18 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 		}
 	}
 
+	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
+		timeCalcMode > TCalcMode.XLastValidCalcType() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeCalcMode",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'timeCalcMode' " +
+				"is invalid!",
+			err:                 nil,
+		}
+	}
+
 	tzMech := TimeZoneMechanics{}
 
 	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
@@ -3418,6 +3445,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 
 	tDur2.EndTimeDateTz, err = dTzUtil.addPlusTimeDto(
 															&tDur2.StartTimeDateTz,
+															timeCalcMode,
 															plusTimeDto,
 															ePrefix)
 

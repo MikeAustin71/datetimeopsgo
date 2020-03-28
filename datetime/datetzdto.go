@@ -132,11 +132,18 @@ type DateTzDto struct {
 //
 // Input Parameters
 //
-//  timeCalcMode      TimeMathCalcMode
+//  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -199,10 +206,11 @@ type DateTzDto struct {
 //                  days,
 //                  FmtDateTimeYrMDayFmtStr)
 //
-//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//  Note:
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
-//        'FmtDateTimeYrMDayFmtStr' is a constant available in
-//        source file 'constantsdatetime.go'.
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz *DateTzDto) AddDate(
 	timeCalcMode TimeMathCalcMode,
@@ -241,11 +249,18 @@ func (dtz *DateTzDto) AddDate(
 //
 // Input Parameters:
 //
-//  timeCalcMode      TimeMathCalcMode
+//  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -315,10 +330,11 @@ func (dtz *DateTzDto) AddDate(
 //                   nanoseconds,
 //                   FmtDateTimeYrMDayFmtStr)
 //
-//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//  Note:
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
-//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file
-//        'constantsdatetime.go'.
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz *DateTzDto) AddDateTime(
 	timeCalcMode TimeMathCalcMode,
@@ -377,8 +393,15 @@ func (dtz *DateTzDto) AddDateTime(
 //  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -483,8 +506,15 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 //  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -618,10 +648,11 @@ func (dtz *DateTzDto) AddDateToThis(
 //                duration,
 //                FmtDateTimeYrMDayFmtStr)
 //
-//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//  Note:
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
-//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file
-//        'constantsdatetime.go'.
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz *DateTzDto) AddDuration(
 	duration time.Duration,
@@ -718,8 +749,15 @@ func (dtz *DateTzDto) AddDurationToThis(
 //  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -806,8 +844,15 @@ func (dtz *DateTzDto) AddMinusTimeDto(
 //  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -899,8 +944,15 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(
 //  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -988,8 +1040,15 @@ func (dtz *DateTzDto) AddPlusTimeDto(
 //  timeCalcMode  TimeMathCalcMode
 //       - TimeMathCalcMode is an enumeration which specifies the
 //         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value. For
-//         additional information see the type documentation at
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
 //               datetime\timemathcalcmode.go
 //
 //         Valid values are:
@@ -1135,10 +1194,11 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(
 //                nanoseconds,
 //                FmtDateTimeYrMDayFmtStr)
 //
-//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//  Note:
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
-//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file
-//        'constantsdatetime.go'.
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz *DateTzDto) AddTime(
 	hours,
@@ -1217,10 +1277,11 @@ func (dtz *DateTzDto) AddTime(
 //                nanoseconds,
 //                FmtDateTimeYrMDayFmtStr)
 //
-//  Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//  Note:
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
-//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file
-//        'constantsdatetime.go'.
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz *DateTzDto) AddTimeToThis(
 		hours,
@@ -2645,7 +2706,6 @@ func (dtz DateTzDto) New() DateTzDto {
 //
 //
 //   Note:
-//
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'
 //
@@ -3307,10 +3367,11 @@ func (dtz DateTzDto) NewNowTz(
 //   dtzDto, err := DateTzDto{}.NewNowUTC(
 //                      FmtDateTimeYrMDayFmtStr)
 //
-//   Note: FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//   Note:
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'
 //
-//         'FmtDateTimeYrMDayFmtStr' is a constant available in source file
-//         'constantsdatetime.go'.
+//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (dtz DateTzDto) NewNowUTC(
 	dateTimeFmtStr string) (DateTzDto, error) {
