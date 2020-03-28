@@ -229,6 +229,61 @@ func (dtMech *DTimeMechanics) AddDateTime(
 
 	return newDate.Add(time.Duration(totNanoSecs))
 }
+
+// AddDateTimeByLocalTimeZone - Performs an addition operation
+// by adding time components to a specified 'baseDateTime'. The
+// addition operation is performed using the local time zone
+// associated with input parameter 'baseDateTime'.
+//
+func (dtMech *DTimeMechanics) AddDateTimeByLocalTimeZone(
+	baseDateTime time.Time,
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	milliseconds,
+	microseconds,
+	nanoseconds int) time.Time {
+
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	var newDateTime time.Time
+
+	if years != 0 ||
+		months != 0 {
+
+		newDateTime = baseDateTime.AddDate(
+			years,
+			months,
+			0)
+
+	} else {
+
+		newDateTime = baseDateTime
+
+	}
+
+	totNanoSecs := int64(days) * DayNanoSeconds
+	totNanoSecs += int64(hours) * int64(time.Hour)
+	totNanoSecs += int64(minutes) * int64(time.Minute)
+	totNanoSecs += int64(seconds) * int64(time.Second)
+	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
+	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
+	totNanoSecs += int64(nanoseconds)
+
+	return newDateTime.Add(time.Duration(totNanoSecs))
+}
+
+
 // AddDateTimeByUtc - Adds date and time values to an existing date time,
 // 'baseDateTime'. 'baseDateTime' is first converted to equivalent
 // UTC date time before the addition. Afterwards, the date time
@@ -282,6 +337,26 @@ func (dtMech *DTimeMechanics) AddDateTimeByUtc(
 	resultDateTime = newDateTime.Add(time.Duration(totNanoSecs))
 
 	return resultDateTime.In(baseDateTime.Location())
+}
+
+// AddDurationByLocalTimeZone - Receives a date time input
+// parameter ('baseDateTime') and proceeds to add input
+// parameter 'timeDuration'. The local time zone is utilized
+// in the addition operation.
+//
+func (dtMech *DTimeMechanics) AddDurationByLocalTimeZone(
+	baseDateTime time.Time,
+	timeDuration time.Duration) time.Time {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	return baseDateTime.Add(timeDuration)
 }
 
 // AddDurationByUtc - Receives a base date time and

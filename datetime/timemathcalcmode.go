@@ -101,14 +101,17 @@ var mTimeMathCalcModeToString = map[TimeMathCalcMode]string{
 // an enumeration of available calculation modes. These methods are listed as
 // follows:
 //
+// Enumeration     Value  Description
+// ===========     =====  ===========
+//
 // None             (0) - None - Signals that Time Math Calculation Mode
 //                        is not initialized. This is an error condition.
 //
 // LocalTimeZone    (1) - LocalTimeZone Time Calculation Mode. This mode
 //                        specifies that time spans added or subtracted
-//                        from a date time value will use the local time
-//                        zone. This means that days MAY be lesser than
-//                        greater than 24-consecutive hours.
+//                        from a date time value will use the associated
+//                        local time zone. This means that days MAY be
+//                        less than or greater than 24-consecutive hours.
 //
 // UtcTimeZone      (2) - Coordinated Universal Time (UTC) Mode. This mode
 //                        specifies that time spans added to or subtracted
@@ -130,6 +133,9 @@ type TimeMathCalcMode int
 
 var lockTimeMathCalcMode sync.Mutex
 
+// None - Signals that Time Math Calculation Mode
+// is not initialized. This is an error condition.
+//
 func (tMathMode TimeMathCalcMode) None() TimeMathCalcMode {
 
 	lockTimeMathCalcMode.Lock()
@@ -139,7 +145,12 @@ func (tMathMode TimeMathCalcMode) None() TimeMathCalcMode {
 	return TimeMathCalcMode(0)
 }
 
-
+// LocalTimeZone - Local Time Zone Time Calculation Mode. This mode
+// specifies that time spans added or subtracted from a date time
+// value will use the associated local time zone. This means that
+// days MAY be defined as less than or greater than 24-consecutive
+// hours.
+//
 func (tMathMode TimeMathCalcMode) LocalTimeZone() TimeMathCalcMode {
 
 	lockTimeMathCalcMode.Lock()
@@ -149,7 +160,14 @@ func (tMathMode TimeMathCalcMode) LocalTimeZone() TimeMathCalcMode {
 	return TimeMathCalcMode(1)
 }
 
-
+// UtcTimeZone - Coordinated Universal Time (UTC) Mode. This mode
+// specifies that time spans added to or subtracted from date time
+// values will always use days defined as 24-consecutive hours. At
+// a detail level, the original date time is first converted to UTC
+// time before adding the time span to yield an intermediate result.
+// This intermediate result is then converted back to the equivalent
+// time zone of the original date time.
+//
 func (tMathMode TimeMathCalcMode) UtcTimeZone() TimeMathCalcMode {
 
 	lockTimeMathCalcMode.Lock()
@@ -356,8 +374,8 @@ func (tMathMode TimeMathCalcMode) XValueInt() int {
 // technique for accessing TimeMathCalcMode values.
 //
 // Usage:
-// TCalcMode.None(),
-// TCalcMode.LocalTimeZone(),
-// TCalcMode.UtcTimeZone(),
+// TCalcMode.None()
+// TCalcMode.LocalTimeZone()
+// TCalcMode.UtcTimeZone()
 //
 var TCalcMode TimeMathCalcMode

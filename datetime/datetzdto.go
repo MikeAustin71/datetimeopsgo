@@ -132,9 +132,25 @@ type DateTzDto struct {
 //
 // Input Parameters
 //
-//  years             int   - Number of years to add to the current date.
-//  months            int   - Number of months to add to the current date.
-//  days              int   - Number of days to add to the current date.
+//  timeCalcMode      TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
+//  years             int
+//       - Number of years to add to the current date.
+//
+//  months            int
+//       - Number of months to add to the current date.
+//
+//  days              int
+//       - Number of days to add to the current date.
 //
 //          Note: Date Component input parameters may be either negative
 //                or positive. Negative values will subtract time from
@@ -177,6 +193,7 @@ type DateTzDto struct {
 //  dtz := DateTzDto{}
 //
 //  du, err := dtz.AddDate(
+//                  TCalcMode.LocalTimeZone(),
 //                  years,
 //                  months,
 //                  days,
@@ -188,6 +205,7 @@ type DateTzDto struct {
 //        source file 'constantsdatetime.go'.
 //
 func (dtz *DateTzDto) AddDate(
+	timeCalcMode TimeMathCalcMode,
 	years,
 	months,
 	days int,
@@ -207,6 +225,7 @@ func (dtz *DateTzDto) AddDate(
 
 	return dTzUtil.addDate(
 						dtz,
+						timeCalcMode,
 						years,
 						months,
 						days,
@@ -222,6 +241,17 @@ func (dtz *DateTzDto) AddDate(
 //
 // Input Parameters:
 //
+//  timeCalcMode      TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
 //  years             int   - Number of years to add.
 //  months            int   - Number of months to add.
 //  days              int   - Number of days to add.
@@ -236,7 +266,7 @@ func (dtz *DateTzDto) AddDate(
 //        or positive. Negative values will subtract time from
 //        the current DateTzDto instance.
 //
-//   dateTimeFmtStr string
+//  dateTimeFmtStr string
 //       - A date time format string which will be used
 //         to format and display 'dateTime'. Example:
 //         "2006-01-02 15:04:05.000000000 -0700 MST"
@@ -273,6 +303,7 @@ func (dtz *DateTzDto) AddDate(
 //  ... initialize to a value.
 //
 //  dtz, err := dtz.addDateTime(
+//                   TCalcMode.LocalTimeZone(),
 //                   years,
 //                   months,
 //                   days,
@@ -290,6 +321,7 @@ func (dtz *DateTzDto) AddDate(
 //        'constantsdatetime.go'.
 //
 func (dtz *DateTzDto) AddDateTime(
+	timeCalcMode TimeMathCalcMode,
 	years,
 	months,
 	days,
@@ -322,6 +354,7 @@ func (dtz *DateTzDto) AddDateTime(
 
 	return dTzUtil.addDateTime(
 		&dTz2,
+		timeCalcMode,
 		years,
 		months,
 		days,
@@ -341,15 +374,26 @@ func (dtz *DateTzDto) AddDateTime(
 //
 // Input Parameters
 //
-//  years        int - Number of years to add.
-//  months       int - Number of months to add.
-//  days         int - Number of days to add.
-//  hours        int - Number of hours to add.
-//  minutes      int - Number of minutes to add.
-//  seconds      int - Number of seconds to add.
-//  milliseconds int - Number of milliseconds to add.
-//  microseconds int - Number of microseconds to add.
-//  nanoseconds  int - Number of nanoseconds to add.
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
+//  years         int - Number of years to add.
+//  months        int - Number of months to add.
+//  days          int - Number of days to add.
+//  hours         int - Number of hours to add.
+//  minutes       int - Number of minutes to add.
+//  seconds       int - Number of seconds to add.
+//  milliseconds  int - Number of milliseconds to add.
+//  microseconds  int - Number of microseconds to add.
+//  nanoseconds   int - Number of nanoseconds to add.
 //
 //  Note: Date Time Component input parameters may be either negative
 //        or positive. Negative values will subtract time from
@@ -370,6 +414,7 @@ func (dtz *DateTzDto) AddDateTime(
 //  ... initialize to some value
 //
 //  err := dtz.AddDateTimeToThis(
+//                TCalcMode.LocalTimeZone(),
 //                years,
 //                months,
 //                days,
@@ -381,6 +426,7 @@ func (dtz *DateTzDto) AddDateTime(
 //                nanoseconds)
 //
 func (dtz *DateTzDto) AddDateTimeToThis(
+	timeCalcMode TimeMathCalcMode,
 	years,
 	months,
 	days,
@@ -405,6 +451,7 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 
 	dtz2, err :=dTzUtil.addDateTime(
 							dtz,
+							timeCalcMode,
 							years,
 							months,
 							days,
@@ -433,9 +480,20 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 //
 // Input Parameters
 //
-//  years    int - Number of years to add to the current date.
-//  months   int - Number of months to add to the current date.
-//  days     int - Number of days to add to the current date.
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
+//  years         int - Number of years to add to the current date.
+//  months        int - Number of months to add to the current date.
+//  days          int - Number of days to add to the current date.
 //
 //           Note: Date Component input parameters may be either negative
 //                 or positive. Negative values will subtract time from
@@ -456,11 +514,13 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 //  ... initialize to some value
 //
 //  err := dtz.AddDateToThis(
+//                TCalcMode.LocalTimeZone(),
 //                years,
 //                months,
 //                days)
 //
 func (dtz *DateTzDto) AddDateToThis(
+	timeCalcMode TimeMathCalcMode,
 	years,
 	months,
 	days int) error {
@@ -483,6 +543,7 @@ func (dtz *DateTzDto) AddDateToThis(
 
 	dtz2, err = dTzUtil.addDate(
 		dtz,
+		timeCalcMode,
 		years,
 		months,
 		days,
@@ -506,30 +567,34 @@ func (dtz *DateTzDto) AddDateToThis(
 //
 // Input Parameters
 //
-//  duration time.Duration  - A Time duration value which is added to the DateTime
-//                            value of the current DateTzDto instance to produce and
-//                            return a new, updated DateTzDto instance.
+//  timeCalcMode  TimeMathCalcMode
 //
-//            Note: The time.Duration input parameter may be either negative
-//                  or positive. Negative values will subtract time from
-//                  the current DateTzDto instance.
+//  duration      time.Duration
+//       - A Time duration value which is added to the DateTime
+//         value of the current DateTzDto instance to produce and
+//         return a new, updated DateTzDto instance.
 //
-//  dateTimeFmtStr string   - A date time format string which will be used
-//                            to format and display 'dateTime'. Example:
-//                            "2006-01-02 15:04:05.000000000 -0700 MST"
+//         Note: The time.Duration input parameter may be either negative
+//               or positive. Negative values will subtract time from
+//               the current DateTzDto instance.
 //
-//                            Date time format constants are found in the source
-//                            file 'constantsdatetime.go'. These constants represent
-//                            the more commonly used date time string formats. All
-//                            Date Time format constants begin with the prefix
-//                            'FmtDateTime'.
+//  dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                            If 'dateTimeFmtStr' is submitted as an
-//                            'empty string', a default date time format
-//                            string will be applied. The default date time
-//                            format string is:
-//                              FmtDateTimeYrMDayFmtStr =
-//                                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -613,7 +678,8 @@ func (dtz *DateTzDto) AddDuration(
 //
 //  err := dtz.AddDurationToThis(duration)
 //
-func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
+func (dtz *DateTzDto) AddDurationToThis(
+	duration time.Duration) error {
 
 	if dtz.lock == nil {
 		dtz.lock = new(sync.Mutex)
@@ -649,28 +715,40 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //
 // Input Parameters
 //
-//  minusTimeDto TimeDto - A TimeDto instance consisting of time components
-//                         (years, months, weeks, days, hours, minutes etc.)
-//                         which will be subtracted from the date time value
-//                         of the current DateTzDto instance.
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
 //
-//    type TimeDto struct {
-//       Years                int // Number of Years
-//       Months               int // Number of Months
-//       Weeks                int // Number of Weeks
-//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
-//       Hours                int // Number of Hours.
-//       Minutes              int // Number of Minutes
-//       Seconds              int // Number of Seconds
-//       Milliseconds         int // Number of Milliseconds
-//       Microseconds         int // Number of Microseconds
-//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
-//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                                //  plus remaining Nanoseconds
-//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
-//                                //  + Seconds + Milliseconds + Nanoseconds
-//    }
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
+//  minusTimeDto  TimeDto
+//       - A TimeDto instance consisting of time components
+//         (years, months, weeks, days, hours, minutes etc.)
+//         which will be subtracted from the date time value
+//         of the current DateTzDto instance.
+//
+//         type TimeDto struct {
+//            Years                int // Number of Years
+//            Months               int // Number of Months
+//            Weeks                int // Number of Weeks
+//            WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//            DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//            Hours                int // Number of Hours.
+//            Minutes              int // Number of Minutes
+//            Seconds              int // Number of Seconds
+//            Milliseconds         int // Number of Milliseconds
+//            Microseconds         int // Number of Microseconds
+//            Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//            TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                     //  plus remaining Nanoseconds
+//            TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                     //  + Seconds + Milliseconds + Nanoseconds
+//         }
 //
 //
 // ------------------------------------------------------------------------
@@ -691,9 +769,13 @@ func (dtz *DateTzDto) AddDurationToThis(duration time.Duration) error {
 //  dtz := DateTzDto{}
 //  ... initialize to some value
 //
-//  dtz2, err := dtz.AddMinusTimeDto(minusTimeDto)
+//  dtz2, err := dtz.AddMinusTimeDto(
+//                   TCalcMode.LocalTimeZone(),
+//                   minusTimeDto)
 //
-func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
+func (dtz *DateTzDto) AddMinusTimeDto(
+	timeCalcMode TimeMathCalcMode,
+	minusTimeDto TimeDto) (DateTzDto, error) {
 
 	if dtz.lock == nil {
 		dtz.lock = new(sync.Mutex)
@@ -709,6 +791,7 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 
 	return dTzUtil.addMinusTimeDto(
 								dtz,
+								timeCalcMode,
 								minusTimeDto,
 								ePrefix)
 }
@@ -720,28 +803,40 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //
 // Input Parameters
 //
-//  minusTimeDto TimeDto - A TimeDto instance consisting of time components
-//                         (years, months, weeks, days, hours, minutes etc.)
-//                         which will be subtracted from the date time value
-//                         of the current DateTzDto instance.
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
 //
-//    type TimeDto struct {
-//       Years                int // Number of Years
-//       Months               int // Number of Months
-//       Weeks                int // Number of Weeks
-//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
-//       Hours                int // Number of Hours.
-//       Minutes              int // Number of Minutes
-//       Seconds              int // Number of Seconds
-//       Milliseconds         int // Number of Milliseconds
-//       Microseconds         int // Number of Microseconds
-//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
-//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                                //  plus remaining Nanoseconds
-//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
-//                                //  + Seconds + Milliseconds + Nanoseconds
-//    }
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
+//  minusTimeDto  TimeDto
+//       - A TimeDto instance consisting of time components
+//         (years, months, weeks, days, hours, minutes etc.)
+//         which will be subtracted from the date time value
+//         of the current DateTzDto instance.
+//
+//         type TimeDto struct {
+//            Years                int // Number of Years
+//            Months               int // Number of Months
+//            Weeks                int // Number of Weeks
+//            WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//            DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//            Hours                int // Number of Hours.
+//            Minutes              int // Number of Minutes
+//            Seconds              int // Number of Seconds
+//            Milliseconds         int // Number of Milliseconds
+//            Microseconds         int // Number of Microseconds
+//            Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//            TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                     //  plus remaining Nanoseconds
+//            TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                     //  + Seconds + Milliseconds + Nanoseconds
+//         }
 //
 // ------------------------------------------------------------------------
 //
@@ -757,9 +852,13 @@ func (dtz *DateTzDto) AddMinusTimeDto(minusTimeDto TimeDto) (DateTzDto, error) {
 //  dtz := DateTzDto{}
 //  ... initialize to some value
 //
-//  err := dtz.AddMinusTimeDtoToThis(minusTimeDto)
+//  err := dtz.AddMinusTimeDtoToThis(
+//                   TCalcMode.LocalTimeZone(),
+//                   minusTimeDto)
 //
-func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
+func (dtz *DateTzDto) AddMinusTimeDtoToThis(
+	timeCalcMode TimeMathCalcMode,
+	minusTimeDto TimeDto) error {
 
 	if dtz.lock == nil {
 		dtz.lock = new(sync.Mutex)
@@ -775,6 +874,7 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 
 	dtz2, err := dTzUtil.addMinusTimeDto(
 		dtz,
+		timeCalcMode,
 		minusTimeDto,
 		ePrefix)
 
@@ -796,30 +896,42 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //
 // Input Parameters
 //
-//  plusTimeDto TimeDto - A TimeDto instance consisting of time components
-//                        (years, months, weeks, days, hours, minutes etc.)
-//                        which will be added to the date time value of the
-//                        current DateTzDto instance and returned as an instance
-//                        of type DateTzDto. Note: The value of the current DateTzDto
-//                        will not be altered.
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
 //
-//    type TimeDto struct {
-//       Years                int // Number of Years
-//       Months               int // Number of Months
-//       Weeks                int // Number of Weeks
-//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
-//       Hours                int // Number of Hours.
-//       Minutes              int // Number of Minutes
-//       Seconds              int // Number of Seconds
-//       Milliseconds         int // Number of Milliseconds
-//       Microseconds         int // Number of Microseconds
-//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
-//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                                //  plus remaining Nanoseconds
-//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
-//                                //  + Seconds + Milliseconds + Nanoseconds
-//    }
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
+//  plusTimeDto   TimeDto
+//       - A TimeDto instance consisting of time components
+//         (years, months, weeks, days, hours, minutes etc.)
+//         which will be added to the date time value of the
+//         current DateTzDto instance and returned as an instance
+//         of type DateTzDto. Note: The value of the current DateTzDto
+//         will not be altered.
+//
+//         type TimeDto struct {
+//            Years                int // Number of Years
+//            Months               int // Number of Months
+//            Weeks                int // Number of Weeks
+//            WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//            DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//            Hours                int // Number of Hours.
+//            Minutes              int // Number of Minutes
+//            Seconds              int // Number of Seconds
+//            Milliseconds         int // Number of Milliseconds
+//            Microseconds         int // Number of Microseconds
+//            Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//            TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                     //  plus remaining Nanoseconds
+//            TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                     //  + Seconds + Milliseconds + Nanoseconds
+//         }
 //
 // ------------------------------------------------------------------------
 //
@@ -839,9 +951,13 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(minusTimeDto TimeDto) error {
 //  dtz := DateTzDto{}
 //  ... initialize to some value
 //
-//  dtz2, err := dtz.AddPlusTimeDto(plusTimeDto)
+//  dtz2, err := dtz.AddPlusTimeDto(
+//                   TCalcMode.LocalTimeZone(),
+//                   plusTimeDto)
 //
-func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
+func (dtz *DateTzDto) AddPlusTimeDto(
+	timeCalcMode TimeMathCalcMode,
+	plusTimeDto TimeDto) (DateTzDto, error) {
 
 	if dtz.lock == nil {
 		dtz.lock = new(sync.Mutex)
@@ -857,6 +973,7 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 
 	return dTzUtil.addPlusTimeDto(
 								dtz,
+								timeCalcMode,
 								plusTimeDto,
 								ePrefix)
 }
@@ -867,6 +984,17 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 // ------------------------------------------------------------------------
 //
 // Input Parameters
+//
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value. For
+//         additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
 //
 //  plusTimeDto TimeDto - A TimeDto instance consisting of time components
 //                        (years, months, weeks, days, hours, minutes etc.)
@@ -906,9 +1034,13 @@ func (dtz *DateTzDto) AddPlusTimeDto(plusTimeDto TimeDto) (DateTzDto, error) {
 //  dtz := DateTzDto{}
 //  ... initialize to some value
 //
-//  err := dtz.AddPlusTimeDtoToThis(plusTimeDto)
+//  err := dtz.AddPlusTimeDtoToThis(
+//                   TCalcMode.LocalTimeZone(),
+//                   plusTimeDto)
 //
-func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
+func (dtz *DateTzDto) AddPlusTimeDtoToThis(
+	timeCalcMode TimeMathCalcMode,
+	plusTimeDto TimeDto) error {
 
 	if dtz.lock == nil {
 		dtz.lock = new(sync.Mutex)
@@ -924,6 +1056,7 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(plusTimeDto TimeDto) error {
 
 	dtz2, err := dTzUtil.addPlusTimeDto(
 		dtz,
+		timeCalcMode,
 		plusTimeDto,
 		ePrefix)
 

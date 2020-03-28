@@ -65,6 +65,7 @@ type dateTzDtoUtility struct {
 //
 func (dTzUtil *dateTzDtoUtility) addDate(
 	dTz *DateTzDto,
+	timeCalcMode TimeMathCalcMode,
 	years,
 	months,
 	days int,
@@ -97,19 +98,43 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 			"Validation Error='%v'\n", err.Error())
 	}
 
-	dtMech := DTimeMechanics{}
+	var newDt1 time.Time
+	
+	if timeCalcMode == TCalcMode.LocalTimeZone() {
 
-	newDt1 := dtMech.AddDateTimeByUtc(
-		dTz.dateTimeValue,
-		years,
-		months,
-		days,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0)
+		newDt1 = dTz.dateTimeValue.AddDate(
+			years,
+			months,
+			days)
+
+	} else if timeCalcMode == TCalcMode.UtcTimeZone() {
+
+		dtMech := DTimeMechanics{}
+
+		newDt1 = dtMech.AddDateTimeByUtc(
+			dTz.dateTimeValue,
+			years,
+			months,
+			days,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0)
+
+	} else {
+		return DateTzDto{}, 
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeCalcMode",
+				inputParameterValue: "",
+				errMsg:              "Input parameter " +
+					"'timeCalcMode' is invalid!",
+				err:                 nil,
+			}
+	}
+	
 
 	if dateTimeFormatStr == "" {
 		dateTimeFormatStr = dTz.dateTimeFmt
@@ -126,8 +151,14 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 // current DateTzDto instance. The updated date time value is returned to
 // the calling function as a new DateTzDto instance.
 //
+// Note that the input parameter 'timeCalcMode' determines whether the
+// addition operation will be performed using the local time zone
+// or Universal Coordinated Time. For more information on Time Calculation
+// Mode, see the type documentation for 'TimeMathCalcMode'.
+//
 func (dTzUtil *dateTzDtoUtility) addDateTime(
 	dTz *DateTzDto,
+	timeCalcMode TimeMathCalcMode,
 	years,
 	months,
 	days,
@@ -155,19 +186,48 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 		dTz.lock = new(sync.Mutex)
 	}
 
+	var newDateTime time.Time
 	dtMech := DTimeMechanics{}
 
-	newDateTime := dtMech.AddDateTimeByUtc(
-		dTz.dateTimeValue,
-		years,
-		months,
-		days,
-		hours,
-		minutes,
-		seconds,
-		milliseconds,
-		microseconds,
-		nanoseconds)
+	if timeCalcMode == TCalcMode.LocalTimeZone() {
+
+		newDateTime = dtMech.AddDateTimeByLocalTimeZone(
+										dTz.dateTimeValue,
+										years,
+										months,
+										days,
+										hours,
+										minutes,
+										seconds,
+										milliseconds,
+										microseconds,
+										nanoseconds)
+
+	} else if timeCalcMode == TCalcMode.UtcTimeZone() {
+
+		newDateTime = dtMech.AddDateTimeByUtc(
+			dTz.dateTimeValue,
+			years,
+			months,
+			days,
+			hours,
+			minutes,
+			seconds,
+			milliseconds,
+			microseconds,
+			nanoseconds)
+
+	} else {
+		return DateTzDto{},
+		&InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeCalcMode",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'timeCalcMode' " +
+				"is invalid!",
+			err:                 nil,
+		}
+	}
 
 	dTzUtil2 := dateTzDtoUtility{}
 
@@ -229,6 +289,7 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 //
 func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	dTz *DateTzDto,
+	timeCalcMode TimeMathCalcMode,
 	minusTimeDto TimeDto,
 	ePrefix string) (DateTzDto, error) {
 
@@ -270,19 +331,50 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 
 	tDto.ConvertToNegativeValues()
 
+	var dt2 time.Time
+
 	dtMech := DTimeMechanics{}
 
-	dt2 := dtMech.AddDateTimeByUtc(
-		dTz.dateTimeValue,
-		tDto.Years,
-		tDto.Months,
-		tDto.DateDays,
-		tDto.Hours,
-		tDto.Minutes,
-		tDto.Seconds,
-		tDto.Milliseconds,
-		tDto.Microseconds,
-		tDto.Nanoseconds)
+	if timeCalcMode == TCalcMode.LocalTimeZone() {
+
+		dt2 = dtMech.AddDateTimeByLocalTimeZone(
+			dTz.dateTimeValue,
+			tDto.Years,
+			tDto.Months,
+			tDto.DateDays,
+			tDto.Hours,
+			tDto.Minutes,
+			tDto.Seconds,
+			tDto.Milliseconds,
+			tDto.Microseconds,
+			tDto.Nanoseconds)
+
+	} else if timeCalcMode == TCalcMode.UtcTimeZone() {
+
+		dt2 = dtMech.AddDateTimeByUtc(
+			dTz.dateTimeValue,
+			tDto.Years,
+			tDto.Months,
+			tDto.DateDays,
+			tDto.Hours,
+			tDto.Minutes,
+			tDto.Seconds,
+			tDto.Milliseconds,
+			tDto.Microseconds,
+			tDto.Nanoseconds)
+
+	} else {
+		
+		return DateTzDto{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeCalcMode",
+				inputParameterValue: "",
+				errMsg:              "",
+				err:                 nil,
+			}
+
+	}
 
 	dtz2 := DateTzDto{}
 	dTzUtil2 := dateTzDtoUtility{}
@@ -309,6 +401,7 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 //
 func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 	dTz *DateTzDto,
+	timeCalcMode TimeMathCalcMode,
 	plusTimeDto TimeDto,
 	ePrefix string) (DateTzDto, error) {
 
@@ -350,19 +443,50 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 
 	tDto.ConvertToAbsoluteValues()
 
-	dt1 := dTz.dateTimeValue.AddDate(tDto.Years,
-		tDto.Months,
-		0)
+	var dt2 time.Time
 
-	incrementalDur := int64(tDto.DateDays) * DayNanoSeconds
-	incrementalDur += int64(tDto.Hours) * HourNanoSeconds
-	incrementalDur += int64(tDto.Minutes) * MinuteNanoSeconds
-	incrementalDur += int64(tDto.Seconds) * SecondNanoseconds
-	incrementalDur += int64(tDto.Milliseconds) * MilliSecondNanoseconds
-	incrementalDur += int64(tDto.Microseconds) * MicroSecondNanoseconds
-	incrementalDur += int64(tDto.Nanoseconds)
+	dtMech := DTimeMechanics{}
 
-	dt2 := dt1.Add(time.Duration(incrementalDur))
+	if timeCalcMode == TCalcMode.LocalTimeZone() {
+
+		dt2 = dtMech.AddDateTimeByLocalTimeZone(
+			dTz.dateTimeValue,
+			tDto.Years,
+			tDto.Months,
+			tDto.DateDays,
+			tDto.Hours,
+			tDto.Minutes,
+			tDto.Seconds,
+			tDto.Milliseconds,
+			tDto.Microseconds,
+			tDto.Nanoseconds)
+
+	} else if timeCalcMode == TCalcMode.UtcTimeZone() {
+
+		dt2 = dtMech.AddDateTimeByUtc(
+			dTz.dateTimeValue,
+			tDto.Years,
+			tDto.Months,
+			tDto.DateDays,
+			tDto.Hours,
+			tDto.Minutes,
+			tDto.Seconds,
+			tDto.Milliseconds,
+			tDto.Microseconds,
+			tDto.Nanoseconds)
+
+	} else {
+
+		return DateTzDto{},
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "timeCalcMode",
+				inputParameterValue: "",
+				errMsg:              "",
+				err:                 nil,
+			}
+
+	}
 
 	dTz2 := DateTzDto{}
 
@@ -411,20 +535,27 @@ func (dTzUtil *dateTzDtoUtility) addTime(
 		dTz.lock = new(sync.Mutex)
 	}
 
-	totNanoSecs := int64(hours) * int64(time.Hour)
-	totNanoSecs += int64(minutes) * int64(time.Minute)
-	totNanoSecs += int64(seconds) * int64(time.Second)
-	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
-	totNanoSecs += int64(microseconds) * int64(time.Microsecond)
-	totNanoSecs += int64(nanoseconds)
+	var dt2 time.Time
 
-	newDateTime := dTz.dateTimeValue.Add(time.Duration(totNanoSecs))
+	dtMech := DTimeMechanics{}
+
+	dt2 = dtMech.AddDateTimeByLocalTimeZone(
+			dTz.dateTimeValue,
+			0,
+			0,
+			0,
+			hours,
+			minutes,
+			seconds,
+			milliseconds,
+			microseconds,
+			nanoseconds)
 
 	dTzUtil2 := dateTzDtoUtility{}
 
 	dtz2 := DateTzDto{}
 
-	err := dTzUtil2.setFromDateTime(&dtz2, newDateTime, dateTimeFormatStr, ePrefix)
+	err := dTzUtil2.setFromDateTime(&dtz2, dt2, dateTimeFormatStr, ePrefix)
 
 	if err != nil {
 		return DateTzDto{}, err
