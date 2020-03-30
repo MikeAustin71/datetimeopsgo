@@ -106,8 +106,8 @@ func (tZoneUtil *timeZoneDtoUtility) addDateTime(
 	err = tZoneUtil2.setTimeInTzDef(
 		&tzDto2,
 		newUtcDateTime,
-		TzConvertType.Relative(),
 		tzDto.TimeIn.GetTimeZoneDef(),
+		TzConvertType.Relative(),
 		dateTimeFormat,
 		ePrefix)
 
@@ -301,8 +301,27 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 // Input Parameters:
 // =================
 //
-// tzDto  *TimeZoneDto - The Time Zone Dto object from which
-//                       'timeDto' parameter will be subtracted.
+//  tzDto           *TimeZoneDto
+//     - The Time Zone Dto object from which
+//      'timeDto' parameter will be subtracted.
+//
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
 //
 // timeDto TimeDto - A TimeDto type containing time components (i.e.
 //          years, months, weeks, days, hours, minutes,
@@ -327,7 +346,6 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 //
 // Returns
 // =======
-// There is only one return: an 'error' type.
 //
 // error -  If errors are encountered, this method returns an 'error'
 //          instance populated with an error message. If the method completes
@@ -335,6 +353,7 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 //
 func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 	tzDto *TimeZoneDto,
+	timeCalcMode TimeMathCalcMode,
 	timeDto TimeDto,
 	ePrefix string) error {
 
@@ -391,6 +410,7 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 
 	dateTzIn, err = dTzUtil.addMinusTimeDto(
 		&tIn,
+		timeCalcMode,
 		timeDto,
 		ePrefix)
 
@@ -457,29 +477,64 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 // Input Parameters:
 // =================
 //
-// tzDto  *TimeZoneDto - The Time Zone Dto object from which
-//                       'timeDto' parameter will be subtracted.
+// tzDto            *TimeZoneDto
+//     - The Time Zone Dto object from which
+//       'timeDto' parameter will be subtracted.
 //
-// timeDto TimeDto - A TimeDto type containing time components (i.e.
-//          years, months, weeks, days, hours, minutes,
-//          seconds etc.) to be subtracted from the current
-//          TimeZoneDto.
 //
-//         type TimeDto struct {
-//          Years          int // Number of Years
-//          Months         int // Number of Months
-//          Weeks          int // Number of Weeks
-//          WeekDays       int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//          DateDays       int // Total Number of Days. Weeks x 7 plus WeekDays
-//          Hours          int // Number of Hours.
-//          Minutes        int // Number of Minutes
-//          Seconds        int // Number of Seconds
-//          Milliseconds   int // Number of Milliseconds
-//          Microseconds   int // Number of Microseconds
-//          Nanoseconds    int // Remaining Nanoseconds after Milliseconds & Microseconds
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
+//
+//
+// timeDto          TimeDto
+//     - A TimeDto type containing time components (i.e.
+//       years, months, weeks, days, hours, minutes,
+//       seconds etc.) to be subtracted from the current
+//       TimeZoneDto.
+//
+//       The TimeDto structure is defined as follows:
+//
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
 //          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 //                                   //  plus remaining Nanoseconds
-//         }
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
+//
+//
+//  ePrefix         string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
 //
 // Returns
 // =======
@@ -491,6 +546,7 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 //
 func (tZoneUtil *timeZoneDtoUtility) addPlusTimeDto(
 	tzDto *TimeZoneDto,
+	timeCalcMode TimeMathCalcMode,
 	timeDto TimeDto,
 	ePrefix string) error {
 
@@ -547,6 +603,7 @@ func (tZoneUtil *timeZoneDtoUtility) addPlusTimeDto(
 
 	dateTzIn, err = dTzUtil.addPlusTimeDto(
 		&tIn,
+		timeCalcMode,
 		timeDto,
 		ePrefix)
 
@@ -668,8 +725,8 @@ func (tZoneUtil *timeZoneDtoUtility) addTime(
 	err = tZoneUtil2.setTimeInTzDef(
 		&tzDto2,
 		newDateTime,
-		TzConvertType.Relative(),
 		tzDto.TimeIn.GetTimeZoneDef(),
+		TzConvertType.Relative(),
 		dateTimeFormat,
 		ePrefix)
 
@@ -1655,7 +1712,7 @@ func (tZoneUtil *timeZoneDtoUtility) preProcessDateFormatStr(
 // Input Parameters
 //
 //
-// tzDto    *TimeZoneDto
+//   tzDto    *TimeZoneDto
 //       - A pointer to a TimeZoneDto object. The member
 //         variable values will be set by this method.
 //
@@ -1778,11 +1835,102 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 // field 'TimeIn'. Input parameter 'tIn' is first converted
 // to the target time zone designated by 'targetTzSpec'.
 //
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+//   tzDto                   *TimeZoneDto
+//     - A pointer to a TimeZoneDto object. The member
+//       variable values will be set by this method.
+//
+//
+//   tIn                     time.Time
+//     - A date time value which will be used to
+//       set the 'tzDto' instance.
+//
+//
+//   targetTzDef             TimeZoneDefinition
+//     - A detailed time zone definition containing specifications for both an
+//       original time zone and a convertible time zone.  This time zone definition
+//       will be used to set the time zone for the 'tzDto' instance.
+//
+//
+//   timeZoneConversionType  TimeZoneConversionType -
+//           This parameter determines the algorithm that will
+//           be used to convert parameter 'dateTime' to the time
+//           zone specified by parameter 'timeZoneName'.
+//
+//           TimeZoneConversionType is an enumeration type which
+//           must be set to one of two values:
+//              TimeZoneConversionType(0).Absolute()
+//              TimeZoneConversionType(0).Relative()
+//           Note: You can also use the global variable
+//           'TzConvertType' for easier access:
+//              TzConvertType.Absolute()
+//              TzConvertType.Relative()
+//
+//           Absolute Time Conversion - Identifies the 'Absolute' time
+//           to time zone conversion algorithm. This algorithm provides
+//           that a time value in time zone 'X' will be converted to the
+//           same time value in time zone 'Y'.
+//
+//           For example, assume the time 10:00AM is associated with time
+//           zone USA Central Standard time and that this time is to be
+//           converted to USA Eastern Standard time. Applying the 'Absolute'
+//           algorithm would convert ths time to 10:00AM Eastern Standard
+//           time.  In this case the hours, minutes and seconds have not been
+//           altered. 10:00AM in USA Central Standard Time has simply been
+//           reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//           Relative Time Conversion - Identifies the 'Relative' time to time
+//           zone conversion algorithm. This algorithm provides that times in
+//           time zone 'X' will be converted to their equivalent time in time
+//           zone 'Y'.
+//
+//           For example, assume the time 10:00AM is associated with time zone
+//           USA Central Standard time and that this time is to be converted to
+//           USA Eastern Standard time. Applying the 'Relative' algorithm would
+//           convert ths time to 11:00AM Eastern Standard time. In this case the
+//           hours, minutes and seconds have been changed to reflect an equivalent
+//           time in the USA Eastern Standard Time Zone.
+//
+//
+//   dateTimeFmtStr         string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
+//   ePrefix                 string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (tZoneUtil *timeZoneDtoUtility) setTimeInTzDef(
 	tzDto *TimeZoneDto,
 	tIn time.Time,
-	timeConversionType TimeZoneConversionType,
 	targetTzDef TimeZoneDefinition,
+	timeZoneConversionType TimeZoneConversionType,
 	dateTimeFormatStr,
 	ePrefix string) error {
 
@@ -1835,8 +1983,8 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeInTzDef(
 	err = dTzUtil.setFromTzDef(
 		&tzDto.TimeIn,
 		tIn,
-		timeConversionType,
 		targetTzDef,
+		timeZoneConversionType,
 		dateTimeFormatStr,
 		ePrefix)
 
@@ -2001,8 +2149,8 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzDef(
 	err = dTzUtil.setFromTzDef(
 		&dTz,
 		tOut,
-		timeConversionType,
 		tOutTimeZoneDef,
+		timeConversionType,
 		dateTimeFormat,
 		ePrefix)
 

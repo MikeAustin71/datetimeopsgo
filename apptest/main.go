@@ -100,6 +100,7 @@ timeDto := dt.TimeDto{
 }
 
 	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
+		dt.TCalcMode.LocalTimeZone(),
 		t2Result,
 		timeDto,
 		dt.TZones.America.Chicago(),
@@ -247,6 +248,7 @@ func (mt mainTest) mainTest071() {
 		Seconds: 2}
 
 	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
+		 dt.TCalcMode.LocalTimeZone(),
 			t2,
 			timeDto,
 			dt.TZones.US.Central(),

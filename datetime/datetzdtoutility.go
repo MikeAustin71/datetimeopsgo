@@ -1986,13 +1986,15 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 //
 // Input Parameters
 //
-//  dTz                     *DateTzDto
+//   dTz                    *DateTzDto
 //     - The member variables contained with in this 'DateTzDto'
 //       instance will be set to new values based on the following
 //       input parameters.
 //
+//
 //   dateTime               time.Time
 //     - A date time value
+//
 //
 //   timeZoneDef            TimeZoneDefinition
 //     - A detailed time zone definition containing specifications for both an
@@ -2428,6 +2430,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTzSpec(
 //           time zone declarations covering all IANA and Military Time
 //           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
 //           time zone constants begin with the prefix 'TZones'.
+//
+//  ePrefix string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
 //
 // ------------------------------------------------------------------------
 //
