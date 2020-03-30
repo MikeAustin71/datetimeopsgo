@@ -23,8 +23,26 @@ type dateTzDtoUtility struct {
 // Input Parameters
 //
 //
-// dTz *DateTzDto - Provides the base date to which input parameters 'years',
+//  dTz *DateTzDto - Provides the base date to which input parameters 'years',
 //                  'months' and 'days' are added.
+//
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
 //
 //  years             int   - Number of years to add to the current date.
 //  months            int   - Number of months to add to the current date.
@@ -50,6 +68,10 @@ type dateTzDtoUtility struct {
 //                            format string is:
 //                              FmtDateTimeYrMDayFmtStr =
 //                                  "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//  ePrefix        string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
 //
 // ------------------------------------------------------------------------
 //
@@ -156,6 +178,65 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 // or Universal Coordinated Time. For more information on Time Calculation
 // Mode, see the type documentation for 'TimeMathCalcMode'.
 //
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+//  dTz *DateTzDto
+//     - Provides the base date to which input parameters 'years',
+//       'months', 'days', 'hours', 'minutes', 'seconds',
+//       'milliseconds', 'microseconds' and 'nanoseconds' are added.
+//
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
+//
+//  years             int   - Number of years to add to the value of parameter 'dTz'.
+//  months            int   - Number of months to add to the value of parameter 'dTz'.
+//  days              int   - Number of days to add to the value of parameter 'dTz'.
+//  hours             int   - Number of hours to add to the value of parameter 'dTz'.
+//  minutes           int   - Number of minutes to add to the value of parameter 'dTz'.
+//  seconds           int   - Number of seconds to add to the value of parameter 'dTz'.
+//  milliseconds      int   - Number of milliseconds to add to the value of parameter 'dTz'.
+//  microseconds      int   - Number of microseconds to add to the value of parameter 'dTz'.
+//  nanoseconds       int   - Number of nanoseconds to add to the value of parameter 'dTz'.
+//
+//          Note: Date Component input parameters may be either negative
+//                or positive. Negative values will subtract time from
+//                the current DateTzDto instance.
+//
+//  ePrefix string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  DateTzDto - If successful the method returns a new, valid, fully populated
+//              DateTzDto type updated to reflect the added input parameters,
+//              years, months, days, hours, minutes, seconds, milliseconds,
+//              microseconds and nanoseconds.
+//
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) addDateTime(
 	dTz *DateTzDto,
 	timeCalcMode TimeMathCalcMode,
@@ -246,6 +327,61 @@ func (dTzUtil *dateTzDtoUtility) addDateTime(
 // parameter 'dTz' (DateTzDto) and returns a new DateTzDto instance
 // with the updated Date Time value.
 //
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+//  dTz *DateTzDto - Provides the base date to which input parameters 'years',
+//                  'months' and 'days' are added.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+//  dTz         *DateTzDto
+//     - Provides the base date to which input parameters 'years',
+//       'months' and 'days' are added.
+//
+//  duration time.Duration
+//     - Time duration value to be added to parameter 'dTz'.
+//
+//  dateTimeFmtStr  string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//  ePrefix        string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  DateTzDto - If successful the method returns a new, valid, fully populated
+//              DateTzDto type updated to reflect the added input parameters,
+//              years, months and days.
+//
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) addDuration(
 	dTz *DateTzDto,
 	duration time.Duration,
@@ -286,6 +422,53 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 // addMinusTimeDto - Creates and returns a new DateTzDto by
 // subtracting a TimeDto from the value of the input
 // parameter 'dTz' (DateTzDto) instance.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+//  dTz                   *DateTzDto
+//     - Provides the base date from which input parameters
+//      'minusTimeDto' will be subtracted.
+//
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
+//
+//  minusTimeDto             TimeDto
+//     - The value of this 'TimeDto' will be subtracted from parameter
+//       'dTz'.
+//
+//  ePrefix string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  DateTzDto - If successful the method returns a new, valid, fully populated
+//              DateTzDto type incorporating the time value calculated by subtracting
+//              'minusTimeDto' from 'dTz'.
+//
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
 //
 func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	dTz *DateTzDto,
@@ -382,8 +565,8 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 	err = dTzUtil2.setFromTzDef(
 		&dtz2,
 		dt2,
-		TzConvertType.Relative(),
 		dTz.timeZone.CopyOut(),
+		TzConvertType.Relative(),
 		dTz.dateTimeFmt,
 		ePrefix)
 
@@ -398,6 +581,53 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 // to the value of theDateTzDto instance passed as an input parameter.
 //
 // The value of the input parameter DateTzDto instance is not be altered.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+//  dTz                   *DateTzDto
+//     - Provides the base date to which input parameter 'plusTimeDto'
+//       will be added.
+//
+//  timeCalcMode    TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the
+//       addition algorithm which will be used when adding time
+//       components to the current DateTzDto date time value.
+//
+//       If days are defined as local time zone days (which may be
+//       less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//       If days are always defined as having a time span of 24-consecutive
+//       hours, use TCalcMode.UtcTimeZone().
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//       Valid values are:
+//             TCalcMode.LocalTimeZone()
+//             TCalcMode.UtcTimeZone()
+//
+//  plusTimeDto              TimeDto
+//     - The time duration value represented by 'plusTimeDto' will
+//       be added to parameter 'dTz'.
+//
+//  ePrefix string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  DateTzDto - If successful the method returns a new, valid, fully populated
+//              DateTzDto containing the sum of time values for 'dTz' and
+//              parameter 'plusTimeDto'.
+//
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
 //
 func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 	dTz *DateTzDto,
@@ -508,6 +738,61 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 //
 // The value of the input parameter 'dTz' (DateTzDto) instance is NOT altered.
 //
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//
+//  dTz *DateTzDto - Provides the base date to which input parameters 'hours',
+//                  'minutes', 'seconds', 'milliseconds', 'microseconds' and
+//                   'nanoseconds' are added.
+//
+//  hours             int   - Number of hours to add to the value of parameter 'dTz'.
+//  minutes           int   - Number of minutes to add to the value of parameter 'dTz'.
+//  seconds           int   - Number of seconds to add to the value of parameter 'dTz'.
+//  milliseconds      int   - Number of milliseconds to add to the value of parameter 'dTz'.
+//  microseconds      int   - Number of microseconds to add to the value of parameter 'dTz'.
+//  nanoseconds       int   - Number of hours to add to the value of parameter 'dTz'.
+//
+//          Note: Date Component input parameters may be either negative
+//                or positive. Negative values will subtract time from
+//                the current DateTzDto instance.
+//
+//  dateTimeFmtStr  string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//  ePrefix string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  DateTzDto - If successful the method returns a new, valid, fully populated
+//              DateTzDto type updated to reflect the added input parameters,
+//              years, months, days, hours, minutes, seconds, milliseconds,
+//              microseconds and nanoseconds.
+//
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) addTime(
 	dTz *DateTzDto,
 	hours,
@@ -612,6 +897,7 @@ func (dTzUtil *dateTzDtoUtility) copyIn(
 
 // copyOut - Returns a deep copy of input parameter
 // 'dTz' which is a pointer to a type 'DateTzDto'.
+//
 func (dTzUtil *dateTzDtoUtility) copyOut(
 	dTz *DateTzDto) DateTzDto {
 
@@ -857,6 +1143,43 @@ func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
 
 // setDateTimeFormat - Sets the Date Time Format
 // string in the 'dtz' object.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  dTz *DateTzDto
+//     - The date time format member variable contained within this
+//       'DateTzDto' instance will be set to new value specified by
+//        input parameter, 'dateTimeFmtStr'.
+//
+//  dateTimeFmtStr  string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//  ePrefix string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//   None
+//
 func (dTzUtil *dateTzDtoUtility) setDateTimeFormat(
 	dtz *DateTzDto,
 	dateTimeFmtStr string,
@@ -886,6 +1209,58 @@ func (dTzUtil *dateTzDtoUtility) setDateTimeFormat(
 // in input parameter 'dTz'. The field values will be set
 // based on an input parameter 'dateTime' (Type time.time) and a
 // date time format string.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  dTz *DateTzDto
+//     - The member variables contained with in this 'DateTzDto'
+//       instance will be set to new values based on the following
+//       input parameters.
+//
+//
+//   dateTime    time.Time
+//     - A date time value
+//
+//
+//  dateTimeFmtStr  string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//  ePrefix string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
+//
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
 func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 	dTz *DateTzDto,
 	dateTime time.Time,
@@ -953,6 +1328,106 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 // Note that this variation of time elements breaks time down by
 // hour, minute, second, millisecond, microsecond and nanosecond.
 //
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  dTz *DateTzDto
+//     - The member variables contained with in this 'DateTzDto'
+//       instance will be set to new values based on the following
+//       input parameters.
+//
+//  year              int   - Year value.
+//  month             int   - Month value.
+//  day               int   - Day value.
+//  hour              int   - Hour value .
+//  minute            int   - Minutes value.
+//  second            int   - Seconds value.
+//  millisecond       int   - Milliseconds value.
+//  microsecond       int   - Microseconds value.
+//  nanosecond        int   - Nanoseconds value.
+//
+//          Note: Date Component input parameters may be either negative
+//                or positive. Negative values will subtract time from
+//                the current DateTzDto instance.
+//
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//  dateTimeFmtStr  string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//  ePrefix string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 	dTz *DateTzDto,
 	year,
@@ -964,7 +1439,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 	millisecond,
 	microsecond,
 	nanosecond int,
-	timeZoneName,
+	timeZoneLocationName,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -998,18 +1473,18 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	dtUtil := TimeZoneMechanics{}
 
-	tzl := dtUtil.PreProcessTimeZoneLocation(timeZoneName)
+	timeZoneLocationName = dtUtil.PreProcessTimeZoneLocation(timeZoneLocationName)
 
-	if len(tzl) == 0 {
+	if len(timeZoneLocationName) == 0 {
 		return fmt.Errorf(ePrefix +
-			"\nError: Input Parameter 'timeZoneName' " +
+			"\nError: Input Parameter 'timeZoneLocationName' " +
 			"resolved to an empty string!\n" +
-			"timeZoneName='%v'\n", timeZoneName)
+			"timeZoneLocationName='%v'\n", timeZoneLocationName)
 	}
 
 	dtMech := DTimeMechanics{}
 
-	_, err = dtMech.LoadTzLocation(tzl, ePrefix)
+	_, err = dtMech.LoadTzLocation(timeZoneLocationName, ePrefix)
 
 	if err != nil {
 		return err
@@ -1017,13 +1492,13 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 
 	var dt time.Time
 
-	dt, err = tDto.GetDateTime(tzl)
+	dt, err = tDto.GetDateTime(timeZoneLocationName)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned by tDto.GetDateTime(tzl).\n"+
-			"\ntimeZoneName='%v'\ntzl='%v'\nError='%v'\n",
-			timeZoneName, tzl, err.Error())
+			"\nError returned by tDto.GetDateTime(timeZoneLocationName).\n"+
+			"\ntimeZoneLocationName='%v'\nError='%v'\n",
+			timeZoneLocationName, err.Error())
 	}
 
 	timeZone := TimeZoneDefinition{}
@@ -1034,7 +1509,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 		&timeZone,
 		dt,
 		TzConvertType.Absolute(),
-		timeZoneName,
+		timeZoneLocationName,
 		ePrefix)
 
 	if err != nil {
@@ -1059,6 +1534,104 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 // Date Time elements include year, month, day, hour, minute,
 // second and nanosecond.
 //
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  dTz *DateTzDto
+//     - The member variables contained with in this 'DateTzDto'
+//       instance will be set to new values based on the following
+//       input parameters.
+//
+//  year              int   - Year value.
+//  month             int   - Month value.
+//  day               int   - Day value.
+//  hour              int   - Hour value .
+//  minute            int   - Minutes value.
+//  second            int   - Seconds value.
+//  nanosecond        int   - Nanoseconds value.
+//
+//          Note: Date Component input parameters may be either negative
+//                or positive. Negative values will subtract time from
+//                the current DateTzDto instance.
+//
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//  dateTimeFmtStr  string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//  ePrefix string
+//            - The error prefix containing the names of all
+//              the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 	dTz *DateTzDto,
 	year,
@@ -1068,7 +1641,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 	minute,
 	second,
 	nanosecond int,
-	timeZoneName,
+	timeZoneLocationName,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -1087,8 +1660,17 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 		dTz.lock = new(sync.Mutex)
 	}
 
-	tDto, err := TimeDto{}.NewTimeComponents(year, month, 0, day, hour, minute, second,
-		0, 0, nanosecond)
+	tDto, err := TimeDto{}.NewTimeComponents(
+		year,
+		month,
+		0,
+		day,
+		hour,
+		minute,
+		second,
+		0,
+		0,
+		nanosecond)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
@@ -1102,36 +1684,36 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 
 	tzMech := TimeZoneMechanics{}
 
-	timeZoneName = tzMech.PreProcessTimeZoneLocation(timeZoneName)
+	timeZoneLocationName = tzMech.PreProcessTimeZoneLocation(timeZoneLocationName)
 
-	if len(timeZoneName) == 0 {
+	if len(timeZoneLocationName) == 0 {
 		return errors.New(ePrefix +
-			"\nError: Input Parameter 'timeZoneName' is an empty string!\n")
+			"\nError: Input Parameter 'timeZoneLocationName' is an empty string!\n")
 	}
 
 	dtMech := DTimeMechanics{}
 
-	_, err = dtMech.LoadTzLocation(timeZoneName, ePrefix)
+	_, err = dtMech.LoadTzLocation(timeZoneLocationName, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
-			"\nError returned by dtMech.LoadTzLocation(timeZoneName, ePrefix).\n"+
-			"INVALID 'timeZoneName'!\n"+
-			"tzl='%v'\ntimeZoneName='%v'\n"+
+			"\nError returned by dtMech.LoadTzLocation(timeZoneLocationName, ePrefix).\n"+
+			"INVALID 'timeZoneLocationName'!\n"+
+			"timeZoneLocationName='%v'\n"+
 			"Error='%v'\n",
-			timeZoneName, timeZoneName, err.Error())
+			timeZoneLocationName, err.Error())
 	}
 
 	var dt time.Time
 
-	dt, err = tDto.GetDateTime(timeZoneName)
+	dt, err = tDto.GetDateTime(timeZoneLocationName)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+
 			"\nError returned by tDto.GetDateTime(tzl).\n"+
-			"\ntimeZoneName='%v'\ntzl='%v'\n"+
+			"\ntimeZoneLocationName='%v'\n"+
 			"Error='%v'\n",
-			timeZoneName, timeZoneName, err.Error())
+			timeZoneLocationName, err.Error())
 	}
 
 	timeZone := TimeZoneDefinition{}
@@ -1142,7 +1724,7 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 		&timeZone,
 		dt,
 		TzConvertType.Absolute(),
-		timeZoneName,
+		timeZoneLocationName,
 		ePrefix)
 
 	if err != nil {
@@ -1174,6 +1756,138 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 // the type enumeration type TimeZoneConversionType.
 // This parameter will determine how 'dateTime' will be
 // converted to the target time zone.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//   dTz                     *DateTzDto
+//     - The member variables contained with in this 'DateTzDto'
+//       instance will be set to new values based on the following
+//       input parameters.
+//
+//   dateTime                time.Time
+//     - A date time value
+//
+//   timeZoneConversionType  TimeZoneConversionType
+//     - This parameter determines the algorithm that will
+//       be used to convert parameter 'dateTime' to the time
+//       zone specified by parameter 'timeZoneName'.
+//
+//       TimeZoneConversionType is an enumeration type which
+//       be used to convert parameter 'dateTime' to the time
+//       must be set to one of two values:
+//       This parameter determines the algorithm that will
+//          TimeZoneConversionType(0).Absolute()
+//          TimeZoneConversionType(0).Relative()
+//       Note: You can also use the global variable
+//       'TzConvertType' for easier access:
+//          TzConvertType.Absolute()
+//          TzConvertType.Relative()
+//
+//       Absolute Time Conversion - Identifies the 'Absolute' time
+//       to time zone conversion algorithm. This algorithm provides
+//       that a time value in time zone 'X' will be converted to the
+//       same time value in time zone 'Y'.
+//
+//       For example, assume the time 10:00AM is associated with time
+//       zone USA Central Standard time and that this time is to be
+//       converted to USA Eastern Standard time. Applying the 'Absolute'
+//       algorithm would convert ths time to 10:00AM Eastern Standard
+//       time.  In this case the hours, minutes and seconds have not been
+//       altered. 10:00AM in USA Central Standard Time has simply been
+//       reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//       Relative Time Conversion - Identifies the 'Relative' time to time
+//       zone conversion algorithm. This algorithm provides that times in
+//       time zone 'X' will be converted to their equivalent time in time
+//       zone 'Y'.
+//
+//       For example, assume the time 10:00AM is associated with time zone
+//       USA Central Standard time and that this time is to be converted to
+//       USA Eastern Standard time. Applying the 'Relative' algorithm would
+//       convert ths time to 11:00AM Eastern Standard time. In this case the
+//       hours, minutes and seconds have been changed to reflect an equivalent
+//       time in the USA Eastern Standard Time Zone.
+//
+//
+//   timeZoneLocationName    string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//   dateTimeFmtStr          string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//   ePrefix                 string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//   error - If successful the returned error Type is set equal to 'nil'. If errors are
+//           encountered this error Type will encapsulate an error message.
 //
 func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 	dTz *DateTzDto,
@@ -1268,11 +1982,97 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 // to configure time and time zone data in parameter,
 // 'dTz'.
 //
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  dTz                     *DateTzDto
+//     - The member variables contained with in this 'DateTzDto'
+//       instance will be set to new values based on the following
+//       input parameters.
+//
+//   dateTime               time.Time
+//     - A date time value
+//
+//   timeZoneDef            TimeZoneDefinition
+//     - A detailed time zone definition containing specifications for both an
+//       original time zone and a convertible time zone.  This time zone definition
+//       will be used to set the time zone for the 'dTz' instance.
+//
+//
+//   timeZoneConversionType TimeZoneConversionType -
+//           This parameter determines the algorithm that will
+//           be used to convert parameter 'dateTime' to the time
+//           zone specified by parameter 'timeZoneName'.
+//
+//           TimeZoneConversionType is an enumeration type which
+//           must be set to one of two values:
+//              TimeZoneConversionType(0).Absolute()
+//              TimeZoneConversionType(0).Relative()
+//           Note: You can also use the global variable
+//           'TzConvertType' for easier access:
+//              TzConvertType.Absolute()
+//              TzConvertType.Relative()
+//
+//           Absolute Time Conversion - Identifies the 'Absolute' time
+//           to time zone conversion algorithm. This algorithm provides
+//           that a time value in time zone 'X' will be converted to the
+//           same time value in time zone 'Y'.
+//
+//           For example, assume the time 10:00AM is associated with time
+//           zone USA Central Standard time and that this time is to be
+//           converted to USA Eastern Standard time. Applying the 'Absolute'
+//           algorithm would convert ths time to 10:00AM Eastern Standard
+//           time.  In this case the hours, minutes and seconds have not been
+//           altered. 10:00AM in USA Central Standard Time has simply been
+//           reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//           Relative Time Conversion - Identifies the 'Relative' time to time
+//           zone conversion algorithm. This algorithm provides that times in
+//           time zone 'X' will be converted to their equivalent time in time
+//           zone 'Y'.
+//
+//           For example, assume the time 10:00AM is associated with time zone
+//           USA Central Standard time and that this time is to be converted to
+//           USA Eastern Standard time. Applying the 'Relative' algorithm would
+//           convert ths time to 11:00AM Eastern Standard time. In this case the
+//           hours, minutes and seconds have been changed to reflect an equivalent
+//           time in the USA Eastern Standard Time Zone.
+//
+//   dateTimeFmtStr         string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//   ePrefix                string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 	dTz *DateTzDto,
 	dateTime time.Time,
-	timeConversionType TimeZoneConversionType,
 	timeZoneDef TimeZoneDefinition,
+	timeConversionType TimeZoneConversionType,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -1375,6 +2175,93 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 // This parameter will determine how 'dateTime' will be
 // converted to the target time zone.
 //
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  dTz                     *DateTzDto
+//     - The member variables contained with in this 'DateTzDto'
+//       instance will be set to new values based on the following
+//       input parameters.
+//
+//
+//   dateTime               time.Time
+//     - A date time value
+//
+//
+//   timeZoneSpec           TimeZoneSpecification
+//     - A detailed time zone specification which will be
+//       used to set the time zone for the 'dTz' instance.
+//
+//
+//   timeZoneConversionType TimeZoneConversionType -
+//           This parameter determines the algorithm that will
+//           be used to convert parameter 'dateTime' to the time
+//           zone specified by parameter 'timeZoneName'.
+//
+//           TimeZoneConversionType is an enumeration type which
+//           must be set to one of two values:
+//              TimeZoneConversionType(0).Absolute()
+//              TimeZoneConversionType(0).Relative()
+//           Note: You can also use the global variable
+//           'TzConvertType' for easier access:
+//              TzConvertType.Absolute()
+//              TzConvertType.Relative()
+//
+//           Absolute Time Conversion - Identifies the 'Absolute' time
+//           to time zone conversion algorithm. This algorithm provides
+//           that a time value in time zone 'X' will be converted to the
+//           same time value in time zone 'Y'.
+//
+//           For example, assume the time 10:00AM is associated with time
+//           zone USA Central Standard time and that this time is to be
+//           converted to USA Eastern Standard time. Applying the 'Absolute'
+//           algorithm would convert ths time to 10:00AM Eastern Standard
+//           time.  In this case the hours, minutes and seconds have not been
+//           altered. 10:00AM in USA Central Standard Time has simply been
+//           reclassified as 10:00AM in USA Eastern Standard Time.
+//
+//           Relative Time Conversion - Identifies the 'Relative' time to time
+//           zone conversion algorithm. This algorithm provides that times in
+//           time zone 'X' will be converted to their equivalent time in time
+//           zone 'Y'.
+//
+//           For example, assume the time 10:00AM is associated with time zone
+//           USA Central Standard time and that this time is to be converted to
+//           USA Eastern Standard time. Applying the 'Relative' algorithm would
+//           convert ths time to 11:00AM Eastern Standard time. In this case the
+//           hours, minutes and seconds have been changed to reflect an equivalent
+//           time in the USA Eastern Standard Time Zone.
+//
+//   dateTimeFmtStr         string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
+//
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//   ePrefix                string
+//     - The error prefix containing the names of all
+//       the methods executed up to this point.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  error     - If successful the returned error Type is set equal to 'nil'. If errors are
+//              encountered this error Type will encapsulate an error message.
+//
 func (dTzUtil *dateTzDtoUtility) setFromTzSpec(
 	dTz *DateTzDto,
 	dateTime time.Time,
@@ -1456,6 +2343,98 @@ func (dTzUtil *dateTzDtoUtility) setFromTzSpec(
 // accordingly. When the method completes, the values of the
 // current DateTzDto will equal the values of the input parameter
 // TimeDto instance.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  dTz              *DateTzDto
+//     - The member variables contained with in this 'DateTzDto'
+//       instance will be set to new values based on the following
+//       input parameters.
+//
+//
+//   tDto            TimeDto
+//     - A populated TimeDto instance.
+//
+//       The TimeDto structure is defined as follows:
+//
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
+//
+//
+//   timeZoneLocationName  string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time duration
+//       calculations.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location, or time zone name,
+//       must be designated as one of three types
+//       of values:
+//
+//       (1) The string 'Local' - signals the designation of the local time zone
+//           configured for the host computer executing this code.
+//
+//       (2) IANA Time Zone Location -
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system. Note: IANA Time Zone Data base is
+//           equivalent to 'tz database'.
+//
+//              Examples:
+//                "America/New_York"
+//                "America/Chicago"
+//                "America/Denver"
+//                "America/Los_Angeles"
+//                "Pacific/Honolulu"
+//
+//       (3) A valid Military Time Zone
+//           Military time zones are commonly used in
+//           aviation as well as at sea. They are also
+//           known as nautical or maritime time zones.
+//           Reference:
+//               https://en.wikipedia.org/wiki/List_of_military_time_zones
+//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//               https://www.timeanddate.com/time/zones/military
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//   error - If successful the returned error Type is set equal to 'nil'. If errors are
+//           encountered this error Type will encapsulate an error message.
 //
 func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 	dTz *DateTzDto,

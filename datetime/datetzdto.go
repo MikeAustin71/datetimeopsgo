@@ -207,6 +207,11 @@ type DateTzDto struct {
 //                  FmtDateTimeYrMDayFmtStr)
 //
 //  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'
 //
@@ -331,6 +336,11 @@ func (dtz *DateTzDto) AddDate(
 //                   FmtDateTimeYrMDayFmtStr)
 //
 //  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'
 //
@@ -431,7 +441,7 @@ func (dtz *DateTzDto) AddDateTime(
 //
 // ------------------------------------------------------------------------
 //
-// Usage
+// Example Usage:
 //
 //  dtz := DateTzDto{}
 //  ... initialize to some value
@@ -447,6 +457,12 @@ func (dtz *DateTzDto) AddDateTime(
 //                milliseconds,
 //                microseconds,
 //                nanoseconds)
+//
+//  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
 //
 func (dtz *DateTzDto) AddDateTimeToThis(
 	timeCalcMode TimeMathCalcMode,
@@ -549,6 +565,12 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 //                months,
 //                days)
 //
+//  Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
 func (dtz *DateTzDto) AddDateToThis(
 	timeCalcMode TimeMathCalcMode,
 	years,
@@ -596,8 +618,6 @@ func (dtz *DateTzDto) AddDateToThis(
 // ------------------------------------------------------------------------
 //
 // Input Parameters
-//
-//  timeCalcMode  TimeMathCalcMode
 //
 //  duration      time.Duration
 //       - A Time duration value which is added to the DateTime
@@ -811,6 +831,12 @@ func (dtz *DateTzDto) AddDurationToThis(
 //                   TCalcMode.LocalTimeZone(),
 //                   minusTimeDto)
 //
+// Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
 func (dtz *DateTzDto) AddMinusTimeDto(
 	timeCalcMode TimeMathCalcMode,
 	minusTimeDto TimeDto) (DateTzDto, error) {
@@ -900,6 +926,13 @@ func (dtz *DateTzDto) AddMinusTimeDto(
 //  err := dtz.AddMinusTimeDtoToThis(
 //                   TCalcMode.LocalTimeZone(),
 //                   minusTimeDto)
+//
+// Note:
+//
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
 //
 func (dtz *DateTzDto) AddMinusTimeDtoToThis(
 	timeCalcMode TimeMathCalcMode,
@@ -1007,6 +1040,12 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(
 //                   TCalcMode.LocalTimeZone(),
 //                   plusTimeDto)
 //
+// Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
+//
 func (dtz *DateTzDto) AddPlusTimeDto(
 	timeCalcMode TimeMathCalcMode,
 	plusTimeDto TimeDto) (DateTzDto, error) {
@@ -1096,6 +1135,12 @@ func (dtz *DateTzDto) AddPlusTimeDto(
 //  err := dtz.AddPlusTimeDtoToThis(
 //                   TCalcMode.LocalTimeZone(),
 //                   plusTimeDto)
+//
+// Note:
+//        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
+//        Reference 'timeCalcMode' input parameter documentation above
+//        and source code documentation at:
+//            datetime\timemathcalcmode.go
 //
 func (dtz *DateTzDto) AddPlusTimeDtoToThis(
 	timeCalcMode TimeMathCalcMode,
@@ -4267,26 +4312,27 @@ func (dtz *DateTzDto) SetFromDateTimeElements(
 //
 // Input Parameters
 //
-//   dateTime    time.Time   - A date time value
+//   dateTime    time.Time
+//     - A date time value
 //
 //
 //   dateTimeFmtStr string
-//       - A date time format string which will be used
-//         to format and display 'dateTime'. Example:
-//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//         Date time format constants are found in the source
-//         file 'constantsdatetime.go'. These constants represent
-//         the more commonly used date time string formats. All
-//         Date Time format constants begin with the prefix
-//         'FmtDateTime'.
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
 //
-//         If 'dateTimeFmtStr' is submitted as an
-//         'empty string', a default date time format
-//         string will be applied. The default date time
-//         format string is:
-//           FmtDateTimeYrMDayFmtStr =
-//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // ------------------------------------------------------------------------
 //
@@ -4322,27 +4368,31 @@ func (dtz *DateTzDto) SetFromDateTime(dateTime time.Time, dateTimeFmtStr string)
 //
 // Input Parameters
 //
-//   tDto            TimeDto - A populated TimeDto instance
-//                             A TimeDto struct is defined as follows:
+//   tDto            TimeDto
+//     - A populated TimeDto instance.
 //
-//    type TimeDto struct {
-//       Years                int // Number of Years
-//       Months               int // Number of Months
-//       Weeks                int // Number of Weeks
-//       WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//       DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
-//       Hours                int // Number of Hours.
-//       Minutes              int // Number of Minutes
-//       Seconds              int // Number of Seconds
-//       Milliseconds         int // Number of Milliseconds
-//       Microseconds         int // Number of Microseconds
-//       Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
-//       TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                                //  plus remaining Nanoseconds
-//       TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
-//                                //  + Seconds + Milliseconds + Nanoseconds
-//    }
+//       The TimeDto structure is defined as follows:
 //
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
 //
 //
 //   timeZoneLocationName  string
@@ -4433,48 +4483,49 @@ func (dtz *DateTzDto) SetFromTimeDto(
 //
 // Input Parameters
 //
-//   dateTime      time.Time - A date time value
+//   dateTime      time.Time
+//     - A date time value
 //
-//   timeZoneConversionType TimeZoneConversionType -
-//            This parameter determines the algorithm that will
-//            be used to convert parameter 'dateTime' to the time
-//            zone specified by parameter 'timeZoneName'.
+//   timeZoneConversionType TimeZoneConversionType
+//     - This parameter determines the algorithm that will
+//       be used to convert parameter 'dateTime' to the time
+//       zone specified by parameter 'timeZoneName'.
 //
-//            TimeZoneConversionType is an enumeration type which
-//            be used to convert parameter 'dateTime' to the time
-//            must be set to one of two values:
-//            This parameter determines the algorithm that will
-//               TimeZoneConversionType(0).Absolute()
-//               TimeZoneConversionType(0).Relative()
-//            Note: You can also use the global variable
-//            'TzConvertType' for easier access:
-//               TzConvertType.Absolute()
-//               TzConvertType.Relative()
+//       TimeZoneConversionType is an enumeration type which
+//       be used to convert parameter 'dateTime' to the time
+//       must be set to one of two values:
+//       This parameter determines the algorithm that will
+//          TimeZoneConversionType(0).Absolute()
+//          TimeZoneConversionType(0).Relative()
+//       Note: You can also use the global variable
+//       'TzConvertType' for easier access:
+//          TzConvertType.Absolute()
+//          TzConvertType.Relative()
 //
-//            Absolute Time Conversion - Identifies the 'Absolute' time
-//            to time zone conversion algorithm. This algorithm provides
-//            that a time value in time zone 'X' will be converted to the
-//            same time value in time zone 'Y'.
+//       Absolute Time Conversion - Identifies the 'Absolute' time
+//       to time zone conversion algorithm. This algorithm provides
+//       that a time value in time zone 'X' will be converted to the
+//       same time value in time zone 'Y'.
 //
-//            For example, assume the time 10:00AM is associated with time
-//            zone USA Central Standard time and that this time is to be
-//            converted to USA Eastern Standard time. Applying the 'Absolute'
-//            algorithm would convert ths time to 10:00AM Eastern Standard
-//            time.  In this case the hours, minutes and seconds have not been
-//            altered. 10:00AM in USA Central Standard Time has simply been
-//            reclassified as 10:00AM in USA Eastern Standard Time.
+//       For example, assume the time 10:00AM is associated with time
+//       zone USA Central Standard time and that this time is to be
+//       converted to USA Eastern Standard time. Applying the 'Absolute'
+//       algorithm would convert ths time to 10:00AM Eastern Standard
+//       time.  In this case the hours, minutes and seconds have not been
+//       altered. 10:00AM in USA Central Standard Time has simply been
+//       reclassified as 10:00AM in USA Eastern Standard Time.
 //
-//            Relative Time Conversion - Identifies the 'Relative' time to time
-//            zone conversion algorithm. This algorithm provides that times in
-//            time zone 'X' will be converted to their equivalent time in time
-//            zone 'Y'.
+//       Relative Time Conversion - Identifies the 'Relative' time to time
+//       zone conversion algorithm. This algorithm provides that times in
+//       time zone 'X' will be converted to their equivalent time in time
+//       zone 'Y'.
 //
-//            For example, assume the time 10:00AM is associated with time zone
-//            USA Central Standard time and that this time is to be converted to
-//            USA Eastern Standard time. Applying the 'Relative' algorithm would
-//            convert ths time to 11:00AM Eastern Standard time. In this case the
-//            hours, minutes and seconds have been changed to reflect an equivalent
-//            time in the USA Eastern Standard Time Zone.
+//       For example, assume the time 10:00AM is associated with time zone
+//       USA Central Standard time and that this time is to be converted to
+//       USA Eastern Standard time. Applying the 'Relative' algorithm would
+//       convert ths time to 11:00AM Eastern Standard time. In this case the
+//       hours, minutes and seconds have been changed to reflect an equivalent
+//       time in the USA Eastern Standard Time Zone.
 //
 //
 //   timeZoneLocationName  string

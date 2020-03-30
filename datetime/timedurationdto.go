@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-
 // TimeDurationDto
 //
 // Overview and Usage
@@ -67,7 +66,7 @@ type TimeDurationDto struct {
 	TotTimeNanoseconds   int64 // Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
 	//                             in equivalent nanoseconds
 
-	lock                 *sync.Mutex // Used to enforce thread safe operations
+	lock *sync.Mutex // Used to enforce thread safe operations
 }
 
 // CopyIn - Receives a TimeDurationDto as an input parameters
@@ -85,7 +84,7 @@ type TimeDurationDto struct {
 //
 func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -114,7 +113,7 @@ func (tDur *TimeDurationDto) CopyIn(t2Dur TimeDurationDto) {
 //
 func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -125,8 +124,8 @@ func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	return tDurDtoUtil.copyOut(
-							tDur,
-						"TimeDurationDto.CopyOut() ")
+		tDur,
+		"TimeDurationDto.CopyOut() ")
 }
 
 // Empty - Resets all current TimeDurationDto data
@@ -140,14 +139,14 @@ func (tDur *TimeDurationDto) CopyOut() TimeDurationDto {
 //
 func (tDur *TimeDurationDto) Empty() {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
 
 	defer tDur.lock.Unlock()
-	
+
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	tDurDtoUtil.empty(
@@ -166,14 +165,14 @@ func (tDur *TimeDurationDto) Empty() {
 //
 func (tDur *TimeDurationDto) EmptyTimeFields() {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
 
 	defer tDur.lock.Unlock()
-	
+
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	tDurDtoUtil.emptyTimeFields(
@@ -202,7 +201,7 @@ func (tDur *TimeDurationDto) EmptyTimeFields() {
 //
 func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -235,7 +234,7 @@ func (tDur *TimeDurationDto) Equal(t2Dur TimeDurationDto) bool {
 //
 func (tDur *TimeDurationDto) IsEmpty() bool {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -269,7 +268,7 @@ func (tDur *TimeDurationDto) IsEmpty() bool {
 //
 func (tDur *TimeDurationDto) IsValid() error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -280,10 +279,9 @@ func (tDur *TimeDurationDto) IsValid() error {
 	ePrefix := "TimeDurationDto.IsValid() "
 
 	tDurDtoUtil := timeDurationDtoUtility{}
-	
+
 	return tDurDtoUtil.isValid(tDur, ePrefix)
 }
-
 
 // GetCumDaysCalcDto - Returns a new TimeDurationDto which re-calculates
 // the values of the current TimeDurationDto and stores them in a
@@ -319,7 +317,7 @@ func (tDur *TimeDurationDto) IsValid() error {
 //
 func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -379,7 +377,7 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 //
 func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -461,7 +459,7 @@ func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 //
 func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -524,7 +522,7 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 //
 func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -603,7 +601,7 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 //
 func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -665,7 +663,7 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 //
 func (tDur *TimeDurationDto) GetCumMinutesTimeStr() (string, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -743,7 +741,7 @@ func (tDur *TimeDurationDto) GetCumMinutesTimeStr() (string, error) {
 //
 func (tDur *TimeDurationDto) GetCumMonthsDaysCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -806,7 +804,7 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysCalcDto() (TimeDurationDto, error) 
 //
 func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -892,7 +890,7 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 //
 func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -953,7 +951,7 @@ func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error)
 //
 func (tDur *TimeDurationDto) GetCumNanosecondsTimeStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1004,7 +1002,7 @@ func (tDur *TimeDurationDto) GetCumNanosecondsTimeStr() string {
 //
 func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1062,7 +1060,7 @@ func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 //
 func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1138,7 +1136,7 @@ func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 //
 func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1200,7 +1198,7 @@ func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 //
 func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1268,7 +1266,7 @@ func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 //
 func (tDur *TimeDurationDto) GetDefaultDurationStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1305,7 +1303,7 @@ func (tDur *TimeDurationDto) GetDefaultDurationStr() string {
 //
 func (tDur TimeDurationDto) GetDurationFromDays(days int64) time.Duration {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1342,7 +1340,7 @@ func (tDur TimeDurationDto) GetDurationFromDays(days int64) time.Duration {
 //
 func (tDur TimeDurationDto) GetDurationFromHours(hours int64) time.Duration {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1379,7 +1377,7 @@ func (tDur TimeDurationDto) GetDurationFromHours(hours int64) time.Duration {
 //
 func (tDur TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1416,7 +1414,7 @@ func (tDur TimeDurationDto) GetDurationFromMinutes(minutes int64) time.Duration 
 //
 func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1475,7 +1473,7 @@ func (tDur TimeDurationDto) GetDurationFromTime(
 	microseconds,
 	nanoseconds int) time.Duration {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1483,7 +1481,7 @@ func (tDur TimeDurationDto) GetDurationFromTime(
 
 	defer tDur.lock.Unlock()
 
-	dtMech :=DTimeMechanics{}
+	dtMech := DTimeMechanics{}
 
 	return dtMech.GetDurationFromTimeComponents(
 		0,
@@ -1523,7 +1521,7 @@ func (tDur TimeDurationDto) GetDurationFromTime(
 //
 func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1610,7 +1608,7 @@ func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 //
 func (tDur *TimeDurationDto) GetElapsedSecsNanosecsStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1665,7 +1663,6 @@ func (tDur *TimeDurationDto) GetElapsedSecsNanosecsStr() string {
 
 	str += fmt.Sprintf("%v-Seconds ", t2Dur.Seconds)
 
-
 	str += fmt.Sprintf("%v-Nanoseconds", t2Dur.TotSubSecNanoseconds)
 
 	return str
@@ -1707,7 +1704,7 @@ func (tDur *TimeDurationDto) GetElapsedSecsNanosecsStr() string {
 //
 func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1812,7 +1809,7 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 //
 func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1902,7 +1899,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 //
 func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -1911,7 +1908,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 	defer tDur.lock.Unlock()
 
 	ePrefix := "TimeDurationDto.GetYearMthDaysTimeStr() "
-	
+
 	if int64(tDur.TimeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
@@ -1985,7 +1982,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 //
 func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2078,7 +2075,7 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 //
 func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2162,7 +2159,7 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 //
 func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2253,7 +2250,7 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 //
 func (tDur *TimeDurationDto) GetGregorianYearCalcDto() (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2333,7 +2330,7 @@ func (tDur *TimeDurationDto) GetGregorianYearCalcDto() (TimeDurationDto, error) 
 //
 func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2387,7 +2384,7 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 //
 func (tDur TimeDurationDto) New() TimeDurationDto {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2545,7 +2542,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2702,7 +2699,7 @@ func (tDur TimeDurationDto) NewAutoStart(
 	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2809,7 +2806,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 	endDateTz DateTzDto,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -2832,9 +2829,9 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 				inputParameterName:  "startDateTz",
 				inputParameterValue: "",
 				errMsg: fmt.Sprintf(
-					"Input Parameter 'startDateTz' is INVALID!\n" +
+					"Input Parameter 'startDateTz' is INVALID!\n"+
 						"Validation Error='%v'", err.Error()),
-				err:                 nil,
+				err: nil,
 			}
 	}
 
@@ -2853,7 +2850,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDto(
 		timeZoneLocation,
 		dateTimeFmtStr,
 		ePrefix,
-		)
+	)
 
 	if err != nil {
 		return TimeDurationDto{}, err
@@ -3032,14 +3029,14 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoCalcTz(
 	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
-	
+
 	defer tDur.lock.Unlock()
-		
+
 	ePrefix := "TimeDurationDto.NewStartEndDateTzDtoCalcTz() "
 
 	tDurDtoUtil := timeDurationDtoUtility{}
@@ -3193,7 +3190,7 @@ func (tDur TimeDurationDto) NewStartEndDateTzDtoTz(
 	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -3297,7 +3294,7 @@ func (tDur TimeDurationDto) NewStartEndTimes(
 	endDateTime time.Time,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -3450,19 +3447,19 @@ func (tDur TimeDurationDto) NewStartEndTimes(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewStartEndTimesTz(
-	startDateTime, 
+	startDateTime,
 	endDateTime time.Time,
-	timeZoneLocation, 
+	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
-	
+
 	defer tDur.lock.Unlock()
-	
+
 	ePrefix := "TimeDurationDto.NewStartEndTimesTz() "
 
 	tDurDtoUtil := timeDurationDtoUtility{}
@@ -3600,7 +3597,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalc(
 	tDurCalcType TDurCalcType,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -3800,7 +3797,7 @@ func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
 	timeZoneLocation string,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -3888,8 +3885,8 @@ func (tDur TimeDurationDto) NewStartEndTimesCalcTz(
 // Example Usage:
 //
 //  tDurDto, err := TimeDurationDto{}.NewStartEndTimesDateDto(
-//                                    startTime, 
-//                                    endTime, 
+//                                    startTime,
+//                                    endTime,
 //                                    FmtDateTimeYrMDayFmtStr)
 //
 //      Note:
@@ -3903,7 +3900,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDto(
 	endDateTimeTz DateTzDto,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -4057,7 +4054,7 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(
 	tDurCalcType TDurCalcType,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -4257,19 +4254,19 @@ func (tDur TimeDurationDto) NewStartEndTimesDateDtoCalc(
 //
 func (tDur TimeDurationDto) NewStartEndTimesDateTzDtoCalcTz(
 	startDateTz,
-	endDateTz DateTzDto, 
-	tDurCalcType TDurCalcType, 
+	endDateTz DateTzDto,
+	tDurCalcType TDurCalcType,
 	timeZoneLocation string,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
-	
+
 	defer tDur.lock.Unlock()
-	
+
 	ePrefix := "TimeDurationDto.NewStartEndTimesDateTzDtoCalcTz() "
 
 	tDur2 := TimeDurationDto{}
@@ -4374,7 +4371,7 @@ func (tDur TimeDurationDto) NewStartTimeDuration(
 	duration time.Duration,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -4542,7 +4539,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationTz(
 	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -4748,7 +4745,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalcTz(
 	timeZoneLocation string,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -4901,7 +4898,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationCalc(
 	tDurCalcType TDurCalcType,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -5015,7 +5012,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(
 	duration time.Duration,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -5033,13 +5030,13 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDto(
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	err := tDurDtoUtil.setStartTimeDurationDateDtoCalcTz(
-						&tDur2,
-						startDateTimeTz,
-						duration,
-						TDurCalc.StdYearMth(),
-						timeZoneLocation,
-						dateTimeFmtStr,
-						ePrefix)
+		&tDur2,
+		startDateTimeTz,
+		duration,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
 		return TimeDurationDto{}, err
@@ -5189,7 +5186,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTz(
 	timeZoneLocation string,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -5400,7 +5397,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(
 	tDurCalcType TDurCalcType,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -5415,13 +5412,13 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoTzCalc(
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	err := tDurDtoUtil.setStartTimeDurationDateDtoCalcTz(
-												&tDur2,
-												startDateTime,
-												duration,
-												tDurCalcType,
-												timeZoneLocation,
-												dateTimeFmtStr,
-												ePrefix)
+		&tDur2,
+		startDateTime,
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
 		return TimeDurationDto{}, nil
@@ -5558,7 +5555,7 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(
 	tDurCalcType TDurCalcType,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -5717,12 +5714,12 @@ func (tDur TimeDurationDto) NewStartTimeDurationDateDtoCalc(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
-	timeCalcMode  TimeMathCalcMode,
+	timeCalcMode TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -5737,14 +5734,14 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 	tDur2 := TimeDurationDto{}
 
 	err := tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
-										&tDur2,
-										timeCalcMode,
-										startDateTime,
-										plusTimeDto,
-										TDurCalcType(0).StdYearMth(),
-										startDateTime.Location().String(),
-										dateTimeFmtStr,
-										ePrefix)
+		&tDur2,
+		timeCalcMode,
+		startDateTime,
+		plusTimeDto,
+		TDurCalcType(0).StdYearMth(),
+		startDateTime.Location().String(),
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
 		return TimeDurationDto{}, err
@@ -5965,14 +5962,14 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
-	timeCalcMode  TimeMathCalcMode,
+	timeCalcMode TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -6125,12 +6122,12 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDtoCalcTz(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
-	timeCalcMode  TimeMathCalcMode,
+	timeCalcMode TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -6369,14 +6366,14 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
-	timeCalcMode  TimeMathCalcMode,
+	timeCalcMode TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -6391,14 +6388,14 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 	t2Dur := TimeDurationDto{}
 
 	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
-								&t2Dur,
-								timeCalcMode,
-								endDateTime,
-								minusTimeDto,
-								tDurCalcType,
-								timeZoneLocation,
-								dateTimeFmtStr,
-								ePrefix)
+		&t2Dur,
+		timeCalcMode,
+		endDateTime,
+		minusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 
 	if err != nil {
 		return TimeDurationDto{}, err
@@ -6465,7 +6462,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDtoCalcTz(
 func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(
 	tDurCalcType TDurCalcType) error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -6502,16 +6499,16 @@ func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(
 //
 func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
-	
+
 	defer tDur.lock.Unlock()
-	
+
 	ePrefix := "TimeDurationDto.ReCalcEndDateTimeToNow() "
-	
+
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	return tDurDtoUtil.reCalcEndDateTimeToNow(tDur, ePrefix)
@@ -6544,7 +6541,7 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 //
 func (tDur *TimeDurationDto) SetAutoEnd() error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -6557,8 +6554,8 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	return tDurDtoUtil.setAutoEnd(
-							tDur,
-							ePrefix)
+		tDur,
+		ePrefix)
 }
 
 // SetEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration
@@ -6764,14 +6761,14 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetEndTimeMinusTimeDtoCalcTz(
-	timeCalcMode  TimeMathCalcMode,
+	timeCalcMode TimeMathCalcMode,
 	endDateTime time.Time,
-	minusTimeDto TimeDto, 
-	tDurCalcType TDurCalcType, 
-	timeZoneLocation, 
+	minusTimeDto TimeDto,
+	tDurCalcType TDurCalcType,
+	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -6964,26 +6961,26 @@ func (tDur *TimeDurationDto) SetStartEndTimesDateDtoCalcTz(
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
-	
+
 	defer tDur.lock.Unlock()
-	
+
 	ePrefix := "TimeDurationDto.SetStartEndTimesDateDtoCalcTz() "
-	
+
 	tDurDtoUtil := timeDurationDtoUtility{}
-	
+
 	return tDurDtoUtil.setStartEndTimesDateDtoCalcTz(
-			tDur,
-			startDateTimeTz,
-			endDateTimeTz,
-			tDurCalcType,
-			timeZoneLocation,
-			dateTimeFmtStr,
-			ePrefix)
+		tDur,
+		startDateTimeTz,
+		endDateTimeTz,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 }
 
 // SetStartEndTimesCalcTz - Sets data field values for the current TimeDurationDto
@@ -7146,7 +7143,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -7159,13 +7156,13 @@ func (tDur *TimeDurationDto) SetStartEndTimesCalcTz(
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	return tDurDtoUtil.setStartEndTimesCalcTz(
-							tDur,
-							startDateTime,
-							endDateTime,
-							tDurCalcType,
-							timeZoneLocation,
-							dateTimeFmtStr,
-							ePrefix)
+		tDur,
+		startDateTime,
+		endDateTime,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 }
 
 // SetStartTimeDurationCalcTz - Sets start time, end time and duration for the
@@ -7334,26 +7331,26 @@ func (tDur *TimeDurationDto) SetStartTimeDurationCalcTz(
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
 	tDur.lock.Lock()
 
 	defer tDur.lock.Unlock()
-	
+
 	ePrefix := "TimeDurationDto.SetStartTimeDurationCalcTz() "
-	
+
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	return tDurDtoUtil.setStartTimeDurationCalcTz(
-						tDur,
-						startDateTime,
-						duration,
-						tDurCalcType,
-						timeZoneLocation,
-						dateTimeFmtStr,
-						ePrefix)
+		tDur,
+		startDateTime,
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 }
 
 // SetStartTimeDurationDateDtoCalcTz - Sets start time, end time and
@@ -7524,7 +7521,7 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -7537,13 +7534,13 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	return tDurDtoUtil.setStartTimeDurationDateDtoCalcTz(
-						tDur,
-						startDateTimeTz,
-						duration,
-						tDurCalcType,
-						timeZoneLocation,
-						dateTimeFmtStr,
-						ePrefix)
+		tDur,
+		startDateTimeTz,
+		duration,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 }
 
 // SetStartTimePlusTimeDtoCalcTz - Sets start date time, end date time and duration
@@ -7580,30 +7577,30 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(
 //       'startDateTime'.
 //
 //  plusTimeDto       TimeDto
-//     -  Time components (Years, months, weeks, days, hours etc.)
-//        which will be added to 'startDateTime' to compute
-//        time duration and ending date time.
+//     - Time components (Years, months, weeks, days, hours etc.)
+//       which will be added to 'startDateTime' to compute
+//       time duration and ending date time.
 //
-//        type TimeDto struct {
-//           Years                int // Number of Years
-//           Months               int // Number of Months
-//           Weeks                int // Number of Weeks
-//           WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//           DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
-//           Hours                int // Number of Hours.
-//           Minutes              int // Number of Minutes
-//           Seconds              int // Number of Seconds
-//           Milliseconds         int // Number of Milliseconds
-//           Microseconds         int // Number of Microseconds
-//           Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
-//           TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                                    //  plus remaining Nanoseconds
-//           TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
-//                                    //  + Seconds + Milliseconds + Nanoseconds
-//        }
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
 //
-//        Type 'TimeDto' is located in source file:
-//           datetimeopsgo\datetime\timedto.go
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
 //
 //
 //  tDurCalcType TDurCalcType
@@ -7749,14 +7746,14 @@ func (tDur *TimeDurationDto) SetStartTimeDurationDateDtoCalcTz(
 //        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(
-	timeCalcMode  TimeMathCalcMode,
+	timeCalcMode TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation,
 	dateTimeFmtStr string) error {
 
-	if tDur.lock == nil{
+	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
 	}
 
@@ -7769,12 +7766,12 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDtoCalcTz(
 	tDurDtoUtil := timeDurationDtoUtility{}
 
 	return tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
-								tDur,
-								timeCalcMode,
-								startDateTime,
-								plusTimeDto,
-								tDurCalcType,
-								timeZoneLocation,
-								dateTimeFmtStr,
-								ePrefix)
+		tDur,
+		timeCalcMode,
+		startDateTime,
+		plusTimeDto,
+		tDurCalcType,
+		timeZoneLocation,
+		dateTimeFmtStr,
+		ePrefix)
 }

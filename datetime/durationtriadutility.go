@@ -273,115 +273,148 @@ func(durTUtil *durationTriadUtility) isValid(
 //
 // Input Parameters
 //
-// durT     *DurationTriad - The results of this calculation will be stored
-//                           in this instance of 'DurationTriad'
+//  durT          *DurationTriad
+//       - The results of this calculation will be stored
+//         in this instance of 'DurationTriad'
 //
-// endDateTime   time.Time - The ending date time value from which TimeDto
-//                            parameter 'minusTimeDto' will be subtracted
-//                            in order to compute the Starting Date Time.
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value.
 //
-// minusTimeDto  TimeDto   - An instance of TimeDto containing time values,
-//                            (Years, Months, weeks, days, hours, minutes etc.)
-//                            which will be subtracted from input parameter
-//                            'endDateTime' in order to compute the Starting
-//                            Date Time and Time Duration.
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
 //
-//                           type TimeDto struct {
-//                             Years                  int // Number of Years
-//                             Months                 int // Number of Months
-//                             Weeks                  int // Number of Weeks
-//                             WeekDays               int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-//                             DateDays               int // Total Number of Days. Weeks x 7 plus WeekDays
-//                             Hours                  int // Number of Hours.
-//                             Minutes                int // Number of Minutes
-//                             Seconds                int // Number of Seconds
-//                             Milliseconds           int // Number of Milliseconds
-//                             Microseconds           int // Number of Microseconds
-//                             Nanoseconds            int // Remaining Nanoseconds after Milliseconds & Microseconds
-//                             TotSubSecNanoseconds   int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-//                                                        // plus remaining Nanoseconds
-//                            }
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
 //
-//                            Type 'TimeDto' is located in source file:
-//                             MikeAustin71\datetimeopsgo\datetime\timedto.go
+//         For additional information see the type documentation at
+//               datetime\timemathcalcmode.go
 //
-// tDurCalcType  TDurCalcType - Specifies the calculation type to be used in allocating
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
+//  endDateTime   time.Time
+//       - The ending date time value from which TimeDto
+//         parameter 'minusTimeDto' will be subtracted
+//         in order to compute the Starting Date Time.
+//
+//  minusTimeDto  TimeDto
+//       - An instance of TimeDto containing time values,
+//         (Years, Months, weeks, days, hours, minutes etc.)
+//         which will be subtracted from input parameter
+//         'endDateTime' in order to compute the Starting
+//         Date Time and Time Duration.
+//
+//         type TimeDto struct {
+//           Years                  int // Number of Years
+//           Months                 int // Number of Months
+//           Weeks                  int // Number of Weeks
+//           WeekDays               int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//           DateDays               int // Total Number of Days. Weeks x 7 plus WeekDays
+//           Hours                  int // Number of Hours.
+//           Minutes                int // Number of Minutes
+//           Seconds                int // Number of Seconds
+//           Milliseconds           int // Number of Milliseconds
+//           Microseconds           int // Number of Microseconds
+//           Nanoseconds            int // Remaining Nanoseconds after Milliseconds & Microseconds
+//           TotSubSecNanoseconds   int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                      // plus remaining Nanoseconds
+//         }
+//
+//         Type 'TimeDto' is located in source file:
+//          MikeAustin71\datetimeopsgo\datetime\timedto.go
+//
+//  tDurCalcType  TDurCalcType
+//       - Specifies the calculation type to be used in allocating
 //         time duration:
 //
-//    TDurCalcType(0).StdYearMth() - Default - standard year, month week,
-//              day time calculation.
+//    TDurCalcType(0).StdYearMth()
+//       - Default - standard year, month week,
+//         day time calculation.
 //
-//    TDurCalcTypeCUMMONTHS - Computes cumulative months - no Years.
+//    TDurCalcTypeCUMMONTHS
+//       - Computes cumulative months - no Years.
 //
-//    TDurCalcTypeCUMWEEKS - Computes cumulative weeks. No Years or months
+//    TDurCalcTypeCUMWEEKS
+//       - Computes cumulative weeks. No Years or months
 //
-//    TDurCalcTypeCUMDAYS - Computes cumulative days. No Years, months or weeks.
+//    TDurCalcTypeCUMDAYS
+//       - Computes cumulative days. No Years, months or weeks.
 //
-//    TDurCalcTypeCUMHOURS - Computes cumulative hours. No Years, months, weeks or days.
+//    TDurCalcTypeCUMHOURS
+//       - Computes cumulative hours. No Years, months, weeks or days.
 //
-//    TDurCalcTypeCUMMINUTES - Computes cumulative minutes. No Years, months, weeks, days
+//    TDurCalcTypeCUMMINUTES
+//       - Computes cumulative minutes. No Years, months, weeks, days
 //         or hours.
 //
-//    TDurCalcTypeCUMSECONDS - Computes cumulative seconds. No Years, months, weeks, days,
+//    TDurCalcTypeCUMSECONDS
+//       - Computes cumulative seconds. No Years, months, weeks, days,
 //         hours or minutes.
 //
-//    TDurCalcTypeGregorianYrs - Computes Years based on average length of a Gregorian Year
-//          Used for very large duration values.
+//    TDurCalcTypeGregorianYrs
+//       - Computes Years based on average length of a Gregorian Year
+//         Used for very large duration values.
 //
 //
-// timeZoneLocation string - time zone location must be designated as one of
-//                           three types of time zones:
+//  timeZoneLocation string
+//       - Time zone location must be designated as one of
+//         three types of time zones:
 //
-//               (1) the string 'Local' - signals the designation of the
-//                   time zone location used by the host computer.
+//         (1) the string 'Local' - signals the designation of the
+//             time zone location used by the host computer.
 //
-//               (2) IANA Time Zone Location -
-//                   See https://golang.org/pkg/time/#LoadLocation
-//                   and https://www.iana.org/time-zones to ensure that
-//                   the IANA Time Zone Database is properly configured
-//                   on your system. Note: IANA Time Zone Data base is
-//                   equivalent to 'tz database'.
-//                      Examples:
-//                        "America/New_York"
-//                        "America/Chicago"
-//                        "America/Denver"
-//                        "America/Los_Angeles"
-//                        "Pacific/Honolulu"
+//         (2) IANA Time Zone Location -
+//             See https://golang.org/pkg/time/#LoadLocation
+//             and https://www.iana.org/time-zones to ensure that
+//             the IANA Time Zone Database is properly configured
+//             on your system. Note: IANA Time Zone Data base is
+//             equivalent to 'tz database'.
+//                Examples:
+//                  "America/New_York"
+//                  "America/Chicago"
+//                  "America/Denver"
+//                  "America/Los_Angeles"
+//                  "Pacific/Honolulu"
 //
-//               (3) A Military Time Zone
-//                   Reference:
-//                    https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                    http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                    https://www.timeanddate.com/time/zones/military
-//                    https://www.timeanddate.com/worldclock/timezone/alpha
-//                    https://www.timeanddate.com/time/map/
+//         (3) A Military Time Zone
+//             Reference:
+//              https://en.wikipedia.org/wiki/List_of_military_time_zones
+//              http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//              https://www.timeanddate.com/time/zones/military
+//              https://www.timeanddate.com/worldclock/timezone/alpha
+//              https://www.timeanddate.com/time/map/
 //
-//                    Examples:
-//                      "Alpha"   or "A"
-//                      "Bravo"   or "B"
-//                      "Charlie" or "C"
-//                      "Delta"   or "D"
-//                      "Zulu"    or "Z"
+//              Examples:
+//                "Alpha"   or "A"
+//                "Bravo"   or "B"
+//                "Charlie" or "C"
+//                "Delta"   or "D"
+//                "Zulu"    or "Z"
 //
-// dateTimeFmtStr string   - A date time format string which will be used
-//                           to format and display 'dateTime'. Example:
-//                           "2006-01-02 15:04:05.000000000 -0700 MST"
+//  dateTimeFmtStr string
+//       - A date time format string which will be used
+//         to format and display 'dateTime'. Example:
+//         "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//                           Date time format constants are found in the source
-//                           file 'constantsdatetime.go'. These constants represent
-//                           the more commonly used date time string formats. All
-//                           Date Time format constants begin with the prefix
-//                           'FmtDateTime'.
+//         Date time format constants are found in the source
+//         file 'constantsdatetime.go'. These constants represent
+//         the more commonly used date time string formats. All
+//         Date Time format constants begin with the prefix
+//         'FmtDateTime'.
 //
-//                           If 'dateTimeFmtStr' is submitted as an
-//                           'empty string', a default date time format
-//                           string will be applied. The default date time
-//                           format string is:
-//                             FmtDateTimeYrMDayFmtStr =
-//                                 "2006-01-02 15:04:05.000000000 -0700 MST"
+//         If 'dateTimeFmtStr' is submitted as an
+//         'empty string', a default date time format
+//         string will be applied. The default date time
+//         format string is:
+//           FmtDateTimeYrMDayFmtStr =
+//               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-// ePrefix        string   - The error prefix containing the names of all
-//                           the methods executed up to this point.
+//  ePrefix        string
+//       - The error prefix containing the names of all
+//         the methods executed up to this point.
 //
 //
 // ------------------------------------------------------------------------
@@ -397,13 +430,16 @@ func(durTUtil *durationTriadUtility) isValid(
 //
 // Usage
 //
-// dt  := DurationTriad{}
-// err := dt.SetEndTimeMinusTimeDtoCalcTz(
-//        startDateTime,
-//        minusTimeDto,
-//        TDurCalcType(0).StdYearMth(),
-//        TZones.US.Central(),
-//        FmtDateTimeYrMDayFmtStr)
+//  dt  := DurationTriad{}
+//  err := dt.SetEndTimeMinusTimeDtoCalcTz(
+//         durT,
+//         timeCalcMode,
+//         startDateTime,
+//         minusTimeDto,
+//         TDurCalcType(0).StdYearMth(),
+//         TZones.US.Central(),
+//         timeCalcMode,
+//         FmtDateTimeYrMDayFmtStr)
 //
 //
 // Note: 'TDurCalcType(0).StdYearMth()' is of type 'TDurCalcType' which is defined in
@@ -417,6 +453,7 @@ func(durTUtil *durationTriadUtility) isValid(
 //
 func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 	durT *DurationTriad,
+	timeCalcMode TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
@@ -469,6 +506,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		&durT2.BaseTime,
+		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
@@ -482,6 +520,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		&durT2.LocalTime,
+		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
@@ -495,6 +534,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		&durT2.UTCTime,
+		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
@@ -1069,6 +1109,24 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 //
 // Input Parameters
 //
+//  timeCalcMode  TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the
+//         addition algorithm which will be used when adding time
+//         components to the current DateTzDto date time value.
+//
+//         If days are defined as local time zone days (which may be
+//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
+//
+//         If days are always defined as having a time span of 24-consecutive
+//         hours, use TCalcMode.UtcTimeZone().
+//
+//         For additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//         Valid values are:
+//               TCalcMode.LocalTimeZone()
+//               TCalcMode.UtcTimeZone()
+//
 //  durT       *DurationTriad
 //     - The results of this calculation will be stored
 //       in this instance of 'DurationTriad'
@@ -1228,6 +1286,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 //
 func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 	durT *DurationTriad,
+	timeCalcMode TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
@@ -1294,6 +1353,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 		&tDur2.BaseTime,
+		timeCalcMode,
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
@@ -1308,6 +1368,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 		&tDur2.LocalTime,
+		timeCalcMode,
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
@@ -1321,6 +1382,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 		&tDur2.UTCTime,
+		timeCalcMode,
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
