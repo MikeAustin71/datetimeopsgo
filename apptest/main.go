@@ -10,13 +10,60 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest073()
+	mainTest{}.mainTest074()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest074() {
+	// Variation on:
+	// TestDurationTriad_GetYearMthDaysTimeAbbrv
+	// datetime\zztdurationtriad01_test.go
+	lineLen := 70
+	titles := []string{"mainTest.mainTest074()",
+		"TestDurationTriad_GetYearMthDaysTimeAbbrv",
+		"DurationTriad and Time Duration Dto"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"
+	t2str := "04/30/2017 22:58:33.123456789 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	du := dt.DurationTriad{}
+
+	err := du.SetStartEndTimesTz(t1, t2, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by du.SetStartEndTimesTz(t2, t1, TZones.US.Central(), "+
+			"FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
+	}
+
+	fmt.Printf("Base Time Allocated Nanoseconds= '%v'\n",
+		du.BaseTime.Nanoseconds)
+
+	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
+
+	dOut := du.BaseTime.GetYearMthDaysTimeAbbrvStr()
+
+	if expected != dOut {
+		fmt.Printf("Expected result= '%v'.\n" +
+			                " Instead result= '%v'.\n",
+			                expected, dOut)
+	}
+
 }
 
 func (mt mainTest) mainTest073() {

@@ -1728,7 +1728,12 @@ func (mc MainCodeExamples) mainCodeEx027() {
 
 	t2 := t1.AddDate(5, 6, 12)
 
-	dtz2, err := dtz1.AddDate(5, 6, 12, fmtstr)
+	dtz2, err := dtz1.AddDate(
+		dt.TCalcMode.LocalTimeZone(),
+		5,
+		6,
+		12,
+		fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr).\n" +
@@ -2518,7 +2523,12 @@ func (mc MainCodeExamples) mainCodeEx014() {
 		return
 	}
 
-	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
+		dt.TCalcMode.LocalTimeZone(),
+		t2,
+		timeDto,
+		dt.TZones.US.Central(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). "+
@@ -2625,7 +2635,11 @@ func (mc MainCodeExamples) mainCodeEx010() {
 		return
 	}
 
-	dur, err := dt.TimeDurationDto{}.NewEndTimeMinusTimeDto(t2, timeDto, fmtstr)
+	dur, err := dt.TimeDurationDto{}.NewEndTimeMinusTimeDto(
+		dt.TCalcMode.LocalTimeZone(),
+		t2,
+		timeDto,
+		fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto). Error='%v'\n", err.Error())

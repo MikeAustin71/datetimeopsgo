@@ -28,7 +28,12 @@ func TestDateTzDto_AddDate_01(t *testing.T) {
 
 	t2 := t1.AddDate(5, 6, 12)
 
-	dtz2, err := dtz1.AddDate(5, 6, 12, fmtstr)
+	dtz2, err := dtz1.AddDate(
+		TCalcMode.LocalTimeZone(),
+		5,
+		6,
+		12,
+		fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by dtz1.AddDate(5, 6, 12, fmtstr).\n" +
@@ -66,7 +71,11 @@ func TestDateTzDto_AddDateToThis_01(t *testing.T) {
 
 	t2 := t1.AddDate(5, 6, 12)
 
-	err = dtz1.AddDateToThis(5, 6, 12)
+	err = dtz1.AddDateToThis(
+		TCalcMode.LocalTimeZone(),
+		5,
+		6,
+		12)
 
 	if err != nil {
 		t.Errorf("Error returned by AddDateToThis(5, 6, 12). Error='%v'", err.Error())
@@ -306,7 +315,18 @@ func TestDateTzDto_AddDateTime(t *testing.T) {
 
 	t3 := t2.Add(time.Duration(totNanoSecs))
 
-	dTz2, err := dTz1.AddDateTime(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, fmtstr)
+	dTz2, err := dTz1.AddDateTime(
+		TCalcMode.LocalTimeZone(),
+		years,
+		months,
+		days,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds,
+		fmtstr)
 
 	if err != nil {
 		t.Errorf("Error returned by dTz1.addDateTime(years, months, days, hours, minutes, ...)\n" +
@@ -364,7 +384,17 @@ func TestDateTzDto_AddDateTimeToThis_01(t *testing.T) {
 
 	t3 := t2.Add(time.Duration(totNanoSecs))
 
-	err = dTz1.AddDateTimeToThis(years, months, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
+	err = dTz1.AddDateTimeToThis(
+		TCalcMode.LocalTimeZone(),
+		years,
+		months,
+		days,
+		hours,
+		minutes,
+		seconds,
+		milliseconds,
+		microseconds,
+		nanoseconds)
 
 	if err != nil {
 		t.Errorf("Error returned by dTz1.AddDateTimeToThis(years, months, days, hours, " +

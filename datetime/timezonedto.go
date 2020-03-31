@@ -316,7 +316,11 @@ func (tzDto *TimeZoneDto) AddMinusTimeDto(timeDto TimeDto) error {
 
 	tZoneUtil := timeZoneDtoUtility{}
 
-	return tZoneUtil.addMinusTimeDto(tzDto, timeDto, ePrefix)
+	return tZoneUtil.addMinusTimeDto(
+		tzDto,
+		TCalcMode.LocalTimeZone(),
+		timeDto,
+		ePrefix)
 }
 
 // AddPlusTimeDto - This method receives a TimeDto input parameter. It
@@ -377,7 +381,11 @@ func (tzDto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 
 	tZoneUtil := timeZoneDtoUtility{}
 
-	return tZoneUtil.addPlusTimeDto(tzDto, timeDto, ePrefix)
+	return tZoneUtil.addPlusTimeDto(
+		tzDto,
+		TCalcMode.LocalTimeZone(),
+		timeDto,
+		ePrefix)
 }
 
 // AddTime - Adds time elements to the time value of the current

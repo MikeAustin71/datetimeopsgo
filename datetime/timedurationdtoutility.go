@@ -70,7 +70,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyIn(
 	tDur1.MillisecondsNanosecs = tDur2.MillisecondsNanosecs
 	tDur1.Microseconds = tDur2.Microseconds
 	tDur1.MicrosecondsNanosecs = tDur2.MicrosecondsNanosecs
-	tDur1.Nanoseconds = tDur2.MillisecondsNanosecs
+	tDur1.Nanoseconds = tDur2.Nanoseconds
 	tDur1.TotSubSecNanoseconds = tDur2.TotSubSecNanoseconds
 	tDur1.TotDateNanoseconds = tDur2.TotDateNanoseconds
 	tDur1.TotTimeNanoseconds = tDur2.TotTimeNanoseconds
@@ -1828,8 +1828,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcEndDateTimeToNow(
 	err := dTzUtil.setFromTzDef(
 		&tDur2.EndTimeDateTz,
 		time.Now().UTC(),
-		TzConvertType.Relative(),
 		tDur2.StartTimeDateTz.timeZone.CopyOut(),
+		TzConvertType.Relative(),
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -1924,8 +1924,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 	err = dTzUtil.setFromTzDef(
 		&tDur2.StartTimeDateTz,
 		startDateTime,
-		TzConvertType.Relative(),
 		tzDef,
+		TzConvertType.Relative(),
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -1936,8 +1936,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 	err = dTzUtil.setFromTzDef(
 		&tDur2.EndTimeDateTz,
 		endDateTime,
-		TzConvertType.Relative(),
 		tzDef,
+		TzConvertType.Relative(),
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -2719,8 +2719,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	err = dTzUtil.setFromTzDef(
 		&tDur2.StartTimeDateTz,
 		startDateTimeTz.dateTimeValue,
-		TzConvertType.Relative(),
 		tZoneDef,
+		TzConvertType.Relative(),
 		dateTimeFmtStr,
 		ePrefix + "Input Parameter 'startDateTimeTz' Error. ")
 
@@ -2731,8 +2731,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	err = dTzUtil.setFromTzDef(
 		&tDur2.EndTimeDateTz,
 		endDateTimeTz.dateTimeValue,
-		TzConvertType.Relative(),
 		tZoneDef,
+		TzConvertType.Relative(),
 		dateTimeFmtStr,
 		ePrefix + "Input Parameter 'endDateTimeTz' Error. ")
 

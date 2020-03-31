@@ -11,7 +11,7 @@ func TestTimeZoneUtility_NewTimeAddDate_01(t *testing.T) {
 
 	t1, _ := time.Parse(fmtstr, t1str)
 
-	var utcPtr, centraTzPtr *time.Location
+	var utcPtr, centralTzPtr *time.Location
 		var t1Utc, t2Utc, t2Central time.Time
 	var tzu2 TimeZoneDto
 	var err error
@@ -24,10 +24,10 @@ func TestTimeZoneUtility_NewTimeAddDate_01(t *testing.T) {
 		return
 	}
 
-	centraTzPtr, err = time.LoadLocation(TZones.US.Central())
+	centralTzPtr, err = time.LoadLocation(TZones.US.Central())
 
 	if err != nil {
-		t.Errorf("Error returned by centraTzPtr, err = time.LoadLocation(TZones.US.Central())\n" +
+		t.Errorf("Error returned by centralTzPtr, err = time.LoadLocation(TZones.US.Central())\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -36,7 +36,7 @@ func TestTimeZoneUtility_NewTimeAddDate_01(t *testing.T) {
 
 	t2Utc = t1Utc.AddDate(3, 2, 15)
 
-	t2Central = t2Utc.In(centraTzPtr)
+	t2Central = t2Utc.In(centralTzPtr)
 
 	t2OutStr := t2Central.Format(fmtstr)
 

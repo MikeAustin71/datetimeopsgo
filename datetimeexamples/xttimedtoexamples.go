@@ -199,7 +199,11 @@ func ExampleTimeDto005() {
 	locUSCentral, _ := time.LoadLocation(dt.TZones.US.Central())
 
 	t1USCentral := time.Date(1948, time.Month(9), 7, 4, 32, 16, 8185431, locUSCentral)
-	tDur, err := dt.TimeDurationDto{}.NewStartTimePlusTimeDto(t1USCentral, tDto, dt.FmtDateTimeYrMDayFmtStr)
+	tDur, err := dt.TimeDurationDto{}.NewStartTimePlusTimeDto(
+		dt.TCalcMode.LocalTimeZone(),
+		t1USCentral,
+		tDto,
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by TimeDurationDto{}.NewStartTimePlusTimeDto(). "+

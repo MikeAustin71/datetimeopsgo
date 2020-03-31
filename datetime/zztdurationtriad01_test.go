@@ -16,11 +16,15 @@ func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 
 	du := DurationTriad{}
 
-	err := du.SetStartEndTimesTz(t2, t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := du.SetStartEndTimesTz(
+		t2,
+		t1,
+		TZones.US.Central(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by du.SetStartEndTimesTz(t2, t1, TZones.US.Central(), "+
-			"FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
+			"FmtDateTimeYrMDayFmtStr).\nError='%v'\n", err.Error())
 	}
 
 	expected := "0-Hours 0-Minutes 1-Seconds 135-Milliseconds 802-Microseconds 468-Nanoseconds"
@@ -28,7 +32,8 @@ func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 	dOut := du.BaseTime.GetYearMthDaysTimeAbbrvStr()
 
 	if expected != dOut {
-		t.Errorf("Expected: %v. Error - got %v", expected, dOut)
+		t.Errorf("Expected: %v.\nInstead, " +
+			"result= %v.\n", expected, dOut)
 	}
 }
 
@@ -914,7 +919,12 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur, err := DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewEndTimeMinusTimeDtoTz(
+		TCalcMode.LocalTimeZone(),
+		t2,
+		timeDto,
+		TZones.US.Central(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto).\n" +
@@ -958,7 +968,12 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(
+		TCalcMode.LocalTimeZone(),
+		t1,
+		timeDto,
+		TZones.US.Central(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto).\n" +

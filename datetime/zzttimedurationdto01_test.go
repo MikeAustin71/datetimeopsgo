@@ -948,7 +948,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimePlusTimeDto_01
 
 	assert.Nil(suite.T(), err, "Error TimeDto{}.NewStartEndTimes(year, month, ...):")
 
-	tDur, err := TimeDurationDto{}.NewStartTimePlusTimeDto(suite.t1USCentral, tDto, suite.fmtStr)
+	tDur, err := TimeDurationDto{}.NewStartTimePlusTimeDto(
+		TCalcMode.LocalTimeZone(),
+		suite.t1USCentral,
+		tDto,
+		suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):")
 
@@ -973,7 +977,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeMinusTimeDto_0
 
 	assert.Nil(suite.T(), err, "Error TimeDto{}.NewStartEndTimes(year, month, ...):")
 
-	tDur, err := TimeDurationDto{}.NewEndTimeMinusTimeDto(suite.t4USCentral, tDto, suite.fmtStr)
+	tDur, err := TimeDurationDto{}.NewEndTimeMinusTimeDto(
+		TCalcMode.LocalTimeZone(),
+		suite.t4USCentral,
+		tDto,
+		suite.fmtStr)
 
 	assert.Nil(suite.T(), err, "Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):")
 
