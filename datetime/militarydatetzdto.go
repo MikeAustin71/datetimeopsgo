@@ -660,7 +660,7 @@ func (milDtDto MilitaryDateTzDto) NewNow(
 	var err error
 
 	newMilDateDto.MilitaryTzLetterName,
-	newMilDateDto.MilitaryTzLetterName,
+		newMilDateDto.MilitaryTzTextName,
 	newMilDateDto.EquivalentIanaTimeZone,
 	err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter(militaryTz)
 
@@ -669,6 +669,12 @@ func (milDtDto MilitaryDateTzDto) NewNow(
 			fmt.Errorf(ePrefix +
 				"\nInvalid Military Time Zone!\n" +
 				"'%v'\n", err.Error())
+	}
+
+	if newMilDateDto.MilitaryTzTextName == "" {
+		return MilitaryDateTzDto{},
+		errors.New(ePrefix + "After Parse " +
+			"newMilDateDto.MilitaryTzTextName is an EMPTY String!")
 	}
 
 	t := time.Now().UTC()
@@ -894,99 +900,136 @@ func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
 // equal to 'nil' signaling no error was encountered.
 //
 func (milDtDto MilitaryDateTzDto) parseMilitaryTzNameAndLetter(
-	rawTz string) (milTzLetter, milTzName string, equivalentIanaTimeZone TimeZoneDefinition, err error) {
+	rawTz string) (
+	milTzLetter,
+	milTzName string,
+	equivalentIanaTimeZone TimeZoneDefinition, err error) {
 
 	milTzLetter = ""
 	milTzName = ""
 	equivalentIanaTimeZone = TimeZoneDefinition{}
 	err = nil
 
-		ePrefix := "MilitaryDateTzDto.ParseMilitaryTzNameAndLetter() "
+	ePrefix := "MilitaryDateTzDto.ParseMilitaryTzNameAndLetter() "
 
-		lMilTz := len(rawTz)
+	tzMech := TimeZoneMechanics{}
 
-		if lMilTz == 0 {
-			err = errors.New(ePrefix +
-				"Error: Input Parameter 'rawTz' is EMPTY!\n")
-			return milTzLetter, milTzName, equivalentIanaTimeZone, err
-		}
+	dtNow := time.Now().In(time.UTC)
 
-	var ok bool
-	var equivalentTzStr string
-	milTzData := MilitaryTimeZoneData{}
+	var tzSpec TimeZoneSpecification
 
-	if lMilTz == 1 {
+	tzSpec, err =	tzMech.ParseMilitaryTzNameAndLetter(
+		dtNow,
+		TzConvertType.Relative(),
+		rawTz,
+		ePrefix)
 
-		milTzLetter = strings.ToUpper(rawTz)
-
-		milTzName , ok =
-			milTzData.MilTzLetterToTextName(milTzLetter)
-
-		if !ok {
-			err = fmt.Errorf(ePrefix +
-				"Error: Input Parameter XValue 'militaryTz' is INVALID!\n" +
-				"'militaryTz' DOES NOT map to a valid Military Time Zone.\n" +
-				"militaryTz='%v'", milTzLetter)
-			return milTzLetter, milTzName, equivalentIanaTimeZone, err
-		}
-
-		equivalentTzStr, ok = milTzData.MilitaryTzToIanaTz(milTzName)
-
-		if !ok {
-			err = fmt.Errorf(ePrefix +
-				"Error: Input Parameter XValue 'rawTz' is INVALID!\n" +
-				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n" +
-				"rawTz='%v'", milTzName)
-			return milTzLetter, milTzName, equivalentIanaTimeZone, err
-		}
-
-
-	} else {
-		// lMilTz > 1
-		temp1 := rawTz[:1]
-		temp2 := rawTz[1:]
-
-		temp1 = strings.ToUpper(temp1)
-		temp2 = strings.ToLower(temp2)
-
-		milTzLetter = temp1
-		milTzName = temp1 + temp2
-
-		equivalentTzStr, ok = milTzData.MilitaryTzToIanaTz(milTzName)
-
-		if !ok {
-			err = fmt.Errorf(ePrefix +
-				"Error: Input Parameter XValue 'rawTz' is INVALID!\n" +
-				"'rawTz' DOES NOT map to a valid IANA Time Zone.\n" +
-				"Military Time Zone Letter='%v'\n" +
-				"Military Time Zone Text Name='%v'", milTzLetter ,milTzName)
-			milTzLetter = ""
-			milTzName = ""
-			return milTzLetter, milTzName, equivalentIanaTimeZone, err
-		}
-	}
-
-	var err2 error
-
-	equivalentIanaTimeZone, err2 = TimeZoneDefinition{}.NewFromTimeZoneName(
-		time.Now(),
-		equivalentTzStr,
-		TzConvertType.Relative())
-
-	if err2 != nil {
-		err = fmt.Errorf(ePrefix +
-			"\nError returned by TimeZoneDefinition{}.NewFromTimeZoneName(equivalentTzStr)\n" +
-			"equivalentTzStr='%v'\n" +
-			"Error='%v'\n", equivalentTzStr, err2.Error())
-
-		milTzLetter = ""
-		milTzName = ""
-		equivalentIanaTimeZone = TimeZoneDefinition{}
-
+	if err != nil {
 		return milTzLetter, milTzName, equivalentIanaTimeZone, err
 	}
 
-	err = nil
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setFromTimeZoneSpecification(
+		&equivalentIanaTimeZone,
+		dtNow,
+		TzConvertType.Relative(),
+		tzSpec,
+		ePrefix)
+
+	if err != nil {
+		return milTzLetter, milTzName, equivalentIanaTimeZone, err
+	}
+
+	milTzLetter = tzSpec.militaryTimeZoneLetter
+
+	milTzName = tzSpec.militaryTimeZoneName
+
+
+	//	lMilTz := len(rawTz)
+	//
+	//	if lMilTz == 0 {
+	//		err = errors.New(ePrefix +
+	//			"Error: Input Parameter 'rawTz' is EMPTY!\n")
+	//		return milTzLetter, milTzName, equivalentIanaTimeZone, err
+	//	}
+	//
+	//var ok bool
+	//var equivalentTzStr string
+	//milTzData := MilitaryTimeZoneData{}
+	//
+	//if lMilTz == 1 {
+	//
+	//	milTzLetter = strings.ToUpper(rawTz)
+	//
+	//	milTzName , ok =
+	//		milTzData.MilTzLetterToTextName(milTzLetter)
+	//
+	//	if !ok {
+	//		err = fmt.Errorf(ePrefix +
+	//			"Error: Input Parameter XValue 'militaryTz' is INVALID!\n" +
+	//			"'militaryTz' DOES NOT map to a valid Military Time Zone.\n" +
+	//			"militaryTz='%v'", milTzLetter)
+	//		return milTzLetter, milTzName, equivalentIanaTimeZone, err
+	//	}
+	//
+	//	equivalentTzStr, ok = milTzData.MilitaryTzToIanaTz(milTzName)
+	//
+	//	if !ok {
+	//		err = fmt.Errorf(ePrefix +
+	//			"Error: Input Parameter XValue 'rawTz' is INVALID!\n" +
+	//			"'rawTz' DOES NOT map to a valid IANA Time Zone.\n" +
+	//			"rawTz='%v'", milTzName)
+	//		return milTzLetter, milTzName, equivalentIanaTimeZone, err
+	//	}
+	//
+	//
+	//} else {
+	//	// lMilTz > 1
+	//	temp1 := rawTz[:1]
+	//	temp2 := rawTz[1:]
+	//
+	//	temp1 = strings.ToUpper(temp1)
+	//	temp2 = strings.ToLower(temp2)
+	//
+	//	milTzLetter = temp1
+	//	milTzName = temp1 + temp2
+	//
+	//	equivalentTzStr, ok = milTzData.MilitaryTzToIanaTz(milTzName)
+	//
+	//	if !ok {
+	//		err = fmt.Errorf(ePrefix +
+	//			"Error: Input Parameter XValue 'rawTz' is INVALID!\n" +
+	//			"'rawTz' DOES NOT map to a valid IANA Time Zone.\n" +
+	//			"Military Time Zone Letter='%v'\n" +
+	//			"Military Time Zone Text Name='%v'", milTzLetter ,milTzName)
+	//		milTzLetter = ""
+	//		milTzName = ""
+	//		return milTzLetter, milTzName, equivalentIanaTimeZone, err
+	//	}
+	//}
+	//
+	//var err2 error
+	//
+	//equivalentIanaTimeZone, err2 = TimeZoneDefinition{}.NewFromTimeZoneName(
+	//	time.Now(),
+	//	equivalentTzStr,
+	//	TzConvertType.Relative())
+	//
+	//if err2 != nil {
+	//	err = fmt.Errorf(ePrefix +
+	//		"\nError returned by TimeZoneDefinition{}.NewFromTimeZoneName(equivalentTzStr)\n" +
+	//		"equivalentTzStr='%v'\n" +
+	//		"Error='%v'\n", equivalentTzStr, err2.Error())
+	//
+	//	milTzLetter = ""
+	//	milTzName = ""
+	//	equivalentIanaTimeZone = TimeZoneDefinition{}
+	//
+	//	return milTzLetter, milTzName, equivalentIanaTimeZone, err
+	//}
+	//
+	//err = nil
 
 	return milTzLetter, milTzName, equivalentIanaTimeZone, err
 }

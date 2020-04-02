@@ -1943,14 +1943,18 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 
 	}
 
-	err = tzSpec.SetTimeZone(
+	tzSpecUtil := timeZoneSpecUtility{}
+
+	err = tzSpecUtil.setTimeZone(
+		&tzSpec,
 		dateTime,
-		milTzLetter,
-		milTzName,
-		"Original Time Zone",
+		 milTzLetter,
+		 milTzName,
+		 "Original Time Zone",
 		"",
-		TzClass.OriginalTimeZone(),
+		 TzClass.OriginalTimeZone(),
 		ePrefix)
+
 
 	return tzSpec, err
 }

@@ -193,7 +193,7 @@ func TestMilitaryDateTzDto_New_01(t *testing.T) {
 		return
 	}
 
-	actualMilDateTimeGroup, err = milDatTzDto.GetCompactDateTimeGroup()
+	actualMilDateTimeGroup, err = milDatTzDto.GetOpenDateTimeGroup()
 
 	if err != nil {
 		t.Errorf("Error returned by milDatTzDto.GetOpenDateTimeGroup()\n" +
@@ -204,7 +204,7 @@ func TestMilitaryDateTzDto_New_01(t *testing.T) {
 	if expectedMilDateTimeGroup != actualMilDateTimeGroup {
 		t.Errorf("Error: Expected Military Date Time Group='%v'.\n" +
 			"Actual Military Date Time Group='%v'\n" +
-			"Military Time='%v'",
+			"Military Time='%v'\n",
 			expectedMilDateTimeGroup, actualMilDateTimeGroup, expectedMilTime.Format(fmtStr))
 	}
 	
