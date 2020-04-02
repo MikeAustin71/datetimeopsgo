@@ -626,7 +626,7 @@ func TestTimeZoneConversionType_08(t *testing.T) {
 	textString := "relative"
 
 	actualValue, err :=
-		TimeZoneConversionType(0).XParseString(textString, true)
+		TimeZoneConversionType(0).XParseString(textString, false)
 
 	if err != nil {
 		t.Errorf("Error returned by TimeZoneConversionType(0).XParseString(textString, true)\n" +
@@ -893,7 +893,7 @@ func TestTimeZoneType_08(t *testing.T) {
 
 func TestTimeZoneType_09(t *testing.T) {
 
-	textString := "UTC"
+	textString := "Iana"
 
 	actualValue, err :=
 		TimeZoneType(0).XParseString(textString, true)
@@ -912,7 +912,7 @@ func TestTimeZoneType_09(t *testing.T) {
 
 func TestTimeZoneType_10(t *testing.T) {
 
-	textString := "utc"
+	textString := "iana"
 
 	actualValue, err :=
 		TimeZoneType(0).XParseString(textString, false)
