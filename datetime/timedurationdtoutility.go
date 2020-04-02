@@ -633,13 +633,17 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumDays(
 
 	tDur2 := tDurDtoUtilX2.copyOut(tDur, ePrefix)
 
+	tDurDtoUtilX2.emptyTimeFields(
+		&tDur2,
+		ePrefix)
+
 	tDur2.CalcType = TDurCalcType(0).CumDays()
 
-	rd := int64(tDur2.TimeDuration)
-
-	if rd == 0 {
+	if tDur2.TimeDuration == 0 {
 		return nil
 	}
+
+	rd := int64(tDur2.TimeDuration)
 
 	if rd >= DayNanoSeconds {
 		tDur2.DateDays = rd / DayNanoSeconds
@@ -710,6 +714,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumHours(
 		tDur,
 		ePrefix)
 
+	tDurDtoUtilX2.emptyTimeFields(
+		&tDur2,
+		ePrefix)
+
 	tDur2.CalcType = TDurCalcType(0).CumHours()
 
 	if tDur2.TimeDuration == 0 {
@@ -773,6 +781,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMinutes(
 
 	tDur2 := tDurDtoUtilX2.copyOut(
 		tDur,
+		ePrefix)
+
+	tDurDtoUtilX2.emptyTimeFields(
+		&tDur2,
 		ePrefix)
 
 	tDur2.CalcType = TDurCalcType(0).CumMinutes()
@@ -854,7 +866,13 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMonths(
 		tDur,
 		ePrefix)
 
+	tDurDtoUtilX2.emptyTimeFields(&tDur2, ePrefix)
+
 	tDur2.CalcType = TDurCalcType(0).CumMonths()
+
+	if tDur2.TimeDuration == 0 {
+		return nil
+	}
 
 	err := tDurDtoUtilX2.calcMonthsFromDuration(&tDur2, ePrefix)
 
@@ -930,13 +948,17 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumSeconds(
 		tDur,
 		ePrefix)
 
+	tDurDtoUtilX2.emptyTimeFields(
+		&tDur2,
+		ePrefix)
+
 	tDur2.CalcType = TDurCalcType(0).CumSeconds()
 
-	rd := int64(tDur2.TimeDuration)
-
-	if rd == 0 {
+	if tDur2.TimeDuration == 0 {
 		return nil
 	}
+
+	rd := int64(tDur2.TimeDuration)
 
 	if rd >= SecondNanoseconds {
 		tDur2.Seconds = rd / SecondNanoseconds
@@ -995,7 +1017,13 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumWeeks(
 		tDur,
 		ePrefix)
 
+	tDurDtoUtilX2.emptyTimeFields(&tDur2, ePrefix)
+
 	tDur2.CalcType = TDurCalcType(0).CumWeeks()
+
+	if tDur2.TimeDuration == 0 {
+		return nil
+	}
 
 	rd := int64(tDur2.TimeDuration)
 
@@ -1081,13 +1109,17 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeGregorianYears(
 		tDur,
 		ePrefix)
 
+	tDurDtoUtilX2.emptyTimeFields(
+		&tDur2,
+		ePrefix)
+
 	tDur2.CalcType = TDurCalcType(0).GregorianYears()
 
-	rd := int64(tDur2.TimeDuration)
-
-	if rd == 0 {
+	if tDur2.TimeDuration == 0 {
 		return nil
 	}
+
+	rd := int64(tDur2.TimeDuration)
 
 	if rd >= GregorianYearNanoSeconds {
 		tDur2.Years = rd / GregorianYearNanoSeconds
@@ -1175,7 +1207,15 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeStdYearMth(
 						tDur,
 						ePrefix)
 
+	tDurDtoUtilX2.emptyTimeFields(
+		&tDur2,
+		ePrefix)
+
 	tDur2.CalcType = TDurCalcType(0).StdYearMth()
+
+	if tDur2.TimeDuration == 0 {
+		return nil
+	}
 
 	err := tDurDtoUtilX2.calcYearsFromDuration(&tDur2, ePrefix)
 

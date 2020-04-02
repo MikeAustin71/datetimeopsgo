@@ -10,13 +10,188 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest074()
+	mainTest{}.mainTest075()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest075() {
+	// Variation on:
+	//   TestDurationTriad_NewStartEndDateTzDto_01
+	// datetime\zztdurationtriad01_test.go
+
+	lineLen := 70
+	titles := []string{"mainTest.mainTest075()",
+		"TestDurationTriad_NewStartEndDateTzDto_01",
+		"DurationTriad and Time Duration Dto"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	dateTz1, err := dt.DateTzDto{}.NewDateTime(t1, dt.FmtDateTimeYrMDayFmtStr)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	dateTz2, err := dt.DateTzDto{}.NewDateTime(t2, dt.FmtDateTimeYrMDayFmtStr)
+
+	dur, err := dt.DurationTriad{}.NewStartEndDateTzDto(dateTz1, dateTz2)
+
+	if err != nil {
+		fmt.Printf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+		fmt.Printf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
+			t1OutStr, dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+		fmt.Printf("Error: Expected DurationTriad.EndTimeDateTz of %v. Instead, got %v ",
+			t1OutStr, dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	tOutDur := t2.Sub(t1)
+
+	if tOutDur != dur.BaseTime.TimeDuration {
+		fmt.Printf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.TimeDuration)
+	}
+
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+
+	outStr = dur.BaseTime.GetYearsMthsWeeksTimeStr()
+
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, outStr)
+	}
+
+	outStr = dur.BaseTime.GetDefaultDurationStr()
+
+	expected = "28082h4m2s"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected Default Duration: %v. Instead, got %v", expected, outStr)
+	}
+
+	outStr, _ = dur.BaseTime.GetCumDaysTimeStr()
+
+	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected WeekDays Duration: %v. Instead, got %v", expected, outStr)
+	}
+
+	outStr, err = dur.BaseTime.GetCumHoursTimeStr()
+
+	if err != nil {
+		fmt.Printf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). "+
+			"Error='%v'", err.Error())
+	}
+
+	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected Hours Duration: %v. Instead, got %v", expected, outStr)
+	}
+
+	outStr = dur.BaseTime.GetYrMthWkDayHrMinSecNanosecsStr()
+
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected YrMthWkDayHourSecNanosec Duration: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+	outStr, err = dur.BaseTime.GetCumWeeksDaysTimeStr()
+
+	if err != nil {
+		fmt.Printf("Error returned by dur.BaseTime.GetCumHoursTimeStr(). "+
+			"Error='%v'", err.Error())
+	}
+
+	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		fmt.Printf("Error - Expected Weeks WeekDays Duration: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+	loc, err := time.LoadLocation("Local")
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(\"Local\"). Error='%v'", err.Error())
+	}
+
+	t1Local := t1.In(loc)
+
+	if t1Local.Location().String() != dur.LocalTime.StartTimeDateTz.GetOriginalTzName() {
+		fmt.Printf("Expected Local Time Zone Location ='%v'.\n" +
+			"Actual Time Zone Location ='%v'.\n",
+			t1Local.Location().String(),
+			dur.LocalTime.StartTimeDateTz.GetOriginalTzName())
+	}
+
+	if !t1Local.Equal(dur.LocalTime.StartTimeDateTz.GetDateTimeValue()) {
+		fmt.Printf("Expected Local Start Time ='%v'.\n" +
+			"Actual Local Start Time ='%v'.\n",
+			t1Local.Location().String(),
+			dur.LocalTime.StartTimeDateTz.GetOriginalTzName())
+	}
+
+	t2Local := dur.LocalTime.StartTimeDateTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
+
+	if !t2Local.Equal(dur.LocalTime.EndTimeDateTz.GetDateTimeValue()) {
+		fmt.Printf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
+			t2Local.Format(dt.FmtDateTimeYrMDayFmtStr),
+			dur.LocalTime.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
+	}
+
+	loc, err = time.LoadLocation(dt.TZones.UTC())
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(TZones.UTC()). Error='%v'", err.Error())
+	}
+
+	t1UTC := t1.In(loc)
+
+	if !t1UTC.Equal(dur.UTCTime.StartTimeDateTz.GetDateTimeValue()) {
+		fmt.Printf("Expected UTC Start Time='%v'. Actual UTC Start Time='%v'. ",
+			t1UTC.Format(dt.FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.StartTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
+	}
+
+	t2UTC := dur.UTCTime.StartTimeDateTz.GetDateTimeValue().Add(dur.UTCTime.TimeDuration)
+
+	if !t2UTC.Equal(dur.UTCTime.EndTimeDateTz.GetDateTimeValue()) {
+		fmt.Printf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
+			t2UTC.Format(dt.FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
+	}
+
+
 }
 
 func (mt mainTest) mainTest074() {
