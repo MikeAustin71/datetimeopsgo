@@ -1796,6 +1796,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcTimeDurationAllocation(
 
 	tDur2 := tDurDtoUtil2.copyOut(tDur, ePrefix)
 
+	tDur2.CalcType = tDurCalcType
+
 	err := tDurDtoUtil2.calcTimeDurationAllocations(
 		&tDur2,
 		tDurCalcType,
@@ -1880,6 +1882,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcEndDateTimeToNow(
 	tDur2.TimeDuration =
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
 			tDur2.StartTimeDateTz.dateTimeValue)
+
+	tDur2.CalcType = tDur.CalcType
 
 	err = tDurDtoUtil2.calcTimeDurationAllocations(
 		&tDur2,
@@ -1990,6 +1994,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 				tDur2.StartTimeDateTz.dateTimeValue)
 
 	calcType := tDur.CalcType
+
+	tDur2.CalcType = calcType
 
 	err = tDurDtoUtil2.calcTimeDurationAllocations(
 		&tDur2,
@@ -2489,6 +2495,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
 					tDur2.StartTimeDateTz.dateTimeValue)
 
+	tDur2.CalcType = tDurCalcType
+
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
 	err = tDurDtoUtil2.calcTimeDurationAllocations(
@@ -2784,6 +2792,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
 			tDur2.StartTimeDateTz.dateTimeValue)
 
+	tDur2.CalcType = tDurCalcType
+
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
 	err = tDurDtoUtil2.calcTimeDurationAllocations(
@@ -3020,6 +3030,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationCalcTz(
 	}
 
 	tDur2.TimeDuration = duration
+
+	tDur2.CalcType = tDurCalcType
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
@@ -3259,6 +3271,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationDateDtoCalcTz(
 	}
 
 	tDur2.TimeDuration = duration
+
+	tDur2.CalcType = tDurCalcType
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
@@ -3529,6 +3543,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 	tDur2.TimeDuration =
 			tDur2.EndTimeDateTz.dateTimeValue.Sub(
 				tDur2.StartTimeDateTz.dateTimeValue)
+
+	tDur2.CalcType = tDurCalcType
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
