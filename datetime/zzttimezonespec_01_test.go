@@ -354,9 +354,9 @@ func TestTimeZoneSpecification_04 (t *testing.T) {
 
 	actualLocNameType := tzSpec.GetLocationNameType()
 
-	if LocNameType.ConvertibleTimeZone() != actualLocNameType {
+	if LocNameType.NonConvertibleTimeZone() != actualLocNameType {
 		t.Errorf("Error: Expected actualLocNameType=" +
-			"'LocNameType.ConvertibleTimeZone()'\n" +
+			"'LocNameType.NonConvertibleTimeZone()'\n" +
 			"Instead actualLocNameType='%v'\n", actualLocNameType.String())
 		return
 	}
