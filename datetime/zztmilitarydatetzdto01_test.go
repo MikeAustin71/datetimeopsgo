@@ -273,7 +273,7 @@ func TestMilitaryDateTzDto_NewNowZulu_01(t *testing.T) {
 	milDatTzDto, err := MilitaryDateTzDto{}.NewNowZulu()
 
 	if err != nil {
-		t.Errorf("Error returned by MilitaryDateTzDto{}.NewNow(militaryTz)\n" +
+		t.Errorf("Error returned by MilitaryDateTzDto{}.NewNowZulu(militaryTz)\n" +
 			"militaryTz='ZULU'\n" +
 			"Error='%v'\n", err.Error())
 		return
@@ -292,6 +292,10 @@ func TestMilitaryDateTzDto_NewFromDateTzDto_01(t *testing.T) {
 
 	tstr := "12/06/2019 03:12:00 -0600 CST"
 	fmtStr := "01/02/2006 15:04:05 -0700 MST"
+
+	// 630pm on January 6th, 2012 in Fayetteville NC would read '061830RJAN12'
+	// "12/06/2019 03:12:00 -0600 CST"
+	expectedCompactDateGroup := "060312SDEC19"
 
 	testTime, err := time.Parse(fmtStr, tstr)
 
@@ -323,9 +327,6 @@ func TestMilitaryDateTzDto_NewFromDateTzDto_01(t *testing.T) {
 		return
 	}
 
-	// 630pm on January 6th, 2012 in Fayetteville NC would read '061830RJAN12'
-	// "12/06/2019 03:12:00 -0600 CST"
-	expectedCompactDateGroup := "061512SDEC19"
 
 	var actualCompactDateGroup string
 

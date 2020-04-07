@@ -1,7 +1,7 @@
 === RUN   TestDateTzDto_AddDate_01
 --- PASS: TestDateTzDto_AddDate_01 (0.00s)
 === RUN   TestDateTzDto_AddDateToThis_01
---- PASS: TestDateTzDto_AddDateToThis_01 (0.00s)
+--- PASS: TestDateTzDto_AddDateToThis_01 (0.02s)
 === RUN   TestDateTzDto_AddDuration_01
 --- PASS: TestDateTzDto_AddDuration_01 (0.00s)
 === RUN   TestDateTzDto_AddDurationToThis_01
@@ -19,11 +19,11 @@
 === RUN   TestDateTzDto_CopyOut
 --- PASS: TestDateTzDto_CopyOut (0.00s)
 === RUN   TestDateTzDto_GetConvertibleTzStatusFlags_01
---- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.00s)
+--- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.11s)
 === RUN   TestDateTzDto_GetOriginalTagDescription_01
 --- PASS: TestDateTzDto_GetOriginalTagDescription_01 (0.00s)
 === RUN   TestDateTzDto_GetTimeDto_01
---- PASS: TestDateTzDto_GetTimeDto_01 (0.00s)
+--- PASS: TestDateTzDto_GetTimeDto_01 (0.03s)
 === RUN   TestDateTzDto_GetDateTimeTzNanoSecYMDDowText
 --- PASS: TestDateTzDto_GetDateTimeTzNanoSecYMDDowText (0.00s)
 === RUN   TestDateTzDto_NewDateTimeElements_01
@@ -49,7 +49,7 @@
 === RUN   TestDateTzDto_SetNewTimeZone_01
 --- PASS: TestDateTzDto_SetNewTimeZone_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeTz_01
---- PASS: TestDateTzDto_SetFromTimeTz_01 (0.01s)
+--- PASS: TestDateTzDto_SetFromTimeTz_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeDto
 --- PASS: TestDateTzDto_SetFromTimeDto (0.01s)
 === RUN   TestDateTzDto_Sub_01
@@ -369,14 +369,14 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.65s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.82s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.02s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.02s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.00s)
+--- PASS: TestDtfmtTestSuite (4.22s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.01s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.01s)
     --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.01s)
 === RUN   TestMilitaryDateTzDto_01
 --- PASS: TestMilitaryDateTzDto_01 (0.00s)
@@ -387,17 +387,9 @@ Processed 67 sample dates successfully!
 === RUN   TestMilitaryDateTzDto_NewNow_01
 --- PASS: TestMilitaryDateTzDto_NewNow_01 (0.00s)
 === RUN   TestMilitaryDateTzDto_NewNowZulu_01
-    TestMilitaryDateTzDto_NewNowZulu_01: zztmilitarydatetzdto01_test.go:276: Error returned by MilitaryDateTzDto{}.NewNow(militaryTz)
-        militaryTz='ZULU'
-        Error='MilitaryDateTzDto.NewNow() Error: Military Time Zone Text Name is INVALID!
-        Could NOT map geographical location description.
-        newMilDateDto.MilitaryTzTextName=''
-        '
---- FAIL: TestMilitaryDateTzDto_NewNowZulu_01 (0.00s)
+--- PASS: TestMilitaryDateTzDto_NewNowZulu_01 (0.00s)
 === RUN   TestMilitaryDateTzDto_NewFromDateTzDto_01
-    TestMilitaryDateTzDto_NewFromDateTzDto_01: zztmilitarydatetzdto01_test.go:340: Error: Expected Compact Date Group='061512SDEC19'.
-        Instead, Compact Date Group='060312SDEC19'
---- FAIL: TestMilitaryDateTzDto_NewFromDateTzDto_01 (0.00s)
+--- PASS: TestMilitaryDateTzDto_NewFromDateTzDto_01 (0.00s)
 === RUN   TestMilitaryDateTzDto_GeoLocation_01
 --- PASS: TestMilitaryDateTzDto_GeoLocation_01 (0.00s)
 === RUN   TestMilitaryDateTzDto_UtcOffset_01
@@ -578,13 +570,13 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.05s)
+--- PASS: TestTimeDuroTestSuite (0.07s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDto_01 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoCalc_01 (0.01s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoTzCalc_01 (0.01s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDto_01 (0.01s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTzCalc_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationCalc_01 (0.00s)
@@ -661,7 +653,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneDefinition_GetConvertibleTimeZoneName_02
 --- PASS: TestTimeZoneDefinition_GetConvertibleTimeZoneName_02 (0.00s)
 === RUN   TestTimeZoneDto_AddTimeDurationDto_01
---- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.00s)
+--- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.01s)
 === RUN   TestTimeZoneDto_AddMinusTimeDto
 --- PASS: TestTimeZoneDto_AddMinusTimeDto (0.00s)
 === RUN   TestTimeZoneDto_AddPlusTimeDto
@@ -697,15 +689,15 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneUtility_New_01
 --- PASS: TestTimeZoneUtility_New_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddDuration_01
---- PASS: TestTimeZoneUtility_NewAddDuration_01 (0.00s)
+--- PASS: TestTimeZoneUtility_NewAddDuration_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewAddDate_01
 --- PASS: TestTimeZoneUtility_NewAddDate_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewAddDateTime_01
---- PASS: TestTimeZoneUtility_NewAddDateTime_01 (0.00s)
+--- PASS: TestTimeZoneUtility_NewAddDateTime_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewAddTime_01
---- PASS: TestTimeZoneUtility_NewAddTime_01 (0.00s)
+--- PASS: TestTimeZoneUtility_NewAddTime_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewTimeAddDate_01
---- PASS: TestTimeZoneUtility_NewTimeAddDate_01 (0.00s)
+--- PASS: TestTimeZoneUtility_NewTimeAddDate_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewTimeAddTime_01
 --- PASS: TestTimeZoneUtility_NewTimeAddTime_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewTimeAddDateTime_01
@@ -730,4 +722,4 @@ Processed 67 sample dates successfully!
 --- FAIL: TestTimeZoneSpecification_04 (0.00s)
 FAIL
 exit status 1
-FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	10.733s
+FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	11.370s

@@ -765,7 +765,7 @@ func (milDtDto MilitaryDateTzDto) NewNowZulu() (MilitaryDateTzDto, error) {
 	var err error
 
 	newMilDateDto.MilitaryTzLetterName,
-	newMilDateDto.MilitaryTzLetterName,
+		newMilDateDto.MilitaryTzTextName,
 	newMilDateDto.EquivalentIanaTimeZone,
 	err = MilitaryDateTzDto{}.parseMilitaryTzNameAndLetter("Zulu")
 
@@ -792,7 +792,8 @@ func (milDtDto MilitaryDateTzDto) NewNowZulu() (MilitaryDateTzDto, error) {
 
 	milTzDat := MilitaryTimeZoneData{}
 
-	newMilDateDto.GeoLocationDesc, ok = milTzDat.MilitaryTzToLocation(newMilDateDto.MilitaryTzTextName)
+	newMilDateDto.GeoLocationDesc, ok =
+		milTzDat.MilitaryTzToLocation(newMilDateDto.MilitaryTzTextName)
 
 	if !ok {
 		return MilitaryDateTzDto{}, fmt.Errorf(ePrefix +
