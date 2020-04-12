@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest075()
+	mainTest{}.mainTest077()
 
 }
 
@@ -18,6 +18,242 @@ type mainTest struct {
 	input  string
 	output string
 }
+
+func (mt mainTest) mainTest077() {
+
+	lineLen := 70
+	titles := []string{"mainTest.mainTest077()",
+		"Testing Change To Standard Time",
+		"November 2, 2014"}
+
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	centralTz, err := time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(\"dt.TZones.America.Chicago()\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+
+	t1_1 := time.Date(
+		2014,
+		10,
+		31,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t1_1: '%v'\n", t1_1.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t1_2 := time.Date(
+		2014,
+		11,
+		1,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t1_2: '%v'\n", t1_2.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t1Dur := t1_2.Sub(t1_1)
+
+	fmt.Printf("t1Dur: '%v'\n", t1Dur)
+	fmt.Println("------------------------------------")
+	fmt.Println()
+	fmt.Println()
+
+	t2_1 := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t2_1: '%v'\n", t2_1.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t2_2 := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t2_2: '%v'\n", t2_2.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t2Dur := t2_2.Sub(t2_1)
+
+	fmt.Printf("t2Dur: '%v'\n", t2Dur)
+	fmt.Println("------------------------------------")
+	fmt.Println()
+	fmt.Println()
+
+	t3_1 := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	fmt.Printf("t3_1: '%v'\n", t3_1.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t3_2 := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	fmt.Printf("t3_2: '%v'\n", t3_2.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t3Dur := t3_2.Sub(t3_1)
+
+	fmt.Printf("t3Dur (UTC): '%v'\n", t3Dur)
+	fmt.Println("------------------------------------")
+	fmt.Println()
+	fmt.Println()
+
+}
+
+func (mt mainTest) mainTest076() {
+
+	lineLen := 70
+	titles := []string{"mainTest.mainTest076()",
+		"Testing Change to Daylight Savings Time",
+		"March 9, 2014"}
+
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	centralTz, err := time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(\"dt.TZones.America.Chicago()\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1_1 := time.Date(
+		2014,
+		3,
+		7,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t1_1: '%v'\n", t1_1.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t1_2 := time.Date(
+		2014,
+		3,
+		8,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t1_2: '%v'\n", t1_2.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t1Dur := t1_2.Sub(t1_1)
+
+	fmt.Printf("t1Dur: '%v'\n", t1Dur)
+	fmt.Println("------------------------------------")
+	fmt.Println()
+	fmt.Println()
+
+	t2_1 := time.Date(
+		2014,
+		3,
+		9,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t2_1: '%v'\n", t2_1.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t2_2 := time.Date(
+		2014,
+		3,
+		10,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("t2_2: '%v'\n", t2_2.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t2Dur := t2_2.Sub(t2_1)
+
+	fmt.Printf("t2Dur: '%v'\n", t2Dur)
+	fmt.Println("------------------------------------")
+	fmt.Println()
+	fmt.Println()
+
+	t3_1 := time.Date(
+		2014,
+		3,
+		9,
+		0,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	fmt.Printf("t3_1: '%v'\n", t3_1.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t3_2 := time.Date(
+		2014,
+		3,
+		10,
+		0,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	fmt.Printf("t3_2: '%v'\n", t3_2.Format(dt.DEFAULTDATETIMEFORMAT))
+
+	t3Dur := t3_2.Sub(t3_1)
+
+	fmt.Printf("t3Dur (UTC): '%v'\n", t3Dur)
+	fmt.Println("------------------------------------")
+	fmt.Println()
+	fmt.Println()
+
+}
+
 
 func (mt mainTest) mainTest075() {
 	// Variation on:

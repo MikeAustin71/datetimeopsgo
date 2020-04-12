@@ -28,7 +28,7 @@ var mTimeMathCalcModeToString = map[TimeMathCalcMode]string{
 // or algorithms, used in performing addition or subtraction
 // operations on date time values.
 //
-// The 'TimeMathCalcMode' addresses a problem which arises from
+// The 'TimeMathCalcMode' addresses an anomaly which arises from
 // adding or subtracting date times using 'days'. Depending on
 // whether the date times being added or subtracted exist in a
 // time zone which observes daylight savings time, the term
@@ -40,16 +40,26 @@ var mTimeMathCalcModeToString = map[TimeMathCalcMode]string{
 //
 // In this case, 'CST' stands for the Central Standard Time Zone
 // located in the USA. The Central Standard Time Zone observes
-// daylight savings. Generally, Central Standard Time transitions
+// daylight savings time. Generally, Central Standard Time transitions
 // to Central Daylight time ('CDT') in March. Following the example
 // above, Central Standard Time transitioned to Central Daylight time
 // on Sunday, March 9, 2014. Likewise, Central Daylight Time transitioned
-// to Central Standard Time on Sunday, November 2, 2019.
+// to Central Standard Time ('CST') on Sunday, November 2, 2014.
 //
 // The day of March 9, 2014, the day that Central Standard Time transitioned
 // to Central Daylight Time, had only 23 hours. At 2:00AM, Sunday, March 9,
 // 2014, clocks were moved forward 1-hour to 3:00AM (Spring Forward!). The 1-hour
-// time span from 2:00AM to 3:00AM was effectively deleted.
+// time span from 2:00AM to 3:00AM was effectively deleted. This means that
+// when using the Golang time package to compute time duration from
+// 2014-03-09 00:00:00 CST to 2014-03-10 00:00:00 CDT, only 23-hours had
+//elapsed.
+//
+// A similar analysis performed on the day Central Daylight Time ('CDT)
+// transitioned to Central Standard Time ('CST') will show a day with
+// a duration of 25-hours. On Sunday, November 2, 2014, Central Daylight
+// Time ('CDT') transitioned to Central Standard Time ('CST'). Using the
+// Golang time package to compute duration from 2014-11-02 00:00:00 CDT
+// to 2014-11-03 00:00:00 CST will yield 25-hours.
 //
 // With that background consider the datetime mathematics for our example:
 //      "2014-02-15 19:54:30.038175584 -0600 CST"
