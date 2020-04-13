@@ -1698,7 +1698,7 @@ func (durT DurationTriad) NewStartDateTzDuration(
 //
 //
 //  du, err := DurationTriad{}.NewStartEndDateTzDto(
-//                             startTimeDateTz,
+//                             startDateTimeTz,
 //                             endTimeDateTz)
 //
 func (durT DurationTriad) NewStartEndDateTzDto(
@@ -3883,10 +3883,10 @@ func (durT *DurationTriad) SetAutoEnd() error {
 	endDateTime := time.Now().Local()
 
 	calcType := durT.BaseTime.CalcType
-	startDateTime := durT.BaseTime.StartTimeDateTz.GetDateTimeValue()
+	startDateTime := durT.BaseTime.startDateTimeTz.GetDateTimeValue()
 
-	tzLocName := durT.BaseTime.StartTimeDateTz.GetOriginalTzName()
-	fmtStr := durT.BaseTime.StartTimeDateTz.GetDateTimeFmt()
+	tzLocName := durT.BaseTime.startDateTimeTz.GetOriginalTzName()
+	fmtStr := durT.BaseTime.startDateTimeTz.GetDateTimeFmt()
 
 	durTUtil := durationTriadUtility{}
 
@@ -3908,7 +3908,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 // Time values in the 'timeDto' parameter are first converted to negative
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time. As a result, true values
-// for 'StartTimeDateTz', 'EndTimeDateTz' and 'TimeDuration' are stored in
+// for 'startDateTimeTz', 'EndTimeDateTz' and 'TimeDuration' are stored in
 // the DurationTriad data structure.
 //
 // Time Zone Location is extracted from input parameter, 'endDateTime'. The extracted
@@ -4067,7 +4067,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time.
 //
-// As a result, true values for StartTimeDateTz, EndTimeDateTz and TimeDuration
+// As a result, true values for startDateTimeTz, EndTimeDateTz and TimeDuration
 // are stored in the DurationTriad data structure.
 //
 // Input parameter, 'timeZoneLocation', is applied to both the starting and ending
@@ -4306,7 +4306,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time.
 //
-// As a result, true values for StartTimeDateTz, EndTimeDateTz and TimeDuration
+// As a result, true values for startDateTimeTz, EndTimeDateTz and TimeDuration
 // are stored in the DurationTriad data structure.
 //
 // Input parameter, 'timeZoneLocation', is applied to both the starting and ending
@@ -6091,12 +6091,12 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 
 // SetStartTimePlusTimeDtoTz - Calculate duration values based on a Starting Date Time and
 // time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
-// in the 'times' parameter. The 'timeDto' parameter is added to 'StartTimeDateTz'.
+// in the 'times' parameter. The 'timeDto' parameter is added to 'startDateTimeTz'.
 //
 // Values in the 'timeDto' parameter are automatically converted to positive numeric
-// values before being added to 'StartTimeDateTz'.
+// values before being added to 'startDateTimeTz'.
 //
-// True values for StartTimeDateTz, EndTimeDateTz and TimeDuration are then stored in
+// True values for startDateTimeTz, EndTimeDateTz and TimeDuration are then stored in
 // the DurationTriad data structure.
 //
 // Time Zone Location is extracted from input parameter, 'startDateTime'. The extracted

@@ -173,7 +173,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_01() {
 		Calculated End Date:  2017-04-30 22:58:32.628149653 -0500 CDT
 			Expected End Date:  2017-04-30 22:58:32.628149653 -0500 CDT
 		Time Duration Dto
-				 StartTimeDateTz:  2014-02-15 19:54:30.987654321 -0600 CST
+				 startDateTimeTz:  2014-02-15 19:54:30.987654321 -0600 CST
 					 EndTimeDateTz:  2017-04-30 22:58:32.628149653 -0500 CDT
 						TimeDuration:  101095441640495332
 								CalcType:  StdYearMthCalc
@@ -269,13 +269,13 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 
 	assert.Nil(suite.T(), err, "Error NewAutoEnd() :")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetOriginalTzName(),
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.startDateTimeTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.True(suite.T(), suite.t1USCentral.Equal(t1Dur.StartTimeDateTz.GetDateTimeValue()), "Error: Expected Starting Date Time NOT EQUAL to t1Dur.StartTimeDateTz!")
+	assert.True(suite.T(), suite.t1USCentral.Equal(t1Dur.startDateTimeTz.GetDateTimeValue()), "Error: Expected Starting Date Time NOT EQUAL to t1Dur.startDateTimeTz!")
 
 	cLoc, _ := time.LoadLocation(TZones.US.Central())
 
@@ -295,15 +295,15 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoStart_01() {
 
 	assert.Nil(suite.T(), err, "Error NewAutoStart() :")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.StartTimeDateTz.GetOriginalTzName(),
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.startDateTimeTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(),
-		suite.fmtStr == t1Dur.StartTimeDateTz.GetDateTimeFmt(),
-		"Error: Expected suite.fmtSTr to EQUAL t1Dur.StartTimeDateTz.DateTimeFmt. THEY ARE NOT EQUAL!")
+		suite.fmtStr == t1Dur.startDateTimeTz.GetDateTimeFmt(),
+		"Error: Expected suite.fmtSTr to EQUAL t1Dur.startDateTimeTz.DateTimeFmt. THEY ARE NOT EQUAL!")
 
 	err = t1Dur.SetAutoEnd()
 
@@ -1001,9 +1001,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01(
 
 	s := fmt.Sprintf("Expected StartDateTime Time Zone='%v'. "+
 		"Instead StartDateTime TimeZone='%v'",
-		TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetOriginalTzName())
+		TZones.Asia.Tokyo(), tDur.startDateTimeTz.GetOriginalTzName())
 
-	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.StartTimeDateTz.GetOriginalTzName(), s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.startDateTimeTz.GetOriginalTzName(), s)
 
 	s = fmt.Sprintf("Expected EndDateTime Time Zone='%v'. "+
 		"Instead EndDateTime TimeZone='%v'",
@@ -1011,9 +1011,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01(
 
 	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetOriginalTzName(), s)
 
-	assert.True(suite.T(), suite.t1AsiaTokyo.Equal(tDur.StartTimeDateTz.GetDateTimeValue()),
+	assert.True(suite.T(), suite.t1AsiaTokyo.Equal(tDur.startDateTimeTz.GetDateTimeValue()),
 		"Error: Expected StartDateTime (suite.t1AsiaTokyo) NOT EQUAL " +
-		"to t1Dur.StartTimeDateTz!")
+		"to t1Dur.startDateTimeTz!")
 
 	testMax := time.Duration(int64(2) * int64(time.Second))
 
@@ -1156,7 +1156,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 		Results Cumulative Months:
 		3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds
 		Time Duration Dto
-				 StartTimeDateTz:  2018-03-06 20:02:18.792489279 -0600 CST
+				 startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
 					 EndTimeDateTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 						TimeDuration:  10346806666132070
 								CalcType:  CumMonthsCalc
@@ -1476,7 +1476,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
 		Results Cumulative Weeks:
 		17-Weeks 0-WeekDays 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds
 		Time Duration Dto
-				 StartTimeDateTz:  2018-03-06 20:02:18.792489279 -0600 CST
+				 startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
 					 EndTimeDateTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 						TimeDuration:  10346806666132070
 								CalcType:  CumWeeksCalc
@@ -1797,7 +1797,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_01() {
 		Results Cumulative Days:
 		119-Days 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds
 		Time Duration Dto
-		     StartTimeDateTz:  2018-03-06 20:02:18.792489279 -0600 CST
+		     startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
 		       EndTimeDateTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 		        TimeDuration:  10346806666132070
 		            CalcType:  CumDaysCalc

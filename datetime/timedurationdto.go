@@ -35,11 +35,11 @@ import (
 //   MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 type TimeDurationDto struct {
-	StartTimeDateTz      DateTzDto        // Starting Date Time with Time Zone info
-	EndTimeDateTz        DateTzDto        // Ending Date Time with Time Zone info
-	TimeDuration         time.Duration    // Elapsed time or duration between starting and ending date time
-	CalcType             TDurCalcType     // The calculation Type. This controls the allocation of time
-	                                      // duration over years, months, weeks, days and hours.
+	startDateTimeTz DateTzDto     // Starting Date Time with Time Zone info
+	EndTimeDateTz   DateTzDto     // Ending Date Time with Time Zone info
+	TimeDuration    time.Duration // Elapsed time or duration between starting and ending date time
+	CalcType        TDurCalcType  // The calculation Type. This controls the allocation of time
+	// duration over years, months, weeks, days and hours.
 	timeMathCalcMode     TimeMathCalcMode // The Time Math algorithm used to calculate time duration
 	Years                int64            // Number of Years
 	YearsNanosecs        int64            // Number of Years in Nanoseconds
@@ -65,7 +65,7 @@ type TimeDurationDto struct {
 	TotSubSecNanoseconds int64            // Equivalent Nanoseconds for Milliseconds + Microseconds + Nanoseconds
 	TotDateNanoseconds   int64            // Equal to Years + Months + DateDays in equivalent nanoseconds.
 	TotTimeNanoseconds   int64            // Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
-	                                      // in equivalent nanoseconds
+	// in equivalent nanoseconds
 
 	lock *sync.Mutex // Used to enforce thread safe operations
 }
@@ -1781,6 +1781,58 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 	return str
 }
 
+// GetTypeStartDateTime - Returns the starting date time for this
+// duration as a Type, 'time.Time'.  This value is extracted from
+// private member variable TimeDurationDto.startDateTimeTz.
+func (tDur *TimeDurationDto) GetTypeStartDateTime() time.Time {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	return tDur.startDateTimeTz.dateTimeValue
+
+}
+
+// GetTypeStartDateTimeSting - Returns the starting date time for
+// this duration as a string.
+//
+func (tDur *TimeDurationDto) GetTypeStartDateTimeSting() string {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	return tDur.startDateTimeTz.String()
+}
+
+// GetTypeStartTimeDateTz - Returns the starting date time for this
+// duration as a Type,'DateTzDTo'. This value is stored in private
+// member variable TimeDurationDto.startDateTimeTz.
+func (tDur *TimeDurationDto) GetTypeStartDateTimeTz() DateTzDto {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	return tDur.startDateTimeTz
+}
+
+
+
+
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of time duration
 // as Years, Months, DateDays, Hours, Minutes, Seconds, Milliseconds,
 // Microseconds and Nanoseconds. At a minimum, only Hours, Minutes,
@@ -2401,7 +2453,7 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 
 	timeDur2.CalcType = TDurCalc.None()
 
-	timeDur2.StartTimeDateTz = DateTzDto{}.New()
+	timeDur2.startDateTimeTz = DateTzDto{}.New()
 
 	timeDur2.EndTimeDateTz = DateTzDto{}.New()
 
@@ -6488,7 +6540,7 @@ func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(
 // This is useful in stop watch applications.
 //
 // The Time Zone Location is derived from the existing starting date
-// time, 'tDur.StartTimeDateTz'.  The Calculation type is taken from
+// time, 'tDur.startDateTimeTz'.  The Calculation type is taken from
 // the existing calculation type, 'tDur.CalcType'.
 //
 // __________________________________________________________________________

@@ -265,9 +265,9 @@ func TestTimeDurationDto_NewStartTimeDuration_01(t *testing.T) {
 
 	// tDto.SetStartTimeDurationTz(t1, t12Dur)
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -309,9 +309,9 @@ func TestTimeDurationDto_NewStartEndTimes_01(t *testing.T) {
 		return
 	}
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
-		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.startDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -426,9 +426,9 @@ func TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01(t *testing.T) {
 		return
 	}
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
-		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.startDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -544,9 +544,9 @@ func TestTimeDurationDto_NewStartEndDateTzDtoTz_01(t *testing.T) {
 		return
 	}
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
-		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.startDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -664,9 +664,9 @@ func TestTimeDurationDto_NewStartEndDateTzDto_01(t *testing.T) {
 		return
 	}
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
-		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.startDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -775,9 +775,9 @@ func TestTimeDurationDto_NewStartTimeMinusTime_01(t *testing.T) {
 		return
 	}
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -824,9 +824,9 @@ func TestTimeDurationDto_NewStartTimePlusTime_01(t *testing.T) {
 		return
 	}
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -876,9 +876,9 @@ func TestTimeDurationDto_SetStartEndTimes(t *testing.T) {
 			"Error='%v' ", err.Error())
 	}
 
-	if t1OutStr != tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
-		t.Errorf("Error: Expected DurationTriad.StartTimeDateTz of %v. Instead, got %v ",
-			t1OutStr, tDto.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.startDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != tDto.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -1091,9 +1091,9 @@ func TestTimeDurationDto_SetStartTimePlusTime(t *testing.T) {
 			"Error='%v'", err.Error())
 	}
 
-	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
-			t1OutStr, dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+			t1OutStr, dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -1143,9 +1143,9 @@ func TestTimeDurationDto_SetStartTimeMinusTime(t *testing.T) {
 			"Error='%v'", err.Error())
 	}
 
-	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
-			t1OutStr, dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+			t1OutStr, dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {
@@ -1193,9 +1193,9 @@ func TestTimeDurationDto_SetStartTimeDuration(t *testing.T) {
 			"Error='%v'", err.Error())
 	}
 
-	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr) {
+	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
-			t1OutStr, dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(fmtstr))
+			t1OutStr, dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
 	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(fmtstr) {

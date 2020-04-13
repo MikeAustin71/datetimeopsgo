@@ -46,7 +46,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyIn(
 
 	tDurDtoUtil2.empty(tDur1, ePrefix)
 
-	tDur1.StartTimeDateTz = tDur2.StartTimeDateTz.CopyOut()
+	tDur1.startDateTimeTz = tDur2.startDateTimeTz.CopyOut()
 	tDur1.EndTimeDateTz = tDur2.EndTimeDateTz.CopyOut()
 	tDur1.TimeDuration = tDur2.TimeDuration
 	tDur1.CalcType = tDur2.CalcType
@@ -101,7 +101,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyOut(
 
 	t2Dur := TimeDurationDto{}
 
-	t2Dur.StartTimeDateTz = tDur.StartTimeDateTz.CopyOut()
+	t2Dur.startDateTimeTz = tDur.startDateTimeTz.CopyOut()
 	t2Dur.EndTimeDateTz = tDur.EndTimeDateTz.CopyOut()
 	t2Dur.TimeDuration = tDur.TimeDuration
 	t2Dur.CalcType = tDur.CalcType
@@ -140,7 +140,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyOut(
 // Calculates 'tDur.DateDays', 'tDur.DateDaysNanosecs', 'tDur.Weeks', 'tDur.WeeksNanosecs',
 // 'tDur.WeekDays' and 'tDur.WeekDaysNanosecs'.
 //
-// NOTE: (1) Before calling this method, ensure that TimeDurationDto.StartTimeDateTz,
+// NOTE: (1) Before calling this method, ensure that TimeDurationDto.startDateTimeTz,
 //           TimeDurationDto.EndTimeDateTz and tDur.TimeDuration are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following methods are called
@@ -213,11 +213,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcDateDaysWeeksFromDuration(
 }
 
 // calcHoursMinSecs - Calculates Hours, Minute, and
-// Seconds of duration using startTime, tDur.StartTimeDateTz,
+// Seconds of duration using startTime, tDur.startDateTimeTz,
 // and endTime, tDur.EndTimeDateTz.DateTime.
 //
 //
-// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+// NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
 //           TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
 //           are properly initialized.
 //
@@ -296,7 +296,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcHoursMinSecs(
 // calcNanoseconds - Calculates 'tDur.Milliseconds', 'tDur.MillisecondsNanosecs',
 // 'tDur.Microseconds', 'tDur.MicrosecondsNanosecs',  and 'tDur.Nanoseconds'.
 //
-// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+// NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
 //           TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
 //           are properly initialized.
 //
@@ -372,10 +372,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcNanoseconds(
 }
 
 // calcMonthsFromDuration - calculates the months duration
-// using the start and end dates, 'tDur.StartTimeDateTz' and
+// using the start and end dates, 'tDur.startDateTimeTz' and
 // 'tDur.EndTimeDateTz.DateTime'.
 //
-// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+// NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
 //           tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following method is called
@@ -406,7 +406,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	startTime := tDur.StartTimeDateTz.dateTimeValue
+	startTime := tDur.startDateTimeTz.dateTimeValue
 	endTime := tDur.EndTimeDateTz.dateTimeValue
 
 	if endTime.Before(startTime) {
@@ -467,7 +467,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 // calcSummaryTimeElements - Calculates totals for Date, Time and
 // sub-second nanoseconds.
 //
-// NOTE: (1) Before calling this method, ensure that tDur.StartTimeDateTz,
+// NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
 //           TimeDurationDto.EndTimeDateTz and TimeDurationDto.TimeDuration
 //           are properly initialized.
 //
@@ -1259,10 +1259,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeStdYearMth(
 }
 
 // calcYearsFromDuration - Calculates number of years duration and nanoseconds
-// represented by years duration using input parameters 'tDur.StartTimeDateTz' and
+// represented by years duration using input parameters 'tDur.startDateTimeTz' and
 // 'tDur.EndTimeDateTz'.
 //
-// NOTE: Before calling this method, ensure that tDur.StartTimeDateTz,
+// NOTE: Before calling this method, ensure that tDur.startDateTimeTz,
 //       tDur.EndTimeDateTz and tDur.TimeDuration are properly initialized.
 //
 func (tDurDtoUtil *timeDurationDtoUtility) calcYearsFromDuration(
@@ -1291,7 +1291,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcYearsFromDuration(
 
 	years := int64(0)
 	yearNanosecs := int64(0)
-	startTime := tDur.StartTimeDateTz.dateTimeValue
+	startTime := tDur.startDateTimeTz.dateTimeValue
 	endTime := tDur.EndTimeDateTz.dateTimeValue
 
 	if endTime.Before(startTime) {
@@ -1362,7 +1362,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) empty(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	tDur.StartTimeDateTz = DateTzDto{}
+	tDur.startDateTimeTz = DateTzDto{}
 	tDur.EndTimeDateTz = DateTzDto{}
 	tDur.TimeDuration = time.Duration(0)
 	tDur.CalcType = TDurCalcType(0).None()
@@ -1519,7 +1519,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) equal(
 		t2Dur.lock = new(sync.Mutex)
 	}
 
-	if !t1Dur.StartTimeDateTz.Equal(t2Dur.StartTimeDateTz) ||
+	if !t1Dur.startDateTimeTz.Equal(t2Dur.startDateTimeTz) ||
 		!t1Dur.EndTimeDateTz.Equal(t2Dur.EndTimeDateTz) ||
 		t1Dur.TimeDuration != t2Dur.TimeDuration ||
 		t1Dur.CalcType != t2Dur.CalcType ||
@@ -1608,7 +1608,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isEmpty(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if tDur.StartTimeDateTz.IsEmpty() &&
+	if tDur.startDateTimeTz.IsEmpty() &&
 		tDur.EndTimeDateTz.IsEmpty() &&
 		tDur.TimeDuration == 0 &&
 		tDur.Years == 0 &&
@@ -1687,7 +1687,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if tDur.StartTimeDateTz.dateTimeValue.IsZero() &&
+	if tDur.startDateTimeTz.dateTimeValue.IsZero() &&
 		tDur.EndTimeDateTz.dateTimeValue.IsZero() {
 
 		return fmt.Errorf(ePrefix +
@@ -1695,7 +1695,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 
 	}
 
-	if tDur.EndTimeDateTz.dateTimeValue.Before(tDur.StartTimeDateTz.dateTimeValue) {
+	if tDur.EndTimeDateTz.dateTimeValue.Before(tDur.startDateTimeTz.dateTimeValue) {
 		return fmt.Errorf(ePrefix +
 			"\nError: End Time is Before Start Time!\n")
 	}
@@ -1817,7 +1817,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcTimeDurationAllocation(
 // This is useful in stop watch applications.
 //
 // The Time Zone Location is derived from the existing starting date
-// time, 'tDur.StartTimeDateTz'.  The Calculation type is taken from
+// time, 'tDur.startDateTimeTz'.  The Calculation type is taken from
 // the existing calculation type, 'tDur.CalcType'.
 //
 // Input Parameter
@@ -1861,16 +1861,16 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcEndDateTimeToNow(
 
 	dtMech := DTimeMechanics{}
 
-	dateTimeFmtStr := dtMech.PreProcessDateFormatStr(tDur.StartTimeDateTz.dateTimeFmt)
+	dateTimeFmtStr := dtMech.PreProcessDateFormatStr(tDur.startDateTimeTz.dateTimeFmt)
 
 	dTzUtil := dateTzDtoUtility{}
 
-	tDur2.StartTimeDateTz = dTzUtil.copyOut(&tDur.StartTimeDateTz)
+	tDur2.startDateTimeTz = dTzUtil.copyOut(&tDur.startDateTimeTz)
 
 	err := dTzUtil.setFromTzDef(
 		&tDur2.EndTimeDateTz,
 		time.Now().UTC(),
-		tDur2.StartTimeDateTz.timeZone.CopyOut(),
+		tDur2.startDateTimeTz.timeZone.CopyOut(),
 		TzConvertType.Relative(),
 		dateTimeFmtStr,
 		ePrefix)
@@ -1881,7 +1881,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcEndDateTimeToNow(
 
 	tDur2.TimeDuration =
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
-			tDur2.StartTimeDateTz.dateTimeValue)
+			tDur2.startDateTimeTz.dateTimeValue)
 
 	tDur2.CalcType = tDur.CalcType
 
@@ -1949,11 +1949,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 			"Validation Error='%v'\n", err.Error())
 	}
 
-	startDateTime := tDur.StartTimeDateTz.dateTimeValue
+	startDateTime := tDur.startDateTimeTz.dateTimeValue
 
 	endDateTime := time.Now().Local()
 
-	tzDef := tDur.StartTimeDateTz.timeZone.CopyOut()
+	tzDef := tDur.startDateTimeTz.timeZone.CopyOut()
 
 	dtMech := DTimeMechanics{}
 
@@ -1963,10 +1963,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 
 	tDur2.lock = new(sync.Mutex)
 
-	dateTimeFmtStr := dtMech.PreProcessDateFormatStr(tDur.StartTimeDateTz.dateTimeFmt)
+	dateTimeFmtStr := dtMech.PreProcessDateFormatStr(tDur.startDateTimeTz.dateTimeFmt)
 
 	err = dTzUtil.setFromTzDef(
-		&tDur2.StartTimeDateTz,
+		&tDur2.startDateTimeTz,
 		startDateTime,
 		tzDef,
 		TzConvertType.Relative(),
@@ -1991,7 +1991,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 
 	tDur2.TimeDuration =
 			tDur2.EndTimeDateTz.dateTimeValue.Sub(
-				tDur2.StartTimeDateTz.dateTimeValue)
+				tDur2.startDateTimeTz.dateTimeValue)
 
 	calcType := tDur.CalcType
 
@@ -2254,7 +2254,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 		return err
 	}
 
-	tDur2.StartTimeDateTz, err =
+	tDur2.startDateTimeTz, err =
 		dTzUtil.addMinusTimeDto(
 					&tDur2.EndTimeDateTz,
 					timeCalcMode,
@@ -2267,7 +2267,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	tDur2.TimeDuration =
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
-				tDur2.StartTimeDateTz.dateTimeValue)
+				tDur2.startDateTimeTz.dateTimeValue)
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
@@ -2468,7 +2468,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 	dTzUtil := dateTzDtoUtility{}
 
 	err := dTzUtil.setFromTimeTzName(
-		&tDur2.StartTimeDateTz,
+		&tDur2.startDateTimeTz,
 		startDateTime,
 		TzConvertType.Relative(),
 		timeZoneLocation,
@@ -2493,7 +2493,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 
 	tDur2.TimeDuration =
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
-					tDur2.StartTimeDateTz.dateTimeValue)
+					tDur2.startDateTimeTz.dateTimeValue)
 
 	tDur2.CalcType = tDurCalcType
 
@@ -2765,7 +2765,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 	}
 
 	err = dTzUtil.setFromTzDef(
-		&tDur2.StartTimeDateTz,
+		&tDur2.startDateTimeTz,
 		startDateTimeTz.dateTimeValue,
 		tZoneDef,
 		TzConvertType.Relative(),
@@ -2790,7 +2790,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 
 	tDur2.TimeDuration =
 		tDur2.EndTimeDateTz.dateTimeValue.Sub(
-			tDur2.StartTimeDateTz.dateTimeValue)
+			tDur2.startDateTimeTz.dateTimeValue)
 
 	tDur2.CalcType = tDurCalcType
 
@@ -3006,7 +3006,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationCalcTz(
 	dTzUtil := dateTzDtoUtility{}
 
 	err := dTzUtil.setFromTimeTzName(
-		&tDur2.StartTimeDateTz,
+		&tDur2.startDateTimeTz,
 		startDateTime,
 		TzConvertType.Relative(),
 		timeZoneLocation,
@@ -3247,7 +3247,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationDateDtoCalcTz(
 	dTzUtil := dateTzDtoUtility{}
 
 	err := dTzUtil.setFromTimeTzName(
-		&tDur2.StartTimeDateTz,
+		&tDur2.startDateTimeTz,
 		startDateTime,
 		TzConvertType.Relative(),
 		timeZoneLocation,
@@ -3523,7 +3523,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 	dTzUtil := dateTzDtoUtility{}
 
 	err = dTzUtil.setFromTimeTzName(
-		&tDur2.StartTimeDateTz,
+		&tDur2.startDateTimeTz,
 		startDateTime,
 		TzConvertType.Relative(),
 		timeZoneLocation,
@@ -3535,14 +3535,14 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 	}
 
 	tDur2.EndTimeDateTz, err = dTzUtil.addPlusTimeDto(
-															&tDur2.StartTimeDateTz,
+															&tDur2.startDateTimeTz,
 															timeCalcMode,
 															plusTimeDto,
 															ePrefix)
 
 	tDur2.TimeDuration =
 			tDur2.EndTimeDateTz.dateTimeValue.Sub(
-				tDur2.StartTimeDateTz.dateTimeValue)
+				tDur2.startDateTimeTz.dateTimeValue)
 
 	tDur2.CalcType = tDurCalcType
 

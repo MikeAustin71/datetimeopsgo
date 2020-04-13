@@ -2536,9 +2536,10 @@ func (mc MainCodeExamples) mainCodeEx014() {
 		return
 	}
 
-	if t1OutStr != dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr) {
-		fmt.Printf("Error- Expected Start Time %v. Instead, got %v.\n",
-			t1OutStr, dur.BaseTime.StartTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
+	if t1OutStr != dur.BaseTime.GetTypeStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr) {
+		fmt.Printf("Error- Expected Start Time %v.\n" +
+			"Instead, got %v.\n",
+			t1OutStr, dur.BaseTime.GetTypeStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 
@@ -2646,8 +2647,10 @@ func (mc MainCodeExamples) mainCodeEx010() {
 		return
 	}
 
+	startTimeTz := dur.GetTypeStartDateTimeTz()
+
 	fmt.Println("Expected Start Date Time: ", t1OutStr)
-	fmt.Println("  Actual Start Date Time: ", dur.StartTimeDateTz.String())
+	fmt.Println("  Actual Start Date Time: ", startTimeTz.String())
 	fmt.Println("-----------------------------------------")
 	fmt.Println("  Expected End Date Time: ", t2OutStr)
 	fmt.Println("    Actual End Date Time: ", dur.EndTimeDateTz.String())
@@ -2713,9 +2716,11 @@ func (mc MainCodeExamples) mainCodeEx008() {
 
 	dOut := du.BaseTime.GetYearMthDaysTimeAbbrvStr()
 
-	fmt.Println("Expected: ", expected)
-	fmt.Println("  Actual: ", dOut)
-	fmt.Println("Start Time: ", du.BaseTime.StartTimeDateTz.String())
+	startTimeTz := du.BaseTime.GetTypeStartDateTimeTz()
+
+	fmt.Println("  Expected: ", expected)
+	fmt.Println("    Actual: ", dOut)
+	fmt.Println("Start Time: ", startTimeTz.String())
 	fmt.Println("  End Time: ", du.BaseTime.EndTimeDateTz.String())
 
 }

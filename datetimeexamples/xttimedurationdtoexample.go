@@ -113,7 +113,7 @@ func ExampleTimeDuration003() {
 // data fields.
 func PrintTimeDurationDto(tDur dt.TimeDurationDto) {
 
-	fmt.Println("     StartTimeDateTz: ", tDur.StartTimeDateTz.String())
+	fmt.Println("     startTimeDateTz: ", tDur.GetTypeStartDateTimeSting())
 	fmt.Println("       EndTimeDateTz: ", tDur.EndTimeDateTz.String())
 	fmt.Println("        TimeDuration: ", int64(tDur.TimeDuration))
 	fmt.Println("            CalcType: ", tDur.CalcType.String())

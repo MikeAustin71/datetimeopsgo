@@ -142,7 +142,7 @@ func (durCalc TDurCalcType) None() TDurCalcType {
 // data fields in the TimeDurationDto	structure are populated.
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).StdYearMth()
@@ -205,7 +205,7 @@ func (durCalc TDurCalcType) StdYearMth() TDurCalcType {
 // are populated in the TimeDurationDto structure:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMonths()
@@ -264,7 +264,7 @@ func (durCalc TDurCalcType) CumMonths() TDurCalcType {
 // populated in the TimeDurationDto structure:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumWeeks()
@@ -324,7 +324,7 @@ func (durCalc TDurCalcType) CumWeeks() TDurCalcType {
 // populated in the TimeDurationDto structure:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumDays()
@@ -386,7 +386,7 @@ func (durCalc TDurCalcType) CumDays() TDurCalcType {
 // are populated in the TimeDurationDto structure:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumHours()
@@ -448,7 +448,7 @@ func (durCalc TDurCalcType) CumHours() TDurCalcType {
 // are populated:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMinutes()
@@ -510,7 +510,7 @@ func (durCalc TDurCalcType) CumMinutes() TDurCalcType {
 // populated:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumSeconds()
@@ -571,7 +571,7 @@ func (durCalc TDurCalcType) CumSeconds() TDurCalcType {
 // For the 'CumMilliseconds' time duration calculation type, the following data fields are populated:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMilliseconds()
@@ -634,7 +634,7 @@ func (durCalc TDurCalcType) CumMilliseconds() TDurCalcType {
 // are populated:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMicroseconds()
@@ -697,7 +697,7 @@ func (durCalc TDurCalcType) CumMicroseconds() TDurCalcType {
 // are populated:
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumNanoseconds()
@@ -763,7 +763,7 @@ func (durCalc TDurCalcType) CumNanoseconds() TDurCalcType {
 //
 //
 // type TimeDurationDto struct {
-//     StartTimeDateTz             populated
+//     startDateTimeTz             populated
 //     EndTimeDateTz               populated
 //     TimeDuration                populated
 //     CalcType                    = TDurCalcType(0).GregorianYears()
