@@ -35,36 +35,36 @@ import (
 //   MikeAustin71\datetimeopsgo\datetime\timedurationdto.go
 //
 type TimeDurationDto struct {
-	StartTimeDateTz DateTzDto     // Starting Date Time with Time Zone info
-	EndTimeDateTz   DateTzDto     // Ending Date Time with Time Zone info
-	TimeDuration    time.Duration // Elapsed time or duration between starting and ending date time
-	CalcType        TDurCalcType  // The calculation Type. This controls the allocation of time
-	// 		duration over years, months, weeks, days and hours.
-	Years                int64 // Number of Years
-	YearsNanosecs        int64 // Number of Years in Nanoseconds
-	Months               int64 // Number of Months
-	MonthsNanosecs       int64 // Number of Months in Nanoseconds
-	Weeks                int64 // Number of Weeks: Date Days / 7
-	WeeksNanosecs        int64 // Number of Weeks in Nanoseconds
-	WeekDays             int64 // WeekDays = DateDays - (Weeks * 7)
-	WeekDaysNanosecs     int64 // Equivalent WeekDays in NanoSeconds
-	DateDays             int64 // Day Number in Month (1-31)
-	DateDaysNanosecs     int64 // DateDays in equivalent nanoseconds
-	Hours                int64 // Number of Hours
-	HoursNanosecs        int64 // Number of Hours in Nanoseconds
-	Minutes              int64 // Number of Minutes
-	MinutesNanosecs      int64 // Number of Minutes in Nanoseconds
-	Seconds              int64 // Number of Seconds
-	SecondsNanosecs      int64 // Number of Seconds in Nanoseconds
-	Milliseconds         int64 // Number of Milliseconds
-	MillisecondsNanosecs int64 // Number of Milliseconds in Nanoseconds
-	Microseconds         int64 // Number of Microseconds
-	MicrosecondsNanosecs int64 // Number of Microseconds in Nanoseconds
-	Nanoseconds          int64 // Number of Nanoseconds (Remainder after Milliseconds & Microseconds)
-	TotSubSecNanoseconds int64 // Equivalent Nanoseconds for Milliseconds + Microseconds + Nanoseconds
-	TotDateNanoseconds   int64 // Equal to Years + Months + DateDays in equivalent nanoseconds.
-	TotTimeNanoseconds   int64 // Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
-	//                             in equivalent nanoseconds
+	StartTimeDateTz      DateTzDto     // Starting Date Time with Time Zone info
+	EndTimeDateTz        DateTzDto     // Ending Date Time with Time Zone info
+	TimeDuration         time.Duration // Elapsed time or duration between starting and ending date time
+	CalcType             TDurCalcType  // The calculation Type. This controls the allocation of time
+	                                   // duration over years, months, weeks, days and hours.
+	Years                int64         // Number of Years
+	YearsNanosecs        int64         // Number of Years in Nanoseconds
+	Months               int64         // Number of Months
+	MonthsNanosecs       int64         // Number of Months in Nanoseconds
+	Weeks                int64         // Number of Weeks: Date Days / 7
+	WeeksNanosecs        int64         // Number of Weeks in Nanoseconds
+	WeekDays             int64         // WeekDays = DateDays - (Weeks * 7)
+	WeekDaysNanosecs     int64         // Equivalent WeekDays in NanoSeconds
+	DateDays             int64         // Day Number in Month (1-31)
+	DateDaysNanosecs     int64         // DateDays in equivalent nanoseconds
+	Hours                int64         // Number of Hours
+	HoursNanosecs        int64         // Number of Hours in Nanoseconds
+	Minutes              int64         // Number of Minutes
+	MinutesNanosecs      int64         // Number of Minutes in Nanoseconds
+	Seconds              int64         // Number of Seconds
+	SecondsNanosecs      int64         // Number of Seconds in Nanoseconds
+	Milliseconds         int64         // Number of Milliseconds
+	MillisecondsNanosecs int64         // Number of Milliseconds in Nanoseconds
+	Microseconds         int64         // Number of Microseconds
+	MicrosecondsNanosecs int64         // Number of Microseconds in Nanoseconds
+	Nanoseconds          int64         // Number of Nanoseconds (Remainder after Milliseconds & Microseconds)
+	TotSubSecNanoseconds int64         // Equivalent Nanoseconds for Milliseconds + Microseconds + Nanoseconds
+	TotDateNanoseconds   int64         // Equal to Years + Months + DateDays in equivalent nanoseconds.
+	TotTimeNanoseconds   int64         // Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
+	                                   // in equivalent nanoseconds
 
 	lock *sync.Mutex // Used to enforce thread safe operations
 }
