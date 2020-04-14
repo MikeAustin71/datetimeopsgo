@@ -255,7 +255,7 @@ func(durTUtil *durationTriadUtility) isValid(
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time.
 //
-// As a result, true values for startDateTimeTz, EndTimeDateTz and TimeDuration
+// As a result, true values for startDateTimeTz, endDateTimeTz and TimeDuration
 // are stored in the DurationTriad data structure.
 //
 // Input parameter, 'timeZoneLocation', is applied to both the starting and ending

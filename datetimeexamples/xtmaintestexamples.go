@@ -2543,9 +2543,10 @@ func (mc MainCodeExamples) mainCodeEx014() {
 		return
 	}
 
-	if t2OutStr != dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr) {
-		fmt.Printf("Error- Expected End Time %v. Instead, got %v.\n",
-			t2OutStr, dur.BaseTime.EndTimeDateTz.GetDateTimeValue().Format(dt.FmtDateTimeYrMDayFmtStr))
+	if t2OutStr != dur.BaseTime.GetThisEndDateTime().Format(dt.FmtDateTimeYrMDayFmtStr) {
+		fmt.Printf("Error- Expected End Time %v.\n" +
+			"Instead, got %v.\n",
+			t2OutStr, dur.BaseTime.GetThisEndDateTime().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 
@@ -2653,7 +2654,7 @@ func (mc MainCodeExamples) mainCodeEx010() {
 	fmt.Println("  Actual Start Date Time: ", startTimeTz.String())
 	fmt.Println("-----------------------------------------")
 	fmt.Println("  Expected End Date Time: ", t2OutStr)
-	fmt.Println("    Actual End Date Time: ", dur.EndTimeDateTz.String())
+	fmt.Println("    Actual End Date Time: ", dur.GetThisEndDateTimeString())
 	fmt.Println("-----------------------------------------")
 	fmt.Println("       Expected Duration: ", t12Dur)
 	fmt.Println("         Actual Duration: ", dur.TimeDuration.String())
@@ -2721,7 +2722,7 @@ func (mc MainCodeExamples) mainCodeEx008() {
 	fmt.Println("  Expected: ", expected)
 	fmt.Println("    Actual: ", dOut)
 	fmt.Println("Start Time: ", startTimeTz.String())
-	fmt.Println("  End Time: ", du.BaseTime.EndTimeDateTz.String())
+	fmt.Println("  End Time: ", du.BaseTime.GetThisEndDateTimeString())
 
 }
 

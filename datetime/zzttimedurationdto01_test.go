@@ -147,11 +147,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_01() {
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -174,7 +174,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_01() {
 			Expected End Date:  2017-04-30 22:58:32.628149653 -0500 CDT
 		Time Duration Dto
 				 startDateTimeTz:  2014-02-15 19:54:30.987654321 -0600 CST
-					 EndTimeDateTz:  2017-04-30 22:58:32.628149653 -0500 CDT
+					 endDateTimeTz:  2017-04-30 22:58:32.628149653 -0500 CDT
 						TimeDuration:  101095441640495332
 								CalcType:  StdYearMthCalc
 									 Years:  3
@@ -240,11 +240,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_02() {
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -272,7 +272,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.startDateTimeTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetOriginalTzName(),
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.endDateTimeTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(), suite.t1USCentral.Equal(t1Dur.startDateTimeTz.GetDateTimeValue()), "Error: Expected Starting Date Time NOT EQUAL to t1Dur.startDateTimeTz!")
@@ -281,7 +281,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoEnd_01() {
 
 	checkTime := time.Now().In(cLoc)
 
-	checkDur := checkTime.Sub(t1Dur.EndTimeDateTz.GetDateTimeValue())
+	checkDur := checkTime.Sub(t1Dur.endDateTimeTz.GetDateTimeValue())
 
 	testMax := time.Duration(int64(2) * int64(time.Second))
 
@@ -298,7 +298,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewAutoStart_01() {
 	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.startDateTimeTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
-	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.EndTimeDateTz.GetOriginalTzName(),
+	assert.Equal(suite.T(), TZones.US.Central(), t1Dur.endDateTimeTz.GetOriginalTzName(),
 		"Expected Start Time Zone NOT EQUAL To Actual Start Time Zone!")
 
 	assert.True(suite.T(),
@@ -344,11 +344,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTz_01() {
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -396,11 +396,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTzCalc_01(
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -443,11 +443,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesCalc_01() 
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -502,11 +502,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDto_01
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -564,11 +564,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzC
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -621,11 +621,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoCal
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "StdYearMth" == t1Dur.CalcType.String(), "Error: CalcType String NOT EQUAL to StdYearMth!")
 
@@ -652,8 +652,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_01() 
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -666,7 +666,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_01() 
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -686,8 +686,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01(
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -700,7 +700,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01(
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -721,8 +721,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTzCalc
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -735,7 +735,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTzCalc
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -755,8 +755,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationCalc_0
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -769,7 +769,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationCalc_0
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -793,8 +793,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationDateDto:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -807,7 +807,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -831,8 +831,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationDateDtoTz:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -845,7 +845,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -868,8 +868,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -882,7 +882,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -906,8 +906,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	assert.Nil(suite.T(), err, "Error NewStartTimeDurationTz:")
 
-	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.EndTimeDateTz.String(), suite.t4USCentral.Format(suite.fmtStr))
-	assert.True(suite.T(), t1Dur.EndTimeDateTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
+	s := fmt.Sprintf("Error: Expected EndDateTime NOT EQUAL to t1Dur.EndDateTime! t1Dur.EndTime='%v' t4USCentral='%v' ", t1Dur.endDateTimeTz.String(), suite.t4USCentral.Format(suite.fmtStr))
+	assert.True(suite.T(), t1Dur.endDateTimeTz.GetDateTimeValue().Equal(suite.t4USCentral), s)
 
 	tx1 := suite.t1USCentral.AddDate(int(t1Dur.Years), int(t1Dur.Months), int(t1Dur.DateDays))
 
@@ -920,7 +920,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationDateDt
 
 	tx2 := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), tx2.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), tx2.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated EndDateTime (tx2) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 	assert.True(suite.T(), dur == t1Dur.TotTimeNanoseconds, "Error: Summary Time NOT EQUAL to t1Dur.TotTimeNanoseconds!")
 
@@ -956,7 +956,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimePlusTimeDto_01
 
 	assert.Nil(suite.T(), err, "Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):")
 
-	assert.True(suite.T(), suite.t4USCentral.Equal(tDur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), suite.t4USCentral.Equal(tDur.endDateTimeTz.GetDateTimeValue()), "Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 }
 
@@ -985,7 +985,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeMinusTimeDto_0
 
 	assert.Nil(suite.T(), err, "Error TimeDurationDto{}.NewStartTimePlusTimeDto(...):")
 
-	assert.True(suite.T(), suite.t4USCentral.Equal(tDur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.EndTimeDateTz!")
+	assert.True(suite.T(), suite.t4USCentral.Equal(tDur.endDateTimeTz.GetDateTimeValue()), "Error: Expected EndDateTime (suite.t4USCentral) NOT EQUAL to t1Dur.endDateTimeTz!")
 
 }
 
@@ -1007,9 +1007,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01(
 
 	s = fmt.Sprintf("Expected EndDateTime Time Zone='%v'. "+
 		"Instead EndDateTime TimeZone='%v'",
-		TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetOriginalTzName())
+		TZones.Asia.Tokyo(), tDur.endDateTimeTz.GetOriginalTzName())
 
-	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.EndTimeDateTz.GetOriginalTzName(), s)
+	assert.Equal(suite.T(), TZones.Asia.Tokyo(), tDur.endDateTimeTz.GetOriginalTzName(), s)
 
 	assert.True(suite.T(), suite.t1AsiaTokyo.Equal(tDur.startDateTimeTz.GetDateTimeValue()),
 		"Error: Expected StartDateTime (suite.t1AsiaTokyo) NOT EQUAL " +
@@ -1019,7 +1019,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_ReCalcEndDateTimeToNow_01(
 
 	tokyoNow := time.Now().In(suite.t1AsiaTokyo.Location())
 
-	actualDur := tokyoNow.Sub(tDur.EndTimeDateTz.GetDateTimeValue())
+	actualDur := tokyoNow.Sub(tDur.endDateTimeTz.GetDateTimeValue())
 
 	s = fmt.Sprintf("Error: Expected actual duration since Now to be less than '%v'. "+
 		"Instead, actual duration ='%v'.", testMax, actualDur)
@@ -1057,11 +1057,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "CumMonths" == t1Dur.CalcType.String(),
 		"Error: CalcType String NOT EQUAL to CumMonths!")
@@ -1157,7 +1157,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 		3-Months 27-Days 19-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds
 		Time Duration Dto
 				 startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
-					 EndTimeDateTz:  2018-07-04 15:09:05.458621349 -0500 CDT
+					 endDateTimeTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 						TimeDuration:  10346806666132070
 								CalcType:  CumMonthsCalc
 									 Years:  0
@@ -1226,12 +1226,12 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_02() {
 
 	expectedEndDate := tx1.Add(time.Duration(dur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()),
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	expectedEndDate = tx1.Add(time.Duration(t1Dur.TotTimeNanoseconds))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()),
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "CumMonths" == t1Dur.CalcType.String(),
@@ -1358,7 +1358,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
 
 	expectedEndDate := tx1.Add(time.Duration(timeDaysDur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()),
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "CumWeeks" == t1Dur.CalcType.String(),
@@ -1477,7 +1477,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
 		17-Weeks 0-WeekDays 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds
 		Time Duration Dto
 				 startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
-					 EndTimeDateTz:  2018-07-04 15:09:05.458621349 -0500 CDT
+					 endDateTimeTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 						TimeDuration:  10346806666132070
 								CalcType:  CumWeeksCalc
 									 Years:  0
@@ -1550,7 +1550,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_02() {
 
 	expectedEndDate := tx1.Add(time.Duration(timeDaysDur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()),
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "CumWeeks" == t1Dur.CalcType.String(),
@@ -1692,7 +1692,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_01() {
 
 	expectedEndDate := tx1.Add(time.Duration(dayTimeDur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()),
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "CumDays" == t1Dur.CalcType.String(),
@@ -1798,7 +1798,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_01() {
 		119-Days 18-Hours 6-Minutes 46-Seconds 666-Milliseconds 132-Microseconds 70-Nanoseconds
 		Time Duration Dto
 		     startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
-		       EndTimeDateTz:  2018-07-04 15:09:05.458621349 -0500 CDT
+		       endDateTimeTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 		        TimeDuration:  10346806666132070
 		            CalcType:  CumDaysCalc
 		               Years:  0
@@ -1871,7 +1871,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_02() {
 
 	expectedEndDate := tx1.Add(time.Duration(timeDaysDur))
 
-	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.EndTimeDateTz.GetDateTimeValue()),
+	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
 	assert.True(suite.T(), "CumDays" == t1Dur.CalcType.String(),
