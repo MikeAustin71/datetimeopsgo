@@ -1848,10 +1848,10 @@ func (tDur *TimeDurationDto) GetThisStartDateTime() time.Time {
 
 }
 
-// GetTypeStartDateTimeSting - Returns the starting date time for
+// GetThisStartDateTimeSting - Returns the starting date time for
 // this duration as a string.
 //
-func (tDur *TimeDurationDto) GetTypeStartDateTimeSting() string {
+func (tDur *TimeDurationDto) GetThisStartDateTimeSting() string {
 
 	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
