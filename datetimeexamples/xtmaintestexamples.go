@@ -2536,10 +2536,10 @@ func (mc MainCodeExamples) mainCodeEx014() {
 		return
 	}
 
-	if t1OutStr != dur.BaseTime.GetTypeStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr) {
+	if t1OutStr != dur.BaseTime.GetThisStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr) {
 		fmt.Printf("Error- Expected Start Time %v.\n" +
 			"Instead, got %v.\n",
-			t1OutStr, dur.BaseTime.GetTypeStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr))
+			t1OutStr, dur.BaseTime.GetThisStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr))
 		return
 	}
 

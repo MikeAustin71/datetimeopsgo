@@ -291,10 +291,10 @@ func (mt mainTest) mainTest075() {
 		return
 	}
 
-	if t1OutStr != dur.BaseTime.GetTypeStartDateTime().Format(fmtstr) {
+	if t1OutStr != dur.BaseTime.GetThisStartDateTime().Format(fmtstr) {
 		fmt.Printf("Error: Expected DurationTriad.StartTimeDateTz of %v.\n" +
 			"Instead, got %v\n",
-			t1OutStr, dur.BaseTime.GetTypeStartDateTime().Format(fmtstr))
+			t1OutStr, dur.BaseTime.GetThisStartDateTime().Format(fmtstr))
 	}
 
 	if t2OutStr != dur.BaseTime.GetThisEndDateTime().Format(fmtstr) {
@@ -399,7 +399,7 @@ func (mt mainTest) mainTest075() {
 			startDateTimeTz.GetDateTimeValue().Format(dt.DEFAULTDATETIMEFORMAT))
 	}
 
-	t2Local := dur.LocalTime.GetTypeStartDateTime().Add(dur.LocalTime.TimeDuration)
+	t2Local := dur.LocalTime.GetThisStartDateTime().Add(dur.LocalTime.TimeDuration)
 
 	if !t2Local.Equal(dur.LocalTime.GetThisEndDateTime()) {
 		fmt.Printf("Expected Local End Time='%v'.\n" +
@@ -416,14 +416,14 @@ func (mt mainTest) mainTest075() {
 
 	t1UTC := t1.In(loc)
 
-	if !t1UTC.Equal(dur.UTCTime.GetTypeStartDateTime()) {
+	if !t1UTC.Equal(dur.UTCTime.GetThisStartDateTime()) {
 		fmt.Printf("Expected UTC Start Time='%v'.\n" +
 			"Actual UTC Start Time='%v'.\n",
 			t1UTC.Format(dt.FmtDateTimeYrMDayFmtStr),
-			dur.UTCTime.GetTypeStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr))
+			dur.UTCTime.GetThisStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.GetTypeStartDateTime().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.GetThisStartDateTime().Add(dur.UTCTime.TimeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.GetThisEndDateTime()) {
 		fmt.Printf("Expected UTC End Time='%v'.\n" +
@@ -575,7 +575,7 @@ timeDto := dt.TimeDto{
 	}
 
 	fmt.Printf("\nCalculated Start Time: %v\n",
-		dur.BaseTime.GetTypeStartDateTime().Format(fmtStr))
+		dur.BaseTime.GetThisStartDateTime().Format(fmtStr))
 
 	fmt.Printf("\n    Actual Start Time: %v\n\n",
 		t1.Format(fmtStr))
@@ -588,7 +588,7 @@ timeDto := dt.TimeDto{
 		t2Result.Format(fmtStr))
 
 	fmt.Printf("\nCalculated UTC Start Time: %v\n",
-		dur.UTCTime.GetTypeStartDateTime().Format(fmtStr))
+		dur.UTCTime.GetThisStartDateTime().Format(fmtStr))
 
 	fmt.Printf("\n    Actual UTC Start Time: %v\n\n",
 		t1Utc.Format(fmtStr))
@@ -722,10 +722,10 @@ func (mt mainTest) mainTest071() {
 		return
 	}
 
-	if t1OutStr != dur.BaseTime.GetTypeStartDateTime().Format(fmtstr) {
+	if t1OutStr != dur.BaseTime.GetThisStartDateTime().Format(fmtstr) {
 		fmt.Printf("Error- Expected Start Time %v.\n" +
 			"Instead, got %v.\n",
-			t1OutStr, dur.BaseTime.GetTypeStartDateTime().Format(fmtstr))
+			t1OutStr, dur.BaseTime.GetThisStartDateTime().Format(fmtstr))
 	}
 
 	if t2OutStr != dur.BaseTime.GetThisEndDateTime().Format(fmtstr) {
