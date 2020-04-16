@@ -38,7 +38,7 @@ type TimeDurationDto struct {
 	startDateTimeTz DateTzDto     // Starting Date Time with Time Zone info
 	endDateTimeTz   DateTzDto     // Ending Date Time with Time Zone info
 	timeDuration    time.Duration // Elapsed time or duration between starting and ending date time
-	calcType        TDurCalcType  // The calculation Type. This controls the allocation of time
+	timeDurCalcType TDurCalcType  // The calculation Type. This controls the allocation of time
 	//                               duration over years, months, weeks, days and hours.
 	timeMathCalcMode     TimeMathCalcMode // The Time Math algorithm used to calculate time duration
 	Years                int64            // Number of Years
@@ -1898,7 +1898,7 @@ func (tDur *TimeDurationDto) GetThisTimeDuration() time.Duration {
 
 // GetThisTimeDurationCalcType - Returns the time duration calculation type
 // associated with this TimeDurationDto instance. This value is extracted
-// from private member variable TimeDurationDto.calcType.
+// from private member variable TimeDurationDto.timeDurCalcType.
 //
 func (tDur *TimeDurationDto) GetThisTimeDurationCalcType() TDurCalcType {
 
@@ -1910,7 +1910,7 @@ func (tDur *TimeDurationDto) GetThisTimeDurationCalcType() TDurCalcType {
 
 	defer tDur.lock.Unlock()
 
-	return tDur.calcType
+	return tDur.timeDurCalcType
 }
 
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of time duration
@@ -2531,7 +2531,7 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 
 	timeDur2.timeDuration = time.Duration(0)
 
-	timeDur2.calcType = TDurCalc.None()
+	timeDur2.timeDurCalcType = TDurCalc.None()
 
 	timeDur2.startDateTimeTz = DateTzDto{}.New()
 
@@ -6621,7 +6621,7 @@ func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(
 //
 // The Time Zone Location is derived from the existing starting date
 // time, 'tDur.startDateTimeTz'.  The Calculation type is taken from
-// the existing calculation type, 'tDur.calcType'.
+// the existing calculation type, 'tDur.timeDurCalcType'.
 //
 // __________________________________________________________________________
 //

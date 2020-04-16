@@ -153,7 +153,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_01() {
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
 
@@ -176,7 +176,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_01() {
 				 startDateTimeTz:  2014-02-15 19:54:30.987654321 -0600 CST
 					 endDateTimeTz:  2017-04-30 22:58:32.628149653 -0500 CDT
 						timeDuration:  101095441640495332
-								calcType:  StdYearMthCalc
+								timeDurCalcType:  StdYearMthCalc
 									 Years:  3
 					 YearsNanosecs:  94694400000000000
 									Months:  2
@@ -246,7 +246,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_New_02() {
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
 
@@ -350,7 +350,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTz_01() {
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
 
@@ -402,7 +402,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesTzCalc_01(
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
 
@@ -449,7 +449,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesCalc_01() 
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedDateNanosecs := int64(tx1.Sub(suite.t2USCentral))
 
@@ -508,7 +508,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDto_01
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedDateNanosecs := int64(tx1.Sub(suite.t2USCentral))
 
@@ -570,7 +570,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoTzC
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
 
@@ -627,7 +627,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimesDateDtoCal
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "StdYearMth" == t1Dur.calcType.String(), "Error: calcType String NOT EQUAL to StdYearMth!")
+	assert.True(suite.T(), "StdYearMth" == t1Dur.timeDurCalcType.String(), "Error: timeDurCalcType String NOT EQUAL to StdYearMth!")
 
 	expectedTimeDur = suite.t3USCentral.Sub(suite.t2USCentral)
 
@@ -1063,8 +1063,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()), "Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "CumMonths" == t1Dur.calcType.String(),
-		"Error: calcType String NOT EQUAL to CumMonths!")
+	assert.True(suite.T(), "CumMonths" == t1Dur.timeDurCalcType.String(),
+		"Error: timeDurCalcType String NOT EQUAL to CumMonths!")
 
 	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
 
@@ -1159,7 +1159,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_01() {
 				 startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
 					 endDateTimeTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 						timeDuration:  10346806666132070
-								calcType:  CumMonthsCalc
+								timeDurCalcType:  CumMonthsCalc
 									 Years:  0
 					 YearsNanosecs:  0
 									Months:  3
@@ -1234,8 +1234,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_02() {
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Tot Time Duration + End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "CumMonths" == t1Dur.calcType.String(),
-		"Error: calcType String NOT EQUAL to CumMonths!")
+	assert.True(suite.T(), "CumMonths" == t1Dur.timeDurCalcType.String(),
+		"Error: timeDurCalcType String NOT EQUAL to CumMonths!")
 
 	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
 
@@ -1361,8 +1361,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "CumWeeks" == t1Dur.calcType.String(),
-		"Error: calcType String NOT EQUAL to CumWeeks!")
+	assert.True(suite.T(), "CumWeeks" == t1Dur.timeDurCalcType.String(),
+		"Error: timeDurCalcType String NOT EQUAL to CumWeeks!")
 
 	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
 
@@ -1479,7 +1479,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_01() {
 				 startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
 					 endDateTimeTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 						timeDuration:  10346806666132070
-								calcType:  CumWeeksCalc
+								timeDurCalcType:  CumWeeksCalc
 									 Years:  0
 					 YearsNanosecs:  0
 									Months:  0
@@ -1553,8 +1553,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_02() {
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "CumWeeks" == t1Dur.calcType.String(),
-		"Error: calcType String NOT EQUAL to CumWeeks!")
+	assert.True(suite.T(), "CumWeeks" == t1Dur.timeDurCalcType.String(),
+		"Error: timeDurCalcType String NOT EQUAL to CumWeeks!")
 
 	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
 
@@ -1695,8 +1695,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_01() {
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "CumDays" == t1Dur.calcType.String(),
-		"Error: calcType String NOT EQUAL to CumDays!")
+	assert.True(suite.T(), "CumDays" == t1Dur.timeDurCalcType.String(),
+		"Error: timeDurCalcType String NOT EQUAL to CumDays!")
 
 	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
 
@@ -1800,7 +1800,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_01() {
 		     startDateTimeTz:  2018-03-06 20:02:18.792489279 -0600 CST
 		       endDateTimeTz:  2018-07-04 15:09:05.458621349 -0500 CDT
 		        timeDuration:  10346806666132070
-		            calcType:  CumDaysCalc
+		            timeDurCalcType:  CumDaysCalc
 		               Years:  0
 		       YearsNanosecs:  0
 		              Months:  0
@@ -1874,8 +1874,8 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_02() {
 	assert.True(suite.T(), expectedEndDate.Equal(t1Dur.endDateTimeTz.GetDateTimeValue()),
 		"Error: Expected Calculated End Date NOT EQUAL to t1Dur.EndDate!")
 
-	assert.True(suite.T(), "CumDays" == t1Dur.calcType.String(),
-		"Error: calcType String NOT EQUAL to CumDays!")
+	assert.True(suite.T(), "CumDays" == t1Dur.timeDurCalcType.String(),
+		"Error: timeDurCalcType String NOT EQUAL to CumDays!")
 
 	expectedTimeDur = suite.t5USCentral.Sub(suite.t4USCentral)
 

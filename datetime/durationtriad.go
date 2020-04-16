@@ -3882,7 +3882,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 
 	endDateTime := time.Now().Local()
 
-	calcType := durT.BaseTime.calcType
+	calcType := durT.BaseTime.timeDurCalcType
 	startDateTime := durT.BaseTime.startDateTimeTz.GetDateTimeValue()
 
 	tzLocName := durT.BaseTime.startDateTimeTz.GetOriginalTzName()

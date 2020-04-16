@@ -145,7 +145,7 @@ func (durCalc TDurCalcType) None() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).StdYearMth()
+//     timeDurCalcType                    = TDurCalcType(0).StdYearMth()
 //     Years                       populated
 //     YearsNanosecs               populated
 //     Months                      populated
@@ -208,7 +208,7 @@ func (durCalc TDurCalcType) StdYearMth() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumMonths()
+//     timeDurCalcType                    = TDurCalcType(0).CumMonths()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      populated
@@ -267,7 +267,7 @@ func (durCalc TDurCalcType) CumMonths() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumWeeks()
+//     timeDurCalcType                    = TDurCalcType(0).CumWeeks()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -327,7 +327,7 @@ func (durCalc TDurCalcType) CumWeeks() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumDays()
+//     timeDurCalcType                    = TDurCalcType(0).CumDays()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -389,7 +389,7 @@ func (durCalc TDurCalcType) CumDays() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumHours()
+//     timeDurCalcType                    = TDurCalcType(0).CumHours()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -451,7 +451,7 @@ func (durCalc TDurCalcType) CumHours() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumMinutes()
+//     timeDurCalcType                    = TDurCalcType(0).CumMinutes()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -513,7 +513,7 @@ func (durCalc TDurCalcType) CumMinutes() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumSeconds()
+//     timeDurCalcType                    = TDurCalcType(0).CumSeconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -574,7 +574,7 @@ func (durCalc TDurCalcType) CumSeconds() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumMilliseconds()
+//     timeDurCalcType                    = TDurCalcType(0).CumMilliseconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -637,7 +637,7 @@ func (durCalc TDurCalcType) CumMilliseconds() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumMicroseconds()
+//     timeDurCalcType                    = TDurCalcType(0).CumMicroseconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -700,7 +700,7 @@ func (durCalc TDurCalcType) CumMicroseconds() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).CumNanoseconds()
+//     timeDurCalcType                    = TDurCalcType(0).CumNanoseconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
 //     Months                      NOT-populated
@@ -766,7 +766,7 @@ func (durCalc TDurCalcType) CumNanoseconds() TDurCalcType {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
 //     timeDuration                populated
-//     calcType                    = TDurCalcType(0).GregorianYears()
+//     timeDurCalcType                    = TDurCalcType(0).GregorianYears()
 //     Years                       populated
 //     YearsNanosecs               populated
 //     Months                      populated
