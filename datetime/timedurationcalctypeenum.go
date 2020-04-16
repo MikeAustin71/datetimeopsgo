@@ -144,7 +144,7 @@ func (durCalc TDurCalcType) None() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).StdYearMth()
 //     Years                       populated
 //     YearsNanosecs               populated
@@ -207,7 +207,7 @@ func (durCalc TDurCalcType) StdYearMth() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMonths()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -266,7 +266,7 @@ func (durCalc TDurCalcType) CumMonths() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumWeeks()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -326,7 +326,7 @@ func (durCalc TDurCalcType) CumWeeks() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumDays()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -388,7 +388,7 @@ func (durCalc TDurCalcType) CumDays() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumHours()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -450,7 +450,7 @@ func (durCalc TDurCalcType) CumHours() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMinutes()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -512,7 +512,7 @@ func (durCalc TDurCalcType) CumMinutes() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumSeconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -573,7 +573,7 @@ func (durCalc TDurCalcType) CumSeconds() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMilliseconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -636,7 +636,7 @@ func (durCalc TDurCalcType) CumMilliseconds() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumMicroseconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -699,7 +699,7 @@ func (durCalc TDurCalcType) CumMicroseconds() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).CumNanoseconds()
 //     Years                       NOT-populated
 //     YearsNanosecs               NOT-populated
@@ -765,7 +765,7 @@ func (durCalc TDurCalcType) CumNanoseconds() TDurCalcType {
 // type TimeDurationDto struct {
 //     startDateTimeTz             populated
 //     endDateTimeTz               populated
-//     TimeDuration                populated
+//     timeDuration                populated
 //     CalcType                    = TDurCalcType(0).GregorianYears()
 //     Years                       populated
 //     YearsNanosecs               populated

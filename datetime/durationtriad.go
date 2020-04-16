@@ -3908,7 +3908,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 // Time values in the 'timeDto' parameter are first converted to negative
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time. As a result, true values
-// for 'startDateTimeTz', 'endDateTimeTz' and 'TimeDuration' are stored in
+// for 'startDateTimeTz', 'endDateTimeTz' and 'timeDuration' are stored in
 // the DurationTriad data structure.
 //
 // Time Zone Location is extracted from input parameter, 'endDateTime'. The extracted
@@ -4067,7 +4067,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time.
 //
-// As a result, true values for startDateTimeTz, endDateTimeTz and TimeDuration
+// As a result, true values for startDateTimeTz, endDateTimeTz and timeDuration
 // are stored in the DurationTriad data structure.
 //
 // Input parameter, 'timeZoneLocation', is applied to both the starting and ending
@@ -4306,7 +4306,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDtoCalcTz(
 // numeric values. Then these values are added to the 'startDateTime' value
 // which is effective treated as an End Date Time.
 //
-// As a result, true values for startDateTimeTz, endDateTimeTz and TimeDuration
+// As a result, true values for startDateTimeTz, endDateTimeTz and timeDuration
 // are stored in the DurationTriad data structure.
 //
 // Input parameter, 'timeZoneLocation', is applied to both the starting and ending
@@ -6096,7 +6096,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDtoCalcTz(
 // Values in the 'timeDto' parameter are automatically converted to positive numeric
 // values before being added to 'startDateTimeTz'.
 //
-// True values for startDateTimeTz, endDateTimeTz and TimeDuration are then stored in
+// True values for startDateTimeTz, endDateTimeTz and timeDuration are then stored in
 // the DurationTriad data structure.
 //
 // Time Zone Location is extracted from input parameter, 'startDateTime'. The extracted

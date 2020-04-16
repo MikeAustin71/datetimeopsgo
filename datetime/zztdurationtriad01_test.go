@@ -86,7 +86,7 @@ func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
 
 	expectedDur := time.Duration(int64(2) * int64(time.Second))
 
-	if durT.BaseTime.TimeDuration > expectedDur {
+	if durT.BaseTime.timeDuration > expectedDur {
 		t.Error("Expected duration is greater than 2-seconds. Error!")
 	}
 
@@ -111,7 +111,7 @@ func TestDurationTriad_NewAutoStart(t *testing.T) {
 
 	expectedDur := time.Duration(int64(3) * int64(time.Second))
 
-	if durT.BaseTime.TimeDuration > expectedDur {
+	if durT.BaseTime.timeDuration > expectedDur {
 		t.Error("Expected duration is greater than 3-seconds. Error!")
 	}
 
@@ -148,8 +148,8 @@ func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
-		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, dur.BaseTime.TimeDuration)
+	if t12Dur != dur.BaseTime.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -202,8 +202,8 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
-		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, dur.BaseTime.TimeDuration)
+	if t12Dur != dur.BaseTime.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -234,7 +234,7 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 			dur.LocalTime.startDateTimeTz.GetOriginalTzName())
 	}
 
-	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
+	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.timeDuration)
 
 	if !t2Local.Equal(dur.LocalTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
@@ -256,7 +256,7 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 			dur.UTCTime.startDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.timeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
@@ -299,8 +299,8 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != dur.BaseTime.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.TimeDuration)
+	if tOutDur != dur.BaseTime.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -399,7 +399,7 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 	}
 
 	t2Local := dur.LocalTime.startDateTimeTz.
-		GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
+		GetDateTimeValue().Add(dur.LocalTime.timeDuration)
 
 	if !t2Local.Equal(dur.LocalTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local End Time='%v'.\n" +
@@ -424,7 +424,7 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 			dur.UTCTime.startDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.timeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected UTC End Time='%v'.\n" +
@@ -469,8 +469,8 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != dur.BaseTime.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.TimeDuration)
+	if tOutDur != dur.BaseTime.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -563,7 +563,7 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 			dur.LocalTime.startDateTimeTz.GetOriginalTzName())
 	}
 
-	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
+	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.timeDuration)
 
 	if !t2Local.Equal(dur.LocalTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
@@ -585,7 +585,7 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 			dur.UTCTime.startDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.timeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
@@ -634,8 +634,8 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != dur.BaseTime.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.TimeDuration)
+	if tOutDur != dur.BaseTime.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -727,7 +727,7 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 			dur.LocalTime.startDateTimeTz.GetOriginalTzName())
 	}
 
-	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
+	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.timeDuration)
 
 	if !t2Local.Equal(dur.LocalTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
@@ -749,7 +749,7 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 			dur.UTCTime.startDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.timeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
@@ -790,8 +790,8 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != dur.BaseTime.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.TimeDuration)
+	if tOutDur != dur.BaseTime.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -884,7 +884,7 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 			dur.LocalTime.startDateTimeTz.GetOriginalTzName())
 	}
 
-	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
+	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.timeDuration)
 
 	if !t2Local.Equal(dur.LocalTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
@@ -906,7 +906,7 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 			dur.UTCTime.startDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.timeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
@@ -952,9 +952,9 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
+	if t12Dur != dur.BaseTime.timeDuration {
 		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, dur.BaseTime.TimeDuration)
+			t12Dur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -1001,9 +1001,9 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
+	if t12Dur != dur.BaseTime.timeDuration {
 		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, dur.BaseTime.TimeDuration)
+			t12Dur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -1037,7 +1037,7 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 			dur.LocalTime.startDateTimeTz.GetOriginalTzName())
 	}
 
-	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.TimeDuration)
+	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.timeDuration)
 
 	if !t2Local.Equal(dur.LocalTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
@@ -1059,7 +1059,7 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 			dur.UTCTime.startDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.timeDuration)
 
 	if !t2UTC.Equal(dur.UTCTime.endDateTimeTz.GetDateTimeValue()) {
 		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",

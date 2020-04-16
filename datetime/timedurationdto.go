@@ -37,7 +37,7 @@ import (
 type TimeDurationDto struct {
 	startDateTimeTz DateTzDto     // Starting Date Time with Time Zone info
 	endDateTimeTz   DateTzDto     // Ending Date Time with Time Zone info
-	TimeDuration    time.Duration // Elapsed time or duration between starting and ending date time
+	timeDuration    time.Duration // Elapsed time or duration between starting and ending date time
 	CalcType        TDurCalcType  // The calculation Type. This controls the allocation of time
 	//                               duration over years, months, weeks, days and hours.
 	timeMathCalcMode     TimeMathCalcMode // The Time Math algorithm used to calculate time duration
@@ -328,7 +328,7 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.GetCumDaysCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{},
 			fmt.Errorf(ePrefix + "Error: Time Duration is equal to zero!")
 	}
@@ -388,7 +388,7 @@ func (tDur *TimeDurationDto) GetCumDaysTimeStr() (string, error) {
 
 	ePrefix := "TimeDurationDto.GetCumDaysTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds", nil
 	}
 
@@ -470,7 +470,7 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.GetCumHoursCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{},
 			fmt.Errorf(ePrefix +
 				"\nError: Time Duration is ZERO value!\n")
@@ -533,7 +533,7 @@ func (tDur *TimeDurationDto) GetCumHoursTimeStr() (string, error) {
 
 	ePrefix := "TimeDurationDto.GetCumHoursTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds", nil
 	}
 
@@ -612,7 +612,7 @@ func (tDur *TimeDurationDto) GetCumMinutesCalcDto() (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.GetCumMinutesCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{},
 			fmt.Errorf(ePrefix +
 				"\nError: Time Duration is ZERO!\n")
@@ -674,7 +674,7 @@ func (tDur *TimeDurationDto) GetCumMinutesTimeStr() (string, error) {
 
 	ePrefix := "TimeDurationDto.GetCumMinutesTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds", nil
 	}
 
@@ -752,7 +752,7 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysCalcDto() (TimeDurationDto, error) 
 
 	ePrefix := "TimeDurationDto.GetCumMonthsDaysCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{}, nil
 	}
 
@@ -815,7 +815,7 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 
 	ePrefix := "TimeDurationDto.GetCumMonthsDaysTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds", nil
 	}
 
@@ -901,7 +901,7 @@ func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error)
 
 	ePrefix := "TimeDurationDto.GetCumNanosecondsCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{},
 			fmt.Errorf(ePrefix +
 				"\nError: Time Duration is ZERO value!\n")
@@ -960,7 +960,7 @@ func (tDur *TimeDurationDto) GetCumNanosecondsTimeStr() string {
 
 	defer tDur.lock.Unlock()
 
-	str := fmt.Sprintf("%v-Nanoseconds", int64(tDur.TimeDuration))
+	str := fmt.Sprintf("%v-Nanoseconds", int64(tDur.timeDuration))
 
 	return str
 }
@@ -1013,7 +1013,7 @@ func (tDur *TimeDurationDto) GetCumSecondsCalcDto() (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.GetCumSecondsCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{}, nil
 	}
 
@@ -1071,7 +1071,7 @@ func (tDur *TimeDurationDto) GetCumSecondsTimeStr() (string, error) {
 
 	ePrefix := "TimeDurationDto.GetCumSecondsTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds", nil
 	}
 
@@ -1147,7 +1147,7 @@ func (tDur *TimeDurationDto) GetCumWeeksCalcDto() (TimeDurationDto, error) {
 
 	ePrefix := "TimeDurationDto.GetCumWeeksCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{},
 			fmt.Errorf(ePrefix + "Error: Time Duration is Zero")
 	}
@@ -1209,7 +1209,7 @@ func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 
 	ePrefix := "TimeDurationDto.GetCumWeeksDaysTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds", nil
 	}
 
@@ -1275,7 +1275,7 @@ func (tDur *TimeDurationDto) GetDefaultDurationStr() string {
 
 	defer tDur.lock.Unlock()
 
-	return fmt.Sprintf("%v", tDur.TimeDuration)
+	return fmt.Sprintf("%v", tDur.timeDuration)
 }
 
 // GetDurationFromDays - returns a time Duration value
@@ -1532,7 +1532,7 @@ func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 
 	ePrefix := "TimeDurationDto.GetElapsedMinutesStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -1619,7 +1619,7 @@ func (tDur *TimeDurationDto) GetElapsedSecsNanosecsStr() string {
 
 	ePrefix := "TimeDurationDto.GetElapsedSecsNanosecsStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -1681,7 +1681,7 @@ func (tDur *TimeDurationDto) GetElapsedSecsNanosecsStr() string {
 //
 // The time.Duration value used to format this display is taken from the
 // internal data field of the current 'TimeDurationDto' object,
-// 'tDur.TimeDuration'.
+// 'tDur.timeDuration'.
 //
 // This method only returns date time elements with value greater than
 // zero. If all values are zero, the string will display Nanoseconds.
@@ -1715,7 +1715,7 @@ func (tDur *TimeDurationDto) GetElapsedTimeStr() string {
 
 	ePrefix := "TimeDurationDto.GetElapsedTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -1881,6 +1881,22 @@ func (tDur *TimeDurationDto) GetThisStartDateTimeTz() DateTzDto {
 	return tDur.startDateTimeTz
 }
 
+// GetThisTimeDuration - Returns the time duration as Type, 'time.Duration'.
+// This value is extracted from private member variable TimeDurationDto.timeDuration.
+//
+func (tDur *TimeDurationDto) GetThisTimeDuration() time.Duration {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	return tDur.timeDuration
+}
+
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of time duration
 // as Years, Months, DateDays, Hours, Minutes, Seconds, Milliseconds,
 // Microseconds and Nanoseconds. At a minimum, only Hours, Minutes,
@@ -1920,7 +1936,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeAbbrvStr() string {
 
 	ePrefix := "TimeDurationDto.GetYearMthDaysTimeAbbrvStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -2010,7 +2026,7 @@ func (tDur *TimeDurationDto) GetYearMthDaysTimeStr() string {
 
 	ePrefix := "TimeDurationDto.GetYearMthDaysTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -2093,7 +2109,7 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeAbbrvStr() string {
 
 	ePrefix := "TimeDurationDto.GetYearsMthsWeeksTimeAbbrvStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -2186,7 +2202,7 @@ func (tDur *TimeDurationDto) GetYearsMthsWeeksTimeStr() string {
 
 	ePrefix := "TimeDurationDto.GetYearsMthsWeeksTimeStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -2270,7 +2286,7 @@ func (tDur *TimeDurationDto) GetYrMthWkDayHrMinSecNanosecsStr() string {
 
 	ePrefix := "TimeDurationDto.GetYrMthWkDayHrMinSecNanosecsStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds"
 	}
 
@@ -2361,7 +2377,7 @@ func (tDur *TimeDurationDto) GetGregorianYearCalcDto() (TimeDurationDto, error) 
 
 	ePrefix := "TimeDurationDto.GetGregorianYearCalcDto() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return TimeDurationDto{}, nil
 	}
 
@@ -2441,7 +2457,7 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 
 	ePrefix := "TimeDurationDto.GetGregorianYearDurationStr() "
 
-	if int64(tDur.TimeDuration) == 0 {
+	if int64(tDur.timeDuration) == 0 {
 		return "0-Nanoseconds", nil
 	}
 
@@ -2497,7 +2513,7 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 
 	timeDur2.lock = new(sync.Mutex)
 
-	timeDur2.TimeDuration = time.Duration(0)
+	timeDur2.timeDuration = time.Duration(0)
 
 	timeDur2.CalcType = TDurCalc.None()
 

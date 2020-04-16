@@ -2550,9 +2550,10 @@ func (mc MainCodeExamples) mainCodeEx014() {
 		return
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
-		fmt.Printf("Error- Expected Time Duration %v. Instead, got %v\n",
-			t12Dur, dur.BaseTime.TimeDuration)
+	if t12Dur != dur.BaseTime.GetThisTimeDuration() {
+		fmt.Printf("Error- Expected Time Duration %v.\n" +
+			"Instead, got %v\n",
+			t12Dur, dur.BaseTime.GetThisTimeDuration())
 		return
 	}
 
@@ -2657,7 +2658,7 @@ func (mc MainCodeExamples) mainCodeEx010() {
 	fmt.Println("    Actual End Date Time: ", dur.GetThisEndDateTimeString())
 	fmt.Println("-----------------------------------------")
 	fmt.Println("       Expected Duration: ", t12Dur)
-	fmt.Println("         Actual Duration: ", dur.TimeDuration.String())
+	fmt.Println("         Actual Duration: ", dur.GetThisTimeDuration().String())
 }
 
 func (mc MainCodeExamples) mainCodeEx009() {

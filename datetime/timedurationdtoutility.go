@@ -48,7 +48,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyIn(
 
 	tDur1.startDateTimeTz = tDur2.startDateTimeTz.CopyOut()
 	tDur1.endDateTimeTz = tDur2.endDateTimeTz.CopyOut()
-	tDur1.TimeDuration = tDur2.TimeDuration
+	tDur1.timeDuration = tDur2.timeDuration
 	tDur1.CalcType = tDur2.CalcType
 	tDur1.Years = tDur2.Years
 	tDur1.YearsNanosecs = tDur2.YearsNanosecs
@@ -103,7 +103,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyOut(
 
 	t2Dur.startDateTimeTz = tDur.startDateTimeTz.CopyOut()
 	t2Dur.endDateTimeTz = tDur.endDateTimeTz.CopyOut()
-	t2Dur.TimeDuration = tDur.TimeDuration
+	t2Dur.timeDuration = tDur.timeDuration
 	t2Dur.CalcType = tDur.CalcType
 	t2Dur.Years = tDur.Years
 	t2Dur.YearsNanosecs = tDur.YearsNanosecs
@@ -141,7 +141,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) copyOut(
 // 'tDur.WeekDays' and 'tDur.WeekDaysNanosecs'.
 //
 // NOTE: (1) Before calling this method, ensure that TimeDurationDto.startDateTimeTz,
-//           TimeDurationDto.endDateTimeTz and tDur.TimeDuration are properly initialized.
+//           TimeDurationDto.endDateTimeTz and tDur.timeDuration are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following methods are called
 //           first, in sequence:
@@ -172,7 +172,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcDateDaysWeeksFromDuration(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	rd := int64(tDur.TimeDuration)
+	rd := int64(tDur.timeDuration)
 
 	if rd == 0 {
 		return nil
@@ -218,7 +218,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcDateDaysWeeksFromDuration(
 //
 //
 // NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
-//           TimeDurationDto.endDateTimeTz and TimeDurationDto.TimeDuration
+//           TimeDurationDto.endDateTimeTz and TimeDurationDto.timeDuration
 //           are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following methods are called
@@ -251,7 +251,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcHoursMinSecs(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	rd := int64(tDur.TimeDuration)
+	rd := int64(tDur.timeDuration)
 
 	if rd == 0 {
 		return nil
@@ -297,7 +297,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcHoursMinSecs(
 // 'tDur.Microseconds', 'tDur.MicrosecondsNanosecs',  and 'tDur.Nanoseconds'.
 //
 // NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
-//           TimeDurationDto.endDateTimeTz and TimeDurationDto.TimeDuration
+//           TimeDurationDto.endDateTimeTz and TimeDurationDto.timeDuration
 //           are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following methods are called
@@ -331,7 +331,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcNanoseconds(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	rd := int64(tDur.TimeDuration)
+	rd := int64(tDur.timeDuration)
 
 	if rd == 0 {
 		return nil
@@ -376,7 +376,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcNanoseconds(
 // 'tDur.endDateTimeTz.DateTime'.
 //
 // NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
-//           tDur.endDateTimeTz and tDur.TimeDuration are properly initialized.
+//           tDur.endDateTimeTz and tDur.timeDuration are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following method is called
 //           first:
@@ -424,7 +424,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 			endTime.Location().String())
 	}
 
-	rd := int64(tDur.TimeDuration)
+	rd := int64(tDur.timeDuration)
 
 	if rd == 0 {
 		return nil
@@ -468,7 +468,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcMonthsFromDuration(
 // sub-second nanoseconds.
 //
 // NOTE: (1) Before calling this method, ensure that tDur.startDateTimeTz,
-//           TimeDurationDto.endDateTimeTz and TimeDurationDto.TimeDuration
+//           TimeDurationDto.endDateTimeTz and TimeDurationDto.timeDuration
 //           are properly initialized.
 //
 //       (2) Before calling this method, ensure that the following methods are called
@@ -503,7 +503,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcSummaryTimeElements(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	rd := int64(tDur.TimeDuration)
+	rd := int64(tDur.timeDuration)
 
 	if rd == 0 {
 		return nil
@@ -639,11 +639,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumDays(
 
 	tDur2.CalcType = TDurCalcType(0).CumDays()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
-	rd := int64(tDur2.TimeDuration)
+	rd := int64(tDur2.timeDuration)
 
 	if rd >= DayNanoSeconds {
 		tDur2.DateDays = rd / DayNanoSeconds
@@ -720,7 +720,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumHours(
 
 	tDur2.CalcType = TDurCalcType(0).CumHours()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
@@ -789,11 +789,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMinutes(
 
 	tDur2.CalcType = TDurCalcType(0).CumMinutes()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
-	rd := int64(tDur2.TimeDuration)
+	rd := int64(tDur2.timeDuration)
 
 	if rd >= MinuteNanoSeconds {
 		tDur2.Minutes = rd / MinuteNanoSeconds
@@ -870,7 +870,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumMonths(
 
 	tDur2.CalcType = TDurCalcType(0).CumMonths()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
@@ -954,11 +954,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumSeconds(
 
 	tDur2.CalcType = TDurCalcType(0).CumSeconds()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
-	rd := int64(tDur2.TimeDuration)
+	rd := int64(tDur2.timeDuration)
 
 	if rd >= SecondNanoseconds {
 		tDur2.Seconds = rd / SecondNanoseconds
@@ -1021,11 +1021,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeCumWeeks(
 
 	tDur2.CalcType = TDurCalcType(0).CumWeeks()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
-	rd := int64(tDur2.TimeDuration)
+	rd := int64(tDur2.timeDuration)
 
 	if rd >= WeekNanoSeconds {
 
@@ -1115,11 +1115,11 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeGregorianYears(
 
 	tDur2.CalcType = TDurCalcType(0).GregorianYears()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
-	rd := int64(tDur2.TimeDuration)
+	rd := int64(tDur2.timeDuration)
 
 	if rd >= GregorianYearNanoSeconds {
 		tDur2.Years = rd / GregorianYearNanoSeconds
@@ -1213,7 +1213,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeStdYearMth(
 
 	tDur2.CalcType = TDurCalcType(0).StdYearMth()
 
-	if tDur2.TimeDuration == 0 {
+	if tDur2.timeDuration == 0 {
 		return nil
 	}
 
@@ -1263,7 +1263,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) calcTypeStdYearMth(
 // 'tDur.endDateTimeTz'.
 //
 // NOTE: Before calling this method, ensure that tDur.startDateTimeTz,
-//       tDur.endDateTimeTz and tDur.TimeDuration are properly initialized.
+//       tDur.endDateTimeTz and tDur.timeDuration are properly initialized.
 //
 func (tDurDtoUtil *timeDurationDtoUtility) calcYearsFromDuration(
 	tDur *TimeDurationDto,
@@ -1364,7 +1364,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) empty(
 
 	tDur.startDateTimeTz = DateTzDto{}
 	tDur.endDateTimeTz = DateTzDto{}
-	tDur.TimeDuration = time.Duration(0)
+	tDur.timeDuration = time.Duration(0)
 	tDur.CalcType = TDurCalcType(0).None()
 	tDur.Years = 0
 	tDur.YearsNanosecs = 0
@@ -1521,7 +1521,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) equal(
 
 	if !t1Dur.startDateTimeTz.Equal(t2Dur.startDateTimeTz) ||
 		!t1Dur.endDateTimeTz.Equal(t2Dur.endDateTimeTz) ||
-		t1Dur.TimeDuration != t2Dur.TimeDuration ||
+		t1Dur.timeDuration != t2Dur.timeDuration ||
 		t1Dur.CalcType != t2Dur.CalcType ||
 		t1Dur.Years != t2Dur.Years ||
 		t1Dur.YearsNanosecs != t2Dur.YearsNanosecs ||
@@ -1610,7 +1610,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isEmpty(
 
 	if tDur.startDateTimeTz.IsEmpty() &&
 		tDur.endDateTimeTz.IsEmpty() &&
-		tDur.TimeDuration == 0 &&
+		tDur.timeDuration == 0 &&
 		tDur.Years == 0 &&
 		tDur.YearsNanosecs == 0 &&
 		tDur.Months == 0 &&
@@ -1879,7 +1879,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcEndDateTimeToNow(
 		return err
 	}
 
-	tDur2.TimeDuration =
+	tDur2.timeDuration =
 		tDur2.endDateTimeTz.dateTimeValue.Sub(
 			tDur2.startDateTimeTz.dateTimeValue)
 
@@ -1989,7 +1989,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 		return err
 	}
 
-	tDur2.TimeDuration =
+	tDur2.timeDuration =
 			tDur2.endDateTimeTz.dateTimeValue.Sub(
 				tDur2.startDateTimeTz.dateTimeValue)
 
@@ -2265,7 +2265,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 		return err
 	}
 
-	tDur2.TimeDuration =
+	tDur2.timeDuration =
 		tDur2.endDateTimeTz.dateTimeValue.Sub(
 				tDur2.startDateTimeTz.dateTimeValue)
 
@@ -2491,7 +2491,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 		return err
 	}
 
-	tDur2.TimeDuration =
+	tDur2.timeDuration =
 		tDur2.endDateTimeTz.dateTimeValue.Sub(
 					tDur2.startDateTimeTz.dateTimeValue)
 
@@ -2788,7 +2788,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesDateDtoCalcTz(
 		return err
 	}
 
-	tDur2.TimeDuration =
+	tDur2.timeDuration =
 		tDur2.endDateTimeTz.dateTimeValue.Sub(
 			tDur2.startDateTimeTz.dateTimeValue)
 
@@ -3029,7 +3029,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationCalcTz(
 		return err
 	}
 
-	tDur2.TimeDuration = duration
+	tDur2.timeDuration = duration
 
 	tDur2.CalcType = tDurCalcType
 
@@ -3270,7 +3270,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDurationDateDtoCalcTz(
 		return err
 	}
 
-	tDur2.TimeDuration = duration
+	tDur2.timeDuration = duration
 
 	tDur2.CalcType = tDurCalcType
 
@@ -3540,7 +3540,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDtoCalcTz(
 															plusTimeDto,
 															ePrefix)
 
-	tDur2.TimeDuration =
+	tDur2.timeDuration =
 			tDur2.endDateTimeTz.dateTimeValue.Sub(
 				tDur2.startDateTimeTz.dateTimeValue)
 

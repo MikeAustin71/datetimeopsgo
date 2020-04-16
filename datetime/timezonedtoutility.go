@@ -825,7 +825,7 @@ func (tZoneUtil *timeZoneDtoUtility) addTimeDurationDto(
 
 	return tZoneUtil2.addDuration(
 		tzDto,
-		durDto.TimeDuration,
+		durDto.timeDuration,
 		ePrefix)
 }
 

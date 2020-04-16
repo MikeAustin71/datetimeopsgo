@@ -129,9 +129,9 @@ func ExampleNewStartTimeDuration01() {
 			t2OutStr, dur.BaseTime.GetThisEndDateTime().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
+	if t12Dur != dur.BaseTime.GetThisTimeDuration() {
 		fmt.Printf("Error- Expected Time Duration %v.\n" +
-			"Instead, got %v\n", t12Dur, dur.BaseTime.TimeDuration)
+			"Instead, got %v\n", t12Dur, dur.BaseTime.GetThisTimeDuration())
 	}
 
 	if t12Dur != t12UTCDur {

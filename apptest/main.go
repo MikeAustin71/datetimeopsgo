@@ -305,8 +305,10 @@ func (mt mainTest) mainTest075() {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != dur.BaseTime.TimeDuration {
-		fmt.Printf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, dur.BaseTime.TimeDuration)
+	if tOutDur != dur.BaseTime.GetThisTimeDuration() {
+		fmt.Printf("Error: Expected DurationTriad.timeDuration of %v.\n" +
+			"Instead, got %v\n",
+			tOutDur, dur.BaseTime.GetThisTimeDuration())
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -399,7 +401,7 @@ func (mt mainTest) mainTest075() {
 			startDateTimeTz.GetDateTimeValue().Format(dt.DEFAULTDATETIMEFORMAT))
 	}
 
-	t2Local := dur.LocalTime.GetThisStartDateTime().Add(dur.LocalTime.TimeDuration)
+	t2Local := dur.LocalTime.GetThisStartDateTime().Add(dur.LocalTime.GetThisTimeDuration())
 
 	if !t2Local.Equal(dur.LocalTime.GetThisEndDateTime()) {
 		fmt.Printf("Expected Local End Time='%v'.\n" +
@@ -423,7 +425,7 @@ func (mt mainTest) mainTest075() {
 			dur.UTCTime.GetThisStartDateTime().Format(dt.FmtDateTimeYrMDayFmtStr))
 	}
 
-	t2UTC := dur.UTCTime.GetThisStartDateTime().Add(dur.UTCTime.TimeDuration)
+	t2UTC := dur.UTCTime.GetThisStartDateTime().Add(dur.UTCTime.GetThisTimeDuration())
 
 	if !t2UTC.Equal(dur.UTCTime.GetThisEndDateTime()) {
 		fmt.Printf("Expected UTC End Time='%v'.\n" +
@@ -605,7 +607,7 @@ timeDto := dt.TimeDto{
 	fmt.Printf("\n     Calculated UTC Duration: %v\n\n",
 		dur.UTCTime.GetYearMthDaysTimeAbbrvStr())
 
-	t2DurationDate := t1.Add(dur.UTCTime.TimeDuration)
+	t2DurationDate := t1.Add(dur.UTCTime.GetThisTimeDuration())
 
 	fmt.Printf("\n t1 + UTCTime Durtion: %v\n\n",
 		t2DurationDate.Format(fmtStr))
@@ -734,9 +736,9 @@ func (mt mainTest) mainTest071() {
 			t2OutStr, dur.BaseTime.GetThisEndDateTime().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
+	if t12Dur != dur.BaseTime.GetThisTimeDuration() {
 		fmt.Printf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, dur.BaseTime.TimeDuration)
+			t12Dur, dur.BaseTime.GetThisTimeDuration())
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()

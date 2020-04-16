@@ -275,8 +275,8 @@ func TestTimeDurationDto_NewStartTimeDuration_01(t *testing.T) {
 			t2OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != tDto.TimeDuration {
-		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, tDto.TimeDuration)
+	if t12Dur != tDto.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, tDto.timeDuration)
 	}
 
 	outStr := tDto.GetYearMthDaysTimeStr()
@@ -321,8 +321,8 @@ func TestTimeDurationDto_NewStartEndTimes_01(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != tDto.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, tDto.TimeDuration)
+	if tOutDur != tDto.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, tDto.timeDuration)
 	}
 
 	outStr := tDto.GetYearMthDaysTimeStr()
@@ -438,8 +438,8 @@ func TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != tDto.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, tDto.TimeDuration)
+	if tOutDur != tDto.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, tDto.timeDuration)
 	}
 
 	outStr := tDto.GetYearMthDaysTimeStr()
@@ -556,8 +556,8 @@ func TestTimeDurationDto_NewStartEndDateTzDtoTz_01(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != tDto.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, tDto.TimeDuration)
+	if tOutDur != tDto.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, tDto.timeDuration)
 	}
 
 	outStr := tDto.GetYearMthDaysTimeStr()
@@ -676,8 +676,8 @@ func TestTimeDurationDto_NewStartEndDateTzDto_01(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != tDto.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v", tOutDur, tDto.TimeDuration)
+	if tOutDur != tDto.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, tDto.timeDuration)
 	}
 
 	outStr := tDto.GetYearMthDaysTimeStr()
@@ -785,9 +785,9 @@ func TestTimeDurationDto_NewStartTimeMinusTime_01(t *testing.T) {
 			t2OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != tDto.TimeDuration {
+	if t12Dur != tDto.timeDuration {
 		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, tDto.TimeDuration)
+			t12Dur, tDto.timeDuration)
 	}
 
 	outStr := tDto.GetYearMthDaysTimeStr()
@@ -834,9 +834,9 @@ func TestTimeDurationDto_NewStartTimePlusTime_01(t *testing.T) {
 			t2OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != tDto.TimeDuration {
+	if t12Dur != tDto.timeDuration {
 		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, tDto.TimeDuration)
+			t12Dur, tDto.timeDuration)
 	}
 
 	outStr := tDto.GetYearMthDaysTimeStr()
@@ -888,9 +888,9 @@ func TestTimeDurationDto_SetStartEndTimes(t *testing.T) {
 
 	tOutDur := t2.Sub(t1)
 
-	if tOutDur != tDto.TimeDuration {
-		t.Errorf("Error: Expected DurationTriad.TimeDuration of %v. Instead, got %v",
-			tOutDur, tDto.TimeDuration)
+	if tOutDur != tDto.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v",
+			tOutDur, tDto.timeDuration)
 
 	}
 
@@ -1101,9 +1101,9 @@ func TestTimeDurationDto_SetStartTimePlusTime(t *testing.T) {
 			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
+	if t12Dur != dur.BaseTime.timeDuration {
 		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, dur.BaseTime.TimeDuration)
+			t12Dur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -1153,9 +1153,9 @@ func TestTimeDurationDto_SetStartTimeMinusTime(t *testing.T) {
 			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
+	if t12Dur != dur.BaseTime.timeDuration {
 		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, dur.BaseTime.TimeDuration)
+			t12Dur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -1203,9 +1203,9 @@ func TestTimeDurationDto_SetStartTimeDuration(t *testing.T) {
 			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.TimeDuration {
+	if t12Dur != dur.BaseTime.timeDuration {
 		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, dur.BaseTime.TimeDuration)
+			t12Dur, dur.BaseTime.timeDuration)
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
