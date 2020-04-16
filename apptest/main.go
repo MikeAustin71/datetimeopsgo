@@ -384,7 +384,7 @@ func (mt mainTest) mainTest075() {
 	}
 
 	t1Local := t1.In(loc)
-	startDateTimeTz := dur.LocalTime.GetTypeStartDateTimeTz()
+	startDateTimeTz := dur.LocalTime.GetThisStartDateTimeTz()
 	if t1Local.Location().String() != startDateTimeTz.GetOriginalTzName() {
 		fmt.Printf("Expected Local Time Zone Location ='%v'.\n" +
 			"Actual Time Zone Location ='%v'.\n",

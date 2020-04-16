@@ -2648,7 +2648,7 @@ func (mc MainCodeExamples) mainCodeEx010() {
 		return
 	}
 
-	startTimeTz := dur.GetTypeStartDateTimeTz()
+	startTimeTz := dur.GetThisStartDateTimeTz()
 
 	fmt.Println("Expected Start Date Time: ", t1OutStr)
 	fmt.Println("  Actual Start Date Time: ", startTimeTz.String())
@@ -2717,7 +2717,7 @@ func (mc MainCodeExamples) mainCodeEx008() {
 
 	dOut := du.BaseTime.GetYearMthDaysTimeAbbrvStr()
 
-	startTimeTz := du.BaseTime.GetTypeStartDateTimeTz()
+	startTimeTz := du.BaseTime.GetThisStartDateTimeTz()
 
 	fmt.Println("  Expected: ", expected)
 	fmt.Println("    Actual: ", dOut)

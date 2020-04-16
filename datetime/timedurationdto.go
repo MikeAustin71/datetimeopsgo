@@ -1864,11 +1864,11 @@ func (tDur *TimeDurationDto) GetThisStartDateTimeSting() string {
 	return tDur.startDateTimeTz.String()
 }
 
-// GetTypeStartTimeDateTz - Returns the starting date time for this
+// GetThisStartDateTimeTz - Returns the starting date time for this
 // duration as a Type,'DateTzDTo'. This value is stored in private
 // member variable TimeDurationDto.startDateTimeTz.
 //
-func (tDur *TimeDurationDto) GetTypeStartDateTimeTz() DateTzDto {
+func (tDur *TimeDurationDto) GetThisStartDateTimeTz() DateTzDto {
 
 	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
