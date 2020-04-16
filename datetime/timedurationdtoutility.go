@@ -2404,7 +2404,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 	startDateTime,
 	endDateTime time.Time,
 	tDurCalcType TDurCalcType,
-	timeZoneLocation,
+	timeZoneLocation string,
+	timeMathCalcMode TimeMathCalcMode,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -2453,6 +2454,17 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 			}
 	}
 
+	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
+			timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeMathCalcMode",
+			inputParameterValue: timeMathCalcMode.String(),
+			errMsg:              "Input Parameter 'timeMathCalcMode' is INVALID!",
+			err:                 nil,
+		}
+	}
+
 	tzMech := TimeZoneMechanics{}
 
 	timeZoneLocation = tzMech.PreProcessTimeZoneLocation(timeZoneLocation)
@@ -2465,37 +2477,26 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesCalcTz(
 
 	tDur2.lock = new(sync.Mutex)
 
-	dTzUtil := dateTzDtoUtility{}
+	var err error
 
-	err := dTzUtil.setFromTimeTzName(
-		&tDur2.startDateTimeTz,
+	tDur2.timeDuration,
+	tDur2.startDateTimeTz,
+	tDur2.endDateTimeTz,
+	err = dtMech.ComputeDuration(
 		startDateTime,
-		TzConvertType.Relative(),
-		timeZoneLocation,
-		dateTimeFmtStr,
-		ePrefix)
-
-	if err != nil {
-		return err
-	}
-
-	err = dTzUtil.setFromTimeTzName(
-		&tDur2.endDateTimeTz,
 		endDateTime,
-		TzConvertType.Relative(),
 		timeZoneLocation,
+		timeMathCalcMode,
 		dateTimeFmtStr,
 		ePrefix)
 
 	if err != nil {
 		return err
 	}
-
-	tDur2.timeDuration =
-		tDur2.endDateTimeTz.dateTimeValue.Sub(
-					tDur2.startDateTimeTz.dateTimeValue)
 
 	tDur2.timeDurCalcType = tDurCalcType
+
+	tDur2.timeMathCalcMode = timeMathCalcMode
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 

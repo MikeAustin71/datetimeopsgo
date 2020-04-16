@@ -433,14 +433,22 @@ func (dtMech *DTimeMechanics) AllocateSecondsToHrsMinSecs(
 	return hours, minutes, seconds, sign
 }
 
-// ComputeDurationUtc - Computes time duration by first
-// converting parameters 'startTime' and 'EndTime' to UTC
-// Time Zone.
+// ComputeDuration - Computes time duration using
+// the algorithm specified by input parameter
+// 'timeMathCalcMode'.
 //
-func (dtMech *DTimeMechanics) ComputeDurationUtc(
+func (dtMech *DTimeMechanics) ComputeDuration(
 	startTime,
 	endTime time.Time,
-	ePrefix string) (time.Duration, error) {
+	timeZoneLocation string,
+	timeMathCalcMode TimeMathCalcMode,
+	dateTimeFmtStr,
+	ePrefix string) (
+	duration time.Duration,
+	newStartDateTime DateTzDto,
+	newEndDateTime DateTzDto,
+	err error) {
+
 
 	if dtMech.lock == nil {
 		dtMech.lock = new(sync.Mutex)
@@ -450,8 +458,18 @@ func (dtMech *DTimeMechanics) ComputeDurationUtc(
 
 	defer dtMech.lock.Unlock()
 
+	ePrefix += "DTimeMechanics.ComputeDuration() "
+
+	duration = time.Duration(0)
+
+	newStartDateTime = DateTzDto{}.New()
+
+	newEndDateTime = DateTzDto{}.New()
+
+	err = nil
+
 	if endTime.Before(startTime) {
-		return time.Duration(0),
+		err =
 			&InputParameterError{
 				ePrefix:             ePrefix,
 				inputParameterName:  "startTime",
@@ -459,13 +477,244 @@ func (dtMech *DTimeMechanics) ComputeDurationUtc(
 				errMsg:              "Input parameter 'endTime' is less than 'startTime'!",
 				err:                 nil,
 			}
+
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+
+	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
+		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeMathCalcMode",
+			inputParameterValue: timeMathCalcMode.String(),
+			errMsg:              "Input Parameter 'timeMathCalcMode' is INVALID!",
+			err:                 nil,
+		}
+
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	dtMech2 := DTimeMechanics{}
+
+	if timeMathCalcMode == TCalcMode.LocalTimeZone() {
+
+		return dtMech2.ComputeDurationByLocalTz(
+			startTime,
+			endTime,
+			timeZoneLocation,
+			dateTimeFmtStr,
+			ePrefix)
+
+	} else if timeMathCalcMode == TCalcMode.UtcTimeZone() {
+
+		return dtMech2.ComputeDurationByUtc(
+			startTime,
+			endTime,
+			timeZoneLocation,
+			dateTimeFmtStr,
+			ePrefix)
+
+	}
+
+	err = fmt.Errorf(ePrefix +
+		"\nError: Input parameter 'timeMathCalcMode' is not equal to\n" +
+		"'LocalTimeZone' or 'UtcTimeZone'\n")
+
+	return duration, newStartDateTime, newEndDateTime, err
+}
+
+// ComputeDurationByLocalTz - Computes time duration by local
+// time zone. The local time zone is specified by the input
+// string parameter 'timeZoneLocation'.
+//
+func (dtMech *DTimeMechanics) ComputeDurationByLocalTz(
+	startTime,
+	endTime time.Time,
+	timeZoneLocation,
+	dateTimeFmtStr,
+	ePrefix string) (
+	                 duration time.Duration,
+	                 newStartDateTime DateTzDto,
+	                 newEndDateTime DateTzDto,
+	                 err error) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix += "DTimeMechanics.ComputeDurationByLocalTz() "
+
+	duration = time.Duration(0)
+
+	newStartDateTime = DateTzDto{}.New()
+
+	newEndDateTime = DateTzDto{}.New()
+
+	err = nil
+
+	if endTime.Before(startTime) {
+		err =
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "startTime",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'endTime' is less than 'startTime'!",
+				err:                 nil,
+			}
+
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	tzMech := TimeZoneMechanics{}
+
+	var tzSpec TimeZoneSpecification
+
+	tzSpec, err = tzMech.GetTimeZoneFromName(
+		startTime,
+		timeZoneLocation,
+		TzConvertType.Relative(),
+		ePrefix)
+
+	if err != nil {
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTzSpec(
+		&newStartDateTime,
+		startTime,
+		tzSpec,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	err = dTzUtil.setFromTzSpec(
+		&newEndDateTime,
+		endTime,
+		tzSpec,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		newStartDateTime = DateTzDto{}.New()
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	duration =  newEndDateTime.dateTimeValue.
+								Sub(newStartDateTime.dateTimeValue)
+
+	return duration, newStartDateTime, newEndDateTime, err
+}
+
+// ComputeDurationByUtc - Computes time duration by first
+// converting parameters 'startTime' and 'EndTime' to UTC
+// Time Zone and then computing duration. Return values
+// 'newStartDateTime' and 'newEndDateTime' are then computed
+// by converting from UTC time to the local time zone designated
+// by input string parameter, 'timeZoneLocation'.
+//
+func (dtMech *DTimeMechanics) ComputeDurationByUtc(
+	startTime,
+	endTime time.Time,
+	timeZoneLocation,
+	dateTimeFmtStr,
+	ePrefix string) (duration time.Duration,
+	                 newStartDateTime DateTzDto,
+	                 newEndDateTime DateTzDto,
+	                 err error) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix += "DTimeMechanics.ComputeDurationByUtc() "
+
+	duration = time.Duration(0)
+
+	newStartDateTime = DateTzDto{}.New()
+
+	newEndDateTime = DateTzDto{}.New()
+
+	err = nil
+
+	if endTime.Before(startTime) {
+		err =
+			&InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "startTime",
+				inputParameterValue: "",
+				errMsg:              "Input parameter 'endTime' is less than 'startTime'!",
+				err:                 nil,
+			}
+
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	tzMech := TimeZoneMechanics{}
+
+	var tzSpec TimeZoneSpecification
+
+	tzSpec, err = tzMech.GetTimeZoneFromName(
+		startTime,
+		timeZoneLocation,
+		TzConvertType.Relative(),
+		ePrefix)
+
+	if err != nil {
+		return duration, newStartDateTime, newEndDateTime, err
 	}
 
 	startTimeUtc := startTime.In(time.UTC)
 
 	endTimeUtc := endTime.In(time.UTC)
 
-	return endTimeUtc.Sub(startTimeUtc), nil
+	duration = endTimeUtc.Sub(startTimeUtc)
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTzSpec(
+		&newStartDateTime,
+		startTimeUtc,
+		tzSpec,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		duration = time.Duration(0)
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	err = dTzUtil.setFromTzSpec(
+		&newEndDateTime,
+		startTimeUtc,
+		tzSpec,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		duration = time.Duration(0)
+		newStartDateTime = DateTzDto{}.New()
+		return duration, newStartDateTime, newEndDateTime, err
+	}
+
+	return duration, newStartDateTime, newEndDateTime, err
 }
 
 // GetDurationFromTimeComponents - Receives time components
