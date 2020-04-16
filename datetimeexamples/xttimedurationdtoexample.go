@@ -116,7 +116,7 @@ func PrintTimeDurationDto(tDur dt.TimeDurationDto) {
 	fmt.Println("     startTimeDateTz: ", tDur.GetThisStartDateTimeSting())
 	fmt.Println("       endDateTimeTz: ", tDur.GetThisEndDateTimeString())
 	fmt.Println("        timeDuration: ", int64(tDur.GetThisTimeDuration()))
-	fmt.Println("            CalcType: ", tDur.CalcType.String())
+	fmt.Println("            calcType: ", tDur.GetThisTimeDurationCalcType().String())
 	fmt.Println("               Years: ", tDur.Years)
 	fmt.Println("       YearsNanosecs: ", tDur.YearsNanosecs)
 	fmt.Println("              Months: ", tDur.Months)

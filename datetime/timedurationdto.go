@@ -38,7 +38,7 @@ type TimeDurationDto struct {
 	startDateTimeTz DateTzDto     // Starting Date Time with Time Zone info
 	endDateTimeTz   DateTzDto     // Ending Date Time with Time Zone info
 	timeDuration    time.Duration // Elapsed time or duration between starting and ending date time
-	CalcType        TDurCalcType  // The calculation Type. This controls the allocation of time
+	calcType        TDurCalcType  // The calculation Type. This controls the allocation of time
 	//                               duration over years, months, weeks, days and hours.
 	timeMathCalcMode     TimeMathCalcMode // The Time Math algorithm used to calculate time duration
 	Years                int64            // Number of Years
@@ -1845,7 +1845,6 @@ func (tDur *TimeDurationDto) GetThisStartDateTime() time.Time {
 	defer tDur.lock.Unlock()
 
 	return tDur.startDateTimeTz.dateTimeValue
-
 }
 
 // GetThisStartDateTimeSting - Returns the starting date time for
@@ -1895,6 +1894,23 @@ func (tDur *TimeDurationDto) GetThisTimeDuration() time.Duration {
 	defer tDur.lock.Unlock()
 
 	return tDur.timeDuration
+}
+
+// GetThisTimeDurationCalcType - Returns the time duration calculation type
+// associated with this TimeDurationDto instance. This value is extracted
+// from private member variable TimeDurationDto.calcType.
+//
+func (tDur *TimeDurationDto) GetThisTimeDurationCalcType() TDurCalcType {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	return tDur.calcType
 }
 
 // GetYearMthDaysTimeAbbrvStr - Abbreviated formatting of time duration
@@ -2515,7 +2531,7 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 
 	timeDur2.timeDuration = time.Duration(0)
 
-	timeDur2.CalcType = TDurCalc.None()
+	timeDur2.calcType = TDurCalc.None()
 
 	timeDur2.startDateTimeTz = DateTzDto{}.New()
 
@@ -6605,7 +6621,7 @@ func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(
 //
 // The Time Zone Location is derived from the existing starting date
 // time, 'tDur.startDateTimeTz'.  The Calculation type is taken from
-// the existing calculation type, 'tDur.CalcType'.
+// the existing calculation type, 'tDur.calcType'.
 //
 // __________________________________________________________________________
 //
