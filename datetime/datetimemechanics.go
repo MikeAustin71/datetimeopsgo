@@ -433,11 +433,135 @@ func (dtMech *DTimeMechanics) AllocateSecondsToHrsMinSecs(
 	return hours, minutes, seconds, sign
 }
 
-// ComputeDuration - Computes time duration using
+// ComputeDurationFromBaseTime - Computes time duration using
+// using a Base Date Time and a time duration. The algorithm
+// used to compute staring date time and ending date time is
+// specified by input parameter 'timeMathCalcMode'.
+//
+func (dtMech *DTimeMechanics) ComputeDurationFromBaseTime(
+	baseTime time.Time,
+	duration time.Duration,
+	timeZoneLocation string,
+	timeMathCalcMode TimeMathCalcMode,
+	dateTimeFmtStr string,
+	ePrefix string) (
+	newStartDateTime DateTzDto,
+	newEndDateTime DateTzDto,
+	err error) {
+
+	if dtMech.lock == nil {
+		dtMech.lock = new(sync.Mutex)
+	}
+
+	dtMech.lock.Lock()
+
+	defer dtMech.lock.Unlock()
+
+	ePrefix += "DTimeMechanics.ComputeDurationFromBaseTime() "
+
+	newStartDateTime = DateTzDto{}.New()
+
+	newEndDateTime = DateTzDto{}.New()
+
+	err = nil
+
+	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
+		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeMathCalcMode",
+			inputParameterValue: timeMathCalcMode.String(),
+			errMsg:              "Input Parameter 'timeMathCalcMode' is INVALID!",
+			err:                 nil,
+		}
+
+		return newStartDateTime, newEndDateTime, err
+	}
+
+	var newBaseTime, startDateTime, endDateTime time.Time
+
+	if timeMathCalcMode == TCalcMode.LocalTimeZone() {
+
+		newBaseTime = baseTime
+
+	} else if timeMathCalcMode == TCalcMode.UtcTimeZone() {
+
+		newBaseTime = baseTime.In(time.UTC)
+
+	} else {
+
+		err = fmt.Errorf(ePrefix +
+			"\nError: Input parameter 'timeMathCalcMode' is not equal to\n" +
+			"'LocalTimeZone' or 'UtcTimeZone'\n")
+
+		return newStartDateTime, newEndDateTime, err
+	}
+
+	if duration < 0 {
+
+		endDateTime = newBaseTime
+
+		startDateTime = endDateTime.Add(duration)
+
+		duration = duration * -1
+
+	} else {
+
+		startDateTime = newBaseTime
+
+		endDateTime = startDateTime.Add(duration)
+
+	}
+
+	tzMech := TimeZoneMechanics{}
+
+	var tzSpec TimeZoneSpecification
+
+	tzSpec, err = tzMech.GetTimeZoneFromName(
+		baseTime,
+		timeZoneLocation,
+		TzConvertType.Relative(),
+		ePrefix)
+
+	if err != nil {
+		return newStartDateTime, newEndDateTime, err
+	}
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTzSpec(
+		&newStartDateTime,
+		startDateTime,
+		tzSpec,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return newStartDateTime, newEndDateTime, err
+	}
+
+	err = dTzUtil.setFromTzSpec(
+		&newEndDateTime,
+		endDateTime,
+		tzSpec,
+		TzConvertType.Relative(),
+		dateTimeFmtStr,
+		ePrefix)
+
+	if err != nil {
+		newStartDateTime = DateTzDto{}.New()
+		return newStartDateTime, newEndDateTime, err
+	}
+
+	return newStartDateTime, newEndDateTime, err
+}
+
+// ComputeDurationFromStartEndTimes - Computes time duration using
 // the algorithm specified by input parameter
 // 'timeMathCalcMode'.
 //
-func (dtMech *DTimeMechanics) ComputeDuration(
+func (dtMech *DTimeMechanics) ComputeDurationFromStartEndTimes(
 	startTime,
 	endTime time.Time,
 	timeZoneLocation string,
@@ -449,7 +573,6 @@ func (dtMech *DTimeMechanics) ComputeDuration(
 	newEndDateTime DateTzDto,
 	err error) {
 
-
 	if dtMech.lock == nil {
 		dtMech.lock = new(sync.Mutex)
 	}
@@ -458,7 +581,7 @@ func (dtMech *DTimeMechanics) ComputeDuration(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix += "DTimeMechanics.ComputeDuration() "
+	ePrefix += "DTimeMechanics.ComputeDurationFromStartEndTimes() "
 
 	duration = time.Duration(0)
 
@@ -468,17 +591,18 @@ func (dtMech *DTimeMechanics) ComputeDuration(
 
 	err = nil
 
-	if endTime.Before(startTime) {
-		err =
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "startTime",
-				inputParameterValue: "",
-				errMsg:              "Input parameter 'endTime' is less than 'startTime'!",
-				err:                 nil,
-			}
+	var tempStartTime, tempEndTime time.Time
 
-		return duration, newStartDateTime, newEndDateTime, err
+	if endTime.Before(startTime) {
+
+		tempStartTime = endTime
+		tempEndTime = startTime
+
+	} else {
+
+		tempStartTime = startTime
+		tempEndTime = endTime
+
 	}
 
 
@@ -500,8 +624,8 @@ func (dtMech *DTimeMechanics) ComputeDuration(
 	if timeMathCalcMode == TCalcMode.LocalTimeZone() {
 
 		return dtMech2.ComputeDurationByLocalTz(
-			startTime,
-			endTime,
+			tempStartTime,
+			tempEndTime,
 			timeZoneLocation,
 			dateTimeFmtStr,
 			ePrefix)
@@ -509,8 +633,8 @@ func (dtMech *DTimeMechanics) ComputeDuration(
 	} else if timeMathCalcMode == TCalcMode.UtcTimeZone() {
 
 		return dtMech2.ComputeDurationByUtc(
-			startTime,
-			endTime,
+			tempStartTime,
+			tempEndTime,
 			timeZoneLocation,
 			dateTimeFmtStr,
 			ePrefix)
@@ -557,17 +681,18 @@ func (dtMech *DTimeMechanics) ComputeDurationByLocalTz(
 
 	err = nil
 
-	if endTime.Before(startTime) {
-		err =
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "startTime",
-				inputParameterValue: "",
-				errMsg:              "Input parameter 'endTime' is less than 'startTime'!",
-				err:                 nil,
-			}
+	var tempStartTime, tempEndTime time.Time
 
-		return duration, newStartDateTime, newEndDateTime, err
+	if endTime.Before(startTime) {
+
+		tempStartTime = endTime
+		tempEndTime = startTime
+
+	} else {
+
+		tempStartTime = startTime
+		tempEndTime = endTime
+
 	}
 
 	tzMech := TimeZoneMechanics{}
@@ -575,7 +700,7 @@ func (dtMech *DTimeMechanics) ComputeDurationByLocalTz(
 	var tzSpec TimeZoneSpecification
 
 	tzSpec, err = tzMech.GetTimeZoneFromName(
-		startTime,
+		tempStartTime,
 		timeZoneLocation,
 		TzConvertType.Relative(),
 		ePrefix)
@@ -588,7 +713,7 @@ func (dtMech *DTimeMechanics) ComputeDurationByLocalTz(
 
 	err = dTzUtil.setFromTzSpec(
 		&newStartDateTime,
-		startTime,
+		tempStartTime,
 		tzSpec,
 		TzConvertType.Relative(),
 		dateTimeFmtStr,
@@ -600,7 +725,7 @@ func (dtMech *DTimeMechanics) ComputeDurationByLocalTz(
 
 	err = dTzUtil.setFromTzSpec(
 		&newEndDateTime,
-		endTime,
+		tempEndTime,
 		tzSpec,
 		TzConvertType.Relative(),
 		dateTimeFmtStr,
@@ -652,17 +777,18 @@ func (dtMech *DTimeMechanics) ComputeDurationByUtc(
 
 	err = nil
 
-	if endTime.Before(startTime) {
-		err =
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "startTime",
-				inputParameterValue: "",
-				errMsg:              "Input parameter 'endTime' is less than 'startTime'!",
-				err:                 nil,
-			}
+	var tempStartTime, tempEndTime time.Time
 
-		return duration, newStartDateTime, newEndDateTime, err
+	if endTime.Before(startTime) {
+
+		tempStartTime = endTime
+		tempEndTime = startTime
+
+	} else {
+
+		tempStartTime = startTime
+		tempEndTime = endTime
+
 	}
 
 	tzMech := TimeZoneMechanics{}
@@ -679,9 +805,9 @@ func (dtMech *DTimeMechanics) ComputeDurationByUtc(
 		return duration, newStartDateTime, newEndDateTime, err
 	}
 
-	startTimeUtc := startTime.In(time.UTC)
+	startTimeUtc := tempStartTime.In(time.UTC)
 
-	endTimeUtc := endTime.In(time.UTC)
+	endTimeUtc := tempEndTime.In(time.UTC)
 
 	duration = endTimeUtc.Sub(startTimeUtc)
 
