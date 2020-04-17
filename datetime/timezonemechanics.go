@@ -1183,8 +1183,9 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 	defer tzMech.lock.Unlock()
 
 	ePrefix += "TimeZoneMechanics.GetTimeZoneFromDateTime() "
-tzSpec = TimeZoneSpecification{}
-err = nil
+
+	tzSpec = TimeZoneSpecification{}
+	err = nil
 
 	if dateTime.IsZero() {
 		err =  &InputParameterError{
