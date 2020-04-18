@@ -273,34 +273,18 @@ func(durTUtil *durationTriadUtility) isValid(
 //
 // Input Parameters
 //
-//  durT          *DurationTriad
+//  durT              *DurationTriad
 //       - The results of this calculation will be stored
 //         in this instance of 'DurationTriad'
 //
-//  timeCalcMode  TimeMathCalcMode
-//       - TimeMathCalcMode is an enumeration which specifies the
-//         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value.
 //
-//         If days are defined as local time zone days (which may be
-//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
-//
-//         If days are always defined as having a time span of 24-consecutive
-//         hours, use TCalcMode.UtcTimeZone().
-//
-//         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
-//
-//         Valid values are:
-//               TCalcMode.LocalTimeZone()
-//               TCalcMode.UtcTimeZone()
-//
-//  endDateTime   time.Time
+//  endDateTime       time.Time
 //       - The ending date time value from which TimeDto
 //         parameter 'minusTimeDto' will be subtracted
 //         in order to compute the Starting Date Time.
 //
-//  minusTimeDto  TimeDto
+//
+//  minusTimeDto      TimeDto
 //       - An instance of TimeDto containing time values,
 //         (Years, Months, weeks, days, hours, minutes etc.)
 //         which will be subtracted from input parameter
@@ -326,7 +310,8 @@ func(durTUtil *durationTriadUtility) isValid(
 //         Type 'TimeDto' is located in source file:
 //          MikeAustin71\datetimeopsgo\datetime\timedto.go
 //
-//  tDurCalcType  TDurCalcType
+//
+//  tDurCalcType      TDurCalcType
 //       - Specifies the calculation type to be used in allocating
 //         time duration:
 //
@@ -359,7 +344,7 @@ func(durTUtil *durationTriadUtility) isValid(
 //         Used for very large duration values.
 //
 //
-//  timeZoneLocation string
+//  timeZoneLocation  string
 //       - Time zone location must be designated as one of
 //         three types of time zones:
 //
@@ -394,7 +379,25 @@ func(durTUtil *durationTriadUtility) isValid(
 //                "Delta"   or "D"
 //                "Zulu"    or "Z"
 //
-//  dateTimeFmtStr string
+//
+//  timeCalcMode      TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the algorithm
+//         which will be used when computing time spans or time duration.
+//
+//         If 'LocalTimeZone' is specified, days are defined as local time
+//         zone days which may be less than, or greater than, 24-hours due
+//         to local conventions like daylight savings time.
+//         (TCalcMode.LocalTimeZone())
+//
+//         If 'UtcTimeZone' is specified, days are uniformly defined as
+//         a time span consisting of 24-consecutive hours.
+//         (TCalcMode.UtcTimeZone())
+//
+//         For additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//
+//  dateTimeFmtStr    string
 //       - A date time format string which will be used
 //         to format and display 'dateTime'. Example:
 //         "2006-01-02 15:04:05.000000000 -0700 MST"
@@ -412,7 +415,8 @@ func(durTUtil *durationTriadUtility) isValid(
 //           FmtDateTimeYrMDayFmtStr =
 //               "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//  ePrefix        string
+//
+//  ePrefix           string
 //       - The error prefix containing the names of all
 //         the methods executed up to this point.
 //
@@ -453,12 +457,12 @@ func(durTUtil *durationTriadUtility) isValid(
 //
 func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 	durT *DurationTriad,
-	timeCalcMode TimeMathCalcMode,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
-	timeZoneLocation,
-	dateTimeFmtStr,
+	timeZoneLocation string,
+	timeCalcMode TimeMathCalcMode,
+	dateTimeFmtStr string,
 	ePrefix string) error {
 
 	durTUtil.lock.Lock()
@@ -506,11 +510,11 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		&durT2.BaseTime,
-		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
 		timeZoneLocation,
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Base Time Creation- ")
 
@@ -520,11 +524,11 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		&durT2.LocalTime,
-		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
 		TZones.Local(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Local Time Creation- ")
 
@@ -534,11 +538,11 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
 		&durT2.UTCTime,
-		timeCalcMode,
 		endDateTime,
 		minusTimeDto,
 		tDurCalcType,
 		TZones.Etc.UTC(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "UTC Time Creation- ")
 
@@ -682,6 +686,23 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 //              classified as a Military Time Zone.
 //
 //
+//  timeCalcMode       TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the algorithm
+//       which will be used when computing time spans or time duration.
+//
+//       If 'LocalTimeZone' is specified, days are defined as local time
+//       zone days which may be less than, or greater than, 24-hours due
+//       to local conventions like daylight savings time.
+//       (TCalcMode.LocalTimeZone())
+//
+//       If 'UtcTimeZone' is specified, days are uniformly defined as
+//       a time span consisting of 24-consecutive hours.
+//       (TCalcMode.UtcTimeZone())
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//
 //  dateTimeFmtStr     string
 //     - A date time format string which will be used
 //       to format and display 'dateTime'. Example:
@@ -713,8 +734,9 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 	startDateTime,
 	endDateTime time.Time,
 	tDurCalcType TDurCalcType,
-	timeZoneLocation,
-	dateTimeFmtStr,
+	timeZoneLocation string,
+	timeCalcMode TimeMathCalcMode,
+	dateTimeFmtStr string,
 	ePrefix string) error {
 
 	durTUtil.lock.Lock()
@@ -753,6 +775,18 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		}
 	}
 
+	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
+		timeCalcMode > TCalcMode.XLastValidCalcType() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeCalcMode",
+			inputParameterValue: "",
+			errMsg: "Input parameter 'timeCalcMode' " +
+				"is invalid!",
+			err: nil,
+		}
+	}
+
 	dtMech := DTimeMechanics{}
 
 	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
@@ -771,6 +805,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		endDateTime,
 		tDurCalcType,
 		timeZoneLocation,
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "BaseTime Failed- ")
 
@@ -784,6 +819,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		endDateTime,
 		tDurCalcType,
 		TZones.Local(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix+ "LocalTime Failed- ")
 
@@ -797,6 +833,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		endDateTime,
 		tDurCalcType,
 		TZones.UTC(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix+ "UTC Time Failed - ")
 
@@ -936,6 +973,23 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 //              classified as a Military Time Zone.
 //
 //
+//  timeCalcMode      TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the algorithm
+//         which will be used when computing time spans or time duration.
+//
+//         If 'LocalTimeZone' is specified, days are defined as local time
+//         zone days which may be less than, or greater than, 24-hours due
+//         to local conventions like daylight savings time.
+//         (TCalcMode.LocalTimeZone())
+//
+//         If 'UtcTimeZone' is specified, days are uniformly defined as
+//         a time span consisting of 24-consecutive hours.
+//         (TCalcMode.UtcTimeZone())
+//
+//         For additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//
 //  dateTimeFmtStr     string
 //     - A date time format string which will be used
 //       to format and display 'dateTime'. Example:
@@ -975,8 +1029,9 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 	startDateTime time.Time,
 	duration time.Duration,
 	tDurCalcType TDurCalcType,
-	timeZoneLocation,
-	dateTimeFmtStr,
+	timeZoneLocation string,
+	timeCalcMode TimeMathCalcMode,
+	dateTimeFmtStr string,
 	ePrefix string) error {
 
 	durTUtil.lock.Lock()
@@ -1033,6 +1088,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 		duration,
 		tDurCalcType,
 		timeZoneLocation,
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Base Time - ")
 
@@ -1047,6 +1103,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 		duration,
 		tDurCalcType,
 		TZones.Local(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Local Time - ")
 
@@ -1060,6 +1117,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 		duration,
 		tDurCalcType,
 		TZones.UTC(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "UTC Time - ")
 
@@ -1108,24 +1166,6 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 // ------------------------------------------------------------------------
 //
 // Input Parameters
-//
-//  timeCalcMode  TimeMathCalcMode
-//       - TimeMathCalcMode is an enumeration which specifies the
-//         addition algorithm which will be used when adding time
-//         components to the current DateTzDto date time value.
-//
-//         If days are defined as local time zone days (which may be
-//         less than or greater than 24-hours) use TCalcMode.LocalTimeZone().
-//
-//         If days are always defined as having a time span of 24-consecutive
-//         hours, use TCalcMode.UtcTimeZone().
-//
-//         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
-//
-//         Valid values are:
-//               TCalcMode.LocalTimeZone()
-//               TCalcMode.UtcTimeZone()
 //
 //  durT       *DurationTriad
 //     - The results of this calculation will be stored
@@ -1251,6 +1291,23 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 //              classified as a Military Time Zone.
 //
 //
+//  timeCalcMode      TimeMathCalcMode
+//       - TimeMathCalcMode is an enumeration which specifies the algorithm
+//         which will be used when computing time spans or time duration.
+//
+//         If 'LocalTimeZone' is specified, days are defined as local time
+//         zone days which may be less than, or greater than, 24-hours due
+//         to local conventions like daylight savings time.
+//         (TCalcMode.LocalTimeZone())
+//
+//         If 'UtcTimeZone' is specified, days are uniformly defined as
+//         a time span consisting of 24-consecutive hours.
+//         (TCalcMode.UtcTimeZone())
+//
+//         For additional information see the type documentation at
+//               datetime\timemathcalcmode.go
+//
+//
 //  dateTimeFmtStr string
 //     - A date time format string which will be used
 //       to format and display 'dateTime'. Example:
@@ -1286,11 +1343,11 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 //
 func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 	durT *DurationTriad,
-	timeCalcMode TimeMathCalcMode,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
-	timeZoneLocation,
+	timeZoneLocation string,
+	timeCalcMode TimeMathCalcMode,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -1353,11 +1410,11 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 		&tDur2.BaseTime,
-		timeCalcMode,
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
 		timeZoneLocation,
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Base Time - ")
 
@@ -1365,14 +1422,13 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 		return err
 	}
 
-
 	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 		&tDur2.LocalTime,
-		timeCalcMode,
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
 		TZones.Local(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Local Time - ")
 
@@ -1382,11 +1438,11 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 
 	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
 		&tDur2.UTCTime,
-		timeCalcMode,
 		startDateTime,
 		plusTimeDto,
 		tDurCalcType,
 		TZones.UTC(),
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "UTC Time - ")
 
