@@ -2556,106 +2556,164 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 // reversed and ending date time is assigned to 'startDateTime' while 'startDateTime'
 // is assigned to ending date time.
 //
-// Note:   This method applies the standard Time Duration allocation, calculation type
-//         'TDurCalcType(0).StdYearMth()'. This means that time duration is allocated over years,
-//         months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
-//         microseconds and nanoseconds.  For details, see Type 'TDurCalcType' in this source
-//         file: MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure both starting and ending date time.
+//
+// The user is also required to provide the time duration calculation type which
+// will control the output of the time duration calculation. The standard date
+// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
+// time duration is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// discussion of Time Duration Calculation type, see Type TDurCalcType located
+// in source file:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // __________________________________________________________________________
 //
 // Input Parameters:
 //
-//  startDateTime  time.Time
+//  startDateTime     time.Time
 //     - Starting date time
 //
 //
+//  tDurCalcType      TDurCalcType
+//     - Specifies the calculation type to be used in allocating
+//       time duration. This Type is configured as an enumeration.
+//       Member values may be accessed directly using the syntax
+//       TDurCalcType(0).StdYearMth(). Alternatively, an abbreviated
+//       syntax may be used by means of the global variable, 'TDurCalc'.
+//       Example: TDurCalc.StdYearMth()
+//
+//       Valid enumerations are listed as follows:
+//
+//       TDurCalcType(0).StdYearMth()
+//         - Default - standard year, month week, day time calculation.
+//
+//       TDurCalcType(0).CumMonths()
+//         - Computes cumulative months - no Years.
+//
+//       TDurCalcType(0).CumWeeks()
+//         - Computes cumulative weeks. No Years or months
+//
+//       TDurCalcType(0).CumDays()
+//         - Computes cumulative days. No Years, months or weeks.
+//
+//       TDurCalcType(0).CumHours()
+//         - Computes cumulative hours. No Years, months, weeks or days.
+//
+//       TDurCalcType(0).CumMinutes()
+//         - Computes cumulative minutes. No Years, months, weeks, days
+//           or hours.
+//
+//       TDurCalcType(0).CumSeconds()
+//         - Computes cumulative seconds. No Years, months, weeks, days,
+//           hours or minutes.
+//
+//       TDurCalcType(0).GregorianYears()
+//         - Computes Years based on average length of a Gregorian Year
+//           Used for very large duration values.
+//
+//       Type 'TDurCalcType' is located in source file:
+//         MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+//
 //  timeZoneLocation  string
-//       - Designates the standard Time Zone location by which
-//         time duration will be compared. This ensures that
-//         'oranges are compared to oranges and apples are compared
-//         to apples' with respect to start time and end time duration
-//         calculations.
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time comparisons.
 //
-//         If 'timeZoneLocation' is passed as an empty string, it
-//         will be automatically defaulted to the 'UTC' time zone.
-//         Reference Universal Coordinated Time:
-//            https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//         Time zone location, or time zone name,
-//         must be designated as one of three types
-//         of values:
+//       Time zone location must be designated as one of three types of
+//       time zones.
 //
-//         (1) The string 'Local' - signals the designation of the local time zone
-//             configured for the host computer executing this code.
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
 //
-//         (2) IANA Time Zone Location -
-//             See https://golang.org/pkg/time/#LoadLocation
-//             and https://www.iana.org/time-zones to ensure that
-//             the IANA Time Zone Database is properly configured
-//             on your system. Note: IANA Time Zone Data base is
-//             equivalent to 'tz database'.
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system.
 //
-//                Examples:
-//                  "America/New_York"
-//                  "America/Chicago"
-//                  "America/Denver"
-//                  "America/Los_Angeles"
-//                  "Pacific/Honolulu"
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
 //
-//         (3) A valid Military Time Zone
-//             Military time zones are commonly used in
-//             aviation as well as at sea. They are also
-//             known as nautical or maritime time zones.
-//             Reference:
-//                 https://en.wikipedia.org/wiki/List_of_military_time_zones
-//                 http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//                 https://www.timeanddate.com/time/zones/military
-//                 https://www.timeanddate.com/worldclock/timezone/alpha
-//                 https://www.timeanddate.com/time/map/
+//       (3) A Military Time Zone
+//             In addition to military operations, Military
+//             time zones are commonly used in aviation as
+//             well as at sea. They are also known as nautical
+//             or maritime time zones.
+//           Reference:
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
 //
-//         Note:
-//             The source file 'timezonedata.go' contains over 600 constant
-//             time zone declarations covering all IANA and Military Time
-//             Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//             time zone constants begin with the prefix 'TZones'.
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
 //
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
 //
-//  timeCalcMode  TimeMathCalcMode
-//       - TimeMathCalcMode is an enumeration which specifies the algorithm
-//         which will be used when computing time spans or time duration.
-//
-//         If 'LocalTimeZone' is specified, days are defined as local time
-//         zone days which may be less than, or greater than, 24-hours due
-//         to local conventions like daylight savings time.
-//         (TCalcMode.LocalTimeZone())
-//
-//         If 'UtcTimeZone' is specified, days are uniformly defined as
-//         a time span consisting of 24-consecutive hours.
-//         (TCalcMode.UtcTimeZone())
-//
-//         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
 //
 //
-//   dateTimeFmtStr string
-//       - A date time format string which will be used
-//         to format and display 'dateTime'. Example:
-//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//  timeCalcMode      TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the algorithm
+//       which will be used when computing time spans or time duration.
 //
-//         Date time format constants are found in the source
-//         file 'constantsdatetime.go'. These constants represent
-//         the more commonly used date time string formats. All
-//         Date Time format constants begin with the prefix
-//         'FmtDateTime'.
+//       If 'LocalTimeZone' is specified, days are defined as local time
+//       zone days which may be less than, or greater than, 24-hours due
+//       to local conventions like daylight savings time.
+//       (TCalcMode.LocalTimeZone())
 //
-//         If 'dateTimeFmtStr' is submitted as an
-//         'empty string', a default date time format
-//         string will be applied. The default date time
-//         format string is:
-//           FmtDateTimeYrMDayFmtStr =
-//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'UtcTimeZone' is specified, days are uniformly defined as
+//       a time span consisting of 24-consecutive hours.
+//       (TCalcMode.UtcTimeZone())
 //
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
+//
+//
+//  dateTimeFmtStr    string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
+//
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // __________________________________________________________________________
 //
@@ -2676,24 +2734,33 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 //
 //   tDurDto, err := TimeDurationDto{}.NewAutoEnd(
 //                                     startTime,
-//                                     TZones.US.Central(),
-//                                     FmtDateTimeYrMDayFmtStr)
+//                    TDurCalc.StdYearMth(),
+//                    TZones.US.Central(),
+//                    TCalcMode.LocalTimeZone(),
+//                    FmtDateTimeYrMDayFmtStr)
 //
-//   Note:
+//  Note:
+//        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
+//         standard year month day time duration allocation.
+//
 //        'TZones.US.Central()' is a constant available int source file,
-//         'timezonedata.go'
+//        'timezonedata.go'. TZones.US.Central() is equivalent to
+//        "America/Chicago".
 //
-//         TZones.US.Central() is equivalent to "America/Chicago"
+//        TCalcMode.LocalTimeZone() specifies that time duration will be
+//        computed in the context of local time zones. Reference Type
+//        'TDurCalcType' located in source file:
+//            'datetime\timemathcalcmode.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
-//        'constantsdatetime.go'
-//
-//         FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//        'constantsdatetime.go'.
+//              FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewAutoEnd(
 	startDateTime time.Time,
+	tDurCalcType TDurCalcType,
 	timeZoneLocation string,
-	timeMathCalcMode TimeMathCalcMode,
+	timeCalcMode TimeMathCalcMode,
 	dateTimeFmtStr string) (TimeDurationDto, error) {
 
 	if tDur.lock == nil {
@@ -2714,9 +2781,9 @@ func (tDur TimeDurationDto) NewAutoEnd(
 		&tDur2,
 		startDateTime,
 		time.Now().UTC(),
-		TDurCalc.StdYearMth(),
+		tDurCalcType,
 		timeZoneLocation,
-		timeMathCalcMode,
+		timeCalcMode,
 		dateTimeFmtStr,
 		ePrefix)
 
@@ -2731,103 +2798,125 @@ func (tDur TimeDurationDto) NewAutoEnd(
 // automatically initialized by calling time.Now(). Afterwards, start date time is converted
 // to the Time Zone specified in input parameter, 'timeZoneLocation'.
 //
-// This method will set ending date time to the same value as starting date time resulting in
-// a time duration value of zero.
-//
-// In order to compute the final time duration value, call the method TimeDurationDto.SetAutoEnd()
-// when ready.  At that point, ending date time will be set by a call to time.Now().
+// This method will set an arbitrary ending date time to be used as a place holder.  Thereafter
+// a call to method TimeDurationDto.SetAutoEnd() will automatically set the final
+// ending date time and compute the associated time duration.
 //
 // Use of these two methods, 'NewAutStart' and 'SetAutoEnd', constitutes a stop watch feature which
 // can be triggered to measure elapsed time.
 //
-// Note:  This method applies the standard Time Duration allocation, calculation type
-//        'TDurCalcType(0).StdYearMth()'. This means that time duration is allocated over years,
-//        months, weeks, weekdays, date days, hours, minutes, seconds, milliseconds,
-//        microseconds and nanoseconds. For details, see Type 'TDurCalcType' in this source
-//        file: MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure both starting and ending date time.
+//
+// The user is also required to provide the time duration calculation type which
+// will control the output of the time duration calculation. The standard date
+// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
+// time duration is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// discussion of Time Duration Calculation type, see Type TDurCalcType located
+// in source file:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // __________________________________________________________________________
 //
 // Input Parameters:
 //
-//  tDurCalcType TDurCalcType
-//       - Specifies the calculation type to be used in allocating
-//         time duration:
+//  tDurCalcType      TDurCalcType
+//     - Specifies the calculation type to be used in allocating
+//       time duration. This Type is configured as an enumeration.
+//       Member values may be accessed directly using the syntax
+//       TDurCalcType(0).StdYearMth(). Alternatively, an abbreviated
+//       syntax may be used by means of the global variable, 'TDurCalc'.
+//       Example: TDurCalc.StdYearMth()
 //
-//         TDurCalcType(0).StdYearMth()
-//           - Default - standard year, month week, day time calculation.
+//       Valid enumerations are listed as follows:
 //
-//         TDurCalcType(0).CumMonths()
-//           - Computes cumulative months - no Years.
+//       TDurCalcType(0).StdYearMth()
+//         - Default - standard year, month week, day time calculation.
 //
-//         TDurCalcType(0).CumWeeks()
-//           - Computes cumulative weeks. No Years or months
+//       TDurCalcType(0).CumMonths()
+//         - Computes cumulative months - no Years.
 //
-//         TDurCalcType(0).CumDays()
-//           - Computes cumulative days. No Years, months or weeks.
+//       TDurCalcType(0).CumWeeks()
+//         - Computes cumulative weeks. No Years or months
 //
-//         TDurCalcType(0).CumHours()
-//           - Computes cumulative hours. No Years, months, weeks or days.
+//       TDurCalcType(0).CumDays()
+//         - Computes cumulative days. No Years, months or weeks.
 //
-//         TDurCalcType(0).CumMinutes()
-//           - Computes cumulative minutes. No Years, months, weeks, days
-//             or hours.
+//       TDurCalcType(0).CumHours()
+//         - Computes cumulative hours. No Years, months, weeks or days.
 //
-//         TDurCalcType(0).CumSeconds()
-//           - Computes cumulative seconds. No Years, months, weeks, days,
-//             hours or minutes.
+//       TDurCalcType(0).CumMinutes()
+//         - Computes cumulative minutes. No Years, months, weeks, days
+//           or hours.
 //
-//         TDurCalcType(0).GregorianYears()
-//           - Computes Years based on average length of a Gregorian Year
-//             Used for very large duration values.
+//       TDurCalcType(0).CumSeconds()
+//         - Computes cumulative seconds. No Years, months, weeks, days,
+//           hours or minutes.
 //
-//         Type 'TDurCalcType' is located in source file:
-//           MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//       TDurCalcType(0).GregorianYears()
+//         - Computes Years based on average length of a Gregorian Year
+//           Used for very large duration values.
+//
+//       Type 'TDurCalcType' is located in source file:
+//         MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 //
 //  timeZoneLocation  string
 //     - Designates the standard Time Zone location by which
 //       time duration will be compared. This ensures that
 //       'oranges are compared to oranges and apples are compared
-//       to apples' with respect to start time and end time duration
-//       calculations.
+//       to apples' with respect to start time and end time comparisons.
 //
 //       If 'timeZoneLocation' is passed as an empty string, it
 //       will be automatically defaulted to the 'UTC' time zone.
 //       Reference Universal Coordinated Time:
 //          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 //
-//       Time zone location, or time zone name,
-//       must be designated as one of three types
-//       of values:
+//       Time zone location must be designated as one of three types of
+//       time zones.
 //
-//       (1) The string 'Local' - signals the designation of the local time zone
-//           configured for the host computer executing this code.
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
 //
-//       (2) IANA Time Zone Location -
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
 //           See https://golang.org/pkg/time/#LoadLocation
 //           and https://www.iana.org/time-zones to ensure that
 //           the IANA Time Zone Database is properly configured
-//           on your system. Note: IANA Time Zone Data base is
-//           equivalent to 'tz database'.
+//           on your system.
 //
-//              Examples:
-//                "America/New_York"
-//                "America/Chicago"
-//                "America/Denver"
-//                "America/Los_Angeles"
-//                "Pacific/Honolulu"
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
 //
-//       (3) A valid Military Time Zone
-//           Military time zones are commonly used in
-//           aviation as well as at sea. They are also
-//           known as nautical or maritime time zones.
+//       (3) A Military Time Zone
+//             In addition to military operations, Military
+//             time zones are commonly used in aviation as
+//             well as at sea. They are also known as nautical
+//             or maritime time zones.
 //           Reference:
-//               https://en.wikipedia.org/wiki/List_of_military_time_zones
-//               http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//               https://www.timeanddate.com/time/zones/military
-//               https://www.timeanddate.com/worldclock/timezone/alpha
-//               https://www.timeanddate.com/time/map/
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
+//
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
+//
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
 //
 //       Note:
 //           The source file 'timezonedata.go' contains over 600 constant
@@ -2836,40 +2925,40 @@ func (tDur TimeDurationDto) NewAutoEnd(
 //           time zone constants begin with the prefix 'TZones'.
 //
 //
-//  timeCalcMode  TimeMathCalcMode
-//       - TimeMathCalcMode is an enumeration which specifies the algorithm
-//         which will be used when computing time spans or time duration.
+//  timeCalcMode      TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the algorithm
+//       which will be used when computing time spans or time duration.
 //
-//         If 'LocalTimeZone' is specified, days are defined as local time
-//         zone days which may be less than, or greater than, 24-hours due
-//         to local conventions like daylight savings time.
-//         (TCalcMode.LocalTimeZone())
+//       If 'LocalTimeZone' is specified, days are defined as local time
+//       zone days which may be less than, or greater than, 24-hours due
+//       to local conventions like daylight savings time.
+//       (TCalcMode.LocalTimeZone())
 //
-//         If 'UtcTimeZone' is specified, days are uniformly defined as
-//         a time span consisting of 24-consecutive hours.
-//         (TCalcMode.UtcTimeZone())
+//       If 'UtcTimeZone' is specified, days are uniformly defined as
+//       a time span consisting of 24-consecutive hours.
+//       (TCalcMode.UtcTimeZone())
 //
-//         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmode.go
 //
 //
-//   dateTimeFmtStr string
-//       - A date time format string which will be used
-//         to format and display 'dateTime'. Example:
-//         "2006-01-02 15:04:05.000000000 -0700 MST"
+//  dateTimeFmtStr    string
+//     - A date time format string which will be used
+//       to format and display 'dateTime'. Example:
+//       "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-//         Date time format constants are found in the source
-//         file 'constantsdatetime.go'. These constants represent
-//         the more commonly used date time string formats. All
-//         Date Time format constants begin with the prefix
-//         'FmtDateTime'.
+//       Date time format constants are found in the source
+//       file 'constantsdatetime.go'. These constants represent
+//       the more commonly used date time string formats. All
+//       Date Time format constants begin with the prefix
+//       'FmtDateTime'.
 //
-//         If 'dateTimeFmtStr' is submitted as an
-//         'empty string', a default date time format
-//         string will be applied. The default date time
-//         format string is:
-//           FmtDateTimeYrMDayFmtStr =
-//               "2006-01-02 15:04:05.000000000 -0700 MST"
+//       If 'dateTimeFmtStr' is submitted as an
+//       'empty string', a default date time format
+//       string will be applied. The default date time
+//       format string is:
+//         FmtDateTimeYrMDayFmtStr =
+//             "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 // __________________________________________________________________________
 //
@@ -2889,12 +2978,12 @@ func (tDur TimeDurationDto) NewAutoEnd(
 // Example Usage:
 //
 //   tDurDto, err := TimeDurationDto{}.NewAutoStart(
-//                TDurCalc.StdYearMth(),
-//                TZones.US.Central(),
-//                TCalcMode.LocalTimeZone(),
-//                FmtDateTimeYrMDayFmtStr)
+//                    TDurCalc.StdYearMth(),
+//                    TZones.US.Central(),
+//                    TCalcMode.LocalTimeZone(),
+//                    FmtDateTimeYrMDayFmtStr)
 //
-//   Note:
+//  Note:
 //        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
 //         standard year month day time duration allocation.
 //
@@ -2908,9 +2997,8 @@ func (tDur TimeDurationDto) NewAutoEnd(
 //            'datetime\timemathcalcmode.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
-//        'constantsdatetime.go'
-//
-//        FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//        'constantsdatetime.go'.
+//              FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (tDur TimeDurationDto) NewAutoStart(
 	tDurCalcType TDurCalcType,
@@ -2932,11 +3020,12 @@ func (tDur TimeDurationDto) NewAutoStart(
 
 	tDur2 := TimeDurationDto{}
 
-	startEndTime := time.Now().UTC()
+	startEndTime := time.Now().UTC().
+		AddDate(0,0,2)
 
 	err := tDurDtoUtil.setStartEndTimesCalcTz(
 		&tDur2,
-		startEndTime,
+		time.Now().UTC(),
 		startEndTime,
 		tDurCalcType,
 		timeZoneLocation,

@@ -128,7 +128,7 @@ func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur, err := DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartTimeTzDuration(t1, t12Dur, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur).\n" +
@@ -184,7 +184,7 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 			" Error ='%v' ", err.Error())
 	}
 
-	dur, err := DurationTriad{}.NewStartDateTzDuration(t1DateTz, t12Dur)
+	dur, err := DurationTriad{}.NewStartTimeTzDuration(t1DateTz, t12Dur)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartDateTzDuration(t1DateTz, t12Dur).\n"+
@@ -279,7 +279,7 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	dateTz2, err := DateTzDto{}.NewDateTime(t2, FmtDateTimeYrMDayFmtStr)
 
-	dur, err := DurationTriad{}.NewStartEndDateTzDto(dateTz1, dateTz2)
+	dur, err := DurationTriad{}.NewStartEndTimesTz(dateTz1, dateTz2)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
@@ -608,11 +608,12 @@ func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	dateTz2, err := DateTzDto{}.NewDateTime(t2, FmtDateTimeYrMDayFmtStr)
 
-	dur, err := DurationTriad{}.NewStartEndDateTzDtoCalcTz(
+	dur, err := DurationTriad{}.NewStartEndTimesTz(
 		dateTz1,
 		dateTz2,
 		TDurCalcType(0).StdYearMth(),
 		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -978,7 +979,7 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur, err := DurationTriad{}.NewStartTimePlusTimeDtoTz(
+	dur, err := DurationTriad{}.NewStartTimeTzPlusTimeDto(
 		TCalcMode.LocalTimeZone(),
 		t1,
 		timeDto,

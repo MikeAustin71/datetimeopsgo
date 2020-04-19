@@ -283,7 +283,7 @@ func (mt mainTest) mainTest075() {
 	t2OutStr := t2.Format(fmtstr)
 	dateTz2, err := dt.DateTzDto{}.NewDateTime(t2, dt.FmtDateTimeYrMDayFmtStr)
 
-	dur, err := dt.DurationTriad{}.NewStartEndDateTzDto(dateTz1, dateTz2)
+	dur, err := dt.DurationTriad{}.NewStartEndTimesTz(dateTz1, dateTz2)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +

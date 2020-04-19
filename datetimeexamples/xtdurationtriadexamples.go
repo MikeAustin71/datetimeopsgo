@@ -108,7 +108,7 @@ func ExampleNewStartTimeDuration01() {
 	t12Dur := t2.Sub(t1)
 	t12UTCDur := t2Utc.Sub(t1Utc)
 
-	dur, err := dt.DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur, dt.TZones.US.Central(), fmtstr)
+	dur, err := dt.DurationTriad{}.NewStartTimeTzDuration(t1, t12Dur, dt.TZones.US.Central(), fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur). Error='%v'\n", err.Error())
