@@ -2078,11 +2078,12 @@ func (mc MainCodeExamples) mainCodeEx019() {
 	second = 20
 	t2USCentral := time.Date(year, time.Month(month), day, hour, minute, second, nSecs, locUSCentral)
 
-	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(
+	tDur, err := dt.TimeDurationDto{}.NewStartEndTimes(
 		t1USCentral,
 		t2USCentral,
 		dt.TDurCalcType(0).StdYearMth(),
 		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -2604,8 +2605,13 @@ func (mc MainCodeExamples) mainCodeEx011() {
 	t1, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t1str)
 	t2, _ := time.Parse(dt.FmtDateTimeYrMDayFmtStr, t2str)
 
-	tDto, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1, t2,
-		dt.TDurCalcType(0).StdYearMth(), dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	tDto, err := dt.TimeDurationDto{}.NewStartEndTimes(
+		t1,
+		t2,
+		dt.TDurCalcType(0).StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz() "+
@@ -2671,8 +2677,13 @@ func (mc MainCodeExamples) mainCodeEx009() {
 	t2, _ := time.Parse(fmtstr, t2str)
 
 	tDto, err :=
-		dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t2, t1,
-			dt.TDurCalcType(0).StdYearMth(), dt.TZones.US.Central(), fmtstr)
+		dt.TimeDurationDto{}.NewStartEndTimes(
+			t2,
+			t1,
+			dt.TDurCalcType(0).StdYearMth(),
+			dt.TZones.US.Central(),
+			dt.TCalcMode.LocalTimeZone(),
+			fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). "+

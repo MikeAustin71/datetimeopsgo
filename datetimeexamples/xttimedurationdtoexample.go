@@ -18,8 +18,13 @@ func ExampleTimeDuration001() {
 
 	hoursDur := int64(24) * dt.HourNanoSeconds
 
-	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeDurationCalcTz(t1USCentral, time.Duration(hoursDur),
-		dt.TDurCalcType(0).StdYearMth(), dt.TZones.US.Central(), fmtStr)
+	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeDuration(
+		t1USCentral,
+		time.Duration(hoursDur),
+		dt.TDurCalcType(0).StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimes(t1USCentral, t2USCentral, fmtStr).\n" +
@@ -47,8 +52,13 @@ func ExampleTimeDuration002() {
 	t2USCentral := time.Date(2018, time.Month(7), 04, 15, 9, 5, 458621349, locUSCentral)
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
 
-	t1Dur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
-		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
+	t1Dur, err := dt.TimeDurationDto{}.NewStartEndTimes(
+		t1USCentral,
+		t2USCentral,
+		dt.TDurCalcType(0).CumDays(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimes(t1USCentral, t2USCentral, fmtStr).\n" +
@@ -91,8 +101,13 @@ func ExampleTimeDuration003() {
 	t2USCentral := time.Date(2018, time.Month(7), 04, 15, 9, 5, 458621349, locUSCentral)
 	//t2USCentral := time.Date(2018, time.Month(4),15,20,02,18,792489279, locUSCentral)
 
-	tDur, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(t1USCentral, t2USCentral,
-		dt.TDurCalcType(0).CumDays(), dt.TZones.US.Central(), fmtStr)
+	tDur, err := dt.TimeDurationDto{}.NewStartEndTimes(
+		t1USCentral,
+		t2USCentral,
+		dt.TDurCalcType(0).CumDays(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		fmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimes(t1USCentral, t2USCentral, fmtStr).\n" +

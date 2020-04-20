@@ -2624,6 +2624,69 @@ func (dtz *DateTzDto) GetTimeZoneDef() TimeZoneDefinition {
 	return dtz.timeZone.CopyOut()
 }
 
+// GetTimeZoneName - Returns the name of the time zone
+// associated with this DateTzDto instance as a string.
+//
+// If the Time Zone is a Military Time Zone, the Military
+// Time Zone Name is returned. Otherwise, the standard
+// (IANA) time Zone Name is returned.
+//
+func (dtz *DateTzDto) GetTimeZoneName() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	timeZoneLocation := dtz.timeZone.GetBestConvertibleTimeZone()
+
+	return timeZoneLocation.GetMilitaryOrStdTimeZoneName()
+
+}
+
+// GetTimeZoneLocationName - Always returns the name of the
+// the time zone location. Military Time Zones Names are
+// discarded and only standard IANA Time Zone Names are
+// returned.
+//
+func (dtz *DateTzDto) GetTimeZoneLocationName() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	timeZoneLocation := dtz.timeZone.GetBestConvertibleTimeZone()
+
+	return timeZoneLocation.locationName
+}
+
+// GetTimeZoneLocationPtr - Returns a pointer to the Time Zone
+// Location associated with this DateTzDto instance. Note that
+// Military Time Zones are ignored. This method will always
+// return a pointer to the standard (IANA) Time Zone Location.
+//
+func (dtz *DateTzDto) GetTimeZoneLocationPtr() *time.Location {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	timeZoneLocation := dtz.timeZone.GetBestConvertibleTimeZone()
+
+	return timeZoneLocation.locationPtr
+}
+
 // IsEmpty - Analyzes the current DateTzDto instance to determine
 // if the instance is in an 'EMPTY' or uninitialized state.
 //

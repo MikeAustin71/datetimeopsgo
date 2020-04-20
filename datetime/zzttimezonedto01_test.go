@@ -24,11 +24,12 @@ func TestTimeZoneDto_AddTimeDurationDto_01(t *testing.T) {
 
 	t12Dur := t2.Sub(t1)
 
-	tdurDto, err := TimeDurationDto{}.NewStartEndTimesCalcTz(
+	tdurDto, err := TimeDurationDto{}.NewStartEndTimes(
 		t1,
 		t2,
 		TDurCalcType(0).StdYearMth(),
 		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
 		fmtstr)
 
 	if err != nil {

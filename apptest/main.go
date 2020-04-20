@@ -283,7 +283,13 @@ func (mt mainTest) mainTest075() {
 	t2OutStr := t2.Format(fmtstr)
 	dateTz2, err := dt.DateTzDto{}.NewDateTime(t2, dt.FmtDateTimeYrMDayFmtStr)
 
-	dur, err := dt.DurationTriad{}.NewStartEndTimesTz(dateTz1, dateTz2)
+	dur, err := dt.DurationTriad{}.NewStartEndTimesTz(
+		dateTz1,
+		dateTz2,
+		dt.TDurCalc.StdYearMth(),
+		dateTz1.GetTimeZoneName(),
+		dt.TCalcMode.LocalTimeZone(),
+		dateTz1.GetDateTimeFmt())
 
 	if err != nil {
 		fmt.Printf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
@@ -461,7 +467,13 @@ func (mt mainTest) mainTest074() {
 
 	du := dt.DurationTriad{}
 
-	err := du.SetStartEndTimesTz(t1, t2, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err := du.SetStartEndTimes(
+		t1,
+		t2,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by du.SetStartEndTimesTz(t2, t1, TZones.US.Central(), "+
@@ -563,11 +575,12 @@ timeDto := dt.TimeDto{
 	TotTimeNanoseconds:   0,
 }
 
-	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
-		dt.TCalcMode.LocalTimeZone(),
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDto(
 		t2Result,
 		timeDto,
+		dt.TDurCalc.StdYearMth(),
 		dt.TZones.America.Chicago(),
+		dt.TCalcMode.LocalTimeZone(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -581,7 +594,6 @@ timeDto := dt.TimeDto{
 
 	fmt.Printf("\n    Actual Start Time: %v\n\n",
 		t1.Format(fmtStr))
-
 
 	fmt.Printf("\nCalculated End Time: %v\n",
 		dur.BaseTime.GetThisEndDateTime().Format(fmtStr))
@@ -617,6 +629,9 @@ timeDto := dt.TimeDto{
 	timeDurDto, err := dt.TimeDurationDto{}.NewStartTimeDuration(
 	t1,
 	timeDur,
+	dt.TDurCalc.StdYearMth(),
+	t1.Location().String(),
+	dt.TCalcMode.LocalTimeZone(),
 	fmtStr)
 
 	if err != nil {
@@ -711,11 +726,12 @@ func (mt mainTest) mainTest071() {
 		Minutes: 4, 
 		Seconds: 2}
 
-	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
-		 dt.TCalcMode.LocalTimeZone(),
+	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDto(
 			t2,
 			timeDto,
+			dt.TDurCalc.StdYearMth(),
 			dt.TZones.US.Central(),
+			dt.TCalcMode.LocalTimeZone(),
 			dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -1691,11 +1707,12 @@ func (mt mainTest) mainTest060() {
 
 	t12Dur := t2.Sub(t1)
 
-	tdurDto, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(
+	tdurDto, err := dt.TimeDurationDto{}.NewStartEndTimes(
 		t1,
 		t2,
 		dt.TDurCalcType(0).StdYearMth(),
 		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
 		fmtStr)
 
 	if err != nil {
@@ -2259,11 +2276,12 @@ func (mt mainTest) mainTest052() {
 
 	t12Dur := t2.Sub(t1)
 
-	tdurDto, err := dt.TimeDurationDto{}.NewStartEndTimesCalcTz(
+	tdurDto, err := dt.TimeDurationDto{}.NewStartEndTimes(
 		t1,
 		t2,
 		dt.TDurCalcType(0).StdYearMth(),
 		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
 		fmtstr)
 
 	if err != nil {
