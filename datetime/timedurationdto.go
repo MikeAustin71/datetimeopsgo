@@ -3381,9 +3381,9 @@ func (tDur TimeDurationDto) NewDefaultStartTimeTzDuration(
 	return tDur2, nil
 }
 
-// NewStartTimePlusTimeDto - Creates and returns a new TimeDurationDto setting
+// NewDefaultStartTimePlusTimeDto - Creates and returns a new TimeDurationDto setting
 // the start date time, end date time and duration based on a starting date time
-// and the time components contained in a TimeDto.
+// and the time components contained in an instance of TimeDto.
 //
 // The time components of the TimeDto are added to the starting date time to compute
 // the ending date time and the time duration. TimeDto components are typically
@@ -3453,7 +3453,7 @@ func (tDur TimeDurationDto) NewDefaultStartTimeTzDuration(
 //
 // Example Usage:
 //
-//  tDurDto, err := TimeDurationDto{}.NewStartTimePlusTimeDto(
+//  tDurDto, err := TimeDurationDto{}.NewDefaultStartTimePlusTimeDto(
 //                    startTime,
 //                    plusTimeDto)
 //
