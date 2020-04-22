@@ -18,11 +18,17 @@ func ExampleSetStartEndTimes() {
 
 	dur := dt.DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t2, dt.TZones.US.Central(), fmtstr)
+	err := dur.SetStartEndTimes(
+		t1,
+		t2,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		fmtstr)
 
 	if err != nil {
 		panic(fmt.Errorf("ExampleSetStartEndTimes() Error returned by "+
-			"dur.SetStartEndTimesTz(). Error='%v' ", err.Error()))
+			"dur.SetStartEndTimes(). Error='%v' ", err.Error()))
 	}
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
@@ -108,10 +114,16 @@ func ExampleNewStartTimeDuration01() {
 	t12Dur := t2.Sub(t1)
 	t12UTCDur := t2Utc.Sub(t1Utc)
 
-	dur, err := dt.DurationTriad{}.NewStartTimeTzDuration(t1, t12Dur, dt.TZones.US.Central(), fmtstr)
+	dur, err := dt.DurationTriad{}.NewStartTimeDuration(
+		t1,
+		t12Dur,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		fmtstr)
 
 	if err != nil {
-		fmt.Printf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur). Error='%v'\n", err.Error())
+		fmt.Printf("Error returned by DurationTriad{}.NewStartTimeTzDuration(t1, t12Dur). Error='%v'\n", err.Error())
 		return
 	}
 

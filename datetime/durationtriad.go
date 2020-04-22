@@ -734,7 +734,7 @@ func (durT DurationTriad) NewAutoEnd(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartEndTimesCalcTz(
+	err := durTUtil.setStartEndTimes(
 		&durT2,
 		startDateTime,
 		endDateTime,
@@ -993,7 +993,7 @@ func (durT DurationTriad) NewAutoStart(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartEndTimesCalcTz(
+	err := durTUtil.setStartEndTimes(
 		&durT2,
 		startDateTime,
 		endDateTime,
@@ -1266,7 +1266,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
+	err := durTUtil.setEndTimeMinusTimeDto(
 		&durT2,
 		endDateTime,
 		minusTimeDto,
@@ -1552,7 +1552,7 @@ func (durT DurationTriad) NewEndTimeTzMinusTimeDto(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setEndTimeMinusTimeDtoCalcTz(
+	err := durTUtil.setEndTimeMinusTimeDto(
 		&durT2,
 		endDateTimeTz.dateTimeValue,
 		minusTimeDto,
@@ -1808,7 +1808,7 @@ func (durT DurationTriad) NewStartEndTimes(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartEndTimesCalcTz(
+	err := durTUtil.setStartEndTimes(
 		&t2Dur,
 		startDateTime,
 		endDateTime,
@@ -2050,7 +2050,7 @@ func (durT DurationTriad) NewStartEndTimesTz(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartEndTimesCalcTz(
+	err := durTUtil.setStartEndTimes(
 		&durT2,
 		startDateTimeTz.dateTimeValue,
 		endDateTimeTz.dateTimeValue,
@@ -2315,7 +2315,7 @@ func (durT DurationTriad) NewStartTimeDuration(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartTimeDurationCalcTz(
+	err := durTUtil.setStartTimeDuration(
 		&durT2,
 		startDateTime,
 		duration,
@@ -2580,7 +2580,7 @@ func (durT DurationTriad) NewStartTimeTzDuration(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartTimeDurationCalcTz(
+	err := durTUtil.setStartTimeDuration(
 		&durT2,
 		startDateTimeTz.dateTimeValue,
 		duration,
@@ -2867,7 +2867,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartTimePlusTimeDtoCalcTz(
+	err := durTUtil.setStartTimePlusTimeDto(
 		&durT2,
 		startDateTime,
 		plusTimeDto,
@@ -3149,7 +3149,7 @@ func (durT DurationTriad) NewStartTimeTzPlusTimeDto(
 
 	durTUtil := durationTriadUtility{}
 
-	err := durTUtil.setStartTimePlusTimeDtoCalcTz(
+	err := durTUtil.setStartTimePlusTimeDto(
 		&durT2,
 		startDateTime,
 		plusTimeDto,
@@ -3230,7 +3230,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setStartEndTimesCalcTz(
+	return durTUtil.setStartEndTimes(
 		durT,
 		startDateTime,
 		time.Now().UTC(),
@@ -3505,11 +3505,11 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 
 	defer durT.lock.Unlock()
 
-	ePrefix := "DurationTriad.SetEndTimeMinusTimeDtoCalcTz() "
+	ePrefix := "DurationTriad.SetEndTimeMinusTimeDto() "
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setEndTimeMinusTimeDtoCalcTz(
+	return durTUtil.setEndTimeMinusTimeDto(
 		durT,
 		endDateTime,
 		minusTimeDto,
@@ -3782,7 +3782,7 @@ func (durT *DurationTriad) SetEndTimeTzMinusTimeDto(
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setEndTimeMinusTimeDtoCalcTz(
+	return durTUtil.setEndTimeMinusTimeDto(
 		durT,
 		endDateTimeTz.dateTimeValue,
 		minusTimeDto,
@@ -4019,7 +4019,7 @@ func (durT *DurationTriad) SetStartEndTimes(
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setStartEndTimesCalcTz(
+	return durTUtil.setStartEndTimes(
 		durT,
 		startDateTime,
 		endDateTime,
@@ -4257,7 +4257,7 @@ func (durT *DurationTriad) SetStartEndTimesTz(
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setStartEndTimesCalcTz(
+	return durTUtil.setStartEndTimes(
 		durT,
 		startDateTimeTz.GetDateTimeValue(),
 		endDateTimeTz.GetDateTimeValue(),
@@ -4503,7 +4503,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setStartTimeDurationCalcTz(
+	return durTUtil.setStartTimeDuration(
 		durT,
 		startDateTime,
 		duration,
@@ -4740,7 +4740,7 @@ func (durT *DurationTriad) SetStartTimeTzDuration(
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setStartTimeDurationCalcTz(
+	return durTUtil.setStartTimeDuration(
 		durT,
 		startDateTime,
 		duration,
@@ -5006,7 +5006,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setStartTimePlusTimeDtoCalcTz(
+	return durTUtil.setStartTimePlusTimeDto(
 		durT,
 		startDateTime,
 		plusTimeDto,
@@ -5277,7 +5277,7 @@ func (durT *DurationTriad) SetStartTimeTzPlusTimeDto(
 
 	durTUtil := durationTriadUtility{}
 
-	return durTUtil.setStartTimePlusTimeDtoCalcTz(
+	return durTUtil.setStartTimePlusTimeDto(
 		durT,
 		startDateTimeTz.dateTimeValue,
 		plusTimeDto,

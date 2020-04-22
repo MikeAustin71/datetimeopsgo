@@ -16,10 +16,12 @@ func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 
 	du := DurationTriad{}
 
-	err := du.SetStartEndTimesTz(
-		t2,
+	err := du.SetStartEndTimes(
 		t1,
+		t2,
+		TDurCalc.StdYearMth(),
 		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -49,7 +51,13 @@ func TestDurationTriad_GetYearsMthsWeeksTimeAbbrv(t *testing.T) {
 
 	du := DurationTriad{}
 
-	err := du.SetStartEndTimesTz(t2, t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := du.SetStartEndTimes(
+		t2,
+		t1,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by du.SetStartEndTimesTz(t2, t1, TZones.US.Central(), "+
@@ -76,7 +84,12 @@ func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
 
 	startDateTime := time.Now().In(locCentral)
 
-	durT, err := DurationTriad{}.NewAutoEnd(startDateTime, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	durT, err := DurationTriad{}.NewAutoEnd(
+		startDateTime,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewAutoEnd().\n" +
@@ -94,7 +107,11 @@ func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
 
 func TestDurationTriad_NewAutoStart(t *testing.T) {
 
-	durT, err := DurationTriad{}.NewAutoStart(TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	durT, err := DurationTriad{}.NewAutoStart(
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewAutoStart().\n"+
@@ -128,10 +145,16 @@ func TestDurationTriad_NewStartTimeDuration_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur, err := DurationTriad{}.NewStartTimeTzDuration(t1, t12Dur, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartTimeDuration(
+		t1,
+		t12Dur,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by DurationTriad{}.NewStartTimeDurationTz(t1, t12Dur).\n" +
+		t.Errorf("Error returned by DurationTriad{}.NewStartTimeTzDuration(t1, t12Dur).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -182,9 +205,16 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error returned by DateTzDto{}.NewTz(t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr) "+
 			" Error ='%v' ", err.Error())
+		return
 	}
 
-	dur, err := DurationTriad{}.NewStartTimeTzDuration(t1DateTz, t12Dur)
+	dur, err := DurationTriad{}.NewStartTimeTzDuration(
+		t1DateTz,
+		t12Dur,
+		TDurCalc.StdYearMth(),
+		t1DateTz.GetTimeZoneName(),
+		TCalcMode.LocalTimeZone(),
+		t1DateTz.GetDateTimeFmt())
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartDateTzDuration(t1DateTz, t12Dur).\n"+
@@ -266,7 +296,7 @@ func TestDurationTriad_NewStartDateTzDuration_01(t *testing.T) {
 
 }
 
-func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
+func TestDurationTriad_NewStartEndTimesTz_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -279,7 +309,13 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	dateTz2, err := DateTzDto{}.NewDateTime(t2, FmtDateTimeYrMDayFmtStr)
 
-	dur, err := DurationTriad{}.NewStartEndTimesTz(dateTz1, dateTz2)
+	dur, err := DurationTriad{}.NewStartEndTimesTz(
+		dateTz1,
+		dateTz2,
+		TDurCalc.StdYearMth(),
+		dateTz1.GetTimeZoneName(),
+		TCalcMode.LocalTimeZone(),
+		dateTz1.GetDateTimeFmt())
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
@@ -435,7 +471,7 @@ func TestDurationTriad_NewStartEndDateTzDto_01(t *testing.T) {
 
 }
 
-func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
+func TestDurationTriad_NewStartEndTimesTz_02(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -448,7 +484,13 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	dateTz2, err := DateTzDto{}.NewDateTime(t2, FmtDateTimeYrMDayFmtStr)
 
-	dur, err := DurationTriad{}.NewStartEndDateTzDtoTz(dateTz1, dateTz2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartEndTimesTz(
+		dateTz1,
+		dateTz2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
@@ -595,7 +637,7 @@ func TestDurationTriad_NewStartEndDateTzDtoTz(t *testing.T) {
 
 }
 
-func TestDurationTriad_NewStartEndDateTzDtoCalcTz(t *testing.T) {
+func TestDurationTriad_NewStartEndTimesTz_03(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -771,7 +813,13 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 	t2, _ := time.Parse(fmtstr, t2str)
 	t2OutStr := t2.Format(fmtstr)
 
-	dur, err := DurationTriad{}.NewStartEndTimesTz(t1, t2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	dur, err := DurationTriad{}.NewStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
@@ -917,7 +965,7 @@ func TestDurationTriad_NewStartEndTimes_01(t *testing.T) {
 
 }
 
-func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
+func TestDurationTriad_NewEndTimeMinusTimeDto_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -930,11 +978,12 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	dur, err := DurationTriad{}.NewEndTimeMinusTimeDtoTz(
-		TCalcMode.LocalTimeZone(),
+	dur, err := DurationTriad{}.NewEndTimeMinusTimeDto(
 		t2,
 		timeDto,
+		TDurCalc.StdYearMth(),
 		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -968,7 +1017,7 @@ func TestDurationTriad_NewStartTimeMinusTime_01(t *testing.T) {
 
 }
 
-func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
+func TestDurationTriad_NewStartTimePlusTimeDto_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -979,11 +1028,13 @@ func TestDurationTriad_NewStartTimePlusTime_01(t *testing.T) {
 	t12Dur := t2.Sub(t1)
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
-	dur, err := DurationTriad{}.NewStartTimeTzPlusTimeDto(
-		TCalcMode.LocalTimeZone(),
+
+	dur, err := DurationTriad{}.NewStartTimePlusTimeDto(
 		t1,
 		timeDto,
+		TDurCalc.StdYearMth(),
 		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {

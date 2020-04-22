@@ -246,7 +246,7 @@ func(durTUtil *durationTriadUtility) isValid(
 
 }
 
-// setEndTimeMinusTimeDtoCalcTz - Calculates duration values based on an Ending Date Time and
+// setEndTimeMinusTimeDto - Calculates duration values based on an Ending Date Time and
 // a TimeDto structure consisting of time values (Years, Months, weeks, days, hours,
 // minutes etc.). The time values in the 'timeDto' parameter are subtracted
 // from 'endDateTime'.
@@ -435,7 +435,7 @@ func(durTUtil *durationTriadUtility) isValid(
 // Usage
 //
 //  dt  := DurationTriad{}
-//  err := dt.SetEndTimeMinusTimeDtoCalcTz(
+//  err := dt.SetEndTimeMinusTimeDto(
 //         durT,
 //         timeCalcMode,
 //         startDateTime,
@@ -455,7 +455,7 @@ func(durTUtil *durationTriadUtility) isValid(
 //       'TZones.US.Central()' and 'FmtDateTimeYrMDayFmtStr' are constants available in
 //       source file 'constantsdatetime.go'.
 //
-func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
+func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 	durT *DurationTriad,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
@@ -469,7 +469,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	defer durTUtil.lock.Unlock()
 
-	ePrefix += "durationTriadUtility.setEndTimeMinusTimeDtoCalcTz() "
+	ePrefix += "durationTriadUtility.setEndTimeMinusTimeDto() "
 
 	if durT == nil {
 		return &InputParameterError{
@@ -567,7 +567,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 	return nil
 }
 
-// setStartEndTimesCalcTz - Calculates duration values and save the results in the data fields
+// setStartEndTimes - Calculates duration values and save the results in the data fields
 // of the current DurationTriad instance. Calculations are based on a starting date time and
 // an ending date time passed to the method. This method requires the user to specify a
 // 'timeZoneLocation' input parameter which ensures that starting date time and ending date
@@ -729,7 +729,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDtoCalcTz(
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
 //
-func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
+func(durTUtil *durationTriadUtility) setStartEndTimes(
 	durT *DurationTriad,
 	startDateTime,
 	endDateTime time.Time,
@@ -743,7 +743,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 
 	defer durTUtil.lock.Unlock()
 
-	ePrefix += "durationTriadUtility.setEndTimeMinusTimeDtoCalcTz() "
+	ePrefix += "durationTriadUtility.setStartEndTimes() "
 
 	if durT == nil {
 		return &InputParameterError{
@@ -799,7 +799,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 
 	tDur2 := DurationTriad{}
 
-	err := tDurDtoUtil.setStartEndTimesCalcTz(
+	err := tDurDtoUtil.setStartEndTimes(
 		&tDur2.BaseTime,
 		startDateTime,
 		endDateTime,
@@ -813,7 +813,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		return err
 	}
 
-	err = tDurDtoUtil.setStartEndTimesCalcTz(
+	err = tDurDtoUtil.setStartEndTimes(
 		&tDur2.LocalTime,
 		startDateTime,
 		endDateTime,
@@ -827,7 +827,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 		return err
 	}
 
-	err = tDurDtoUtil.setStartEndTimesCalcTz(
+	err = tDurDtoUtil.setStartEndTimes(
 		&tDur2.UTCTime,
 		startDateTime,
 		endDateTime,
@@ -856,7 +856,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 	return nil
 }
 
-// setStartTimeDurationCalcTz - Receives a starting date time and calculates
+// setStartTimeDuration - Receives a starting date time and calculates
 // a time duration. The method then calculates the ending date time, duration
 // and populates the DurationTriad data fields.
 //
@@ -1024,7 +1024,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimesCalcTz(
 //       appropriate error message.
 //
 //
-func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
+func(durTUtil *durationTriadUtility) setStartTimeDuration(
 	durT *DurationTriad,
 	startDateTime time.Time,
 	duration time.Duration,
@@ -1038,7 +1038,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 
 	defer durTUtil.lock.Unlock()
 
-	ePrefix += "durationTriadUtility.setStartTimeDurationCalcTz() "
+	ePrefix += "durationTriadUtility.setStartTimeDuration() "
 
 	if durT == nil {
 		return &InputParameterError{
@@ -1082,7 +1082,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 
 	tDur2 := DurationTriad{}
 
-	err := tDurDtoUtil.setStartTimeDurationCalcTz(
+	err := tDurDtoUtil.setStartTimeDuration(
 		&tDur2.BaseTime,
 		startDateTime,
 		duration,
@@ -1097,7 +1097,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 	}
 
 
-	err = tDurDtoUtil.setStartTimeDurationCalcTz(
+	err = tDurDtoUtil.setStartTimeDuration(
 		&tDur2.LocalTime,
 		startDateTime,
 		duration,
@@ -1111,7 +1111,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 		return err
 	}
 
-	err = tDurDtoUtil.setStartTimeDurationCalcTz(
+	err = tDurDtoUtil.setStartTimeDuration(
 		&tDur2.UTCTime,
 		startDateTime,
 		duration,
@@ -1141,7 +1141,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 }
 
 
-// setStartTimePlusTimeDtoCalcTz - Calculates time duration values based on a Starting Date Time
+// setStartTimePlusTimeDto - Calculates time duration values based on a Starting Date Time
 // plus time values (Years, Months, weeks, days, hours, minutes etc.) passed to the method
 // in the 'plusTimeDto' parameter. The 'plusTimeDto' parameter is added to 'startDateTime' to
 // calculate ending date time and duration.
@@ -1341,7 +1341,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDurationCalcTz(
 //       this method will return an error Type which encapsulates an
 //       appropriate error message.
 //
-func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
+func(durTUtil *durationTriadUtility) setStartTimePlusTimeDto(
 	durT *DurationTriad,
 	startDateTime time.Time,
 	plusTimeDto TimeDto,
@@ -1355,7 +1355,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 
 	defer durTUtil.lock.Unlock()
 
-	ePrefix += "durationTriadUtility.setStartTimePlusTimeDtoCalcTz() "
+	ePrefix += "durationTriadUtility.setStartTimePlusTimeDto() "
 
 	if durT == nil {
 		return &InputParameterError{
@@ -1408,7 +1408,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 
 	tDur2 := DurationTriad{}
 
-	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
+	err = tDurDtoUtil.setStartTimePlusTimeDto(
 		&tDur2.BaseTime,
 		startDateTime,
 		plusTimeDto,
@@ -1422,7 +1422,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 		return err
 	}
 
-	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
+	err = tDurDtoUtil.setStartTimePlusTimeDto(
 		&tDur2.LocalTime,
 		startDateTime,
 		plusTimeDto,
@@ -1436,7 +1436,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDtoCalcTz(
 		return err
 	}
 
-	err = tDurDtoUtil.setStartTimePlusTimeDtoCalcTz(
+	err = tDurDtoUtil.setStartTimePlusTimeDto(
 		&tDur2.UTCTime,
 		startDateTime,
 		plusTimeDto,

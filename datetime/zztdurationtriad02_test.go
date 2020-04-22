@@ -19,7 +19,13 @@ func TestDurationTriad_SetStartEndTimes(t *testing.T) {
 
 	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), "+
@@ -185,7 +191,13 @@ func TestDurationTriad_SetStartEndTimes_02(t *testing.T) {
 
 	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetStartEndTimesTz(t1, t2, TZones.US.Central(), "+
@@ -266,10 +278,16 @@ func TestDurationTriad_SetStartEndTimes_03(t *testing.T) {
 
 	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t2, t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dur.SetStartEndTimesTz(t2, t1, TZones.US.Central(), "+
+		t.Errorf("Error returned by dur.SetStartEndTimes(t1, t2, TZones.US.Central(), "+
 			"FmtDateTimeYrMDayFmtStr) Error='%v' ", err.Error())
 	}
 
@@ -291,10 +309,16 @@ func TestDurationTriad_SetStartEndTimes_04(t *testing.T) {
 
 	dur := DurationTriad{}
 
-	err := dur.SetStartEndTimesTz(t1, t1, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartEndTimes(
+		t1,
+		t1,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dur.SetStartEndTimesTz(t1, t1, TZones.US.Central(), "+
+		t.Errorf("Error returned by dur.SetStartEndTimes(t1, t1, TZones.US.Central(), "+
 			"FmtDateTimeYrMDayFmtStr) Error='%v' ", err.Error())
 	}
 
@@ -323,15 +347,16 @@ func TestDurationTriad_SetStartTimePlusTime(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	err := dur.SetStartTimePlusTimeDtoTz(
-		TCalcMode.LocalTimeZone(),
+	err := dur.SetStartTimePlusTimeDto(
 		t1,
 		timeDto,
+		TDurCalc.StdYearMth(),
 		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dur.SetStartTimePlusTimeDtoTz(t1, timeDto, "+
+		t.Errorf("Error returned by dur.SetStartTimePlusTimeDto(t1, timeDto, "+
 			"TZones.US.Central(), FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
 	}
 
@@ -375,15 +400,16 @@ func TestDurationTriad_SetStartTimeMinusTime(t *testing.T) {
 
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
-	err := dur.SetEndTimeMinusTimeDtoTz(
-		TCalcMode.LocalTimeZone(),
+	err := dur.SetEndTimeMinusTimeDto(
 		t2,
 		timeDto,
+		TDurCalc.StdYearMth(),
 		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dur.SetEndTimeMinusTimeDtoTz(t2, timeDto, "+
+		t.Errorf("Error returned by dur.SetEndTimeMinusTimeDto(t2, timeDto, "+
 			"TZones.US.Central(), FmtDateTimeYrMDayFmtStr) Error='%v' ", err.Error())
 	}
 
@@ -426,10 +452,16 @@ func TestDurationTriad_SetStartTimeDuration(t *testing.T) {
 
 	dur := DurationTriad{}
 
-	err := dur.SetStartTimeDurationTz(t1, t12Dur, TZones.US.Central(), FmtDateTimeYrMDayFmtStr)
+	err := dur.SetStartTimeDuration(
+		t1,
+		t12Dur,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dur.SetStartTimeDurationTz(t1, t12Dur, "+
+		t.Errorf("Error returned by dur.SetStartTimeDuration(t1, t12Dur, "+
 			"TZones.US.Central(), FmtDateTimeYrMDayFmtStr). Error='%v' ", err.Error())
 	}
 
@@ -474,9 +506,11 @@ func TestDurationTriad_SetStartTimePlusTimeDto_01(t *testing.T) {
 	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
 
 	err := dur.SetStartTimePlusTimeDto(
-		TCalcMode.LocalTimeZone(),
 		t1,
 		timeDto,
+		TDurCalc.StdYearMth(),
+		t1.Location().String(),
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {

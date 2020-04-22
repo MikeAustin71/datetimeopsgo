@@ -2524,11 +2524,18 @@ func (mc MainCodeExamples) mainCodeEx014() {
 		return
 	}
 
-	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDtoTz(
-		dt.TCalcMode.LocalTimeZone(),
+	var datTz2 dt.DateTzDto
+
+	datTz2, err = dt.DateTzDto{}.NewDateTime(
 		t2,
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	dur, err := dt.DurationTriad{}.NewEndTimeTzMinusTimeDto(
+		datTz2,
 		timeDto,
+		dt.TDurCalc.StdYearMth(),
 		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -2645,9 +2652,11 @@ func (mc MainCodeExamples) mainCodeEx010() {
 	}
 
 	dur, err := dt.TimeDurationDto{}.NewEndTimeMinusTimeDto(
-		dt.TCalcMode.LocalTimeZone(),
 		t2,
 		timeDto,
+		dt.TDurCalc.StdYearMth(),
+		t2.Location().String(),
+		dt.TCalcMode.LocalTimeZone(),
 		fmtstr)
 
 	if err != nil {
@@ -2694,7 +2703,37 @@ func (mc MainCodeExamples) mainCodeEx009() {
 	fmt.Println("TimeDurationDto")
 	PrintTimeDurationDto(tDto)
 
-	durT, err := dt.DurationTriad{}.NewStartEndTimesTz(t2, t1, dt.TZones.US.Central(), fmtstr)
+	var datTz1, datTz2 dt.DateTzDto
+
+	datTz1, err = dt.DateTzDto{}.NewDateTime(
+		t1,
+		fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.DateTzDto{}.NewDateTime(t1). "+
+			" Error='%v'\n", err.Error())
+		return
+	}
+
+	datTz2, err = dt.DateTzDto{}.NewDateTime(
+		t2,
+		fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.DateTzDto{}.NewDateTime(t2). "+
+			" Error='%v'\n", err.Error())
+		return
+	}
+
+	var durT dt.DurationTriad
+
+	durT, err = dt.DurationTriad{}.NewStartEndTimesTz(
+		datTz2,
+		datTz1,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		fmtstr)
 
 	if err != nil {
 		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimesCalcTz(). "+
@@ -2715,9 +2754,39 @@ func (mc MainCodeExamples) mainCodeEx008() {
 
 	t2, _ := time.Parse(fmtstr, t2str)
 
+
+	var datTz1, datTz2 dt.DateTzDto
+	var err error
+
+	datTz1, err = dt.DateTzDto{}.NewDateTime(
+		t1,
+		fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.DateTzDto{}.NewDateTime(t1). "+
+			" Error='%v'\n", err.Error())
+		return
+	}
+
+	datTz2, err = dt.DateTzDto{}.NewDateTime(
+		t2,
+		fmtstr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.DateTzDto{}.NewDateTime(t2). "+
+			" Error='%v'\n", err.Error())
+		return
+	}
+
 	du := dt.DurationTriad{}
 
-	err := du.SetStartEndTimesTz(t2, t1, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimesTz(
+		datTz2,
+		datTz1,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		fmt.Printf("Error returned by du.SetStartEndTimesTz(t2, t1, dt.TZones.US.Central(), "+

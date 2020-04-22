@@ -19,11 +19,11 @@
 === RUN   TestDateTzDto_CopyOut
 --- PASS: TestDateTzDto_CopyOut (0.00s)
 === RUN   TestDateTzDto_GetConvertibleTzStatusFlags_01
---- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.00s)
+--- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.10s)
 === RUN   TestDateTzDto_GetOriginalTagDescription_01
 --- PASS: TestDateTzDto_GetOriginalTagDescription_01 (0.00s)
 === RUN   TestDateTzDto_GetTimeDto_01
---- PASS: TestDateTzDto_GetTimeDto_01 (0.00s)
+--- PASS: TestDateTzDto_GetTimeDto_01 (0.03s)
 === RUN   TestDateTzDto_GetDateTimeTzNanoSecYMDDowText
 --- PASS: TestDateTzDto_GetDateTimeTzNanoSecYMDDowText (0.00s)
 === RUN   TestDateTzDto_NewDateTimeElements_01
@@ -105,23 +105,31 @@
 === RUN   TestDurationTriad_NewAutoEnd_01
 --- PASS: TestDurationTriad_NewAutoEnd_01 (0.00s)
 === RUN   TestDurationTriad_NewAutoStart
---- PASS: TestDurationTriad_NewAutoStart (0.00s)
+--- PASS: TestDurationTriad_NewAutoStart (0.01s)
 === RUN   TestDurationTriad_NewStartTimeDuration_01
 --- PASS: TestDurationTriad_NewStartTimeDuration_01 (0.00s)
 === RUN   TestDurationTriad_NewStartDateTzDuration_01
 --- PASS: TestDurationTriad_NewStartDateTzDuration_01 (0.00s)
-=== RUN   TestDurationTriad_NewStartEndDateTzDto_01
---- PASS: TestDurationTriad_NewStartEndDateTzDto_01 (0.00s)
-=== RUN   TestDurationTriad_NewStartEndDateTzDtoTz
---- PASS: TestDurationTriad_NewStartEndDateTzDtoTz (0.00s)
-=== RUN   TestDurationTriad_NewStartEndDateTzDtoCalcTz
---- PASS: TestDurationTriad_NewStartEndDateTzDtoCalcTz (0.00s)
+=== RUN   TestDurationTriad_NewStartEndTimesTz_01
+--- PASS: TestDurationTriad_NewStartEndTimesTz_01 (0.00s)
+=== RUN   TestDurationTriad_NewStartEndTimesTz_02
+--- PASS: TestDurationTriad_NewStartEndTimesTz_02 (0.00s)
+=== RUN   TestDurationTriad_NewStartEndTimesTz_03
+--- PASS: TestDurationTriad_NewStartEndTimesTz_03 (0.00s)
 === RUN   TestDurationTriad_NewStartEndTimes_01
 --- PASS: TestDurationTriad_NewStartEndTimes_01 (0.00s)
-=== RUN   TestDurationTriad_NewStartTimeMinusTime_01
---- PASS: TestDurationTriad_NewStartTimeMinusTime_01 (0.00s)
-=== RUN   TestDurationTriad_NewStartTimePlusTime_01
---- PASS: TestDurationTriad_NewStartTimePlusTime_01 (0.00s)
+=== RUN   TestDurationTriad_NewEndTimeMinusTimeDto_01
+    TestDurationTriad_NewEndTimeMinusTimeDto_01: zztdurationtriad01_test.go:990: Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz(t2, timeDto).
+        Error='DurationTriad.NewEndTimeMinusTimeDto() durationTriadUtility.setEndTimeMinusTimeDto() durT2 Validity Check - durationTriadUtility.isValid() INVALID durT.BaseTime. Error='TimeDurationDto.IsValid() timeDurationDtoUtility.isValid() 
+        Error: Time Math Calculation Mode is INVALID!
+        ''
+--- FAIL: TestDurationTriad_NewEndTimeMinusTimeDto_01 (0.00s)
+=== RUN   TestDurationTriad_NewStartTimePlusTimeDto_01
+    TestDurationTriad_NewStartTimePlusTimeDto_01: zztdurationtriad01_test.go:1041: Error returned by DurationTriad{}.NewStartTimePlusTimeDtoTz(t1, timeDto).
+        Error='DurationTriad.NewStartTimePlusTimeDto() durationTriadUtility.setStartTimePlusTimeDto() 'tDur2' Validity Check durationTriadUtility.isValid() INVALID durT.BaseTime. Error='TimeDurationDto.IsValid() timeDurationDtoUtility.isValid() 
+        Error: Time Math Calculation Mode is INVALID!
+        ''
+--- FAIL: TestDurationTriad_NewStartTimePlusTimeDto_01 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes
 --- PASS: TestDurationTriad_SetStartEndTimes (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_02
@@ -131,13 +139,34 @@
 === RUN   TestDurationTriad_SetStartEndTimes_04
 --- PASS: TestDurationTriad_SetStartEndTimes_04 (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTime
---- PASS: TestDurationTriad_SetStartTimePlusTime (0.00s)
+    TestDurationTriad_SetStartTimePlusTime: zztdurationtriad02_test.go:359: Error returned by dur.SetStartTimePlusTimeDto(t1, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr). Error='DurationTriad.SetStartTimePlusTimeDto() durationTriadUtility.setStartTimePlusTimeDto() 'tDur2' Validity Check durationTriadUtility.isValid() INVALID durT.BaseTime. Error='TimeDurationDto.IsValid() timeDurationDtoUtility.isValid() 
+        Error: Time Math Calculation Mode is INVALID!
+        '' 
+    TestDurationTriad_SetStartTimePlusTime: zztdurationtriad02_test.go:364: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestDurationTriad_SetStartTimePlusTime: zztdurationtriad02_test.go:369: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestDurationTriad_SetStartTimePlusTime: zztdurationtriad02_test.go:374: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    TestDurationTriad_SetStartTimePlusTime: zztdurationtriad02_test.go:383: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
+--- FAIL: TestDurationTriad_SetStartTimePlusTime (0.00s)
 === RUN   TestDurationTriad_SetStartTimeMinusTime
---- PASS: TestDurationTriad_SetStartTimeMinusTime (0.00s)
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:412: Error returned by dur.SetEndTimeMinusTimeDto(t2, timeDto, TZones.US.Central(), FmtDateTimeYrMDayFmtStr) Error='DurationTriad.SetEndTimeMinusTimeDto() durationTriadUtility.setEndTimeMinusTimeDto() durT2 Validity Check - durationTriadUtility.isValid() INVALID durT.BaseTime. Error='TimeDurationDto.IsValid() timeDurationDtoUtility.isValid() 
+        Error: Time Math Calculation Mode is INVALID!
+        '' 
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:417: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:422: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:427: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    TestDurationTriad_SetStartTimeMinusTime: zztdurationtriad02_test.go:436: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
+--- FAIL: TestDurationTriad_SetStartTimeMinusTime (0.00s)
 === RUN   TestDurationTriad_SetStartTimeDuration
 --- PASS: TestDurationTriad_SetStartTimeDuration (0.00s)
 === RUN   TestDurationTriad_SetStartTimePlusTimeDto_01
---- PASS: TestDurationTriad_SetStartTimePlusTimeDto_01 (0.00s)
+    TestDurationTriad_SetStartTimePlusTimeDto_01: zztdurationtriad02_test.go:517: Error returned by dur.SetStartTimePlusTimeDto(t1, timeDto, FmtDateTimeYrMDayFmtStr) Error='DurationTriad.SetStartTimePlusTimeDto() durationTriadUtility.setStartTimePlusTimeDto() 'tDur2' Validity Check durationTriadUtility.isValid() INVALID durT.BaseTime. Error='TimeDurationDto.IsValid() timeDurationDtoUtility.isValid() 
+        Error: Time Math Calculation Mode is INVALID!
+        '' 
+    TestDurationTriad_SetStartTimePlusTimeDto_01: zztdurationtriad02_test.go:522: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestDurationTriad_SetStartTimePlusTimeDto_01: zztdurationtriad02_test.go:527: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestDurationTriad_SetStartTimePlusTimeDto_01: zztdurationtriad02_test.go:532: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    TestDurationTriad_SetStartTimePlusTimeDto_01: zztdurationtriad02_test.go:541: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
+--- FAIL: TestDurationTriad_SetStartTimePlusTimeDto_01 (0.00s)
 === RUN   TestLocationNameType_None_01
 --- PASS: TestLocationNameType_None_01 (0.00s)
 === RUN   TestLocationNameType_02
@@ -369,15 +398,15 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.12s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.62s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.22s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.02s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.00s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.06s)
+--- PASS: TestDtfmtTestSuite (4.01s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.01s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.01s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.03s)
 === RUN   TestMilitaryDateTzDto_01
 --- PASS: TestMilitaryDateTzDto_01 (0.00s)
 === RUN   TestMilitaryDateTzDto_02
@@ -545,24 +574,24 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoTzCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDto_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTzCalc_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTzCalc_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTz_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDto_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTzCalc_01
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_02
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_03
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_04
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_01
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_02
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_03
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_04
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_01
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_02
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_03
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_04
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_05
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_01
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_02
+=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_03
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_New_01
-=== RUN   TestTimeDuroTestSuite/TestTimeDurationDto_New_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_ReCalcEndDateTimeToNow_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_02
@@ -570,27 +599,27 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.06s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.01s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDtoTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesDateDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTzCalc_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDtoTz_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationDateDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTzCalc_01 (0.00s)
+--- PASS: TestTimeDuroTestSuite (0.10s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.01s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_01 (0.01s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_02 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_03 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_04 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_01 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_02 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_03 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimes_04 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_01 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_02 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_03 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_04 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDurationTz_05 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_01 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_02 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeDuration_03 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeMinusTimeDto_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimePlusTimeDto_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_New_01 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_New_02 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_ReCalcEndDateTimeToNow_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_02 (0.00s)
@@ -612,12 +641,12 @@ Processed 67 sample dates successfully!
 --- PASS: TestTimeDurationDto_NewStartTimeDuration_01 (0.00s)
 === RUN   TestTimeDurationDto_NewStartEndTimes_01
 --- PASS: TestTimeDurationDto_NewStartEndTimes_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01
---- PASS: TestTimeDurationDto_NewStartEndDateTzDtoCalcTz_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartEndDateTzDtoTz_01
---- PASS: TestTimeDurationDto_NewStartEndDateTzDtoTz_01 (0.00s)
-=== RUN   TestTimeDurationDto_NewStartEndDateTzDto_01
---- PASS: TestTimeDurationDto_NewStartEndDateTzDto_01 (0.00s)
+=== RUN   TestTimeDurationDto_NewStartEndTimesTz_01
+--- PASS: TestTimeDurationDto_NewStartEndTimesTz_01 (0.00s)
+=== RUN   TestTimeDurationDto_NewStartEndTimesTz_02
+--- PASS: TestTimeDurationDto_NewStartEndTimesTz_02 (0.00s)
+=== RUN   TestTimeDurationDto_NewStartEndTimesTz_03
+--- PASS: TestTimeDurationDto_NewStartEndTimesTz_03 (0.00s)
 === RUN   TestTimeDurationDto_NewStartTimeMinusTime_01
 --- PASS: TestTimeDurationDto_NewStartTimeMinusTime_01 (0.00s)
 === RUN   TestTimeDurationDto_NewStartTimePlusTime_01
@@ -631,9 +660,23 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDurationDto_SetStartEndTimes_04
 --- PASS: TestTimeDurationDto_SetStartEndTimes_04 (0.00s)
 === RUN   TestTimeDurationDto_SetStartTimePlusTime
---- PASS: TestTimeDurationDto_SetStartTimePlusTime (0.00s)
+    TestTimeDurationDto_SetStartTimePlusTime: zzttimedurationdto02_test.go:1149: Error returned by dur.SetStartTimePlusTimeDtoTz(...). Error='DurationTriad.SetStartTimePlusTimeDto() durationTriadUtility.setStartTimePlusTimeDto() 'tDur2' Validity Check durationTriadUtility.isValid() INVALID durT.BaseTime. Error='TimeDurationDto.IsValid() timeDurationDtoUtility.isValid() 
+        Error: Time Math Calculation Mode is INVALID!
+        ''
+    TestTimeDurationDto_SetStartTimePlusTime: zzttimedurationdto02_test.go:1154: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestTimeDurationDto_SetStartTimePlusTime: zzttimedurationdto02_test.go:1159: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestTimeDurationDto_SetStartTimePlusTime: zzttimedurationdto02_test.go:1164: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    TestTimeDurationDto_SetStartTimePlusTime: zzttimedurationdto02_test.go:1173: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
+--- FAIL: TestTimeDurationDto_SetStartTimePlusTime (0.00s)
 === RUN   TestTimeDurationDto_SetStartTimeMinusTime
---- PASS: TestTimeDurationDto_SetStartTimeMinusTime (0.00s)
+    TestTimeDurationDto_SetStartTimeMinusTime: zzttimedurationdto02_test.go:1202: Error returned by dur.SetEndTimeMinusTimeDtoTz(...). Error='DurationTriad.SetEndTimeMinusTimeDto() durationTriadUtility.setEndTimeMinusTimeDto() durT2 Validity Check - durationTriadUtility.isValid() INVALID durT.BaseTime. Error='TimeDurationDto.IsValid() timeDurationDtoUtility.isValid() 
+        Error: Time Math Calculation Mode is INVALID!
+        ''
+    TestTimeDurationDto_SetStartTimeMinusTime: zzttimedurationdto02_test.go:1207: Error- Expected Start Time 02/15/2014 19:54:30.000000000 -0600 CST. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestTimeDurationDto_SetStartTimeMinusTime: zzttimedurationdto02_test.go:1212: Error- Expected End Time 04/30/2017 22:58:32.000000000 -0500 CDT. Instead, got 01/01/0001 00:00:00.000000000 +0000 UTC.
+    TestTimeDurationDto_SetStartTimeMinusTime: zzttimedurationdto02_test.go:1217: Error- Expected Time Duration 28082h4m2s. Instead, got 0s
+    TestTimeDurationDto_SetStartTimeMinusTime: zzttimedurationdto02_test.go:1226: Error - Expected YrMthDay: 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds. Instead, got 0-Nanoseconds
+--- FAIL: TestTimeDurationDto_SetStartTimeMinusTime (0.00s)
 === RUN   TestTimeDurationDto_SetStartTimeDuration
 --- PASS: TestTimeDurationDto_SetStartTimeDuration (0.00s)
 === RUN   TestTimeZoneDefinition_New_01
@@ -653,7 +696,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneDefinition_GetConvertibleTimeZoneName_02
 --- PASS: TestTimeZoneDefinition_GetConvertibleTimeZoneName_02 (0.00s)
 === RUN   TestTimeZoneDto_AddTimeDurationDto_01
---- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.00s)
+--- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.01s)
 === RUN   TestTimeZoneDto_AddMinusTimeDto
 --- PASS: TestTimeZoneDto_AddMinusTimeDto (0.00s)
 === RUN   TestTimeZoneDto_AddPlusTimeDto
@@ -691,7 +734,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneUtility_NewAddDuration_01
 --- PASS: TestTimeZoneUtility_NewAddDuration_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddDate_01
---- PASS: TestTimeZoneUtility_NewAddDate_01 (0.00s)
+--- PASS: TestTimeZoneUtility_NewAddDate_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewAddDateTime_01
 --- PASS: TestTimeZoneUtility_NewAddDateTime_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddTime_01
@@ -701,7 +744,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneUtility_NewTimeAddTime_01
 --- PASS: TestTimeZoneUtility_NewTimeAddTime_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewTimeAddDateTime_01
---- PASS: TestTimeZoneUtility_NewTimeAddDateTime_01 (0.00s)
+--- PASS: TestTimeZoneUtility_NewTimeAddDateTime_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewTimeAddDuration_01
 --- PASS: TestTimeZoneUtility_NewTimeAddDuration_01 (0.00s)
 === RUN   TestTimeZoneUtility_ReclassifyTimeWithTzLocal
@@ -718,5 +761,6 @@ Processed 67 sample dates successfully!
 --- PASS: TestTimeZoneSpecification_03 (0.00s)
 === RUN   TestTimeZoneSpecification_04
 --- PASS: TestTimeZoneSpecification_04 (0.00s)
-PASS
-ok  	github.com/MikeAustin71/datetimeopsgo/datetime	11.448s
+FAIL
+exit status 1
+FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	11.249s

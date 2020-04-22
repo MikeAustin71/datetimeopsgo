@@ -200,9 +200,11 @@ func ExampleTimeDto005() {
 
 	t1USCentral := time.Date(1948, time.Month(9), 7, 4, 32, 16, 8185431, locUSCentral)
 	tDur, err := dt.TimeDurationDto{}.NewStartTimePlusTimeDto(
-		dt.TCalcMode.LocalTimeZone(),
 		t1USCentral,
 		tDto,
+		dt.TDurCalc.StdYearMth(),
+		t1USCentral.Location().String(),
+		dt.TCalcMode.LocalTimeZone(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {

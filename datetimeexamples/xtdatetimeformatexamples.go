@@ -27,7 +27,13 @@ func WriteAllFormatsToFile() {
 	}
 
 	endTimeGetFormats := time.Now()
-	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTime,
+		endTimeGetFormats,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("WriteAllFormatsToFile(). Error returned by "+
@@ -54,7 +60,13 @@ func WriteAllFormatsToFile() {
 
 	endTime := time.Now()
 
-	err = du.SetStartEndTimesTz(endTimeGetFormats, endTime, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		endTimeGetFormats,
+		endTime,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("Error returned by du.SetStartEndTimesTz(...). "+
@@ -65,7 +77,13 @@ func WriteAllFormatsToFile() {
 
 	d2 := dt.DurationTriad{}
 
-	err = d2.SetStartEndTimesTz(startTime, endTime, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = d2.SetStartEndTimes(
+		startTime,
+		endTime,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("Error returned by d2.SetStartEndTimesTz(...). "+
@@ -102,7 +120,13 @@ func WriteFormatStatsToFile() {
 
 	endTimeCreateFormats := time.Now()
 	du := dt.DurationTriad{}
-	err = du.SetStartEndTimesTz(startTime, endTimeCreateFormats, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTime,
+		endTimeCreateFormats,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf("WriteFormatStatsToFile(): Error returned by "+
@@ -158,7 +182,13 @@ func HammerSampleDateTimes() {
 	endTimeGetFormats := time.Now()
 	du := dt.DurationTriad{}
 
-	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTime,
+		endTimeGetFormats,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
@@ -192,10 +222,12 @@ func HammerSampleDateTimes() {
 
 	hammerEndTime := time.Now()
 	err =
-		du.SetStartEndTimesTz(
+		du.SetStartEndTimes(
 			hammerStartTime,
 			hammerEndTime,
+			dt.TDurCalc.StdYearMth(),
 			dt.TZones.US.Central(),
+			dt.TCalcMode.LocalTimeZone(),
 			dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -234,7 +266,13 @@ func TestParseSampleDateTimes() {
 
 	endTimeGetFormats := time.Now()
 
-	err = du.SetStartEndTimesTz(startTime, endTimeGetFormats, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTime,
+		endTimeGetFormats,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+"Error returned by du.SetStartEndTimesTz(). "+
@@ -279,10 +317,12 @@ func TestParseDateTime(dtf dt.FormatDateTimeUtility, dateTimeStr string, probabl
 	du := dt.DurationTriad{}
 
 	err =
-		du.SetStartEndTimesTz(
+		du.SetStartEndTimes(
 			startTimeParse,
 			endTimeParse,
+			dt.TDurCalc.StdYearMth(),
 			dt.TZones.US.Central(),
+			dt.TCalcMode.LocalTimeZone(),
 			dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -319,10 +359,12 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 
 	endTimeGetFormats := time.Now()
 
-	err = du.SetStartEndTimesTz(
+	err = du.SetStartEndTimes(
 		startTime,
 		endTimeGetFormats,
+		dt.TDurCalc.StdYearMth(),
 		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
 		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -350,7 +392,13 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	endTimeParse := time.Now()
 	fmt.Println()
 
-	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTimeParse,
+		endTimeParse,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
@@ -362,11 +410,17 @@ func TestParseDateTimeCreateFormatsInMemory(dateTimeStr string, probableDateTime
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 	fmt.Println("Actual Duration XValue: ", du.BaseTime.GetThisTimeDuration())
 
-	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTime,
+		endTimeParse,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
-			"Error returned by 2nd du.SetStartEndTimesTz(...). Error='%v' ",
+			"Error returned by 2nd du.SetStartEndTimes(...). Error='%v' ",
 			err.Error()))
 	}
 
@@ -416,7 +470,13 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 	endTimeParse := time.Now()
 	fmt.Println()
 
-	err = du.SetStartEndTimesTz(startTimeParse, endTimeParse, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTimeParse,
+		endTimeParse,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
@@ -429,11 +489,17 @@ func TestParseDateTimeFromFile(dateTimeStr string, probableDateTimeFormat string
 	fmt.Println("Elapsed Time For Time Parse: ", outStr)
 	fmt.Println("Actual Duration XValue: ", du.BaseTime.GetThisTimeDuration())
 
-	err = du.SetStartEndTimesTz(startTime, endTimeParse, dt.TZones.US.Central(), dt.FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		startTime,
+		endTimeParse,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.US.Central(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		panic(fmt.Errorf(ePrefix+
-			"Error returned by 2nd du.SetStartEndTimesTz(...). Error='%v' ",
+			"Error returned by 2nd du.SetStartEndTimes(...). Error='%v' ",
 			err.Error()))
 	}
 

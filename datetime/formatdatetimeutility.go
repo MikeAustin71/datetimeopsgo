@@ -335,10 +335,12 @@ func (dtf *FormatDateTimeUtility) LoadAllFormatsFromFileIntoMemory(
 	frDto.FileReadEndTime = time.Now()
 	frDto.NumberOfFormatMapKeysGenerated = len(dtf.FormatMap)
 	du := DurationTriad{}
-	err = du.SetStartEndTimesTz(
+	err = du.SetStartEndTimes(
 		frDto.FileReadStartTime,
 		frDto.FileReadEndTime,
+		TDurCalc.StdYearMth(),
 		"Local",
+		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
@@ -424,7 +426,13 @@ func (dtf *FormatDateTimeUtility) WriteAllFormatsInMemoryToFile(outputPathFileNa
 
 	du := DurationTriad{}
 
-	err = du.SetStartEndTimesTz(fwDto.FileWriteStartTime, fwDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		fwDto.FileWriteStartTime,
+		fwDto.FileWriteEndTime,
+		TDurCalc.StdYearMth(),
+		"Local",
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		_ = outF.Close()
@@ -519,7 +527,13 @@ func (dtf *FormatDateTimeUtility) WriteFormatStatsToFile(
 
 	outputDto.FileWriteEndTime = time.Now()
 	du := DurationTriad{}
-	err = du.SetStartEndTimesTz(outputDto.FileWriteStartTime, outputDto.FileWriteEndTime, "Local", FmtDateTimeYrMDayFmtStr)
+	err = du.SetStartEndTimes(
+		outputDto.FileWriteStartTime,
+		outputDto.FileWriteEndTime,
+		TDurCalc.StdYearMth(),
+		"Local",
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
 		_ = f.Close()
