@@ -478,6 +478,107 @@ func TestTimeDurationDto_NewDefaultStartEndTimesTz_01(t *testing.T) {
 	}
 }
 
+func TestTimeDurationDto_NewDefaultStartTimeDuration_001(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	tDto, err := TimeDurationDto{}.NewDefaultStartTimeDuration(
+		t1,
+		t12Dur)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeDurationCalcTz(t1, t12Dur).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.",
+			t2OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t12Dur != tDto.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, tDto.timeDuration)
+	}
+
+	outStr := tDto.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+}
+
+func TestTimeDurationDto_NewDefaultStartTimeTzDuration_001(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	var tDto TimeDurationDto
+	var err error
+	var dTzT1 DateTzDto
+
+	dTzT1, err = DateTzDto{}.NewDateTime(t1, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t1, fmtstr).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	tDto, err = TimeDurationDto{}.NewDefaultStartTimeTzDuration(
+		dTzT1,
+		t12Dur)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeDurationCalcTz(t1, t12Dur).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.",
+			t2OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t12Dur != tDto.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, tDto.timeDuration)
+	}
+
+	outStr := tDto.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+}
+
+
 func TestTimeDurationDto_NewStartTimeDuration_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
