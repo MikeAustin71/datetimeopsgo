@@ -835,7 +835,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_03() 
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeTzDuration_01() {
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
@@ -881,7 +881,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_01(
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_02() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeTzDuration_02() {
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
@@ -925,7 +925,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_02(
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_03() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeTzDuration_03() {
 
 	dTz, err := DateTzDto{}.NewDateTime(suite.t1USCentral, suite.fmtStr)
 
@@ -968,7 +968,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_03(
 	assert.True(suite.T(), actualTimeDuration == t1Dur.timeDuration, "Error: Actual Duration DOES NOT EQUAL t1Dur.timeDuration!")
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_04() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeTzDuration_04() {
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
@@ -1012,7 +1012,7 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_04(
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDurationTz_05() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeTzDuration_05() {
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
