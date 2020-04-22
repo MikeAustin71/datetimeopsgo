@@ -496,6 +496,18 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		}
 	}
 
+	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
+		timeCalcMode > TCalcMode.XLastValidCalcType() {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "timeCalcMode",
+			inputParameterValue: "",
+			errMsg: "Input parameter 'timeCalcMode' " +
+				"is invalid!",
+			err: nil,
+		}
+	}
+
 	dtMech := DTimeMechanics{}
 
 	dateTimeFmtStr = dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
@@ -508,7 +520,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 
 	tDurDtoUtil := timeDurationDtoUtility{}
 
-	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
+	err := tDurDtoUtil.setEndTimeMinusTimeDto(
 		&durT2.BaseTime,
 		endDateTime,
 		minusTimeDto,
@@ -522,7 +534,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		return err
 	}
 
-	err = tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
+	err = tDurDtoUtil.setEndTimeMinusTimeDto(
 		&durT2.LocalTime,
 		endDateTime,
 		minusTimeDto,
@@ -536,7 +548,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		return err
 	}
 
-	err = tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
+	err = tDurDtoUtil.setEndTimeMinusTimeDto(
 		&durT2.UTCTime,
 		endDateTime,
 		minusTimeDto,

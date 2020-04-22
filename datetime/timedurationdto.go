@@ -4856,7 +4856,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 
 	tDur2 := TimeDurationDto{}
 
-	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
+	err := tDurDtoUtil.setEndTimeMinusTimeDto(
 		&tDur2,
 		endDateTime,
 		minusTimeDto,
@@ -5136,7 +5136,7 @@ func (tDur TimeDurationDto) NewEndTimeTzMinusTimeDto(
 
 	t2Dur := TimeDurationDto{}
 
-	err := tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
+	err := tDurDtoUtil.setEndTimeMinusTimeDto(
 		&t2Dur,
 		endDateTime,
 		minusTimeDto,
@@ -5578,7 +5578,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(
 
 	tDurDtoUtil := timeDurationDtoUtility{}
 
-	return tDurDtoUtil.setEndTimeMinusTimeDtoCalcTz(
+	return tDurDtoUtil.setEndTimeMinusTimeDto(
 		tDur,
 		endDateTime,
 		minusTimeDto,

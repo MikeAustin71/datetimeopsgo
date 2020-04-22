@@ -1807,6 +1807,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcTimeDurationAllocation(
 	tDur2 := tDurDtoUtil2.copyOut(tDur, ePrefix)
 
 	tDur2.timeDurCalcType = tDurCalcType
+	tDur2.timeMathCalcMode = tDur.timeMathCalcMode
 
 	err := tDurDtoUtil2.calcTimeDurationAllocations(
 		&tDur2,
@@ -2296,7 +2297,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoStart(
 	return nil
 }
 
-// setEndTimeMinusTimeDtoCalcTz - Sets start date time, end date time and duration
+// setEndTimeMinusTimeDto - Sets start date time, end date time and duration
 // based on an ending date time, and the time components contained in a TimeDto.
 //
 // Starting date time is computed by subtracting the value of the TimeDto from
@@ -2450,7 +2451,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoStart(
 //     - The error prefix containing the names of all
 //       the methods executed up to this point.
 //
-func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
+func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 	tDur *TimeDurationDto,
 	endDateTime time.Time,
 	minusTimeDto TimeDto,
@@ -2464,7 +2465,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 
 	defer tDurDtoUtil.lock.Unlock()
 
-	ePrefix += "timeDurationDtoUtility.setEndTimeMinusTimeDtoCalcTz() "
+	ePrefix += "timeDurationDtoUtility.setEndTimeMinusTimeDto() "
 
 	if tDur == nil {
 		return &InputParameterError{
@@ -2559,6 +2560,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDtoCalcTz(
 			tDur2.startDateTimeTz.dateTimeValue)
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
+
+	tDur2.timeDurCalcType = tDurCalcType
+
+	tDur2.timeMathCalcMode = timeCalcMode
 
 	err = tDurDtoUtil2.calcTimeDurationAllocations(
 		&tDur2,
@@ -3781,7 +3786,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation string,
-	timeCalcMode TimeMathCalcMode,
+	timeMathCalcMode TimeMathCalcMode,
 	dateTimeFmtStr string,
 	ePrefix string) error {
 
@@ -3830,13 +3835,13 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 		}
 	}
 
-	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeCalcMode > TCalcMode.XLastValidCalcType() {
+	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
+		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "timeCalcMode",
+			inputParameterName:  "timeMathCalcMode",
 			inputParameterValue: "",
-			errMsg: "Input parameter 'timeCalcMode' " +
+			errMsg: "Input parameter 'timeMathCalcMode' " +
 				"is invalid!",
 			err: nil,
 		}
@@ -3870,7 +3875,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 
 	tDur2.endDateTimeTz, err = dTzUtil.addPlusTimeDto(
 		&tDur2.startDateTimeTz,
-		timeCalcMode,
+		timeMathCalcMode,
 		plusTimeDto,
 		ePrefix)
 
@@ -3879,6 +3884,8 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 			tDur2.startDateTimeTz.dateTimeValue)
 
 	tDur2.timeDurCalcType = tDurCalcType
+
+	tDur2.timeMathCalcMode = timeMathCalcMode
 
 	tDurDtoUtil2 := timeDurationDtoUtility{}
 
