@@ -155,33 +155,6 @@ func (tDur *TimeDurationDto) Empty() {
 		"TimeDurationDto.Empty() ")
 }
 
-// EmptyTimeFields - Sets all data fields associated
-// with time duration allocation to zero.
-//
-// __________________________________________________________________________
-//
-// Return Values:
-//
-//   -- NONE --
-//
-func (tDur *TimeDurationDto) EmptyTimeFields() {
-
-	if tDur.lock == nil {
-		tDur.lock = new(sync.Mutex)
-	}
-
-	tDur.lock.Lock()
-
-	defer tDur.lock.Unlock()
-
-	tDurDtoUtil := timeDurationDtoUtility{}
-
-	tDurDtoUtil.emptyTimeFields(
-		tDur,
-		"TimeDurationDto.EmptyTimeFields() ")
-
-}
-
 // Equal - Compares two TimeDurationDto instances to determine
 // if they are equivalent.
 //
