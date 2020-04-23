@@ -95,3 +95,66 @@ func TestTimeDurationDto_CopyIn_01(t *testing.T) {
 	}
 
 }
+
+func TestTimeDurationDto_IsEmpty_01(t *testing.T){
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+
+	tDto, err := TimeDurationDto{}.NewDefaultStartEndTimes(
+		t1,
+		t2)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewDefaultStartEndTimes(...).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.startDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.endDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	tOutDur := t2.Sub(t1)
+
+	if tOutDur != tDto.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v", tOutDur, tDto.timeDuration)
+	}
+
+	outStr := tDto.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+
+	if tDto.IsEmpty() {
+		t.Error("Error - Expected IsEmpty() == 'false'.\n" +
+			"Instead, IsEmpty()=='true'")
+	}
+}
+
+func TestTimeDurationDto_IsEmpty_02(t *testing.T){
+
+	tDto := TimeDurationDto{}
+
+	if !tDto.IsEmpty() {
+		t.Error("Error - Expected IsEmpty() == 'true'.\n" +
+			"Instead, IsEmpty() == 'false'.\n")
+	}
+
+}
