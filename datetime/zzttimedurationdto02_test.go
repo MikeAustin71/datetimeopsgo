@@ -1696,7 +1696,6 @@ func TestTimeDurationDto_SetStartEndTimesTz_01(t *testing.T) {
 		return
 	}
 
-
 	err = tDto.SetStartEndTimesTz(
 		dTz1,
 		dTz2,
@@ -1954,10 +1953,9 @@ func TestTimeDurationDto_SetStartTimePlusTimeDto_001(t *testing.T) {
 	if expected != outStr {
 		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
 	}
-
 }
 
-func TestTimeDurationDto_SetStartTimeDuration(t *testing.T) {
+func TestTimeDurationDto_SetStartTimeDuration_001(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -1968,37 +1966,66 @@ func TestTimeDurationDto_SetStartTimeDuration(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	dur := DurationTriad{}
+	var err error
+	var tDto TimeDurationDto
 
-	err := dur.SetStartTimeDuration(
+	tX1 := time.Date(
+		2007,
+		5,
+		7,
+		14,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	tX2 := time.Date(
+		2008,
+		9,
+		7,
+		6,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	tDto, err = TimeDurationDto{}.NewDefaultStartEndTimes(tX1, tX2)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewDefaultStartEndTimes(t1, t12Dur).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = tDto.SetStartTimeDuration(
 		t1,
 		t12Dur,
-		TDurCalc.StdYearMth(),
+		TDurCalcType(0).StdYearMth(),
 		TZones.US.Central(),
 		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dur.SetStartTimeDurationTz(...). "+
-			"Error='%v'", err.Error())
+		t.Errorf("Error returned by tDto.SetStartTimeDuration(t1, t12Dur).\n"+
+			"Error='%v'\n", err.Error())
+		return
 	}
 
-	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
-			t1OutStr, dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t2OutStr != dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+	if t2OutStr != tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
 		t.Errorf("Error- Expected End Time %v. Instead, got %v.",
-			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+			t2OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
 	}
 
-	if t12Dur != dur.BaseTime.timeDuration {
-		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
-			t12Dur, dur.BaseTime.timeDuration)
+	if t12Dur != tDto.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v", t12Dur, tDto.timeDuration)
 	}
 
-	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
+	outStr := tDto.GetYearMthDaysTimeStr()
 
 	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
