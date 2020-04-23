@@ -6331,10 +6331,10 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //  tDurDto, err := tDurDto.SetEndTimeMinusTimeDto(
 //                           endTime,
 //                           minusTimeDto,
-//                                     TDurCalc.StdYearMth(),
-//                                     TZones.US.Central(),
-//                                     TCalcMode.LocalTimeZone(),
-//                                     FmtDateTimeYrMDayFmtStr)
+//                           TDurCalc.StdYearMth(),
+//                           TZones.US.Central(),
+//                           TCalcMode.LocalTimeZone(),
+//                           FmtDateTimeYrMDayFmtStr)
 //
 //  Note:
 //        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
