@@ -3128,7 +3128,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 //              FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
 //
 func (durT DurationTriad) NewStartTimeTzPlusTimeDto(
-	startDateTime time.Time,
+	startDateTimeTz DateTzDto,
 	plusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation string,
@@ -3151,7 +3151,7 @@ func (durT DurationTriad) NewStartTimeTzPlusTimeDto(
 
 	err := durTUtil.setStartTimePlusTimeDto(
 		&durT2,
-		startDateTime,
+		startDateTimeTz.dateTimeValue,
 		plusTimeDto,
 		tDurCalcType,
 		timeZoneLocation,
