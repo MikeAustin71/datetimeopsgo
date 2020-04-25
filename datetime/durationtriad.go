@@ -415,6 +415,32 @@ func (durT *DurationTriad) Equal(duIn DurationTriad) bool {
 	return areEqual
 }
 
+// IsEmpty - Returns true if the current DurationTriad
+// instance is 'empty' or uninitialized.
+//
+func (durT *DurationTriad) IsEmpty() bool {
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
+	}
+
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
+	durTUtil := durationTriadUtility{}
+
+	isEmpty, err := durTUtil.isEmpty(
+		durT,
+		"DurationTriad.IsEmpty() ")
+
+	if err != nil {
+		return false
+	}
+
+	return isEmpty
+}
+
 // IsValid - Validates the current DurationTriad instance. If the current
 // instance is invalid, an error type is returned with an appropriate error
 // message.

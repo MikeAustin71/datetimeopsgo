@@ -205,6 +205,61 @@ ePrefix += "durationTriadUtility.equal() "
 	return false, nil
 }
 
+// isEmpty - Returns 'true' if the DurationTriad
+// instance is 'empty' or uninitialized.
+//
+func(durTUtil *durationTriadUtility) isEmpty(
+	durT *DurationTriad,
+	ePrefix string) (bool, error) {
+
+	durTUtil.lock.Lock()
+
+	defer durTUtil.lock.Unlock()
+
+	ePrefix += "durationTriadUtility.isValid() "
+
+	if durT == nil {
+		return false, &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "durT",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'durT' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
+	}
+
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	isEmpty, err := tDurDtoUtil.isEmpty(
+									&durT.BaseTime,
+									ePrefix)
+
+	if err != nil ||
+		!isEmpty {
+		return isEmpty, err
+	}
+
+	isEmpty, err = tDurDtoUtil.isEmpty(
+									&durT.LocalTime,
+									ePrefix)
+
+	if err != nil ||
+		!isEmpty {
+		return isEmpty, err
+	}
+
+	isEmpty, err = tDurDtoUtil.isEmpty(
+									&durT.UTCTime,
+									ePrefix)
+
+	return isEmpty, err
+}
+
 // isValid - Analyzes input DurationTriad 'durT' to
 // determine if it is valid. If the DurationTriad
 // instance is found to be 'invalid', an error is
