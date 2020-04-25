@@ -99,9 +99,19 @@ func(durTUtil *durationTriadUtility) empty(
 		durT.lock = new(sync.Mutex)
 	}
 
-	durT.BaseTime.Empty()
-	durT.LocalTime.Empty()
-	durT.UTCTime.Empty()
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	tDurDtoUtil.empty(
+		&durT.BaseTime,
+		"TimeDurationDto.Empty(durT.BaseTime) ")
+
+	tDurDtoUtil.empty(
+		&durT.LocalTime,
+		"TimeDurationDto.Empty(durT.LocalTime) ")
+
+	tDurDtoUtil.empty(
+		&durT.UTCTime,
+		"TimeDurationDto.Empty(durT.UTCTime) ")
 
 	return
 }

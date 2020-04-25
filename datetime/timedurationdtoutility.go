@@ -1641,8 +1641,10 @@ func (tDurDtoUtil *timeDurationDtoUtility) isEmpty(
 		tDur.TotDateNanoseconds == 0 &&
 		tDur.TotTimeNanoseconds == 0 {
 
-		if tDur.timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-			tDur.timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+		if (tDur.timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
+			 tDur.timeMathCalcMode > TCalcMode.XLastValidCalcType())  &&
+			(tDur.timeDurCalcType < TDurCalc.XFirstValidCalcType()   ||
+			 tDur.timeDurCalcType > TDurCalc.XLastValidCalcType()) {
 			return true, nil
 		}
 	}

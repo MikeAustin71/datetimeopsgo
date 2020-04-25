@@ -341,6 +341,103 @@ func TestDurationTriad_CopyOut_01(t *testing.T) {
 
 }
 
+func TestDurationTriad_Empty_01(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	dur, err := DurationTriad{}.NewStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dur.Empty()
+
+	if dur.BaseTime.timeDurCalcType != TDurCalcType(0).None() {
+		t.Errorf("Error: Expected dur.BaseTime.timeDurCalcType = TDurCalcType(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.BaseTime.timeDurCalcType.String())
+	}
+	
+
+	if dur.BaseTime.timeMathCalcMode != TCalcMode.None() {
+		t.Errorf("Error: Expected dur.BaseTime.timeMathCalcMode = TCalcMode(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.BaseTime.timeMathCalcMode.String())
+	}
+	
+
+	if dur.BaseTime.timeDurCalcType != TDurCalcType(0).None() {
+		t.Errorf("Error: Expected dur.BaseTime.timeDurCalcType = TDurCalcType(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.BaseTime.timeDurCalcType.String())
+	}
+	
+
+	if dur.BaseTime.timeMathCalcMode != TCalcMode.None() {
+		t.Errorf("Error: Expected dur.BaseTime.timeMathCalcMode = TCalcMode(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.BaseTime.timeMathCalcMode.String())
+	}
+
+	if dur.LocalTime.timeDurCalcType != TDurCalcType(0).None() {
+		t.Errorf("Error: Expected dur.LocalTime.timeDurCalcType = TDurCalcType(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.LocalTime.timeDurCalcType.String())
+	}
+	
+
+	if dur.LocalTime.timeMathCalcMode != TCalcMode.None() {
+		t.Errorf("Error: Expected dur.LocalTime.timeMathCalcMode = TCalcMode(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.LocalTime.timeMathCalcMode.String())
+	}
+
+	if dur.LocalTime.timeDurCalcType != TDurCalcType(0).None() {
+		t.Errorf("Error: Expected dur.LocalTime.timeDurCalcType = TDurCalcType(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.LocalTime.timeDurCalcType.String())
+	}
+	
+
+	if dur.LocalTime.timeMathCalcMode != TCalcMode.None() {
+		t.Errorf("Error: Expected dur.LocalTime.timeMathCalcMode = TCalcMode(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.LocalTime.timeMathCalcMode.String())
+	}
+
+	if dur.UTCTime.timeDurCalcType != TDurCalcType(0).None() {
+		t.Errorf("Error: Expected dur.UTCTime.timeDurCalcType = TDurCalcType(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.UTCTime.timeDurCalcType.String())
+	}
+	
+
+	if dur.UTCTime.timeMathCalcMode != TCalcMode.None() {
+		t.Errorf("Error: Expected dur.UTCTime.timeMathCalcMode = TCalcMode(0).None().\n" +
+			"Instead it is equal to '%v'\n", dur.UTCTime.timeMathCalcMode.String())
+	}
+
+	if !dur.BaseTime.IsEmpty() {
+		t.Error("Error: Expected dur.BaseTime.IsEmpty()='true'.\n" +
+			"Instead, dur.BaseTime.IsEmpty()='false'.\n")
+	}
+
+	if !dur.LocalTime.IsEmpty() {
+		t.Error("Error: Expected dur.LocalTime.IsEmpty()='true'.\n" +
+			"Instead, dur.LocalTime.IsEmpty()='false'.\n")
+	}
+
+	if !dur.UTCTime.IsEmpty() {
+		t.Error("Error: Expected dur.UTCTime.IsEmpty()='true'.\n" +
+			"Instead, dur.UTCTime.IsEmpty()='false'.\n")
+	}
+
+}
+
 func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"
 	t2str := "04/30/2017 22:58:33.123456789 -0500 CDT"
