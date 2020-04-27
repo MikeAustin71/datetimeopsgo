@@ -6,6 +6,11 @@ import (
 	"sync"
 )
 
+const (
+	timeMathTimeCalcModeFirstValidModeType = 1
+	timeMathTimeCalcModeLastValidModeType = 2
+)
+
 var mTimeMathCalcModeStringToCode = map[string]TimeMathCalcMode{
 	"None"           : TimeMathCalcMode(0),
 	"LocalTimeZone"  : TimeMathCalcMode(1),
@@ -247,6 +252,25 @@ func (tMathMode TimeMathCalcMode) XLastValidCalcType() TimeMathCalcMode {
 	defer lockTDurCalcType.Unlock()
 
 	return TimeMathCalcMode(2)
+}
+
+// XIsValid - Returns a boolean value signaling whether
+// the current TimeMathCalcMode value is valid.
+//
+func (tMathMode TimeMathCalcMode) XIsValid() bool {
+	 //timeMathTimeCalcModeFirstValidModeType = 1
+	 // timeMathTimeCalcModeLastValidModeType = 2
+
+	lockTDurCalcType.Lock()
+
+	defer lockTDurCalcType.Unlock()
+
+	if tMathMode < timeMathTimeCalcModeFirstValidModeType ||
+		tMathMode > timeMathTimeCalcModeLastValidModeType {
+		return false
+	}
+
+	return true
 }
 
 // XParseString - Receives a string and attempts to match it with

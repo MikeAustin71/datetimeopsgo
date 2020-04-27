@@ -461,7 +461,7 @@ func(durTUtil *durationTriadUtility) isValid(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -778,7 +778,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr     string
@@ -1064,7 +1064,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr     string
@@ -1381,7 +1381,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDuration(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr string

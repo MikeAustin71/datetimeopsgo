@@ -38,7 +38,7 @@ type dateTzDtoUtility struct {
 //       hours, use TCalcMode.UtcTimeZone().
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //       Valid values are:
 //             TCalcMode.LocalTimeZone()
@@ -200,7 +200,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 //       hours, use TCalcMode.UtcTimeZone().
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //       Valid values are:
 //             TCalcMode.LocalTimeZone()
@@ -444,7 +444,7 @@ func (dTzUtil *dateTzDtoUtility) addDuration(
 //       hours, use TCalcMode.UtcTimeZone().
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //       Valid values are:
 //             TCalcMode.LocalTimeZone()
@@ -603,7 +603,7 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 //       hours, use TCalcMode.UtcTimeZone().
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //       Valid values are:
 //             TCalcMode.LocalTimeZone()

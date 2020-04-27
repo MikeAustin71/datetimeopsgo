@@ -317,7 +317,7 @@ func (tZoneUtil *timeZoneDtoUtility) addDuration(
 //       hours, use TCalcMode.UtcTimeZone().
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //       Valid values are:
 //             TCalcMode.LocalTimeZone()
@@ -494,7 +494,7 @@ func (tZoneUtil *timeZoneDtoUtility) addMinusTimeDto(
 //       hours, use TCalcMode.UtcTimeZone().
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //       Valid values are:
 //             TCalcMode.LocalTimeZone()

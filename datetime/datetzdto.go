@@ -144,7 +144,7 @@ type DateTzDto struct {
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -210,7 +210,7 @@ type DateTzDto struct {
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'
@@ -266,7 +266,7 @@ func (dtz *DateTzDto) AddDate(
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -339,7 +339,7 @@ func (dtz *DateTzDto) AddDate(
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'
@@ -412,7 +412,7 @@ func (dtz *DateTzDto) AddDateTime(
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -462,7 +462,7 @@ func (dtz *DateTzDto) AddDateTime(
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 func (dtz *DateTzDto) AddDateTimeToThis(
 	timeCalcMode TimeMathCalcMode,
@@ -531,7 +531,7 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -569,7 +569,7 @@ func (dtz *DateTzDto) AddDateTimeToThis(
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 func (dtz *DateTzDto) AddDateToThis(
 	timeCalcMode TimeMathCalcMode,
@@ -778,7 +778,7 @@ func (dtz *DateTzDto) AddDurationToThis(
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -835,7 +835,7 @@ func (dtz *DateTzDto) AddDurationToThis(
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 func (dtz *DateTzDto) AddMinusTimeDto(
 	timeCalcMode TimeMathCalcMode,
@@ -879,7 +879,7 @@ func (dtz *DateTzDto) AddMinusTimeDto(
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -932,7 +932,7 @@ func (dtz *DateTzDto) AddMinusTimeDto(
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 func (dtz *DateTzDto) AddMinusTimeDtoToThis(
 	timeCalcMode TimeMathCalcMode,
@@ -986,7 +986,7 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -1044,7 +1044,7 @@ func (dtz *DateTzDto) AddMinusTimeDtoToThis(
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 func (dtz *DateTzDto) AddPlusTimeDto(
 	timeCalcMode TimeMathCalcMode,
@@ -1088,7 +1088,7 @@ func (dtz *DateTzDto) AddPlusTimeDto(
 //         hours, use TCalcMode.UtcTimeZone().
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //         Valid values are:
 //               TCalcMode.LocalTimeZone()
@@ -1140,7 +1140,7 @@ func (dtz *DateTzDto) AddPlusTimeDto(
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
 //        Reference 'timeCalcMode' input parameter documentation above
 //        and source code documentation at:
-//            datetime\timemathcalcmode.go
+//            datetime\timemathcalcmodeenum.go
 //
 func (dtz *DateTzDto) AddPlusTimeDtoToThis(
 	timeCalcMode TimeMathCalcMode,

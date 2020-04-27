@@ -58,9 +58,9 @@ func TestTDurCalcType_04(t *testing.T) {
 		TDurCalcType(0).XParseString(textString, true)
 
 	if err != nil {
-		t.Errorf("Error returned by LocationNameType(0)." +
-			"XParseString(textString, true)\n" +
-			"Error='%v'\n", err.Error())
+		t.Errorf("Error returned by TDurCalcType(0)." +
+			"textString='%v'\n" +
+			"Error='%v'\n", textString, err.Error())
 		return
 	}
 

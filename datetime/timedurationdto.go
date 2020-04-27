@@ -2667,7 +2667,7 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -2723,7 +2723,7 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -2912,7 +2912,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -2967,7 +2967,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -3953,7 +3953,7 @@ func (tDur TimeDurationDto) NewDefaultEndTimeTzMinusTimeDto(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -4010,7 +4010,7 @@ func (tDur TimeDurationDto) NewDefaultEndTimeTzMinusTimeDto(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -4201,7 +4201,7 @@ func (tDur TimeDurationDto) NewStartEndTimes(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -4258,7 +4258,7 @@ func (tDur TimeDurationDto) NewStartEndTimes(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -4455,7 +4455,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -4512,7 +4512,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -4705,7 +4705,7 @@ func (tDur TimeDurationDto) NewStartTimeDuration(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -4762,7 +4762,7 @@ func (tDur TimeDurationDto) NewStartTimeDuration(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -4982,7 +4982,7 @@ func (tDur TimeDurationDto) NewStartTimeTzDuration(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -5039,7 +5039,7 @@ func (tDur TimeDurationDto) NewStartTimeTzDuration(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -5255,7 +5255,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -5312,7 +5312,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -5538,7 +5538,7 @@ func (tDur TimeDurationDto) NewStartTimeTzPlusTimeDto(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -5595,7 +5595,7 @@ func (tDur TimeDurationDto) NewStartTimeTzPlusTimeDto(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -5819,7 +5819,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -5876,7 +5876,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -6265,7 +6265,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -6320,7 +6320,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -6479,7 +6479,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //   dateTimeFmtStr string
@@ -6688,7 +6688,7 @@ func (tDur *TimeDurationDto) SetStartEndTimes(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //   dateTimeFmtStr string
@@ -6922,7 +6922,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesTz(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -6977,7 +6977,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesTz(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -7140,7 +7140,7 @@ func (tDur *TimeDurationDto) SetStartTimeDuration(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //   dateTimeFmtStr   string
@@ -7195,7 +7195,7 @@ func (tDur *TimeDurationDto) SetStartTimeDuration(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -7392,7 +7392,7 @@ func (tDur *TimeDurationDto) SetStartTimeTzDuration(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -7447,7 +7447,7 @@ func (tDur *TimeDurationDto) SetStartTimeTzDuration(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.
@@ -7646,7 +7646,7 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
@@ -7701,7 +7701,7 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(
 //        TCalcMode.LocalTimeZone() specifies that time duration will be
 //        computed in the context of local time zones. Reference Type
 //        'TDurCalcType' located in source file:
-//            'datetime\timemathcalcmode.go'
+//            'datetime\timemathcalcmodeenum.go'
 //
 //        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
 //        'constantsdatetime.go'.

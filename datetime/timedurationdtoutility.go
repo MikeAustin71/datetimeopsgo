@@ -1954,7 +1954,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcTimeDurationAllocation(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr string
@@ -2182,7 +2182,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr string
@@ -2438,7 +2438,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoStart(
 //       (TCalcMode.UtcTimeZone())
 //
 //       For additional information see the type documentation at
-//             datetime\timemathcalcmode.go
+//             datetime\timemathcalcmodeenum.go
 //
 //
 // dateTimeFmtStr   string
@@ -2700,7 +2700,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr string
@@ -2963,7 +2963,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimes(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr string
@@ -3243,7 +3243,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesTz(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr string
@@ -3483,7 +3483,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDuration(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  timeCalcMode  TimeMathCalcMode
@@ -3500,7 +3500,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDuration(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr string
@@ -3762,7 +3762,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeTzDuration(
 //         (TCalcMode.UtcTimeZone())
 //
 //         For additional information see the type documentation at
-//               datetime\timemathcalcmode.go
+//               datetime\timemathcalcmodeenum.go
 //
 //
 //  dateTimeFmtStr    string
