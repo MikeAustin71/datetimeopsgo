@@ -341,6 +341,79 @@ func TestDurationTriad_CopyOut_01(t *testing.T) {
 
 }
 
+func TestDurationTriad_Equal_01(t *testing.T) {
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	var dur, durX DurationTriad
+	var err error
+
+	durX, err = DurationTriad{}.NewStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by durX, err = " +
+			"DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dur = durX.CopyOut()
+
+	if ! dur.Equal(durX) {
+		t.Error("Error: Expected dur == durX.\n" +
+			"Instead, they are NOT Equal!\n")
+	}
+}
+
+func TestDurationTriad_Equal_02(t *testing.T) {
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	var dur, durX DurationTriad
+	var err error
+
+	durX, err = DurationTriad{}.NewStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by durX, err = " +
+			"DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dur = durX.CopyOut()
+
+	dur.BaseTime.timeMathCalcMode = TCalcMode.UtcTimeZone()
+
+	if dur.Equal(durX) {
+		t.Error("Error: Expected dur != durX.\n" +
+			"Instead, they are Equal!\n" +
+			"However, dur.BaseTime.timeMathCalcMode is unequal!\n")
+	}
+}
+
 func TestDurationTriad_Empty_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
