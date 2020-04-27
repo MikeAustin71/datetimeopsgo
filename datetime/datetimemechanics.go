@@ -465,8 +465,7 @@ func (dtMech *DTimeMechanics) ComputeDurationFromBaseTime(
 
 	err = nil
 
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",
@@ -605,9 +604,7 @@ func (dtMech *DTimeMechanics) ComputeDurationFromStartEndTimes(
 
 	}
 
-
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",

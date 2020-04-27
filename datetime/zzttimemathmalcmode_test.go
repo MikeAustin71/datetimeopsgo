@@ -361,3 +361,47 @@ func TestTimeMathCalcMode_XIsValid_05 (t *testing.T) {
 	}
 
 }
+
+func TestTimeMathCalcMode_XIsValid_06 (t *testing.T) {
+
+	timeMathCalcMode := TCalcMode.UtcTimeZone()
+
+	if !timeMathCalcMode.XIsValid() {
+		t.Error("Error: Expected timeMathCalcMode.XIsValid()=='true'.\n" +
+			"Value is TCalcMode.UtcTimeZone().\n" +
+			"Instead, timeMathCalcMode.XIsValid()=='false'.\n")
+	}
+
+	intValue := timeMathCalcMode.XValueInt()
+
+	if intValue != 2 {
+		t.Errorf("Error: Expected TCalcMode.UtcTimeZone() " +
+			"to yield an integer value of '2'.\n" +
+			"Instead, integer value = '%v'.\n" +
+			"Also, timeMathCalcMode.XIsValid()='%v'",
+			intValue, timeMathCalcMode.XIsValid())
+	}
+
+}
+
+func TestTimeMathCalcMode_XIsValid_07 (t *testing.T) {
+
+	timeMathCalcMode := TCalcMode.LocalTimeZone()
+
+	if !timeMathCalcMode.XIsValid() {
+		t.Error("Error: Expected timeMathCalcMode.XIsValid()=='true'.\n" +
+			"Value is TCalcMode.LocalTimeZone().\n" +
+			"Instead, timeMathCalcMode.XIsValid()=='false'.\n")
+	}
+
+	intValue := timeMathCalcMode.XValueInt()
+
+	if intValue != 1 {
+		t.Errorf("Error: Expected TCalcMode.LocalTimeZone() " +
+			"to yield an integer value of '1'.\n" +
+			"Instead, integer value = '%v'.\n" +
+			"Also, timeMathCalcMode.XIsValid()='%v'",
+			intValue, timeMathCalcMode.XIsValid())
+	}
+
+}

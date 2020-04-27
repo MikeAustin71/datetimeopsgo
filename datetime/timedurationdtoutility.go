@@ -1641,8 +1641,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isEmpty(
 		tDur.TotDateNanoseconds == 0 &&
 		tDur.TotTimeNanoseconds == 0 {
 
-		if (tDur.timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-			 tDur.timeMathCalcMode > TCalcMode.XLastValidCalcType())  &&
+		if (!tDur.timeMathCalcMode.XIsValid())  &&
 			(!tDur.timeDurCalcType.XIsValid()) {
 			return true, nil
 		}
@@ -1713,8 +1712,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 			"\nError: Time Duration Calculation Type is INVALID!\n")
 	}
 
-	if tDur.timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		tDur.timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !tDur.timeMathCalcMode.XIsValid() {
 		return fmt.Errorf(ePrefix +
 			"\nError: Time Math Calculation Mode is INVALID!\n")
 	}
@@ -2011,8 +2009,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 		}
 	}
 
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",
@@ -2240,8 +2237,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoStart(
 		}
 	}
 
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",
@@ -2462,7 +2458,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 	minusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation string,
-	timeCalcMode TimeMathCalcMode,
+	timeMathCalcMode TimeMathCalcMode,
 	dateTimeFmtStr,
 	ePrefix string) error {
 
@@ -2510,13 +2506,12 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 		}
 	}
 
-	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "timeCalcMode",
+			inputParameterName:  "timeMathCalcMode",
 			inputParameterValue: "",
-			errMsg: "Input parameter 'timeCalcMode' " +
+			errMsg: "Input parameter 'timeMathCalcMode' " +
 				"is invalid!",
 			err: nil,
 		}
@@ -2551,7 +2546,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 	tDur2.startDateTimeTz, err =
 		dTzUtil.addMinusTimeDto(
 			&tDur2.endDateTimeTz,
-			timeCalcMode,
+			timeMathCalcMode,
 			minusTimeDto,
 			ePrefix)
 
@@ -2567,7 +2562,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 
 	tDur2.timeDurCalcType = tDurCalcType
 
-	tDur2.timeMathCalcMode = timeCalcMode
+	tDur2.timeMathCalcMode = timeMathCalcMode
 
 	err = tDurDtoUtil2.calcTimeDurationAllocations(
 		&tDur2,
@@ -2777,8 +2772,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimes(
 		}
 	}
 
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",
@@ -3061,8 +3055,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesTz(
 		}
 	}
 
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",
@@ -3564,8 +3557,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeTzDuration(
 		}
 	}
 
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",
@@ -3834,8 +3826,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 		}
 	}
 
-	if timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeMathCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "timeMathCalcMode",

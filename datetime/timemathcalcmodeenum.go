@@ -226,34 +226,6 @@ func (tMathMode TimeMathCalcMode) String() string {
 	return result
 }
 
-// XFirstValidCalcType - Returns the value of the First TimeMathCalcMode
-// enumeration.
-//
-// The first Time Math Calculation Mode enumeration is 'LocalTimeZone'.
-//
-func (tMathMode TimeMathCalcMode) XFirstValidCalcType() TimeMathCalcMode {
-
-	lockTimeMathCalcMode.Lock()
-
-	defer lockTimeMathCalcMode.Unlock()
-
-	return TimeMathCalcMode(1)
-}
-
-// XLastValidCalcType - Returns the value of the Last TimeMathCalcMode
-// enumeration.
-//
-// The Last TimeMathCalcMode value is 'UtcTimeZone'.
-//
-func (tMathMode TimeMathCalcMode) XLastValidCalcType() TimeMathCalcMode {
-
-	lockTDurCalcType.Lock()
-
-	defer lockTDurCalcType.Unlock()
-
-	return TimeMathCalcMode(2)
-}
-
 // XIsValid - Returns a boolean value signaling whether
 // the current TimeMathCalcMode value is valid.
 //

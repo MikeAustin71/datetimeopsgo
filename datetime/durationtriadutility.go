@@ -528,7 +528,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 	minusTimeDto TimeDto,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation string,
-	timeCalcMode TimeMathCalcMode,
+	timeMathCalcMode TimeMathCalcMode,
 	dateTimeFmtStr string,
 	ePrefix string) error {
 
@@ -562,13 +562,12 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		}
 	}
 
-	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "timeCalcMode",
+			inputParameterName:  "timeMathCalcMode",
 			inputParameterValue: "",
-			errMsg: "Input parameter 'timeCalcMode' " +
+			errMsg: "Input parameter 'timeMathCalcMode' " +
 				"is invalid!",
 			err: nil,
 		}
@@ -592,7 +591,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		minusTimeDto,
 		tDurCalcType,
 		timeZoneLocation,
-		timeCalcMode,
+		timeMathCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Base Time Creation- ")
 
@@ -606,7 +605,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		minusTimeDto,
 		tDurCalcType,
 		TZones.Local(),
-		timeCalcMode,
+		timeMathCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "Local Time Creation- ")
 
@@ -620,7 +619,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		minusTimeDto,
 		tDurCalcType,
 		TZones.Etc.UTC(),
-		timeCalcMode,
+		timeMathCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "UTC Time Creation- ")
 
@@ -813,7 +812,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 	endDateTime time.Time,
 	tDurCalcType TDurCalcType,
 	timeZoneLocation string,
-	timeCalcMode TimeMathCalcMode,
+	timeMathCalcMode TimeMathCalcMode,
 	dateTimeFmtStr string,
 	ePrefix string) error {
 
@@ -852,13 +851,12 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 		}
 	}
 
-	if timeCalcMode < TCalcMode.XFirstValidCalcType() ||
-		timeCalcMode > TCalcMode.XLastValidCalcType() {
+	if !timeMathCalcMode.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "timeCalcMode",
+			inputParameterName:  "timeMathCalcMode",
 			inputParameterValue: "",
-			errMsg: "Input parameter 'timeCalcMode' " +
+			errMsg: "Input parameter 'timeMathCalcMode' " +
 				"is invalid!",
 			err: nil,
 		}
@@ -882,7 +880,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 		endDateTime,
 		tDurCalcType,
 		timeZoneLocation,
-		timeCalcMode,
+		timeMathCalcMode,
 		dateTimeFmtStr,
 		ePrefix + "BaseTime Failed- ")
 
@@ -896,7 +894,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 		endDateTime,
 		tDurCalcType,
 		TZones.Local(),
-		timeCalcMode,
+		timeMathCalcMode,
 		dateTimeFmtStr,
 		ePrefix+ "LocalTime Failed- ")
 
@@ -910,7 +908,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 		endDateTime,
 		tDurCalcType,
 		TZones.UTC(),
-		timeCalcMode,
+		timeMathCalcMode,
 		dateTimeFmtStr,
 		ePrefix+ "UTC Time Failed - ")
 
