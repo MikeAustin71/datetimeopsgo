@@ -1709,6 +1709,12 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 			"\nError: End Time is Before Start Time!\n")
 	}
 
+	if tDur.timeDurCalcType < TDurCalc.XFirstValidCalcType() ||
+		tDur.timeDurCalcType > TDurCalc.XLastValidCalcType() {
+		return fmt.Errorf(ePrefix +
+			"\nError: Time Duration Calculation Type is INVALID!\n")
+	}
+
 	if tDur.timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
 		tDur.timeMathCalcMode > TCalcMode.XLastValidCalcType() {
 		return fmt.Errorf(ePrefix +

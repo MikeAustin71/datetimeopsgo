@@ -289,19 +289,21 @@ func(durTUtil *durationTriadUtility) isValid(
 		durT.lock = new(sync.Mutex)
 	}
 
-	err := durT.BaseTime.IsValid()
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	err := tDurDtoUtil.isValid(&durT.BaseTime, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"INVALID durT.BaseTime. Error='%v'", err.Error())
 	}
 
-	err = durT.LocalTime.IsValid()
+	err = tDurDtoUtil.isValid(&durT.LocalTime, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"INVALID durT.LocalTime. Error='%v'", err.Error())
 	}
 
-	err = durT.UTCTime.IsValid()
+	err = tDurDtoUtil.isValid(&durT.UTCTime, ePrefix)
 
 	if err != nil {
 		return fmt.Errorf(ePrefix+"INVALID durT.UTCTime. Error='%v'", err.Error())

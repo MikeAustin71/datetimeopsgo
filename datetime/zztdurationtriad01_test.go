@@ -541,6 +541,69 @@ func TestDurationTriad_IsEmpty_01(t *testing.T) {
 	}
 }
 
+func TestDurationTriad_IsValid_01(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1, _ := time.Parse(fmtstr, t1str)
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	dur, err := DurationTriad{}.NewStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = dur.IsValid()
+
+	if err != nil {
+		t.Errorf("Error: Since dur is valid, dur.IsValid()\n" +
+			"should have returned err==nil.\n" +
+			"Instead, err='%v'\n", err.Error())
+	}
+
+}
+
+func TestDurationTriad_IsValid_02(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1, _ := time.Parse(fmtstr, t1str)
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	dur, err := DurationTriad{}.NewStartEndTimes(
+		t1,
+		t2,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewStartEndTimesTz(t1, t2).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dur.UTCTime.timeDurCalcType = TDurCalc.None()
+
+	err = dur.IsValid()
+
+	if err == nil {
+		t.Error("Error: Since dur is invalid, dur.IsValid()\n" +
+			"should have returned err!=nil.\n" +
+			"Instead, err==nil'\n")
+	}
+}
+
 func TestDurationTriad_GetYearMthDaysTimeAbbrv(t *testing.T) {
 	t1str := "04/30/2017 22:58:31.987654321 -0500 CDT"
 	t2str := "04/30/2017 22:58:33.123456789 -0500 CDT"
