@@ -649,7 +649,6 @@ timeDto := dt.TimeDto{
 	fmt.Printf("\n     Calculated t1 Duration: %v\n\n",
 		timeDurDto.GetYearMthDaysTimeAbbrvStr())
 
-
 }
 
 func (mt mainTest) mainTest072() {

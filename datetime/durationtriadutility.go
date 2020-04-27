@@ -552,8 +552,7 @@ func(durTUtil *durationTriadUtility) setEndTimeMinusTimeDto(
 		durT.lock = new(sync.Mutex)
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -843,8 +842,7 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 			"Error: Input parameters 'startDateTime' and 'endDateTime' are ZERO!")
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid()  {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -1138,8 +1136,7 @@ func(durTUtil *durationTriadUtility) setStartTimeDuration(
 			"\nError: Both 'startDateTime' and 'duration' are Zero!\n")
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -1464,8 +1461,7 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDto(
 			"input parameters are ZERO/EMPTY!\n")
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",

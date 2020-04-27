@@ -1643,8 +1643,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isEmpty(
 
 		if (tDur.timeMathCalcMode < TCalcMode.XFirstValidCalcType() ||
 			 tDur.timeMathCalcMode > TCalcMode.XLastValidCalcType())  &&
-			(tDur.timeDurCalcType < TDurCalc.XFirstValidCalcType()   ||
-			 tDur.timeDurCalcType > TDurCalc.XLastValidCalcType()) {
+			(!tDur.timeDurCalcType.XIsValid()) {
 			return true, nil
 		}
 	}
@@ -1709,8 +1708,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 			"\nError: End Time is Before Start Time!\n")
 	}
 
-	if tDur.timeDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDur.timeDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDur.timeDurCalcType.XIsValid() {
 		return fmt.Errorf(ePrefix +
 			"\nError: Time Duration Calculation Type is INVALID!\n")
 	}
@@ -1801,8 +1799,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) reCalcTimeDurationAllocation(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -2004,8 +2001,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoEnd(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -2234,8 +2230,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setAutoStart(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -2505,8 +2500,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 			"input parameters are ZERO/EMPTY!\n")
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -2773,8 +2767,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimes(
 		tempEndDateTime = endDateTime
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -3058,8 +3051,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesTz(
 		}
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -3306,8 +3298,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDuration(
 			"input parameters are ZERO!\n")
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -3563,8 +3554,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeTzDuration(
 			"input parameters are ZERO!\n")
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",
@@ -3834,8 +3824,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 			"input parameters are ZERO/EMPTY!\n")
 	}
 
-	if tDurCalcType < TDurCalc.XFirstValidCalcType() ||
-		tDurCalcType > TDurCalc.XLastValidCalcType() {
+	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "tDurCalcType",

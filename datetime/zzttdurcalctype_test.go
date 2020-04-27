@@ -933,3 +933,39 @@ func TestTDurCalcTypeValue_012(t *testing.T) {
 	}
 
 }
+
+func TestTDurCalcType_XisValid_01(t *testing.T) {
+
+	durCalType := TDurCalc.StdYearMth()
+
+	if !durCalType.XIsValid() {
+		t.Error("Error: Expected durCalType.XIsValid()=='true'.\n" +
+			"Value is TDurCalc.StdYearMth().\n" +
+			"Instead, durCalType.XIsValid()=='false'.\n")
+	}
+
+}
+
+func TestTDurCalcType_XisValid_02(t *testing.T) {
+
+	durCalType := TDurCalcType(-7)
+
+	if durCalType.XIsValid() {
+		t.Error("Error: Expected durCalType.XIsValid()=='false'.\n" +
+			"Value is durCalType := TDurCalcType(-7).\n" +
+			"Instead, durCalType.XIsValid()=='true'.\n")
+	}
+
+}
+
+func TestTDurCalcType_XisValid_03(t *testing.T) {
+
+	durCalType := TDurCalcType(100)
+
+	if durCalType.XIsValid() {
+		t.Error("Error: Expected durCalType.XIsValid()=='false'.\n" +
+			"Value is durCalType := TDurCalcType(-7).\n" +
+			"Instead, durCalType.XIsValid()=='true'.\n")
+	}
+
+}

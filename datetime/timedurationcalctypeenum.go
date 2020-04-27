@@ -6,6 +6,12 @@ import (
 	"sync"
 )
 
+const (
+	tCurCalcTypeFirstValidValue = 1
+	tCurCalcTypeLastValidValue  = 11
+)
+
+
 var mTDurCalcTypeStringToCode = map[string]TDurCalcType{
 	"None"           : TDurCalcType(0),
 	"StdYearMth"     : TDurCalcType(1),
@@ -116,6 +122,11 @@ var mTDurCalcTypeCodeToString = map[TDurCalcType]string{
 //
 // Otherwise you will need to use the formal syntax:
 // TDurCalcType(0).CumNanoseconds()
+//
+// Depending on your editor, intellisense (a.k.a. intelligent code completion) may not
+// list the TDurCalcType methods in alphabetical order. Be advised that all 'TDurCalcType'
+// methods beginning with 'X' as well as the method 'String()' are utility methods and
+// not part of the enumeration values.
 //
 type TDurCalcType int
 
@@ -845,31 +856,24 @@ func (durCalc TDurCalcType) String() string {
 	return result
 }
 
-// XFirstValidCalcType - Returns the value of the First TDurCalcType.
-// The first TDurCalcType is 'StdYearMth'.
+
+// XIsValid - Returns a boolean value signaling
+// whether the current Time Duration Calculation
+// Type is valid.
 //
-func (durCalc TDurCalcType) XFirstValidCalcType() TDurCalcType {
+func (durCalc TDurCalcType) XIsValid() bool {
 
 	lockTDurCalcType.Lock()
 
 	defer lockTDurCalcType.Unlock()
 
-	return TDurCalcType(1)
+	if durCalc > tCurCalcTypeLastValidValue ||
+		durCalc < tCurCalcTypeFirstValidValue {
+		return false
+	}
+
+	return true
 }
-
-
-// XLastValidCalcType - Returns the value of the Last TDurCalcType.
-// The Last TDurCalcType Value is 'GregorianYears'.
-//
-func (durCalc TDurCalcType) XLastValidCalcType() TDurCalcType {
-
-	lockTDurCalcType.Lock()
-
-	defer lockTDurCalcType.Unlock()
-
-	return TDurCalcType(11)
-}
-
 
 // XParseString - Receives a string and attempts to match it with
 // the string value of a supported enumeration. If successful, a
