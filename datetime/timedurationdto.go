@@ -3056,7 +3056,6 @@ func (tDur TimeDurationDto) NewAutoStart(
 //
 //  tDurDto, err := TimeDurationDto{}.NewDefaultStartEndTimes(
 //                                   startDateTime,
-//                                   endDateTime)
 //
 func (tDur TimeDurationDto) NewDefaultStartEndTimes(
 	startDateTime,

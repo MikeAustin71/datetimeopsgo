@@ -525,18 +525,18 @@ func (durT DurationTriad) New() DurationTriad {
 
 // NewAutoEnd - Creates and returns a new DurationTriad instance. The
 // starting date time is provided by input parameter, 'startDateTime'.
-// The ending date time is automatically assigned by calling time.Now()
+// The ending date time is automatically assigned by calling time.Now().
 //
-// The required input parameter, 'timeZoneLocation' specifies the time zone
-// used to configure both starting and ending date time.
+// The required input parameter, 'timeZoneLocation' specifies the time
+// zone used to configure both starting and ending date time.
 //
-// The user is also required to provide the time duration calculation type which
-// will control the output of the time duration calculation. The standard date
-// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
-// time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
-// discussion of Time Duration Calculation type, see Type TDurCalcType located
-// in source file:
+// The user is also required to provide the time duration calculation type
+// which will control the output of the time duration calculation. The standard
+// date time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means
+// that time duration is allocated over years, months, weeks, weekdays, date
+// days, hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
+// For a discussion of Time Duration Calculation type, see Type TDurCalcType
+// located in source file:
 //
 //   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
@@ -777,19 +777,21 @@ func (durT DurationTriad) NewAutoEnd(
 	return durT2, err
 }
 
-// NewAutoStart - Creates and returns a new DurationTriad instance. Starting date time is
-// automatically initialized by calling time.Now(). Afterwards, start date time is converted
-// to the Time Zone specified in input parameter, 'timeZoneLocation'.
+// NewAutoStart - Creates and returns a new DurationTriad instance. Starting date
+// time is automatically initialized by calling time.Now(). Afterwards, start date
+// time is converted to the Time Zone specified in input parameter,
+// 'timeZoneLocation'.
 //
-// This method will set ending date time to the same value as starting date time resulting in
-// a time duration value of zero.
+// This method will set an arbitrary ending date time which is greater than the
+// starting date time. This ending date time is intended to serve as a place holder
+// which can finally be set by a subsequent call to method, DurationTriad.SetAutoEnd().
 //
 // In order to compute the final time duration value, the user must call the method
-// DurationTriad.SetAutoEnd().  At that point, the ending date time will be set by a call to
-// time.Now().
+// DurationTriad.SetAutoEnd().  At that point, the ending date time will be set
+// automatically with a call to time.Now().
 //
-// Use of these two methods, 'NewAutoStart' and 'SetAutoEnd', constitutes a stop watch feature
-// which can be triggered to measure elapsed time.
+// Use of these two methods, 'NewAutoStart' and 'SetAutoEnd', constitutes a stop watch
+// feature which can be triggered to measure elapsed time.
 //
 // The required input parameter, 'timeZoneLocation' specifies the time zone
 // used to configure both starting and ending date time.
@@ -803,6 +805,10 @@ func (durT DurationTriad) NewAutoEnd(
 // in source file:
 //
 //   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+// Be advised that the method DurationTriad.NewDefaultAutoStart() is
+// functionally equivalent to this method. However, unlike this method,
+// DurationTriad.NewDefaultAutoStart() provides many default parameters.
 //
 // __________________________________________________________________________
 //
@@ -1036,9 +1042,499 @@ func (durT DurationTriad) NewAutoStart(
 	return durT2, nil
 }
 
+// NewDefaultAutoEnd - Creates and returns a new DurationTriad instance.
+// The starting date time is provided by input parameter, 'startDateTime'.
+// The ending date time is automatically assigned by calling time.Now().
+//
+// This method will supply default values for Time Duration Calculation
+// Type, Time Zone Location and Time Math Calculation Mode.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTime'.
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  startDateTime     time.Time
+//     - Starting date time. This method automatically calls
+//       time.Now() to compute the ending time.
+//
+// __________________________________________________________________________
+//
+// Return Values
+//
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
+//
+//       A DurationTriad Structure is defined as follows:
+//
+//       type DurationTriad struct {
+//         BaseTime  TimeDurationDto
+//         LocalTime TimeDurationDto
+//         UTCTime   TimeDurationDto
+//       }
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  du, err := DurationTriad{}.NewDefaultAutoEnd(
+//                    startDateTime)
+//
+func (durT DurationTriad) NewDefaultAutoEnd(
+	startDateTime time.Time) (DurationTriad, error) {
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
+	}
+
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
+	ePrefix := "DurationTriad.NewDefaultAutoEnd() "
+
+	endDateTime := time.Now().UTC()
+
+	durT2 := DurationTriad{}
+
+	durTUtil := durationTriadUtility{}
+
+	err := durTUtil.setStartEndTimes(
+		&durT2,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return DurationTriad{}, err
+	}
+
+	return durT2, err
+}
+
+// NewDefaultAutoStart - Creates and returns a new DurationTriad instance. Starting date time
+// is automatically initialized by calling time.Now(). Afterwards, start date time is converted
+// to the Time Zone specified in input parameter, 'timeZoneLocation'.
+//
+// This method will set an arbitrary ending date time which is greater than the starting date
+// time. Ending date time is designed to serve as a place holder which can finally be set by
+// a subsequent call to method, DurationTriad.SetAutoEnd().
+//
+// In order to compute the final time duration value, the user must call the method
+// DurationTriad.SetAutoEnd().  At that point, the ending date time will be set by a call to
+// time.Now().
+//
+// Use of these two methods, 'NewDefaultAutoStart' and 'SetDefaultAutoEnd', constitutes a
+// stop watch feature which can be triggered to measure elapsed time.
+//
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure the starting date time.
+//
+// This method will supply default values for Time Duration Calculation Type,
+// Time Math Calculation Mode and Date Time Format String.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// If the user wishes to set these parameters individually, see method
+// DurationTriad.NewAutoStart().
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  timeZoneLocation   string
+//     - Designates the standard Time Zone location by which
+//       time duration will be compared. This ensures that
+//       'oranges are compared to oranges and apples are compared
+//       to apples' with respect to start time and end time comparisons.
+//
+//       If 'timeZoneLocation' is passed as an empty string, it
+//       will be automatically defaulted to the 'UTC' time zone.
+//       Reference Universal Coordinated Time:
+//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
+//
+//       Time zone location must be designated as one of three types of
+//       time zones.
+//
+//       (1) The time zone "Local", which Golang accepts as
+//           the time zone currently configured on the host
+//           computer.
+//
+//       (2) IANA Time Zone - A valid IANA Time Zone from the
+//           IANA database.
+//           See https://golang.org/pkg/time/#LoadLocation
+//           and https://www.iana.org/time-zones to ensure that
+//           the IANA Time Zone Database is properly configured
+//           on your system.
+//
+//           IANA Time Zone Examples:
+//             "America/New_York"
+//             "America/Chicago"
+//             "America/Denver"
+//             "America/Los_Angeles"
+//             "Pacific/Honolulu"
+//             "Etc/UTC" = GMT or UTC
+//
+//       (3) A Military Time Zone
+//             In addition to military operations, Military
+//             time zones are commonly used in aviation as
+//             well as at sea. They are also known as nautical
+//             or maritime time zones.
+//           Reference:
+//             https://en.wikipedia.org/wiki/List_of_military_time_zones
+//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
+//             https://www.timeanddate.com/time/zones/military
+//             https://www.timeanddate.com/worldclock/timezone/alpha
+//             https://www.timeanddate.com/time/map/
+//
+//            Examples:
+//              "Alpha"   or "A"
+//              "Bravo"   or "B"
+//              "Charlie" or "C"
+//              "Delta"   or "D"
+//              "Zulu"    or "Z"
+//
+//              If the time zone "Zulu" is passed to this method, it will be
+//              classified as a Military Time Zone.
+//
+//       Note:
+//           The source file 'timezonedata.go' contains over 600 constant
+//           time zone declarations covering all IANA and Military Time
+//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
+//           time zone constants begin with the prefix 'TZones'.
+//
+//
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
+//
+//       A DurationTriad Structure is defined as follows:
+//
+//       type DurationTriad struct {
+//         BaseTime  TimeDurationDto
+//         LocalTime TimeDurationDto
+//         UTCTime   TimeDurationDto
+//       }
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
+// ------------------------------------------------------------------------
+//
+// Example Usage:
+//
+//  tDurDto, err := DurationTriad{}.NewDefaultAutoStart(
+//                         TZones.US.Central())
+//
+//  Note:
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'. TZones.US.Central() is equivalent to IANA
+//        time zone, "America/Chicago".
+//
+func (durT DurationTriad) NewDefaultAutoStart(
+	timeZoneLocation string) (DurationTriad, error) {
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
+	}
+
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
+	ePrefix := "DurationTriad.NewDefaultAutoStart() "
+
+	startDateTime := time.Now().Local()
+
+	endDateTime := startDateTime.AddDate(
+		0,
+		0,
+		2)
+
+	durT2 := DurationTriad{}
+
+	durTUtil := durationTriadUtility{}
+
+	err := durTUtil.setStartEndTimes(
+		&durT2,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		timeZoneLocation,
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return DurationTriad{}, err
+	}
+
+	return durT2, nil
+}
+
+// NewDefaultEndTimeMinusTimeDto - Returns a new DurationTriad based on two input parameters,
+// 'endDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto which is subtracted from
+// 'endDateTime' in order to calculate starting date time and time duration.
+//
+// This method will supply default values for Time Duration Calculation Type,
+// Time Zone Location and Time Math Calculation Mode.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTime'.
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  endDateTime   time.Time
+//     - Ending date time. The TimeDto parameter (minusTimeDto) will
+//       be subtracted from this date time in order to compute the
+//       starting date time.
+//
+//
+//  minusTimeDto    TimeDto
+//     - Provides time values which will be subtracted from
+//       input parameter, 'endDateTime', in order to calculate
+//       start Date Time and time duration.
+//
+//       A TimeDto structure is defined as follows:
+//
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
+//
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
+//
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  du, err := DurationTriad{}.NewEndTimeMinusTimeDto(
+//                    endDateTime,
+//                    minusTimeDto)
+//
+func (durT DurationTriad) NewDefaultEndTimeMinusTimeDto(
+	endDateTime time.Time,
+	minusTimeDto TimeDto) (DurationTriad, error) {
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
+	}
+
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
+	ePrefix := "DurationTriad.NewDefaultEndTimeMinusTimeDto() "
+
+	durT2 := DurationTriad{}
+
+	durTUtil := durationTriadUtility{}
+
+	err := durTUtil.setEndTimeMinusTimeDto(
+		&durT2,
+		endDateTime,
+		minusTimeDto,
+		TDurCalc.StdYearMth(),
+		endDateTime.Location().String(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return DurationTriad{}, err
+	}
+
+	return durT2, nil
+}
+
+// NewDefaultEndTimeTzMinusTimeDto - Returns a new DurationTriad based on two input
+// parameters, 'endDateTimeTz' and 'timeDto'. 'timeDto' is an instance of TimeDto
+// which is subtracted from 'endDateTimeTz' in order to calculate starting date time
+// and time duration.
+//
+// Input parameter 'endDateTimeTz' is formatted as an instance of 'DateTzDto'.
+//
+// This method will supply default values for Time Duration Calculation Type,
+// Time Zone Location and Time Math Calculation Mode.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTime'.
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  endDateTimeTz     DateTzDto
+//     - Ending date time. The TimeDto parameter (minusTimeDto) will
+//       be subtracted from this date time in order to compute the starting
+//       date time and time duration.
+//
+//  minusTimeDto      TimeDto
+//     - Provides time values which will be subtracted from
+//       input parameter, 'endDateTime', in order to calculate duration.
+//
+//       A TimeDto structure is defined as follows:
+//
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//            datetimeopsgo\datetime\timedto.go
+//
+//
+// __________________________________________________________________________
+//
+// Return Values:
+//
+//  DurationTriad
+//     - Upon successful completion, this method will return
+//       a new, populated DurationTriad instance.
+//
+//       A DurationTriad Structure is defined as follows:
+//
+//         type DurationTriad struct {
+//           BaseTime  TimeDurationDto
+//           LocalTime TimeDurationDto
+//           UTCTime   TimeDurationDto
+//         }
+//
+//  error
+//     - If this method completes successfully, the returned error
+//       Type is set equal to 'nil'. If an error condition is encountered,
+//       this method will return an error Type which encapsulates an
+//       appropriate error message.
+//
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  du, err := DurationTriad{}.NewDefaultEndTimeTzMinusTimeDto(
+//                    startDateTime,
+//                    minusTimeDto)
+//
+func (durT DurationTriad) NewDefaultEndTimeTzMinusTimeDto(
+	endDateTimeTz DateTzDto,
+	minusTimeDto TimeDto) (DurationTriad, error) {
+
+	if durT.lock == nil {
+		durT.lock = new(sync.Mutex)
+	}
+
+	durT.lock.Lock()
+
+	defer durT.lock.Unlock()
+
+	ePrefix := "DurationTriad.NewDefaultEndTimeTzMinusTimeDto() "
+
+	durT2 := DurationTriad{}
+
+	durTUtil := durationTriadUtility{}
+
+	err := durTUtil.setEndTimeMinusTimeDto(
+		&durT2,
+		endDateTimeTz.dateTimeValue,
+		minusTimeDto,
+		TDurCalc.StdYearMth(),
+		endDateTimeTz.GetTimeZoneName(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return DurationTriad{}, err
+	}
+
+	return durT2, nil
+}
+
 // NewEndTimeMinusTimeDto - Returns a new DurationTriad based on two input parameters,
 // 'endDateTime' and 'timeDto'. 'timeDto' is an instance of TimeDto which is
-// subtracted from 'endDateTime' in order to calculate starting date time and time duration.
+// subtracted from 'endDateTime' in order to calculate starting date time and time
+// duration.
 //
 // The user is also required to provide the time duration calculation type which
 // will control the output of the time duration calculation. The standard date
