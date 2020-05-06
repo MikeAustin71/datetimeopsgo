@@ -1423,10 +1423,9 @@ func (durT DurationTriad) NewDefaultEndTimeMinusTimeDto(
 //
 // Default Values:
 // Time Duration Calculation Type: TDurCalc.StdYearMth()
-// Time Zone Location:             Extracts the Time Zone Location from 'startDateTime'.
+// Time Zone Location:             Extracts the Time Zone Location from 'endDateTimeTz'.
 // Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
-// Date Time Format String:        FmtDateTimeYrMDayFmtStr
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+// Date Time Format String:        Extracts Date Time Format from endDateTimeTz'.
 //
 // __________________________________________________________________________
 //
@@ -1521,7 +1520,7 @@ func (durT DurationTriad) NewDefaultEndTimeTzMinusTimeDto(
 		TDurCalc.StdYearMth(),
 		endDateTimeTz.GetTimeZoneName(),
 		TCalcMode.LocalTimeZone(),
-		FmtDateTimeYrMDayFmtStr,
+		endDateTimeTz.GetDateTimeFmt(),
 		ePrefix)
 
 	if err != nil {
@@ -1632,8 +1631,7 @@ func (durT DurationTriad) NewDefaultStartEndTimes(
 // Time Duration Calculation Type: TDurCalc.StdYearMth()
 // Time Zone Location:             Extracts the Time Zone Location from 'startDateTime'.
 // Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
-// Date Time Format String:        FmtDateTimeYrMDayFmtStr
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+// Date Time Format String:        Extracts Date Time Format from 'startDateTime'.
 //
 // __________________________________________________________________________
 //
@@ -1702,7 +1700,7 @@ func (durT DurationTriad) NewDefaultStartEndTimesTz(
 		TDurCalc.StdYearMth(),
 		startDateTimeTz.GetTimeZoneName(),
 		TCalcMode.LocalTimeZone(),
-		FmtDateTimeYrMDayFmtStr,
+		startDateTimeTz.GetDateTimeFmt(),
 		ePrefix)
 
 	if err != nil {
