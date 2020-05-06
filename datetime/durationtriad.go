@@ -1825,10 +1825,9 @@ func (durT DurationTriad) NewDefaultStartTimeDuration(
 //
 // Default Values:
 // Time Duration Calculation Type: TDurCalc.StdYearMth()
-// Time Zone Location:             Extracts the Time Zone Location from 'startDateTime'.
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTz'.
 // Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
-// Date Time Format String:        FmtDateTimeYrMDayFmtStr
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+// Date Time Format String:        Date Time Format is extracted from 'startDateTz'.
 //
 // __________________________________________________________________________
 //
@@ -1898,7 +1897,7 @@ func (durT DurationTriad) NewDefaultStartTimeTzDuration(
 		TDurCalc.StdYearMth(),
 		startDateTimeTz.GetTimeZoneName(),
 		TCalcMode.LocalTimeZone(),
-		FmtDateTimeYrMDayFmtStr,
+		startDateTimeTz.GetDateTimeFmt(),
 		ePrefix)
 
 	if err != nil {
