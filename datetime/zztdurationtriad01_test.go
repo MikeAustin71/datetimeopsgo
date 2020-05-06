@@ -704,6 +704,37 @@ func TestDurationTriad_NewAutoEnd_01(t *testing.T) {
 
 }
 
+func TestDurationTriad_NewDefaultAutoEnd_01(t *testing.T) {
+
+	locCentral, err := time.LoadLocation(TZones.US.Central())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(TZones.US.Central()).\n" +
+			"Error='%v'", err.Error())
+	}
+
+	startDateTime := time.Now().In(locCentral)
+
+	var durT DurationTriad
+
+	durT, err = DurationTriad{}.NewDefaultAutoEnd(
+		startDateTime)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewDefaultAutoEnd().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDur := time.Duration(int64(2) * int64(time.Second))
+
+	if durT.BaseTime.timeDuration > expectedDur {
+		t.Error("Expected duration is greater than 2-seconds. Error!")
+	}
+
+}
+
+
 func TestDurationTriad_NewAutoStart(t *testing.T) {
 
 	durT, err := DurationTriad{}.NewAutoStart(
