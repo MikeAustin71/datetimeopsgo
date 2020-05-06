@@ -734,14 +734,39 @@ func TestDurationTriad_NewDefaultAutoEnd_01(t *testing.T) {
 
 }
 
-
-func TestDurationTriad_NewAutoStart(t *testing.T) {
+func TestDurationTriad_NewAutoStart_01(t *testing.T) {
 
 	durT, err := DurationTriad{}.NewAutoStart(
 		TDurCalc.StdYearMth(),
 		TZones.US.Central(),
 		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewAutoStart().\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = durT.SetAutoEnd()
+
+	if err != nil {
+		t.Errorf("Error returned by durT.SetAutoEnd() "+
+			"Error='%v' ", err.Error())
+	}
+
+	expectedDur := time.Duration(int64(3) * int64(time.Second))
+
+	if durT.BaseTime.timeDuration > expectedDur {
+		t.Error("Expected duration is greater than 3-seconds. Error!")
+	}
+
+}
+
+func TestDurationTriad_NewDefaultAutoStart_01(t *testing.T) {
+
+	durT, err := DurationTriad{}.NewDefaultAutoStart(
+		TZones.US.Central())
 
 	if err != nil {
 		t.Errorf("Error returned by DurationTriad{}.NewAutoStart().\n"+
