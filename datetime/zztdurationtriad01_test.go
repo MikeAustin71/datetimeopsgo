@@ -2653,3 +2653,116 @@ func TestDurationTriad_NewStartTimeTzPlusTimeDto_01(t *testing.T) {
 	}
 
 }
+
+func TestDurationTriad_NewDefaultStartTimeTzPlusTimeDto_01(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	var err error
+	var dur DurationTriad
+	var dTz1 DateTzDto
+
+	dTz1, err = DateTzDto{}.NewDateTime(t1, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t1, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dur, err = DurationTriad{}.NewDefaultStartTimeTzPlusTimeDto(
+		dTz1,
+		timeDto)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}." +
+			"NewDefaultStartTimeTzPlusTimeDto(t1, timeDto).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
+			t1OutStr, dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.",
+			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t12Dur != dur.BaseTime.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
+			t12Dur, dur.BaseTime.timeDuration)
+	}
+
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+	loc, err := time.LoadLocation("Local")
+
+	if err != nil {
+		t.Errorf("Error returned from time.LoadLocation(\"Local\"). Error='%v'", err.Error())
+	}
+
+	t1Local := t1.In(loc)
+
+	if t1Local.Location().String() != dur.LocalTime.startDateTimeTz.GetOriginalTzName() {
+		t.Errorf("Expected Local Time Zone Location ='%v'.\n" +
+			"Actual Time Zone Location ='%v'. ",
+			t1Local.Location().String(),
+			dur.LocalTime.startDateTimeTz.GetOriginalTzName())
+	}
+
+	if !t1Local.Equal(dur.LocalTime.startDateTimeTz.GetDateTimeValue()) {
+		t.Errorf("Expected Local Start Time ='%v'.\n" +
+			"Actual Local Start Time ='%v'.\n",
+			t1Local.Location().String(),
+			dur.LocalTime.startDateTimeTz.GetOriginalTzName())
+	}
+
+	t2Local := dur.LocalTime.startDateTimeTz.GetDateTimeValue().Add(dur.LocalTime.timeDuration)
+
+	if !t2Local.Equal(dur.LocalTime.endDateTimeTz.GetDateTimeValue()) {
+		t.Errorf("Expected Local End Time='%v'. Actual Local End Time='%v'. ",
+			t2Local.Format(FmtDateTimeYrMDayFmtStr),
+			dur.LocalTime.endDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
+	}
+
+	loc, err = time.LoadLocation(TZones.UTC())
+
+	if err != nil {
+		t.Errorf("Error returned from time.LoadLocation(TZones.UTC()). Error='%v'", err.Error())
+	}
+
+	t1UTC := t1.In(loc)
+
+	if !t1UTC.Equal(dur.UTCTime.startDateTimeTz.GetDateTimeValue()) {
+		t.Errorf("Expected UTC Start Time='%v'. Actual UTC Start Time='%v'. ",
+			t1UTC.Format(FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.startDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
+	}
+
+	t2UTC := dur.UTCTime.startDateTimeTz.GetDateTimeValue().Add(dur.UTCTime.timeDuration)
+
+	if !t2UTC.Equal(dur.UTCTime.endDateTimeTz.GetDateTimeValue()) {
+		t.Errorf("Expected UTC End Time='%v'. Actual UTC End Time='%v'. ",
+			t2UTC.Format(FmtDateTimeYrMDayFmtStr),
+			dur.UTCTime.endDateTimeTz.GetDateTimeValue().Format(FmtDateTimeYrMDayFmtStr))
+	}
+
+}
