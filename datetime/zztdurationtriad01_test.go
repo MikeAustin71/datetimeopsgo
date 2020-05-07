@@ -2940,6 +2940,174 @@ func TestDurationTriad_NewEndTimeTzMinusTimeDto_01(t *testing.T) {
 
 }
 
+func TestDurationTriad_NewEndTimeTzMinusTimeDto_02(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	var dur DurationTriad
+	var err error
+	var dTz2 DateTzDto
+
+	dTz2, err = DateTzDto{}.NewDateTime(t2, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t2, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dur, err = DurationTriad{}.NewEndTimeTzMinusTimeDto(
+		dTz2,
+		timeDto,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		"")
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}.NewEndTimeTzMinusTimeDto(dTz2, timeDto).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
+			t1OutStr, dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.",
+			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t12Dur != dur.BaseTime.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
+			t12Dur, dur.BaseTime.timeDuration)
+	}
+
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+}
+
+func TestDurationTriad_NewEndTimeTzMinusTimeDto_03(t *testing.T) {
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	var err error
+	var dTz2 DateTzDto
+
+	dTz2, err = DateTzDto{}.NewDateTime(t2, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t2, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	_, err = DurationTriad{}.NewEndTimeTzMinusTimeDto(
+		dTz2,
+		timeDto,
+		TDurCalc.None(),
+		TZones.US.Central(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err == nil {
+		t.Error("Expected an error return from DurationTriad{}.NewEndTimeTzMinusTimeDto(dTz2, timeDto)\n" +
+			"because parameter 'TDurCalc.None()' is invalid.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestDurationTriad_NewEndTimeTzMinusTimeDto_04(t *testing.T) {
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	var err error
+	var dTz2 DateTzDto
+
+	dTz2, err = DateTzDto{}.NewDateTime(t2, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t2, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	_, err = DurationTriad{}.NewEndTimeTzMinusTimeDto(
+		dTz2,
+		timeDto,
+		TDurCalc.StdYearMth(),
+		"Invalid Time Zone Location",
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err == nil {
+		t.Error("Expected an error return from DurationTriad{}.NewEndTimeTzMinusTimeDto(dTz2, timeDto)\n" +
+			"because parameter time zone location is invalid.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
+func TestDurationTriad_NewEndTimeTzMinusTimeDto_05(t *testing.T) {
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t2, _ := time.Parse(fmtstr, t2str)
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	var err error
+	var dTz2 DateTzDto
+
+	dTz2, err = DateTzDto{}.NewDateTime(t2, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t2, fmtstr).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	_, err = DurationTriad{}.NewEndTimeTzMinusTimeDto(
+		dTz2,
+		timeDto,
+		TDurCalc.StdYearMth(),
+		TZones.US.Central(),
+		TCalcMode.None(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err == nil {
+		t.Error("Expected an error return from DurationTriad{}.NewEndTimeTzMinusTimeDto(dTz2, timeDto)\n" +
+			"because parameter TCalcMode.None() is invalid.\n" +
+			"However, NO ERROR WAS RETURNED!!\n")
+		return
+	}
+}
+
 func TestDurationTriad_NewDefaultEndTimeTzMinusTimeDto_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
