@@ -1616,7 +1616,7 @@ func TestTimeDurationDto_SetStartEndTimes_03(t *testing.T) {
 
 }
 
-func TestTimeDurationDto_SetStartEndTimes_04(t *testing.T) {
+func TestTimeDurationDto_SetStartEndTimesTz_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.123456789 -0600 CST"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
 
@@ -1662,7 +1662,7 @@ func TestTimeDurationDto_SetStartEndTimes_04(t *testing.T) {
 }
 
 
-func TestTimeDurationDto_SetStartEndTimesTz_01(t *testing.T) {
+func TestTimeDurationDto_SetStartEndTimesTz_02(t *testing.T) {
 
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
