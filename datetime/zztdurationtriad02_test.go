@@ -333,7 +333,7 @@ func TestDurationTriad_SetStartEndTimes_04(t *testing.T) {
 
 }
 
-func TestDurationTriad_SetStartTimeMinusTimeDto_001(t *testing.T) {
+func TestDurationTriad_SetEndTimeMinusTimeDto_001(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -357,7 +357,7 @@ func TestDurationTriad_SetStartTimeMinusTimeDto_001(t *testing.T) {
 		FmtDateTimeYrMDayFmtStr)
 
 	if err != nil {
-		t.Errorf("Error returned by dur.SetEndTimeMinusTimeDtoTz(...). "+
+		t.Errorf("Error returned by dur.SetEndTimeMinusTimeDto(...). "+
 			"Error='%v'", err.Error())
 	}
 
@@ -387,7 +387,7 @@ func TestDurationTriad_SetStartTimeMinusTimeDto_001(t *testing.T) {
 
 }
 
-func TestDurationTriad_SetStartTimeMinusTimeDto_002(t *testing.T) {
+func TestDurationTriad_SetEndTimeMinusTimeDto_002(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -413,6 +413,57 @@ func TestDurationTriad_SetStartTimeMinusTimeDto_002(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error returned by dur.SetEndTimeMinusTimeDto(t2, timeDto, "+
 			"TZones.US.Central(), FmtDateTimeYrMDayFmtStr) Error='%v' ", err.Error())
+	}
+
+	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
+			t1OutStr, dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.",
+			t2OutStr, dur.BaseTime.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t12Dur != dur.BaseTime.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
+			t12Dur, dur.BaseTime.timeDuration)
+	}
+
+	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+}
+
+func TestDurationTriad_SetDefaultEndTimeMinusTimeDto_001(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	dur := DurationTriad{}
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	err := dur.SetDefaultEndTimeMinusTimeDto(
+		t2,
+		timeDto,
+		TZones.US.Central())
+
+	if err != nil {
+		t.Errorf("Error returned by dur.SetDefaultEndTimeMinusTimeDto(...). "+
+			"Error='%v'", err.Error())
 	}
 
 	if t1OutStr != dur.BaseTime.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
