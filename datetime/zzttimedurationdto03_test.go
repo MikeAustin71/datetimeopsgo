@@ -2129,6 +2129,145 @@ func TestTimeDurationDto_SetStartEndTimesTz_02(t *testing.T) {
 
 }
 
+func TestTimeDurationDto_SetDefaultStartEndTimesTz_01(t *testing.T) {
+
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+
+	tDto := TimeDurationDto{}
+
+	var err error
+
+	var dTz1, dTz2 DateTzDto
+
+	dTz1, err = DateTzDto{}.NewDateTime(t1, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t1, fmtstr).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	dTz2, err = DateTzDto{}.NewDateTime(t2, fmtstr)
+
+	if err != nil {
+		t.Errorf("Error returned by DateTzDto{}.NewDateTime(t2, fmtstr).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = tDto.SetDefaultStartEndTimesTz(
+		dTz1,
+		dTz2)
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.SetDefaultStartEndTimesTz(...).\n"+
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.startDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error: Expected DurationTriad.endDateTimeTz of %v. Instead, got %v ",
+			t1OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	tOutDur := t2.Sub(t1)
+
+	if tOutDur != tDto.timeDuration {
+		t.Errorf("Error: Expected DurationTriad.timeDuration of %v. Instead, got %v",
+			tOutDur, tDto.timeDuration)
+
+	}
+
+	outStr := tDto.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+
+	outStr = tDto.GetYearsMthsWeeksTimeStr()
+
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+	outStr = tDto.GetDefaultDurationStr()
+
+	expected = "28082h4m2s"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected Default Duration: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+	outStr, err = tDto.GetCumDaysTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.BaseTime.GetCumDaysTimeStr(). "+
+			"Error='%v'", err.Error())
+	}
+
+	expected = "1170-Days 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected WeekDays Duration: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+	outStr, err = tDto.GetCumHoursTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.BaseTime.GetCumHoursTimeStr(). "+
+			"Error='%v'", err.Error())
+	}
+
+	expected = "28082-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected Hours Duration: %v. Instead, got %v", expected, outStr)
+	}
+
+	outStr = tDto.GetYrMthWkDayHrMinSecNanosecsStr()
+
+	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthWkDayHourSecNanosec Duration: %v. Instead, got %v",
+			expected, outStr)
+	}
+
+	outStr, err = tDto.GetCumWeeksDaysTimeStr()
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.BaseTime.GetCumWeeksDaysTimeStr(). "+
+			"Error='%v'", err.Error())
+	}
+
+	expected = "167-Weeks 1-WeekDays 2-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected Weeks WeekDays Duration: %v. Instead, got %v", expected, outStr)
+	}
+
+}
+
 func TestTimeDurationDto_SetEndTimeMinusTimeDto_001(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
