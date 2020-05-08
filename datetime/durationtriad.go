@@ -4588,16 +4588,16 @@ func (durT *DurationTriad) SetDefaultEndTimeMinusTimeDto(
 // starting date time, ending date time and time duration are stored in
 // the current DurationTriad data structure.
 //
-// This method will extract default values for Time Duration Calculation Type,
-// Time Zone Location, Time Math Calculation Mode and Date Time Format from
-// the current DurationTriad object.
+// This method will provide default values for Time Duration Calculation Type,
+// Time Zone Location, Time Math Calculation Mode and Date Time Format. Time
+// Zone Location and Date Time Format will be extracted from input parameter,
+// 'endDateTimeTz'.
 //
 // Default Values:
 // Time Duration Calculation Type: TDurCalc.StdYearMth()
 // Time Zone Location:             Extracted from 'endDateTimeTz'.
 // Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
-// Date Time Format String:        FmtDateTimeYrMDayFmtStr
-//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+// Date Time Format String:        Extracted from 'endDateTimeTz'.
 //
 // For granular control over these default parameters, see:
 //       DurationTriad.SetEndTimeTzMinusTimeDto()
@@ -4703,7 +4703,7 @@ func (durT *DurationTriad) SetDefaultEndTimeTzMinusTimeDto(
 		TDurCalc.StdYearMth(),
 		endDateTimeTz.GetTimeZoneName(),
 		TCalcMode.LocalTimeZone(),
-		FmtDateTimeYrMDayFmtStr,
+		endDateTimeTz.GetDateTimeFmt(),
 		ePrefix)
 }
 
