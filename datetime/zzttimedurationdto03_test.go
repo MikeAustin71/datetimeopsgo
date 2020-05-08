@@ -1904,6 +1904,101 @@ func TestTimeDurationDto_SetEndTimeMinusTimeDto_001(t *testing.T) {
 
 }
 
+func TestTimeDurationDto_SetDefaultEndTimeMinusTimeDto_001(t *testing.T) {
+	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
+	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
+	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
+
+	var err error
+	var africaCairoPtr *time.Location
+
+	africaCairoPtr, err = time.LoadLocation(TZones.Africa.Cairo())
+
+	if err != nil {
+		t.Errorf("Error returned by time." +
+			"LoadLocation(TZones.Africa.Cairo()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+
+	t01 := time.Date(
+		2010,
+		time.Month(1),
+		15,
+		13,
+		0,
+		0,
+		0,
+		africaCairoPtr)
+
+
+	t02 := time.Date(
+		2012,
+		time.Month(3),
+		9,
+		2,
+		0,
+		0,
+		0,
+		africaCairoPtr)
+
+	t1, _ := time.Parse(fmtstr, t1str)
+	t1OutStr := t1.Format(fmtstr)
+	t2, _ := time.Parse(fmtstr, t2str)
+	t2OutStr := t2.Format(fmtstr)
+	t12Dur := t2.Sub(t1)
+
+	timeDto := TimeDto{Years: 3, Months: 2, Weeks: 2, WeekDays: 1, Hours: 3, Minutes: 4, Seconds: 2}
+
+	var tDto TimeDurationDto
+
+	tDto, err = TimeDurationDto{}.NewDefaultStartEndTimes(
+		t01,
+		t02)
+
+	if err != nil {
+		t.Errorf("Error returned by DurationTriad{}." +
+			"NewDefaultStartEndTimes(t01, t02).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = tDto.SetDefaultEndTimeMinusTimeDto(
+		t2,
+		timeDto)
+
+	if err != nil {
+		t.Errorf("Error returned by tDto.SetDefaultEndTimeMinusTimeDto().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if t1OutStr != tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected Start Time %v. Instead, got %v.",
+			t1OutStr, tDto.startDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t2OutStr != tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr) {
+		t.Errorf("Error- Expected End Time %v. Instead, got %v.",
+			t2OutStr, tDto.endDateTimeTz.GetDateTimeValue().Format(fmtstr))
+	}
+
+	if t12Dur != tDto.timeDuration {
+		t.Errorf("Error- Expected Time Duration %v. Instead, got %v",
+			t12Dur, tDto.timeDuration)
+	}
+
+	outStr := tDto.GetYearMthDaysTimeStr()
+
+	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+
+	if expected != outStr {
+		t.Errorf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
+	}
+
+}
+
 func TestTimeDurationDto_SetStartTimeDuration_001(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"

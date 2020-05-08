@@ -4387,19 +4387,17 @@ func (durT *DurationTriad) SetAutoEnd() error {
 // starting date time, ending date time and time duration are stored in
 // the current DurationTriad data structure.
 //
-// The required input parameter, 'timeZoneLocation' specifies the time zone
-// used to configure both starting and ending date time.
-//
 // This method will provide default values for Time Duration Calculation Type,
 // Time Math Calculation Mode and Date Time Format.
 //
 // Default Values:
 // Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location Name:        Extracted from input parameter, 'endDateTime'
 // Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
 // Date Time Format String:        FmtDateTimeYrMDayFmtStr
 //                                   "2006-01-02 15:04:05.000000000 -0700 MST"
 //
-// For granular control over these default parameters, see:
+// For granular control over these default parameters, see method:
 //       DurationTriad.SetEndTimeMinusTimeDto()
 //
 // ------------------------------------------------------------------------
@@ -4441,68 +4439,6 @@ func (durT *DurationTriad) SetAutoEnd() error {
 //          datetimeopsgo\datetime\timedto.go
 //
 //
-//  timeZoneLocation  string
-//     - Designates the standard Time Zone location by which
-//       time duration will be compared. This ensures that
-//       'oranges are compared to oranges and apples are compared
-//       to apples' with respect to start time and end time comparisons.
-//
-//       If 'timeZoneLocation' is passed as an empty string, it
-//       will be automatically defaulted to the 'UTC' time zone.
-//       Reference Universal Coordinated Time:
-//          https://en.wikipedia.org/wiki/Coordinated_Universal_Time
-//
-//       Time zone location must be designated as one of three types of
-//       time zones.
-//
-//       (1) The time zone "Local", which Golang accepts as
-//           the time zone currently configured on the host
-//           computer.
-//
-//       (2) IANA Time Zone - A valid IANA Time Zone from the
-//           IANA database.
-//           See https://golang.org/pkg/time/#LoadLocation
-//           and https://www.iana.org/time-zones to ensure that
-//           the IANA Time Zone Database is properly configured
-//           on your system.
-//
-//           IANA Time Zone Examples:
-//             "America/New_York"
-//             "America/Chicago"
-//             "America/Denver"
-//             "America/Los_Angeles"
-//             "Pacific/Honolulu"
-//             "Etc/UTC" = GMT or UTC
-//
-//       (3) A Military Time Zone
-//             In addition to military operations, Military
-//             time zones are commonly used in aviation as
-//             well as at sea. They are also known as nautical
-//             or maritime time zones.
-//           Reference:
-//             https://en.wikipedia.org/wiki/List_of_military_time_zones
-//             http://www.thefightschool.demon.co.uk/UNMC_Military_Time.htm
-//             https://www.timeanddate.com/time/zones/military
-//             https://www.timeanddate.com/worldclock/timezone/alpha
-//             https://www.timeanddate.com/time/map/
-//
-//            Examples:
-//              "Alpha"   or "A"
-//              "Bravo"   or "B"
-//              "Charlie" or "C"
-//              "Delta"   or "D"
-//              "Zulu"    or "Z"
-//
-//              If the time zone "Zulu" is passed to this method, it will be
-//              classified as a Military Time Zone.
-//
-//       Note:
-//           The source file 'timezonedata.go' contains over 600 constant
-//           time zone declarations covering all IANA and Military Time
-//           Zones. Example: 'TZones.US.Central()' = "America/Chicago". All
-//           time zone constants begin with the prefix 'TZones'.
-//
-//
 // ------------------------------------------------------------------------
 //
 // Return Values
@@ -4526,8 +4462,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 //
 //      err := dt.SetDefaultEndTimeMinusTimeDto(
 //                  endDateTime,
-//                  minusTimeDto,
-//                  TZones.US.Central())
+//                  minusTimeDto)
 //
 //  Example # 2:
 //
@@ -4536,8 +4471,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 //
 //      err := dt.SetDefaultEndTimeMinusTimeDto(
 //                  endDateTime,
-//                  minusTimeDto,
-//                  TZones.US.Central())
+//                  minusTimeDto)
 //
 //    Note:
 //
@@ -4547,8 +4481,7 @@ func (durT *DurationTriad) SetAutoEnd() error {
 //
 func (durT *DurationTriad) SetDefaultEndTimeMinusTimeDto(
 	endDateTime time.Time,
-	minusTimeDto TimeDto,
-	timeZoneLocationName string) error {
+	minusTimeDto TimeDto) error {
 
 	if durT.lock == nil {
 		durT.lock = new(sync.Mutex)
@@ -4567,7 +4500,7 @@ func (durT *DurationTriad) SetDefaultEndTimeMinusTimeDto(
 		endDateTime,
 		minusTimeDto,
 		TDurCalc.StdYearMth(),
-		timeZoneLocationName,
+		endDateTime.Location().String(),
 		TCalcMode.LocalTimeZone(),
 		FmtDateTimeYrMDayFmtStr,
 		ePrefix)
@@ -6985,8 +6918,8 @@ func (durT *DurationTriad) SetStartTimeTzDuration(
 //
 //  dt  := DurationTriad{}
 //  err := dt.SetStartTimePlusTimeDto(
-//                startDateTime,
-//                plusTimeDto,
+//                   startDateTime,
+//                    plusTimeDto,
 //                    TDurCalc.StdYearMth(),
 //                    TZones.US.Central(),
 //                    TCalcMode.LocalTimeZone(),

@@ -6061,6 +6061,44 @@ func (tDur *TimeDurationDto) ReCalcEndDateTimeToNow() error {
 //       error instance is set to 'nil'. If an error is encountered, the
 //       error object is populated with an appropriate error message.
 //
+//
+// ------------------------------------------------------------------------
+//
+// Example Usage:
+//
+//
+//  dt, err := TimeDurationDto{}.NewAutoStart(
+//                    TDurCalc.StdYearMth(),
+//                    TZones.US.Central(),
+//                    TCalcMode.LocalTimeZone(),
+//                    FmtDateTimeYrMDayFmtStr)
+//
+//  if err != nil {
+//     'Do Something'
+//  }
+//
+//
+//  err := dt.SetAutoEnd()
+//
+//
+//  Note:
+//        'TDurCalc.StdYearMth()' is of type 'TDurCalcType' and signals
+//         standard year month day time duration allocation.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'. TZones.US.Central() is equivalent to
+//        "America/Chicago".
+//
+//        TCalcMode.LocalTimeZone() specifies that time duration will be
+//        computed in the context of local time zones. Reference Type
+//        'TDurCalcType' located in source file:
+//            'datetime\timemathcalcmodeenum.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'.
+//              FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+//
 func (tDur *TimeDurationDto) SetAutoEnd() error {
 
 	if tDur.lock == nil {
@@ -6356,6 +6394,646 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(
 		ePrefix)
 }
 
+// SetDefaultEndTimeMinusTimeDto - Sets the member data variables for the current
+// instance of TimeDurationDto.  The current TimeDurationDto instance is populated
+// with starting date time, ending date time and time duration. Starting date time
+// is calculated by subtracting a TimeDto time duration value from ending date
+// time. Ending date time is passed as a 'time.Time' value through input parameter
+// 'endDateTime'.  Input parameter 'minusTimeDto' is passed as an instance of
+// 'TimeDto' which encapsulates time duration formatted as a series time components
+// such as years, months, days, hours, minutes, seconds, milliseconds, microseconds
+// and nanoseconds. To compute starting date time, the 'minusTimeDto' time duration
+// value is subtracted from 'endDateTime'.
+//
+// Input parameter 'minusTimeDto' is first converted to absolute, or positive,
+// time duration values before it is subsequently subtracted from ending date
+// time in order to compute starting date time.
+//
+// This method will provide default values for Time Duration Calculation Type,
+// Time Math Calculation Mode and Date Time Format.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location Name:        Extracted from input parameter, 'endDateTime'
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// For granular control over these default parameters, see method:
+//       TimeDurationDto.SetEndTimeMinusTimeDto()
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  endDateTime     time.Time
+//     - Ending date time. The starting date time will be computed
+//       by subtracting minusTimeDto from 'endDateTime'
+//
+//  minusTimeDto      TimeDto
+//     - Time components (Years, months, weeks, days, hours etc.)
+//       which will be subtracted from 'endDateTime' to compute
+//       time duration and starting date time.
+//
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetDefaultEndTimeMinusTimeDto(
+//                           endTime,
+//                           minusTimeDto)
+//
+func (tDur *TimeDurationDto) SetDefaultEndTimeMinusTimeDto(
+	endDateTime time.Time,
+	minusTimeDto TimeDto) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetDefaultEndTimeMinusTimeDto() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setEndTimeMinusTimeDto(
+		tDur,
+		endDateTime,
+		minusTimeDto,
+		TDurCalc.StdYearMth(),
+		endDateTime.Location().String(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+}
+
+// SetDefaultStartEndTimes - Sets data field values for the current TimeDurationDto
+// instance using a Start Date Time, End Date Time and a time zone specification.
+// First, 'startDateTime' and 'endDateTime' are converted to the designate Time
+// Zone Location. Next, 'startDateTime' is subtracted from 'endDateTime' to compute
+// time duration.
+//
+// All data fields in the current TimeDurationDto instance are overwritten with
+// the new time duration values.
+//
+// Input parameter 'minusTimeDto' is first converted to absolute, or positive,
+// time duration values before it is subsequently subtracted from ending date
+// time in order to compute starting date time.
+//
+// This method will provide default values for Time Duration Calculation Type,
+// Time Math Calculation Mode and Date Time Format.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location Name:        Extracted from input parameter, 'startDateTime'
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// For granular control over these default parameters, see method:
+//       TimeDurationDto.SetStartEndTimes()
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  startDateTime   time.Time
+//     - Starting time
+//
+//
+//  endDateTime     time.Time
+//     - Ending time
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetDefaultStartEndTimes(
+//                           startDateTime,
+//                           endDateTime)
+//
+func (tDur *TimeDurationDto) SetDefaultStartEndTimes(
+	startDateTime,
+	endDateTime time.Time) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetDefaultStartEndTimes() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setStartEndTimes(
+		tDur,
+		startDateTime,
+		endDateTime,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+}
+
+// SetDefaultStartEndTimesTz - Sets data field values for the current TimeDurationDto
+// instance using a Start Date Time, End Date Time and a time zone specification.
+//
+// The Starting Date Time and Ending Date Time are submitted as type 'DateTzDto'.
+//
+// First, input parameters 'startDateTimeTz' and 'endDateTimeTz' are converted to
+// the designated Time Zone Location. Next, 'startDateTimeTz' is subtracted from
+// 'endDateTimeTz' to compute time duration.
+//
+// This method will supply default values for Time Duration Calculation Type,
+// Time Zone Location, Time Math Calculation Mode and Date Time Format.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTimeTz'.
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        Extracts the date time format from 'startDateTimeTz'.
+//
+//
+// For granular control over these parameters, see:
+//    TimeDurationDto.SetStartEndTimesTz()
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  startDateTimeTz DateTzDto
+//     - Starting date time
+//
+//  endDateTimeTz   DateTzDto
+//     - Ending date time
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetDefaultStartEndTimesTz(
+//                           startDateTimeTz,
+//                           endDateTimeTz)
+//
+func (tDur *TimeDurationDto) SetDefaultStartEndTimesTz(
+	startDateTimeTz,
+	endDateTimeTz DateTzDto) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetDefaultStartEndTimesTz() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setStartEndTimesTz(
+		tDur,
+		startDateTimeTz,
+		endDateTimeTz,
+		TDurCalc.StdYearMth(),
+		startDateTimeTz.GetTimeZoneName(),
+		TCalcMode.LocalTimeZone(),
+		startDateTimeTz.GetDateTimeFmt(),
+		ePrefix)
+}
+
+// SetSDefaultStartTimeDuration - Sets start time, end time and duration for the
+// current TimeDurationDto instance. 'startDateTime' is converted to the
+// specified by 'timeZoneLocation'. The duration value is added to 'startDateTime'
+// in order to compute the ending date time.
+//
+// If 'duration' is a negative value 'startDateTime' is converted to ending date
+// time. Thereafter, the actual starting date time is computed by subtracting
+// duration.
+//
+// This method will provide default values for Time Duration Calculation Type,
+// Time Math Calculation Mode and Date Time Format.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location Name:        Extracted from input parameter, 'startDateTime'
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// For granular control over these default parameters, see method:
+//       TimeDurationDto.SetStartTimeDuration()
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  startDateTime     time.Time
+//     - Starting date time for the duration calculation
+//
+//
+//  duration        time.Duration
+//     - Time Duration added to 'startDateTime' in order to
+//       compute Ending Date Time.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetDefaultStartTimeDuration(
+//                           startDateTime,
+//                           duration)
+//
+func (tDur *TimeDurationDto) SetDefaultStartTimeDuration(
+	startDateTime time.Time,
+	duration time.Duration) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetDefaultStartTimeDuration() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setStartTimeDuration(
+		tDur,
+		startDateTime,
+		duration,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+}
+
+// SetDefaultStartTimeTzDuration - Sets start time, end time and
+// duration for the current TimeDurationDto instance.
+//
+// The input parameter, 'startDateTimeTz', is of type DateTzDto. It
+// is converted to the specified 'timeZoneLocation', and added to
+// the duration value in order to compute the ending date time.
+//
+// If 'duration' is a negative value 'startDateTimeTz' is converted
+// to ending date time. Thereafter, the actual starting date time is
+// computed by subtracting duration.
+//
+// This method will supply default values for Time Duration Calculation Type,
+// Time Zone Location, Time Math Calculation Mode and Date Time Format.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTimeTz'.
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        Extracts the date time format from 'startDateTimeTz'.
+//
+//
+// For granular control over these parameters, see method:
+//    TimeDurationDto.SetStartTimeTzDuration()
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  startDateTime     DateTzDto
+//     - Provides starting date time for the duration calculation
+//
+//
+//  duration          time.Duration
+//     - Amount of time to be added to or subtracted from
+//       'startDateTime'. Note: If duration is a negative value
+//       'startDateTime' is converted to ending date time and
+//       actual starting date time is computed by subtracting
+//       duration.
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetDefaultStartTimeTzDuration(
+//                           startDateTimeTz,
+//                           duration)
+//
+func (tDur *TimeDurationDto) SetDefaultStartTimeTzDuration(
+	startDateTimeTz DateTzDto,
+	duration time.Duration) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetDefaultStartTimeTzDuration() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setStartTimeTzDuration(
+		tDur,
+		startDateTimeTz,
+		duration,
+		TDurCalc.StdYearMth(),
+		startDateTimeTz.GetTimeZoneName(),
+		TCalcMode.LocalTimeZone(),
+		startDateTimeTz.GetDateTimeFmt(),
+		ePrefix)
+}
+
+// SetDefaultStartTimePlusTimeDto - Sets start date time, end date time and duration
+// based on a starting date time. The results of this calculation are used to
+// populate the current TimeDurationDto instance.
+//
+// The time components of the TimeDto are added to the starting date time to
+// compute the ending date time and the duration.
+//
+// This method will supply default values for Time Duration Calculation Type,
+// Time Zone Location, Time Math Calculation Mode and Date Time Format.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTime'.
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        FmtDateTimeYrMDayFmtStr
+//                                   "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+// For granular control over these parameters, see method:
+//    TimeDurationDto.SetStartTimePlusTimeDto()
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  startDateTime     time.Time
+//     - Starting date time. The ending date time will be computed
+//       by adding the time components of the 'plusTimeDto' to
+//       'startDateTime'.
+//
+//
+//  plusTimeDto       TimeDto
+//     - Time components (Years, months, weeks, days, hours etc.)
+//       which will be added to 'startDateTime' to compute
+//       time duration and ending date time.
+//
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetDefaultStartTimePlusTimeDto(
+//                           startDateTime,
+//                           plusTimeDto)
+//
+func (tDur *TimeDurationDto) SetDefaultStartTimePlusTimeDto(
+	startDateTime time.Time,
+	plusTimeDto TimeDto) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetDefaultStartTimePlusTimeDto() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setStartTimePlusTimeDto(
+		tDur,
+		startDateTime,
+		plusTimeDto,
+		TDurCalc.StdYearMth(),
+		startDateTime.Location().String(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+}
+
+// SetDefaultStartTimeTzPlusTimeDto - Sets start date time, end date time and duration
+// based on a starting date time. The results of this calculation are used to populate
+// the current TimeDurationDto instance.
+//
+// The starting date time is passed to this method as an instance of 'DateTzDto'.
+//
+// The time components of the TimeDto are added to the starting date time to compute
+// the ending date time and the duration.
+//
+// This method will supply default values for Time Duration Calculation Type, Time
+// Zone Location, Time Math Calculation Mode and Date Time Format.
+//
+// Default Values:
+// Time Duration Calculation Type: TDurCalc.StdYearMth()
+// Time Zone Location:             Extracts the Time Zone Location from 'startDateTimeTz'.
+// Time Math Calculation Mode:     TCalcMode.LocalTimeZone()
+// Date Time Format String:        Extracts the date time format from 'startDateTimeTz'.
+//
+//
+// For granular control over these parameters, see:
+//    TimeDurationDto.SetStartTimeTzPlusTimeDto()
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  startDateTimeTz   DateTzDto
+//     - Starting date time. The ending date time will be computed
+//       by adding the time components of the 'plusTimeDto' to
+//       'startDateTime'.
+//
+//  plusTimeDto       TimeDto
+//     - Time components (Years, months, weeks, days, hours etc.)
+//       which will be added to 'startDateTime' to compute
+//       time duration and ending date time.
+//
+//       type TimeDto struct {
+//          Years                int // Number of Years
+//          Months               int // Number of Months
+//          Weeks                int // Number of Weeks
+//          WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+//          DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
+//          Hours                int // Number of Hours.
+//          Minutes              int // Number of Minutes
+//          Seconds              int // Number of Seconds
+//          Milliseconds         int // Number of Milliseconds
+//          Microseconds         int // Number of Microseconds
+//          Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
+//          TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+//                                   //  plus remaining Nanoseconds
+//          TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+//                                   //  + Seconds + Milliseconds + Nanoseconds
+//       }
+//
+//       Type 'TimeDto' is located in source file:
+//          datetimeopsgo\datetime\timedto.go
+//
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If this method proceeds to successful completion, the returned
+//       error instance is set to 'nil'. If an error is encountered, the
+//       error object is populated with an appropriate error message.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto := TimeDurationDto{}
+//
+//  tDurDto, err := tDurDto.SetDefaultStartTimeTzPlusTimeDto(
+//                           startDateTimeTz,
+//                           plusTimeDto)
+//
+func (tDur *TimeDurationDto) SetDefaultStartTimeTzPlusTimeDto(
+	startDateTimeTz DateTzDto,
+	plusTimeDto TimeDto) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetDefaultStartTimeTzPlusTimeDto() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setStartTimePlusTimeDto(
+		tDur,
+		startDateTimeTz.dateTimeValue,
+		plusTimeDto,
+		TDurCalc.StdYearMth(),
+		startDateTimeTz.GetTimeZoneName(),
+		TCalcMode.LocalTimeZone(),
+		startDateTimeTz.GetDateTimeFmt(),
+		ePrefix)
+}
 
 // SetStartEndTimes - Sets data field values for the current TimeDurationDto
 // instance using a Start Date Time, End Date Time and a time zone specification.
@@ -6365,6 +7043,19 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(
 //
 // All data fields in the current TimeDurationDto instance are overwritten with
 // the new time duration values.
+//
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure both starting and ending date time.
+//
+// The user is also required to provide the time duration calculation type which
+// will control the output of the time duration calculation. The standard date
+// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
+// time duration is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// discussion of Time Duration Calculation type, see Type TDurCalcType located
+// in source file:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // __________________________________________________________________________
 //
@@ -6562,30 +7253,36 @@ func (tDur *TimeDurationDto) SetStartEndTimes(
 		ePrefix)
 }
 
-// SetStartEndTimesTz - Sets data field values for the current
-// TimeDurationDto instance using a Start Date Time, End Date Time and a
-// time zone specification.
+// SetStartEndTimesTz - Sets data field values for the current TimeDurationDto
+// instance using a Start Date Time, End Date Time and a time zone specification.
 //
-// The Starting Date Time and Ending Date Time are submitted as type 'DateTzDto'
+// The Starting Date Time and Ending Date Time are submitted as type 'DateTzDto'.
 //
-// First, 'startDateTime' and 'endDateTime' are converted to the designate Time
-// Zone Location. Next, 'startDateTime' is subtracted from 'endDateTime' to compute
-// time duration.
+// First, 'startDateTimeTz' and 'endDateTimeTz' are converted to the designated
+// Time Zone Location. Next, 'startDateTimeTz' is subtracted from 'endDateTime'
+// to compute time duration.
 //
-// The user is required to submit input parameters for time zone location and
-// date time calculation type.
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure both starting and ending date time.
 //
-// All data fields in the current TimeDurationDto instance are overwritten with
-// the new time duration values.
+// The user is also required to provide the time duration calculation type which
+// will control the output of the time duration calculation. The standard date
+// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
+// time duration is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// discussion of Time Duration Calculation type, see Type TDurCalcType located
+// in source file:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // __________________________________________________________________________
 //
 // Input Parameters:
 //
-//  startDateTime   DateTzDto
+//  startDateTimeTz DateTzDto
 //     - Starting date time
 //
-//  endDateTime     DateTzDto
+//  endDateTimeTz   DateTzDto
 //     - Ending date time
 //
 //  tDurCalcType TDurCalcType
@@ -6804,6 +7501,11 @@ func (tDur *TimeDurationDto) SetStartEndTimesTz(
 //     - Starting date time for the duration calculation
 //
 //
+//  duration          time.Duration
+//     - Time Duration added to 'startDateTime' in order to
+//       compute Ending Date Time.
+//
+//
 //  tDurCalcType      TDurCalcType
 //     - Specifies the calculation type to be used in allocating
 //       time duration. This Type is configured as an enumeration.
@@ -7013,22 +7715,35 @@ func (tDur *TimeDurationDto) SetStartTimeDuration(
 		ePrefix)
 }
 
-// SetStartTimeTzDuration - Sets start time, end time and
-// duration for the current TimeDurationDto instance.
+// SetStartTimeTzDuration - Sets start time, end time and duration
+// for the current TimeDurationDto instance.
 //
-// The input parameter, 'startDateTime', is of type DateTzDto. It is
+// The input parameter, 'startDateTimeTz', is of type DateTzDto. It is
 // converted to the specified 'timeZoneLocation', and added to the
 // duration value in order to compute the ending date time.
 //
-// If 'duration' is a negative value 'startDateTime' is converted to
+// If 'duration' is a negative value 'startDateTimeTz' is converted to
 // ending date time. Thereafter, the actual starting date time is
 // computed by subtracting duration.
+//
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure both starting and ending date time.
+//
+// The user is also required to provide the time duration calculation type which
+// will control the output of the time duration calculation. The standard date
+// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
+// time duration is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// discussion of Time Duration Calculation type, see Type TDurCalcType located
+// in source file:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // __________________________________________________________________________
 //
 // Input Parameters:
 //
-//  startDateTime     DateTzDto
+//  startDateTimeTz   DateTzDto
 //     - Provides starting date time for the duration calculation
 //
 //
@@ -7237,6 +7952,19 @@ func (tDur *TimeDurationDto) SetStartTimeTzDuration(
 //
 // The time components of the TimeDto are added to the starting date time to
 // compute the ending date time and the duration.
+//
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure both starting and ending date time.
+//
+// The user is also required to provide the time duration calculation type which
+// will control the output of the time duration calculation. The standard date
+// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
+// time duration is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// discussion of Time Duration Calculation type, see Type TDurCalcType located
+// in source file:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // __________________________________________________________________________
 //
@@ -7491,6 +8219,19 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(
 //
 // The time components of the TimeDto are added to the starting date time to
 // compute the ending date time and the duration.
+//
+// The required input parameter, 'timeZoneLocation' specifies the time zone
+// used to configure both starting and ending date time.
+//
+// The user is also required to provide the time duration calculation type which
+// will control the output of the time duration calculation. The standard date
+// time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
+// time duration is allocated over years, months, weeks, weekdays, date days,
+// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// discussion of Time Duration Calculation type, see Type TDurCalcType located
+// in source file:
+//
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
 //
 // __________________________________________________________________________
 //

@@ -927,8 +927,7 @@ func TestDurationTriad_SetDefaultEndTimeMinusTimeDto_001(t *testing.T) {
 
 	err := dur.SetDefaultEndTimeMinusTimeDto(
 		t2,
-		timeDto,
-		TZones.US.Central())
+		timeDto)
 
 	if err != nil {
 		t.Errorf("Error returned by dur.SetDefaultEndTimeMinusTimeDto(...). "+
