@@ -10,13 +10,111 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest077()
+	mainTest{}.mainTest078()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest078() {
+	lineLen := 70
+	titles := []string{"mainTest.mainTest078()",
+		"Testing Change To Standard Time",
+		"November 2, 2014",
+	"Using Time Math Calculation Mode = UtcTimeZone"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	var err error
+	var centralTz *time.Location
+
+	centralTz, err = time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(\"dt.TZones.America.Chicago()\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1_1 := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("Initial Start Time:  %v\n",
+		t1_1.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	t1_2 := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("Initial End Time:    %v\n",
+		t1_2.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	dtMech := dt.DTimeMechanics{}
+
+	var duration time.Duration
+	var newStartDateTime, newEndDateTime dt.DateTzDto
+
+	duration,
+	newStartDateTime,
+	newEndDateTime,
+	err =
+	dtMech.ComputeDurationByUtc(
+		t1_1,
+		t1_2,
+		dt.TZones.America.Chicago(),
+		dt.FmtDateTimeYrMDayFmtStr,
+		"mainTest078()")
+
+	if err != nil {
+		fmt.Printf("Error returned by DTimeMechanics.ComputeDurationByUtc().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("New Start Date Time: %v\n",
+		newStartDateTime.GetDateTimeText())
+
+	fmt.Printf("New End Date Time:   %v\n",
+		newEndDateTime.GetDateTimeText())
+
+	fmt.Printf("Time Duration:       %v\n",
+		duration.String())
+
+	initialStartDateTime := t1_1.In(time.UTC)
+
+	fmt.Printf("Initial Start Date Time UTC: %v\n",
+		initialStartDateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	initialEndDateTime := t1_2.In(time.UTC)
+
+	fmt.Printf("Initial End Date Time UTC:   %v\n",
+		initialEndDateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	utcDuration := initialEndDateTime.Sub(initialStartDateTime)
+
+	fmt.Printf("UTC Duration:                %v\n",
+		utcDuration.String())
+
 }
 
 func (mt mainTest) mainTest077() {

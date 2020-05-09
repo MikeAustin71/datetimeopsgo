@@ -1968,6 +1968,30 @@ func (dtz *DateTzDto) GetDateTimeTzNanoSecDowYMDText() string {
 	return dtz.dateTimeValue.Format(FmtDateTimeTzNanoDowYMD)
 }
 
+
+// GetDateTimeText - Returns a date time value formatted
+// as a string using the format associated with this DateTzDto
+// instance.
+//
+func (dtz *DateTzDto) GetDateTimeText() string {
+
+	if dtz.lock == nil {
+		dtz.lock = new(sync.Mutex)
+	}
+
+	dtz.lock.Lock()
+
+	defer dtz.lock.Unlock()
+
+	if dtz.dateTimeFmt == "" {
+		dtMech := DTimeMechanics{}
+		dtz.dateTimeFmt = dtMech.PreProcessDateFormatStr(dtz.dateTimeFmt)
+	}
+
+	return dtz.dateTimeValue.Format(dtz.dateTimeFmt)
+}
+
+
 // GetDateTimeTzNanoSecText - Outputs date time in string format using
 // the FmtDateTimeDMYNanoTz format which incorporates date time to nano seconds
 // and the associated time zone.

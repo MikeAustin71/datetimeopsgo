@@ -1,6 +1,7 @@
 package datetime
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -157,4 +158,93 @@ func TestTimeDurationDto_IsEmpty_02(t *testing.T){
 			"Instead, IsEmpty() == 'false'.\n")
 	}
 
+}
+
+func TestTimeDurationDto_DurCompare_01(t *testing.T) {
+/*
+		Testing Change To Standard Time
+		November 2, 2014
+
+		TCalcMode.LocalTimeZone() and TCalcMode.UtcTimeZone()
+		yield the same result because duration is NOT added to
+		starting date time. Using "Local Time Zone" and "UTC"
+		mode, the result is the same, "25-hours".
+
+*/
+	var err error
+	var centralTz *time.Location
+
+	centralTz, err = time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(\"dt.TZones.America.Chicago()\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t2_1 := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	t2_2 := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	var tDur1, tDur2 TimeDurationDto
+
+	tDur1, err = TimeDurationDto{}.NewStartEndTimes(
+		t2_1,
+		t2_2,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartEndTimes(TCalcMode.LocalTimeZone()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedHours := time.Duration( HourNanoSeconds * 25)
+
+	actualDuration := tDur1.GetThisTimeDuration()
+
+	if expectedHours != actualDuration {
+		t.Errorf("Error: Expected Local Time Duration = 25-hours.\n" +
+			"Instead, actual duration = '%v'.", actualDuration.String())
+	}
+
+	tDur2, err = TimeDurationDto{}.NewStartEndTimes(
+		t2_1,
+		t2_2,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.UtcTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartEndTimes(TCalcMode.UtcTimeZone()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	actualDuration = tDur2.GetThisTimeDuration()
+
+	if expectedHours != actualDuration {
+		t.Errorf("Error: Expected UTC Time Duration = 25-hours.\n" +
+			"Instead, actual duration = '%v'.", actualDuration.String())
+	}
 }

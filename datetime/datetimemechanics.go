@@ -825,7 +825,7 @@ func (dtMech *DTimeMechanics) ComputeDurationByUtc(
 
 	err = dTzUtil.setFromTzSpec(
 		&newEndDateTime,
-		startTimeUtc,
+		endTimeUtc,
 		tzSpec,
 		TzConvertType.Relative(),
 		dateTimeFmtStr,
