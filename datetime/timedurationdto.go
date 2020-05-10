@@ -70,6 +70,27 @@ type TimeDurationDto struct {
 	lock *sync.Mutex // Used to enforce thread safe operations
 }
 
+func (tDur *TimeDurationDto) AddDuration() error {
+
+
+	return nil
+}
+
+func (tDur *TimeDurationDto) AddDate(
+	years,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds int,
+	nanoseconds int64) error {
+
+
+	return nil
+}
+
+
+
 // CopyIn - Receives a TimeDurationDto as an input parameters
 // and proceeds to set all data fields of the current TimeDurationDto
 // equal to the incoming TimeDurationDto.
