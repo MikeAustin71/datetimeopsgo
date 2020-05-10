@@ -4903,13 +4903,12 @@ func (dtz *DateTzDto) String() string {
 
 	defer dtz.lock.Unlock()
 
-	fmtStr := dtz.dateTimeFmt
-
-	if len(fmtStr) == 0 {
-		fmtStr = FmtDateTimeYrMDayFmtStr
+	if dtz.dateTimeFmt == "" {
+		dtMech := DTimeMechanics{}
+		dtz.dateTimeFmt = dtMech.PreProcessDateFormatStr(dtz.dateTimeFmt)
 	}
 
-	return dtz.dateTimeValue.Format(fmtStr)
+	return dtz.dateTimeValue.Format(dtz.dateTimeFmt)
 }
 
 // Sub - Subtracts the DateTime value of the incoming DateTzDto

@@ -10,13 +10,364 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest078()
+	mainTest{}.mainTest080()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest080() {
+	/*
+		Testing Change To Standard Time
+		November 2, 2014
+
+		TCalcMode.LocalTimeZone() and TCalcMode.UtcTimeZone()
+		yield different results because duration is added to
+		starting date time.
+
+	*/
+
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest080()",
+		"Testing Change To Standard Time",
+		"November 2, 2014",
+		"Using TimeDurationDto and Time Math Calculation Modes",
+	"LocalTimeZone & UtcTimeZone"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	var err error
+	var centralTz *time.Location
+
+	centralTz, err = time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned from time." +
+			"LoadLocation(\"dt.TZones.America.Chicago()\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	initialStartDate := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	localTzEndDate := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	uTCTzEndDate := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	var tDur1, tDur2 dt.TimeDurationDto
+
+	expectedDuration := time.Duration( dt.HourNanoSeconds * 25)
+
+	tDur1, err = dt.TimeDurationDto{}.NewStartTimeDuration(
+		initialStartDate,
+		expectedDuration,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.America.Chicago(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeDurationDto{}." +
+			"NewStartEndTimes(TCalcMode.LocalTimeZone()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+	fmt.Printf(lineSplitter + "\n")
+
+	fmt.Printf("Initial Start Date Time:    %v\n",
+		initialStartDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	actualStartDate := tDur1.GetThisStartDateTimeString()
+
+	fmt.Printf("Actual Start Date Time #1:  %v\n",
+		actualStartDate)
+
+	fmt.Printf(lineSplitter + "\n")
+
+	fmt.Printf("Expected Duration #1:       %v\n",
+		expectedDuration)
+
+	actualDuration := tDur1.GetThisTimeDuration()
+
+	fmt.Printf("Actual Duration #1:         %v\n",
+		actualDuration)
+
+	fmt.Printf(lineSplitter + "\n")
+
+	if expectedDuration != actualDuration {
+		fmt.Printf("Error: Expected Local Time Duration = " +
+			"25-hours.\n" +
+			"Instead, actual duration = '%v'.", actualDuration.String())
+		return
+	}
+
+	if actualStartDate != initialStartDate.Format(dt.FmtDateTimeYrMDayFmtStr) {
+		fmt.Printf("Error: Expected starting date time= '%v'.\n" +
+			"Instead, actual starting date time= '%v'\n",
+			initialStartDate.Format(dt.FmtDateTimeYrMDayFmtStr), actualStartDate)
+		return
+	}
+
+	fmt.Printf("Expected End Date Time #1:  %v\n",
+		localTzEndDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+
+	endDateTimeStr := tDur1.GetThisEndDateTimeString()
+
+	fmt.Printf("Actual End Date Time #1:    %v\n",
+		endDateTimeStr)
+
+	fmt.Printf(lineSplitter + "\n")
+
+	if endDateTimeStr != localTzEndDate.Format(dt.FmtDateTimeYrMDayFmtStr) {
+		fmt.Printf("Error: Expected ending date time= '%v'.\n" +
+			"Instead, actual starting date time= '%v'\n",
+			localTzEndDate.Format(dt.FmtDateTimeYrMDayFmtStr), endDateTimeStr)
+		return
+	}
+
+	tDur2, err = dt.TimeDurationDto{}.NewStartTimeDuration(
+		initialStartDate,
+		expectedDuration,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.America.Chicago(),
+		dt.TCalcMode.UtcTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeDurationDto{}.NewStartEndTimes(TCalcMode.UtcTimeZone()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf(lineSplitter + "\n")
+
+	fmt.Printf("Expected Duration #2:       %v\n",
+		expectedDuration)
+
+
+	actualDuration = tDur2.GetThisTimeDuration()
+
+	fmt.Printf("Actual Duration #2:         %v\n",
+		actualDuration)
+
+	fmt.Printf(lineSplitter + "\n")
+
+	if expectedDuration != actualDuration {
+		fmt.Printf("Error: Expected UTC Time Duration = 25-hours.\n" +
+			"Instead, actual duration = '%v'.", actualDuration.String())
+		return
+	}
+
+	fmt.Printf("Expected End Date Time #2:  %v\n",
+		uTCTzEndDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	endDateTimeStr = tDur1.GetThisEndDateTimeString()
+
+	actualEndDateTime := tDur1.GetThisEndDateTime()
+
+	fmt.Printf("Actual End Date Time #2:    %v\n",
+		endDateTimeStr)
+
+	fmt.Println()
+	fmt.Printf(lineSplitter + "\n")
+
+	if endDateTimeStr != uTCTzEndDate.Format(dt.FmtDateTimeYrMDayFmtStr) {
+		fmt.Printf("Error: Expected ending date time= '%v'.\n" +
+			"Instead, actual starting date time= '%v'\n",
+			uTCTzEndDate.Format(dt.FmtDateTimeYrMDayFmtStr), endDateTimeStr)
+	}
+
+	initialStartDateUTC := initialStartDate.In(time.UTC)
+	fmt.Printf("Initial Start Date UTC:     %v\n",
+		initialStartDateUTC.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	expectedEndDateUTC := initialStartDateUTC.Add(expectedDuration)
+	fmt.Printf("Expected End Date UTC:      %v\n",
+		expectedEndDateUTC.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	actualEndDateUTC := actualEndDateTime.In(time.UTC)
+	fmt.Printf("Actual End Date UTC:        %v\n",
+		actualEndDateUTC.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+
+	fmt.Printf(lineSplitter + "\n")
+
+	fmt.Printf("Expected Duration:          %v\n",
+		expectedDuration)
+
+	actualDuration = expectedEndDateUTC.Sub(initialStartDateUTC)
+
+	fmt.Printf("Actual Duration:            %v\n\n",
+		actualDuration)
+
+	convertedUTCStartDate := initialStartDateUTC.In(centralTz)
+
+	fmt.Printf(lineSplitter + "\n")
+	fmt.Printf("Converted UTC Start Date:   %v\n",
+		convertedUTCStartDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Printf("Initial Start Date:         %v\n",
+		initialStartDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Printf(lineSplitter + "\n\n")
+
+	convertedUTCEndDate := expectedEndDateUTC.In(centralTz)
+	fmt.Printf("Converted UTC End Date:     %v\n",
+		convertedUTCEndDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Printf("Original CTZ End Date:      %v\n",
+		endDateTimeStr)
+	fmt.Printf(lineSplitter + "\n")
+	fmt.Printf(lineSplitter + "\n\n")
+
+
+
+
+}
+
+func (mt mainTest) mainTest079() {
+	lineLen := 70
+	titles := []string{"mainTest.mainTest079()",
+		"Testing Change To Standard Time",
+		"November 2, 2014",
+	"Using Time Math Calculation Mode = UtcTimeZone"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	var err error
+	var centralTz *time.Location
+
+	centralTz, err = time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned from time.LoadLocation(\"dt.TZones.America.Chicago()\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1_1 := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("Initial Start Time:  %v\n",
+		t1_1.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	t1_2 := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	fmt.Printf("Initial End Time:    %v\n",
+		t1_2.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	var duration time.Duration
+	var newStartDateTime, newEndDateTime dt.DateTzDto
+/*
+	duration,
+	newStartDateTime,
+	newEndDateTime,
+	err =
+	dtMech.ComputeDurationByUtc(
+		t1_1,
+		t1_2,
+		dt.TZones.America.Chicago(),
+		dt.FmtDateTimeYrMDayFmtStr,
+		"mainTest078()")
+*/
+
+var tDur dt.TimeDurationDto
+
+	tDur, err = dt.TimeDurationDto{}.NewStartEndTimes(
+		t1_1,
+		t1_2,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.America.Chicago(),
+		dt.TCalcMode.UtcTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by dt.TimeDurationDto{}.NewStartEndTimes().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	duration = tDur.GetThisTimeDuration()
+	newStartDateTime = tDur.GetThisStartDateTimeTz()
+	newEndDateTime = tDur.GetThisEndDateTimeTz()
+
+	fmt.Printf("New Start Date Time: %v\n",
+		newStartDateTime.GetDateTimeText())
+
+	fmt.Printf("New End Date Time:   %v\n",
+		newEndDateTime.GetDateTimeText())
+
+	fmt.Printf("Time Duration:       %v\n",
+		duration.String())
+
+	initialStartDateTime := t1_1.In(time.UTC)
+
+	fmt.Printf("Initial Start Date Time UTC: %v\n",
+		initialStartDateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	initialEndDateTime := t1_2.In(time.UTC)
+
+	fmt.Printf("Initial End Date Time UTC:   %v\n",
+		initialEndDateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	utcDuration := initialEndDateTime.Sub(initialStartDateTime)
+
+	fmt.Printf("UTC Duration:                %v\n",
+		utcDuration.String())
+
 }
 
 func (mt mainTest) mainTest078() {
