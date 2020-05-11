@@ -117,12 +117,12 @@ type TimeDurationDto struct {
 // __________________________________________________________________________
 //
 // Return Value:
-//  error
-//     - If this method proceeds to successful completion, the returned
-//       error instance is set to 'nil'. If an error is encountered, the
-//       error object is populated with an appropriate error message.
 //
-//       If this value is returned as 'nil' it signals that the method
+//  error
+//     - If an error is encountered, the error object is populated with an
+//       appropriate error message.
+//
+//       If this value is returned as 'nil', it signals that the method
 //       completed successfully and that the current TimeDurationDto
 //       instance has been updated with new values.
 //
@@ -318,12 +318,12 @@ func (tDur *TimeDurationDto) AddDate(
 // __________________________________________________________________________
 //
 // Return Value:
-//  error
-//     - If this method proceeds to successful completion, the returned
-//       error instance is set to 'nil'. If an error is encountered, the
-//       error object is populated with an appropriate error message.
 //
-//       If this value is returned as 'nil' it signals that the method
+//  error
+//     - If an error is encountered, the error object is populated with an
+//       appropriate error message.
+//
+//       If this value is returned as 'nil', it signals that the method
 //       completed successfully and that the current TimeDurationDto
 //       instance has been updated with new values.
 //
@@ -466,12 +466,12 @@ func (tDur *TimeDurationDto) AddDateTime(
 // __________________________________________________________________________
 //
 // Return Value:
-//  error
-//     - If this method proceeds to successful completion, the returned
-//       error instance is set to 'nil'. If an error is encountered, the
-//       error object is populated with an appropriate error message.
 //
-//       If this value is returned as 'nil' it signals that the method
+//  error
+//     - If an error is encountered, the error object is populated with an
+//       appropriate error message.
+//
+//       If this value is returned as 'nil', it signals that the method
 //       completed successfully and that the current TimeDurationDto
 //       instance has been updated with new values.
 //
@@ -653,12 +653,12 @@ func (tDur *TimeDurationDto) AddDuration(
 // __________________________________________________________________________
 //
 // Return Value:
-//  error
-//     - If this method proceeds to successful completion, the returned
-//       error instance is set to 'nil'. If an error is encountered, the
-//       error object is populated with an appropriate error message.
 //
-//       If this value is returned as 'nil' it signals that the method
+//  error
+//     - If an error is encountered, the error object is populated with an
+//       appropriate error message.
+//
+//       If this value is returned as 'nil', it signals that the method
 //       completed successfully and that the current TimeDurationDto
 //       instance has been updated with new values.
 //
@@ -826,12 +826,12 @@ func (tDur *TimeDurationDto) AddTime(
 // __________________________________________________________________________
 //
 // Return Value:
-//  error
-//     - If this method proceeds to successful completion, the returned
-//       error instance is set to 'nil'. If an error is encountered, the
-//       error object is populated with an appropriate error message.
 //
-//       If this value is returned as 'nil' it signals that the method
+//  error
+//     - If an error is encountered, the error object is populated with an
+//       appropriate error message.
+//
+//       If this value is returned as 'nil', it signals that the method
 //       completed successfully and that the current TimeDurationDto
 //       instance has been updated with new values.
 //
@@ -6777,82 +6777,6 @@ func (tDur TimeDurationDto) NewEndTimeTzMinusTimeDto(
 	return t2Dur, nil
 }
 
-// ReCalcTimeDurationAllocation - Re-calculates and allocates time duration for the current
-// TimeDurationDto instance over the various time components (years, months, weeks, weekdays,
-// datedays, hour, minutes, seconds, milliseconds, microseconds and nanoseconds) depending
-// on the value of the 'TDurCalcType' input parameter.
-//
-// Type 'TDurCalcType' is located in source file:
-//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
-//
-// __________________________________________________________________________
-//
-// Input Parameters:
-//
-//  tDurCalcType TDurCalcType
-//     - Specifies the calculation type to be used in allocating
-//       time duration:
-//
-//       TDurCalcType(0).StdYearMth()
-//         - Default - standard year, month week, day time calculation.
-//
-//       TDurCalcType(0).CumMonths()
-//         - Computes cumulative months - no Years.
-//
-//       TDurCalcType(0).CumWeeks()
-//         - Computes cumulative weeks. No Years or months
-//
-//       TDurCalcType(0).CumDays()
-//         - Computes cumulative days. No Years, months or weeks.
-//
-//       TDurCalcType(0).CumHours()
-//         - Computes cumulative hours. No Years, months, weeks or days.
-//
-//       TDurCalcType(0).CumMinutes()
-//         - Computes cumulative minutes. No Years, months, weeks, days
-//           or hours.
-//
-//       TDurCalcType(0).CumSeconds()
-//         - Computes cumulative seconds. No Years, months, weeks, days,
-//           hours or minutes.
-//
-//       TDurCalcType(0).GregorianYears()
-//         - Computes Years based on average length of a Gregorian Year
-//           Used for very large duration values.
-//
-//           Type 'TDurCalcType' is located in source file:
-//              MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
-//
-// __________________________________________________________________________
-//
-// Return Value:
-//
-//  error
-//     - If this method proceeds to successful completion, the returned
-//       error instance is set to 'nil'. If an error is encountered, the
-//       error object is populated with an appropriate error message.
-//
-func (tDur *TimeDurationDto) ReCalcTimeDurationAllocation(
-	tDurCalcType TDurCalcType) error {
-
-	if tDur.lock == nil {
-		tDur.lock = new(sync.Mutex)
-	}
-
-	tDur.lock.Lock()
-
-	defer tDur.lock.Unlock()
-
-	ePrefix := "TimeDurationDto.ReCalcTimeDurationAllocation() "
-
-	tDurDtoUtil := timeDurationDtoUtility{}
-
-	return tDurDtoUtil.reCalcTimeDurationAllocation(
-		tDur,
-		tDurCalcType,
-		ePrefix)
-}
-
 // ReCalcEndDateTimeToNow - Recomputes time duration values for the
 // current TimeDurationDto by setting ending date time to time.Now().
 // This is useful in stop watch applications.
@@ -9335,6 +9259,230 @@ func (tDur *TimeDurationDto) SetStartTimeTzPlusTimeDto(
 		ePrefix)
 }
 
+// SetTimeDurationAllocationType - Re-calculates and allocates time duration for the current
+// TimeDurationDto instance over the various time components (years, months, weeks, weekdays,
+// datedays, hour, minutes, seconds, milliseconds, microseconds and nanoseconds) depending
+// on the value of the 'TDurCalcType' input parameter.
+//
+// Type 'TDurCalcType' is located in source file:
+//   MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  tDurCalcType TDurCalcType
+//     - Specifies the calculation type to be used in allocating
+//       time duration:
+//
+//       TDurCalcType(0).StdYearMth()
+//         - Default - standard year, month week, day time calculation.
+//
+//       TDurCalcType(0).CumMonths()
+//         - Computes cumulative months - no Years.
+//
+//       TDurCalcType(0).CumWeeks()
+//         - Computes cumulative weeks. No Years or months
+//
+//       TDurCalcType(0).CumDays()
+//         - Computes cumulative days. No Years, months or weeks.
+//
+//       TDurCalcType(0).CumHours()
+//         - Computes cumulative hours. No Years, months, weeks or days.
+//
+//       TDurCalcType(0).CumMinutes()
+//         - Computes cumulative minutes. No Years, months, weeks, days
+//           or hours.
+//
+//       TDurCalcType(0).CumSeconds()
+//         - Computes cumulative seconds. No Years, months, weeks, days,
+//           hours or minutes.
+//
+//       TDurCalcType(0).GregorianYears()
+//         - Computes Years based on average length of a Gregorian Year
+//           Used for very large duration values.
+//
+//           Type 'TDurCalcType' is located in source file:
+//              MikeAustin71\datetimeopsgo\datetime\timedurationcalctypeenum.go
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If an error is encountered, the error object is populated with an
+//       appropriate error message.
+//
+//       If this value is returned as 'nil', it signals that the method
+//       completed successfully and that the current TimeDurationDto
+//       instance has been updated with new values.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto, err := TimeDurationDto{}.NewStartEndTimes(
+//                                   startTime,
+//                                   endTime,
+//                                     TDurCalc.StdYearMth(),
+//                                     TZones.US.Central(),
+//                                     TCalcMode.LocalTimeZone(),
+//                                     FmtDateTimeYrMDayFmtStr)
+//
+//  if err != nil {
+//     do something
+//  }
+//
+//  err = tDurDto.SetTimeDurationAllocationType(TDurCalc.CumSeconds())
+//
+//  Note:
+//        'TDurCalc.StdYearMth()' and 'TDurCalc.CumSeconds()' are of type
+//        'TDurCalcType'. 'TDurCalc.StdYearMth()' signals  standard year
+//         month day time duration allocation while 'TDurCalc.CumSeconds()'
+//         seconds, milliseconds, microseconds and nanoseconds allocations.
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'. TZones.US.Central() is equivalent to
+//        "America/Chicago".
+//
+//        TCalcMode.LocalTimeZone() specifies that time duration will be
+//        computed in the context of local time zones. Reference Type
+//        'TDurCalcType' located in source file:
+//            'datetime\timemathcalcmodeenum.go'
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'.
+//              FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (tDur *TimeDurationDto) SetTimeDurationAllocationType(
+	tDurCalcType TDurCalcType) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.SetTimeDurationAllocationType() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.reCalcTimeDurationAllocation(
+		tDur,
+		tDurCalcType,
+		ePrefix)
+}
+
+// SetTimeMathCalcMode - This method resets the value of the
+// Time Math Calculation Mode for the current TimeDurationDto
+// instance. The Time Math Calculation Mode controls the
+// mathematical algorithms used to compute time duration for
+// 'days'. As discussed in the documentation, 'days' may, or
+// may not, be defined as 24-hours depending on the associated
+// time zone. For additional information see the type documentation
+// at:
+//          datetime\timemathcalcmodeenum.go
+//
+// __________________________________________________________________________
+//
+// Input Parameters:
+//
+//  timeCalcMode      TimeMathCalcMode
+//     - TimeMathCalcMode is an enumeration which specifies the algorithm
+//       which will be used when computing time spans or time duration.
+//
+//       If 'LocalTimeZone' is specified, days are defined as local time
+//       zone days which may be less than, or greater than, 24-hours due
+//       to local conventions like daylight savings time.
+//       (TCalcMode.LocalTimeZone())
+//
+//       If 'UtcTimeZone' is specified, days are uniformly defined as
+//       a time span consisting of 24-consecutive hours.
+//       (TCalcMode.UtcTimeZone())
+//
+//       For additional information see the type documentation at
+//             datetime\timemathcalcmodeenum.go
+//
+// __________________________________________________________________________
+//
+// Return Value:
+//
+//  error
+//     - If an error is encountered, the error object is populated with an
+//       appropriate error message.
+//
+//       If this value is returned as 'nil', it signals that the method
+//       completed successfully and that the current TimeDurationDto
+//       instance has been updated with new values.
+//
+// __________________________________________________________________________
+//
+// Example Usage:
+//
+//  tDurDto, err := TimeDurationDto{}.NewStartEndTimes(
+//                                   startTime,
+//                                   endTime,
+//                                     TDurCalc.StdYearMth(),
+//                                     TZones.US.Central(),
+//                                     TCalcMode.LocalTimeZone(),
+//                                     FmtDateTimeYrMDayFmtStr)
+//
+//  if err != nil {
+//     do something
+//  }
+//
+//  err = tDurDto.SetTimeMathCalcMode(TCalcMode.UtcTimeZone())
+//
+//  Note:
+//        'TDurCalc.StdYearMth()' and 'TDurCalc.CumSeconds()' are of type
+//        'TDurCalcType'. 'TDurCalc.StdYearMth()' signals  standard year
+//         month day time duration allocation while 'TDurCalc.CumSeconds()'
+//         seconds, milliseconds, microseconds and nanoseconds allocations.
+//
+//         Reference Type'TDurCalcType' located in source file:
+//            'datetime\timemathcalcmodeenum.go'
+//
+//        'TZones.US.Central()' is a constant available int source file,
+//        'timezonedata.go'. TZones.US.Central() is equivalent to
+//        "America/Chicago".
+//
+//        'TCalcMode.LocalTimeZone()' specifies that time duration will be
+//        computed in the context of local time zones. 'TCalcMode.UtcTimeZone()'
+//        specifies that days are always defined as 24-hours in
+//        length as found in the UTC time zone.
+//
+//        'FmtDateTimeYrMDayFmtStr' is a constant available in source file,
+//        'constantsdatetime.go'.
+//              FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+//
+func (tDur *TimeDurationDto) SetTimeMathCalcMode(
+	timeMathCalcMode TimeMathCalcMode) error {
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.lock.Lock()
+
+	defer tDur.lock.Unlock()
+
+	ePrefix := "TimeDurationDto.AddTimeDto() "
+
+	tDurDtoUtil := timeDurationDtoUtility{}
+
+	return tDurDtoUtil.setStartEndTimesTz(
+		tDur,
+		tDur.startDateTimeTz.CopyOut(),
+		tDur.endDateTimeTz.CopyOut(),
+		tDur.timeDurCalcType,
+		tDur.startDateTimeTz.GetTimeZoneName(),
+		timeMathCalcMode,
+		tDur.startDateTimeTz.GetDateTimeFmt(),
+		ePrefix)
+
+}
 
 // SubtractTimeDto - Receives a TimeDto object and computes
 // the amount of time duration which will be subtracted from

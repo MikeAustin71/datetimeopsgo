@@ -1362,9 +1362,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumMonths_02() {
 
 	assert.Nil(suite.T(), err, "Error NewStartEndTimesTz :")
 
-	err = t1Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumMonths())
+	err = t1Dur.SetTimeDurationAllocationType(TDurCalcType(0).CumMonths())
 
-	assert.Nil(suite.T(), err, "Error ReCalcTimeDurationAllocation:")
+	assert.Nil(suite.T(), err, "Error SetTimeDurationAllocationType:")
 
 	expectedTimeDur := suite.t5USCentral.Sub(suite.t4USCentral)
 
@@ -1707,9 +1707,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumWeeks_02() {
 
 	assert.Nil(suite.T(), err, "Error NewStartEndTimesTz:")
 
-	err = t1Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumWeeks())
+	err = t1Dur.SetTimeDurationAllocationType(TDurCalcType(0).CumWeeks())
 
-	assert.Nil(suite.T(), err, "Error ReCalcTimeDurationAllocation:")
+	assert.Nil(suite.T(), err, "Error SetTimeDurationAllocationType:")
 
 	expectedTimeDur := suite.t5USCentral.Sub(suite.t4USCentral)
 
@@ -2053,9 +2053,9 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_TestCumDays_02() {
 
 	assert.Nil(suite.T(), err, "Error NewStartEndTimesTz:")
 
-	err = t1Dur.ReCalcTimeDurationAllocation(TDurCalcType(0).CumDays())
+	err = t1Dur.SetTimeDurationAllocationType(TDurCalcType(0).CumDays())
 
-	assert.Nil(suite.T(), err, "Error ReCalcTimeDurationAllocation:")
+	assert.Nil(suite.T(), err, "Error SetTimeDurationAllocationType:")
 
 	expectedTimeDur := suite.t5USCentral.Sub(suite.t4USCentral)
 
