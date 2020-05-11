@@ -580,7 +580,7 @@ func (dTzUtil *dateTzDtoUtility) addMinusTimeDto(
 // addPlusTimeDto - Creates and returns a new DateTzDto by adding a TimeDto
 // to the value of theDateTzDto instance passed as an input parameter.
 //
-// The value of the input parameter DateTzDto instance is not be altered.
+// The value of the input parameter DateTzDto instance is not altered.
 //
 // ------------------------------------------------------------------------
 //
