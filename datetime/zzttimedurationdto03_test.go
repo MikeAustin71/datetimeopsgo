@@ -277,7 +277,7 @@ func TestTimeDurationDto_NewStartTimeAddDate_01(t *testing.T) {
 		locationPtr)
 
 	// Local Tz End Date Time
-	// 2019-08-27 20:54:30.038175584 -0500 CDT
+	// 2019-08-27 19:54:30.038175584 -0500 CDT
 	calcEndDateTimeLocal := time.Date(
 		2019,
 		8,
@@ -611,6 +611,82 @@ func TestTimeDurationDto_NewStartTimeAddDate_06(t *testing.T) {
 			"because parameter TDurCalc.None() is invalid.\n" +
 			"However, NO ERROR WAS RETURNED!\n")
 		return
+	}
+}
+
+func TestTimeDurationDto_NewStartTimeAddDateTime_01(t *testing.T) {
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+
+	// Local Tz End Date Time
+	// 2019-08-27 20:55:31.038175594 -0500 CDT
+	calcEndDateTimeLocal := time.Date(
+		2019,
+		8,
+		27,
+		20,
+		55,
+		31,
+		38175594,
+		locationPtr)
+
+	var tDurDto TimeDurationDto
+	// 5-years, 6-months, 12-days,
+	// 1-hour, 1-minute, 1-second, 0-milliseconds,
+	// 0-microseconds, 10-nanoseconds
+
+	tDurDto, err = TimeDurationDto{}.NewStartTimeAddDateTime(
+		startDateTime,
+		5,
+		6,
+		12,
+		1,
+		1,
+		1,
+		0,
+		0,
+		10,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by " +
+			"TimeDurationDto{}.NewStartTimeAddDateTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTime := calcEndDateTimeLocal.Format(fmtStr)
+
+	actualDateTime := tDurDto.GetThisEndDateTimeString()
+
+	if expectedDateTime != actualDateTime {
+		t.Errorf("Error: Expected End Date Time='%v'\n" +
+			"Instead, End Date Time='%v'\n",
+			expectedDateTime, actualDateTime)
 	}
 }
 
