@@ -259,12 +259,13 @@ func (dtMech *DTimeMechanics) AddDateTimeByLocalTimeZone(
 	var newDateTime time.Time
 
 	if years != 0 ||
-		months != 0 {
+		months != 0 ||
+		days != 0 {
 
 		newDateTime = baseDateTime.AddDate(
 			years,
 			months,
-			0)
+			days)
 
 	} else {
 
@@ -272,8 +273,7 @@ func (dtMech *DTimeMechanics) AddDateTimeByLocalTimeZone(
 
 	}
 
-	totNanoSecs := int64(days) * DayNanoSeconds
-	totNanoSecs += int64(hours) * int64(time.Hour)
+	totNanoSecs := int64(hours) * int64(time.Hour)
 	totNanoSecs += int64(minutes) * int64(time.Minute)
 	totNanoSecs += int64(seconds) * int64(time.Second)
 	totNanoSecs += int64(milliseconds) * int64(time.Millisecond)
@@ -282,7 +282,6 @@ func (dtMech *DTimeMechanics) AddDateTimeByLocalTimeZone(
 
 	return newDateTime.Add(time.Duration(totNanoSecs))
 }
-
 
 // AddDateTimeByUtc - Adds date and time values to an existing date time,
 // 'baseDateTime'. 'baseDateTime' is first converted to equivalent

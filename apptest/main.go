@@ -35,11 +35,11 @@ func (mt mainTest) mainTest082() {
 
 	  Local Tz Times:
 	   Start Time: 2014-02-15 19:54:30.038175584 -0600 CST
-	     End Time: 2019-08-27 20:54:30.038175584 -0500 CDT
+	     End Time: 2019-08-27 19:54:30.038175584 -0500 CDT
 
 	  UTC Tz Times:
 	   Start Time: 2014-02-15 19:54:30.038175584 -0600 CST
-	     End Time: 2019-08-27 19:54:30.038175584 -0500 CDT
+	     End Time: 2019-08-27 20:54:30.038175584 -0500 CDT
 	 */
 
 	lineLen := 70
@@ -75,24 +75,24 @@ func (mt mainTest) mainTest082() {
 		locationPtr)
 
 	// Local Tz End Date Time
-	// 2019-08-27 20:54:30.038175584 -0500 CDT
+	// 2019-08-27 19:54:30.038175584 -0500 CDT
 	calcEndDateTimeLocal := time.Date(
 		2019,
 		8,
 		27,
-		20,
+		19,
 		54,
 		30,
 		38175584,
 		locationPtr)
 
 	// UTC Tz End Date Time
-	// 2019-08-27 19:54:30.038175584 -0500 CDT
+	// 2019-08-27 20:54:30.038175584 -0500 CDT
 	calcEndDateTimeUTC := time.Date(
 		2019,
 		8,
 		27,
-		19,
+		20,
 		54,
 		30,
 		38175584,
@@ -126,7 +126,7 @@ func (mt mainTest) mainTest082() {
 	}
 
 	endDateTimeTz2, err = startDateTimeTz.AddDate(
-		dt.TCalcMode.LocalTimeZone(),
+		dt.TCalcMode.UtcTimeZone(),
 		5,
 		6,
 		12,
