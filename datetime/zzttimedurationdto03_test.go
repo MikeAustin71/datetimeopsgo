@@ -16,7 +16,7 @@ func TestTimeDurationDto_DaylightSavings_01(t *testing.T) {
 
 	hoursDur := int64(24) * HourNanoSeconds
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDuration(
+	t1Dur, err := TimeDurationDto{}.NewStartTimeAddDuration(
 		t1USCentral,
 		time.Duration(hoursDur),
 		TDurCalcType(0).StdYearMth(),
@@ -792,8 +792,7 @@ func TestTimeDurationDto_NewDefaultEndTimeTzMinusTimeDto_001(t *testing.T) {
 	}
 }
 
-
-func TestTimeDurationDto_NewStartTimeDuration_01(t *testing.T) {
+func TestTimeDurationDto_NewStartTimeAddDuration_S2_01(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
 	fmtstr := "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -804,7 +803,7 @@ func TestTimeDurationDto_NewStartTimeDuration_01(t *testing.T) {
 	t2OutStr := t2.Format(fmtstr)
 	t12Dur := t2.Sub(t1)
 
-	tDto, err := TimeDurationDto{}.NewStartTimeDuration(
+	tDto, err := TimeDurationDto{}.NewStartTimeAddDuration(
 		t1,
 		t12Dur,
 		TDurCalcType(0).StdYearMth(),

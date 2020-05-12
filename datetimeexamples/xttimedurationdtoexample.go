@@ -18,7 +18,7 @@ func ExampleTimeDuration001() {
 
 	hoursDur := int64(24) * dt.HourNanoSeconds
 
-	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeDuration(
+	t1Dur, err := dt.TimeDurationDto{}.NewStartTimeAddDuration(
 		t1USCentral,
 		time.Duration(hoursDur),
 		dt.TDurCalcType(0).StdYearMth(),

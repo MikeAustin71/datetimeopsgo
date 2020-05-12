@@ -295,7 +295,7 @@ func TestTimeDurationDto_DurCompare_02(t *testing.T) {
 
 	expectedDuration := time.Duration( HourNanoSeconds * 25)
 
-	tDur1, err = TimeDurationDto{}.NewStartTimeDuration(
+	tDur1, err = TimeDurationDto{}.NewStartTimeAddDuration(
 		initialStartDate,
 		expectedDuration,
 		TDurCalc.StdYearMth(),
@@ -336,7 +336,7 @@ func TestTimeDurationDto_DurCompare_02(t *testing.T) {
 		return
 	}
 
-	tDur2, err = TimeDurationDto{}.NewStartTimeDuration(
+	tDur2, err = TimeDurationDto{}.NewStartTimeAddDuration(
 		initialStartDate,
 		expectedDuration,
 		TDurCalc.StdYearMth(),

@@ -715,11 +715,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartEndTimes_04() {
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_01() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeAddDuration_01() {
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDuration(
+	t1Dur, err := TimeDurationDto{}.NewStartTimeAddDuration(
 		suite.t1USCentral,
 		actualTimeDuration,
 		TDurCalc.StdYearMth(),
@@ -755,11 +755,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_01() 
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_02() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeAddDuration_02() {
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDuration(
+	t1Dur, err := TimeDurationDto{}.NewStartTimeAddDuration(
 		suite.t1USCentral,
 		actualTimeDuration,
 		TDurCalcType(0).StdYearMth(),
@@ -795,11 +795,11 @@ func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_02() 
 
 }
 
-func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeDuration_03() {
+func (suite *timedurdtoTestSuite) TestTimeDurationDto_NewStartTimeAddDuration_03() {
 
 	actualTimeDuration := suite.t4USCentral.Sub(suite.t1USCentral)
 
-	t1Dur, err := TimeDurationDto{}.NewStartTimeDuration(
+	t1Dur, err := TimeDurationDto{}.NewStartTimeAddDuration(
 		suite.t1USCentral,
 		actualTimeDuration,
 		TDurCalcType(0).StdYearMth(),
