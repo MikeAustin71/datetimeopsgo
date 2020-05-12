@@ -10,13 +10,145 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest082()
+	mainTest{}.mainTest083()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest083() {
+	/*
+		Daylight Savings Time Changed To Standard Time
+		 on November 2, 2014
+
+		This will subtract 1-day from November 3, 2014
+	                             Results - Output
+	======================================================================
+	                        mainTest.mainTest083()
+	                    Testing Change To Standard Time
+	                           November 2, 2014
+	         Using TimeDurationDto and Time Math Calculation Modes
+	                      LocalTimeZone & UtcTimeZone
+	       24-hours Duration Added Over Daylight Savings Time Change
+	======================================================================
+	Initial Start Date:         2014-11-03 00:00:00.000000000 -0600 CST
+	----------------------------------------------------------------------
+	Expected Date Local:        2014-11-02 00:00:00.000000000 -0500 CDT
+	Actual Date Local:          2014-11-02 00:00:00.000000000 -0500 CDT
+	----------------------------------------------------------------------
+	Expected Date UTC:          2014-11-02 01:00:00.000000000 -0500 CDT
+	Actual Date UTC:            2014-11-02 01:00:00.000000000 -0500 CDT
+	*/
+
+
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest083()",
+		"Testing Change To Standard Time",
+		"November 2, 2014",
+		"Using TimeDurationDto and Time Math Calculation Modes",
+		"LocalTimeZone & UtcTimeZone",
+		"24-hours Duration Subtracted Over Daylight Savings Time Change"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	var err error
+	var centralTz *time.Location
+
+	centralTz, err = time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned from time." +
+			"LoadLocation(\"dt.TZones.America.Chicago()\")\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	initialStartDate := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		centralTz)
+
+	initialStartDateUTC := initialStartDate.In(time.UTC)
+
+	expectedEndDateLocalTz := initialStartDate.AddDate(
+		0,
+		0,
+		-1)
+
+	var negDuration time.Duration
+
+	negDuration = time.Duration(int64(time.Hour) * int64(-24))
+
+	expectedStartDateTimeUTC := initialStartDateUTC.Add(negDuration).In(centralTz)
+
+	fmt.Printf("Initial Start Date:         %v\n",
+		initialStartDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Expected Date Local:        %v\n",
+		expectedEndDateLocalTz.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	var tDurDto, tDurDto2 dt.TimeDurationDto
+
+	tDurDto, err = dt.TimeDurationDto{}.NewStartTimeAddDate(
+		initialStartDate,
+		0,
+		0,
+		-1,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.America.Chicago(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by (Local) TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("Actual Date Local:          %v\n",
+		tDurDto.GetThisStartDateTimeString())
+
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Expected Date UTC:          %v\n",
+		expectedStartDateTimeUTC.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	tDurDto2, err = dt.TimeDurationDto{}.NewStartTimeAddDate(
+		initialStartDate,
+		0,
+		0,
+		-1,
+		dt.TDurCalc.StdYearMth(),
+		dt.TZones.America.Chicago(),
+		dt.TCalcMode.UtcTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by (Local) TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("Actual Date UTC:            %v\n",
+		tDurDto2.GetThisStartDateTimeString())
+
 }
 
 func (mt mainTest) mainTest082() {
@@ -160,128 +292,6 @@ func (mt mainTest) mainTest082() {
 		endDateTimeTz2.GetDateTimeText())
 	fmt.Println(lineSplit)
 	fmt.Println(lineSplit)
-
-
-	/*
-
-	t1Utc := t1.In(time.UTC)
-
-	t1Result := t1.AddDate(5, 6, 12)
-
-	t2Utc := t1Utc.AddDate(5, 6, 12)
-
-	t2Result := t2Utc.In(locationPtr)
-
-	titles = []string{"t1 Result",
-		"Using Go Date Time Package Addition",
-		"Adding 5-Years, 6-Months 12-Days"}
-
-	ex.PrintOutDateTimeTimeZoneFields(
-		t1Result,
-		titles,
-		lineLen,
-		fmtStr)
-
-	titles = []string{"t2 Result",
-		"Using UTC Conversion",
-		"Adding 5-Years, 6-Months 12-Days"}
-
-	ex.PrintOutDateTimeTimeZoneFields(
-		t2Result,
-		titles,
-		lineLen,
-		fmtStr)
-
-	timeDto := dt.TimeDto{
-		Years:                5,
-		Months:               6,
-		Weeks:                0,
-		WeekDays:             0,
-		DateDays:             12,
-		Hours:                0,
-		Minutes:              0,
-		Seconds:              0,
-		Milliseconds:         0,
-		Microseconds:         0,
-		Nanoseconds:          0,
-		TotSubSecNanoseconds: 0,
-		TotTimeNanoseconds:   0,
-	}
-
-	dur, err := dt.DurationTriad{}.NewEndTimeMinusTimeDto(
-		t2Result,
-		timeDto,
-		dt.TDurCalc.StdYearMth(),
-		dt.TZones.America.Chicago(),
-		dt.TCalcMode.LocalTimeZone(),
-		dt.FmtDateTimeYrMDayFmtStr)
-
-	if err != nil {
-		fmt.Printf("Error returned by DurationTriad{}.NewEndTimeMinusTimeDtoTz()\n" +
-			"Error='%v'\n", err.Error())
-		return
-	}
-
-	fmt.Printf("\nCalculated Start Time: %v\n",
-		dur.BaseTime.GetThisStartDateTime().Format(fmtStr))
-
-	fmt.Printf("\n    Actual Start Time: %v\n\n",
-		t1.Format(fmtStr))
-
-	fmt.Printf("\nCalculated End Time: %v\n",
-		dur.BaseTime.GetThisEndDateTime().Format(fmtStr))
-
-	fmt.Printf("\n    Actual End Time: %v\n\n",
-		t2Result.Format(fmtStr))
-
-	fmt.Printf("\nCalculated UTC Start Time: %v\n",
-		dur.UTCTime.GetThisStartDateTime().Format(fmtStr))
-
-	fmt.Printf("\n    Actual UTC Start Time: %v\n\n",
-		t1Utc.Format(fmtStr))
-
-	fmt.Printf("\nCalculated UTC End Time: %v\n",
-		dur.UTCTime.GetThisEndDateTime().Format(fmtStr))
-
-	fmt.Printf("\n    Actual UTC End Time: %v\n\n",
-		t2Utc.Format(fmtStr))
-
-	fmt.Printf("\nCalculated BaseTime Duration: %v\n\n",
-		dur.BaseTime.GetYearMthDaysTimeAbbrvStr())
-
-	fmt.Printf("\n     Calculated UTC Duration: %v\n\n",
-		dur.UTCTime.GetYearMthDaysTimeAbbrvStr())
-
-	t2DurationDate := t1.Add(dur.UTCTime.GetThisTimeDuration())
-
-	fmt.Printf("\n t1 + UTCTime Durtion: %v\n\n",
-		t2DurationDate.Format(fmtStr))
-
-	timeDur :=t1Result.Sub(t1)
-
-	timeDurDto, err := dt.TimeDurationDto{}.NewStartTimeAddDuration(
-		t1,
-		timeDur,
-		dt.TDurCalc.StdYearMth(),
-		t1.Location().String(),
-		dt.TCalcMode.LocalTimeZone(),
-		fmtStr)
-
-	if err != nil {
-		fmt.Printf("Error retured by dt.TimeDurationDto{}.NewStartTimeAddDuration().\n" +
-			"Error='%v'\n", err.Error())
-		return
-	}
-
-	fmt.Printf("\n                    t1 time: %v\n",
-		t1.Format(fmtStr))
-
-	fmt.Printf("\n             t1 result time: %v\n",
-		t1Result.Format(fmtStr))
-
-	fmt.Printf("\n     Calculated t1 Duration: %v\n\n",
-		timeDurDto.GetYearMthDaysTimeAbbrvStr())
-*/
 }
 
 func (mt mainTest) mainTest081() {
@@ -297,7 +307,7 @@ func (mt mainTest) mainTest081() {
 
 	lineLen := 70
 
-	titles := []string{"mainTest.mainTest080()",
+	titles := []string{"mainTest.mainTest081()",
 		"Testing Change To Standard Time",
 		"November 2, 2014",
 		"Using TimeDurationDto and Time Math Calculation Modes",

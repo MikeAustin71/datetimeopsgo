@@ -381,6 +381,239 @@ func TestTimeDurationDto_NewStartTimeAddDate_02(t *testing.T) {
 	}
 }
 
+func TestTimeDurationDto_NewStartTimeAddDate_03(t *testing.T) {
+/*
+		Daylight Savings Time Changed To Standard Time
+	 on November 2, 2014
+
+*/
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-11-03 00:00:00.000000000 -0600 CST"
+	endDateTimeLocal := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	// Local Start Date Time
+	// 2014-11-02 00:00:00.000000000 -0500 CDT
+	calcStartDateTimeLocal := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	// UTC Start Date Time
+	// 2014-11-02 01:00:00.000000000 -0500 CDT
+	calcStartDateTimeUTC := time.Date(
+		2014,
+		11,
+		2,
+		1,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	var tDurDto, tDurDto2 TimeDurationDto
+
+	tDurDto, err = TimeDurationDto{}.NewStartTimeAddDate(
+		endDateTimeLocal,
+		0,
+		0,
+		-1,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTimeLocal := calcStartDateTimeLocal.Format(fmtStr)
+
+	actualDateTimeLocal := tDurDto.GetThisStartDateTimeString()
+
+	if expectedDateTimeLocal != actualDateTimeLocal {
+		t.Errorf("\nError: Expected Start Date Time Local='%v'\n" +
+			"Instead, Start Date Time Local='%v'\n",
+			expectedDateTimeLocal, actualDateTimeLocal)
+	}
+
+	tDurDto2, err = TimeDurationDto{}.NewStartTimeAddDate(
+		endDateTimeLocal,
+		0,
+		0,
+		-1,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.UtcTimeZone(),
+		fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTimeUTC := calcStartDateTimeUTC.Format(fmtStr)
+
+	actualDateTimeUTC := tDurDto2.GetThisStartDateTimeString()
+
+	if expectedDateTimeUTC != actualDateTimeUTC {
+		t.Errorf("Error: Expected Start Date Time UTC='%v'\n" +
+			"Instead, Start Date Time UTC='%v'\n",
+			expectedDateTimeUTC, actualDateTimeUTC)
+	}
+
+}
+
+func TestTimeDurationDto_NewStartTimeAddDate_04(t *testing.T) {
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	_, err = TimeDurationDto{}.NewStartTimeAddDate(
+		startDateTime,
+		5,
+		6,
+		12,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.None(),
+		fmtStr)
+
+	if err == nil {
+		t.Error("Expected error returned from " +
+			"TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"because parameter TCalcMode.None() is invalid.\n" +
+			"However, NO ERROR WAS RETURNED!\n")
+		return
+	}
+}
+
+func TestTimeDurationDto_NewStartTimeAddDate_05(t *testing.T) {
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	_, err = TimeDurationDto{}.NewStartTimeAddDate(
+		startDateTime,
+		5,
+		6,
+		12,
+		TDurCalc.StdYearMth(),
+		"Invalid Time Zone Location",
+		TCalcMode.LocalTimeZone(),
+		fmtStr)
+
+	if err == nil {
+		t.Error("Expected error returned from " +
+			"TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"because parameter Time Zone Location is invalid.\n" +
+			"However, NO ERROR WAS RETURNED!\n")
+		return
+	}
+}
+
+func TestTimeDurationDto_NewStartTimeAddDate_06(t *testing.T) {
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	_, err = TimeDurationDto{}.NewStartTimeAddDate(
+		startDateTime,
+		5,
+		6,
+		12,
+		TDurCalc.None(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		fmtStr)
+
+	if err == nil {
+		t.Error("Expected error returned from " +
+			"TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"because parameter TDurCalc.None() is invalid.\n" +
+			"However, NO ERROR WAS RETURNED!\n")
+		return
+	}
+}
+
 func TestTimeDurationDto_NewDefaultStartEndTimes_001(t *testing.T) {
 
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
