@@ -1276,6 +1276,79 @@ func TestTimeDurationDto_NewDefaultStartTimeAddDateTime_01(t *testing.T) {
 	}
 }
 
+func TestTimeDurationDto_NewDefaultStartTimeAddTime_01(t *testing.T) {
+
+	/*
+			Daylight Savings Time Changed To Standard Time
+		 on November 2, 2014
+
+	*/
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// Base 2014-11-03 00:00:00.000000000 -0600 CST
+	endDateTimeLocal := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	// Calculated Local Start Date Time
+	// Projected: 2014-11-02 00:58:58.999999999 -0500 CDT
+	calcStartDateTimeLocal := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		58,
+		58,
+		999999999,
+		locationPtr)
+
+	var tDurDto TimeDurationDto
+
+	// Subtract -
+	// -24-hours, -1-minute, -1-second, 0-milliseconds,
+	// 0-microseconds, -1-nanoseconds
+
+	tDurDto, err = TimeDurationDto{}.NewDefaultStartTimeAddTime(
+		endDateTimeLocal,
+		-24,
+		-1,
+		-1,
+		0,
+		0,
+		-1)
+
+	if err != nil {
+		t.Errorf("Error returned by " +
+			"TimeDurationDto{}.NewStartTimeAddDateTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTime := calcStartDateTimeLocal.Format(FmtDateTimeYrMDayFmtStr)
+
+	actualDateTime := tDurDto.GetThisStartDateTimeString()
+
+	if expectedDateTime != actualDateTime {
+		t.Errorf("\n" +
+			"Error: Expected Start Date Time='%v'\n" +
+			"Instead, Start Date Time       ='%v'\n",
+			expectedDateTime, actualDateTime)
+	}
+}
+
 func TestTimeDurationDto_NewDefaultStartTimeDuration_001(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
