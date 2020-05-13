@@ -6,6 +6,234 @@ import (
 	"time"
 )
 
+func TestTimeDurationDto_AddDate_01(t *testing.T) {
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	// Local Tz End Date Time
+	// 2019-08-27 19:54:30.038175584 -0500 CDT
+	calcEndDateTimeLocal := time.Date(
+		2019,
+		8,
+		27,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	var tDurDto TimeDurationDto
+
+	tDurDto, err = TimeDurationDto{}.NewStartTimeAddDate(
+		startDateTime,
+		1,
+		0,
+		0,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = tDurDto.AddDate(
+		4,
+		6,
+		12)
+
+	if err != nil {
+		t.Errorf("Error returned by tDurDto.AddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTime := calcEndDateTimeLocal.Format(FmtDateTimeYrMDayFmtStr)
+
+	actualDateTime := tDurDto.GetThisEndDateTimeString()
+
+	if expectedDateTime != actualDateTime {
+		t.Errorf("Error: Expected End Date Time='%v'\n" +
+			"Instead, End Date Time='%v'\n",
+			expectedDateTime, actualDateTime)
+	}
+}
+
+func TestTimeDurationDto_AddDateTime_01(t *testing.T) {
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	// Local Tz End Date Time
+	// 2019-08-27 19:54:30.038175584 -0500 CDT
+	calcEndDateTimeLocal := time.Date(
+		2019,
+		8,
+		27,
+		20,
+		55,
+		30,
+		38175585,
+		locationPtr)
+
+	var tDurDto TimeDurationDto
+
+	tDurDto, err = TimeDurationDto{}.NewStartTimeAddDate(
+		startDateTime,
+		1,
+		0,
+		0,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = tDurDto.AddDateTime(
+		4,
+		6,
+		12,
+		1,
+		1,
+		0,
+		0,
+		0,
+		1)
+
+	if err != nil {
+		t.Errorf("Error returned by tDurDto.AddDateTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTime := calcEndDateTimeLocal.Format(FmtDateTimeYrMDayFmtStr)
+
+	actualDateTime := tDurDto.GetThisEndDateTimeString()
+
+	if expectedDateTime != actualDateTime {
+		t.Errorf("Error: Expected End Date Time='%v'\n" +
+			"Instead, End Date Time='%v'\n",
+			expectedDateTime, actualDateTime)
+	}
+}
+
+func TestTimeDurationDto_AddTime_01(t *testing.T) {
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	// Local Tz End Date Time
+	// 2019-08-27 19:54:30.038175584 -0500 CDT
+	calcEndDateTimeLocal := time.Date(
+		2019,
+		8,
+		27,
+		20,
+		55,
+		30,
+		38175585,
+		locationPtr)
+
+	var tDurDto TimeDurationDto
+
+	tDurDto, err = TimeDurationDto{}.NewStartTimeAddDate(
+		startDateTime,
+		5,
+		6,
+		12,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}.NewStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	err = tDurDto.AddTime(
+		1,
+		1,
+		0,
+		0,
+		0,
+		1)
+
+	if err != nil {
+		t.Errorf("Error returned by tDurDto.AddDateTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTime := calcEndDateTimeLocal.Format(FmtDateTimeYrMDayFmtStr)
+
+	actualDateTime := tDurDto.GetThisEndDateTimeString()
+
+	if expectedDateTime != actualDateTime {
+		t.Errorf("Error: Expected End Date Time='%v'\n" +
+			"Instead, End Date Time='%v'\n",
+			expectedDateTime, actualDateTime)
+	}
+}
+
 func TestTimeDurationDto_CopyIn_01(t *testing.T) {
 
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"

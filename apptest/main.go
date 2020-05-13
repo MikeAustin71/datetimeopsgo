@@ -10,13 +10,131 @@ import (
 
 func main() {
 
-	mainTest{}.mainTestBed01()
+	mainTest{}.mainTestBed02()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTestBed02() {
+	/* This a test vehicle for testing date addition.
+
+			Daylight Savings Time Changed To Standard Time
+		 on November 2, 2014
+	  // FmtDateTimeYrMDayFmtStr - Year Month Day Date Format String
+	  FmtDateTimeYrMDayFmtStr = "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	*/
+
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTestBed01()",
+		"Change To Standard Time on November 2, 2014",
+		"Test Bed For Subtracting Time Values"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	locationPtr, err := time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var endDateTimeUTCLocal, endDateTimeLocal,
+			startDateTimeLocal, endDateTimeUTC,
+			startDateTimeUTCLocal, startDateTimeUTC time.Time
+
+	// Local Start Date Time
+	// Base:      2014-11-02 00:00:00.000000000 -0500 CDT
+	startDateTimeLocal = time.Date(
+		2014,
+		11,
+		2,
+		0,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	startDateTimeUTC = startDateTimeLocal.In(time.UTC)
+	startDateTimeUTCLocal = startDateTimeUTC.In(locationPtr)
+/*
+	hours := time.Duration(dt.HourNanoSeconds * -24)
+
+	minutes := time.Duration(dt.MinuteNanoSeconds * -1)
+
+	seconds := time.Duration(dt.SecondNanoseconds * -1)
+
+	nanoSeconds := time.Duration(-1)
+
+	duration := hours + minutes + seconds + nanoSeconds
+*/
+
+	endDateTimeLocal = startDateTimeLocal.AddDate(
+		0,
+		0,
+		1)
+
+	endDateTimeUTC = startDateTimeUTC.AddDate(
+		0,
+		0,
+		1)
+
+
+	endDateTimeUTCLocal = endDateTimeUTC.In(locationPtr)
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+	equalLineSplitter := strings.Repeat("=", lineLen)
+
+	fmt.Println(equalLineSplitter)
+
+	fmt.Printf(" Adding Date: " +
+		 "1-Day\n")
+	fmt.Printf("Base Date Local:             %v\n",
+		startDateTimeLocal.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println(equalLineSplitter)
+
+	fmt.Printf("Local Start Date:            %v\n",
+		startDateTimeLocal.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Printf("Local End Date:              %v\n",
+		endDateTimeLocal.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Println(equalLineSplitter)
+
+	fmt.Println("UTC Conversion Data")
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Calculated UTC Start Date:   %v\n",
+		startDateTimeUTC.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Printf("Initial UTC End Date:        %v\n",
+		endDateTimeUTC.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Println(lineSplitter)
+
+	fmt.Println("   Equivalent Local Date Times       ")
+	fmt.Println("UTC Date Time Converted To Local Time")
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("UTC -> Local Start Date:     %v\n",
+		startDateTimeUTCLocal.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Printf("UTC -> End Date:             %v\n",
+		endDateTimeUTCLocal.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Println(equalLineSplitter)
+
 }
 
 func (mt mainTest) mainTestBed01() {
