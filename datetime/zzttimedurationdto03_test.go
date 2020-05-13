@@ -684,7 +684,7 @@ func TestTimeDurationDto_NewStartTimeAddDateTime_01(t *testing.T) {
 	actualDateTime := tDurDto.GetThisEndDateTimeString()
 
 	if expectedDateTime != actualDateTime {
-		t.Errorf("Error: Expected End Date Time='%v'\n" +
+		t.Errorf("\nError: Expected End Date Time='%v'\n" +
 			"Instead, End Date Time='%v'\n",
 			expectedDateTime, actualDateTime)
 	}
@@ -762,6 +762,84 @@ func TestTimeDurationDto_NewStartTimeAddDateTime_02(t *testing.T) {
 	if expectedDateTime != actualDateTime {
 		t.Errorf("\nError: Expected Start Date Time='%v'\n" +
 			"Instead, Start Date Time='%v'\n",
+			expectedDateTime, actualDateTime)
+	}
+}
+
+func TestTimeDurationDto_NewStartTimeAddTime_01(t *testing.T) {
+
+	/*
+			Daylight Savings Time Changed To Standard Time
+		 on November 2, 2014
+
+	*/
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// Base 2014-11-03 00:00:00.000000000 -0600 CST
+	endDateTimeLocal := time.Date(
+		2014,
+		11,
+		3,
+		0,
+		0,
+		0,
+		0,
+		locationPtr)
+
+	// Calculated Local Start Date Time
+	// Projected: 2014-11-02 00:58:58.999999999 -0500 CDT
+	calcStartDateTimeLocal := time.Date(
+		2014,
+		11,
+		2,
+		0,
+		58,
+		58,
+		999999999,
+		locationPtr)
+
+	var tDurDto TimeDurationDto
+
+	// Subtract -
+	// -24-hours, -1-minute, -1-second, 0-milliseconds,
+	// 0-microseconds, -1-nanoseconds
+
+	tDurDto, err = TimeDurationDto{}.NewStartTimeAddTime(
+		endDateTimeLocal,
+		-24,
+		-1,
+		-1,
+		0,
+		0,
+		-1,
+		TDurCalc.StdYearMth(),
+		TZones.America.Chicago(),
+		TCalcMode.LocalTimeZone(),
+		fmtStr)
+
+	if err != nil {
+		t.Errorf("Error returned by " +
+			"TimeDurationDto{}.NewStartTimeAddDateTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTime := calcStartDateTimeLocal.Format(fmtStr)
+
+	actualDateTime := tDurDto.GetThisStartDateTimeString()
+
+	if expectedDateTime != actualDateTime {
+		t.Errorf("\n" +
+			"Error: Expected Start Date Time='%v'\n" +
+			"Instead, Start Date Time       ='%v'\n",
 			expectedDateTime, actualDateTime)
 	}
 }
