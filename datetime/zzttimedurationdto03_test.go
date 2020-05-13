@@ -1148,6 +1148,68 @@ func TestTimeDurationDto_NewDefaultStartEndTimesTz_01(t *testing.T) {
 	}
 }
 
+func TestTimeDurationDto_NewDefaultStartAddDate_001(t *testing.T) {
+
+	fmtStr := "2006-01-02 15:04:05.000000000 -0700 MST"
+
+	locationPtr, err := time.LoadLocation(TZones.America.Chicago())
+
+	if err != nil {
+		t.Errorf("Error returned by time.LoadLocation(dt.TZones.America.Chicago()).\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	// "2014-02-15 19:54:30.038175584 -0600 CST"
+	startDateTime := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	// Local Tz End Date Time
+	// 2019-08-27 19:54:30.038175584 -0500 CDT
+	calcEndDateTimeLocal := time.Date(
+		2019,
+		8,
+		27,
+		19,
+		54,
+		30,
+		38175584,
+		locationPtr)
+
+	var tDurDto TimeDurationDto
+
+	tDurDto, err = TimeDurationDto{}.NewDefaultStartTimeAddDate(
+		startDateTime,
+		5,
+		6,
+		12)
+
+	if err != nil {
+		t.Errorf("Error returned by TimeDurationDto{}." +
+			"NewDefaultStartTimeAddDate()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	expectedDateTime := calcEndDateTimeLocal.Format(fmtStr)
+
+	actualDateTime := tDurDto.GetThisEndDateTimeString()
+
+	if expectedDateTime != actualDateTime {
+		t.Errorf("Error: Expected End Date Time='%v'\n" +
+			"Instead, End Date Time='%v'\n",
+			expectedDateTime, actualDateTime)
+	}
+
+}
+
 func TestTimeDurationDto_NewDefaultStartTimeDuration_001(t *testing.T) {
 	t1str := "02/15/2014 19:54:30.000000000 -0600 CST"
 	t2str := "04/30/2017 22:58:32.000000000 -0500 CDT"
