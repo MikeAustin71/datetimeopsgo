@@ -316,6 +316,28 @@ func (tDto *TimeDto) GetDateTime(timeZoneLocationName string) (time.Time, error)
 	return tzSpec.referenceDateTime, nil
 }
 
+// GetDuration - Analyzes the time components contained in the
+// current TimeDto instance and returns the equivalent time
+// duration value.
+//
+func (tDto *TimeDto) GetDuration() (time.Duration, error) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.GetDuration() "
+
+	tDtoUtil := timeDtoUtility{}
+
+	return tDtoUtil.computeDuration(tDto, ePrefix)
+
+}
+
 // IsEmpty - Returns 'true' if all data fields in the current
 // TimeDto instance are equal to zero or equal to their
 // uninitialized values.
@@ -601,6 +623,37 @@ func (tDto TimeDto) NewFromDateTzDto(dTzDto DateTzDto) (TimeDto, error) {
 	tDtoUtil := timeDtoUtility{}
 
 	err := tDtoUtil.setFromDateTzDto(&tDto2, dTzDto, ePrefix)
+
+	if err != nil {
+		return TimeDto{}, err
+	}
+
+	return tDto2, nil
+}
+
+// NewFromDuration - Receives a time duration value and
+// returns a configured TimeDto instance.
+func (tDto TimeDto) NewFromDuration(
+	duration time.Duration) (TimeDto, error) {
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
+	tDto.lock.Lock()
+
+	defer tDto.lock.Unlock()
+
+	ePrefix := "TimeDto.NewFromDuration() "
+
+	tDto2 := TimeDto{}
+
+	tDtoUtil := timeDtoUtility{}
+
+	err := tDtoUtil.setFromDuration(
+		&tDto2,
+		duration,
+		ePrefix)
 
 	if err != nil {
 		return TimeDto{}, err

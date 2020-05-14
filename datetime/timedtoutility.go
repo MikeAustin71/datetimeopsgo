@@ -355,6 +355,41 @@ func (tDtoUtil *timeDtoUtility) copyOut(
 	return t2Dto
 }
 
+// computeDuration - Receives a TimeDto instance and converts
+// the constituent time components into a single time duration
+// value.
+//
+// Note that duration is computed using standard 24-hour days
+// and does not take into account time zones and daylight savings
+// time.
+//
+func (tDtoUtil *timeDtoUtility) computeDuration(
+	tDto *TimeDto,
+	ePrefix string) (time.Duration, error) {
+
+	tDtoUtil.lock.Lock()
+
+	defer tDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDtoUtility.computeDuration() "
+
+	if tDto == nil {
+		return time.Duration(0),
+		&InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDto",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tDto' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
+	return time.Duration(tDto.TotTimeNanoseconds), nil
+}
 
 // convertToAbsoluteValues - Converts time components
 // (Years, months, weeks days, hours, seconds, etc.)
@@ -935,6 +970,99 @@ func (tDtoUtil *timeDtoUtility) normalizeTimeElements(
 	return err
 }
 
+func (tDtoUtil *timeDtoUtility) setFromDuration(
+	tDto *TimeDto,
+	duration time.Duration,
+	ePrefix string) error {
+
+	tDtoUtil.lock.Lock()
+
+	defer tDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDtoUtility.setFromDateTime() "
+
+	if tDto == nil {
+		return errors.New(ePrefix +
+			"Error: Input parameter 'tDto' is a 'nil' pointer!\n")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
+	tDtoUtil2 := timeDtoUtility{}
+
+	tDtoUtil2.empty(tDto, ePrefix)
+
+	nanoSecs := int64(duration)
+
+
+	if nanoSecs == 0 {
+		return nil
+	}
+
+	tDto.TotTimeNanoseconds = nanoSecs
+
+	signVal := int64(1)
+
+	if nanoSecs < signVal {
+		signVal = -1
+		nanoSecs = nanoSecs * signVal
+	}
+
+	temp := int64(0)
+
+	if nanoSecs >= HourNanoSeconds {
+		temp = nanoSecs/HourNanoSeconds
+
+		nanoSecs -= temp * HourNanoSeconds
+
+		tDto.Hours = int(temp * signVal)
+
+	}
+
+	if nanoSecs >= MinuteNanoSeconds {
+
+		temp = nanoSecs/MinuteNanoSeconds
+
+		nanoSecs -= temp * MinuteNanoSeconds
+
+		tDto.Minutes = int(temp * signVal)
+	}
+
+	if nanoSecs >= SecondNanoseconds {
+
+		temp = nanoSecs/SecondNanoseconds
+
+		nanoSecs -= temp * SecondNanoseconds
+
+		tDto.Seconds = int(temp * signVal)
+	}
+
+	tDto.TotSubSecNanoseconds = int(nanoSecs * signVal)
+
+	if nanoSecs >= MilliSecondNanoseconds {
+
+		temp = nanoSecs/MilliSecondNanoseconds
+
+		nanoSecs -= temp * MilliSecondNanoseconds
+
+		tDto.Milliseconds = int(temp * signVal)
+	}
+
+	if nanoSecs >= MicroSecondNanoseconds {
+
+		temp = nanoSecs/MicroSecondNanoseconds
+
+		nanoSecs -= temp * MicroSecondNanoseconds
+
+		tDto.Microseconds = int(temp * signVal)
+	}
+
+	tDto.Nanoseconds = int(nanoSecs * signVal)
+
+	return nil
+}
 
 // SetFromDateTime - Populates the specified 'TimeDto' instance with new
 // data field values based on input parameter 'dateTime' (time.Time)

@@ -806,7 +806,15 @@ func TestTimeDto_GetDateTime_01(t *testing.T) {
 			"TZones.US.Central()='%v'  Error='%v'", TZones.US.Central(), err.Error())
 	}
 
-	t2 := time.Date(year, time.Month(month), dateDay, hour, minute, second, totNanoSecs, loc)
+	t2 := time.Date(
+		year,
+		time.Month(month),
+		dateDay,
+		hour,
+		minute,
+		second,
+		totNanoSecs,
+		loc)
 
 	if year != tDto.Years {
 		t.Errorf("Error: Expected Years='%v'.  Instead, Years='%v'", year, tDto.Years)

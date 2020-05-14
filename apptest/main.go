@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTestBed02()
+	mainTest{}.mainTest084()
 
 }
 
@@ -18,6 +18,126 @@ type mainTest struct {
 	input  string
 	output string
 }
+
+func (mt mainTest) mainTest084() {
+
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest084()",
+		"Testing Change To Standard Time",
+		"November 2, 2014",
+		"Using TimeDto To Compute Duration"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	var err error
+	var centralTz *time.Location
+
+	centralTz, err = time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned by time.LoadLocation(dt.TZones.America.Chicago())\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	t1 := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		0,
+		centralTz,
+		)
+
+	t1UTC := t1.In(time.UTC)
+
+	t2UTC := t1.AddDate(3, 2, 15)
+
+	nanoSecs := int64(0)
+
+	nanoSecs += dt.HourNanoSeconds * 3
+	nanoSecs += dt.MinuteNanoSeconds * 4
+	nanoSecs += dt.SecondNanoseconds * 2
+
+	t2UTC = t2UTC.Add(time.Duration(nanoSecs))
+
+	calculatedUTCDuration := t2UTC.Sub(t1UTC)
+
+	// 3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+	// expected duration = "28082h4m2s"
+
+	var tDto dt.TimeDto
+
+	tDto, err = dt.TimeDto{}.NewFromDuration(
+		calculatedUTCDuration)
+
+	if err != nil {
+		fmt.Printf("Error returned by TimeDto{}.NewFromDuration().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var actualDuration time.Duration
+
+	actualDuration, err = tDto.GetDuration()
+
+	if err != nil {
+		fmt.Printf("Error returned by tDto.GetDuration().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+	fmt.Printf("UTC Beginning and Ending Date Times")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Start Time UTC:          %v\n", t1UTC)
+	fmt.Printf("  End Time UTC:          %v\n", t1UTC)
+	fmt.Println(lineSplitter)
+	fmt.Println()
+	fmt.Printf("TimeDto Duration Comparison")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Expected Duration:       %v\n",
+		calculatedUTCDuration)
+	fmt.Printf(" TimeDto Duration:       %v\n",
+		actualDuration)
+	fmt.Println(lineSplitter)
+	fmt.Println("TimeDto Contents")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Years:                   %v\n",
+		tDto.Years)
+	fmt.Printf("Months:                  %v\n",
+		tDto.Months)
+	fmt.Printf("Weeks:                   %v\n",
+		tDto.Weeks)
+	fmt.Printf("Week Days:               %v\n",
+		tDto.WeekDays)
+	fmt.Printf("Date Days:               %v\n",
+		tDto.DateDays)
+	fmt.Printf("Hours:                   %v\n",
+		tDto.Hours)
+	fmt.Printf("Minutes:                 %v\n",
+		tDto.Minutes)
+	fmt.Printf("Seconds:                 %v\n",
+		tDto.Seconds)
+	fmt.Printf("Milliseconds:            %v\n",
+		tDto.Milliseconds)
+	fmt.Printf("Microseconds:            %v\n",
+		tDto.Microseconds)
+	fmt.Printf("Nanoseconds:             %v\n",
+		tDto.Nanoseconds)
+	fmt.Printf("TotSubSecNanoSeconds     %v\n",
+		tDto.TotSubSecNanoseconds)
+	fmt.Println(lineSplitter)
+	fmt.Println(lineSplitter)
+}
+
 
 func (mt mainTest) mainTestBed02() {
 	/* This a test vehicle for testing date addition.
@@ -190,9 +310,11 @@ func (mt mainTest) mainTestBed01() {
 
 	seconds := time.Duration(dt.SecondNanoseconds * -1)
 
-	nanoSeconds := time.Duration(-1)
+	var totalNano time.Duration
 
-	duration := hours + minutes + seconds + nanoSeconds
+	totalNano = -1
+
+	duration := hours + minutes + seconds + totalNano
 
 	startDateTimeUTC = endDateTimeUTC.Add(duration)
 
@@ -1498,7 +1620,8 @@ func (mt mainTest) mainTest075() {
 
 	outStr := dur.BaseTime.GetYearMthDaysTimeStr()
 
-	expected := "3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected :=
+		"3-Years 2-Months 15-Days 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		fmt.Printf("Error - Expected YrMthDay: %v. Instead, got %v", expected, outStr)
@@ -1506,7 +1629,8 @@ func (mt mainTest) mainTest075() {
 
 	outStr = dur.BaseTime.GetYearsMthsWeeksTimeStr()
 
-	expected = "3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
+	expected =
+		"3-Years 2-Months 2-Weeks 1-WeekDays 3-Hours 4-Minutes 2-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds"
 
 	if expected != outStr {
 		fmt.Printf("Error - Expected YearsMthsWeeksTime Duration: %v. Instead, got %v", expected, outStr)
