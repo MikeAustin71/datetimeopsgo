@@ -732,19 +732,6 @@ func (tzMech *TimeZoneMechanics) ConvertUtcAbbrvToStaticTz(
 	staticTimeZone = TimeZoneSpecification{}
 	staticTimeZone.lock = new(sync.Mutex)
 
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' " +
-				"has a ZERO value!",
-			err:                 nil,
-		}
-
-		return staticTimeZone, err
-	}
-
 	if timeConversionType != TzConvertType.Relative() &&
 		timeConversionType != TzConvertType.Absolute() {
 
@@ -1044,18 +1031,6 @@ func (tzMech *TimeZoneMechanics) GetConvertibleTimeZoneFromDateTime(
 	tzSpec.lock = new(sync.Mutex)
 	err = nil
 
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'dateTime' is ZERO!",
-			err:                 nil,
-		}
-
-		return tzSpec, err
-	}
-
 	if timeConversionType != TzConvertType.Relative() &&
 		timeConversionType != TzConvertType.Absolute() {
 
@@ -1183,18 +1158,6 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 
 	err = nil
 
-	if dateTime.IsZero() {
-		err =  &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'dateTime' is ZERO!",
-			err:                 nil,
-		}
-
-		return tzSpec, err
-	}
-
 	if dateTime.Location() == nil {
 		err = &TimeZoneError{
 			ePrefix: ePrefix,
@@ -1229,7 +1192,11 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 			return tzSpec, err
 		}
 
-		tzSpec.timeZoneClass.OriginalTimeZone()
+		if tzSpec.lock == nil {
+			tzSpec.lock = new(sync.Mutex)
+		}
+
+		tzSpec.timeZoneClass =  TzClass.OriginalTimeZone()
 		tzSpec.zoneLabel = "Convertible Time Zone"
 
 		return tzSpec, err
@@ -1279,6 +1246,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 			return tzSpec, err
 		}
 
+		if tzSpec.lock == nil {
+			tzSpec.lock = new(sync.Mutex)
+		}
+
 		tzSpec.locationNameType = LocNameType.ConvertibleTimeZone()
 		tzSpec.timeZoneClass = TzClass.AlternateTimeZone()
 
@@ -1298,6 +1269,11 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 
 	if err == nil {
 		// tzMech.ConvertUtcAbbrvToStaticTz Succeeded!
+
+		if tzSpec.lock == nil {
+			tzSpec.lock = new(sync.Mutex)
+		}
+
 		tzSpec.locationNameType = LocNameType.ConvertibleTimeZone()
 		tzSpec.timeZoneClass = TzClass.OriginalTimeZone()
 
@@ -1332,6 +1308,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromDateTime(
 		tzSpec = TimeZoneSpecification{}
 
 		return tzSpec, err
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
 	}
 
 	return tzSpec, err
@@ -1415,19 +1395,6 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 
 	err = nil
 
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' " +
-				"has a ZERO value!",
-			err:                 nil,
-		}
-
-		return tzSpec, err
-	}
-
 	if timeConversionType < TzConvertType.Absolute() ||
 		timeConversionType > TzConvertType.Relative() {
 
@@ -1476,7 +1443,6 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 	// This is NOT a Military Time Zone. Try
 	// a conventional Time Zone.
 	tzSpec = TimeZoneSpecification{}
-	tzSpec.lock = new(sync.Mutex)
 	err = nil
 
 	dtMech := DTimeMechanics{}
@@ -1518,6 +1484,11 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 			ePrefix)
 
 		if err == nil {
+
+			if tzSpec.lock == nil {
+				tzSpec.lock = new(sync.Mutex)
+			}
+
 			return tzSpec, err
 		}
 
@@ -1533,6 +1504,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 
 		if err != nil {
 			return tzSpec, err
+		}
+
+		if tzSpec.lock == nil {
+			tzSpec.lock = new(sync.Mutex)
 		}
 
 		tzSpec.timeZoneClass = TzClass.AlternateTimeZone()
@@ -1554,6 +1529,10 @@ func (tzMech *TimeZoneMechanics) GetTimeZoneFromName(
 			ianaLocationPtr)
 	} else {
 		dateTime = dateTime.In(ianaLocationPtr)
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
 	}
 
 	err = tzSpec.SetTimeZone(
@@ -1669,16 +1648,6 @@ func (tzMech *TimeZoneMechanics) GetTzAbbrvLookupIdFromDateTime(
 
 	ePrefix += "TimeZoneMechanics.GetTzAbbrvLookupIdFromDateTime() "
 
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:            ePrefix,
-			inputParameterName: "dateTime",
-			errMsg:             "dateTime is Zero!",
-			err:                nil,
-		}
-		return tzAbbrvLookupId, err
-	}
-
 	tStr :=
 		dateTime.Format("2006-01-02 15:04:05 -0700 MST")
 
@@ -1731,16 +1700,6 @@ func (tzMech *TimeZoneMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	err = nil
 
 	ePrefix += "TimeZoneMechanics.GetUtcOffsetTzAbbrvFromDateTime() "
-
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:            ePrefix,
-			inputParameterName: "dateTime",
-			errMsg:             "dateTime is Zero!",
-			err:                nil,
-		}
-		return utcOffset, tzAbbrv, err
-	}
 
 	tStr :=
 		dateTime.Format("2006-01-02 15:04:05 -0700 MST")
@@ -1802,20 +1761,6 @@ func (tzMech *TimeZoneMechanics) ParseMilitaryTzNameAndLetter(
 	err = nil
 
 	tzSpec = TimeZoneSpecification{}
-
-	tzSpec.lock = new(sync.Mutex)
-
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Error: Input Parameter 'dateTime' has a ZERO value!",
-			err:                 nil,
-		}
-
-		return tzSpec, err
-	}
 
 	if timeConversionType != TzConvertType.Relative() &&
 		timeConversionType != TzConvertType.Absolute() {
