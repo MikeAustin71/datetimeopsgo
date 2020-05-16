@@ -14,9 +14,9 @@ import (
 //
 type LongTimeDuration struct {
 
-	startDateTime    time.Time    // Starting Date Time
+	startDateTimeTz DateTzDto // Starting Date Time
 
-	endDateTime      time.Time    // Ending Date Time
+	endDateTimeTz DateTzDto // Ending Date Time
 
 	duration         *big.Int     // Time Duration expressed as a big.Int.
 	                              // 'duration' is stored as a positive value
@@ -28,7 +28,7 @@ type LongTimeDuration struct {
 
 // New - Returns a new LongTimeDuration instance initialized to
 // 'Zero' duration.
-func (lngDur LongTimeDuration) New() LongTimeDuration {
+func (lngDur LongTimeDuration) New() (LongTimeDuration, error) {
 
 	if lngDur.lock == nil {
 		lngDur.lock = new(sync.Mutex)
@@ -42,15 +42,31 @@ func (lngDur LongTimeDuration) New() LongTimeDuration {
 
 	longDur.lock = new(sync.Mutex)
 
+	ePrefix := "LongTimeDuration.New() "
+
 	longDur.duration = big.NewInt(0)
 
 	longDur.sign = 0
 
-	longDur.startDateTime = time.Time{}
+	dTzUtil := dateTzDtoUtility{}
 
-	longDur.endDateTime = time.Time{}
+	err := dTzUtil.setZeroDateTimeTz(
+		&longDur.startDateTimeTz,
+		ePrefix)
 
-	return longDur
+	if err != nil {
+		return LongTimeDuration{}, err
+	}
+
+	err = dTzUtil.setZeroDateTimeTz(
+		&longDur.endDateTimeTz,
+		ePrefix)
+
+	if err != nil {
+		return LongTimeDuration{}, err
+	}
+
+	return longDur, nil
 }
 
 // NewFromDuration - Initializes and returns a new instance of LongTimeDuration.
@@ -85,12 +101,14 @@ func (lngDur LongTimeDuration) NewFromDuration(
 	longDur.duration = big.NewInt(0).SetInt64(int64(duration))
 
 	lngDurUtil := longTimeDurationUtility{}
+
 	var err error
+	var finalStartDateTime, finalEndDateTime time.Time
 
 	if longDur.sign == -1 {
 
-		longDur.startDateTime,
-		longDur.endDateTime,
+		finalStartDateTime,
+			finalEndDateTime,
 		err = lngDurUtil.getStartDateMinusDuration(
 			&longDur,
 			startDateTime,
@@ -98,8 +116,8 @@ func (lngDur LongTimeDuration) NewFromDuration(
 
 	} else {
 
-		longDur.startDateTime,
-		longDur.endDateTime,
+		finalStartDateTime,
+			finalEndDateTime,
 		err = lngDurUtil.getStartDatePlusDuration(
 			&longDur,
 			startDateTime,
@@ -111,13 +129,40 @@ func (lngDur LongTimeDuration) NewFromDuration(
 		return LongTimeDuration{}, err
 	}
 
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTimeTzName(
+		&longDur.startDateTimeTz,
+		finalStartDateTime,
+		TzConvertType.Relative(),
+		startDateTime.Location().String(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return LongTimeDuration{}, err
+	}
+
+	err = dTzUtil.setFromTimeTzName(
+		&longDur.endDateTimeTz,
+		finalEndDateTime,
+		TzConvertType.Relative(),
+		startDateTime.Location().String(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return LongTimeDuration{}, err
+	}
+
 	return longDur, nil
 }
 
 // AddDuration - Adds a time.Duration value to the total time duration
 // maintained by the current instance of LongTimeDuration.
 //
-func (lngDur *LongTimeDuration) AddDuration(duration time.Duration) error {
+func (lngDur *LongTimeDuration) AddDuration(
+	duration time.Duration) error {
 
 	if lngDur.lock == nil {
 		lngDur.lock = new(sync.Mutex)

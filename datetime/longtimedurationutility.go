@@ -24,9 +24,26 @@ func (lngDurUtil *longTimeDurationUtility) addDuration(
 
 	defer lngDurUtil.lock.Unlock()
 
+	ePrefix += "longTimeDurationUtility.addDuration() "
+
 	err = nil
 
-	ePrefix += "longTimeDurationUtility.addDuration() "
+	if longDur == nil {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "longDur",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'longDur' " +
+				"is nil!",
+			err:                 nil,
+		}
+
+		return err
+	}
+
+	if longDur.lock == nil {
+		longDur.lock = new(sync.Mutex)
+	}
 
 	lngDurUtil2 := longTimeDurationUtility{}
 
@@ -91,11 +108,45 @@ func (lngDurUtil *longTimeDurationUtility) addLongDuration(
 
 	ePrefix += "longTimeDurationUtility.addDuration() "
 
+	if longDur1 == nil {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "longDur1",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'longDur1' " +
+				"is nil!",
+			err:                 nil,
+		}
+
+		return err
+	}
+
+	if longDur1.lock == nil {
+		longDur1.lock = new(sync.Mutex)
+	}
+
+	if longDur2 == nil {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "longDur2",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'longDur2' " +
+				"is nil!",
+			err:                 nil,
+		}
+
+		return err
+	}
+
+	if longDur2.lock == nil {
+		longDur2.lock = new(sync.Mutex)
+	}
+
 	lngDurUtil2 := longTimeDurationUtility{}
 
-	var isZero1, isZero2 bool
+	var isZero2 bool
 
-	isZero1, err = lngDurUtil2.isValid(longDur1, ePrefix + "longDur1 ")
+	_, err = lngDurUtil2.isValid(longDur1, ePrefix + "longDur1 ")
 
 	if err != nil {
 		return err
@@ -107,7 +158,7 @@ func (lngDurUtil *longTimeDurationUtility) addLongDuration(
 		return err
 	}
 
-	if isZero1 && isZero2 {
+	if isZero2 {
 		return err
 	}
 
@@ -137,7 +188,50 @@ func (lngDurUtil *longTimeDurationUtility) addLongDuration(
 		longDur1.duration = big.NewInt(0).Set(newDur)
 	}
 
-	return nil
+	var finalStartDateTime, finalEndDateTime time.Time
+
+	if longDur1.sign == -1 {
+
+		finalStartDateTime,
+		finalEndDateTime,
+		err = lngDurUtil2.getStartDateMinusDuration(
+			longDur1,
+			longDur1.endDateTimeTz.dateTimeValue,
+			ePrefix)
+	} else {
+
+		finalStartDateTime,
+			finalEndDateTime,
+			err = lngDurUtil2.getStartDatePlusDuration(
+			longDur1,
+			longDur1.startDateTimeTz.dateTimeValue,
+			ePrefix)
+
+	}
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTimeTzName(
+		&longDur1.startDateTimeTz,
+		finalStartDateTime,
+		TzConvertType.Relative(),
+		longDur1.startDateTimeTz.GetTimeZoneName(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	if err != nil {
+		return  err
+	}
+
+	err = dTzUtil.setFromTimeTzName(
+		&longDur1.endDateTimeTz,
+		finalEndDateTime,
+		TzConvertType.Relative(),
+		longDur1.endDateTimeTz.GetTimeZoneName(),
+		FmtDateTimeYrMDayFmtStr,
+		ePrefix)
+
+	return err
 }
 
 // isValid - Tests an instance of LongTimeDuration
