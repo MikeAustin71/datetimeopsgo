@@ -36,21 +36,21 @@ import (
 //          Note: TimeDto is part of the DateTzDto structure.
 //
 type TimeDto struct {
-	Years                int // Number of Years
-	Months               int // Number of Months
-	Weeks                int // Number of Weeks
-	WeekDays             int // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
-	DateDays             int // Total Number of Days. Weeks x 7 plus WeekDays
-	Hours                int // Number of Hours.
-	Minutes              int // Number of Minutes
-	Seconds              int // Number of Seconds
-	Milliseconds         int // Number of Milliseconds
-	Microseconds         int // Number of Microseconds
-	Nanoseconds          int // Remaining Nanoseconds after Milliseconds & Microseconds
-	TotSubSecNanoseconds int // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-	                         //  plus remaining Nanoseconds
-	TotTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
-	                         //  + Seconds + Milliseconds + Nanoseconds
+	Years                int  // Number of Years
+	Months               int  // Number of Months
+	Weeks                int  // Number of Weeks
+	WeekDays             int  // Number of Week-WeekDays. Total WeekDays/7 + Remainder WeekDays
+	DateDays             int  // Total Number of Days. Weeks x 7 plus WeekDays
+	Hours                int  // Number of Hours.
+	Minutes              int  // Number of Minutes
+	Seconds              int  // Number of Seconds
+	Milliseconds         int  // Number of Milliseconds
+	Microseconds         int  // Number of Microseconds
+	Nanoseconds          int  // Remaining Nanoseconds after Milliseconds & Microseconds
+	TotSubSecNanoseconds int  // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+	                          //  plus remaining Nanoseconds
+	TotTimeNanoseconds int64  // Total Number of equivalent Nanoseconds for Hours + Minutes
+	                          //  + Seconds + Milliseconds + Nanoseconds
 	lock          *sync.Mutex // Used for coordinating thread safe operations.
 }
 

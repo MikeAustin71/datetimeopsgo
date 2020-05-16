@@ -1638,7 +1638,7 @@ func (tzdef *TimeZoneDefinition) IsValid() error {
 // New - Returns a new TimeZoneDefinition instance with
 // member variables initialized to zero values.
 //
-func (tzdef TimeZoneDefinition) New() TimeZoneDefinition {
+func (tzdef TimeZoneDefinition) New() (TimeZoneDefinition, error) {
 
 	if tzdef.lock == nil {
 	tzdef.lock = new(sync.Mutex)
@@ -1648,15 +1648,18 @@ func (tzdef TimeZoneDefinition) New() TimeZoneDefinition {
 
 	defer tzdef.lock.Unlock()
 
+	ePrefix := "TimeZoneDefinition.New() "
+
 	tzDef2 := TimeZoneDefinition{}
 
-	tzDef2.lock = new(sync.Mutex)
+	tzDefUtil := timeZoneDefUtility{}
 
-	tzDef2.originalTimeZone = TimeZoneSpecification{}.New()
+	err := tzDefUtil.setZeroTimeZoneDef(
+		&tzDef2,
+		ePrefix)
 
-	tzDef2.convertibleTimeZone = TimeZoneSpecification{}.New()
 
-	return tzDef2
+	return tzDef2, err
 }
 
 // NewDateTime - Creates and returns a new TimeZoneDefinition instance based on

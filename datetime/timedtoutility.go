@@ -1087,14 +1087,15 @@ func (tDtoUtil *timeDtoUtility) setFromDateTime(
 		tDto.lock = new(sync.Mutex)
 	}
 
-	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Input Parameter 'dateTime' has a ZERO XValue!\n")
-	}
 
 	tDtoUtil2 := timeDtoUtility{}
 
 	tDtoUtil2.empty(tDto, ePrefix)
+
+	if dateTime.IsZero() {
+		return nil
+	}
+
 
 	tDto.Years = dateTime.Year()
 	tDto.Months = int(dateTime.Month())
@@ -1271,6 +1272,39 @@ func (tDtoUtil *timeDtoUtility) setTimeElements(
 	return nil
 }
 
+// setZeroTimeDto - Sets the incoming TimeDto instance
+// to zero values.
+//
+func (tDtoUtil *timeDtoUtility) setZeroTimeDto(
+	tDto *TimeDto,
+	ePrefix string) error {
+
+	tDtoUtil.lock.Lock()
+
+	defer tDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDtoUtility.setZeroTimeDto() "
+
+	if tDto == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tDto' is a nil pointer!")
+	}
+
+	if tDto.lock == nil {
+		tDto.lock = new(sync.Mutex)
+	}
+
+	tDtoUtil2 := timeDtoUtility{}
+
+	tDtoUtil2.empty(tDto, ePrefix)
+
+	// 0001-01-01 00:00:00.000000000 +0000 UTC
+	tDto.Years = 1
+	tDto.Months = 1
+	tDto.DateDays = 1
+
+	return nil
+}
 
 // AddTimeDto - Adds time to the current TimeDto. The amount of time added
 // is provided by the input parameter 't2Dto' of type TimeDto.

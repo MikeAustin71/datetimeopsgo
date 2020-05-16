@@ -2744,12 +2744,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimes(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if startDateTime.IsZero() && endDateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Both 'startDateTime' and 'endDateTime' " +
-			"input time parameters are ZERO!\n")
-	}
-
 	var tempStartDateTime, tempEndDateTime time.Time
 
 	// If endDateTime is less than startDateTime
@@ -4256,4 +4250,53 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 	tDurDtoUtil2.copyIn(tDur, &tDur2, ePrefix)
 
 	return nil
+}
+
+// setZeroTimeDto - Sets the incoming TimeDurationDto instance
+// to zero values.
+//
+func (tDurDtoUtil *timeDurationDtoUtility) setZeroTimeDto(
+	tDur *TimeDurationDto,
+	ePrefix string) error {
+
+	tDurDtoUtil.lock.Lock()
+
+	defer tDurDtoUtil.lock.Unlock()
+
+	ePrefix += "timeDurationDtoUtility.setZeroTimeDto() "
+
+	if tDur == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tDur",
+			inputParameterValue: "",
+			errMsg:              "Input Parameter 'tDur' is a 'nil' pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tDur.lock == nil {
+		tDur.lock = new(sync.Mutex)
+	}
+
+	tDur.timeDuration = time.Duration(0)
+
+	tDur.timeDurCalcType = TDurCalc.StdYearMth()
+	tDur.timeMathCalcMode = TCalcMode.LocalTimeZone()
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err := dTzUtil.setZeroDateTimeTz(
+		&tDur.startDateTimeTz,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	err = dTzUtil.setZeroDateTimeTz(
+		&tDur.endDateTimeTz,
+		ePrefix)
+
+	return err
 }

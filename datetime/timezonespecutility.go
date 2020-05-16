@@ -378,16 +378,6 @@ func (tzSpecUtil *timeZoneSpecUtility) setTimeZone(
 		tzSpec.lock = new(sync.Mutex)
 	}
 
-	if referenceDateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "referenceDateTime",
-			inputParameterValue: "",
-			errMsg:              "Input Parameter 'referenceDateTime' has a Zero Value!",
-			err:                 nil,
-		}
-	}
-
 	tzSpecUtil2 := timeZoneSpecUtility{}
 
 	tzSpecUtil2.empty(tzSpec)
@@ -502,7 +492,6 @@ func (tzSpecUtil *timeZoneSpecUtility) setTimeZone(
 	tzSpec.timeZoneClass = timeZoneClass
 	tzSpec.timeZoneType = timeZoneType
 	tzSpec.timeZoneUtcOffsetStatus = tzUtcOffsetStatus
-
 	return nil
 }
 
@@ -536,7 +525,6 @@ func (tzSpecUtil *timeZoneSpecUtility) setFromTimeZoneSpec(
 		tzSpec.lock = new(sync.Mutex)
 	}
 
-
 	if tzSpecIn == nil {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
@@ -549,16 +537,6 @@ func (tzSpecUtil *timeZoneSpecUtility) setFromTimeZoneSpec(
 
 	if tzSpecIn.lock == nil {
 		tzSpecIn.lock = new(sync.Mutex)
-	}
-
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input Parameter 'dateTime' has a Zero Value!",
-			err:                 nil,
-		}
 	}
 
 	err := tzSpec.IsValid(ePrefix)
@@ -611,6 +589,58 @@ func (tzSpecUtil *timeZoneSpecUtility) setFromTimeZoneSpec(
 	tzSpecUtil2.copyIn(tzSpec, tzSpecIn)
 
 	tzSpec.referenceDateTime = dateTime
+
+	return nil
+}
+
+// setZeroTimeZoneSpec - Sets tzSpec to Universal Coordinated
+// Time with a zero date time value.
+//
+func (tzSpecUtil *timeZoneSpecUtility) setZeroTimeZoneSpec(
+	tzSpec *TimeZoneSpecification,
+	ePrefix string) error {
+
+	tzSpecUtil.lock.Lock()
+
+	defer tzSpecUtil.lock.Unlock()
+
+	ePrefix += "timeZoneSpecUtility.setFromTimeZoneSpec() "
+
+	if tzSpec == nil {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "tzSpec",
+			inputParameterValue: "",
+			errMsg:              "Input parameter 'tzSpec' is a nil pointer!",
+			err:                 nil,
+		}
+	}
+
+	if tzSpec.lock == nil {
+		tzSpec.lock = new(sync.Mutex)
+	}
+
+	tzMech := TimeZoneMechanics{}
+
+	dateTime := time.Time{}
+	var err error
+
+	var tzSpec2 TimeZoneSpecification
+
+	tzSpec2,
+		err = tzMech.GetTimeZoneFromName(
+		dateTime,
+		TZones.UTC(),
+		TzConvertType.Absolute(),
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzSpecUtil2 := timeZoneSpecUtility{}
+
+	tzSpecUtil2.copyIn(tzSpec, &tzSpec2)
 
 	return nil
 }

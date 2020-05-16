@@ -3273,7 +3273,7 @@ func (tDur *TimeDurationDto) GetGregorianYearDurationStr() (string, error) {
 // with member variables initialized to their
 // zero values.
 //
-func (tDur TimeDurationDto) New() TimeDurationDto {
+func (tDur TimeDurationDto) New() (TimeDurationDto, error) {
 
 	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
@@ -3283,21 +3283,17 @@ func (tDur TimeDurationDto) New() TimeDurationDto {
 
 	defer tDur.lock.Unlock()
 
+	ePrefix := "TimeDurationDto.New()"
+
 	timeDur2 := TimeDurationDto{}
 
-	timeDur2.lock = new(sync.Mutex)
+	tDurDtoUtil := timeDurationDtoUtility{}
 
-	timeDur2.timeDuration = time.Duration(0)
+	err := tDurDtoUtil.setZeroTimeDto(
+		&timeDur2,
+		ePrefix)
 
-	timeDur2.timeDurCalcType = TDurCalc.None()
-
-	timeDur2.startDateTimeTz = DateTzDto{}.New()
-
-	timeDur2.endDateTimeTz = DateTzDto{}.New()
-
-	timeDur2.timeMathCalcMode = TCalcMode.None()
-
-	return timeDur2
+	return timeDur2, err
 }
 
 // NewAutoEnd - Creates and returns a new TimeDurationDto populated with
@@ -3546,7 +3542,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 		ePrefix)
 
 	if err != nil {
-		return TimeDurationDto{}.New(), err
+		return TimeDurationDto{}, err
 	}
 
 	return tDur2, nil

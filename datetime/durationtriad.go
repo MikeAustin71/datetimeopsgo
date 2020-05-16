@@ -516,9 +516,9 @@ func (durT DurationTriad) New() DurationTriad {
 
 	durTriad2 := DurationTriad{}
 	durTriad2.lock = new(sync.Mutex)
-	durTriad2.BaseTime = TimeDurationDto{}.New()
-	durTriad2.LocalTime = TimeDurationDto{}.New()
-	durTriad2.UTCTime = TimeDurationDto{}.New()
+	durTriad2.BaseTime = TimeDurationDto{}
+	durTriad2.LocalTime = TimeDurationDto{}
+	durTriad2.UTCTime = TimeDurationDto{}
 
 	return durTriad2
 }

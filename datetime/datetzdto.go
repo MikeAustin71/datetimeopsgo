@@ -697,7 +697,7 @@ func (dtz *DateTzDto) AddDuration(
 					ePrefix)
 }
 
-// AddDurationToThis - Receives a time.Duration input parameter and adds this
+// AddDuration - Receives a time.Duration input parameter and adds this
 // duration value to the Date Time value of the current DateTzDto. The current
 // DateTzDto Date Time values are updated to reflect the added 'duration'.
 //
@@ -727,7 +727,7 @@ func (dtz *DateTzDto) AddDuration(
 //  dtz := DateTzDto{}
 //  ... initialize to some value
 //
-//  err := dtz.AddDurationToThis(duration)
+//  err := dtz.AddDuration(duration)
 //
 func (dtz *DateTzDto) AddDurationToThis(
 	duration time.Duration) error {
@@ -740,7 +740,7 @@ func (dtz *DateTzDto) AddDurationToThis(
 
 	defer dtz.lock.Unlock()
 
-	ePrefix := "DateTzDto.AddDurationToThis() "
+	ePrefix := "DateTzDto.AddDuration() "
 
 	dTzUtil := dateTzDtoUtility{}
 
@@ -2767,7 +2767,7 @@ func (dtz *DateTzDto) IsValid() error {
 // New - Returns a new DateTzDto instance initialized
 // to zero values.
 //
-func (dtz DateTzDto) New() DateTzDto {
+func (dtz DateTzDto) New() (DateTzDto, error) {
 
 	if dtz.lock == nil {
 		dtz.lock = new(sync.Mutex)
@@ -2781,13 +2781,13 @@ func (dtz DateTzDto) New() DateTzDto {
 
 	dTz2.lock = new(sync.Mutex)
 
-	dTz2.dateTimeValue = time.Time{}
+	dTzUtil := dateTzDtoUtility{}
 
-	dTz2.timeComponents = TimeDto{}.New()
+	err := dTzUtil.setZeroDateTimeTz(
+		&dTz2,
+		"DateTzDto.New() ")
 
-	dTz2.timeZone = TimeZoneDefinition{}.New()
-
-	return dTz2
+	return dTz2, err
 }
 
 // NewDateTime - returns a new DateTzDto instance based on a time.Time ('dateTime')

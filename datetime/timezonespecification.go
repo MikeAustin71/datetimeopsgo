@@ -829,7 +829,7 @@ func (tzSpec *TimeZoneSpecification) GetZoneSignValue() int {
 // New - Returns a new TimeZoneSpecification instance with member
 // variables initialized to zero values.
 //
-func (tzSpec TimeZoneSpecification) New() TimeZoneSpecification {
+func (tzSpec TimeZoneSpecification) New() (TimeZoneSpecification, error) {
 
 	if tzSpec.lock == nil {
 		tzSpec.lock = new(sync.Mutex)
@@ -839,13 +839,17 @@ func (tzSpec TimeZoneSpecification) New() TimeZoneSpecification {
 
 	defer tzSpec.lock.Unlock()
 
+	ePrefix := "TimeZoneSpecification.New() "
+
 	tzSpec2 := TimeZoneSpecification{}
 
-	tzSpec2.lock = new(sync.Mutex)
+	tzSpecUtil := timeZoneSpecUtility{}
 
-	tzSpec2.locationPtr = time.UTC
+	err := tzSpecUtil.setZeroTimeZoneSpec(
+		&tzSpec2,
+		ePrefix)
 
-	return tzSpec2
+	return tzSpec2, err
 }
 
 // NewRefDate - Returns a new instance of TimeZoneSpecification

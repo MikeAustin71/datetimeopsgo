@@ -1055,8 +1055,7 @@ func (dTzUtil *dateTzDtoUtility) isEmptyDateTzDto(
 	}
 
 	if dTz.tagDescription == "" &&
-		dTz.timeComponents.IsEmpty() &&
-		dTz.dateTimeValue.IsZero() &&
+		dTz.timeComponents.IsEmpty()  &&
 		dTz.dateTimeFmt == "" &&
 		dTz.timeZone.IsEmpty() {
 
@@ -1094,11 +1093,6 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 	if dTzUtil2.isEmptyDateTzDto(dTz) {
 		return errors.New(ePrefix +
 			"\nThis 'DateTzDto' instance is EMPTY!\n")
-	}
-
-	if dTz.dateTimeValue.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: DateTzDto.DateTime is ZERO!\n")
 	}
 
 	if dTz.timeZone.IsEmpty() {
@@ -1280,11 +1274,6 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 
 	if dTz.lock == nil {
 		dTz.lock = new(sync.Mutex)
-	}
-
-	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'dateTime' is ZERO!\n")
 	}
 
 	dTzUtil2 := dateTzDtoUtility{}
@@ -2453,6 +2442,8 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 
 	defer dTzUtil.lock.Unlock()
 
+	ePrefix += "dateTzDtoUtility.setFromTimeDto() "
+
 	if dTz == nil {
 		return errors.New(ePrefix +
 			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
@@ -2461,8 +2452,6 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 	if dTz.lock == nil {
 		dTz.lock = new(sync.Mutex)
 	}
-
-	ePrefix += "dateTzDtoUtility.setFromTimeDto() "
 
 	if tDto.IsEmpty() {
 
@@ -2538,4 +2527,48 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 	dTz.dateTimeFmt = dateTimeFmtStr
 
 	return nil
+}
+
+// setZeroDateTimeTz - Sets the incoming DateTzDto instance
+// to zero values.
+func (dTzUtil *dateTzDtoUtility) setZeroDateTimeTz(
+	dTz *DateTzDto,
+	ePrefix string) error {
+
+	dTzUtil.lock.Lock()
+
+	defer dTzUtil.lock.Unlock()
+
+	ePrefix += "dateTzDtoUtility.setFromTimeDto() "
+
+	if dTz == nil {
+		return errors.New(ePrefix +
+			"\nError: Input parameter dTz (*DateTzDto) is 'nil'!\n")
+	}
+
+	if dTz.lock == nil {
+		dTz.lock = new(sync.Mutex)
+	}
+
+	dTz.dateTimeFmt = FmtDateTimeYrMDayFmtStr
+
+	dTz.dateTimeValue = time.Time{}
+
+	tDtoUtil := timeDtoUtility{}
+
+	err := tDtoUtil.setZeroTimeDto(
+		&dTz.timeComponents,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	err = tzDefUtil.setZeroTimeZoneDef(
+		&dTz.timeZone,
+		ePrefix)
+
+	return err
 }

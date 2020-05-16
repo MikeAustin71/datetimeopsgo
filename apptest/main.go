@@ -10,13 +10,70 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest084()
+	mainTest{}.mainTest085()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest085() {
+
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest084()",
+		"Testing Duration Since Time Zero"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	t1 := time.Date(
+		2014,
+		3,
+		5,
+		9,
+		35,
+		21,
+		53597,
+		time.UTC)
+
+// 0001-01-01 00:00:00.000000000 +0000 UTC
+	zeroTime := time.Time{}
+
+/*
+	zeroTime := time.Date(
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		0,
+		time.UTC)
+*/
+
+
+	fmt.Printf("Zero Date Time:          %v\n",
+		zeroTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Printf("t1 Date Time:            %v\n",
+		t1.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	duration := t1.Sub(zeroTime)
+
+	fmt.Printf("Duration:                %v\n",
+		duration)
+
+	t2 := zeroTime.Add(duration)
+
+	fmt.Printf("t2 Date Time:            %v\n",
+		t2.Format(dt.FmtDateTimeYrMDayFmtStr))
+
 }
 
 func (mt mainTest) mainTest084() {

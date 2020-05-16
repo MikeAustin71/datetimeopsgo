@@ -156,7 +156,7 @@ func TestDateTzDto_AddDurationToThis_01(t *testing.T) {
 	err = dTz1.AddDurationToThis(duration)
 
 	if err != nil {
-		t.Errorf("Error returned by dTz1.AddDurationToThis(duration). Error='%v'", err.Error())
+		t.Errorf("Error returned by dTz1.AddDuration(duration). Error='%v'", err.Error())
 	}
 
 	expectedOutStr = t2.Format(fmtstr)

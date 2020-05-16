@@ -458,9 +458,9 @@ func (dtMech *DTimeMechanics) ComputeDurationFromBaseTime(
 
 	ePrefix += "DTimeMechanics.ComputeDurationFromBaseTime() "
 
-	newStartDateTime = DateTzDto{}.New()
+	newStartDateTime = DateTzDto{}
 
-	newEndDateTime = DateTzDto{}.New()
+	newEndDateTime = DateTzDto{}
 
 	err = nil
 
@@ -548,7 +548,7 @@ func (dtMech *DTimeMechanics) ComputeDurationFromBaseTime(
 		ePrefix)
 
 	if err != nil {
-		newStartDateTime = DateTzDto{}.New()
+		newStartDateTime = DateTzDto{}
 		return newStartDateTime, newEndDateTime, err
 	}
 
@@ -583,9 +583,9 @@ func (dtMech *DTimeMechanics) ComputeDurationFromStartEndTimes(
 
 	duration = time.Duration(0)
 
-	newStartDateTime = DateTzDto{}.New()
+	newStartDateTime = DateTzDto{}
 
-	newEndDateTime = DateTzDto{}.New()
+	newEndDateTime = DateTzDto{}
 
 	err = nil
 
@@ -671,9 +671,9 @@ func (dtMech *DTimeMechanics) ComputeDurationByLocalTz(
 
 	duration = time.Duration(0)
 
-	newStartDateTime = DateTzDto{}.New()
+	newStartDateTime = DateTzDto{}
 
-	newEndDateTime = DateTzDto{}.New()
+	newEndDateTime = DateTzDto{}
 
 	err = nil
 
@@ -728,7 +728,7 @@ func (dtMech *DTimeMechanics) ComputeDurationByLocalTz(
 		ePrefix)
 
 	if err != nil {
-		newStartDateTime = DateTzDto{}.New()
+		newStartDateTime = DateTzDto{}
 		return duration, newStartDateTime, newEndDateTime, err
 	}
 
@@ -767,9 +767,9 @@ func (dtMech *DTimeMechanics) ComputeDurationByUtc(
 
 	duration = time.Duration(0)
 
-	newStartDateTime = DateTzDto{}.New()
+	newStartDateTime = DateTzDto{}
 
-	newEndDateTime = DateTzDto{}.New()
+	newEndDateTime = DateTzDto{}
 
 	err = nil
 
@@ -832,7 +832,7 @@ func (dtMech *DTimeMechanics) ComputeDurationByUtc(
 
 	if err != nil {
 		duration = time.Duration(0)
-		newStartDateTime = DateTzDto{}.New()
+		newStartDateTime = DateTzDto{}
 		return duration, newStartDateTime, newEndDateTime, err
 	}
 

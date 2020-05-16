@@ -873,16 +873,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneName(
 		}
 	}
 
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input Parameter 'dateTime' has a Zero Value!",
-			err:                 nil,
-		}
-	}
-
 	if timeZoneConversionType < TzConvertType.Absolute() ||
 		timeZoneConversionType > TzConvertType.Relative() {
 		return &InputParameterError{
@@ -1081,4 +1071,56 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 		tzdef,
 		newDateTime,
 		ePrefix)
+}
+
+// setZeroTimeZoneDef - Sets a default time zone definition
+// of Universal Coordinated Time.
+//
+func (tzDefUtil *timeZoneDefUtility) setZeroTimeZoneDef(
+	tzdef *TimeZoneDefinition,
+	ePrefix string) error {
+
+	tzDefUtil.lock.Lock()
+
+	defer tzDefUtil.lock.Unlock()
+
+	ePrefix += "timeZoneDefUtility.setZeroTimeZoneDef() "
+
+	if tzdef == nil {
+		return errors.New(ePrefix +
+			"\nInput parameter 'tzdef' is nil!\n")
+	}
+
+	if tzdef.lock == nil {
+		tzdef.lock = new(sync.Mutex)
+	}
+
+	var tzSpec TimeZoneSpecification
+	var err error
+
+	tzMech := TimeZoneMechanics{}
+
+	dateTime := time.Time{}
+
+	tzSpec,
+		err = tzMech.GetTimeZoneFromName(
+		dateTime,
+		TZones.UTC(),
+		TzConvertType.Absolute(),
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	tzSpec.zoneLabel = "Original Time Zone"
+
+	tzdef.originalTimeZone = tzSpec.CopyOut()
+
+	tzSpec.zoneLabel = "Convertible Time Zone"
+	tzSpec.locationNameType.ConvertibleTimeZone()
+
+	tzdef.convertibleTimeZone = tzSpec.CopyOut()
+
+	return nil
 }
