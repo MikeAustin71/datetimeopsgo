@@ -87,20 +87,6 @@ func (tzMech *TimeZoneMechanics) CalcConvertibleTimeZoneStats(
 
 	ePrefix += "TimeZoneMechanics.CalcConvertibleTimeZoneStats() "
 
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "'dateTime' value is Zero!",
-			err:                 nil,
-		}
-
-		return tzIsConvertible,
-			convertibleDateTime,
-			err
-	}
-
 	dateLocPtr := dateTime.Location()
 
 	if dateLocPtr == nil {

@@ -1,7 +1,6 @@
 package datetime
 
 import (
-	"errors"
 	"sync"
 	"time"
 )
@@ -4862,10 +4861,6 @@ func (durT *DurationTriad) SetDefaultStartTimeDuration(
 
 	ePrefix := "DurationTriad.SetDefaultStartTimeDuration() "
 
-	if startDateTime.IsZero() {
-		return errors.New(ePrefix + "Error - Start Time is Zero!")
-	}
-
 	durTUtil := durationTriadUtility{}
 
 	return durTUtil.setStartTimeDuration(
@@ -6442,10 +6437,6 @@ func (durT *DurationTriad) SetStartTimeDuration(
 	defer durT.lock.Unlock()
 
 	ePrefix := "DurationTriad.SetStartTimeDuration() "
-
-	if startDateTime.IsZero() {
-		return errors.New(ePrefix + "Error - Start Time is Zero!")
-	}
 
 	durTUtil := durationTriadUtility{}
 

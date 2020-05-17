@@ -295,10 +295,6 @@ func (tzSpecUtil *timeZoneSpecUtility) isEmpty(
 		tzSpec.lock = new(sync.Mutex)
 	}
 
-	if 	!tzSpec.referenceDateTime.IsZero() {
-		return false
-	}
-
 	if 	tzSpec.zoneOffsetTotalSeconds != 0 ||
 		tzSpec.zoneSignValue != 0 ||
 		tzSpec.offsetHours != 0 ||
@@ -397,7 +393,6 @@ func (tzSpecUtil *timeZoneSpecUtility) setTimeZone(
 		tzSpec.locationPtr,
 		tzSpec.locationName,
 		err = tzMech.CalcUtcZoneOffsets(referenceDateTime, ePrefix)
-
 
 	var timeZoneType TimeZoneType
 	var ok bool

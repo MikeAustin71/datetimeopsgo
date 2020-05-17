@@ -884,14 +884,8 @@ func (dTzUtil *dateTzDtoUtility) copyIn(
 	baseDtz.tagDescription = incomingDtz.tagDescription
 	baseDtz.timeComponents = incomingDtz.timeComponents.CopyOut()
 	baseDtz.dateTimeFmt = incomingDtz.dateTimeFmt
-
-	if incomingDtz.dateTimeValue.IsZero() {
-		baseDtz.timeZone = TimeZoneDefinition{}
-		baseDtz.dateTimeValue = time.Time{}
-	} else {
-		baseDtz.dateTimeValue = incomingDtz.dateTimeValue
-		baseDtz.timeZone = incomingDtz.timeZone.CopyOut()
-	}
+	baseDtz.dateTimeValue = incomingDtz.dateTimeValue
+	baseDtz.timeZone = incomingDtz.timeZone.CopyOut()
 
 }
 
@@ -918,14 +912,8 @@ func (dTzUtil *dateTzDtoUtility) copyOut(
 	dtz2.tagDescription = dTz.tagDescription
 	dtz2.timeComponents = dTz.timeComponents.CopyOut()
 	dtz2.dateTimeFmt = dTz.dateTimeFmt
-
-	if dTz.dateTimeValue.IsZero() {
-		dtz2.timeZone = TimeZoneDefinition{}
-		dtz2.dateTimeValue = time.Time{}
-	} else {
-		dtz2.dateTimeValue = dTz.dateTimeValue
-		dtz2.timeZone = dTz.timeZone.CopyOut()
-	}
+	dtz2.dateTimeValue = dTz.dateTimeValue
+	dtz2.timeZone = dTz.timeZone.CopyOut()
 
 	dtz2.lock = new(sync.Mutex)
 
@@ -1901,11 +1889,6 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeTzName(
 		dTz.lock = new(sync.Mutex)
 	}
 
-	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
-	}
-
 	tZoneDefDto := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
@@ -2087,16 +2070,6 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 		dTz.lock = new(sync.Mutex)
 	}
 
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' has a Zero Value!",
-			err:                 nil,
-		}
-	}
-
 	if timeConversionType < TzConvertType.Absolute() ||
 		timeConversionType > TzConvertType.Relative() {
 		return &InputParameterError{
@@ -2274,11 +2247,6 @@ func (dTzUtil *dateTzDtoUtility) setFromTzSpec(
 
 	if dTz.lock == nil {
 		dTz.lock = new(sync.Mutex)
-	}
-
-	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
 	}
 
 	err := timeZoneSpec.IsValid(ePrefix)

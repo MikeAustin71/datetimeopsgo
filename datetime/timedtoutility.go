@@ -1092,11 +1092,6 @@ func (tDtoUtil *timeDtoUtility) setFromDateTime(
 
 	tDtoUtil2.empty(tDto, ePrefix)
 
-	if dateTime.IsZero() {
-		return nil
-	}
-
-
 	tDto.Years = dateTime.Year()
 	tDto.Months = int(dateTime.Month())
 

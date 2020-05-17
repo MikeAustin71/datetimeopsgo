@@ -2730,7 +2730,6 @@ func (dtz *DateTzDto) IsEmpty() bool {
 
 	if dtz.tagDescription == "" &&
 		dtz.timeComponents.IsEmpty() &&
-		dtz.dateTimeValue.IsZero() &&
 		dtz.dateTimeFmt == "" &&
 		dtz.timeZone.IsEmpty() {
 
@@ -2856,11 +2855,6 @@ func (dtz DateTzDto) NewDateTime(
 	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.NewDateTime() "
-
-	if dateTime.IsZero() {
-		return DateTzDto{}, errors.New(ePrefix +
-			"\nError: Input parameter dateTime is Zero value!\n")
-	}
 
 	dTzUtil := dateTzDtoUtility{}
 
@@ -3875,10 +3869,6 @@ func (dtz DateTzDto) NewTz(
 	defer dtz.lock.Unlock()
 
 	ePrefix := "DateTzDto.NewTz() "
-
-	if dateTime.IsZero() {
-		return DateTzDto{}, errors.New(ePrefix + "Error: Input parameter dateTime is Zero value!")
-	}
 
 	dtz2 := DateTzDto{}
 

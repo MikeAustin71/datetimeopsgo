@@ -10,13 +10,196 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest085()
+	mainTest{}.mainTest087()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest087() {
+	/*
+	  "0001-01-01 00:00:00.000000000 +0000 UTC"
+		zeroTime := time.Time{}
+	*/
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest087()",
+		"Testing Starting and Ending Date",
+		"Time Duration Calculation",
+		"Starting Date Time Zero"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	t1startDateTime := time.Time{}
+
+	t2endDateTime := time.Date(
+		1966,
+		9,
+		7,
+		9,
+		30,
+		31,
+		25647,
+		time.UTC)
+
+	longDur, err := dt.LongTimeDuration{}.NewStartEndDateTimes(
+		t1startDateTime,
+		t2endDateTime,
+		dt.TZones.UTC(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		fmt.Printf("Error returned by LongTimeDuration{}.NewStartEndDateTimes()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+	fmt.Println(lineSplitter)
+	fmt.Println("Expected Starting and Ending Date Times")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Expected Start Date:     %v\n",
+		t1startDateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Printf("Expected End Date:       %v\n",
+		t2endDateTime.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Printf("Expected Time Zone:      %v\n",
+		t2endDateTime.Location().String())
+	fmt.Println(lineSplitter)
+
+	var finalStartDateTz, finalEndDateTz dt.DateTzDto
+
+	finalStartDateTz,
+	finalEndDateTz = longDur.GetStartEndDatesTz()
+
+	finalStartDateTime := finalStartDateTz.GetDateTimeValue()
+
+	fmt.Printf("Actual Start Date:       %v\n",
+		finalStartDateTz.GetDateTimeText())
+	fmt.Printf("Actual End Date:         %v\n",
+		finalEndDateTz.GetDateTimeText())
+	fmt.Printf("Actual Time Zone:        %v\n",
+		finalStartDateTz.GetTimeZoneName())
+	fmt.Printf("Final Start Time Zone:   %v\n",
+		finalStartDateTime.Location().String())
+
+}
+
+func (mt mainTest) mainTest086() {
+/*
+
+ BaseTime Duration:
+ 5-Years 6-Months 12-Days 0-Hours 0-Minutes 0-Seconds 0-Milliseconds 0-Microseconds 0-Nanoseconds
+
+  Local Tz Times:
+   Start Time: 2014-02-15 19:54:30.038175584 -0600 CST
+     End Time: 2019-08-27 19:54:30.038175584 -0500 CDT
+
+  UTC Tz Times:
+   Start Time: 2014-02-15 19:54:30.038175584 -0600 CST
+     End Time: 2019-08-27 20:54:30.038175584 -0500 CDT
+
+*/
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest086()",
+		"Testing Duration Since Time Zero"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	centralTz, err := time.LoadLocation(dt.TZones.America.Chicago())
+
+	if err != nil {
+		fmt.Printf("Error returned by LoadLocation(dt.TZones.America.Chicago())\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	t1StartDate := time.Date(
+		2014,
+		2,
+		15,
+		19,
+		54,
+		30,
+		38175584,
+		centralTz)
+
+	t2EndDate := time.Date(
+		2019,
+		8,
+		27,
+		19,
+		54,
+		30,
+		38175584,
+		centralTz)
+
+	calcDuration := t2EndDate.Sub(t1StartDate)
+
+	var lngDur dt.LongTimeDuration
+
+	lngDur, err =
+		dt.LongTimeDuration{}.NewFromDuration(
+			t1StartDate,
+			calcDuration)
+
+	if err != nil {
+		fmt.Printf("Error returne by LongTimeDuration.NewFromDuration()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var finalStartDate, finalEndDate time.Time
+
+	finalStartDate,
+	finalEndDate,
+	err =	lngDur.GenerateDatePlusDuration(t1StartDate)
+
+	if err != nil {
+		fmt.Printf("Error returne by lngDur.GenerateDatePlusDuration(t1StartDate)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+	fmt.Println(lineSplitter)
+	fmt.Printf("       Base Data\n")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Base Start Date:         %v\n",
+		t1StartDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Printf("  Base End Date:         %v\n",
+		t2EndDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+
+	fmt.Println(lineSplitter)
+	fmt.Printf("  Long Duration Data\n")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Calc Start Date:         %v\n",
+		finalStartDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Printf("Calc End Date:           %v\n",
+		finalEndDate.Format(dt.FmtDateTimeYrMDayFmtStr))
+	fmt.Println(lineSplitter)
+	fmt.Println("Duration Comparison")
+	fmt.Printf("Expected Duration:       %v\n",
+		calcDuration)
+	bigDur, _ := lngDur.GetLongDuration()
+
+	reportedDur := time.Duration(bigDur.Int64())
+
+	fmt.Printf("Reported Duration:       %v\n",
+		reportedDur)
 }
 
 func (mt mainTest) mainTest085() {

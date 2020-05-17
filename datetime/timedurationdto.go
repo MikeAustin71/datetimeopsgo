@@ -6135,8 +6135,8 @@ func (tDur TimeDurationDto) NewStartTimeAddTime(
 // NewStartEndTimes - Creates and returns a new TimeDurationDto based on starting
 // and ending date times.
 //
-// The required input parameter, 'timeZoneLocation' specifies the time zone
-// used to configure both starting and ending date time.
+// The required input parameter, 'timeZoneLocation' specifies the time zone used
+// to configure both starting and ending date times.
 //
 // The user is also required to provide the time duration calculation type which
 // will control the output of the time duration calculation. The standard date

@@ -134,16 +134,11 @@ func (milDtDto *MilitaryDateTzDto) CopyIn(milDtDto2 MilitaryDateTzDto) {
 	milDtDto.Description = milDtDto2.Description
 	milDtDto.Time = milDtDto2.Time.CopyOut()
 
-	if !milDtDto2.DateTime.IsZero() {
-		milDtDto.DateTime = milDtDto2.DateTime
-		milDtDto.EquivalentIanaTimeZone = milDtDto2.EquivalentIanaTimeZone.CopyOut()
-	} else {
-		milDtDto.EquivalentIanaTimeZone = TimeZoneDefinition{}
-		milDtDto.DateTime = time.Time{}
-	}
-
+	milDtDto.DateTime = milDtDto2.DateTime
+	milDtDto.EquivalentIanaTimeZone = milDtDto2.EquivalentIanaTimeZone.CopyOut()
 	milDtDto.UtcOffset = milDtDto2.UtcOffset
 	milDtDto.GeoLocationDesc = milDtDto2.GeoLocationDesc
+	return
 }
 
 // copyOut - Returns a deep copy of the current 'MilitaryDateTzDto'
@@ -237,10 +232,6 @@ func (milDtDto *MilitaryDateTzDto) Empty() {
 func (milDtDto *MilitaryDateTzDto) IsValid() error {
 
 	ePrefix := "DateTzDto.IsValid() "
-
-	if milDtDto.DateTime.IsZero() {
-		return errors.New(ePrefix + "Error: milDtDto.DateTime is ZERO!")
-	}
 
 	if milDtDto.EquivalentIanaTimeZone.IsEmpty() {
 		return errors.New(ePrefix +
@@ -390,13 +381,6 @@ func (milDtDto MilitaryDateTzDto) New(
 	ePrefix := "MilitaryDateTzDto.NewStartEndTimes() "
 
 	newMilDateDto := MilitaryDateTzDto{}
-
-	if t.IsZero() {
-		return newMilDateDto,
-			errors.New(ePrefix +
-				"\nError: Input parameter t tim.Time is ZERO!\n")
-	}
-
 
 	if len(militaryTz) == 0 {
 		return newMilDateDto, errors.New(ePrefix +
@@ -823,11 +807,6 @@ func (milDtDto *MilitaryDateTzDto) SetFromTimeTz(
 	militaryTz string) error {
 
 	ePrefix := "MilitaryDateTzDto.SetFromTimeTz() "
-
-	if dateTime.IsZero() {
-		return errors.New( ePrefix +
-			"\nError: Input parameter 'dateTime' is ZERO and INVALID!\n")
-	}
 
 	if len(militaryTz) == 0 {
 		return errors.New( ePrefix +

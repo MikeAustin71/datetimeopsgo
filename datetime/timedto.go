@@ -1,7 +1,6 @@
 package datetime
 
 import (
-	"errors"
 	"sync"
 	"time"
 )
@@ -585,11 +584,6 @@ func (tDto TimeDto) NewFromDateTime(dateTime time.Time) (TimeDto, error) {
 
 	ePrefix := "TimeDto.NewFromDateTime() "
 
-	if dateTime.IsZero() {
-		return TimeDto{}, errors.New(ePrefix +
-			"\nError: Input Parameter 'dateTime' has a ZERO XValue!\n")
-	}
-
 	t2Dto := TimeDto{}
 
 	tDtoUtil := timeDtoUtility{}
@@ -763,11 +757,6 @@ func (tDto *TimeDto) SetFromDateTime(dateTime time.Time) error {
 	defer tDto.lock.Unlock()
 
 	ePrefix := "TimeDto.SetFromDateTimeComponents() "
-
-	if dateTime.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Input Parameter 'dateTime' has a ZERO XValue!\n")
-	}
 
 	tDtoUtil := timeDtoUtility{}
 

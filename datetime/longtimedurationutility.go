@@ -59,37 +59,101 @@ func (lngDurUtil *longTimeDurationUtility) addDuration(
 		return nil
 	}
 
-	var bigDur *big.Int
+	var currentDur *big.Int
 
 	if longDur.sign == -1 {
-		bigDur = big.NewInt(0).Neg(longDur.duration)
+		currentDur = big.NewInt(0).Neg(longDur.duration)
 	} else {
-		bigDur = big.NewInt(0).Set(longDur.duration)
+		currentDur = big.NewInt(0).Set(longDur.duration)
 	}
 
 	incrementalDuration := big.NewInt(int64(duration))
 
-	newDur := big.NewInt(0).Add(incrementalDuration, bigDur)
+	newDurTotal := big.NewInt(0).Add(incrementalDuration, currentDur)
 
 	bigZero := big.NewInt(0)
 
-	if bigZero.Cmp(newDur) == 0 {
+	var finalStartDateTime, finalEndDateTime time.Time
 
+	timeZoneLocation := longDur.startDateTimeTz.GetTimeZoneName()
+	dateTimeFormat := longDur.startDateTimeTz.GetDateTimeFmt()
+
+	dTzUtil := dateTzDtoUtility{}
+
+	if bigZero.Cmp(newDurTotal) == 0 {
+		// New Duration Total is zero
 		longDur.sign = 0
-		longDur.duration.Set(newDur)
 
-	} else if bigZero.Cmp(newDur) == 1 {
+		longDur.duration = big.NewInt(0)
 
+		err = dTzUtil.setFromTimeTzName(
+			&longDur.endDateTimeTz,
+			longDur.startDateTimeTz.dateTimeValue,
+			TzConvertType.Absolute(),
+			timeZoneLocation,
+			dateTimeFormat,
+			ePrefix)
+
+		return err
+
+	} else if bigZero.Cmp(newDurTotal) == 1 {
+		// New Duration Total is Negative
 		longDur.sign = -1
-		longDur.duration = big.NewInt(0).Neg(newDur)
+
+		longDur.duration = big.NewInt(0).Neg(newDurTotal)
+
+		finalStartDateTime,
+		finalEndDateTime,
+		err =
+		lngDurUtil2.getStartDateMinusDuration(
+			longDur,
+			longDur.startDateTimeTz.dateTimeValue,
+			ePrefix)
+
+		if err != nil {
+			return err
+		}
 
 	} else {
-
+		// New Duration Total is Positive
 		longDur.sign = 1
-		longDur.duration = big.NewInt(0).Set(newDur)
+		longDur.duration = big.NewInt(0).Set(newDurTotal)
+
+		finalStartDateTime,
+			finalEndDateTime,
+			err =
+			lngDurUtil2.getStartDateMinusDuration(
+				longDur,
+				longDur.startDateTimeTz.dateTimeValue,
+				ePrefix)
+
+		if err != nil {
+			return err
+		}
+
 	}
 
-	return nil
+	err = dTzUtil.setFromTimeTzName(
+		&longDur.startDateTimeTz,
+		finalStartDateTime,
+		TzConvertType.Relative(),
+		timeZoneLocation,
+		dateTimeFormat,
+		ePrefix + "Setting longDur.startDateTimeTz ")
+
+	if err != nil {
+		return err
+	}
+
+	err = dTzUtil.setFromTimeTzName(
+		&longDur.endDateTimeTz,
+		finalEndDateTime,
+		TzConvertType.Relative(),
+		timeZoneLocation,
+		dateTimeFormat,
+		ePrefix + "Setting longDur.endDateTimeTz ")
+
+	return err
 }
 
 // addDuration - Add the duration value of another LongTimeDuration
@@ -121,10 +185,6 @@ func (lngDurUtil *longTimeDurationUtility) addLongDuration(
 		return err
 	}
 
-	if longDur1.lock == nil {
-		longDur1.lock = new(sync.Mutex)
-	}
-
 	if longDur2 == nil {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
@@ -136,10 +196,6 @@ func (lngDurUtil *longTimeDurationUtility) addLongDuration(
 		}
 
 		return err
-	}
-
-	if longDur2.lock == nil {
-		longDur2.lock = new(sync.Mutex)
 	}
 
 	lngDurUtil2 := longTimeDurationUtility{}
@@ -162,74 +218,103 @@ func (lngDurUtil *longTimeDurationUtility) addLongDuration(
 		return err
 	}
 
-	var bigDur *big.Int
+	var currentDur, incrementalDuration *big.Int
 
-		bigDur = big.NewInt(0).Set(longDur1.duration)
+	if longDur1.sign == -1 {
+		currentDur = big.NewInt(0).Neg(longDur1.duration)
+	} else {
+		currentDur = big.NewInt(0).Set(longDur1.duration)
+	}
 
-	incrementalDuration := big.NewInt(0).Set(longDur2.duration)
+	if longDur2.sign == -1 {
+		incrementalDuration = big.NewInt(0).Neg(longDur2.duration)
+	} else {
+		incrementalDuration = big.NewInt(0).Set(longDur2.duration)
+	}
 
-	newDur := big.NewInt(0).Add(incrementalDuration, bigDur)
+	newDurTotal := big.NewInt(0).Add(incrementalDuration, currentDur)
 
 	bigZero := big.NewInt(0)
 
-	if bigZero.Cmp(newDur) == 0 {
-
-		longDur1.sign = 0
-		longDur1.duration.Set(newDur)
-
-	} else if bigZero.Cmp(newDur) == 1 {
-
-		longDur1.sign = -1
-		longDur1.duration = big.NewInt(0).Neg(newDur)
-
-	} else {
-
-		longDur1.sign = 1
-		longDur1.duration = big.NewInt(0).Set(newDur)
-	}
-
 	var finalStartDateTime, finalEndDateTime time.Time
 
-	if longDur1.sign == -1 {
+	timeZoneLocation := longDur1.startDateTimeTz.GetTimeZoneName()
+	dateTimeFormat := longDur1.startDateTimeTz.GetDateTimeFmt()
 
-		finalStartDateTime,
-		finalEndDateTime,
-		err = lngDurUtil2.getStartDateMinusDuration(
-			longDur1,
-			longDur1.endDateTimeTz.dateTimeValue,
+	dTzUtil := dateTzDtoUtility{}
+
+	if bigZero.Cmp(newDurTotal) == 0 {
+		// New Duration Total is zero
+		longDur1.sign = 0
+
+		longDur1.duration = big.NewInt(0)
+
+		err = dTzUtil.setFromTimeTzName(
+			&longDur1.endDateTimeTz,
+			longDur1.startDateTimeTz.dateTimeValue,
+			TzConvertType.Absolute(),
+			timeZoneLocation,
+			dateTimeFormat,
 			ePrefix)
-	} else {
+
+		return err
+
+	} else if bigZero.Cmp(newDurTotal) == 1 {
+		// New Duration Total is Negative
+		longDur1.sign = -1
+
+		longDur1.duration = big.NewInt(0).Neg(newDurTotal)
 
 		finalStartDateTime,
 			finalEndDateTime,
-			err = lngDurUtil2.getStartDatePlusDuration(
-			longDur1,
-			longDur1.startDateTimeTz.dateTimeValue,
-			ePrefix)
+			err =
+			lngDurUtil2.getStartDateMinusDuration(
+				longDur1,
+				longDur1.startDateTimeTz.dateTimeValue,
+				ePrefix)
+
+		if err != nil {
+			return err
+		}
+
+	} else {
+		// New Duration Total is Positive
+		longDur1.sign = 1
+		longDur1.duration = big.NewInt(0).Set(newDurTotal)
+
+		finalStartDateTime,
+			finalEndDateTime,
+			err =
+			lngDurUtil2.getStartDateMinusDuration(
+				longDur1,
+				longDur1.startDateTimeTz.dateTimeValue,
+				ePrefix)
+
+		if err != nil {
+			return err
+		}
 
 	}
-
-	dTzUtil := dateTzDtoUtility{}
 
 	err = dTzUtil.setFromTimeTzName(
 		&longDur1.startDateTimeTz,
 		finalStartDateTime,
 		TzConvertType.Relative(),
-		longDur1.startDateTimeTz.GetTimeZoneName(),
-		FmtDateTimeYrMDayFmtStr,
-		ePrefix)
+		timeZoneLocation,
+		dateTimeFormat,
+		ePrefix + "Setting longDur.startDateTimeTz ")
 
 	if err != nil {
-		return  err
+		return err
 	}
 
 	err = dTzUtil.setFromTimeTzName(
 		&longDur1.endDateTimeTz,
 		finalEndDateTime,
 		TzConvertType.Relative(),
-		longDur1.endDateTimeTz.GetTimeZoneName(),
-		FmtDateTimeYrMDayFmtStr,
-		ePrefix)
+		timeZoneLocation,
+		dateTimeFormat,
+		ePrefix + "Setting longDur.endDateTimeTz ")
 
 	return err
 }
@@ -253,17 +338,21 @@ func (lngDurUtil *longTimeDurationUtility) isValid(
 	isZero = false
 	err = nil
 
-	if longDur == nil {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "longDur",
-			inputParameterValue: "",
-			errMsg:              "'longDur' is " +
-				"nil!",
-			err:                 nil,
-		}
+		if longDur == nil {
+			err = &InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "longDur",
+				inputParameterValue: "",
+				errMsg:              "'longDur' is " +
+					"nil!",
+				err:                 nil,
+			}
 
 		return isZero, err
+	}
+
+	if longDur.lock == nil {
+		longDur.lock = new(sync.Mutex)
 	}
 
 	if longDur.duration == nil {
@@ -301,9 +390,13 @@ func (lngDurUtil *longTimeDurationUtility) isValid(
 	return isZero, err
 }
 
-// getStartDatePlusDuration - Used to add duration to a starting date
-// time in those cases where LongTimeDuration.duration is greater than
-// zero.
+
+// getStartDatePlusDuration - Calculates and returns the starting and
+// ending date times associated with a positive time duration.
+//
+// In order to calculate these two dates, the caller must supply the
+// 'starting' date time.
+//
 func (lngDurUtil *longTimeDurationUtility) getStartDatePlusDuration(
 	longDur *LongTimeDuration,
 	startDateTime time.Time,
@@ -400,6 +493,12 @@ func (lngDurUtil *longTimeDurationUtility) getStartDatePlusDuration(
 	return finalStartDateTime, finalEndDateTime, err
 }
 
+// getStartDateMinusDuration - Calculates and returns the starting and
+// ending date times associated with a negative time duration.
+//
+// In order to calculate these two dates, the caller must supply the
+// 'ending' date time.
+//
 func (lngDurUtil *longTimeDurationUtility) getStartDateMinusDuration(
 	longDur *LongTimeDuration,
 	endDateTime time.Time,
@@ -488,4 +587,174 @@ func (lngDurUtil *longTimeDurationUtility) getStartDateMinusDuration(
 	finalStartDateTime = endDateTime.Add(incrementalDuration)
 
 	return finalStartDateTime, finalEndDateTime, nil
+}
+
+// setStartEndDateDuration - Calculates long duration from starting
+// and ending dates
+func (lngDurUtil *longTimeDurationUtility) setStartEndDateDuration(
+	longDur *LongTimeDuration,
+	startDateTime,
+	endDateTime time.Time,
+	timeZoneLocation string,
+	dateTimeFormat string,
+	ePrefix string) error {
+
+	lngDurUtil.lock.Lock()
+
+	defer lngDurUtil.lock.Unlock()
+
+	ePrefix += "longTimeDurationUtility.setStartEndDateDuration() "
+
+	var err error
+
+	lngDurUtil2 := longTimeDurationUtility{}
+
+	_, err = lngDurUtil2.isValid(longDur, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
+	longDur.duration = big.NewInt(0)
+	longDur.sign = 0
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setFromTimeTzName(
+		&longDur.startDateTimeTz,
+		startDateTime,
+		TzConvertType.Relative(),
+		timeZoneLocation,
+		dateTimeFormat,
+		ePrefix + "Setting longDur.startDateTimeTz ")
+
+	if err != nil {
+		return err
+	}
+
+	err = dTzUtil.setFromTimeTzName(
+		&longDur.endDateTimeTz,
+		endDateTime,
+		TzConvertType.Relative(),
+		timeZoneLocation,
+		dateTimeFormat,
+		ePrefix + "Setting longDur.endDateTimeTz ")
+
+	if err != nil {
+		return err
+	}
+
+	if longDur.startDateTimeTz.dateTimeValue.Equal(
+		longDur.endDateTimeTz.dateTimeValue) {
+		return nil
+	}
+
+	newStartDateTime := longDur.startDateTimeTz.dateTimeValue
+
+	finalEndDateTime := longDur.endDateTimeTz.dateTimeValue
+
+	tempEndDateTime := time.Date(
+		newStartDateTime.Year() + 250,
+		newStartDateTime.Month(),
+		newStartDateTime.Day(),
+		newStartDateTime.Hour(),
+		newStartDateTime.Minute(),
+		newStartDateTime.Second(),
+		newStartDateTime.Nanosecond(),
+		newStartDateTime.Location())
+
+	var incrementalDuration time.Duration
+	var currentLngDur, tempLngDur *big.Int
+
+	currentLngDur = big.NewInt(0)
+
+	for tempEndDateTime.Before(finalEndDateTime) {
+
+		incrementalDuration = tempEndDateTime.Sub(newStartDateTime)
+
+		tempLngDur = big.NewInt(int64(incrementalDuration))
+
+		currentLngDur = big.NewInt(0).Add(
+			longDur.duration,
+			tempLngDur)
+
+		longDur.duration = big.NewInt(0).Set(currentLngDur)
+
+		newStartDateTime = tempEndDateTime
+
+		tempEndDateTime = time.Date(
+			newStartDateTime.Year() + 250,
+			newStartDateTime.Month(),
+			newStartDateTime.Day(),
+			newStartDateTime.Hour(),
+			newStartDateTime.Minute(),
+			newStartDateTime.Second(),
+			newStartDateTime.Nanosecond(),
+			newStartDateTime.Location())
+	}
+
+	incrementalDuration = finalEndDateTime.Sub(newStartDateTime)
+
+	tempLngDur = big.NewInt(int64(incrementalDuration))
+
+	currentLngDur = big.NewInt(0).Add(
+		longDur.duration,
+		tempLngDur)
+
+	longDur.duration = big.NewInt(0).Set(currentLngDur)
+
+	return nil
+}
+
+// setZeroLongTermDuration - Receives a pointer to a LongTimeDuration
+// instance and proceeds to set all of the data values to zero.
+//
+func (lngDurUtil *longTimeDurationUtility) setZeroLongTermDuration(
+	longDur *LongTimeDuration,
+	ePrefix string) error {
+
+	lngDurUtil.lock.Lock()
+
+	defer lngDurUtil.lock.Unlock()
+
+	ePrefix += "longTimeDurationUtility.setZeroLongTermDuration() "
+
+	var err error
+
+	if longDur == nil {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "longDur",
+			inputParameterValue: "",
+			errMsg:              "'longDur' is " +
+				"nil!",
+			err:                 nil,
+		}
+
+		return err
+	}
+
+	if longDur.lock == nil {
+		longDur.lock = new(sync.Mutex)
+	}
+
+	longDur.duration = big.NewInt(0)
+
+	longDur.sign = 0
+
+	dTzUtil := dateTzDtoUtility{}
+
+	err = dTzUtil.setZeroDateTimeTz(
+		&longDur.startDateTimeTz,
+		ePrefix + "Setting Starting Date Time ")
+
+	if err != nil {
+		return err
+	}
+
+	err = dTzUtil.setZeroDateTimeTz(
+		&longDur.endDateTimeTz,
+		ePrefix + "Setting Ending Date Time ")
+
+	return err
 }

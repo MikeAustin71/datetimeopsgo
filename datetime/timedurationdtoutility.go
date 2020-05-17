@@ -1694,14 +1694,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) isValid(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if tDur.startDateTimeTz.dateTimeValue.IsZero() &&
-		tDur.endDateTimeTz.dateTimeValue.IsZero() {
-
-		return fmt.Errorf(ePrefix +
-			"\nError: Both Start and End Times are Zero!\n")
-
-	}
-
 	if tDur.endDateTimeTz.dateTimeValue.Before(tDur.startDateTimeTz.dateTimeValue) {
 		return fmt.Errorf(ePrefix +
 			"\nError: End Time is Before Start Time!\n")
@@ -2490,12 +2482,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setEndTimeMinusTimeDto(
 			"Validation Error='%v'\n", err.Error())
 	}
 
-	if endDateTime.IsZero() && minusTimeDto.IsEmpty() {
-		return errors.New(ePrefix +
-			"\nError: Both 'endDateTime' and 'minusTimeDto' " +
-			"input parameters are ZERO/EMPTY!\n")
-	}
-
 	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
@@ -2997,12 +2983,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartEndTimesTz(
 
 	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
-	}
-
-	if startDateTimeTz.dateTimeValue.IsZero() && endDateTimeTz.dateTimeValue.IsZero() {
-		return errors.New(ePrefix +
-			"\nError: Both 'startDateTimeTz' and 'endDateTimeTz' " +
-			"input time parameters have ZERO time values!\n")
 	}
 
 	dTzUtil := dateTzDtoUtility{}
@@ -3634,12 +3614,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeDuration(
 		tDur.lock = new(sync.Mutex)
 	}
 
-	if baseDateTime.IsZero() && duration == 0 {
-		return errors.New(ePrefix +
-			"\nError: Both 'baseDateTime' and 'duration' " +
-			"input parameters are ZERO!\n")
-	}
-
 	if !tDurCalcType.XIsValid() {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
@@ -3898,12 +3872,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimeTzDuration(
 
 	if tDur.lock == nil {
 		tDur.lock = new(sync.Mutex)
-	}
-
-	if startDateTimeTz.dateTimeValue.IsZero() && duration == 0 {
-		return errors.New(ePrefix +
-			"\nError: Both 'startDateTimeTz' and 'duration' " +
-			"input parameters are ZERO!\n")
 	}
 
 	if !tDurCalcType.XIsValid() {
@@ -4167,12 +4135,6 @@ func (tDurDtoUtil *timeDurationDtoUtility) setStartTimePlusTimeDto(
 		return fmt.Errorf(ePrefix+
 			"Input Parameter 'plusTimeDto' is INVALID!\n"+
 			"Validation Error='%v'\n", err.Error())
-	}
-
-	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
-		return errors.New(ePrefix +
-			"\nError: Both 'startDateTime' and 'plusTimeDto' " +
-			"input parameters are ZERO/EMPTY!\n")
 	}
 
 	if !tDurCalcType.XIsValid() {

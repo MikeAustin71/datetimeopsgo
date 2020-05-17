@@ -496,10 +496,6 @@ func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
 		tzdef.lock = new(sync.Mutex)
 	}
 
-	if dateTime.IsZero() {
-		return false
-	}
-
 	return true
 }
 
@@ -659,16 +655,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromDateTime(
 
 	if tzdef.lock == nil {
 		tzdef.lock = new(sync.Mutex)
-	}
-
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'dateTime' is ZERO!",
-			err:                 nil,
-		}
 	}
 
 	if dateTime.Location() == nil {
@@ -934,16 +920,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneDefinition(
 		tzdef.lock = new(sync.Mutex)
 	}
 
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input Parameter 'dateTime' has a Zero Value!",
-			err:                 nil,
-		}
-	}
-
 	tzDefUtil2 := timeZoneDefUtility{}
 
 	err := tzDefUtil2.isValidTimeZoneDef(&timeZoneDef,ePrefix)
@@ -1025,16 +1001,6 @@ func (tzDefUtil *timeZoneDefUtility) setFromTimeZoneSpecification(
 
 	if tzdef.lock == nil {
 		tzdef.lock = new(sync.Mutex)
-	}
-
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input Parameter 'dateTime' has a Zero Value!",
-			err:                 nil,
-		}
 	}
 
 	tzDefUtil2 := timeZoneDefUtility{}

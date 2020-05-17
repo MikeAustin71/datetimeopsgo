@@ -959,16 +959,6 @@ func (tzSpec *TimeZoneSpecification) SetTimeZone(
 
 	ePrefix += "TimeZoneSpecification.SetTimeZone() "
 
-	if referenceDateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "referenceDateTime",
-			inputParameterValue: "",
-			errMsg:              "'referenceDateTime' has a zero value.",
-			err:                 nil,
-		}
-	}
-
 	tzSpecUtil := timeZoneSpecUtility{}
 
 	return tzSpecUtil.setTimeZone(

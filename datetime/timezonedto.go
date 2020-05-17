@@ -979,17 +979,6 @@ func (tzDto TimeZoneDto) New(
 	ePrefix := "TimeZoneDto.NewStartEndTimes() "
 	tZoneDtoUtil := timeZoneDtoUtility{}
 
-	if tIn.IsZero() {
-		return TimeZoneDto{},
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "tIn",
-				inputParameterValue: "",
-				errMsg:              "Input parameter 'tIn' has a ZERO value!",
-				err:                 nil,
-			}
-	}
-
 	if len(timeZoneOutLocationName) == 0 {
 		return TimeZoneDto{},
 			&InputParameterError{

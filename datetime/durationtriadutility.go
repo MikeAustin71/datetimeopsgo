@@ -1,7 +1,6 @@
 package datetime
 
 import (
-	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -836,11 +835,6 @@ func(durTUtil *durationTriadUtility) setStartEndTimes(
 		durT.lock = new(sync.Mutex)
 	}
 
-	if startDateTime.IsZero() && endDateTime.IsZero() {
-		return errors.New(ePrefix +
-			"Error: Input parameters 'startDateTime' and 'endDateTime' are ZERO!")
-	}
-
 	if !tDurCalcType.XIsValid()  {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
@@ -1127,11 +1121,6 @@ func(durTUtil *durationTriadUtility) setStartTimeDuration(
 
 	if durT.lock == nil {
 		durT.lock = new(sync.Mutex)
-	}
-
-	if startDateTime.IsZero() && duration == 0 {
-		return errors.New(ePrefix +
-			"\nError: Both 'startDateTime' and 'duration' are Zero!\n")
 	}
 
 	if !tDurCalcType.XIsValid() {
@@ -1451,12 +1440,6 @@ func(durTUtil *durationTriadUtility) setStartTimePlusTimeDto(
 		return fmt.Errorf(ePrefix +
 			"Input Parameter 'plusTimeDto' is INVALID!\n" +
 			"Validation Error='%v'\n", err.Error())
-	}
-
-	if startDateTime.IsZero() && plusTimeDto.IsEmpty() {
-		return errors.New(ePrefix +
-			"\nError: Both 'startDateTime' and 'plusTimeDto' " +
-			"input parameters are ZERO/EMPTY!\n")
 	}
 
 	if !tDurCalcType.XIsValid() {

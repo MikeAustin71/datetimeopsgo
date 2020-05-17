@@ -946,17 +946,6 @@ func (tZoneUtil *timeZoneDtoUtility) convertTz(
 		tzDto.lock = new(sync.Mutex)
 	}
 
-	if tIn.IsZero() {
-		return TimeZoneDto{},
-		&InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "tIn",
-			inputParameterValue: "",
-			errMsg:              "Input Parameter 'tIn' has a zero value!",
-			err:                 nil,
-		}
-	}
-
 	tZoneUtil2 := timeZoneDtoUtility{}
 
 	isValidTimeZone,
@@ -1596,12 +1585,6 @@ func (tZoneUtil *timeZoneDtoUtility) newTzDto(
 
 	ePrefix += "timeZoneDtoUtility.newTzDto() "
 
-	if tIn.IsZero() {
-		return TimeZoneDto{},
-						errors.New(ePrefix +
-							"\nInput parameter 'tIn' has a value of 'zero'!\n")
-	}
-
 	tzDto2 := TimeZoneDto{}
 
 	tzDto2.lock = new(sync.Mutex)
@@ -1794,16 +1777,6 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeIn(
 		tzDto.lock = new(sync.Mutex)
 	}
 
-	if tIn.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "tIn",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'tIn' has a value of 'zero'!",
-			err:                 nil,
-		}
-	}
-
 	tZoneUtil2 := timeZoneDtoUtility{}
 
 	dateTimeFormatStr = tZoneUtil2.preProcessDateFormatStr(dateTimeFormatStr)
@@ -1954,16 +1927,6 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeInTzDef(
 		tzDto.lock = new(sync.Mutex)
 	}
 
-	if tIn.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "tIn",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'tIn' has a value of 'zero'!",
-			err:                 nil,
-		}
-	}
-
 	err := targetTzDef.IsValid()
 
 	if err != nil {
@@ -2023,11 +1986,6 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTz(
 
 	if tzDto.lock == nil {
 		tzDto.lock = new(sync.Mutex)
-	}
-
-	if tOut.IsZero() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'tOut' has a value of 'zero'!\n")
 	}
 
 	if tZoneConversionType == TzConvertType.None() {
@@ -2104,11 +2062,6 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzDef(
 
 	if tzDto.lock == nil{
 		tzDto.lock = new(sync.Mutex)
-	}
-
-	if tOut.IsZero() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'tOut' has a value of 'zero'!\n")
 	}
 
 	if timeConversionType < TzConvertType.Absolute() ||
@@ -2198,11 +2151,6 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzSpec(
 		tzDto.lock = new(sync.Mutex)
 	}
 
-	if tOut.IsZero() {
-		return errors.New(ePrefix +
-			"\nInput parameter 'tOut' has a value of 'zero'!\n")
-	}
-
 	if tZoneConversionType == TzConvertType.None() {
 		return errors.New(ePrefix +
 			"\nInput parameter 'tZoneConversionType' is INVALID.\n" +
@@ -2266,16 +2214,6 @@ func (tZoneUtil *timeZoneDtoUtility) setUTCTime(
 
 	if tzDto.lock == nil{
 		tzDto.lock = new(sync.Mutex)
-	}
-
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' has a value of 'zero'!",
-			err:                 nil,
-		}
 	}
 
 	if tZoneConversionType < TzConvertType.Absolute() ||
@@ -2344,16 +2282,6 @@ func (tZoneUtil *timeZoneDtoUtility) setLocalTime(
 
 	if tzDto.lock == nil{
 		tzDto.lock = new(sync.Mutex)
-	}
-
-	if dateTime.IsZero() {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' has a value of 'zero'!",
-			err:                 nil,
-		}
 	}
 
 	if tZoneConversionType < TzConvertType.Absolute() ||

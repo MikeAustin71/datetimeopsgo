@@ -1698,17 +1698,6 @@ func (tzdef TimeZoneDefinition) NewDateTime(
 
 	ePrefix := "TimeZoneDefinition.NewDateTime() "
 
-	if dateTime.IsZero() {
-		return TimeZoneDefinition{},
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "dateTime",
-				inputParameterValue: "Input parameter 'dateTime' is a ZERO value!",
-				errMsg:              "",
-				err:                 nil,
-			}
-	}
-
 	tzDef2 := TimeZoneDefinition{}
 
 	tzDefUtil := timeZoneDefUtility{}
@@ -2106,18 +2095,6 @@ func (tzdef TimeZoneDefinition) NewFromTimeZoneName(
 	err = nil
 	tzDefDto = TimeZoneDefinition{}
 
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' has a Zero value!",
-			err:                 nil,
-		}
-
-		return tzDefDto, err
-	}
-
 	if len(timeZoneName) == 0 {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
@@ -2301,18 +2278,6 @@ func (tzdef TimeZoneDefinition) NewTzSpecFromTzName(
 	err = nil
 	TimeZoneSpec = TimeZoneSpecification{}
 
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' has a Zero value!",
-			err:                 nil,
-		}
-
-		return TimeZoneSpec, err
-	}
-
 	if len(timeZoneName) == 0 {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
@@ -2482,19 +2447,6 @@ func (tzdef TimeZoneDefinition) NewForTimeZoneSpec(
 
 	err = nil
 
-	if dateTime.IsZero() {
-		err =
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "dateTime",
-				inputParameterValue: "",
-				errMsg:              "Input parameter 'dateTime' has a Zero Value!",
-				err:                 nil,
-			}
-
-		return tzDefDto, err
-	}
-
 	err2 := tzSpec.IsValid(ePrefix)
 
 	if err2 != nil {
@@ -2585,10 +2537,6 @@ func (tzdef *TimeZoneDefinition) SetFromDateTime(
 	defer tzdef.lock.Unlock()
 
 	ePrefix := "TimeZoneDefinition.SetFromDateTimeComponents() "
-
-	if dateTime.IsZero() {
-		return errors.New(ePrefix + "Error: Input parameter 'dateTime' is a ZERO value!")
-	}
 
 	tzDefUtil := timeZoneDefUtility{}
 

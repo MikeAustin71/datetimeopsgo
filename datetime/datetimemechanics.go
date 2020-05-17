@@ -1,7 +1,6 @@
 package datetime
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -65,12 +64,6 @@ func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneDefConversion(
 	defer dtMech.lock.Unlock()
 
 	ePrefix := "DTimeMechanics.AbsoluteTimeToTimeZoneDefConversion() "
-
-	if dateTime.IsZero() {
-		return time.Time{},
-			errors.New(ePrefix +
-				"\nError: Input parameter 'dateTime' is zero!")
-	}
 
 	if err := timeZoneDefDto.IsValid(); err != nil {
 		return time.Time{},
@@ -140,17 +133,6 @@ func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneNameConversion(
 	defer dtMech.lock.Unlock()
 
 	ePrefix += "DTimeMechanics.AbsoluteTimeToTimeZoneNameConversion() "
-
-	if dateTime.IsZero() {
-		return time.Time{},
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "dateTime",
-				inputParameterValue: "",
-				errMsg:              "Error: Input parameter 'dateTime' is zero!",
-				err:                 nil,
-			}
-	}
 
 	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
 
@@ -962,23 +944,10 @@ func (dtMech *DTimeMechanics) GetTimeZoneFromName(
 
 	defer dtMech.lock.Unlock()
 
-	ePrefix += "DTimeUtility.DTimeMechanics() "
+	ePrefix += "DTimeMechanics.GetTimeZoneFromName() "
 
 	tzSpec = TimeZoneSpecification{}
 	err = nil
-
-	if dateTime.IsZero() {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "dateTime",
-			inputParameterValue: "",
-			errMsg:              "Input parameter 'dateTime' has " +
-				"a Zero value!",
-			err:                 nil,
-		}
-
-		return tzSpec, err
-	}
 
 	if timeConversionType < TzConvertType.Absolute() ||
 		timeConversionType > TzConvertType.Relative() {
@@ -1055,13 +1024,6 @@ func (dtMech *DTimeMechanics) GetUtcOffsetTzAbbrvFromDateTime(
 	err = nil
 
 	ePrefix += "DTimeMechanics.GetUtcOffsetTzAbbrvFromDateTime() "
-
-	if dateTime.IsZero() {
-		err = errors.New(ePrefix +
-			"\nError: Input parameter 'dateTime' is ZERO!\n")
-
-		return utcOffset, tzAbbrv, err
-	}
 
 	tStr := dateTime.Format("2006-01-02 15:04:05 -0700 MST")
 
@@ -1300,17 +1262,6 @@ func (dtMech *DTimeMechanics) RelativeTimeToTimeNameZoneConversion(
 	defer dtMech.lock.Unlock()
 
 	ePrefix += "DTimeMechanics.RelativeTimeToTimeNameZoneConversion() "
-
-	if dateTime.IsZero() {
-		return time.Time{},
-			&InputParameterError{
-				ePrefix:             ePrefix,
-				inputParameterName:  "dateTime",
-				inputParameterValue: "",
-				errMsg:              "Error: Input parameter 'dateTime' is zero!",
-				err:                 nil,
-			}
-	}
 
 	timeZoneName = strings.TrimRight(strings.TrimLeft(timeZoneName, " "), " ")
 
