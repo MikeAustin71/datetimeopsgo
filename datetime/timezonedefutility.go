@@ -469,36 +469,6 @@ func (tzDefUtil *timeZoneDefUtility) isValidTimeZoneDef(
 	return dtUtil.ConsolidateErrors(controlErrors)
 }
 
-// isValidFromDateTime - Uses a time.Time input parameter, 'dateTime' to
-// analyze the specified TimeZoneDefinition instance (tzdef). If the zone and
-// location details of 'dateTime' are not perfectly matched to the current
-// TimeZoneDefinition instance, the instance is considered INVALID, and this
-// method returns 'false'.
-//
-// Otherwise, if all zone and location details are perfectly matched, this
-// method returns 'true', signaling that the TimeZoneDateDefDto instance
-// (tzdef) is VALID.
-//
-func (tzDefUtil *timeZoneDefUtility) isValidFromDateTime(
-	tzdef *TimeZoneDefinition,
-	dateTime time.Time) bool {
-
-	tzDefUtil.lock.Lock()
-
-	defer tzDefUtil.lock.Unlock()
-
-	if tzdef == nil {
-		panic("timeZoneDefUtility.isValidFromDateTime()\n" +
-			"Error: Input parameter 'tzdef' pointer is nil!\n")
-	}
-
-	if tzdef.lock == nil {
-		tzdef.lock = new(sync.Mutex)
-	}
-
-	return true
-}
-
 func (tzDefUtil *timeZoneDefUtility) newFromDateTime(
 	dateTime time.Time,
 	ePrefix string) (TimeZoneDefinition, error) {

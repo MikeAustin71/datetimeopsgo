@@ -247,12 +247,25 @@ func TestDTimeMechanics_GetTimeZoneFromDateTime_03 (t *testing.T) {
 
 	tPacificIn = time.Time{}
 
-	_,
+	expectedTimeZoneName := tPacificIn.Location().String()
+
+	var tzSpec TimeZoneSpecification
+
+	tzSpec,
 		err = dtMech.GetTimeZoneFromDateTime(tPacificIn, "")
 
-	if err == nil {
-		t.Error("Error: Expected an error return from dtMech.GetTimeZoneFromDateTime(tPacificIn, \"\")\n" +
-			"because 'tPacificIn' has a ZERO value. However, NO ERROR WAS RETURNED!!\n")
+	if err != nil {
+		t.Errorf("Errorl returned by dtMech.GetTimeZoneFromDateTime(tPacificIn, \"\"))\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	actualTzName := tzSpec.locationName
+
+	if expectedTimeZoneName != actualTzName {
+		t.Errorf("Error: Expected Time Zone='%v'\n" +
+			"Actual Time Zone='%v'\n",
+			expectedTimeZoneName, actualTzName)
 	}
 }
 
@@ -327,17 +340,31 @@ func TestDTimeMechanics_GetTimeZoneFromName_02(t *testing.T) {
 
 	tPacificIn = time.Time{}
 
-	_,
+	var tzSpec TimeZoneSpecification
+
+	tzSpec,
 		err = dtMech.GetTimeZoneFromName(
 			tPacificIn,
 			TZones.America.New_York(),
 			TzConvertType.Relative(),
 			"")
 
-	if err == nil {
-		t.Error("Error: Expected an error return from dtMech.GetTimeZoneFromName(dateTime,...)\n" +
-			"because 'dateTime' is a ZERO XValue! However, NO ERROR WAS RETURNED!\n")
+	if err != nil {
+		t.Errorf("Error returned by dtMech.GetTimeZoneFromName().\n" +
+			"Error='%v'\n", err.Error())
+		return
 	}
+
+	expectedTimeZone := TZones.America.New_York()
+
+	actualTimeZone := tzSpec.GetLocationName()
+
+	if expectedTimeZone != actualTimeZone {
+		t.Errorf("Error: Expected Time Zone='%v'\n" +
+			"Instead, Time Zone='%v'\n",
+			expectedTimeZone, actualTimeZone)
+	}
+
 }
 
 func TestDTimeMechanics_GetTimeZoneFromName_03(t *testing.T) {
