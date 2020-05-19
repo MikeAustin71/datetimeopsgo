@@ -135,6 +135,9 @@ const (
   // WeekNanoSeconds - Number of Nanoseconds in a 7-day week
   WeekNanoSeconds = int64(7) * DayNanoSeconds
 
+  // NoonNanoSeconds = Nanoseconds from 0-hours to 12-hours
+  NoonNanoSeconds = int64(12) * int64(time.Hour)
+
 
 
 

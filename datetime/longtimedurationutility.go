@@ -12,8 +12,30 @@ type longTimeDurationUtility struct {
 	lock              sync.Mutex
 }
 
-// addDuration - Add a time.Duration value to the current
-// value of longDur.duration.
+// addDuration - Add a time.Duration value to the current value
+// of longDur.duration.
+//
+// In computing durations which extend before the common era
+// ('BCE'), this type uses the Gregorian calendar system. In
+// other words, under this system, there is NO year zero. The
+// year 1BCE is followed by the year 1CE.
+//
+// See Wikipedia https://en.wikipedia.org/wiki/Year_zero :
+//
+//  "The year zero does not exist in the Anno Domini (AD) system
+//  commonly used to number years in the Gregorian calendar and
+//  in its predecessor, the Julian calendar. In this system, the
+//  year 1 BC is followed by AD 1. However, there is a year zero
+//  in astronomical year numbering (where it coincides with the
+//  Julian year 1 BC) and in ISO 8601:2004 (where it coincides
+//  with the Gregorian year 1 BC), as well as in all Buddhist
+//  and Hindu calendars."
+//
+// For information on the "Common Era" calendar notation see:
+//   https://en.wikipedia.org/wiki/Common_Era
+//
+// For Astronomical year numbering see:
+//   https://en.wikipedia.org/wiki/Astronomical_year_numbering
 //
 func (lngDurUtil *longTimeDurationUtility) addDuration(
 	longDur *LongTimeDuration,

@@ -449,7 +449,10 @@ func (lngDur *LongTimeDuration) GetLongDuration() (
 
 // GetStartEndDatesTz - Returns two DateTzDto objects identifying
 // the starting and ending date times for the duration represented
-// by the current LongTimeDuration instance.
+// by the current LongTimeDuration instance. The dates returned
+// reflect the results of a mathematical calculation which adds
+// a positive 
+// the
 //
 func (lngDur *LongTimeDuration) GetStartEndDatesTz() (startDateTimeTz, endDateTimeTz DateTzDto){
 

@@ -1,0 +1,129 @@
+
+
+Julian calendar
+https://en.wikipedia.org/wiki/Julian_calendar
+
+The Julian calendar, proposed by Julius Caesar in 708 Ab urbe condita (AUC) (46 BC),
+was a reform of the Roman calendar.[1] It took effect on 1 January 709 AUC (45 BC),
+by edict. It was designed with the aid of Greek mathematicians and Greek astronomers
+such as Sosigenes of Alexandria.
+
+The calendar was the predominant calendar in the Roman world, most of Europe, and in
+European settlements in the Americas and elsewhere, until it was gradually replaced
+by the Gregorian calendar, promulgated in 1582 by Pope Gregory XIII. The Julian
+calendar is still used in parts of the Eastern Orthodox Church and in parts of Oriental
+Orthodoxy as well as by the Berbers.[2]
+
+The Julian calendar has two types of year: a normal year of 365 days and a leap year of
+366 days. They follow a simple cycle of three normal years and one leap year, giving an
+average year that is 365.25 days long. That is more than the actual solar year value of
+365.24219 days, which means the Julian calendar gains a day every 128 years.
+
+During the 20th and 21st centuries, a date according to the Julian calendar is 13 days
+earlier than its corresponding Gregorian date.
+
+Julian day
+https://en.wikipedia.org/wiki/Julian_day
+Julian day is the continuous count of days since the beginning of the Julian Period and
+is used primarily by astronomers, and in software for easily calculating elapsed days
+between two events (e.g. food production date and sell by date).[1]
+
+The Julian Day Number (JDN) is the integer assigned to a whole solar day in the Julian
+day count starting from noon Universal time, with Julian day number 0 assigned to the
+day starting at noon on Monday, January 1, 4713 BC, proleptic Julian calendar (November
+24, 4714 BC, in the proleptic Gregorian calendar),[2][3][4] a date at which three
+multi-year cycles started (which are: Indiction, Solar, and Lunar cycles) and which
+preceded any dates in recorded history.[5] For example, the Julian day number for
+the day starting at 12:00 UT (noon) on January 1, 2000, was 2 451 545.[6]
+
+The Julian date (JD) of any instant is the Julian day number plus the
+fraction of a day since the preceding noon in Universal Time. Julian
+dates are expressed as a Julian day number with a decimal fraction
+added.[7] For example, the Julian Date for 00:30:00.0 UT January 1,
+2013, is 2 456 293.520 833.[8] Expressed as a Julian date, right
+now it is 2458988.5273727. [refresh] (2020/05/18).
+
+The Julian Period is a chronological interval of 7980 years; year 1
+of the Julian Period was 4713 BC (−4712).[9] The Julian calendar year
+2020 is year 6733 of the current Julian Period. The next Julian Period
+begins in the year AD 3268. Historians used the period to identify
+Julian calendar years within which an event occurred when no such
+year was given in the historical record, or when the year given by
+previous historians was incorrect.
+
+
+Day
+https://en.wikipedia.org/wiki/Day
+A day is approximately the period of time during which the Earth completes one rotation
+around its axis.[1] A solar day is the length of time which elapses between the Sun reaching
+its highest point in the sky two consecutive times.[2] Days on other planets are defined
+similarly and vary in length due to differing rotation periods, that of Mars being slightly
+longer and sometimes called a sol.
+
+In 1960, the second was redefined in terms of the orbital motion of the Earth in the year
+1900, and was designated the SI base unit of time. The unit of measurement "day", was
+redefined as 86,400 SI seconds and symbolized d. In 1967, the second and so the day were
+redefined by atomic electron transition.[3] A civil day is usually 86,400 seconds, plus
+or minus a possible leap second in Coordinated Universal Time (UTC), and occasionally
+plus or minus an hour in those locations that change from or to daylight saving time.
+[2][1]
+
+Day can be defined as each of the twenty-four-hour periods, reckoned from one midnight
+to the next, into which a week, month, or year is divided, and corresponding to a
+rotation of the earth on its axis.[4] However, its use depends on its context; for
+example, when people say 'day and night', 'day' will have a different meaning:
+the interval of light between two successive nights, the time between sunrise and
+sunset;[5] the time of light between one night and the next.[6] For clarity when meaning
+'day' in that sense, the word "daytime" may be used instead,[7][8] though context and
+phrasing often makes the meaning clear. The word day may also refer to a day of the
+week or to a calendar date, as in answer to the question, "On which day?" The life
+patterns (circadian rhythms) of humans and many other species are related to Earth's
+solar day and the day-night cycle.
+
+Converting to Julian Calendar
+https://quasar.as.utexas.edu/BillInfo/JulianDatesG.html
+
+Julian Day Numbers - Using Calgo #199
+http://pmyers.pcug.org.au/General/JulianDates.htm
+
+Astronomical year numbering
+https://en.wikipedia.org/wiki/Astronomical_year_numbering
+Astronomical year numbering is based on AD/CE year numbering, but follows normal decimal
+integer numbering more strictly. Thus, it has a year 0; the years before that are
+designated with negative numbers and the years after that are designated with positive
+numbers.[1] Astronomers use the Julian calendar for years before 1582, including the year
+0, and the Gregorian calendar for years after 1582, as exemplified by Jacques Cassini
+(1740),[2] Simon Newcomb (1898)[3] and Fred Espenak (2007).[4]
+
+The prefix AD and the suffixes CE, BC or BCE (Common Era, Before Christ or Before Common
+Era) are dropped.[1] The year 1 BC/BCE is numbered 0, the year 2 BC is numbered −1, and
+in general the year n BC/BCE is numbered "−(n − 1)"[1] (a negative number equal to 1 − n).
+The numbers of AD/CE years are not changed and are written with either no sign or a positive
+sign; thus in general n AD/CE is simply n or +n.[1] For normal calculation a number zero is
+often needed, here most notably when calculating the number of years in a period that spans
+the epoch; the end years need only be subtracted from each other.
+
+The system is so named due to its use in astronomy. Few other disciplines outside history
+deal with the time before year 1, some exceptions being dendrochronology, archaeology and
+geology, the latter two of which use 'years before the present'. Although the absolute
+numerical values of astronomical and historical years only differ by one before year 1,
+this difference is critical when calculating astronomical events like eclipses or planetary
+conjunctions to determine when historical events which mention them occurred.
+
+Calendar Converter
+https://www.fourmilab.ch/documents/calendar/
+Provides narrative explanations of various calendar systems.
+
+The Julian Calendar and why we need to know about it
+Stephen P. Morse
+https://stevemorse.org/juliancalendar/julian.htm
+
+Astronomical year numbering
+https://en.wikipedia.org/wiki/Astronomical_year_numbering
+
+Modified Julian Dates
+NASA
+https://core2.gsfc.nasa.gov/time/
+
+ke!san Online Julian Day/Date Calculator
+https://keisan.casio.com/exec/system/1227779487

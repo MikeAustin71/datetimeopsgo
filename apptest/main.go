@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest087()
+	mainTest{}.mainTest089()
 
 }
 
@@ -18,6 +18,147 @@ type mainTest struct {
 	input  string
 	output string
 }
+
+func (mt mainTest) mainTest089() {
+
+	dateTimeFormat := dt.FmtDateTimeYrMDayFmtStr
+
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest089()",
+		"Testbed for Computing Julian Day Numbers"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+
+	testDate := time.Date(
+		2013,
+		1,
+		1,
+		0,
+		30,
+		0,
+		0,
+		time.UTC)
+// Expected 2 456 293.520 833
+
+// Example: The Julian Date for 00:30:00.0 UT January 1, 2013, is 2 456 293.520 833
+
+	expectedJulianDayNo := int64(2456293)
+
+
+/*
+	testDate := time.Date(
+		2020,
+		5,
+		19,
+		12,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	// Expected 2458989.2829861 Now adjusted for beginning of Julian day at noon
+
+	expectedJulianDayNo := int64(2458989)
+*/
+
+// http://www.csgnetwork.com/juliandaydate.html
+
+	dtUtil := dt.DTimeUtility{}
+
+	gregorianDateUtc,
+	julianDayNumber,
+	err := dtUtil.GregorianDateToJulianDayNo(
+		testDate,
+		"mainTest.mainTest089() ")
+
+	if err != nil {
+		fmt.Printf("Error returned by dtUtil.GregorianDateToJulianDayNo()\n" +
+			"testDate='%v'\n" +
+			"Error='%v'\n",
+			testDate.Format(dateTimeFormat),
+			err.Error())
+		return
+	}
+
+	fmt.Println(lineSplitter)
+	fmt.Println("Date Time Conversion to Julian Day No.")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Test Date Time:          %v\n",
+		testDate.Format(dateTimeFormat))
+	fmt.Println(lineSplitter)
+	fmt.Printf("gregorianDateUtc:        %v\n",
+		gregorianDateUtc.Format(dateTimeFormat))
+	fmt.Printf("Calculated Julian Day Number: %v\n",
+		julianDayNumber)
+	fmt.Printf("Expected Julian Day Number:   %v\n",
+		expectedJulianDayNo)
+
+	fmt.Println(lineSplitter)
+	fmt.Println(lineSplitter)
+}
+
+func (mt mainTest) mainTest088() {
+
+	// "0001-01-01 00:00:00.000000000 +0000 UTC"
+	zeroTime := time.Time{}
+	dateTimeFormat := dt.FmtDateTimeYrMDayFmtStr
+		lineLen := 70
+
+	titles := []string{"mainTest.mainTest088()",
+		"Testing Starting and Ending Date",
+		"Time Duration Calculation",
+		"Starting Date Time Zero"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	lineSplitter := strings.Repeat("-", lineLen)
+	fmt.Println(lineSplitter)
+	fmt.Println("Zero and Zero Minus Times")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Zero Time:               %v\n",
+		zeroTime.Format(dateTimeFormat))
+
+	t2ZeroMinus1Year := time.Date(
+		zeroTime.Year() -1,
+		1,
+		1,
+		0,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	fmt.Printf("Zero Time -1Year         %v\n",
+		t2ZeroMinus1Year.Format(dateTimeFormat))
+
+	t500BCE := time.Date(
+		zeroTime.Year() -500,
+		1,
+		1,
+		0,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	fmt.Printf("Zero Time -500Years      %v\n",
+		t500BCE.Format(dateTimeFormat))
+	fmt.Println(lineSplitter)
+
+}
+
 
 func (mt mainTest) mainTest087() {
 	/*
