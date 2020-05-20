@@ -10,13 +10,97 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest089()
+	mainTest{}.mainTest090()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest090() {
+
+	dateTimeFormat := dt.FmtDateTimeYrMDayFmtStr
+
+	lineLen := 70
+
+	titles := []string{"mainTest.mainTest090()",
+		"Testbed for Computing Julian Day Numbers"}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+/*
+	testDate := time.Date(
+		2013,
+		1,
+		1,
+		0,
+		30,
+		0,
+		0,
+		time.UTC)
+	// Expected 2 456 293.520 833
+
+	// Example: The Julian Date for 00:30:00.0 UT January 1, 2013, is 2 456 293.520 833
+
+	expectedJulianDate := float64(2456293.520833)
+*/
+
+	testDate := time.Date(
+		2013,
+		1,
+		1,
+		12,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDate := float64(2456294.000000)
+
+	dtUtil := dt.DTimeUtility{}
+
+	gregorianDateUtc,
+	julianDate,
+	err := dtUtil.GregorianDateToJulianDate(
+		testDate,
+		7,
+		"mainTest.mainTest090() ")
+
+	if err != nil {
+		fmt.Printf("Error returned by dtUtil.GregorianDateToJulianDayNo()\n" +
+			"testDate='%v'\n" +
+			"Error='%v'\n",
+			testDate.Format(dateTimeFormat),
+			err.Error())
+		return
+	}
+
+	fmt.Println(lineSplitter)
+	fmt.Println("Date Time Conversion to Julian Date")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Test Date Time:          %v\n",
+		testDate.Format(dateTimeFormat))
+	fmt.Println(lineSplitter)
+	fmt.Printf("gregorianDateUtc:        %v\n",
+		gregorianDateUtc.Format(dateTimeFormat))
+	fmt.Printf("Calculated Julian Date:  %20.8f\n",
+		julianDate)
+	fmt.Printf("Expected Julian Date:    %20.8f\n",
+		expectedJulianDate)
+
+	fmt.Println(lineSplitter)
+	fmt.Println(lineSplitter)
+
+
+
 }
 
 func (mt mainTest) mainTest089() {

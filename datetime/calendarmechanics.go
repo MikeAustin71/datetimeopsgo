@@ -1,11 +1,12 @@
 package datetime
 
 import (
+	"math"
 	"sync"
 	"time"
 )
 
-type dateTimeMechanicsHelper struct {
+type calendarMechanics struct {
 	input  string
 	output string
 	lock   sync.Mutex
@@ -67,18 +68,18 @@ type dateTimeMechanicsHelper struct {
 //       an error message.
 //
 //
-func (dtMechHelper *dateTimeMechanicsHelper) gregorianDateToJulianDayNo(
+func (calMech *calendarMechanics) gregorianDateToJulianDayNo(
 	gregorianDateTime time.Time,
 	ePrefix string) (
 	gregorianDateUtc time.Time,
 	julianDayNo int64,
 	err error) {
 
-	dtMechHelper.lock.Lock()
+	calMech.lock.Lock()
 
-	defer dtMechHelper.lock.Unlock()
+	defer calMech.lock.Unlock()
 
-	ePrefix += "dtMechHelper.dateTimeMechanicsHelper() "
+	ePrefix += "calMech.calendarMechanics() "
 
 	gregorianDateUtc = gregorianDateTime.UTC()
 	julianDayNo = 0
@@ -137,5 +138,102 @@ func (dtMechHelper *dateTimeMechanicsHelper) gregorianDateToJulianDayNo(
 	}
 
 	return gregorianDateUtc, julianDayNo, err
+}
 
+// gregorianDateToJulianDate - Converts a Gregorian Date to a Julian
+// Date.
+//
+// Reference Wikipedia:
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+func (calMech *calendarMechanics) gregorianDateToJulianDate(
+	gregorianDateTime time.Time,
+	digitsAfterDecimal int,
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	julianDate float64,
+	err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calMech.calendarMechanics() "
+
+	gregorianDateUtc = gregorianDateTime.UTC()
+	julianDate = 0.0
+	err = nil
+
+	if digitsAfterDecimal < 0 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "digitsAfterDecimal",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
+				"less than ZERO!",
+			err:                 nil,
+		}
+
+		return gregorianDateUtc, julianDate, err
+	}
+
+	if digitsAfterDecimal > 100 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "digitsAfterDecimal",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
+				"greater than 100!",
+			err:                 nil,
+		}
+
+		return gregorianDateUtc, julianDate, err
+	}
+
+	Year := int64(gregorianDateUtc.Year())
+	Month := int64(gregorianDateUtc.Month())
+	Day := int64(gregorianDateUtc.Day())
+
+	/*
+		JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
+	*/
+
+	julianDayNo :=
+		(int64(1461) * (Year + int64(4800) +
+			(Month - int64(14))/int64(12)))/int64(4) +
+			(int64(367) * (Month - int64(2) -
+				int64(12) * ((Month - int64(14))/int64(12))))/int64(12) -
+			(int64(3) * ((Year + int64(4900) +
+				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
+			Day - int64(32075)
+
+	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Minute()) * MinuteNanoSeconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Second()) * SecondNanoseconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Nanosecond())
+
+	if gregorianTimeNanoSecs < NoonNanoSeconds {
+
+		julianDayNo -= 1
+		gregorianTimeNanoSecs += NoonNanoSeconds
+
+	} else {
+
+		gregorianTimeNanoSecs -= NoonNanoSeconds
+	}
+
+	julianDate = float64(julianDayNo)
+
+	julianDate += float64(gregorianTimeNanoSecs) /
+									float64(DayNanoSeconds)
+
+	multiplier := math.Pow10(digitsAfterDecimal)
+
+	julianDate = julianDate * multiplier
+
+	julianDate = math.Round(julianDate)
+
+	julianDate = julianDate / multiplier
+
+	return gregorianDateUtc, julianDate, err
 }

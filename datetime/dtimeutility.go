@@ -117,6 +117,7 @@ func (dtUtil *DTimeUtility) EqualDateTimeComponents(
 // converted to Universal Coordinated Time (UTC).
 //
 //  Example: The Julian Date for 00:30:00.0 UT January 1, 2013, is 2 456 293.520 833
+//           The Julian Day Number is 2456293
 //
 // ------------------------------------------------------------------------
 //
@@ -185,66 +186,87 @@ func (dtUtil *DTimeUtility) GregorianDateToJulianDayNo(
 
 	ePrefix += "DTimeUtility.GregorianDateToJulianDayNo() "
 
-	dtMechHelper := dateTimeMechanicsHelper{}
+	calendarMech := calendarMechanics{}
 
-	return dtMechHelper.gregorianDateToJulianDayNo(
+	return calendarMech.gregorianDateToJulianDayNo(
 		gregorianDateTime,
 		ePrefix)
-
-	/*
-	gregorianDateUtc = gregorianDateTime.UTC()
-	julianDayNo = 0
-	err =  nil
-
-	// This algorithm is valid for all (possibly proleptic) Gregorian
-	// calendar dates after November 23, −4713.
-	limitDateTime := time.Date(
-	-4713,
-	11,
-	24,
-	0,
-	0,
-	0,
-	0,
-	time.UTC)
-
-	if gregorianDateUtc.Before(limitDateTime) {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "gregorianDateTime",
-			inputParameterValue: "",
-			errMsg:              "Error: 'gregorianDateTime' is invalid. Valid date times must\n" +
-				                   "occur after November 23, −4713 UTC as expressed in Astronomical\n" +
-				                   "year numbering.",
-			err:                 nil,
-		}
-
-		return gregorianDateUtc, julianDayNo, err
-	}
-
-	Year := int64(gregorianDateUtc.Year())
-	Month := int64(gregorianDateUtc.Month())
-	Day := int64(gregorianDateUtc.Day())
-
-	/*
-	JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
-	 */
-/*
-	julianDayNo =
-		(int64(1461) * (Year + int64(4800) + (Month - int64(14))/int64(12)))/int64(4) + (int64(367) * (Month - int64(2) - 12 * ((Month - int64(14))/int64(12))))/int64(12) - (int64(3) * ((Year + int64(4900) + (Month - int64(14))/int64(12))/int64(100)))/int64(4) + Day - int64(32075)
-
-	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
-	gregorianTimeNanoSecs += int64(gregorianDateUtc.Minute()) * MinuteNanoSeconds
-	gregorianTimeNanoSecs += int64(gregorianDateUtc.Second()) * SecondNanoseconds
-	gregorianTimeNanoSecs += int64(gregorianDateUtc.Nanosecond())
-
-	if gregorianTimeNanoSecs < NoonNanoSeconds {
-		julianDayNo -= 1
-	}
-
-	return gregorianDateUtc, julianDayNo, err
-	*/
 }
+
+// GregorianDateToJulianDate - Converts a Gregorian Date to a Julian
+// Date.
+//
+// Reference Wikipedia:
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+//  Example: The Julian Date for 00:30:00.0 UT January 1, 2013, is
+//  2 456 293.520 833
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameter
+//
+//  gregorianDateTime  time.Time
+//     - This date time value will be converted to Universal
+//       Coordinated Time (UTC) before conversion to a Julian
+//       Day Number (JDN).
+//
+//
+//  ePrefix            string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  gregorianDateUtc   time.Time
+//     - The input parameter 'gregorianDateTime' converted to Universal
+//       Coordinated Time (UTC). This is the date time used to compute
+//       the Julian Date
+//
+//
+//  julianDate          float64
+//     - An float64 value representing the Julian Date equivalent to
+//       input parameter 'gregorianDateTime'. Note: 'gregorianDateTime'
+//       is first converted to Universal Coordinated Time (UTC) before
+//       being converted to a Julian Date.
+//
+//
+//  err                 error
+//     - If successful the returned error Type is set equal to 'nil'.
+//       If errors are encountered this error Type will encapsulate
+//       an error message.
+//
+//
+func (dtUtil *DTimeUtility) GregorianDateToJulianDate(
+	gregorianDateTime time.Time,
+	digitsAfterDecimal int,
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	julianDate float64,
+	err error) {
+
+	if dtUtil.lock == nil {
+		dtUtil.lock = new(sync.Mutex)
+	}
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.GregorianDateToJulianDayNo() "
+
+	calendarMech := calendarMechanics{}
+
+	return calendarMech.gregorianDateToJulianDate(
+		gregorianDateTime,
+		digitsAfterDecimal,
+		ePrefix)
+}
+
 
 // ConvertAstronomicalToGregorianBce - Used to convert negative
 // year Astronomical date time values to their correct Gregorian
