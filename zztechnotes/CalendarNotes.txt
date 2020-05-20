@@ -125,5 +125,20 @@ Modified Julian Dates
 NASA
 https://core2.gsfc.nasa.gov/time/
 
-ke!san Online Julian Day/Date Calculator
-https://keisan.casio.com/exec/system/1227779487
+//
+//  ke!san Online Julian Day/Date Calculator
+//    https://keisan.casio.com/exec/system/1227779487
+//
+//  How to Calculate the Julian Date
+//   https://sciencing.com/calculate-age-lunar-years-5997325.html
+//
+//  Astronomy
+//   https://www.aa.quae.nl/en/reken/juliaansedag.html
+//
+// How to Calculate Julian Dates
+// https://www.howcast.com/videos/how-to-calculate-julian-dates
+//
+// Astronomical Calculations: The Julian Day
+// https://squarewidget.com/julian-day/
+
+

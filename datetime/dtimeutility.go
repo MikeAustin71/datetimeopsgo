@@ -185,6 +185,13 @@ func (dtUtil *DTimeUtility) GregorianDateToJulianDayNo(
 
 	ePrefix += "DTimeUtility.GregorianDateToJulianDayNo() "
 
+	dtMechHelper := dateTimeMechanicsHelper{}
+
+	return dtMechHelper.gregorianDateToJulianDayNo(
+		gregorianDateTime,
+		ePrefix)
+
+	/*
 	gregorianDateUtc = gregorianDateTime.UTC()
 	julianDayNo = 0
 	err =  nil
@@ -222,7 +229,7 @@ func (dtUtil *DTimeUtility) GregorianDateToJulianDayNo(
 	/*
 	JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
 	 */
-
+/*
 	julianDayNo =
 		(int64(1461) * (Year + int64(4800) + (Month - int64(14))/int64(12)))/int64(4) + (int64(367) * (Month - int64(2) - 12 * ((Month - int64(14))/int64(12))))/int64(12) - (int64(3) * ((Year + int64(4900) + (Month - int64(14))/int64(12))/int64(100)))/int64(4) + Day - int64(32075)
 
@@ -236,6 +243,7 @@ func (dtUtil *DTimeUtility) GregorianDateToJulianDayNo(
 	}
 
 	return gregorianDateUtc, julianDayNo, err
+	*/
 }
 
 // ConvertAstronomicalToGregorianBce - Used to convert negative
