@@ -240,6 +240,9 @@ func (dtUtil *DTimeUtility) GregorianDateToJulianDayNo(
 //       If errors are encountered this error Type will encapsulate
 //       an error message.
 //
+// Resources:
+//  American Association of Variable Star Observers (AAVSO)
+//  https://www.aavso.org/jd-calculator
 //
 func (dtUtil *DTimeUtility) GregorianDateToJulianDate(
 	gregorianDateTime time.Time,
