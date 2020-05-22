@@ -364,13 +364,30 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 //   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
 //   Oxford University Press. ISBN 978-0192862051
 //
+// The Julian Day Number (JDN) is the integer assigned to a whole solar
+// day in the Julian day count starting from noon Universal time, with
+// Julian day number 0 assigned to the day starting at noon on Monday,
+// January 1, 4713 BC, in the proleptic Julian calendar and November 24,
+// 4714 BC, in the proleptic Gregorian calendar.
+//
+// The Julian Day Number Time is a floating point number with an integer
+// to the left of the decimal point representing the Julian Day Number
+// and the fraction to the right of the decimal point representing time
+// in hours minutes and seconds.
+//
 // Julian Day numbers start on day zero at noon. This means that Julian
 // Day Number Times are valid for all dates on or after noon on Monday,
-// January 1, 4713 BC, in the proleptic Julian calendar or November 24,
-// 4714 BC, in the proleptic Gregorian calendar. Remember that the Golang
-// 'time.Time' type uses Astronomical Year numbering. This translates
-// to algorithm validity for all 'time.Time' (possibly proleptic) dates
-// on or after noon November 24, −4713.
+// January 1, 4713 BCE, in the proleptic Julian calendar or November 24,
+// 4714 BCE, in the proleptic Gregorian calendar. Remember that the Golang
+// 'time.Time' type uses Astronomical Year numbering with the Gregorian
+// Calendar. In other words, the 'time.Time' type recognizes the year
+// zero. Dates expressed in the 'Common Era' ('BCE' Before Common Era
+// or 'CE' Common Era). Therefore a 'time.Time' year of '-4713' is equal
+// to the year '4714 BCE'
+//
+// This means that the 'Richards' algorithm employed by this
+// method is valid for all 'time.Time' (possibly proleptic) Gregorian
+// dates on or after noon November 24, −4713.
 //
 // For information on the Julian Day Number/Time see:
 //   https://en.wikipedia.org/wiki/Julian_day

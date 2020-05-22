@@ -52,14 +52,15 @@ func (mt mainTest) mainTest091() {
 
 	// Example: The Julian Date for 00:30:00.0 UT January 1, 2013, is 2 456 293.520 833
 	var julianDateTime float64
-	julianDateTime = 2456293.520833
+	// julianDateTime = 2456293.520833
+	julianDateTime = 0.0
 
 	digitsAfterDecimal := 6
 
-	dtUtil := dt.DTimeUtility{}
+	calUtil := dt.CalendarUtility{}
 
 	gregorianDateTime,
-	err := dtUtil.JulianDayNoTimeToGregorianDateTime(
+	err := calUtil.JulianDayNoTimeToGregorianDateTime(
 		julianDateTime,
 		digitsAfterDecimal,
 		ePrefix)
@@ -133,17 +134,17 @@ func (mt mainTest) mainTest090() {
 
 	expectedJulianDate = 2456294.000000
 
-	dtUtil := dt.DTimeUtility{}
+	calUtil := dt.CalendarUtility{}
 
 	gregorianDateUtc,
 	julianDate,
-	err := dtUtil.GregorianDateToJulianDate(
+	err := calUtil.GregorianDateToJulianDate(
 		testDate,
 		7,
 		"mainTest.mainTest090() ")
 
 	if err != nil {
-		fmt.Printf("Error returned by dtUtil.GregorianDateToJulianDayNo()\n" +
+		fmt.Printf("Error returned by calUtil.GregorianDateToJulianDayNo()\n" +
 			"testDate='%v'\n" +
 			"Error='%v'\n",
 			testDate.Format(dateTimeFormat),
@@ -223,16 +224,16 @@ func (mt mainTest) mainTest089() {
 
 // http://www.csgnetwork.com/juliandaydate.html
 
-	dtUtil := dt.DTimeUtility{}
+	calUtil := dt.CalendarUtility{}
 
 	gregorianDateUtc,
 	julianDayNumber,
-	err := dtUtil.GregorianDateToJulianDayNo(
+	err := calUtil.GregorianDateToJulianDayNo(
 		testDate,
 		"mainTest.mainTest089() ")
 
 	if err != nil {
-		fmt.Printf("Error returned by dtUtil.GregorianDateToJulianDayNo()\n" +
+		fmt.Printf("Error returned by calUtil.GregorianDateToJulianDayNo()\n" +
 			"testDate='%v'\n" +
 			"Error='%v'\n",
 			testDate.Format(dateTimeFormat),
