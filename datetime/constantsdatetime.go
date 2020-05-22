@@ -123,6 +123,8 @@ const (
   // SecondNanoseconds - Number of Nanoseconds in a Second
   SecondNanoseconds = int64(time.Second)
 
+  HalfSecondNanoseconds = int64(time.Second) / int64(2)
+
   // MinuteNanoSeconds - Number of Nanoseconds in a minute
   MinuteNanoSeconds = int64(time.Minute)
 

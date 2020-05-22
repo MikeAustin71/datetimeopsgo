@@ -382,3 +382,110 @@ func (dtUtil *DTimeUtility) ConvertGregorianToAstronomicalBce(
 
 	return newDateTime
 }
+
+
+// JulianDayNoTimeToGregorianDateTime - Converts a Julian Day
+// Number and Time value to the corresponding date time in the
+// Gregorian Calendar. Because the Gregorian Calendar was instituted
+// in Friday, October 15, 1582, all Gregorian Calendar dates prior
+// to this are extrapolated or proleptic.
+//
+// "This is an algorithm by Richards to convert a Julian Day Number,
+// J, to a date in the Gregorian calendar (proleptic, when applicable).
+// Richards states the algorithm is valid for Julian day numbers greater
+// than or equal to 0".
+//
+//   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
+//   Oxford University Press. ISBN 978-0192862051
+//
+// Julian Day numbers start on day zero at noon. This means that Julian
+// Day Number Times are valid for all dates on or after noon on Monday,
+// January 1, 4713 BC, in the proleptic Julian calendar or November 24,
+// 4714 BC, in the proleptic Gregorian calendar. Remember that the Golang
+// 'time.Time' type uses Astronomical Year numbering. This translates
+// to algorithm validity for all 'time.Time' (possibly proleptic) dates
+// on or after noon November 24, −4713.
+//
+// For information on the Julian Day Number/Time see:
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameter
+//
+//  julianDayNoNoTime   float64
+//     - The integer portion of this number (digits to left of
+//       the decimal) represents the Julian day number. The fractional
+//       digits to the right of the decimal represent elapsed time
+//       since noon on the Julian day number. All time values are
+//       expressed as Universal Coordinated Time (UTC).
+//
+//  digitsAfterDecimal  int
+//     - The number of digits after the decimal in input parameter
+//       'julianDayNoNoTime' which will be used in the conversion
+//       algorithm. Effectively, 'julianDayNoNoTime' will be rounded
+//       to the number of digits to the right of the decimal specified
+//       in this parameter.
+//
+//  ePrefix             string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  gregorianDateUtc    time.Time
+//     - The returned parameter 'gregorianDateTime' represents the input
+//       'julianDayNoNoTime' converted to the Gregorian calendar. This
+//       returned 'time.Time' type is always configured as Universal
+//       Coordinated Time (UTC). In addition, as a Golan 'time.Time'
+//       type, the date is expressed using astronomical years. Astronomical
+//       year numbering includes a Zero Year. Therefore, 1BCE is stored
+//       as year zero in this return value.
+//
+//
+//  err                 error
+//     - If successful the returned error Type is set equal to 'nil'.
+//       If errors are encountered this error Type will encapsulate
+//       an error message.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Resources
+//
+//  PHP Julian date converter algorithms (Stack Overflow)
+//   https://stackoverflow.com/questions/45586444/php-julian-date-converter-algorithms
+//
+//
+func (dtUtil *DTimeUtility) JulianDayNoTimeToGregorianDateTime(
+	julianDayNoNoTime float64,
+	digitsAfterDecimal int,
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	err error) {
+
+	if dtUtil.lock == nil {
+		dtUtil.lock = new(sync.Mutex)
+	}
+
+	dtUtil.lock.Lock()
+
+	defer dtUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.JulianDayNoTimeToGregorianDateTime() "
+
+	calendarMech := calendarMechanics{}
+
+	gregorianDateUtc,
+	err =
+		calendarMech.richardsJulianDayNoTimeToGregorianDateTime(
+			julianDayNoNoTime,
+			digitsAfterDecimal,
+			ePrefix)
+
+	return gregorianDateUtc, err
+}

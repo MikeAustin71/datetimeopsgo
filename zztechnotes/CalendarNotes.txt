@@ -80,8 +80,13 @@ week or to a calendar date, as in answer to the question, "On which day?" The li
 patterns (circadian rhythms) of humans and many other species are related to Earth's
 solar day and the day-night cycle.
 
+
+Julian Day Numbers - Using Calgo #199
+  http://pmyers.pcug.org.au/General/JulianDates.htm
+
+
 Converting to Julian Calendar
-https://quasar.as.utexas.edu/BillInfo/JulianDatesG.html
+  https://quasar.as.utexas.edu/BillInfo/JulianDatesG.html
 
 Julian Day Numbers - Using Calgo #199
 http://pmyers.pcug.org.au/General/JulianDates.htm
@@ -114,31 +119,69 @@ Calendar Converter
 https://www.fourmilab.ch/documents/calendar/
 Provides narrative explanations of various calendar systems.
 
-The Julian Calendar and why we need to know about it
-Stephen P. Morse
-https://stevemorse.org/juliancalendar/julian.htm
+ The Julian Calendar and why we need to know about it
+          Stephen P. Morse
+   https://stevemorse.org/juliancalendar/julian.htm
 
-Astronomical year numbering
-https://en.wikipedia.org/wiki/Astronomical_year_numbering
+ Astronomical year numbering
+  https://en.wikipedia.org/wiki/Astronomical_year_numbering
 
-Modified Julian Dates
-NASA
-https://core2.gsfc.nasa.gov/time/
+ Modified Julian Dates
+        NASA
+  https://core2.gsfc.nasa.gov/time/
 
-//
-//  ke!san Online Julian Day/Date Calculator
-//    https://keisan.casio.com/exec/system/1227779487
-//
-//  How to Calculate the Julian Date
-//   https://sciencing.com/calculate-age-lunar-years-5997325.html
-//
-//  Astronomy
-//   https://www.aa.quae.nl/en/reken/juliaansedag.html
-//
-// How to Calculate Julian Dates
-// https://www.howcast.com/videos/how-to-calculate-julian-dates
-//
-// Astronomical Calculations: The Julian Day
-// https://squarewidget.com/julian-day/
+
+ ke!san Online Julian Day/Date Calculator
+     https://keisan.casio.com/exec/system/1227779487
+
+ How to Calculate the Julian Date
+   https://sciencing.com/calculate-age-lunar-years-5997325.html
+
+ Astronomy
+   https://www.aa.quae.nl/en/reken/juliaansedag.html
+
+ How to Calculate Julian Dates
+  https://www.howcast.com/videos/how-to-calculate-julian-dates
+
+  Astronomical Calculations: The Julian Day
+     https://squarewidget.com/julian-day/
+
+
+  Sciencing - How to Calculate the Julian Date
+   https://sciencing.com/calculate-julian-date-6465290.html
+
+  Sciencing - How to Convert the Julian Date to a Calender Date
+   https://sciencing.com/convert-julian-date-calender-date-6017669.html
+
+  Modified Julian Dates
+   https://core2.gsfc.nasa.gov/time/
+
+  Julian Day Numbers for dates on the Gregorian and Julian Calendars
+    https://www.friesian.com/numbers.htm
+
+              ***  Julian Calendar  ***
+  Conversion between Julian and Gregorian calendars
+   https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+  Change From Julian to Gregorian Calendar
+   https://www.timeanddate.com/calendar/julian-gregorian-switch.html
+
+  Change From Julian to Gregorian Calendar
+   https://www.timeanddate.com/calendar/julian-gregorian-switch.html
+
+  Calendar Converter
+   https://www.fourmilab.ch/documents/calendar/
+
+  Converting Between Julian Dates and Gregorian Calendar Dates in Fortran (and JavaScript)
+   https://ix23.com/converting-between-julian-dates-and-gregorian-calendar-dates-in-fortran-and-javascript/
+
+  How to Convert the Julian Date to a Calender Date
+   https://sciencing.com/convert-julian-date-calender-date-6017669.html
+
+  JulianCalendar.GetDayOfYear(DateTime) Method
+    https://docs.microsoft.com/en-us/dotnet/api/system.globalization.juliancalendar.getdayofyear?view=netcore-3.1
+
+  Astronomical Algorithms
+    http://www.geoastro.de/elevaz/basics/meeus.htm
 
 

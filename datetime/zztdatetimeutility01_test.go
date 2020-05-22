@@ -452,9 +452,9 @@ func TestDTimeUtility_GregorianDateToJulianDate_02(t *testing.T) {
 	dateTimeFormat := FmtDateTimeYrMDayFmtStr
 
 	dtUtil := DTimeUtility{}
-
+	var expectedJulianDate float64
 	// 1776-07-04 12:01:0.0000 = 2369916.00069
-	expectedJulianDate := float64(2369916.00069)
+	expectedJulianDate = 2369916.00069
 	expectedJulianDateStr := fmt.Sprintf("%.5f",
 		expectedJulianDate)
 
@@ -514,9 +514,9 @@ func TestDTimeUtility_GregorianDateToJulianDate_03(t *testing.T) {
 	dateTimeFormat := FmtDateTimeYrMDayFmtStr
 
 	dtUtil := DTimeUtility{}
-
+	var expectedJulianDate float64
 	// 1776-07-04 11:59:59.0000 = 2369915.99999
-	expectedJulianDate := float64(2369915.99999)
+	expectedJulianDate = 2369915.99999
 	expectedJulianDateStr := fmt.Sprintf("%.5f",
 		expectedJulianDate)
 
