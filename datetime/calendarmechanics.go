@@ -353,7 +353,8 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 // Number and Time value to the corresponding date time in the
 // Gregorian Calendar. Because the Gregorian Calendar was instituted
 // in Friday, October 15, 1582, all Gregorian Calendar dates prior
-// to this are extrapolated or proleptic.
+// to this are extrapolated or proleptic. This method uses the
+// 'Richards' algorithm.
 //
 // "This is an algorithm by E. G. Richards to convert a Julian Day Number,
 // J, to a date in the Gregorian calendar (proleptic, when applicable).
@@ -424,9 +425,9 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 //     - The returned parameter 'gregorianDateTime' represents the input
 //       'julianDayNoNoTime' converted to the Gregorian calendar. This
 //       returned 'time.Time' type is always configured as Universal
-//       Coordinated Time (UTC). In addition, as a Golan 'time.Time'
+//       Coordinated Time (UTC). In addition, as a Golang 'time.Time'
 //       type, the date is expressed using astronomical years. Astronomical
-//       year numbering includes a Zero Year. Therefore, 1BCE is stored
+//       year numbering includes a zero year. Therefore, 1BCE is stored
 //       as year zero in this return value.
 //
 //

@@ -599,3 +599,44 @@ func TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_01(t *testing.T) {
 			gregorianDateTime.Format(FmtDateTimeYrMDayFmtStr))
 	}
 }
+
+func TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_02(t *testing.T) {
+
+	expectedDateTime := time.Date(
+		-4713,
+		11,
+		24,
+		12,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	var julianDateTime float64
+
+	julianDateTime = 0.000000
+
+	digitsAfterDecimal := 6
+
+	calUtil := CalendarUtility{}
+
+	gregorianDateTime,
+	err := calUtil.JulianDayNoTimeToGregorianDateTime(
+		julianDateTime,
+		digitsAfterDecimal,
+		"")
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToGregorianDateTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedDateTime.Equal(gregorianDateTime) {
+		t.Errorf("Error: Expected " +
+			"gregorianDateTime='%v'\n" +
+			"Instead, gregorianDateTime='%v'\n",
+			expectedDateTime.Format(FmtDateTimeYrMDayFmtStr),
+			gregorianDateTime.Format(FmtDateTimeYrMDayFmtStr))
+	}
+}

@@ -5,6 +5,78 @@ import (
 	"time"
 )
 
+// CalendarUtility
+//
+// ------------------------------------------------------------------------
+//
+// Definition Of Terms
+//
+//
+// Gregorian Calendar
+// The Gregorian calendar, which is the calendar used today, was first
+// introduced by Pope Gregory XIII via a papal bull in February 1582
+// to correct an error in the old Julian calendar.
+//
+// This error had been accumulating over hundreds of years so that every
+// 128 years the calendar was out of sync with the equinoxes and solstices
+// by one additional day.
+//
+// As the centuries passed, the Julian Calendar became more inaccurate.
+// Because the calendar was incorrectly determining the date of Easter,
+// Pope Gregory XIII reformed the calendar to match the solar year so that
+// Easter would once again "fall upon the first Sunday after the first full
+// moon on or after the Vernal Equinox.".
+//
+// Ten days were omitted from the calendar to bring the calendar back in line
+// with the solstices, and Pope Gregory XIII decreed that the day following
+// Thursday, October 4, 1582 would be Friday, October 15, 1582 and from then
+// on the reformed Gregorian calendar would be used.
+//
+// Reference http://www.searchforancestors.com/utility/gregorian.html
+//
+//
+// Double Dating
+// New Year's Day had been celebrated on March 25 under the Julian calendar
+// in Great Britain and its colonies, but with the introduction of the
+// Gregorian Calendar in 1752, New Year's Day was now observed on January 1.
+// When New Year's Day was celebrated on March 25th, March 24 of one year was
+// followed by March 25 of the following year. When the Gregorian calendar
+// reform changed New Year's Day from March 25 to January 1, the year of George
+// Washington's birth, because it took place in February, changed from 1731 to
+// 1732. In the Julian Calendar his birthdate is Feb 11, 1731 and in the
+// Gregorian Calendar it is Feb 22, 1732. Double dating was used in Great Britain
+// and its colonies including America to clarify dates occurring between 1 January
+// and 24 March on the years between 1582, the date of the original introduction of
+// the Gregorian calendar, and 1752, when Great Britain adopted the calendar.
+//
+// Double dates were identified with a slash mark (/) representing the Old and New
+// Style calendars, e. g., 1731/1732.
+//
+// Reference http://www.searchforancestors.com/utility/gregorian.html
+//
+//
+// Astronomical Year Numbering
+// "Astronomical year numbering is based on AD/CE year numbering, but follows normal
+// decimal integer numbering more strictly. Thus, it has a year 0; the years before
+// that are designated with negative numbers and the years after that are designated
+// with positive numbers."  Wikipedia https://en.wikipedia.org/wiki/Astronomical_year_numbering
+//
+// The Golang type, 'time.Time' uses Astronomical Year Numbering in that the first year
+// before year '1' is year '0'. Thereafter all years before year zero have negative year
+// numbers.
+//
+//
+// Proleptic Gregorian Dates
+// The Gregorian Calendar was instituted on Friday, October 15, 1582. Prior to
+// this date, the Gregorian Calendar was not recognized and therefore did not
+// exist. Nevertheless, dates using the Golang type, 'time.Time' can represent
+// Gregorian Dates prior to October 15, 1582. Such dates are termed 'Proleptic
+// Gregorian Dates'.
+//
+//
+// Proleptic Julian Dates
+//
+
 type CalendarUtility struct {
 	lock *sync.Mutex
 }
@@ -185,23 +257,30 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDate(
 // Number and Time value to the corresponding date time in the
 // Gregorian Calendar. Because the Gregorian Calendar was instituted
 // in Friday, October 15, 1582, all Gregorian Calendar dates prior
-// to this are extrapolated or proleptic.
+// to this are extrapolated or proleptic. This method uses the
+// 'Richards' algorithm.
 //
-// "This is an algorithm by Richards to convert a Julian Day Number,
+// "This is an algorithm by E. G. Richards to convert a Julian Day Number,
 // J, to a date in the Gregorian calendar (proleptic, when applicable).
 // Richards states the algorithm is valid for Julian day numbers greater
-// than or equal to 0".
+// than or equal to 0".  https://en.wikipedia.org/wiki/Julian_day
 //
 //   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
 //   Oxford University Press. ISBN 978-0192862051
 //
 // Julian Day numbers start on day zero at noon. This means that Julian
 // Day Number Times are valid for all dates on or after noon on Monday,
-// January 1, 4713 BC, in the proleptic Julian calendar or November 24,
-// 4714 BC, in the proleptic Gregorian calendar. Remember that the Golang
-// 'time.Time' type uses Astronomical Year numbering. This translates
-// to algorithm validity for all 'time.Time' (possibly proleptic) dates
-// on or after noon November 24, −4713.
+// January 1, 4713 BCE, in the proleptic Julian calendar or November 24,
+// 4714 BCE, in the proleptic Gregorian calendar. Remember that the Golang
+// 'time.Time' type uses Astronomical Year numbering with the Gregorian
+// Calendar. In other words, the 'time.Time' type recognizes the year
+// zero. Dates expressed in the 'Common Era' ('BCE' Before Common Era
+// or 'CE' Common Era). Therefore a 'time.Time' year of '-4713' is equal
+// to the year '4714 BCE'
+//
+// This means that the 'Richards' algorithm employed by this
+// method is valid for all 'time.Time' (possibly proleptic) Gregorian
+// dates on or after noon November 24, −4713.
 //
 // For information on the Julian Day Number/Time see:
 //   https://en.wikipedia.org/wiki/Julian_day
