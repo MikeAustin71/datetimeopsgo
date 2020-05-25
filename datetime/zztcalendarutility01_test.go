@@ -376,7 +376,7 @@ func TestCalendarUtility_GregorianDateToJulianDayNo_07(t *testing.T) {
 	}
 }
 
-func TestCalendarUtility_GregorianDateToJulianDate_01(t *testing.T) {
+func TestCalendarUtility_GregorianDateToJulianDayNoTime_01(t *testing.T) {
 
 	testDate := time.Date(
 		1848,
@@ -403,7 +403,7 @@ func TestCalendarUtility_GregorianDateToJulianDate_01(t *testing.T) {
 
 	gregorianDateUtc,
 	julianDate,
-	err = calUtil.GregorianDateToJulianDate(
+	err = calUtil.GregorianDateToJulianDayNoTime(
 		testDate,
 		digitsAfterDecimal,
 		"TestCalendarUtility_GregorianDateToJulianDayNo_03 ")
@@ -435,7 +435,7 @@ func TestCalendarUtility_GregorianDateToJulianDate_01(t *testing.T) {
 	}
 }
 
-func TestCalendarUtility_GregorianDateToJulianDate_02(t *testing.T) {
+func TestCalendarUtility_GregorianDateToJulianDayNoTime_02(t *testing.T) {
 
 	testDate := time.Date(
 		1776,
@@ -465,7 +465,7 @@ func TestCalendarUtility_GregorianDateToJulianDate_02(t *testing.T) {
 
 	gregorianDateUtc,
 	julianDate,
-	err = calUtil.GregorianDateToJulianDate(
+	err = calUtil.GregorianDateToJulianDayNoTime(
 		testDate,
 		digitsAfterDecimal,
 		"TestCalendarUtility_GregorianDateToJulianDayNo_03 ")
@@ -497,7 +497,7 @@ func TestCalendarUtility_GregorianDateToJulianDate_02(t *testing.T) {
 	}
 }
 
-func TestCalendarUtility_GregorianDateToJulianDate_03(t *testing.T) {
+func TestCalendarUtility_GregorianDateToJulianDayNoTime_03(t *testing.T) {
 
 	testDate := time.Date(
 		1776,
@@ -527,7 +527,7 @@ func TestCalendarUtility_GregorianDateToJulianDate_03(t *testing.T) {
 
 	gregorianDateUtc,
 	julianDate,
-	err = calUtil.GregorianDateToJulianDate(
+	err = calUtil.GregorianDateToJulianDayNoTime(
 		testDate,
 		digitsAfterDecimal,
 		"TestCalendarUtility_GregorianDateToJulianDayNo_03 ")
@@ -580,13 +580,13 @@ func TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_01(t *testing.T) {
 	calUtil := CalendarUtility{}
 
 	gregorianDateTime,
-	err := calUtil.JulianDayNoTimeToGregorianDateTime(
+	err := calUtil.JulianDayNoTimeToGregorianCalendar(
 		julianDateTime,
 		digitsAfterDecimal,
 		"")
 
 	if err != nil {
-		t.Errorf("Error returned by calUtil.JulianDayNoTimeToGregorianDateTime()\n" +
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToGregorianCalendar()\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -621,13 +621,13 @@ func TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_02(t *testing.T) {
 	calUtil := CalendarUtility{}
 
 	gregorianDateTime,
-	err := calUtil.JulianDayNoTimeToGregorianDateTime(
+	err := calUtil.JulianDayNoTimeToGregorianCalendar(
 		julianDateTime,
 		digitsAfterDecimal,
 		"")
 
 	if err != nil {
-		t.Errorf("Error returned by calUtil.JulianDayNoTimeToGregorianDateTime()\n" +
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToGregorianCalendar()\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

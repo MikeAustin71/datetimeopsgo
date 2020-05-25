@@ -1,7 +1,9 @@
 package datetime
 
 import (
+	"fmt"
 	"math"
+	"math/big"
 	"sync"
 	"time"
 )
@@ -195,7 +197,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNo(
 	return gregorianDateUtc, julianDayNo, err
 }
 
-// gregorianDateToJulianDate - Converts a Gregorian Date to a Julian
+// gregorianDateToJulianDayNoTime - Converts a Gregorian Date to a Julian
 // Day Number and Time.
 //
 // Remember that Julian Day Number Times are valid for all dates
@@ -242,7 +244,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNo(
 //       the Julian Day Number (JDN)
 //
 //
-//  julianDayNoNoTime   float64
+//  julianDayNoNoTime  float64
 //     - The integer portion of this number (digits to left of
 //       the decimal) represents the Julian day number. The fractional
 //       digits to the right of the decimal represent elapsed time
@@ -256,7 +258,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNo(
 //       an error message.
 //
 //
-func (calMech *calendarMechanics) gregorianDateToJulianDate(
+func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 	gregorianDateTime time.Time,
 	digitsAfterDecimal int,
 	ePrefix string) (
@@ -268,7 +270,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 
 	defer calMech.lock.Unlock()
 
-	ePrefix += "calMech.gregorianDateToJulianDate() "
+	ePrefix += "calMech.gregorianDateToJulianDayNoTime() "
 
 	gregorianDateUtc = gregorianDateTime.UTC()
 	julianDayNoTime = 0.0
@@ -332,10 +334,132 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 		gregorianTimeNanoSecs -= NoonNanoSeconds
 	}
 
-	julianDayNoTime = float64(julianDayNo)
-
-	julianDayNoTime += float64(gregorianTimeNanoSecs) /
+	/*
+	timeFraction := float64(gregorianTimeNanoSecs) /
 									float64(DayNanoSeconds)
+		julianDayNoStr := fmt.Sprintf("%v",
+			julianDayNo)
+*/
+
+	// newDigitsAfterDecimal := uint(len(julianDayNoStr) +
+	// digitsAfterDecimal + 2)
+	newDigitsAfterDecimal := uint(digitsAfterDecimal)
+
+	bfGregorianTimeNanoSecs := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal).
+		SetInt64(gregorianTimeNanoSecs)
+
+	bfDayNanoSeconds := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal).
+		SetInt64(DayNanoSeconds)
+
+	bfTimeFraction := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal).
+		Quo(bfGregorianTimeNanoSecs,
+			bfDayNanoSeconds)
+
+	bfTimeFractionStr :=
+		bfTimeFraction.Text('f', int(newDigitsAfterDecimal))
+
+	julianDayNoStr := fmt.Sprintf("%v",
+		julianDayNo)
+
+	julianDayNoTimeStr :=
+		julianDayNoStr +
+		bfTimeFractionStr[1:]
+
+	fmt.Printf("Internal Time Fraction:                            %v\n",
+		bfTimeFraction.Text('f', int(newDigitsAfterDecimal)))
+
+	/*
+	bfJulianDayNo := big.NewFloat(0.0)
+	bfJulianDayNo.SetMode(big.ToNearestAway)
+	bfJulianDayNo.SetPrec(newDigitsAfterDecimal)
+	bfJulianDayNo.SetInt64(julianDayNo)
+
+	bfJulianDayNoTime := big.NewFloat(0.0)
+	bfJulianDayNoTime.SetMode(big.ToNearestAway)
+	bfJulianDayNoTime.SetPrec(newDigitsAfterDecimal)
+
+		bfJulianDayNoTime :=
+			big.NewFloat(0.0).
+				SetMode(big.ToNearestAway).
+				SetPrec(newDigitsAfterDecimal + 20).
+				Add(bfJulianDayNo, bfTimeFraction)
+*/
+
+
+	// julianDayNoTimeStr := bfJulianDayNoTime.Text('f', int(newDigitsAfterDecimal))
+	fmt.Printf("julianDayNoTimeStr                           %v\n",
+		julianDayNoTimeStr)
+
+	var err2 error
+
+	bfJulianDayNoTime := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal)
+
+	b := 0
+
+	bfJulianDayNoTime,
+	b,
+	err2 =
+			big.ParseFloat(
+					julianDayNoTimeStr,
+					10,
+					0,
+					big.ToNearestAway)
+
+	if err2 != nil {
+
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error returned by " +
+			"big.ParseFloat(julianDayNoTimeStr)\n" +
+			"julianDayNoTimeStr='%v'\n" +
+			"Error='%v'\n",
+			julianDayNoTimeStr, err2)
+
+		return gregorianDateUtc, julianDayNoTime, err
+	}
+
+	if b != 10 {
+
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: Expected base 10 to be returned from " +
+			"big.ParseFloat(julianDayNoTimeStr)\n" +
+			"julianDayNoTimeStr='%v'\n" +
+			"base='%v'\n",
+			julianDayNoTimeStr, b)
+
+		return gregorianDateUtc, julianDayNoTime, err
+	}
+
+	fmt.Printf("bfJulianDayNoTime                            %v\n",
+		bfJulianDayNoTime.Text('f', int(newDigitsAfterDecimal)))
+
+	var accuracy big.Accuracy
+
+	julianDayNoTime,
+	accuracy = bfJulianDayNoTime.Float64()
+
+	if accuracy != 0 {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: Conversion of 'bfJulianDayNoTime' " +
+			"to return value 'julianDayNoTime'\n" +
+			"generated an in accuracte value. Accuracy='%v'\n",
+			accuracy)
+	}
+
+
+	/*
+	julianDayNoTime = math.Floor(float64(julianDayNo)) +
+		timeFraction
+
+	fmt.Printf("Pre-Round JulianDayNoTime:          %47.35f\n",
+		julianDayNoTime)
 
 	multiplier := math.Pow10(digitsAfterDecimal)
 
@@ -344,17 +468,256 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 	julianDayNoTime = math.Round(julianDayNoTime)
 
 	julianDayNoTime = julianDayNoTime / multiplier
+*/
 
 	return gregorianDateUtc, julianDayNoTime, err
 }
 
 
-// richardsJulianDayNoTimeToGregorianDateTime - Converts a Julian Day
+// gregorianDateToBigJulianDayNoTime - Returns Julian Day Number and
+// fractional time as a type &big.Float
+
+func (calMech *calendarMechanics) gregorianDateToBigJulianDayNoTime(
+	gregorianDateTime time.Time,
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	julianDayNoDto JulianDayNoDto,
+	err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calMech.gregorianDateToBigJulianDayNoTime() "
+
+	gregorianDateUtc = gregorianDateTime.UTC()
+	julianDayNoDto = JulianDayNoDto{}
+
+	err = nil
+
+	Year := int64(gregorianDateUtc.Year())
+	Month := int64(gregorianDateUtc.Month())
+	Day := int64(gregorianDateUtc.Day())
+
+	// JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
+
+	julianDayNo :=
+		(int64(1461) * (Year + int64(4800) +
+			(Month - int64(14))/int64(12)))/int64(4) +
+			(int64(367) * (Month - int64(2) -
+				int64(12) * ((Month - int64(14))/int64(12))))/int64(12) -
+			(int64(3) * ((Year + int64(4900) +
+				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
+			Day - int64(32075)
+
+	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Minute()) * MinuteNanoSeconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Second()) * SecondNanoseconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Nanosecond())
+
+	if gregorianTimeNanoSecs < NoonNanoSeconds {
+
+		julianDayNo -= 1
+		gregorianTimeNanoSecs += NoonNanoSeconds
+
+	} else {
+
+		gregorianTimeNanoSecs -= NoonNanoSeconds
+	}
+
+	bfGregorianTimeNanoSecs :=
+		big.NewFloat(0.0).
+				SetMode(big.ToZero).
+				SetPrec(0).
+				SetInt64(gregorianTimeNanoSecs)
+
+	bfDayNanoSeconds := big.NewFloat(0.0).
+		SetMode(big.ToZero).
+		SetPrec(0).
+		SetInt64(DayNanoSeconds)
+
+	bfTimeFraction := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(0).
+		Quo(bfGregorianTimeNanoSecs,
+			bfDayNanoSeconds)
+
+	jDNDtoUtil := julianDayNoDtoUtility{}
+
+	err = jDNDtoUtil.setDto(
+		&julianDayNoDto,
+		julianDayNo,
+		bfTimeFraction,
+		ePrefix)
+
+	return gregorianDateUtc, julianDayNoDto, err
+}
+
+/*
+func (calMech *calendarMechanics) gregorianDateToBigJulianDayNoTime(
+	gregorianDateTime time.Time,
+	digitsAfterDecimal int,
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	julianDayNoTime *big.Float,
+	err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calMech.gregorianDateToBigJulianDayNoTime() "
+
+	gregorianDateUtc = gregorianDateTime.UTC()
+	julianDayNoTime = big.NewFloat(0.0)
+	err = nil
+
+	if digitsAfterDecimal < 0 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "digitsAfterDecimal",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
+				"less than ZERO!",
+			err:                 nil,
+		}
+
+		return gregorianDateUtc, julianDayNoTime, err
+	}
+
+	if digitsAfterDecimal > 100 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "digitsAfterDecimal",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
+				"greater than 100!",
+			err:                 nil,
+		}
+
+		return gregorianDateUtc, julianDayNoTime, err
+	}
+
+	Year := int64(gregorianDateUtc.Year())
+	Month := int64(gregorianDateUtc.Month())
+	Day := int64(gregorianDateUtc.Day())
+
+	// JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
+
+	julianDayNo :=
+		(int64(1461) * (Year + int64(4800) +
+			(Month - int64(14))/int64(12)))/int64(4) +
+			(int64(367) * (Month - int64(2) -
+				int64(12) * ((Month - int64(14))/int64(12))))/int64(12) -
+			(int64(3) * ((Year + int64(4900) +
+				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
+			Day - int64(32075)
+
+	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Minute()) * MinuteNanoSeconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Second()) * SecondNanoseconds
+	gregorianTimeNanoSecs += int64(gregorianDateUtc.Nanosecond())
+
+	if gregorianTimeNanoSecs < NoonNanoSeconds {
+
+		julianDayNo -= 1
+		gregorianTimeNanoSecs += NoonNanoSeconds
+
+	} else {
+
+		gregorianTimeNanoSecs -= NoonNanoSeconds
+	}
+
+	newDigitsAfterDecimal := uint(digitsAfterDecimal)
+
+	bfGregorianTimeNanoSecs := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal).
+		SetInt64(gregorianTimeNanoSecs)
+
+	bfDayNanoSeconds := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal).
+		SetInt64(DayNanoSeconds)
+
+	bfTimeFraction := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal).
+		Quo(bfGregorianTimeNanoSecs,
+			bfDayNanoSeconds)
+
+	bfTimeFractionStr :=
+		bfTimeFraction.Text('f', int(newDigitsAfterDecimal))
+
+	fmt.Printf("Internal Time Fraction:                            %v\n",
+		bfTimeFraction.Text('f', int(newDigitsAfterDecimal)))
+
+	julianDayNoTimeStr :=
+		fmt.Sprintf("%v", julianDayNo) +
+			bfTimeFractionStr[1:]
+
+	fmt.Printf("julianDayNoTimeStr                           %v\n",
+		julianDayNoTimeStr)
+
+	var err2 error
+
+	bfJulianDayNoTime := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(newDigitsAfterDecimal)
+
+	b := 0
+
+	julianDayNoTime,
+	b,
+	err2 =
+			big.ParseFloat(
+					julianDayNoTimeStr,
+					10,
+					0,
+					big.ToNearestAway)
+
+	if err2 != nil {
+
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error returned by " +
+			"big.ParseFloat(julianDayNoTimeStr)\n" +
+			"julianDayNoTimeStr='%v'\n" +
+			"Error='%v'\n",
+			julianDayNoTimeStr, err2)
+
+		return gregorianDateUtc, julianDayNoTime, err
+	}
+
+	if b != 10 {
+
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: Expected base 10 to be returned from " +
+			"big.ParseFloat(julianDayNoTimeStr)\n" +
+			"julianDayNoTimeStr='%v'\n" +
+			"base='%v'\n",
+			julianDayNoTimeStr, b)
+
+		return gregorianDateUtc, julianDayNoTime, err
+	}
+
+	fmt.Printf("julianDayNoTime                            %v\n",
+		bfJulianDayNoTime.Text('f', int(newDigitsAfterDecimal)))
+
+	return gregorianDateUtc, julianDayNoTime, err
+}
+*/
+
+// richardsJulianDayNoTimeToGregorianCalendar - Converts a Julian Day
 // Number and Time value to the corresponding date time in the
-// Gregorian Calendar. Because the Gregorian Calendar was instituted
-// in Friday, October 15, 1582, all Gregorian Calendar dates prior
-// to this are extrapolated or proleptic. This method uses the
-// 'Richards' algorithm.
+// Gregorian Calendar.
+//
+// The Gregorian Calendar is today applied almost universally across
+// planet Earth. It is named after Pope Gregory XIII, who introduced
+// it in October 1582.  Because the Gregorian Calendar was instituted
+// on Friday, October 15, 1582, all Gregorian Calendar dates prior
+// to this are extrapolated or proleptic.
+//
+// This method uses the 'Richards' algorithm.
 //
 // "This is an algorithm by E. G. Richards to convert a Julian Day Number,
 // J, to a date in the Gregorian calendar (proleptic, when applicable).
@@ -370,6 +733,11 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 // Julian day number 0 assigned to the day starting at noon on Monday,
 // January 1, 4713 BC, in the proleptic Julian calendar and November 24,
 // 4714 BC, in the proleptic Gregorian calendar.
+//
+// The Julian day number is based on the Julian Period proposed
+// by Joseph Scaliger, a classical scholar, in 1583 (one year after
+// the Gregorian calendar reform) as it is the product of three
+// calendar cycles used with the Julian calendar.
 //
 // The Julian Day Number Time is a floating point number with an integer
 // to the left of the decimal point representing the Julian Day Number
@@ -390,7 +758,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 // method is valid for all 'time.Time' (possibly proleptic) Gregorian
 // dates on or after noon November 24, −4713.
 //
-// For information on the Julian Day Number/Time see:
+// For more information on the Julian Day Number/Time see:
 //   https://en.wikipedia.org/wiki/Julian_day
 //
 // ------------------------------------------------------------------------
@@ -404,12 +772,14 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 //       since noon on the Julian day number. All time values are
 //       expressed as Universal Coordinated Time (UTC).
 //
+//
 //  digitsAfterDecimal  int
 //     - The number of digits after the decimal in input parameter
 //       'julianDayNoNoTime' which will be used in the conversion
 //       algorithm. Effectively, 'julianDayNoNoTime' will be rounded
 //       to the number of digits to the right of the decimal specified
 //       in this parameter.
+//
 //
 //  ePrefix             string
 //     - A string containing the names of the calling functions
@@ -445,7 +815,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDate(
 //   https://stackoverflow.com/questions/45586444/php-julian-date-converter-algorithms
 //
 //
-func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianDateTime(
+func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 	julianDayNoNoTime float64,
 	digitsAfterDecimal int,
 	ePrefix string) (
@@ -456,7 +826,282 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianDateTime(
 
 	defer calMech.lock.Unlock()
 
-	ePrefix += "calMech.JulianDayNoTimeToGregorianDateTime() "
+	ePrefix += "calMech.richardsJulianDayNoTimeToGregorianCalendar() "
+
+	gregorianDateUtc = time.Time{}
+	err = nil
+
+	if julianDayNoNoTime < 0.000 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "julianDayNoNoTime",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'julianDayNoNoTime' " +
+				"is less than Zero!",
+			err:                 nil,
+		}
+		return gregorianDateUtc, err
+	}
+
+	if digitsAfterDecimal < 0 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "digitsAfterDecimal",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
+				"less than ZERO!",
+			err:                 nil,
+		}
+
+		return gregorianDateUtc, err
+	}
+
+	if digitsAfterDecimal > 100 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "digitsAfterDecimal",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
+				"greater than 100!",
+			err:                 nil,
+		}
+
+		return gregorianDateUtc, err
+	}
+
+	factor := math.Pow10(digitsAfterDecimal)
+
+	julianDayNoNoTime = (math.Round(julianDayNoNoTime * factor)) / factor
+
+	y := int64(4716)
+	j := int64(1401)
+	m := int64(2)
+	n := int64(12)
+	r := int64(4)
+	p := int64(1461)
+	v := int64(3)
+	u := int64(5)
+	s := int64(153)
+	w := int64(2)
+	B := int64(274277)
+	C := int64(-38)
+
+
+	julianDayNumInt, julianDayNumFrac := math.Modf(julianDayNoNoTime)
+
+	// Julian Day No as integer
+	J := int64(julianDayNumInt)
+
+	f := J + j + ((((4 * J + B) / 146097) * 3) /4) + C
+
+	e := r * f + v // #2
+
+	g := (e % p) / r // #3
+
+	h := u * g + w // #4
+
+	D := ((h % s) / u) + 1  // #5
+
+	M := ((( h / s) + m) % n) + 1  // #6
+
+	Y := (e / p) - y + ((n + m - M)/ n)
+
+	fracNanoSeconds := int64(julianDayNumFrac * float64(DayNanoSeconds))
+
+	totalNanoSeconds :=
+		fracNanoSeconds +
+			NoonNanoSeconds
+
+	hours := 0
+	minutes := 0
+	seconds := 0
+	nanoseconds := 0
+
+	if totalNanoSeconds >= HourNanoSeconds {
+		hours = int(totalNanoSeconds / HourNanoSeconds)
+
+		totalNanoSeconds -= int64(hours) * HourNanoSeconds
+	}
+
+	if totalNanoSeconds >= MinuteNanoSeconds {
+		minutes = int(totalNanoSeconds / MinuteNanoSeconds)
+
+		totalNanoSeconds -= int64(minutes) * MinuteNanoSeconds
+	}
+
+	if totalNanoSeconds >= SecondNanoseconds {
+
+		seconds = int(totalNanoSeconds / SecondNanoseconds)
+
+		totalNanoSeconds -= int64(seconds) * SecondNanoseconds
+	}
+
+	if digitsAfterDecimal < 15 {
+		if totalNanoSeconds >= HalfSecondNanoseconds {
+			seconds += 1
+			nanoseconds = 0
+		}
+	} else {
+		nanoseconds = int(totalNanoSeconds)
+	}
+
+
+	gregorianDateUtc = time.Date(
+		int(Y),
+		time.Month(M),
+		int(D),
+		hours,
+		minutes,
+		seconds,
+		nanoseconds,
+		time.UTC)
+
+	return gregorianDateUtc, err
+}
+
+// richardsJulianDayNoTimeToJulianCalendar - Converts a Julian Day Number
+// and Time value to the corresponding date time in the Julian Calendar.
+// Note that Julian calendar dates before March AD 4 are proleptic, and
+// do not necessarily match the dates actually observed in the Roman Empire.
+//
+// Background:
+//  "The Julian calendar, proposed by Julius Caesar in 708 Ab urbe condita
+//  (AUC) (46 BC), was a reform of the Roman calendar. It took effect on
+//  1 January 709 AUC (45 BC), by edict. It was designed with the aid of
+//  Greek mathematicians and Greek astronomers such as Sosigenes of Alexandria.
+//
+//  The [Julian] calendar was the predominant calendar in the Roman world,
+//  most of Europe, and in European settlements in the Americas and elsewhere,
+//  until it was gradually replaced by the Gregorian calendar, promulgated in
+//  1582 by Pope Gregory XIII. The Julian calendar is still used in parts of
+//  the Eastern Orthodox Church and in parts of Oriental Orthodoxy as well as
+//  by the Berbers.
+//
+//  The Julian calendar has two types of year: a normal year of 365 days and
+//  a leap year of 366 days. They follow a simple cycle of three normal years
+//  and one leap year, giving an average year that is 365.25 days long. That
+//  is more than the actual solar year value of 365.24219 days, which means
+//  the Julian calendar gains a day every 128 years.
+//
+//  During the 20th and 21st centuries, a date according to the Julian calendar
+//  is 13 days earlier than its corresponding Gregorian date."
+//
+// Wikipedia https://en.wikipedia.org/wiki/Julian_calendar
+//
+//  "Augustus corrected errors in the observance of leap years by omitting leap
+//  days until AD 8. Julian calendar dates before March AD 4 are proleptic, and
+//  do not necessarily match the dates actually observed in the Roman Empire.
+//  (Nautical almanac offices of the United Kingdom and United States, 1961,
+//  p. 411)"
+//
+// Conversion between Julian and Gregorian calendars
+// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+//
+// This method uses the 'Richards' algorithm to convert Julian Day Number and
+// Times to the Julian Calendar.
+//
+// Reference:
+//   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
+//   Oxford University Press. ISBN 978-0192862051
+//
+//   Wikipedia - Julian Day
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+// The Julian Calendar date time returned by this method is generated from
+// the Julian Day Number. The Julian Day Number (JDN) is the integer assigned
+// to a whole solar day in the Julian day count starting from noon Universal
+// time, with Julian day number 0 assigned to the day starting at noon on
+// Monday, January 1, 4713 BC, in the proleptic Julian calendar and November
+// 24, 4714 BC, in the proleptic Gregorian calendar.
+//
+// The Julian Day Number Time is a floating point number with an integer
+// to the left of the decimal point representing the Julian Day Number
+// and the fraction to the right of the decimal point representing time
+// in hours minutes and seconds.
+//
+// Julian Day numbers start on day zero at noon. This means that Julian
+// Day Number Times are valid for all dates on or after noon on Monday,
+// January 1, 4713 BCE, in the proleptic Julian calendar or November 24,
+// 4714 BCE, in the proleptic Gregorian calendar. Remember that the Golang
+// 'time.Time' type uses Astronomical Year numbering with the Gregorian
+// Calendar. In other words, the 'time.Time' type recognizes the year
+// zero. Dates expressed in the 'Common Era' ('BCE' Before Common Era
+// or 'CE' Common Era). Therefore a 'time.Time' year of '-4713' is equal
+// to the year '4714 BCE'
+//
+// This means that the 'Richards' algorithm employed by this method is valid
+// for all 'time.Time' (possibly proleptic) Julian dates on or after noon
+// November 24, −4713.
+//
+// For information on the Julian Day Number/Time see:
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameter
+//
+//  julianDayNoNoTime   float64
+//     - The integer portion of this number (digits to left of
+//       the decimal) represents the Julian day number. The fractional
+//       digits to the right of the decimal represent elapsed time
+//       since noon on the Julian day number. All time values are
+//       expressed as Universal Coordinated Time (UTC).
+//
+//
+//  digitsAfterDecimal  int
+//     - The number of digits after the decimal in input parameter
+//       'julianDayNoNoTime' which will be used in the conversion
+//       algorithm. Effectively, 'julianDayNoNoTime' will be rounded
+//       to the number of digits to the right of the decimal specified
+//       in this parameter.
+//
+//
+//  ePrefix             string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  gregorianDateUtc    time.Time
+//     - The returned parameter 'gregorianDateTime' represents the input
+//       'julianDayNoNoTime' converted to the Gregorian calendar. This
+//       returned 'time.Time' type is always configured as Universal
+//       Coordinated Time (UTC). In addition, as a Golang 'time.Time'
+//       type, the date is expressed using astronomical years. Astronomical
+//       year numbering includes a zero year. Therefore, 1BCE is stored
+//       as year zero in this return value.
+//
+//
+//  err                 error
+//     - If successful the returned error Type is set equal to 'nil'.
+//       If errors are encountered this error Type will encapsulate
+//       an error message.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Resources
+//
+//  PHP Julian date converter algorithms (Stack Overflow)
+//   https://stackoverflow.com/questions/45586444/php-julian-date-converter-algorithms
+//
+//
+func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
+	julianDayNoNoTime float64,
+	digitsAfterDecimal int,
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calMech.richardsJulianDayNoTimeToJulianCalendar() "
 
 	gregorianDateUtc = time.Time{}
 	err = nil
@@ -509,16 +1154,15 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianDateTime(
 	u := int64(5)
 	s := int64(153)
 	w := int64(2)
-	B := int64(274277)
-	C := int64(-38)
-
+// B := int64(274277)
+// C := int64(-38)
 
 	julianDayNumInt, julianDayNumFrac := math.Modf(julianDayNoNoTime)
 
 	// Julian Day No as integer
 	J := int64(julianDayNumInt)
 
-	f := J + j + ((((4 * J + B) / 146097) * 3) /4) + C
+	f := J + j
 
 	e := r * f + v // #2
 

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// CalendarUtility
+// CalendarUtility - This type is used to support calendar conversions.
 //
 // ------------------------------------------------------------------------
 //
@@ -174,7 +174,7 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 		ePrefix)
 }
 
-// GregorianDateToJulianDate - Converts a Gregorian Date to a Julian
+// GregorianDateToJulianDayNoTime - Converts a Gregorian Date to a Julian
 // Date.
 //
 // Reference Wikipedia:
@@ -225,12 +225,12 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 //  American Association of Variable Star Observers (AAVSO)
 //  https://www.aavso.org/jd-calculator
 //
-func (calUtil *CalendarUtility) GregorianDateToJulianDate(
+func (calUtil *CalendarUtility) GregorianDateToJulianDayNoTime(
 	gregorianDateTime time.Time,
 	digitsAfterDecimal int,
 	ePrefix string) (
 	gregorianDateUtc time.Time,
-	julianDate float64,
+	julianDateNoTime float64,
 	err error) {
 
 	if calUtil.lock == nil {
@@ -241,19 +241,43 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDate(
 
 	defer calUtil.lock.Unlock()
 
-	ePrefix += "DTimeUtility.GregorianDateToJulianDayNo() "
+	ePrefix += "DTimeUtility.GregorianDateToJulianDayNoTime() "
 
 	calendarMech := calendarMechanics{}
 
-	return calendarMech.gregorianDateToJulianDate(
+	return calendarMech.gregorianDateToJulianDayNoTime(
 		gregorianDateTime,
 		digitsAfterDecimal,
 		ePrefix)
 }
 
+func (calUtil *CalendarUtility) GregorianDateToBigJulianDayNoTime(
+	gregorianDateTime time.Time,
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	julianDayNoDto JulianDayNoDto,
+	err error) {
+
+	if calUtil.lock == nil {
+		calUtil.lock = new(sync.Mutex)
+	}
+
+	calUtil.lock.Lock()
+
+	defer calUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.GregorianDateToJulianDayNoTime() "
+
+	calendarMech := calendarMechanics{}
+
+	return calendarMech.gregorianDateToBigJulianDayNoTime(
+		gregorianDateTime,
+		ePrefix)
+}
 
 
-// JulianDayNoTimeToGregorianDateTime - Converts a Julian Day
+
+// JulianDayNoTimeToGregorianCalendar - Converts a Julian Day
 // Number and Time value to the corresponding date time in the
 // Gregorian Calendar. Because the Gregorian Calendar was instituted
 // in Friday, October 15, 1582, all Gregorian Calendar dates prior
@@ -339,7 +363,7 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDate(
 //  Richards Algorithm
 //   https://en.wikipedia.org/wiki/Julian_day
 //
-func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianDateTime(
+func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianCalendar(
 	julianDayNoNoTime float64,
 	digitsAfterDecimal int,
 	ePrefix string) (
@@ -354,16 +378,47 @@ func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianDateTime(
 
 	defer calUtil.lock.Unlock()
 
-	ePrefix += "DTimeUtility.JulianDayNoTimeToGregorianDateTime() "
+	ePrefix += "DTimeUtility.JulianDayNoTimeToGregorianCalendar() "
 
 	calendarMech := calendarMechanics{}
 
 	gregorianDateUtc,
 		err =
-		calendarMech.richardsJulianDayNoTimeToGregorianDateTime(
+		calendarMech.richardsJulianDayNoTimeToGregorianCalendar(
 			julianDayNoNoTime,
 			digitsAfterDecimal,
 			ePrefix)
 
 	return gregorianDateUtc, err
+}
+
+
+
+func (calUtil *CalendarUtility) JulianDayNoTimeToJulianCalendar(
+	julianDayNoNoTime float64,
+	digitsAfterDecimal int,
+	ePrefix string) (
+	julianDateTimeUtc time.Time,
+	err error) {
+
+	if calUtil.lock == nil {
+		calUtil.lock = new(sync.Mutex)
+	}
+
+	calUtil.lock.Lock()
+
+	defer calUtil.lock.Unlock()
+
+	ePrefix += "DTimeUtility.JulianDayNoTimeToJulianCalendar() "
+
+	calendarMech := calendarMechanics{}
+
+	julianDateTimeUtc,
+		err =
+		calendarMech.richardsJulianDayNoTimeToJulianCalendar(
+			julianDayNoNoTime,
+			digitsAfterDecimal,
+			ePrefix)
+
+	return julianDateTimeUtc, err
 }

@@ -132,10 +132,10 @@ const (
   HourNanoSeconds = int64(time.Hour)
 
   // DayNanoSeconds - Number of Nanoseconds in a 24-hour day
-  DayNanoSeconds = int64(24) * HourNanoSeconds
+  DayNanoSeconds = int64(24) * int64(time.Hour)
 
   // WeekNanoSeconds - Number of Nanoseconds in a 7-day week
-  WeekNanoSeconds = int64(7) * DayNanoSeconds
+  WeekNanoSeconds = int64(7*24) * int64(time.Hour)
 
   // NoonNanoSeconds = Nanoseconds from 0-hours to 12-hours
   NoonNanoSeconds = int64(12) * int64(time.Hour)
