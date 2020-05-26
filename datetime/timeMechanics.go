@@ -1,6 +1,9 @@
 package datetime
 
-import "sync"
+import (
+	"math/big"
+	"sync"
+)
 
 type timeMechanics struct {
 	lock       sync.Mutex
@@ -16,7 +19,8 @@ func (timeMech *timeMechanics) computeTimeElementsInt64(
 	hours,
 	minutes,
 	seconds,
-	nanoSeconds int64) {
+	nanoSeconds int64,
+	numericalSign int) {
 
 	timeMech.lock.Lock()
 
@@ -29,93 +33,103 @@ func (timeMech *timeMechanics) computeTimeElementsInt64(
 	seconds = 0
 	nanoSeconds = 0
 
-	sign := int64(1)
+	numericalSign = 1
 
 	if grossNanoSeconds < 0 {
-		sign = -1
-		grossNanoSeconds = grossNanoSeconds * sign
+		numericalSign = -1
+		grossNanoSeconds = grossNanoSeconds *int64(numericalSign)
 	}
 
 	if grossNanoSeconds == 0 {
-		return hours, minutes, seconds, nanoSeconds
+		numericalSign = 0
+		return hours, minutes, seconds, nanoSeconds, numericalSign
 	}
 
 	if grossNanoSeconds >= HourNanoSeconds {
 		hours = grossNanoSeconds/HourNanoSeconds
 		grossNanoSeconds -= hours * HourNanoSeconds
-		hours = hours * sign
 	}
 
 	if grossNanoSeconds >= MinuteNanoSeconds {
 		minutes = grossNanoSeconds/MinuteNanoSeconds
 		grossNanoSeconds -= minutes * MinuteNanoSeconds
-		minutes = minutes * sign
 	}
 
 	if grossNanoSeconds >= SecondNanoseconds {
 		seconds = grossNanoSeconds/SecondNanoseconds
 		grossNanoSeconds -= seconds * SecondNanoseconds
-		seconds = seconds * sign
 	}
 
 	nanoSeconds = grossNanoSeconds
-	nanoSeconds = nanoSeconds * sign
 
-	return hours, minutes, seconds, nanoSeconds
+	return hours, minutes, seconds, nanoSeconds, numericalSign
 }
 
 // computeTimeElementsInt - Utility routine to break gross nanoseconds
 // int constituent hours, minutes, seconds and remaining nanoseconds. As
 // the method name implies, the return values are of type 'int'.
 //
-func (timeMech *timeMechanics) computeTimeElementsInt(
-	grossNanoSeconds int64) (
+func (timeMech *timeMechanics) computeTimeElementsBigInt(
+	grossNanoSeconds *big.Int) (
 	hours,
 	minutes,
 	seconds,
-	nanoSeconds int) {
+	nanoSeconds *big.Int,
+	numericalSign int) {
 
 	timeMech.lock.Lock()
 
 	defer timeMech.lock.Unlock()
 
-	hours = 0
-	minutes = 0
-	seconds = 0
-	nanoSeconds = 0
+	hours = big.NewInt(0)
+	minutes = big.NewInt(0)
+	seconds = big.NewInt(0)
+	nanoSeconds = big.NewInt(0)
+	numericalSign = 1
 
-	sign := int(1)
+	bigHourNanoSecs := big.NewInt(HourNanoSeconds)
+	bigMinuteNanoSecs := big.NewInt(MinuteNanoSeconds)
+	bigSecondNanoSecs := big.NewInt(SecondNanoseconds)
 
-	if grossNanoSeconds < 0 {
-		sign = -1
-		grossNanoSeconds = grossNanoSeconds * int64(sign)
+	compareResult := big.NewInt(0).Cmp(grossNanoSeconds)
+
+	if compareResult < 0 {
+		numericalSign = -1
+		grossNanoSeconds = big.NewInt(0).Abs(grossNanoSeconds)
 	}
 
-	if grossNanoSeconds == 0 {
-		return hours, minutes, seconds, nanoSeconds
+	if compareResult == 0 {
+		numericalSign = 0
+		return hours, minutes, seconds, nanoSeconds, numericalSign
 	}
 
-	if grossNanoSeconds >= HourNanoSeconds {
-		hours = int(grossNanoSeconds/HourNanoSeconds)
-		grossNanoSeconds -= int64(hours) * HourNanoSeconds
-		hours = hours * sign
+	compareResult = grossNanoSeconds.Cmp(bigHourNanoSecs)
+	var temp *big.Int
+
+	if compareResult > -1 {
+		hours = big.NewInt(0).Div(grossNanoSeconds,bigHourNanoSecs)
+		temp = big.NewInt(0).Mul(hours, bigHourNanoSecs)
+		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
-	if grossNanoSeconds >= MinuteNanoSeconds {
-		minutes = int(grossNanoSeconds/MinuteNanoSeconds)
-		grossNanoSeconds -= int64(minutes) * MinuteNanoSeconds
-		minutes = minutes * sign
+	compareResult = grossNanoSeconds.Cmp(bigMinuteNanoSecs)
+
+	if compareResult > -1 {
+		minutes = big.NewInt(0).Div(grossNanoSeconds,bigMinuteNanoSecs)
+		temp = big.NewInt(0).Mul(minutes, bigMinuteNanoSecs)
+		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
-	if grossNanoSeconds >= SecondNanoseconds {
-		seconds = int(grossNanoSeconds/SecondNanoseconds)
-		grossNanoSeconds -= int64(seconds) * SecondNanoseconds
-		seconds = seconds * sign
+	compareResult = grossNanoSeconds.Cmp(bigSecondNanoSecs)
+
+	if compareResult > -1 {
+		seconds = big.NewInt(0).Div(grossNanoSeconds,bigMinuteNanoSecs)
+		temp = big.NewInt(0).Mul(seconds, bigMinuteNanoSecs)
+		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
-	nanoSeconds = int(grossNanoSeconds)
-	nanoSeconds = nanoSeconds * sign
+	nanoSeconds = big.NewInt(0).Set(grossNanoSeconds)
 
-	return hours, minutes, seconds, nanoSeconds
+	return hours, minutes, seconds, nanoSeconds, numericalSign
 }
 

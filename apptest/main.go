@@ -50,31 +50,53 @@ func (mt mainTest) mainTest094() {
 		5,
 		55,
 		30,
-		999999999,
+		0,
 		time.UTC)
 
 	// Expected Julian Day No Time = 2458992.74688
-	var JDayNoTime, timeFraction *big.Float
+	expectedJulianDayNoWONanoSecs := "2458992.74688"
+	JDayNoTime := new(big.Float)
+	var b int
+	var err error
 
-	JDayNoTime = big.NewFloat(0.0).
+	JDayNoTime, b , err = big.NewFloat(0.0).
+		SetPrec(512).
 		SetMode(big.ToNearestAway).
-		SetPrec(0).
-		SetFloat64(2458992.74688)
+		Parse(expectedJulianDayNoWONanoSecs, 10)
+
+
+	if b != 10 {
+		fmt.Printf("\nError returned by ParseFloat()\n" +
+			"b is NOT equal to 10!\n" +
+			"b='%v'", b)
+		return
+	}
+
+	if err != nil {
+		fmt.Printf("\nError returned by ParseFloat()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
 
 	fmt.Println(lineSplitter)
 	fmt.Println("Converting Julian Date Number Time To Fractional Time")
 	fmt.Println(lineSplitter)
-	fmt.Printf("Test Date:                          %v\n",
+
+	fmt.Printf("Test Date:                %v\n",
 		testDate.Format(dateTimeFormat))
-	fmt.Printf("Julian Day Number Time W/O NanSecs: %v\n",
-		JDayNoTime.Text('f', 40))
+
+	fmt.Printf("Julian Day No Time W/O NanSecs Str:   %v\n",
+		expectedJulianDayNoWONanoSecs)
+
+	fmt.Printf("Julian Day Number Time W/O NanSecs: %80.70f\n",
+		JDayNoTime)
 
 	fmt.Println(lineSplitter)
 
 	decimalCnt1 := "         1         2         3         4         5         6         7"
 	decimalCnt2 := "1230464890123456789012345678901234567890123456789012345678901234567890"
 
-	spacer := strings.Repeat(" ",53)
+	spacer := strings.Repeat(" ",46)
 
 	fmt.Println(spacer + decimalCnt1)
 	fmt.Println(spacer + decimalCnt2)
@@ -94,14 +116,14 @@ func (mt mainTest) mainTest094() {
 		return
 	}
 
-	fmt.Printf("Julian Day Number Time NanSecs:     %57.40f\n",
+	fmt.Printf("Julian Day Number Time NanSecs:     %80.70f\n",
 		julianDayNoTimeDto.GetDayNoTimeNanosecs())
-
+	var timeFraction *big.Float
 	timeFraction = julianDayNoTimeDto.GetTimeFraction()
 
 	fmt.Println(lineSplitter)
 
-	fmt.Printf("Time Fraction:                      %57.40f\n",
+	fmt.Printf("Time Fraction:                      %80.70f\n",
 		timeFraction)
 
 	fmt.Println(lineSplitter)

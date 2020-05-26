@@ -52,31 +52,66 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		return err
 	}
 
-	intSign := int64(1)
+	jDNDto.julianDayNoSign = 1
 
 	if julianDayNo < 0 {
-		intSign = -1
+		jDNDto.julianDayNoSign = -1
 
-		julianDayNo = julianDayNo * intSign
+		julianDayNo = julianDayNo * int64(jDNDto.julianDayNoSign)
 	}
+
+	requestedPrecision :=	uint(200)
 
 	if julianDayNoTimeFraction.Sign() < 0 {
 		julianDayNoTimeFraction =
 			big.NewFloat(0.0).
 				SetMode(big.ToNearestAway).
-				SetPrec(julianDayNoTimeFraction.Prec()).
+				SetPrec(requestedPrecision).
 				Neg(julianDayNoTimeFraction)
 	}
 
+	julianDayNoTimeFracStr :=
+		julianDayNoTimeFraction.Text('f',
+			int(julianDayNoTimeFraction.Prec()))
+
+	julianDayNoTimeStr :=
+		fmt.Sprintf("%v", julianDayNo) +
+			julianDayNoTimeFracStr[1:]
+
+	fmt.Printf("julianDayNoTimeStr:                 %v",
+		julianDayNoTimeStr)
+
+	var b int
+	var err2 error
+
+	jDNDto.julianDayNoFraction,
+	b,
+	err2 = big.NewFloat(0).
+		SetMode(big.ToNearestAway).
+		SetPrec(requestedPrecision).
+		Parse(julianDayNoTimeStr, 10)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error returned by Parse(julianDayNoTimeStr, 10)\n" +
+			"julianDayNoTimeStr='%v'\n" +
+			"Error='%v'\n", julianDayNoTimeStr, err2.Error())
+		return err
+	}
+
+	if b != 10 {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: Parse(julianDayNoTimeStr, 10) did NOT return b=10.\n" +
+			"b='%v'\n" +
+			"julianDayNoTimeStr='%v'\n", b, julianDayNoTimeStr)
+		return err
+	}
+
+	/*
 	bigJulianDayNo := big.NewFloat(0.0).
 		SetMode(big.ToZero).
-		SetPrec(julianDayNoTimeFraction.Prec()).
+		SetPrec(requestedPrecision).
 		SetInt64(julianDayNo)
-
-	requestedPrecision :=	julianDayNoTimeFraction.Prec() +
-	 bigJulianDayNo.Prec() + 10
-
-	// requestedPrecision := uint(100)
 
 	jDNDto.julianDayNoNanoSecs =
 		big.NewFloat(0.0).
@@ -90,24 +125,18 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 			SetMode(big.ToNearestAway).
 			SetPrec(requestedPrecision).
 			Sub(jDNDto.julianDayNoNanoSecs, bigJulianDayNo)
+*/
 
-	originalFraction := julianDayNoTimeFraction.Text('f',int(requestedPrecision))
-	fmt.Printf("setDto original Fraction                           %v\n",
-		originalFraction)
+	fmt.Printf("setDto original Fraction:           %80.70f\n",
+		julianDayNoTimeFraction)
 
-	fractionStr := jDNDto.julianDayNoFraction.Text('f', int(requestedPrecision))
-	fmt.Printf("setDto jDNDto.julianDayNoFraction                  %v\n",
-		fractionStr)
 
-	if intSign < 0 {
-		jDNDto.julianDayNoNanoSecs =
-			big.NewFloat(0.0).
-				Neg(jDNDto.julianDayNoNanoSecs)
-	}
+	fmt.Printf("setDto jDNDto.julianDayNoFraction:  %80.70f\n",
+		jDNDto.julianDayNoFraction)
 
 	bigDayNanoSeconds := big.NewFloat(0.0).
 		SetMode(big.ToZero).
-		SetPrec(0).
+		SetPrec(requestedPrecision).
 		SetInt64(DayNanoSeconds)
 
 	if !bigDayNanoSeconds.IsInt() {
@@ -121,48 +150,32 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 
 	grossNanoSecs := big.NewFloat(0.0).
 		SetMode(big.ToNearestAway).
-		SetPrec(1).
+		SetPrec(requestedPrecision).
 		Mul(bigDayNanoSeconds, jDNDto.julianDayNoFraction)
 
-	grossNanoSecs.SetMode(big.ToZero).
-		SetPrec(1)
+	grossNanoSecs.
+		SetMode(big.ToZero).
+		SetPrec(requestedPrecision).
+		Add(big.NewFloat(0.5), grossNanoSecs)
 
+	fmt.Printf("setDto grossNanoSecs:          %80.70f\n",
+		grossNanoSecs)
 
-	if !grossNanoSecs.IsInt() {
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Error: grossNanoSecs did NOT convert to an integer!\n" +
-			"grossNanoSecs='%v'\n",
-			grossNanoSecs.Text('f', 0))
+	jDNDto.totalNanoSeconds, _ = grossNanoSecs.Int(nil)
 
-		return err
-	}
-
-	var accuracy big.Accuracy
-
-	jDNDto.totalNanoSeconds, accuracy = grossNanoSecs.Int64()
-
-	if accuracy != big.Exact {
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Error: Calculation of grossNanoSecInt64 yielded " +
-			"an inexact resutl!\n" +
-			"Accuracy='%v'\n", accuracy)
-
-		return err
-	}
-
-	fmt.Printf("setDto jDNDto.totalNanoSeconds:              %v\n",
+	fmt.Printf("setDto jDNDto.totalNanoSeconds:%v\n",
 		jDNDto.totalNanoSeconds)
 
 	timeMech := timeMechanics{}
 	jDNDto.hours,
 		jDNDto.minutes,
 		jDNDto.seconds,
-		jDNDto.nanoseconds = timeMech.computeTimeElementsInt(
-		jDNDto.totalNanoSeconds)
+		jDNDto.nanoseconds,
+		_ = timeMech.computeTimeElementsBigInt(
+					jDNDto.totalNanoSeconds)
 
-	newDayNoNanSecsStr := jDNDto.julianDayNoNanoSecs.Text('f', int(requestedPrecision))
-	fmt.Printf("setDto julianDayNoNanoSecs:                  %v\n",
-		newDayNoNanSecsStr)
+	fmt.Printf("setDto julianDayNoNanoSecs:         %80.70f\n",
+		jDNDto.julianDayNoNanoSecs)
 
 	return  err
 }
