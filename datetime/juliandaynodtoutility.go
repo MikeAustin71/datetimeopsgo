@@ -78,7 +78,7 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		fmt.Sprintf("%v", julianDayNo) +
 			julianDayNoTimeFracStr[1:]
 
-	fmt.Printf("julianDayNoTimeStr:                 %v",
+	fmt.Printf("julianDayNoTimeStr:                   %v\n",
 		julianDayNoTimeStr)
 
 	var b int
@@ -161,7 +161,7 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 	fmt.Printf("setDto grossNanoSecs:          %80.70f\n",
 		grossNanoSecs)
 
-	jDNDto.totalNanoSeconds, _ = grossNanoSecs.Int(nil)
+	jDNDto.totalNanoSeconds, _ = grossNanoSecs.Int64()
 
 	fmt.Printf("setDto jDNDto.totalNanoSeconds:%v\n",
 		jDNDto.totalNanoSeconds)
@@ -171,7 +171,7 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		jDNDto.minutes,
 		jDNDto.seconds,
 		jDNDto.nanoseconds,
-		_ = timeMech.computeTimeElementsBigInt(
+		_ = timeMech.computeTimeElementsInt(
 					jDNDto.totalNanoSeconds)
 
 	fmt.Printf("setDto julianDayNoNanoSecs:         %80.70f\n",

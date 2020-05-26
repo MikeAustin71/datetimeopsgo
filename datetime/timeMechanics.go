@@ -65,7 +65,7 @@ func (timeMech *timeMechanics) computeTimeElementsInt64(
 	return hours, minutes, seconds, nanoSeconds, numericalSign
 }
 
-// computeTimeElementsInt - Utility routine to break gross nanoseconds
+// computeTimeElementsBigInt - Utility routine to break gross nanoseconds
 // int constituent hours, minutes, seconds and remaining nanoseconds. As
 // the method name implies, the return values are of type 'int'.
 //
@@ -129,6 +129,58 @@ func (timeMech *timeMechanics) computeTimeElementsBigInt(
 	}
 
 	nanoSeconds = big.NewInt(0).Set(grossNanoSeconds)
+
+	return hours, minutes, seconds, nanoSeconds, numericalSign
+}
+
+// computeTimeElementsInt - Utility routine to break gross nanoseconds
+// int constituent hours, minutes, seconds and remaining nanoseconds. As
+// the method name implies, the return values are of type 'int'.
+//
+func (timeMech *timeMechanics) computeTimeElementsInt(
+	grossNanoSeconds int64) (
+	hours,
+	minutes,
+	seconds,
+	nanoSeconds int,
+	numericalSign int) {
+
+	timeMech.lock.Lock()
+
+	defer timeMech.lock.Unlock()
+
+	hours = 0
+	minutes = 0
+	seconds = 0
+	nanoSeconds = 0
+	numericalSign = 1
+
+	if grossNanoSeconds < 0 {
+		numericalSign = -1
+		grossNanoSeconds *= -1
+	}
+
+	if grossNanoSeconds == 0 {
+		numericalSign = 0
+		return hours, minutes, seconds, nanoSeconds, numericalSign
+	}
+
+	if grossNanoSeconds >= HourNanoSeconds {
+		hours = int(grossNanoSeconds/HourNanoSeconds)
+		grossNanoSeconds -= int64(hours) * HourNanoSeconds
+	}
+
+	if grossNanoSeconds >= MinuteNanoSeconds {
+		minutes = int(grossNanoSeconds/MinuteNanoSeconds)
+		grossNanoSeconds -= int64(minutes) * MinuteNanoSeconds
+	}
+
+	if grossNanoSeconds >= SecondNanoseconds {
+		seconds = int(grossNanoSeconds/SecondNanoseconds)
+		grossNanoSeconds -= int64(seconds) * SecondNanoseconds
+	}
+
+	nanoSeconds = int(grossNanoSeconds)
 
 	return hours, minutes, seconds, nanoSeconds, numericalSign
 }

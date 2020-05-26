@@ -77,11 +77,11 @@ type JulianDayNoDto struct {
 	julianDayNoFraction     *big.Float
 	julianDayNoNanoSecs     *big.Float
 	julianDayNoSign         int
-	totalNanoSeconds        *big.Int
-	hours                   *big.Int
-	minutes                 *big.Int
-	seconds                 *big.Int
-	nanoseconds             *big.Int
+	totalNanoSeconds        int64
+	hours                   int
+	minutes                 int
+	seconds                 int
+	nanoseconds             int
 	lock                    *sync.Mutex
 }
 
@@ -180,11 +180,13 @@ func (jDNDto *JulianDayNoDto) GetDayNoTimeSeconds() (
 					"Accuracy='%v'\n", accuracy)
 		}
 
-		roundFac := float64(0.0000005)
+		var roundFac float64
+
+		roundFac = 0.0000005
 
 		julianDayNoSecs += roundFac
 
-		roundFac = float64(1000000.0)
+		roundFac = 1000000.0
 
 		julianDayNoSecs *= roundFac
 
@@ -194,7 +196,7 @@ func (jDNDto *JulianDayNoDto) GetDayNoTimeSeconds() (
 
 	if jDNDto.julianDayNoSign == -1 {
 
-		roundFac = float64(-1.0)
+		roundFac = -1.0
 
 		julianDayNoSecs *= roundFac
 	}
@@ -222,24 +224,13 @@ func (jDNDto *JulianDayNoDto) GetHours() int {
 	jDNDto.lock.Lock()
 
 	defer jDNDto.lock.Unlock()
-	
-	hoursInt := 0
-	
-	if jDNDto.hours == nil {
-		return hoursInt
-	}
-	
-	if jDNDto.hours.IsInt64() {
-		hoursInt = int(jDNDto.hours.Int64())
-		if hoursInt >= 12 {
-			hoursInt -= 12
-		}
+
+	hoursInt := jDNDto.hours
 
 		if jDNDto.julianDayNoSign == -1 {
 			hoursInt *= -1
 		}
-	}
-	
+
 	return hoursInt
 }
 
@@ -256,7 +247,7 @@ func (jDNDto *JulianDayNoDto) GetHours() int {
 //
 // This method returns the Julian time in total nanoseconds.
 //
-func (jDNDto *JulianDayNoDto) GetJulianTotalNanoSecondsInt64() (int64, error) {
+func (jDNDto *JulianDayNoDto) GetJulianTotalNanoSecondsInt64() int64 {
 
 	if jDNDto.lock == nil {
 		jDNDto.lock = new(sync.Mutex)
@@ -266,28 +257,13 @@ func (jDNDto *JulianDayNoDto) GetJulianTotalNanoSecondsInt64() (int64, error) {
 
 	defer jDNDto.lock.Unlock()
 
-	ePrefix := "JulianDayNoDto) GetJulianTotalNanoSecondsInt64() "
-	result := int64(0)
-
-	if jDNDto.totalNanoSeconds == nil {
-		return result, errors.New(ePrefix + "\n" +
-			"Error: 'jDNDto.totalNanoSeconds' is nil and invalid!\n" +
-			"This instance of 'JulianDayNoDto' has not been properly initialized.\n")
-	}
-
-	if !jDNDto.totalNanoSeconds.IsInt64() {
-		return result, errors.New(ePrefix + "\n" +
-			"Error: 'jDNDto.totalNanoSeconds' cannot be converted to an Int64.\n" +
-			"The value probably exceeds the maximum value for an Int64.\n")
-	}
-
-	result = jDNDto.totalNanoSeconds.Int64()
+	totalNanoSeconds := jDNDto.totalNanoSeconds
 
 	if jDNDto.julianDayNoSign == -1 {
-		result *= int64(-1)
+		totalNanoSeconds *= -1
 	}
 
-	return result, nil
+	return totalNanoSeconds
 }
 
 // GetMinutes - Returns the internal data field
@@ -303,18 +279,11 @@ func (jDNDto *JulianDayNoDto) GetMinutes() int {
 
 	defer jDNDto.lock.Unlock()
 
-	minutesInt := 0
+	minutesInt := jDNDto.minutes
 
-	if jDNDto.minutes == nil {
-		return minutesInt
-	}
-
-	if jDNDto.minutes.IsInt64() {
-		minutesInt = int(jDNDto.minutes.Int64())
 		if jDNDto.julianDayNoSign == -1 {
 			minutesInt *= -1
 		}
-	}
 
 	return minutesInt
 }
@@ -333,7 +302,7 @@ func (jDNDto *JulianDayNoDto) GetMinutes() int {
 //
 // This method returns the Gregorian time in total nanoseconds.
 //
-func (jDNDto *JulianDayNoDto) GetGregorianTotalNanoSecondsInt64() (int64, error) {
+func (jDNDto *JulianDayNoDto) GetGregorianTotalNanoSecondsInt64() int64 {
 
 	if jDNDto.lock == nil {
 		jDNDto.lock = new(sync.Mutex)
@@ -343,22 +312,7 @@ func (jDNDto *JulianDayNoDto) GetGregorianTotalNanoSecondsInt64() (int64, error)
 
 	defer jDNDto.lock.Unlock()
 
-	ePrefix := "JulianDayNoDto.GetGregorianTotalNanoSecondsInt64() "
-	result := int64(0)
-
-	if jDNDto.totalNanoSeconds == nil {
-		return result, errors.New(ePrefix + "\n" +
-			"Error: 'jDNDto.totalNanoSeconds' is nil and invalid!\n" +
-			"This instance of 'JulianDayNoDto' has not been properly initialized.\n")
-	}
-
-	if !jDNDto.totalNanoSeconds.IsInt64() {
-		return result, errors.New(ePrefix + "\n" +
-			"Error: 'jDNDto.totalNanoSeconds' cannot be converted to an Int64.\n" +
-			"The value probably exceeds the maximum value for an Int64.\n")
-	}
-
-	result = jDNDto.totalNanoSeconds.Int64()
+	result := jDNDto.totalNanoSeconds
 
 	if result >= NoonNanoSeconds {
 		result -= NoonNanoSeconds
@@ -368,7 +322,7 @@ func (jDNDto *JulianDayNoDto) GetGregorianTotalNanoSecondsInt64() (int64, error)
 		result *= int64(-1)
 	}
 
-	return result, nil
+	return result
 }
 
 // GetSeconds - Returns the internal data field
@@ -384,17 +338,10 @@ func (jDNDto *JulianDayNoDto) GetSeconds() int {
 
 	defer jDNDto.lock.Unlock()
 
-	secondsInt := 0
+	secondsInt := jDNDto.seconds
 
-	if jDNDto.seconds == nil {
-		return secondsInt
-	}
-
-	if jDNDto.seconds.IsInt64() {
-		secondsInt = int(jDNDto.seconds.Int64())
-		if jDNDto.julianDayNoSign == -1 {
+	if jDNDto.julianDayNoSign == -1 {
 			secondsInt *= -1
-		}
 	}
 
 	return secondsInt
@@ -409,18 +356,11 @@ func (jDNDto *JulianDayNoDto) GetNanoseconds() int {
 		jDNDto.lock = new(sync.Mutex)
 	}
 
-	nanosecondsInt := 0
+	nanosecondsInt := jDNDto.nanoseconds
 
-	if jDNDto.nanoseconds == nil {
-		return nanosecondsInt
-	}
-
-	if jDNDto.nanoseconds.IsInt64() {
-		nanosecondsInt = int(jDNDto.nanoseconds.Int64())
 		if jDNDto.julianDayNoSign == -1 {
 			nanosecondsInt *= -1
 		}
-	}
 
 	return nanosecondsInt
 }
