@@ -3,7 +3,6 @@ package datetime
 import (
 	"errors"
 	"fmt"
-	"math"
 	"math/big"
 	"sync"
 )
@@ -153,53 +152,79 @@ func (jDNDto *JulianDayNoDto) GetDayNoTimeSeconds() (
 	}
 
 	var julianDayNoSecs float64
-	var accuracy big.Accuracy
+	// var accuracy big.Accuracy
+	requestedPrecision := uint(1024)
 
 	bigJulianDayNoTime := big.NewFloat(0.0).
 		SetMode(big.ToNearestAway).
-		SetPrec(200).
-		Set(jDNDto.julianDayNoNanoSecs)
+		SetPrec(requestedPrecision).
+		Copy(jDNDto.julianDayNoNanoSecs)
 
-	if jDNDto.julianDayNoSign == -1 {
+	// Round to 6-Decimal Places
+	roundFac :=
+		big.NewFloat(0).
+		SetMode(big.ToNearestAway).
+		SetPrec(requestedPrecision).
+		SetFloat64(0.0000005)
 
-		bigJulianDayNoTime = big.NewFloat(0.0).
+	bigJulianDayNoTime =
+		big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(requestedPrecision).
+		Add(bigJulianDayNoTime, roundFac)
+
+	scaleFac :=
+		big.NewFloat(0.0).
 			SetMode(big.ToNearestAway).
-			SetPrec(200).
-			Neg(bigJulianDayNoTime)
-	}
+			SetPrec(requestedPrecision).
+			SetFloat64(1000000.0)
 
-	julianDayNoSecs,
-		accuracy =
-		bigJulianDayNoTime.Float64()
+	bigJulianDayNoTime =
+		big.NewFloat(0.0).
+			SetMode(big.ToNearestAway).
+			SetPrec(requestedPrecision).
+			Mul(bigJulianDayNoTime, scaleFac)
 
-		if accuracy != big.Exact {
-			return float64Result,
-				fmt.Errorf(ePrefix + "\n" +
-					"Error: Julian Day Number/Time could exceeds the limits\n" +
-					"of a float64 at 6-digits of precision.\n" +
-					"Accuracy='%v'\n", accuracy)
-		}
+	bigIntTemp, _ := bigJulianDayNoTime.Int(nil)
 
-		var roundFac float64
+	bigJulianDayNoTime =
+		big.NewFloat(0.0).
+			SetMode(big.ToNearestAway).
+			SetPrec(requestedPrecision).
+			SetInt(bigIntTemp)
 
-		roundFac = 0.0000005
+	bigJulianDayNoTime =
+		big.NewFloat(0.0).
+			SetMode(big.ToNearestAway).
+			SetPrec(requestedPrecision).
+			Quo(bigJulianDayNoTime, scaleFac)
 
-		julianDayNoSecs += roundFac
-
-		roundFac = 1000000.0
-
-		julianDayNoSecs *= roundFac
-
-	julianDayNoSecs = math.Floor(julianDayNoSecs)
-
-	julianDayNoSecs /= roundFac
+	fmt.Printf("bigJulianDayNoTime2                 %80.70f\n",
+		bigJulianDayNoTime)
 
 	if jDNDto.julianDayNoSign == -1 {
-
-		roundFac = -1.0
-
-		julianDayNoSecs *= roundFac
+		bigJulianDayNoTime =
+			big.NewFloat(0.0).
+				SetMode(big.ToNearestAway).
+				SetPrec(requestedPrecision).
+				Neg(bigJulianDayNoTime)
 	}
+
+	bigJulianDayNoTime.
+			SetMode(bigJulianDayNoTime.Mode())
+
+	bigJulianDayNoTime.
+		SetPrec(32)
+
+	julianDayNoSecs, _ = bigJulianDayNoTime.Float64()
+
+		//if accuracy != big.Exact {
+		//	return float64Result,
+		//		fmt.Errorf(ePrefix + "\n" +
+		//			"Error: Julian Day Number/Time could exceeds the limits\n" +
+		//			"of a float64 at 6-digits of precision.\n" +
+		//			"Accuracy='%v'\n", accuracy)
+		//}
 
 	return julianDayNoSecs, nil
 }
@@ -226,6 +251,10 @@ func (jDNDto *JulianDayNoDto) GetHours() int {
 	defer jDNDto.lock.Unlock()
 
 	hoursInt := jDNDto.hours
+
+	if hoursInt >= 12 {
+		hoursInt -= 12
+	}
 
 		if jDNDto.julianDayNoSign == -1 {
 			hoursInt *= -1

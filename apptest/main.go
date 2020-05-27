@@ -11,13 +11,162 @@ import (
 
 func main() {
 
-	mainTest{}.mainTest094()
+	mainTest{}.mainTest095()
 
 }
 
 type mainTest struct {
 	input  string
 	output string
+}
+
+func (mt mainTest) mainTest095() {
+	// https://www.aavso.org/jd-calculator
+	// http://numerical.recipes/julian.html
+
+	dateTimeFormat := dt.FmtDateTimeYrMDayFmtStr
+
+	lineLen := 70
+
+	ePrefix := "mainTest.mainTest095() "
+
+	titles := []string{ePrefix,
+		"Convert to Julian Day Numbers",
+		"from Gregorian Calendar Date Time",
+		ePrefix}
+
+	ex.PrintMainHeader(
+		titles,
+		lineLen,
+		"=",
+		"=")
+
+	lineSplitter := strings.Repeat("-", lineLen)
+
+	testDate := time.Date(
+		2020,
+		5,
+		23,
+		5,
+		55,
+		30,
+		0,
+		time.UTC)
+
+	// Expected Julian Day No Time = 2458992.74688
+	expectedJulianDayNoWONanoSecs := "2458992.74688"
+	JDayNoTime := new(big.Float)
+	var b int
+	var err error
+
+	JDayNoTime, b , err = big.NewFloat(0.0).
+		SetPrec(512).
+		SetMode(big.ToNearestAway).
+		Parse(expectedJulianDayNoWONanoSecs, 10)
+
+
+	if b != 10 {
+		fmt.Printf("\nError returned by ParseFloat()\n" +
+			"b is NOT equal to 10!\n" +
+			"b='%v'", b)
+		return
+	}
+
+	if err != nil {
+		fmt.Printf("\nError returned by ParseFloat()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Println(lineSplitter)
+	fmt.Println("Converting Julian Date Number Time To Fractional Time")
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Test Date:                %v\n",
+		testDate.Format(dateTimeFormat))
+
+	fmt.Printf("Julian Day No Time W/O NanSecs Str:   %v\n",
+		expectedJulianDayNoWONanoSecs)
+
+	fmt.Printf("Julian Day Number Time W/O NanSecs: %80.70f\n",
+		JDayNoTime)
+
+	fmt.Println(lineSplitter)
+
+	decimalCnt1 := "         1         2         3         4         5         6         7"
+	decimalCnt2 := "1230464890123456789012345678901234567890123456789012345678901234567890"
+
+	spacer := strings.Repeat(" ",46)
+
+	fmt.Println(spacer + decimalCnt1)
+	fmt.Println(spacer + decimalCnt2)
+
+	calUtil := dt.CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToBigJulianDayNoTime(
+			testDate,
+			ePrefix)
+
+	if err != nil {
+		fmt.Printf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	fmt.Printf("Julian Day Number Time NanSecs:     %80.70f\n",
+		julianDayNoTimeDto.GetDayNoTimeNanosecs())
+	var timeFraction *big.Float
+	timeFraction = julianDayNoTimeDto.GetTimeFraction()
+
+	var julianDayNoTimeSeconds float64
+
+	julianDayNoTimeSeconds, err = julianDayNoTimeDto.GetDayNoTimeSeconds()
+
+	if err != nil {
+		fmt.Printf("Error returned by julianDayNoTimeDto.GetDayNoTimeSeconds()\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	fmt.Printf("Julian Day No Time Seconds:         %80.70f\n",
+		julianDayNoTimeSeconds)
+
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Time Fraction:                      %80.70f\n",
+		timeFraction)
+
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Expected Hours:       %v\n",
+		testDate.Hour())
+	fmt.Printf("Actual Hours:         %v\n",
+		julianDayNoTimeDto.GetHours())
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Expected Minutes:     %v\n",
+		testDate.Minute())
+	fmt.Printf("Actual Minutes:       %v\n",
+		julianDayNoTimeDto.GetMinutes())
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Expected Seconds:     %v\n",
+		testDate.Second())
+
+	fmt.Printf("Actual Seconds:       %v\n",
+		julianDayNoTimeDto.GetSeconds())
+	fmt.Println(lineSplitter)
+
+	fmt.Printf("Expected Nanoseconds: %v\n",
+		testDate.Nanosecond())
+
+	fmt.Printf("Actual Nanoseconds:   %v\n",
+		julianDayNoTimeDto.GetNanoseconds())
+
+	fmt.Println(lineSplitter)
+	fmt.Println(lineSplitter)
 }
 
 func (mt mainTest) mainTest094() {
@@ -31,8 +180,8 @@ func (mt mainTest) mainTest094() {
 	ePrefix := "mainTest.mainTest094() "
 
 	titles := []string{ePrefix,
-		"Convert Julian Day Numbers",
-		"to Gregorian Calendar",
+		"Convert to Julian Day Numbers",
+		"from Gregorian Calendar Date Time",
 		ePrefix}
 
 	ex.PrintMainHeader(

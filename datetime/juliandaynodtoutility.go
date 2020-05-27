@@ -60,7 +60,16 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		julianDayNo = julianDayNo * int64(jDNDto.julianDayNoSign)
 	}
 
+
 	requestedPrecision :=	uint(200)
+
+	if julianDayNoTimeFraction.Prec() > requestedPrecision {
+		requestedPrecision = julianDayNoTimeFraction.Prec()
+	}
+
+	if requestedPrecision > 1024 {
+		requestedPrecision = 1024
+	}
 
 	if julianDayNoTimeFraction.Sign() < 0 {
 		julianDayNoTimeFraction =
@@ -69,6 +78,12 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 				SetPrec(requestedPrecision).
 				Neg(julianDayNoTimeFraction)
 	}
+
+	jDNDto.julianDayNoFraction =
+		big.NewFloat(0.0).
+			SetMode(big.ToNearestAway).
+			SetPrec(requestedPrecision).
+			Set(julianDayNoTimeFraction)
 
 	julianDayNoTimeFracStr :=
 		julianDayNoTimeFraction.Text('f',
@@ -84,7 +99,7 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 	var b int
 	var err2 error
 
-	jDNDto.julianDayNoFraction,
+	jDNDto.julianDayNoNanoSecs,
 	b,
 	err2 = big.NewFloat(0).
 		SetMode(big.ToNearestAway).
@@ -135,7 +150,7 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		jDNDto.julianDayNoFraction)
 
 	bigDayNanoSeconds := big.NewFloat(0.0).
-		SetMode(big.ToZero).
+		SetMode(big.ToNearestAway).
 		SetPrec(requestedPrecision).
 		SetInt64(DayNanoSeconds)
 
@@ -148,17 +163,23 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		return err
 	}
 
+	fmt.Printf("setDto bigDayNanoSeconds:      %80.70f\n",
+		bigDayNanoSeconds)
+
 	grossNanoSecs := big.NewFloat(0.0).
 		SetMode(big.ToNearestAway).
 		SetPrec(requestedPrecision).
 		Mul(bigDayNanoSeconds, jDNDto.julianDayNoFraction)
 
+	fmt.Printf("setDto grossNanoSecs 1:        %80.70f\n",
+		grossNanoSecs)
+
 	grossNanoSecs.
-		SetMode(big.ToZero).
+		SetMode(big.ToNearestAway).
 		SetPrec(requestedPrecision).
 		Add(big.NewFloat(0.5), grossNanoSecs)
 
-	fmt.Printf("setDto grossNanoSecs:          %80.70f\n",
+	fmt.Printf("setDto grossNanoSecs 2:        %80.70f\n",
 		grossNanoSecs)
 
 	jDNDto.totalNanoSeconds, _ = grossNanoSecs.Int64()
