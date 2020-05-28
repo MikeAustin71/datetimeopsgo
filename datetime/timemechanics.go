@@ -1,19 +1,20 @@
 package datetime
 
 import (
+	"math"
 	"math/big"
 	"sync"
 )
 
-type timeMechanics struct {
-	lock       sync.Mutex
+type TimeMechanics struct {
+	lock       * sync.Mutex
 }
 
-// computeTimeElementsInt64 - Utility routine to break gross nanoseconds
+// ComputeTimeElementsInt64 - Utility routine to break gross nanoseconds
 // int constituent hours, minutes, seconds and remaining nanoseconds. As
 // the method name implies, the return values are of type Int64.
 //
-func (timeMech *timeMechanics) computeTimeElementsInt64(
+func (timeMech *TimeMechanics) ComputeTimeElementsInt64(
 	grossNanoSeconds int64,
 	ePrefix string) (
 	hours,
@@ -22,11 +23,15 @@ func (timeMech *timeMechanics) computeTimeElementsInt64(
 	nanoSeconds int64,
 	numericalSign int) {
 
+	if timeMech.lock == nil {
+		timeMech.lock = new(sync.Mutex)
+	}
+
 	timeMech.lock.Lock()
 
 	defer timeMech.lock.Unlock()
 
-	ePrefix += "timeMech.computeTimeElements() "
+	ePrefix += "timeMech.ComputeTimeElementsInt64() "
 
 	hours = 0
 	minutes = 0
@@ -65,28 +70,38 @@ func (timeMech *timeMechanics) computeTimeElementsInt64(
 	return hours, minutes, seconds, nanoSeconds, numericalSign
 }
 
-// computeTimeElementsBigInt - Utility routine to break gross nanoseconds
+// ComputeTimeElementsBigInt - Utility routine to break gross nanoseconds
 // int constituent hours, minutes, seconds and remaining nanoseconds. As
 // the method name implies, the return values are of type 'int'.
 //
-func (timeMech *timeMechanics) computeTimeElementsBigInt(
+func (timeMech *TimeMechanics) ComputeTimeElementsBigInt(
 	grossNanoSeconds *big.Int) (
+	days *big.Int,
 	hours,
 	minutes,
 	seconds,
-	nanoSeconds *big.Int,
+	nanoSeconds int,
 	numericalSign int) {
+
+	if timeMech.lock == nil {
+		timeMech.lock = new(sync.Mutex)
+	}
 
 	timeMech.lock.Lock()
 
 	defer timeMech.lock.Unlock()
 
-	hours = big.NewInt(0)
-	minutes = big.NewInt(0)
-	seconds = big.NewInt(0)
-	nanoSeconds = big.NewInt(0)
+	days = big.NewInt(0)
+	hours = 0
+	minutes = 0
+	seconds = 0
+	nanoSeconds = 0
+	hoursBig := big.NewInt(0)
+	minutesBig := big.NewInt(0)
+	secondsBig := big.NewInt(0)
 	numericalSign = 1
 
+	bigDayNanoSecs := big.NewInt(DayNanoSeconds)
 	bigHourNanoSecs := big.NewInt(HourNanoSeconds)
 	bigMinuteNanoSecs := big.NewInt(MinuteNanoSeconds)
 	bigSecondNanoSecs := big.NewInt(SecondNanoseconds)
@@ -100,50 +115,66 @@ func (timeMech *timeMechanics) computeTimeElementsBigInt(
 
 	if compareResult == 0 {
 		numericalSign = 0
-		return hours, minutes, seconds, nanoSeconds, numericalSign
+		return days, hours, minutes, seconds, nanoSeconds, numericalSign
+	}
+
+	var temp *big.Int
+
+	compareResult =  grossNanoSeconds.Cmp(bigDayNanoSecs)
+
+	if compareResult > -1 {
+		days = big.NewInt(0).Div(grossNanoSeconds, bigDayNanoSecs)
+		temp = big.NewInt(0).Mul(days, bigDayNanoSecs)
+		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
 	compareResult = grossNanoSeconds.Cmp(bigHourNanoSecs)
-	var temp *big.Int
 
 	if compareResult > -1 {
-		hours = big.NewInt(0).Div(grossNanoSeconds,bigHourNanoSecs)
-		temp = big.NewInt(0).Mul(hours, bigHourNanoSecs)
+		hoursBig = big.NewInt(0).Div(grossNanoSeconds,bigHourNanoSecs)
+		temp = big.NewInt(0).Mul(hoursBig, bigHourNanoSecs)
+		hours = int(hoursBig.Int64())
 		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
 	compareResult = grossNanoSeconds.Cmp(bigMinuteNanoSecs)
 
 	if compareResult > -1 {
-		minutes = big.NewInt(0).Div(grossNanoSeconds,bigMinuteNanoSecs)
-		temp = big.NewInt(0).Mul(minutes, bigMinuteNanoSecs)
+		minutesBig = big.NewInt(0).Div(grossNanoSeconds,bigMinuteNanoSecs)
+		temp = big.NewInt(0).Mul(minutesBig, bigMinuteNanoSecs)
+		minutes = int(minutesBig.Int64())
 		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
 	compareResult = grossNanoSeconds.Cmp(bigSecondNanoSecs)
 
 	if compareResult > -1 {
-		seconds = big.NewInt(0).Div(grossNanoSeconds,bigMinuteNanoSecs)
-		temp = big.NewInt(0).Mul(seconds, bigMinuteNanoSecs)
+		secondsBig = big.NewInt(0).Div(grossNanoSeconds,bigSecondNanoSecs)
+		temp = big.NewInt(0).Mul(secondsBig, bigSecondNanoSecs)
+		seconds = int(secondsBig.Int64())
 		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
-	nanoSeconds = big.NewInt(0).Set(grossNanoSeconds)
+	nanoSeconds = int(grossNanoSeconds.Int64())
 
-	return hours, minutes, seconds, nanoSeconds, numericalSign
+	return days, hours, minutes, seconds, nanoSeconds, numericalSign
 }
 
-// computeTimeElementsInt - Utility routine to break gross nanoseconds
+// ComputeTimeElementsInt - Utility routine to break gross nanoseconds
 // int constituent hours, minutes, seconds and remaining nanoseconds. As
 // the method name implies, the return values are of type 'int'.
 //
-func (timeMech *timeMechanics) computeTimeElementsInt(
+func (timeMech *TimeMechanics) ComputeTimeElementsInt(
 	grossNanoSeconds int64) (
 	hours,
 	minutes,
 	seconds,
 	nanoSeconds int,
 	numericalSign int) {
+
+	if timeMech.lock == nil {
+		timeMech.lock = new(sync.Mutex)
+	}
 
 	timeMech.lock.Lock()
 
@@ -183,5 +214,68 @@ func (timeMech *timeMechanics) computeTimeElementsInt(
 	nanoSeconds = int(grossNanoSeconds)
 
 	return hours, minutes, seconds, nanoSeconds, numericalSign
+}
+
+// ComputeFloat64TimeFracToGregorianSeconds - Utility routine to
+// compute time elements to nearest second from a float64
+// Julian Day Number Time. Constituent hours, minutes and
+// seconds are returned as type int in Gregorian Calendar
+// time.
+//
+// Julian Days start at noon. Gregorian days start at
+// midnight. This method adjusts the hours to reflect
+// Gregorian days.
+func (timeMech *TimeMechanics) ComputeFloat64TimeFracToGregorianSeconds(
+	julianDayNoTime float64) (
+	days int64,
+	hours,
+	minutes,
+	seconds,
+	numericalSign int) {
+
+	if timeMech.lock == nil {
+		timeMech.lock = new(sync.Mutex)
+	}
+
+	timeMech.lock.Lock()
+
+	defer timeMech.lock.Unlock()
+
+	days = 0
+	hours = 0
+	minutes = 0
+	seconds = 0
+	numericalSign = 1
+
+	if julianDayNoTime < 0.0 {
+		numericalSign = -1
+		julianDayNoTime = math.Abs(julianDayNoTime)
+	}
+
+	fracSeconds :=
+		int64((julianDayNoTime * 86400.0) + 0.5)
+
+	if fracSeconds >= 86400 {
+		days = fracSeconds / int64(86400)
+
+		fracSeconds -= days * 86400
+	}
+
+	if fracSeconds >= 3600 {
+		hours = int(fracSeconds/3600)
+		fracSeconds -= int64(hours) * int64(3600)
+		if hours >= 12 {
+			hours -= 12
+		}
+	}
+
+	if fracSeconds >= 60 {
+		minutes = int(fracSeconds/60)
+		fracSeconds -= int64(minutes) * int64(60)
+	}
+
+	seconds = int(fracSeconds)
+
+	return days, hours, minutes, seconds, numericalSign
 }
 

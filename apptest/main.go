@@ -50,7 +50,7 @@ func (mt mainTest) mainTest095() {
 		5,
 		55,
 		30,
-		0,
+		499000000,
 		time.UTC)
 
 	// Expected Julian Day No Time = 2458992.74688
@@ -117,21 +117,18 @@ func (mt mainTest) mainTest095() {
 	}
 
 	fmt.Printf("Julian Day Number Time NanSecs:     %80.70f\n",
-		julianDayNoTimeDto.GetDayNoTimeNanosecs())
+		julianDayNoTimeDto.GetDayNoTimeBigFloat())
 	var timeFraction *big.Float
 	timeFraction = julianDayNoTimeDto.GetTimeFraction()
 
 	var julianDayNoTimeSeconds float64
 
-	julianDayNoTimeSeconds, err = julianDayNoTimeDto.GetDayNoTimeSeconds()
+	julianDayNoTimeSeconds, err = julianDayNoTimeDto.GetDayNoTimeFloat64()
 
 	if err != nil {
-		fmt.Printf("Error returned by julianDayNoTimeDto.GetDayNoTimeSeconds()\n" +
+		fmt.Printf("Error returned by julianDayNoTimeDto.GetDayNoTimeFloat64()\n" +
 			"Error='%v'\n", err.Error())
 	}
-
-	fmt.Printf("Julian Day No Time Seconds:         %80.70f\n",
-		julianDayNoTimeSeconds)
 
 	fmt.Println(lineSplitter)
 
@@ -140,10 +137,26 @@ func (mt mainTest) mainTest095() {
 
 	fmt.Println(lineSplitter)
 
+	fmt.Printf("Julian Day No Time Seconds:         %80.70f\n",
+		julianDayNoTimeSeconds)
+
+	timeMech := dt.TimeMechanics{}
+
+	days,
+	hours,
+	minutes,
+	seconds,
+	_ := timeMech.ComputeFloat64TimeFracToGregorianSeconds(julianDayNoTimeSeconds)
+
+	fmt.Printf("Days: %v  Hours: %v  Minutes: %v  Seconds %v\n",
+		days, hours, minutes, seconds)
+
+	fmt.Println(lineSplitter)
+
 	fmt.Printf("Expected Hours:       %v\n",
 		testDate.Hour())
 	fmt.Printf("Actual Hours:         %v\n",
-		julianDayNoTimeDto.GetHours())
+		julianDayNoTimeDto.GetGregorianHours())
 	fmt.Println(lineSplitter)
 
 	fmt.Printf("Expected Minutes:     %v\n",
@@ -266,7 +279,7 @@ func (mt mainTest) mainTest094() {
 	}
 
 	fmt.Printf("Julian Day Number Time NanSecs:     %80.70f\n",
-		julianDayNoTimeDto.GetDayNoTimeNanosecs())
+		julianDayNoTimeDto.GetDayNoTimeBigFloat())
 	var timeFraction *big.Float
 	timeFraction = julianDayNoTimeDto.GetTimeFraction()
 
@@ -280,7 +293,7 @@ func (mt mainTest) mainTest094() {
 	fmt.Printf("Expected Hours:       %v\n",
 		testDate.Hour())
 	fmt.Printf("Actual Hours:         %v\n",
-		julianDayNoTimeDto.GetHours())
+		julianDayNoTimeDto.GetGregorianHours())
 	fmt.Println(lineSplitter)
 
 	fmt.Printf("Expected Minutes:     %v\n",
