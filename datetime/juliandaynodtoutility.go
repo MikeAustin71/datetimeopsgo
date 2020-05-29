@@ -62,7 +62,7 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 	}
 
 
-	requestedPrecision :=	uint(1024)
+	requestedPrecision :=	uint(256)
 
 	if julianDayNoTimeFraction.Prec() > requestedPrecision {
 		requestedPrecision = julianDayNoTimeFraction.Prec()

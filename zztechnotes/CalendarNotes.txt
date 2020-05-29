@@ -87,8 +87,6 @@ Julian Day Numbers - Using Calgo #199
 
 Converting to Julian Calendar
   https://quasar.as.utexas.edu/BillInfo/JulianDatesG.html
-
-Julian Day Numbers - Using Calgo #199
 http://pmyers.pcug.org.au/General/JulianDates.htm
 
 Astronomical year numbering

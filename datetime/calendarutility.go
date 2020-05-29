@@ -227,32 +227,6 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 //
 func (calUtil *CalendarUtility) GregorianDateToJulianDayNoTime(
 	gregorianDateTime time.Time,
-	digitsAfterDecimal int,
-	ePrefix string) (
-	gregorianDateUtc time.Time,
-	julianDateNoTime float64,
-	err error) {
-
-	if calUtil.lock == nil {
-		calUtil.lock = new(sync.Mutex)
-	}
-
-	calUtil.lock.Lock()
-
-	defer calUtil.lock.Unlock()
-
-	ePrefix += "DTimeUtility.GregorianDateToJulianDayNoTime() "
-
-	calendarMech := calendarMechanics{}
-
-	return calendarMech.gregorianDateToJulianDayNoTime(
-		gregorianDateTime,
-		digitsAfterDecimal,
-		ePrefix)
-}
-
-func (calUtil *CalendarUtility) GregorianDateToBigJulianDayNoTime(
-	gregorianDateTime time.Time,
 	ePrefix string) (
 	gregorianDateUtc time.Time,
 	julianDayNoDto JulianDayNoDto,
@@ -364,8 +338,7 @@ func (calUtil *CalendarUtility) GregorianDateToBigJulianDayNoTime(
 //   https://en.wikipedia.org/wiki/Julian_day
 //
 func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianCalendar(
-	julianDayNoNoTime float64,
-	digitsAfterDecimal int,
+	julianDayNoDto JulianDayNoDto,
 	ePrefix string) (
 	gregorianDateUtc time.Time,
 	err error) {
@@ -385,8 +358,7 @@ func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianCalendar(
 	gregorianDateUtc,
 		err =
 		calendarMech.richardsJulianDayNoTimeToGregorianCalendar(
-			julianDayNoNoTime,
-			digitsAfterDecimal,
+			julianDayNoDto,
 			ePrefix)
 
 	return gregorianDateUtc, err

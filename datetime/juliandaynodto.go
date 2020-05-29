@@ -2,6 +2,7 @@ package datetime
 
 import (
 	"errors"
+	"math"
 	"math/big"
 	"sync"
 )
@@ -79,7 +80,8 @@ type JulianDayNoDto struct {
 	julianDayNoSign         int        // Sign of the Julian Day Number/Time value
 	totalNanoSeconds        *big.Int   // Julian Day Number Time Value expressed in nano seconds.
 	                                   //   Always represents a value less than 24-hours
-	hours                   int        // Julian Hours
+	                                   //   Julian Hours
+	hours                   int
 	minutes                 int
 	seconds                 int
 	nanoseconds             int
@@ -88,6 +90,8 @@ type JulianDayNoDto struct {
 
 // GetDayNoTimeBigFloat - Returns a *big.Float type representing
 // the Julian Day Number/Time which is accurate to the nanosecond.
+// Therefore, this return value contains both the Julian Day Number
+// and the time fraction.
 //
 // If the current instance of type JulianDayNoDto has been incorrectly
 // initialized, this method will return an error.
@@ -207,7 +211,7 @@ func (jDNDto *JulianDayNoDto) GetJulianDayInt64() int64 {
 // GetJulianDay - Returns the Julian Day Number as a
 // type *big.Int.
 //
-func (jDNDto *JulianDayNoDto) GetJulianDayBigInt() *big.Int {
+func (jDNDto *JulianDayNoDto) GetJulianDayBigInt() (*big.Int, error) {
 
 	if jDNDto.lock == nil {
 		jDNDto.lock = new(sync.Mutex)
@@ -217,10 +221,13 @@ func (jDNDto *JulianDayNoDto) GetJulianDayBigInt() *big.Int {
 
 	defer jDNDto.lock.Unlock()
 
+	ePrefix := "JulianDayNoDto.GetJulianDayBigInt() "
 
 	if jDNDto.julianDayNo == nil ||
 		!jDNDto.julianDayNo.IsInt64() {
-		return big.NewInt(-1)
+		return big.NewInt(-1),
+		errors.New(ePrefix + "\n" +
+			"Error: This instance of 'JulianDayNoDto' is NOT initialized!\n")
 	}
 
 	result := big.NewInt(0).Set(jDNDto.julianDayNo)
@@ -229,7 +236,7 @@ func (jDNDto *JulianDayNoDto) GetJulianDayBigInt() *big.Int {
 		result = big.NewInt(0).Neg(result)
 	}
 
-	return result
+	return result, nil
 }
 
 // GetGregorianHours - Returns the hours associated with this Julian
@@ -437,15 +444,10 @@ func (jDNDto JulianDayNoDto) New(
 	return julianDayNoDto, err
 }
 
-// GetTimeFraction - Returns the fractional part of Julian Day
-// Number/Time a type *big.Float. The integer portion of this
-// this fractional number is always zero.
-//
-// If the current instance of type JulianDayNoDto has NOT been
-// correctly initialized, this method will return positive
-// infinity.
-//
-func (jDNDto *JulianDayNoDto) GetTimeFraction() *big.Float {
+func (jDNDto JulianDayNoDto) NewFromFloat64(
+	julianDayNoTime float64)	(
+	JulianDayNoDto,
+	error) {
 
 	if jDNDto.lock == nil {
 		jDNDto.lock = new(sync.Mutex)
@@ -455,10 +457,56 @@ func (jDNDto *JulianDayNoDto) GetTimeFraction() *big.Float {
 
 	defer jDNDto.lock.Unlock()
 
-	if jDNDto.julianDayNoFraction == nil {
-		return big.NewFloat(0.0).SetInf(true)
+	ePrefix := "JulianDayNoDto.New() "
+
+	julianDayNoFloat64, julianFracFloat64 :=
+		math.Modf(julianDayNoTime)
+
+	julianDayNoInt64 := int64(julianDayNoFloat64)
+
+	julianTimeFracBigFloat := big.NewFloat(0).
+		SetFloat64(julianFracFloat64)
+
+	julianDayNoDto := JulianDayNoDto{}
+
+	jDNDtoUtil := julianDayNoDtoUtility{}
+
+	err := jDNDtoUtil.setDto(
+		&julianDayNoDto,
+		julianDayNoInt64,
+		julianTimeFracBigFloat,
+		ePrefix)
+
+	return julianDayNoDto, err
+}
+
+
+// GetTimeFraction - Returns the fractional part of Julian Day
+// Number/Time a type *big.Float. The integer portion of this
+// this fractional number is always zero.
+//
+// If the current instance of type JulianDayNoDto has NOT been
+// correctly initialized, this method will return positive
+// infinity.
+//
+func (jDNDto *JulianDayNoDto) GetTimeFraction() (*big.Float, error) {
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
 	}
 
-	return big.NewFloat(0.0).Copy(jDNDto.julianDayNoFraction)
+	jDNDto.lock.Lock()
+
+	defer jDNDto.lock.Unlock()
+
+	ePrefix := "JulianDayNoDto.GetTimeFraction() "
+
+	if jDNDto.julianDayNoFraction == nil {
+		return big.NewFloat(0.0).SetInf(true),
+		errors.New(ePrefix + "\n" +
+			"Error: This 'JulianDayNoDto' instance is NOT initialized!\n")
+	}
+
+	return big.NewFloat(0.0).Copy(jDNDto.julianDayNoFraction), nil
 
 }

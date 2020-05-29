@@ -855,6 +855,24 @@ func ExampleDurationLocalUTCTime() {
 	fmt.Println("t2LocalStr: ", t2LocalStr)
 }
 
+// Simple Timer
+func CodeTimer() (dt.TimeDurationDto, error) {
+
+	tDur, err := dt.TimeDurationDto{}.NewAutoStart(
+		dt.TDurCalc.CumMinutes(),
+		dt.TZones.America.Chicago(),
+		dt.TCalcMode.LocalTimeZone(),
+		dt.FmtDateTimeYrMDayFmtStr)
+
+	if err != nil {
+		return tDur, fmt.Errorf("mainTest.mainTimer() \n" +
+			"Error returned by TimeDurationDto{}.NewAutoStart()\n" +
+			"Error='%v'\n", err.Error())
+	}
+
+	return tDur, nil
+}
+
 func PrintMainHeader(
 	titles []string,
 	fieldLen int,
