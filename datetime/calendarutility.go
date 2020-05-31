@@ -153,6 +153,7 @@ type CalendarUtility struct {
 //
 // Astronomical Calculations: The Julian Day
 // https://squarewidget.com/julian-day/
+//
 func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 	gregorianDateTime time.Time,
 	ePrefix string) (gregorianDateUtc time.Time, julianDayNo int64, err error) {
@@ -169,9 +170,26 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 
 	calendarMech := calendarMechanics{}
 
-	return calendarMech.gregorianDateToJulianDayNo(
+	gregorianDateUtc = time.Time{}
+	julianDayNo = -1
+	err = nil
+
+	var julianDayNoDto JulianDayNoDto
+
+	gregorianDateUtc,
+		julianDayNoDto,
+		err =
+	calendarMech.gregorianDateToJulianDayNoTime(
 		gregorianDateTime,
 		ePrefix)
+
+		if err != nil {
+			return gregorianDateUtc, julianDayNo, err
+		}
+
+	julianDayNo = julianDayNoDto.GetJulianDayInt64()
+
+	return gregorianDateUtc, julianDayNo, err
 }
 
 // GregorianDateToJulianDayNoTime - Converts a Gregorian Date to a Julian
@@ -244,7 +262,7 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNoTime(
 
 	calendarMech := calendarMechanics{}
 
-	return calendarMech.gregorianDateToBigJulianDayNoTime(
+	return calendarMech.gregorianDateToJulianDayNoTime(
 		gregorianDateTime,
 		ePrefix)
 }

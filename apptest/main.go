@@ -50,33 +50,10 @@ func (mt mainTest) mainTest095() {
 		5,
 		55,
 		30,
-		499999999,
+		500000000,
 		time.UTC)
 
-	// Expected Julian Day No Time = 2458992.74688
-	expectedJulianDayNoWONanoSecs := "2458992.74688"
-	JDayNoTime := new(big.Float)
-	var b int
 	var err error
-
-	JDayNoTime, b , err = big.NewFloat(0.0).
-		SetPrec(512).
-		SetMode(big.ToNearestAway).
-		Parse(expectedJulianDayNoWONanoSecs, 10)
-
-
-	if b != 10 {
-		fmt.Printf("\nError returned by ParseFloat()\n" +
-			"b is NOT equal to 10!\n" +
-			"b='%v'", b)
-		return
-	}
-
-	if err != nil {
-		fmt.Printf("\nError returned by ParseFloat()\n" +
-			"Error='%v'\n", err.Error())
-		return
-	}
 
 	fmt.Println(lineSplitter)
 	fmt.Println("Converting Julian Date Number Time To Fractional Time")
@@ -84,12 +61,6 @@ func (mt mainTest) mainTest095() {
 
 	fmt.Printf("Test Date:                %v\n",
 		testDate.Format(dateTimeFormat))
-
-	fmt.Printf("Julian Day No Time W/O NanSecs Str:   %v\n",
-		expectedJulianDayNoWONanoSecs)
-
-	fmt.Printf("Julian Day Number Time W/O NanSecs: %80.70f\n",
-		JDayNoTime)
 
 	fmt.Println(lineSplitter)
 
@@ -149,10 +120,10 @@ func (mt mainTest) mainTest095() {
 
 	var timeFraction *big.Float
 
-	timeFraction, err = julianDayNoTimeDto.GetTimeFraction()
+	timeFraction, err = julianDayNoTimeDto.GetJulianTimeFraction()
 
 	if err != nil {
-		fmt.Printf("Error returned by julianDayNoTimeDto.GetTimeFraction()\n" +
+		fmt.Printf("Error returned by julianDayNoTimeDto.GetJulianTimeFraction()\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -215,8 +186,9 @@ func (mt mainTest) mainTest095() {
 		julianDayNoTimeDto.GetNanoseconds())
 
 	fmt.Println(lineSplitter)
-	fmt.Printf("Code Execution Time: %v\n",
-		tDur.GetYearsMthsWeeksTimeAbbrvStr())
+	fmt.Printf("Code Execution Time:   %v\n",
+		tDur.GetElapsedTimeStr())
+
 	fmt.Println(lineSplitter)
 	fmt.Println(lineSplitter)
 }
@@ -332,10 +304,10 @@ func (mt mainTest) mainTest094() {
 
 	var timeFraction *big.Float
 
-	timeFraction, err = julianDayNoTimeDto.GetTimeFraction()
+	timeFraction, err = julianDayNoTimeDto.GetJulianTimeFraction()
 
 	if err != nil {
-		fmt.Printf("Error returned by julianDayNoTimeDto.GetTimeFraction()\n" +
+		fmt.Printf("Error returned by julianDayNoTimeDto.GetJulianTimeFraction()\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}

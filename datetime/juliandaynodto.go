@@ -75,7 +75,7 @@ type JulianDayNoDto struct {
 	julianDayNo             *big.Int   // Julian Day Number expressed as integer value
 	julianDayNoFraction     *big.Float // The Fractional Time value of the Julian
 	                                   //   Day No Time
-	julianDayNoNanoSecs     *big.Float // JulianDayNo Plus Time Fraction accurate to
+	julianDayNoTime         *big.Float // Julian Day Number Plus Time Fraction accurate to
 	                                   //   within nanoseconds
 	julianDayNoSign         int        // Sign of the Julian Day Number/Time value
 	totalNanoSeconds        *big.Int   // Julian Day Number Time Value expressed in nano seconds.
@@ -110,7 +110,7 @@ func (jDNDto *JulianDayNoDto) GetDayNoTimeBigFloat() (*big.Float, error) {
 
 	result := big.NewFloat(0.0)
 
-	if jDNDto.julianDayNoNanoSecs == nil {
+	if jDNDto.julianDayNoTime == nil {
 		return result, errors.New(ePrefix + "\n" +
 			"Error: This instance 'JulianDayNoDto' was not initialized.\n" +
 			"'JulianDayNoDto' is INVALID!\n")
@@ -119,15 +119,15 @@ func (jDNDto *JulianDayNoDto) GetDayNoTimeBigFloat() (*big.Float, error) {
 	result =
 		big.NewFloat(0.0).
 			SetMode(big.ToNearestAway).
-			SetPrec(jDNDto.julianDayNoNanoSecs.Prec()).
-			Copy(jDNDto.julianDayNoNanoSecs)
+			SetPrec(jDNDto.julianDayNoTime.Prec()).
+			Copy(jDNDto.julianDayNoTime)
 
 
 	if jDNDto.julianDayNoSign == -1 {
 		result =
 			big.NewFloat(0.0).
 				SetMode(big.ToNearestAway).
-				SetPrec(jDNDto.julianDayNoNanoSecs.Prec()).
+				SetPrec(jDNDto.julianDayNoTime.Prec()).
 				Neg(result)
 	}
 
@@ -158,24 +158,62 @@ func (jDNDto *JulianDayNoDto) GetDayNoTimeFloat64() (
 
 	float64Result := 0.0
 
-	if jDNDto.julianDayNoNanoSecs == nil {
+	if jDNDto.julianDayNoTime == nil {
 		return float64Result,
 			errors.New(ePrefix + "\n" +
 				"Error: This instance of JulianDayNoDto was " +
 				"incorrectly initialized and is invalid.\n" +
-				"'julianDayNoNanoSecs' is nil!")
+				"'julianDayNoTime' is nil!")
 	}
 
-	bigJulianDayNoTime := big.NewFloat(0.0).
-		Copy(jDNDto.julianDayNoNanoSecs)
+	if jDNDto.julianDayNo == nil {
+		return float64Result,
+			errors.New(ePrefix + "\n" +
+				"Error: This instance of JulianDayNoDto was " +
+				"incorrectly initialized and is invalid.\n" +
+				"'julianDayNo' is nil!")
+	}
+
+	if !jDNDto.julianDayNo.IsInt64(){
+		return float64Result,
+		errors.New("Error: 'jDNDto.julianDayNo' could not be converted to type 'int64'!\n")
+	}
+
+	actualNanoSecsBigInt := big.NewInt(int64(jDNDto.nanoseconds))
+
+	netSecsBigInt := big.NewInt(0).
+		Sub(jDNDto.totalNanoSeconds, actualNanoSecsBigInt)
+
+	netSecsBigFloat := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(512).
+		SetInt(netSecsBigInt)
+
+	dayNoNanoSecsBigFloat := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(512).
+		SetInt64(DayNanoSeconds)
+
+	secsTimeFractBigFloat := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(512).
+		Quo(netSecsBigFloat,dayNoNanoSecsBigFloat)
+
+	julianDayNoBigFloat := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(512).
+		SetInt(jDNDto.julianDayNo)
+
+	adjustedJulianDayNo := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(512).
+		Add(julianDayNoBigFloat, secsTimeFractBigFloat)
+
+	julianDayNoSecs, _ := adjustedJulianDayNo.Float64()
 
 	if jDNDto.julianDayNoSign == -1 {
-		bigJulianDayNoTime =
-			big.NewFloat(0.0).
-				Neg(bigJulianDayNoTime)
+		julianDayNoSecs *= 1.0
 	}
-
-	julianDayNoSecs, _ := bigJulianDayNoTime.Float64()
 
 	return julianDayNoSecs, nil
 }
@@ -271,6 +309,40 @@ func (jDNDto *JulianDayNoDto) GetGregorianHours() int {
 		}
 
 	return hoursInt
+}
+
+// GetJulianTimeFraction - Returns the fractional part of Julian Day
+// Number/Time as a type *big.Float. The integer portion of this
+// this fractional number is always zero. Only the time value is
+// returned.
+//
+// This time fraction will convert to an accuracy of nanoseconds.
+// However, remember that this value represents Julian Time associated
+// with a Julian Day. Julian Days start at noon whereas Gregorian Days
+// start at midnight.
+//
+// If the current instance of type JulianDayNoDto has NOT been
+// correctly initialized, this method will return an error.
+//
+func (jDNDto *JulianDayNoDto) GetJulianTimeFraction() (*big.Float, error) {
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
+	}
+
+	jDNDto.lock.Lock()
+
+	defer jDNDto.lock.Unlock()
+
+	ePrefix := "JulianDayNoDto.GetJulianTimeFraction() "
+
+	if jDNDto.julianDayNoFraction == nil {
+		return big.NewFloat(0.0).SetInf(true),
+			errors.New(ePrefix + "\n" +
+				"Error: This 'JulianDayNoDto' instance is NOT initialized!\n")
+	}
+
+	return big.NewFloat(0.0).Copy(jDNDto.julianDayNoFraction), nil
 }
 
 // GetJulianTotalNanoSecondsInt64 - Returns the total nanoseconds
@@ -480,33 +552,3 @@ func (jDNDto JulianDayNoDto) NewFromFloat64(
 	return julianDayNoDto, err
 }
 
-
-// GetTimeFraction - Returns the fractional part of Julian Day
-// Number/Time a type *big.Float. The integer portion of this
-// this fractional number is always zero.
-//
-// If the current instance of type JulianDayNoDto has NOT been
-// correctly initialized, this method will return positive
-// infinity.
-//
-func (jDNDto *JulianDayNoDto) GetTimeFraction() (*big.Float, error) {
-
-	if jDNDto.lock == nil {
-		jDNDto.lock = new(sync.Mutex)
-	}
-
-	jDNDto.lock.Lock()
-
-	defer jDNDto.lock.Unlock()
-
-	ePrefix := "JulianDayNoDto.GetTimeFraction() "
-
-	if jDNDto.julianDayNoFraction == nil {
-		return big.NewFloat(0.0).SetInf(true),
-		errors.New(ePrefix + "\n" +
-			"Error: This 'JulianDayNoDto' instance is NOT initialized!\n")
-	}
-
-	return big.NewFloat(0.0).Copy(jDNDto.julianDayNoFraction), nil
-
-}

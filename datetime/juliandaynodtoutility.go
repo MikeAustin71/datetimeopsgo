@@ -61,15 +61,12 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		julianDayNo = julianDayNo * int64(-1)
 	}
 
+	jDNDto.julianDayNo = big.NewInt(julianDayNo)
 
-	requestedPrecision :=	uint(256)
+	requestedPrecision :=	uint(1024)
 
 	if julianDayNoTimeFraction.Prec() > requestedPrecision {
 		requestedPrecision = julianDayNoTimeFraction.Prec()
-	}
-
-	if requestedPrecision > 1024 {
-		requestedPrecision = 1024
 	}
 
 	//fmt.Printf("setDto Original Fraction            %80.70f\n",
@@ -95,45 +92,11 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 			SetPrec(requestedPrecision).
 			SetInt64(julianDayNo)
 
-	jDNDto.julianDayNoNanoSecs =
+	jDNDto.julianDayNoTime =
 	big.NewFloat(0.0).
 		SetMode(big.ToNearestAway).
 		SetPrec(requestedPrecision).
 		Add(bigJulianDayNo, julianDayNoTimeFraction)
-
-	//julianDayNoTimeFracStr :=
-	//	julianDayNoTimeFraction.Text('f',
-	//		int(julianDayNoTimeFraction.Prec()))
-	//
-	//julianDayNoTimeStr :=
-	//	fmt.Sprintf("%v", julianDayNo) +
-	//		julianDayNoTimeFracStr[1:]
-	//
-	//var b int
-	//var err2 error
-	//
-	//jDNDto.julianDayNoNanoSecs,
-	//b,
-	//err2 = big.NewFloat(0).
-	//	SetMode(big.ToNearestAway).
-	//	SetPrec(requestedPrecision).
-	//	Parse(julianDayNoTimeStr, 10)
-	//
-	//if err2 != nil {
-	//	err = fmt.Errorf(ePrefix + "\n" +
-	//		"Error returned by Parse(julianDayNoTimeStr, 10)\n" +
-	//		"julianDayNoTimeStr='%v'\n" +
-	//		"Error='%v'\n", julianDayNoTimeStr, err2.Error())
-	//	return err
-	//}
-	//
-	//if b != 10 {
-	//	err = fmt.Errorf(ePrefix + "\n" +
-	//		"Error: Parse(julianDayNoTimeStr, 10) did NOT return b=10.\n" +
-	//		"b='%v'\n" +
-	//		"julianDayNoTimeStr='%v'\n", b, julianDayNoTimeStr)
-	//	return err
-//	}
 
 	bigDayNanoSeconds := big.NewFloat(0.0).
 		SetMode(big.ToNearestAway).

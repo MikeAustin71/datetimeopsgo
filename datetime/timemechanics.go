@@ -255,6 +255,7 @@ func (timeMech *TimeMechanics) ComputeFloat64TimeFracToGregorianSeconds(
 	fracSeconds :=
 		int64((julianDayNoTime * 86400.0) + 0.5)
 
+	// 86400 seconds in a 24-hour day
 	if fracSeconds >= 86400 {
 		days = fracSeconds / int64(86400)
 
