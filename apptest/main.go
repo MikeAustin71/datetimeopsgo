@@ -53,6 +53,16 @@ func (mt mainTest) mainTest095() {
 		500000000,
 		time.UTC)
 
+	//testDate := time.Date(
+	//	-4713,
+	//	11,
+	//	24,
+	//	12,
+	//	0,
+	//	0,
+	//	0,
+	//	time.UTC)
+
 	var err error
 
 	fmt.Println(lineSplitter)
@@ -118,6 +128,21 @@ func (mt mainTest) mainTest095() {
 	fmt.Printf("Julian Day Number Time NanSecs:     %80.70f\n",
 		bigJDNanoseconds)
 
+	julianDayNoTimeStr,
+	strWidth,
+	intWidth :=
+		julianDayNoTimeDto.GetJulianDayNoTimeStr(20)
+
+	if strWidth  < 0 {
+		fmt.Printf("Error: julianDayNoTimeDto.GetJulianDayNoTimeStr(8) Failed!\n")
+		return
+	}
+
+	spacer2 := strings.Repeat(" ",14 - intWidth)
+
+	fmt.Printf("Julian Day Number Time NanSecs:" + spacer2 + "%v\n",
+		julianDayNoTimeStr)
+
 	var timeFraction *big.Float
 
 	timeFraction, err = julianDayNoTimeDto.GetJulianTimeFraction()
@@ -160,8 +185,14 @@ func (mt mainTest) mainTest095() {
 
 	fmt.Println(lineSplitter)
 
+	expectedHours := testDate.Hour()
+
+	if expectedHours >= 12 {
+		expectedHours -= 12
+	}
+
 	fmt.Printf("Expected Hours:       %v\n",
-		testDate.Hour())
+		expectedHours)
 	fmt.Printf("Actual Hours:         %v\n",
 		julianDayNoTimeDto.GetGregorianHours())
 	fmt.Println(lineSplitter)

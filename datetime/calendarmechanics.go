@@ -147,11 +147,6 @@ type calendarMechanics struct {
 //       an error message.
 //
 //
-
-
-// gregorianDateToJulianDayNoTime - Returns Julian Day Number and
-// fractional time as a type &big.Float
-
 func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 	gregorianDateTime time.Time,
 	ePrefix string) (
