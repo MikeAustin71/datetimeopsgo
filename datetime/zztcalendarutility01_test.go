@@ -395,17 +395,17 @@ func TestCalendarUtility_GregorianDateToJulianDayNoTime_01(t *testing.T) {
 	calUtil := CalendarUtility{}
 
 	// 1848-09-07 03:12:15.0000 = 2396277.63351
+	// Accurate to 5 decimal places
 	expectedJulianDateStr := "2396277.63351"
-	digitsAfterDecimal := 5
 
+
+	var julianDayNoDto JulianDayNoDto
 	var gregorianDateUtc time.Time
-	var julianDate float64
 
 	gregorianDateUtc,
-	julianDate,
+	julianDayNoDto,
 	err = calUtil.GregorianDateToJulianDayNoTime(
 		testDate,
-		digitsAfterDecimal,
 		"TestCalendarUtility_GregorianDateToJulianDayNo_03 ")
 
 	if err != nil {
@@ -425,12 +425,12 @@ func TestCalendarUtility_GregorianDateToJulianDayNoTime_01(t *testing.T) {
 		return
 	}
 
-	julianDateStr := fmt.Sprintf("%.5f",
-		julianDate)
+	julianDateStr, _, _ := julianDayNoDto.GetJulianDayNoTimeStr(5)
 
 	if expectedJulianDateStr != julianDateStr {
-		t.Errorf("Error: Expected Julian Date='%v'\n" +
-			"Instead, Julian Date='%v'\n",
+		t.Errorf("\n" +
+			"Error: Expected Julian Date= '%v'\n" +
+			"Instead, Julian Date=        '%v'\n",
 			expectedJulianDateStr, expectedJulianDateStr)
 	}
 }
@@ -461,13 +461,12 @@ func TestCalendarUtility_GregorianDateToJulianDayNoTime_02(t *testing.T) {
 	digitsAfterDecimal := 5
 
 	var gregorianDateUtc time.Time
-	var julianDate float64
+	var julianDayNoDto JulianDayNoDto
 
 	gregorianDateUtc,
-	julianDate,
+		julianDayNoDto,
 	err = calUtil.GregorianDateToJulianDayNoTime(
 		testDate,
-		digitsAfterDecimal,
 		"TestCalendarUtility_GregorianDateToJulianDayNo_03 ")
 
 	if err != nil {
@@ -487,8 +486,7 @@ func TestCalendarUtility_GregorianDateToJulianDayNoTime_02(t *testing.T) {
 		return
 	}
 
-	julianDateStr := fmt.Sprintf("%.5f",
-		julianDate)
+	julianDateStr,_ , _ := julianDayNoDto.GetJulianDayNoTimeStr(digitsAfterDecimal)
 
 	if expectedJulianDateStr != julianDateStr {
 		t.Errorf("Error: Expected Julian Date='%v'\n" +
@@ -523,13 +521,12 @@ func TestCalendarUtility_GregorianDateToJulianDayNoTime_03(t *testing.T) {
 	digitsAfterDecimal := 5
 
 	var gregorianDateUtc time.Time
-	var julianDate float64
+	var julianDayNoDto JulianDayNoDto
 
 	gregorianDateUtc,
-	julianDate,
+		julianDayNoDto,
 	err = calUtil.GregorianDateToJulianDayNoTime(
 		testDate,
-		digitsAfterDecimal,
 		"TestCalendarUtility_GregorianDateToJulianDayNo_03 ")
 
 	if err != nil {
@@ -549,12 +546,12 @@ func TestCalendarUtility_GregorianDateToJulianDayNoTime_03(t *testing.T) {
 		return
 	}
 
-	julianDateStr := fmt.Sprintf("%.5f",
-		julianDate)
+	julianDateStr, _, _ := julianDayNoDto.GetJulianDayNoTimeStr(digitsAfterDecimal)
 
 	if expectedJulianDateStr != julianDateStr {
-		t.Errorf("Error: Expected Julian Date='%v'\n" +
-			"Instead, Julian Date='%v'\n",
+		t.Errorf("Error: \n" +
+			"Expected Julian Date= '%v'\n" +
+			"Instead, Julian Date= '%v'\n",
 			expectedJulianDateStr, expectedJulianDateStr)
 	}
 }
@@ -575,15 +572,21 @@ func TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_01(t *testing.T) {
 
 	julianDateTime = 2456293.520833
 
-	digitsAfterDecimal := 6
+	julianDayNoDto, err := JulianDayNoDto{}.NewFromFloat64(julianDateTime)
+
+	if err != nil {
+		t.Errorf("Error returned by JulianDayNoDto{}.NewFromFloat64(julianDateTime)\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
 
 	calUtil := CalendarUtility{}
+	var gregorianDateTime time.Time
 
 	gregorianDateTime,
-	err := calUtil.JulianDayNoTimeToGregorianCalendar(
-		julianDateTime,
-		digitsAfterDecimal,
-		"")
+	err = calUtil.JulianDayNoTimeToGregorianCalendar(
+		julianDayNoDto,
+		"TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_01")
 
 	if err != nil {
 		t.Errorf("Error returned by calUtil.JulianDayNoTimeToGregorianCalendar()\n" +
@@ -612,19 +615,43 @@ func TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_02(t *testing.T) {
 		0,
 		time.UTC)
 
-	var julianDateTime float64
+	var julianDayNoTimeFloat64 float64
 
-	julianDateTime = 0.000000
+	julianDayNoTimeFloat64 = 0.000000
 
 	digitsAfterDecimal := 6
+
+	expectedJulianDayNoStr := fmt.Sprintf("%.6F",
+		julianDayNoTimeFloat64)
+
+	var julianDayNoDto JulianDayNoDto
+	var err error
+
+	julianDayNoDto, err =
+		JulianDayNoDto{}.NewFromFloat64(julianDayNoTimeFloat64)
+
+	if err != nil {
+		t.Errorf("Error returned by JulianDayNoDto{}.NewFromFloat64(julianDayNoTimeFloat64)")
+		return
+	}
+
+	actualJulianDayNoTimeStr, _, _ :=
+		julianDayNoDto.GetJulianDayNoTimeStr(digitsAfterDecimal)
+
+	if expectedJulianDayNoStr != actualJulianDayNoTimeStr {
+		t.Errorf("Error:\n" +
+			"Expected Julian Day No String='%v'\n" +
+			"Instead, Julian Day No String='%v'\n",
+			expectedJulianDayNoStr, actualJulianDayNoTimeStr)
+		return
+	}
 
 	calUtil := CalendarUtility{}
 
 	gregorianDateTime,
 	err := calUtil.JulianDayNoTimeToGregorianCalendar(
-		julianDateTime,
-		digitsAfterDecimal,
-		"")
+		julianDayNoDto,
+		"TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_02")
 
 	if err != nil {
 		t.Errorf("Error returned by calUtil.JulianDayNoTimeToGregorianCalendar()\n" +
@@ -633,8 +660,8 @@ func TestCalendarUtility_JulianDayNoTimeToGregorianDateTime_02(t *testing.T) {
 	}
 
 	if !expectedDateTime.Equal(gregorianDateTime) {
-		t.Errorf("Error: Expected " +
-			"gregorianDateTime='%v'\n" +
+		t.Errorf("Error:\n" +
+			"Expected gregorianDateTime='%v'\n" +
 			"Instead, gregorianDateTime='%v'\n",
 			expectedDateTime.Format(FmtDateTimeYrMDayFmtStr),
 			gregorianDateTime.Format(FmtDateTimeYrMDayFmtStr))

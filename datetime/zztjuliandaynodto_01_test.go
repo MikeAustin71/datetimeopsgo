@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestJulianDayNoDto_New(t *testing.T) {
+func TestJulianDayNoDto_New_01(t *testing.T) {
 	// https://www.aavso.org/jd-calculator
 	// http://numerical.recipes/julian.html
 
@@ -18,6 +18,10 @@ func TestJulianDayNoDto_New(t *testing.T) {
 		0,
 		0,
 		time.UTC)
+
+	// to 9-digits
+	expectedJulianDayNoTimeStr :=
+	"0.000000000"
 
 	gregorianDateTimeUtc,
 	julianDayNoDto,
@@ -40,6 +44,15 @@ func TestJulianDayNoDto_New(t *testing.T) {
 		return
 	}
 
+	julianDayNoTimeStr,
+	_,
+	_	:= julianDayNoDto.GetJulianDayNoTimeStr(9)
 
+	if expectedJulianDayNoTimeStr != julianDayNoTimeStr {
+		t.Errorf("Error:\n" +
+			"Expected Julian Day Number/Time= '%v'\n" +
+			"Instead, Juilan Day Number/Time= '%v'\n",
+			expectedJulianDayNoTimeStr, julianDayNoTimeStr)
+	}
 
 }

@@ -180,6 +180,9 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
 			Day - int64(32075)
 
+	fmt.Printf("julianDayNo: %v\n",
+		julianDayNo)
+
 	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
 	gregorianTimeNanoSecs += int64(gregorianDateUtc.Minute()) * MinuteNanoSeconds
 	gregorianTimeNanoSecs += int64(gregorianDateUtc.Second()) * SecondNanoseconds
@@ -536,6 +539,8 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 
 	julianDayNoInt64 = bigJulianDayNo.Int64()
 
+	fmt.Printf("julianDayNoInt64: %v\n", julianDayNoInt64)
+
 	y := int64(4716)
 	j := int64(1401)
 	m := int64(2)
@@ -570,11 +575,21 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 		int(Y),
 		time.Month(M),
 		int(D),
-		julianDayNoDto.GetGregorianHours(),
-		julianDayNoDto.GetMinutes(),
-		julianDayNoDto.GetSeconds(),
-		julianDayNoDto.GetNanoseconds(),
+		12,
+		0,
+		0,
+		0,
 		time.UTC)
+
+	bigTempNanoSecs := big.NewInt(0).
+		SetInt64(NoonNanoSeconds)
+
+	if julianDayNoDto.totalNanoSeconds.Cmp(bigTempNanoSecs) < 1 {
+		gregorianDateUtc = gregorianDateUtc.Add(time.Duration(NoonNanoSeconds))
+	}
+
+	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(julianDayNoDto.totalNanoSeconds.Int64()))
+
 
 	return gregorianDateUtc, err
 }

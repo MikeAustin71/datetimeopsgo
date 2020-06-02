@@ -10,13 +10,74 @@ type TimeMechanics struct {
 	lock       * sync.Mutex
 }
 
-// ComputeTimeElementsInt64 - Utility routine to break gross nanoseconds
+// ComputeBigIntNanoseconds - Utility method to sum days, hours, minutes,
+// seconds and nanoseconds and return total nanoseconds as a type *big.Int.
+//
+func (timeMech *TimeMechanics) ComputeBigIntNanoseconds(
+	days *big.Int,
+	hours,
+	minutes,
+	seconds,
+	nanoseconds int,
+	ePrefix string) (
+	totalNanoseconds *big.Int,
+	err error) {
+
+	if timeMech.lock == nil {
+		timeMech.lock = new(sync.Mutex)
+	}
+
+	timeMech.lock.Lock()
+
+	defer timeMech.lock.Unlock()
+
+	ePrefix += "TimeMechanics.ComputeBigIntNanoseconds() "
+
+	totalNanoseconds = big.NewInt(0)
+	err = nil
+
+	if days == nil {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "days",
+			inputParameterValue: "",
+			errMsg:              "Error: Input parameter 'days' is nil!",
+			err:                 nil,
+		}
+
+		return totalNanoseconds, err
+	}
+
+	temp := big.NewInt(0).
+		Mul(days, big.NewInt(DayNanoSeconds))
+
+	totalNanoseconds.Add(totalNanoseconds, temp)
+
+	temp = big.NewInt(int64(hours) * HourNanoSeconds)
+
+	totalNanoseconds.Add(totalNanoseconds, temp)
+
+	temp = big.NewInt(int64(minutes) * MinuteNanoSeconds)
+
+	totalNanoseconds.Add(totalNanoseconds, temp)
+
+	temp = big.NewInt(int64(seconds) * SecondNanoseconds)
+
+	totalNanoseconds.Add(totalNanoseconds, temp)
+
+	temp = big.NewInt(int64(nanoseconds))
+
+	totalNanoseconds.Add(totalNanoseconds, temp)
+
+	return totalNanoseconds, err
+}
+
+// ComputeTimeElementsInt64 - Utility method to break gross nanoseconds
 // int constituent hours, minutes, seconds and remaining nanoseconds. As
 // the method name implies, the return values are of type Int64.
 //
 func (timeMech *TimeMechanics) ComputeTimeElementsInt64(
-	grossNanoSeconds int64,
-	ePrefix string) (
+	grossNanoSeconds int64) (
 	hours,
 	minutes,
 	seconds,
@@ -30,8 +91,6 @@ func (timeMech *TimeMechanics) ComputeTimeElementsInt64(
 	timeMech.lock.Lock()
 
 	defer timeMech.lock.Unlock()
-
-	ePrefix += "timeMech.ComputeTimeElementsInt64() "
 
 	hours = 0
 	minutes = 0

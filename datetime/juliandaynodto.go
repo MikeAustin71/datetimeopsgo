@@ -3,7 +3,6 @@ package datetime
 import (
 	"errors"
 	"fmt"
-	"math"
 	"math/big"
 	"strconv"
 	"strings"
@@ -513,6 +512,14 @@ func (jDNDto *JulianDayNoDto) GetGregorianHours() int {
 	return hoursInt
 }
 
+// GetJulianHours - Returns the julian hours associated
+// with this Julian Day Number.
+//
+func (jDNDto *JulianDayNoDto) GetJulianHours() int {
+
+	return jDNDto.hours
+}
+
 // GetJulianTimeFraction - Returns the fractional part of Julian Day
 // Number/Time as a type *big.Float. The integer portion of this
 // this fractional number is always zero. Only the time value is
@@ -718,6 +725,12 @@ func (jDNDto JulianDayNoDto) New(
 	return julianDayNoDto, err
 }
 
+// NewFromFloat64 - Computes and returns a new instance
+// of JulianDayNoDto based on the value of a float64
+// input parameter. 'float64' time fractions are only
+// accurate to a second. Fractional nanoseconds are
+// rounded to the nearest second.
+//
 func (jDNDto JulianDayNoDto) NewFromFloat64(
 	julianDayNoTime float64)	(
 	JulianDayNoDto,
@@ -731,24 +744,15 @@ func (jDNDto JulianDayNoDto) NewFromFloat64(
 
 	defer jDNDto.lock.Unlock()
 
-	ePrefix := "JulianDayNoDto.New() "
-
-	julianDayNoFloat64, julianFracFloat64 :=
-		math.Modf(julianDayNoTime)
-
-	julianDayNoInt64 := int64(julianDayNoFloat64)
-
-	julianTimeFracBigFloat := big.NewFloat(0).
-		SetFloat64(julianFracFloat64)
+	ePrefix := "JulianDayNoDto.NewFromFloat64() "
 
 	julianDayNoDto := JulianDayNoDto{}
 
 	jDNDtoUtil := julianDayNoDtoUtility{}
 
-	err := jDNDtoUtil.setDto(
+	err := jDNDtoUtil.setDtoFromFloat64(
 		&julianDayNoDto,
-		julianDayNoInt64,
-		julianTimeFracBigFloat,
+		julianDayNoTime,
 		ePrefix)
 
 	return julianDayNoDto, err
