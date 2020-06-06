@@ -1,0 +1,29 @@
+
+https://en.wikipedia.org/wiki/Rata_Die
+Rata Die (R.D.) is a system for assigning numbers to calendar
+days (optionally with time of day), independent of any calendar,
+for the purposes of calendrical calculations. It was named
+(after the Latin ablative feminine singular for "from a fixed
+date") by Howard Jacobson.[1] The same system (including the
+same epoch) was used earlier, e.g., the REXX programming
+language since about 1980:[2]
+
+The base date of 1 January 0001 is determined by extending the
+current Gregorian calendar backward (365 days each year, with
+an extra day every year that is divisible by 4 except century
+years that are not divisible by 400).
+
+Rata Die is somewhat similar to Julian Dates (JD), in that the
+values are plain real numbers that increase by 1 each day. The
+systems differ principally in that JD takes on a particular value
+at a particular absolute time, and is the same in all contexts,
+whereas R.D. values may be relative to time zone, depending on
+the implementation. This makes R.D. more suitable for work on
+calendar dates, whereas JD is more suitable for work on time
+per se. The systems also differ trivially by having different
+epochs: R.D. is 1 at midnight (00:00) local time on January 1,
+AD 1 in the proleptic Gregorian calendar, JD is 0 at noon (12:00)
+Universal Time on January 1, 4713 BC in the proleptic Julian
+calendar, and the REXX count of days begins with 0 at midnight
+(00:00) local time on January 1, AD 1 in the proleptic Gregorian
+calendar.

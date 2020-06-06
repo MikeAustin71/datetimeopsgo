@@ -433,6 +433,14 @@ func (mt mainTest) mainTest091() {
 // https://www.aavso.org/jd-calculator
 // http://numerical.recipes/julian.html
 // https://quasar.as.utexas.edu/BillInfo/JulianDateCalc.html
+// https://en.wikipedia.org/wiki/Julian_day
+
+	// Julian Day Formula
+	// https://www.howcast.com/videos/how-to-calculate-julian-dates
+	// https://sciencing.com/calculate-age-lunar-years-5997325.html
+	// https://stason.org/TULARC/society/calendars/2-15-1-Is-there-a-formula-for-calculating-the-Julian-day-nu.html
+	// http://mathforum.org/library/drmath/view/51907.html
+
 
 	dateTimeFormat := dt.FmtDateTimeYrMDayFmtStr
 
@@ -453,53 +461,140 @@ func (mt mainTest) mainTest091() {
 
 	lineSplitter := strings.Repeat("-", lineLen)
 
+	//expectedDateTime := time.Date(
+	//	2013,
+	//	1,
+	//	1,
+	//	0,
+	//	30,
+	//	0,
+	//	0,
+	//	time.UTC)
+	//
+	//// Expected 2456293.520833
+	//// The calendar date for 2456293.520833 is 0:29:59.97 UT on January 1, 2013 .
+
 	expectedDateTime := time.Date(
-		2013,
-		1,
-		1,
+		-4713,
+		11,
+		25,
+		9,
 		0,
-		30,
 		0,
 		0,
 		time.UTC)
 
-	// Expected 2456293.520833
-	// The calendar date for 2456293.520833 is 0:29:59.97 UT on January 1, 2013 .
+	var julianDayNoDtoDate, julianDayNoDtoFloat64 dt.JulianDayNoDto
+	var err error
+
+	_, julianDayNoDtoDate, err = dt.JulianDayNoDto{}.NewFromGregorianDate(expectedDateTime)
+
+	if err != nil {
+		fmt.Printf("Error returned by JulianDayNoDto{}.NewFromGregorianDate().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
 
 	var julianDateTime float64
 
-	julianDateTime = 2456293.520833
+//	julianDateTime = 0.000000
+	julianDateTime = 1.87500
 
-	julianDayNoDto, err := dt.JulianDayNoDto{}.NewFromFloat64(
+	julianDayNoDtoFloat64, err = dt.JulianDayNoDto{}.NewFromFloat64(
 		julianDateTime)
 
 	if err != nil {
 		fmt.Printf("Error returned by JulianDayNoDto{}.NewFromFloat64().\n" +
 			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var calcGregorianDateUtc time.Time
+
+	calcGregorianDateUtc,
+	julianDayNoDtoDate,
+	err = dt.JulianDayNoDto{}.NewFromGregorianDate(expectedDateTime)
+
+	if err != nil {
+		fmt.Printf("\nError returned by JulianDayNoDto{}.NewFromGregorianDate(expectedDateTime).\n" +
+			"expectedDateTime='%v'\n" +
+			"Error='%v'\n",
+			expectedDateTime.Format(dt.FmtDateTimeDMYNanoTz),
+			err.Error())
+		return
+	}
+
+	if ! calcGregorianDateUtc.Equal(expectedDateTime) {
+		fmt.Printf("\nError:\n" +
+			"Expected calcGregorianDateUtc= '%v'\n" +
+			"Instead, calcGregorianDateUtc= '%v'\n",
+			expectedDateTime.Format(dt.FmtDateTimeDMYNanoTz),
+			calcGregorianDateUtc.Format(dt.FmtDateTimeDMYNanoTz))
+		return
 	}
 
 	calUtil := dt.CalendarUtility{}
-	var gregorianDateTime time.Time
+	var gregorianDateTimeFloat64,
+			gregorianDateTimeBig time.Time
 
-	gregorianDateTime,
+	gregorianDateTimeFloat64,
 	err = calUtil.JulianDayNoTimeToGregorianCalendar(
-		julianDayNoDto,
+		julianDayNoDtoFloat64,
 		ePrefix)
 
 	if err != nil {
-		fmt.Printf("%v", err.Error())
+		fmt.Printf("Conversion1:\n" +
+			"%v\n", err.Error())
 		return
 	}
+
+	gregorianDateTimeBig,
+	err = calUtil.JulianDayNoTimeToGregorianCalendar(
+		julianDayNoDtoDate,
+		ePrefix)
+
+	if err != nil {
+		fmt.Printf("Conversion2:\n%v\n", err.Error())
+		return
+	}
+
+	var calculatedJulianDayNoTimeFloat64,
+	calculatedJulianDayNoTimeBigFloat *big.Float
+
+	calculatedJulianDayNoTimeFloat64,
+	err = julianDayNoDtoFloat64.GetDayNoTimeBigFloat()
+
+	if err != nil {
+		fmt.Printf("Error returned by julianDayNoDtoFloat64.GetDayNoTimeBigFloat().\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	calculatedJulianDayNoTimeBigFloat,
+	err = julianDayNoDtoDate.GetDayNoTimeBigFloat()
 
 	fmt.Println(lineSplitter)
 	fmt.Println("Converting Julian Date Number Time To Gregorian Date Time")
 	fmt.Println(lineSplitter)
-	fmt.Printf("Input Julian Date Time:      %20.8f\n",
+	fmt.Printf("Test Date:                               %v\n",
+		expectedDateTime.Format(dateTimeFormat))
+	fmt.Println(lineSplitter)
+	fmt.Printf("Input Julian Date Number/Time:           %50.30f\n",
 		julianDateTime)
 	fmt.Println(lineSplitter)
-	fmt.Printf("Calculated Gregorian Date:   %v\n",
-		gregorianDateTime.Format(dateTimeFormat))
-	fmt.Printf("Expected Gregorian Date:     %v\n",
+	fmt.Printf("Calculated float64 Julian Date Number:   %50.30f\n",
+		calculatedJulianDayNoTimeFloat64)
+	fmt.Printf("Calculated Gregorian Date Float64:       %v\n",
+		gregorianDateTimeFloat64.Format(dateTimeFormat))
+	fmt.Println(lineSplitter)
+	fmt.Println("Calculated Julian Date Number/Time Maximum Precision")
+	fmt.Println(lineSplitter)
+	fmt.Printf("Calculated Juilian Date Number/Time:     %50.30f\n",
+		calculatedJulianDayNoTimeBigFloat)
+	fmt.Println(lineSplitter)
+	fmt.Printf("Calculated Gregorian Date Big:           %v\n",
+		gregorianDateTimeBig.Format(dateTimeFormat))
+	fmt.Printf("Expected Gregorian Date:                 %v\n",
 		expectedDateTime.Format(dateTimeFormat))
 	fmt.Println(lineSplitter)
 
