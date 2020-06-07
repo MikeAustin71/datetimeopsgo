@@ -461,11 +461,12 @@ func (mt mainTest) mainTest091() {
 
 	lineSplitter := strings.Repeat("-", lineLen)
 
+	//  1582  10     4.0  2299159.5         2299149.5
 	expectedDateTime := time.Date(
-		-4713,
-		11,
-		24,
-		12,
+		1582,
+		10,
+		4,
+		0,
 		0,
 		0,
 		0,
@@ -475,7 +476,7 @@ func (mt mainTest) mainTest091() {
 	var julianDateTimeInputValue float64
 	var err error
 
-	julianDateTimeInputStr := "0.000000"
+	julianDateTimeInputStr := "2299149.500000"
 
 	idxDot := strings.Index(julianDateTimeInputStr, ".")
 
