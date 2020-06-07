@@ -5,6 +5,7 @@ import (
 	dt "github.com/MikeAustin71/datetimeopsgo/datetime"
 	ex "github.com/MikeAustin71/datetimeopsgo/datetimeexamples"
 	"math/big"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -448,8 +449,7 @@ func (mt mainTest) mainTest091() {
 
 	ePrefix := "mainTest.mainTest091() "
 
-	titles := []string{ePrefix,
-		"Convert Julian Day Numbers",
+	titles := []string{"Convert Julian Day Numbers",
 		"to Gregorian Calendar Date Times",
 		ePrefix}
 
@@ -461,31 +461,40 @@ func (mt mainTest) mainTest091() {
 
 	lineSplitter := strings.Repeat("-", lineLen)
 
-	//expectedDateTime := time.Date(
-	//	2013,
-	//	1,
-	//	1,
-	//	0,
-	//	30,
-	//	0,
-	//	0,
-	//	time.UTC)
-	//
-	//// Expected 2456293.520833
-	//// The calendar date for 2456293.520833 is 0:29:59.97 UT on January 1, 2013 .
-
 	expectedDateTime := time.Date(
 		-4713,
 		11,
-		25,
-		9,
+		24,
+		12,
 		0,
 		0,
 		0,
 		time.UTC)
 
-	var julianDayNoDtoDate, julianDayNoDtoFloat64 dt.JulianDayNoDto
+
+	var julianDateTimeInputValue float64
 	var err error
+
+	julianDateTimeInputStr := "0.000000"
+
+	idxDot := strings.Index(julianDateTimeInputStr, ".")
+
+	strSpacer := strings.Repeat(" ", 17 - idxDot)
+
+	julianDateTimeInputValue,
+	err = strconv.ParseFloat(julianDateTimeInputStr, 64)
+
+	if err != nil {
+		fmt.Printf("\n" +
+			"Error returned by strconv.ParseFloat(julianDateTimeInputStr, 64).\n" +
+			"julianDateTimeInputStr='%v'\n" +
+			"Error='%v'\n",
+			julianDateTimeInputStr, err.Error())
+		return
+	}
+
+
+	var julianDayNoDtoDate, julianDayNoDtoFloat64 dt.JulianDayNoDto
 
 	_, julianDayNoDtoDate, err = dt.JulianDayNoDto{}.NewFromGregorianDate(expectedDateTime)
 
@@ -495,13 +504,8 @@ func (mt mainTest) mainTest091() {
 		return
 	}
 
-	var julianDateTime float64
-
-//	julianDateTime = 0.000000
-	julianDateTime = 1.87500
-
 	julianDayNoDtoFloat64, err = dt.JulianDayNoDto{}.NewFromFloat64(
-		julianDateTime)
+		julianDateTimeInputValue)
 
 	if err != nil {
 		fmt.Printf("Error returned by JulianDayNoDto{}.NewFromFloat64().\n" +
@@ -576,28 +580,42 @@ func (mt mainTest) mainTest091() {
 	fmt.Println(lineSplitter)
 	fmt.Println("Converting Julian Date Number Time To Gregorian Date Time")
 	fmt.Println(lineSplitter)
+	fmt.Println(lineSplitter)
+	decimalCnt1 := "         1         2         3         4         5         6         7"
+	decimalCnt2 := "1230464890123456789012345678901234567890123456789012345678901234567890"
+
+	decFmtStr := "%40.30f\n"
+
+	spacer := strings.Repeat(" ",40)
+
+	fmt.Println(spacer + decimalCnt1)
+	fmt.Println(spacer + decimalCnt2)
+
+	fmt.Printf("Input JDN/Time String:" + strSpacer + "%v\n",
+		julianDateTimeInputStr)
+	fmt.Printf("Input JDN/Time Value:         " + decFmtStr,
+		julianDateTimeInputValue)
+
+	fmt.Printf("Calculated JDN/Time float64:  " + decFmtStr,
+		calculatedJulianDayNoTimeFloat64)
+
+	fmt.Printf("Calculated JDN/Time MaxPrec:  " + decFmtStr,
+			calculatedJulianDayNoTimeBigFloat)
+	fmt.Println(lineSplitter)
+
 	fmt.Printf("Test Date:                               %v\n",
 		expectedDateTime.Format(dateTimeFormat))
-	fmt.Println(lineSplitter)
-	fmt.Printf("Input Julian Date Number/Time:           %50.30f\n",
-		julianDateTime)
-	fmt.Println(lineSplitter)
-	fmt.Printf("Calculated float64 Julian Date Number:   %50.30f\n",
-		calculatedJulianDayNoTimeFloat64)
+
 	fmt.Printf("Calculated Gregorian Date Float64:       %v\n",
 		gregorianDateTimeFloat64.Format(dateTimeFormat))
-	fmt.Println(lineSplitter)
-	fmt.Println("Calculated Julian Date Number/Time Maximum Precision")
-	fmt.Println(lineSplitter)
-	fmt.Printf("Calculated Juilian Date Number/Time:     %50.30f\n",
-		calculatedJulianDayNoTimeBigFloat)
-	fmt.Println(lineSplitter)
+
 	fmt.Printf("Calculated Gregorian Date Big:           %v\n",
 		gregorianDateTimeBig.Format(dateTimeFormat))
+
 	fmt.Printf("Expected Gregorian Date:                 %v\n",
 		expectedDateTime.Format(dateTimeFormat))
 	fmt.Println(lineSplitter)
-
+	fmt.Println(lineSplitter)
 
 }
 

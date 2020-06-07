@@ -516,12 +516,18 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 		return gregorianDateUtc, err
 	}
 
+	//numericalSignVal := 1
+	//
+	//if big.NewInt(0).Cmp(bigJulianDayNo) == 1 {
+	//	numericalSignVal = -1
+	//}
+
 	if big.NewInt(0).Cmp(bigJulianDayNo) == 1 {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "julianDayNoDto.julianDayNo",
 			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'julianDayNoDto.julianDayNo' " +
+			errMsg:              "'julianDayNoDto.julianDayNo' " +
 				"is less than Zero!",
 			err:                 nil,
 		}
@@ -579,22 +585,21 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 		0,
 		time.UTC)
 
-	bigTempNanoSecs := big.NewInt(0).
-		SetInt64(NoonNanoSeconds)
+	//timeMech := TimeMechanics{}
+	//_,
+	//hours,
+	//minutes,
+	//seconds,
+	//nanoseconds,
+	//_ := timeMech.ComputeTimeElementsBigInt(julianDayNoDto.totalNanoSeconds)
 
-	fmt.Printf("julianDayNoDto.totalNanoSeconds= %d\n",
-		julianDayNoDto.totalNanoSeconds)
+	//fmt.Printf("julianDayNoDto.totalNanoSeconds: hours=%d minutes=%d seconds=%d nanoseconds=%d\n",
+	//	hours, minutes,seconds, nanoseconds)
 
-	//if julianDayNoDto.totalNanoSeconds.Cmp(bigTempNanoSecs) < 0 &&
-	//	julianDayNoDto.totalNanoSeconds.Cmp(big.NewInt(0)) != 0 {
-	//	fmt.Println("Added 12-hours!")
-	//	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(NoonNanoSeconds))
-	//}
+		//fmt.Println("Added 12-hours!")
 
-	if julianDayNoDto.totalNanoSeconds.Cmp(bigTempNanoSecs) == -1  {
-		fmt.Println("Added 12-hours!")
-		gregorianDateUtc = gregorianDateUtc.Add(time.Duration(NoonNanoSeconds))
-	}
+
+	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(NoonNanoSeconds))
 
 	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(julianDayNoDto.totalNanoSeconds.Int64()))
 

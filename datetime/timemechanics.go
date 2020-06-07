@@ -139,7 +139,7 @@ func (timeMech *TimeMechanics) ComputeTimeElementsBigInt(
 	hours,
 	minutes,
 	seconds,
-	nanoSeconds int,
+	nanoseconds,
 	numericalSign int) {
 
 	if timeMech.lock == nil {
@@ -154,7 +154,7 @@ func (timeMech *TimeMechanics) ComputeTimeElementsBigInt(
 	hours = 0
 	minutes = 0
 	seconds = 0
-	nanoSeconds = 0
+	nanoseconds = 0
 	hoursBig := big.NewInt(0)
 	minutesBig := big.NewInt(0)
 	secondsBig := big.NewInt(0)
@@ -174,7 +174,7 @@ func (timeMech *TimeMechanics) ComputeTimeElementsBigInt(
 
 	if compareResult == 0 {
 		numericalSign = 0
-		return days, hours, minutes, seconds, nanoSeconds, numericalSign
+		return days, hours, minutes, seconds, nanoseconds, numericalSign
 	}
 
 	var temp *big.Int
@@ -214,9 +214,9 @@ func (timeMech *TimeMechanics) ComputeTimeElementsBigInt(
 		grossNanoSeconds = big.NewInt(0).Sub(grossNanoSeconds, temp)
 	}
 
-	nanoSeconds = int(grossNanoSeconds.Int64())
+	nanoseconds = int(grossNanoSeconds.Int64())
 
-	return days, hours, minutes, seconds, nanoSeconds, numericalSign
+	return days, hours, minutes, seconds, nanoseconds, numericalSign
 }
 
 // ComputeTimeElementsInt - Utility routine to break gross nanoseconds
