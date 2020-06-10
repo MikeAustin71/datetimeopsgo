@@ -1,0 +1,8 @@
+
+PHP Julian date converter algorithms
+Stack Overflow
+https://stackoverflow.com/questions/45586444/php-julian-date-converter-algorithms
+------------------------
+Astronomical Calculations: The Julian Day
+Meeus Algorithm - C#
+https://squarewidget.com/julian-day/

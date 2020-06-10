@@ -1,0 +1,14 @@
+
+Astronomy Answers
+https://www.aa.quae.nl/en/reken/juliaansedag.html
+
+Julian Day Dr. Math
+Fliegel-Van Flandern & Meeus Algorithms
+http://mathforum.org/library/drmath/view/51907.html
+
+Julian and Gregorian Day Numbers
+by Peter Meyer
+http://www.stiltner.org/book/bookcalc.htm
+
+Calendar Algorithms
+http://sites.millersville.edu/bikenaga/number-theory/calendar/calendar.html

@@ -1,0 +1,10 @@
+
+Astronomical Calculations: The Julian Day
+Meeus Algorithm
+https://squarewidget.com/julian-day/
+
+D:\gowork\src\projects\meeus
+
+Julian Day Dr. Math
+Fliegel-Van Flandern & Meeus Algorithms
+http://mathforum.org/library/drmath/view/51907.html

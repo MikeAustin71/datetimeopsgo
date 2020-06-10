@@ -3,7 +3,6 @@ package datetime
 import (
 	"errors"
 	"fmt"
-	"math"
 	"math/big"
 	"sync"
 	"time"
@@ -586,6 +585,7 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 		time.UTC)
 
 	//timeMech := TimeMechanics{}
+	//
 	//_,
 	//hours,
 	//minutes,
@@ -593,16 +593,16 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 	//nanoseconds,
 	//_ := timeMech.ComputeTimeElementsBigInt(julianDayNoDto.totalNanoSeconds)
 
+
 	//fmt.Printf("julianDayNoDto.totalNanoSeconds: hours=%d minutes=%d seconds=%d nanoseconds=%d\n",
 	//	hours, minutes,seconds, nanoseconds)
 
 		//fmt.Println("Added 12-hours!")
 
+		timeDifferential := julianDayNoDto.totalNanoSeconds.Int64() +
+			(HourNanoSeconds * 12)
 
-	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(NoonNanoSeconds))
-
-	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(julianDayNoDto.totalNanoSeconds.Int64()))
-
+	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(timeDifferential))
 
 	return gregorianDateUtc, err
 }
@@ -679,7 +679,7 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 //
 // This means that the 'Richards' algorithm employed by this method is valid
 // for all 'time.Time' (possibly proleptic) Julian dates on or after noon
-// November 24, −4713.
+// November 24, −4713 (Gregorian Calendar proleptic).
 //
 // For information on the Julian Day Number/Time see:
 //   https://en.wikipedia.org/wiki/Julian_day
@@ -714,7 +714,7 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 //
 // Return Values
 //
-//  gregorianDateUtc    time.Time
+//  julianDateUtc    time.Time
 //     - The returned parameter 'gregorianDateTime' represents the input
 //       'julianDayNoNoTime' converted to the Gregorian calendar. This
 //       returned 'time.Time' type is always configured as Universal
@@ -734,15 +734,17 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 //
 // Resources
 //
+//  Julian Day Wikipedia
+//  https://en.wikipedia.org/wiki/Julian_day
+//
 //  PHP Julian date converter algorithms (Stack Overflow)
 //   https://stackoverflow.com/questions/45586444/php-julian-date-converter-algorithms
 //
 //
 func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
-	julianDayNoNoTime float64,
-	digitsAfterDecimal int,
+	julianDayNoDto JulianDayNoDto,
 	ePrefix string) (
-	gregorianDateUtc time.Time,
+	julianDateUtc time.Time,
 	err error) {
 
 	calMech.lock.Lock()
@@ -751,46 +753,34 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 
 	ePrefix += "calMech.richardsJulianDayNoTimeToJulianCalendar() "
 
-	gregorianDateUtc = time.Time{}
+	julianDateUtc = time.Time{}
 	err = nil
 
-	if julianDayNoNoTime < 0.000 {
+	var err2 error
+
+	var bigJulianDayNo *big.Int
+
+	bigJulianDayNo, err2 = julianDayNoDto.GetJulianDayBigInt()
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error returned by julianDayNoDto.GetJulianDayBigInt()\n" +
+			"Error='%v'\n", err2.Error())
+		return julianDateUtc, err
+	}
+
+	if big.NewInt(0).Cmp(bigJulianDayNo) == 1 {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "julianDayNoNoTime",
+			inputParameterName:  "julianDayNoDto.julianDayNo",
 			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'julianDayNoNoTime' " +
+			errMsg:              "'julianDayNoDto.julianDayNo' " +
 				"is less than Zero!",
 			err:                 nil,
 		}
-		return gregorianDateUtc, err
+		return julianDateUtc, err
 	}
 
-	if digitsAfterDecimal < 0 {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "digitsAfterDecimal",
-			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
-				"less than ZERO!",
-			err:                 nil,
-		}
-
-		return gregorianDateUtc, err
-	}
-
-	if digitsAfterDecimal > 100 {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "digitsAfterDecimal",
-			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
-				"greater than 100!",
-			err:                 nil,
-		}
-
-		return gregorianDateUtc, err
-	}
 
 	y := int64(4716)
 	j := int64(1401)
@@ -805,10 +795,10 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 // B := int64(274277)
 // C := int64(-38)
 
-	julianDayNumInt, julianDayNumFrac := math.Modf(julianDayNoNoTime)
+	julianDayNumInt := bigJulianDayNo.Int64()
 
 	// Julian Day No as integer
-	J := int64(julianDayNumInt)
+	J := julianDayNumInt
 
 	f := J + j
 
@@ -824,49 +814,19 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 
 	Y := (e / p) - y + ((n + m - M)/ n)
 
-	totalNanoSeconds :=
-		(int64(julianDayNumFrac * float64(DayNanoSeconds))) +
-			NoonNanoSeconds
-
-	hours := 0
-	minutes := 0
-	seconds := 0
-	nanoseconds := 0
-
-	if totalNanoSeconds >= HourNanoSeconds {
-		hours = int(totalNanoSeconds / HourNanoSeconds)
-
-		totalNanoSeconds -= int64(hours) * HourNanoSeconds
-	}
-
-	if totalNanoSeconds >= MinuteNanoSeconds {
-		minutes = int(totalNanoSeconds / MinuteNanoSeconds)
-
-		totalNanoSeconds -= int64(minutes) * MinuteNanoSeconds
-	}
-
-	if totalNanoSeconds >= SecondNanoseconds {
-
-		seconds = int(totalNanoSeconds / SecondNanoseconds)
-
-		totalNanoSeconds -= int64(seconds) * SecondNanoseconds
-	}
-
-	if totalNanoSeconds >= HalfSecondNanoseconds {
-		seconds += 1
-	}
-
-	nanoseconds = 0
-
-	gregorianDateUtc = time.Date(
+	julianDateUtc = time.Date(
 		int(Y),
 		time.Month(M),
 		int(D),
-		hours,
-		minutes,
-		seconds,
-		nanoseconds,
+		0,
+		0,
+		0,
+		0,
 		time.UTC)
 
-	return gregorianDateUtc, err
+	timeDifferential := julianDayNoDto.totalNanoSeconds.Int64() + (HourNanoSeconds * 12)
+
+	julianDateUtc = julianDateUtc.Add(time.Duration(timeDifferential))
+
+	return julianDateUtc, err
 }

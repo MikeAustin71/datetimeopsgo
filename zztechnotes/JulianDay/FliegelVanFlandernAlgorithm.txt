@@ -1,0 +1,14 @@
+
+The Fliegel and van Flandern algorithm for converting Gregorian to Julian dates and back.
+https://pastebin.com/mcJiMD5b
+
+Julian Day Dr. Math
+Fliegel-Van Flandern & Meeus Algorithms
+http://mathforum.org/library/drmath/view/51907.html
+
+Conversion Algorithms
+https://pastebin.com/rVGMkiR4
+
+Julian Date Algorithm
+https://craftofcoding.files.wordpress.com/2013/07/cs_langjuliandates.pdf
+

@@ -385,8 +385,7 @@ func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianCalendar(
 
 
 func (calUtil *CalendarUtility) JulianDayNoTimeToJulianCalendar(
-	julianDayNoNoTime float64,
-	digitsAfterDecimal int,
+	julianDayNoDto JulianDayNoDto,
 	ePrefix string) (
 	julianDateTimeUtc time.Time,
 	err error) {
@@ -406,8 +405,7 @@ func (calUtil *CalendarUtility) JulianDayNoTimeToJulianCalendar(
 	julianDateTimeUtc,
 		err =
 		calendarMech.richardsJulianDayNoTimeToJulianCalendar(
-			julianDayNoNoTime,
-			digitsAfterDecimal,
+			julianDayNoDto,
 			ePrefix)
 
 	return julianDateTimeUtc, err
