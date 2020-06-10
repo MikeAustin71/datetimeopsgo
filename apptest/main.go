@@ -246,26 +246,26 @@ func (mt mainTest) mainTest092() {
 		"=")
 
 	lineSplitter := strings.Repeat("-", lineLen)
-// October 15, 1582 13:00:00
+// February 28, -500 13:00:00
 	testDate := time.Date(
-		1582,
-		10,
-		15,
+		-500,
+		2,
+		28,
 		13,
 		0,
 		0,
-		500000000,
+		0,
 		time.UTC)
 
 	expectedJulianDateTime :=
 		time.Date(
-			1582,
-			10,
+			-500,
+			3,
 			5,
 			13,
 			0,
 			0,
-			500000000,
+			0,
 			time.UTC)
 
 	var err error

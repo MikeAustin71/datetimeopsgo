@@ -607,43 +607,49 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 	return gregorianDateUtc, err
 }
 
-// richardsJulianDayNoTimeToJulianCalendar - Converts a Julian Day Number
-// and Time value to the corresponding date time in the Julian Calendar.
-// Note that Julian calendar dates before March AD 4 are proleptic, and
-// do not necessarily match the dates actually observed in the Roman Empire.
+
+// richardsJulianDayNoTimeToJulianCalendar - Converts a Julian Day Number and
+// Time value to the corresponding date time in the Julian Calendar.
+//
+// Note that Augustus corrected errors in the observance of leap years
+// by omitting leap days until AD 8. Julian calendar dates before March
+// AD 4 are proleptic, and do not necessarily match the dates actually
+// observed in the Roman Empire.
 //
 // Background:
-//  "The Julian calendar, proposed by Julius Caesar in 708 Ab urbe condita
-//  (AUC) (46 BC), was a reform of the Roman calendar. It took effect on
-//  1 January 709 AUC (45 BC), by edict. It was designed with the aid of
-//  Greek mathematicians and Greek astronomers such as Sosigenes of Alexandria.
 //
-//  The [Julian] calendar was the predominant calendar in the Roman world,
-//  most of Europe, and in European settlements in the Americas and elsewhere,
-//  until it was gradually replaced by the Gregorian calendar, promulgated in
-//  1582 by Pope Gregory XIII. The Julian calendar is still used in parts of
-//  the Eastern Orthodox Church and in parts of Oriental Orthodoxy as well as
-//  by the Berbers.
+// "The Julian calendar, proposed by Julius Caesar in 708 Ab urbe condita
+// (AUC) (46 BC), was a reform of the Roman calendar. It took effect on
+// 1 January 709 AUC (45 BC), by edict. It was designed with the aid of
+// Greek mathematicians and Greek astronomers such as Sosigenes of Alexandria.
 //
-//  The Julian calendar has two types of year: a normal year of 365 days and
-//  a leap year of 366 days. They follow a simple cycle of three normal years
-//  and one leap year, giving an average year that is 365.25 days long. That
-//  is more than the actual solar year value of 365.24219 days, which means
-//  the Julian calendar gains a day every 128 years.
+// The [Julian] calendar was the predominant calendar in the Roman world,
+// most of Europe, and in European settlements in the Americas and elsewhere,
+// until it was gradually replaced by the Gregorian calendar, promulgated in
+// 1582 by Pope Gregory XIII. The Julian calendar is still used in parts of
+// the Eastern Orthodox Church and in parts of Oriental Orthodoxy as well as
+// by the Berbers.
 //
-//  During the 20th and 21st centuries, a date according to the Julian calendar
-//  is 13 days earlier than its corresponding Gregorian date."
+// The Julian calendar has two types of year: a normal year of 365 days and
+// a leap year of 366 days. They follow a simple cycle of three normal years
+// and one leap year, giving an average year that is 365.25 days long. That
+// is more than the actual solar year value of 365.24219 days, which means
+// the Julian calendar gains a day every 128 years.
+//
+// During the 20th and 21st centuries, a date according to the Julian calendar
+// is 13 days earlier than its corresponding Gregorian date."
 //
 // Wikipedia https://en.wikipedia.org/wiki/Julian_calendar
 //
-//  "Augustus corrected errors in the observance of leap years by omitting leap
-//  days until AD 8. Julian calendar dates before March AD 4 are proleptic, and
-//  do not necessarily match the dates actually observed in the Roman Empire.
-//  (Nautical almanac offices of the United Kingdom and United States, 1961,
-//  p. 411)"
 //
-// Conversion between Julian and Gregorian calendars
-// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+// "Augustus corrected errors in the observance of leap years by omitting leap
+// days until AD 8. Julian calendar dates before March AD 4 are proleptic, and
+// do not necessarily match the dates actually observed in the Roman Empire."
+//
+// Nautical almanac offices of the United Kingdom and United States, 1961, p. 411"
+//
+// Conversion between Julian and Gregorian calendars:
+//  https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
 //
 // This method uses the 'Richards' algorithm to convert Julian Day Number and
 // Times to the Julian Calendar.

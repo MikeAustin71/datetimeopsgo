@@ -382,8 +382,145 @@ func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianCalendar(
 	return gregorianDateUtc, err
 }
 
-
-
+// JulianDayNoTimeToJulianCalendar - Converts a Julian Day Number and
+// Time value to the corresponding date time in the Julian Calendar.
+//
+// Note that Augustus corrected errors in the observance of leap years
+// by omitting leap days until AD 8. Julian calendar dates before March
+// AD 4 are proleptic, and do not necessarily match the dates actually
+// observed in the Roman Empire.
+//
+// Background:
+//
+// "The Julian calendar, proposed by Julius Caesar in 708 Ab urbe condita
+// (AUC) (46 BC), was a reform of the Roman calendar. It took effect on
+// 1 January 709 AUC (45 BC), by edict. It was designed with the aid of
+// Greek mathematicians and Greek astronomers such as Sosigenes of Alexandria.
+//
+// The [Julian] calendar was the predominant calendar in the Roman world,
+// most of Europe, and in European settlements in the Americas and elsewhere,
+// until it was gradually replaced by the Gregorian calendar, promulgated in
+// 1582 by Pope Gregory XIII. The Julian calendar is still used in parts of
+// the Eastern Orthodox Church and in parts of Oriental Orthodoxy as well as
+// by the Berbers.
+//
+// The Julian calendar has two types of year: a normal year of 365 days and
+// a leap year of 366 days. They follow a simple cycle of three normal years
+// and one leap year, giving an average year that is 365.25 days long. That
+// is more than the actual solar year value of 365.24219 days, which means
+// the Julian calendar gains a day every 128 years.
+//
+// During the 20th and 21st centuries, a date according to the Julian calendar
+// is 13 days earlier than its corresponding Gregorian date."
+//
+// Wikipedia https://en.wikipedia.org/wiki/Julian_calendar
+//
+//
+// "Augustus corrected errors in the observance of leap years by omitting leap
+// days until AD 8. Julian calendar dates before March AD 4 are proleptic, and
+// do not necessarily match the dates actually observed in the Roman Empire."
+//
+// Nautical almanac offices of the United Kingdom and United States, 1961, p. 411"
+//
+// Conversion between Julian and Gregorian calendars:
+//  https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+//
+// This method uses the 'Richards' algorithm to convert Julian Day Number and
+// Times to the Julian Calendar.
+//
+// Reference:
+//   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
+//   Oxford University Press. ISBN 978-0192862051
+//
+//   Wikipedia - Julian Day
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+// The Julian Calendar date time returned by this method is generated from
+// the Julian Day Number. The Julian Day Number (JDN) is the integer assigned
+// to a whole solar day in the Julian day count starting from noon Universal
+// time, with Julian day number 0 assigned to the day starting at noon on
+// Monday, January 1, 4713 BC, in the proleptic Julian calendar and November
+// 24, 4714 BC, in the proleptic Gregorian calendar.
+//
+// The Julian Day Number Time is a floating point number with an integer
+// to the left of the decimal point representing the Julian Day Number
+// and the fraction to the right of the decimal point representing time
+// in hours minutes and seconds.
+//
+// Julian Day numbers start on day zero at noon. This means that Julian
+// Day Number Times are valid for all dates on or after noon on Monday,
+// January 1, 4713 BCE, in the proleptic Julian calendar or November 24,
+// 4714 BCE, in the proleptic Gregorian calendar. Remember that the Golang
+// 'time.Time' type uses Astronomical Year numbering with the Gregorian
+// Calendar. In other words, the 'time.Time' type recognizes the year
+// zero. Dates expressed in the 'Common Era' ('BCE' Before Common Era
+// or 'CE' Common Era). Therefore a 'time.Time' year of '-4713' is equal
+// to the year '4714 BCE'
+//
+// This means that the 'Richards' algorithm employed by this method is valid
+// for all 'time.Time' (possibly proleptic) Julian dates on or after noon
+// November 24, −4713 (Gregorian Calendar proleptic).
+//
+// For information on the Julian Day Number/Time see:
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameter
+//
+//  julianDayNoNoTime   float64
+//     - The integer portion of this number (digits to left of
+//       the decimal) represents the Julian day number. The fractional
+//       digits to the right of the decimal represent elapsed time
+//       since noon on the Julian day number. All time values are
+//       expressed as Universal Coordinated Time (UTC).
+//
+//
+//  digitsAfterDecimal  int
+//     - The number of digits after the decimal in input parameter
+//       'julianDayNoNoTime' which will be used in the conversion
+//       algorithm. Effectively, 'julianDayNoNoTime' will be rounded
+//       to the number of digits to the right of the decimal specified
+//       in this parameter.
+//
+//
+//  ePrefix             string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//  julianDateUtc    time.Time
+//     - The returned parameter 'gregorianDateTime' represents the input
+//       'julianDayNoNoTime' converted to the Gregorian calendar. This
+//       returned 'time.Time' type is always configured as Universal
+//       Coordinated Time (UTC). In addition, as a Golang 'time.Time'
+//       type, the date is expressed using astronomical years. Astronomical
+//       year numbering includes a zero year. Therefore, 1BCE is stored
+//       as year zero in this return value.
+//
+//
+//  err                 error
+//     - If successful the returned error Type is set equal to 'nil'.
+//       If errors are encountered this error Type will encapsulate
+//       an error message.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Resources
+//
+//  Julian Day Wikipedia
+//  https://en.wikipedia.org/wiki/Julian_day
+//
+//  PHP Julian date converter algorithms (Stack Overflow)
+//   https://stackoverflow.com/questions/45586444/php-julian-date-converter-algorithms
+//
+//
 func (calUtil *CalendarUtility) JulianDayNoTimeToJulianCalendar(
 	julianDayNoDto JulianDayNoDto,
 	ePrefix string) (
