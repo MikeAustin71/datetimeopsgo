@@ -801,3 +801,3234 @@ func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_02(t *testing.T) {
 			julianDateTime.Format(dateTimeFormat))
 	}
 }
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_03(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_03() "
+
+	gregorianDate := time.Date(
+		-500,
+		3,
+		1,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-500,
+			3,
+			6,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_04(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_04() "
+
+	gregorianDate := time.Date(
+		-300,
+		2,
+		27,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-300,
+			3,
+			3,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_05(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_05() "
+
+	gregorianDate := time.Date(
+		-300,
+		2,
+		28,
+		15,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-300,
+			3,
+			4,
+			15,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_06(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_06() "
+
+	gregorianDate := time.Date(
+		-300,
+		3,
+		1,
+		15,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-300,
+			3,
+			5,
+			15,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_07(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_07() "
+
+	gregorianDate := time.Date(
+		-200,
+		2,
+		27,
+		15,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-200,
+			3,
+			2,
+			15,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_08(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_08() "
+
+	gregorianDate := time.Date(
+		-200,
+		2,
+		28,
+		15,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-200,
+			3,
+			3,
+			15,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_09(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_09() "
+
+	gregorianDate := time.Date(
+		-200,
+		3,
+		1,
+		15,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-200,
+			3,
+			4,
+			15,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_10(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_10() "
+
+	gregorianDate := time.Date(
+		-100,
+		2,
+		27,
+		15,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-100,
+			3,
+			1,
+			15,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_11(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_11() "
+
+	gregorianDate := time.Date(
+		-100,
+		2,
+		28,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-100,
+			3,
+			2,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_12(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_12() "
+
+	gregorianDate := time.Date(
+		-100,
+		3,
+		1,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			-100,
+			3,
+			3,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_13(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_13() "
+
+	gregorianDate := time.Date(
+		100,
+		2,
+		27,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			100,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14() "
+
+	gregorianDate := time.Date(
+		100,
+		2,
+		28,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			100,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_15(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_15() "
+
+	gregorianDate := time.Date(
+		100,
+		3,
+		1,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			100,
+			3,
+			2,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_16(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_16() "
+
+	gregorianDate := time.Date(
+		100,
+		2,
+		28,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			100,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_17(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_17() "
+
+	gregorianDate := time.Date(
+		100,
+		3,
+		1,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			100,
+			3,
+			2,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_18(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_18() "
+
+	gregorianDate := time.Date(
+		200,
+		2,
+		27,
+		16,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			200,
+			2,
+			28,
+			16,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_19(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_19() "
+
+	gregorianDate := time.Date(
+		200,
+		2,
+		28,
+		16,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			200,
+			2,
+			29,
+			16,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_20(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_20() "
+
+	gregorianDate := time.Date(
+		200,
+		3,
+		1,
+		16,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			200,
+			3,
+			1,
+			16,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_21(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_21() "
+
+	gregorianDate := time.Date(
+		300,
+		2,
+		28,
+		16,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			300,
+			2,
+			28,
+			16,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_22(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_22() "
+
+	gregorianDate := time.Date(
+		300,
+		3,
+		1,
+		16,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			300,
+			2,
+			29,
+			16,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_23(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_23() "
+
+	gregorianDate := time.Date(
+		300,
+		3,
+		2,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			300,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_24(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_24() "
+
+	gregorianDate := time.Date(
+		500,
+		3,
+		1,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			500,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_25(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_25() "
+
+	gregorianDate := time.Date(
+		500,
+		3,
+		2,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			500,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_26(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_26() "
+
+	gregorianDate := time.Date(
+		500,
+		3,
+		3,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			500,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_27(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_27() "
+
+	gregorianDate := time.Date(
+		600,
+		3,
+		2,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			600,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_28(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_28() "
+
+	gregorianDate := time.Date(
+		600,
+		3,
+		3,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			600,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_29(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_29() "
+
+	gregorianDate := time.Date(
+		600,
+		3,
+		4,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			600,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_30(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_30() "
+
+	gregorianDate := time.Date(
+		700,
+		3,
+		3,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			700,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_31(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_31() "
+
+	gregorianDate := time.Date(
+		700,
+		3,
+		4,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			700,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_32(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_32() "
+
+	gregorianDate := time.Date(
+		700,
+		3,
+		5,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			700,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_33(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_33() "
+
+	gregorianDate := time.Date(
+		900,
+		3,
+		4,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			900,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_34(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_34() "
+
+	gregorianDate := time.Date(
+		900,
+		3,
+		5,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			900,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_35(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_35() "
+
+	gregorianDate := time.Date(
+		900,
+		3,
+		6,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			900,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_36(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_36() "
+
+	gregorianDate := time.Date(
+		1000,
+		3,
+		5,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1000,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_37(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_37() "
+
+	gregorianDate := time.Date(
+		1000,
+		3,
+		6,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1000,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_38(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_38() "
+
+	gregorianDate := time.Date(
+		1000,
+		3,
+		7,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1000,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_39(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_39() "
+
+	gregorianDate := time.Date(
+		1100,
+		3,
+		6,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1100,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_40(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_40() "
+
+	gregorianDate := time.Date(
+		1100,
+		3,
+		7,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1100,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_41(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_41() "
+
+	gregorianDate := time.Date(
+		1100,
+		3,
+		8,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1100,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_42(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_42() "
+
+	gregorianDate := time.Date(
+		1300,
+		3,
+		7,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1300,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_43(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_43() "
+
+	gregorianDate := time.Date(
+		1300,
+		3,
+		8,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1300,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_44(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_44() "
+
+	gregorianDate := time.Date(
+		1300,
+		3,
+		9,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1300,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_45(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_45() "
+
+	gregorianDate := time.Date(
+		1400,
+		3,
+		8,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1400,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_46(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_46() "
+
+	gregorianDate := time.Date(
+		1400,
+		3,
+		9,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1400,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_47(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_47() "
+
+	gregorianDate := time.Date(
+		1400,
+		3,
+		10,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1400,
+			3,
+			1,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_48(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_48() "
+
+	gregorianDate := time.Date(
+		1500,
+		3,
+		9,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1500,
+			2,
+			28,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_49(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_49() "
+
+	gregorianDate := time.Date(
+		1500,
+		3,
+		10,
+		10,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1500,
+			2,
+			29,
+			10,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_50(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_50() "
+
+	gregorianDate := time.Date(
+		1500,
+		3,
+		11,
+		15,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			1500,
+			3,
+			1,
+			15,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	calUtil := CalendarUtility{}
+
+	_,
+	julianDayNoTimeDto,
+	err :=
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+

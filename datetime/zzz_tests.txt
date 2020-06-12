@@ -7,7 +7,7 @@
 === RUN   TestCalendarUtility_GregorianDateToJulianDayNo_04
 --- PASS: TestCalendarUtility_GregorianDateToJulianDayNo_04 (0.00s)
 === RUN   TestCalendarUtility_GregorianDateToJulianDayNo_05
---- PASS: TestCalendarUtility_GregorianDateToJulianDayNo_05 (0.00s)
+--- PASS: TestCalendarUtility_GregorianDateToJulianDayNo_05 (0.05s)
 === RUN   TestCalendarUtility_GregorianDateToJulianDayNo_06
 --- PASS: TestCalendarUtility_GregorianDateToJulianDayNo_06 (0.00s)
 === RUN   TestCalendarUtility_GregorianDateToJulianDayNo_07
@@ -26,6 +26,135 @@
 --- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_01 (0.00s)
 === RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_02
 --- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_02 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_03
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_03 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_04
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_04 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_05
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_05 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_06
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_06 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_07
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_07 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_08
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_08 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_09
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_09 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_10
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_10 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_11
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_11 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_12
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_12 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_13
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_13 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14: zztcalendarutility01_test.go:1613: Error:
+        Expected Julian Date Time: 0100-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 0100-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_15
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_15 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_16
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_16: zztcalendarutility01_test.go:1749: Error:
+        Expected Julian Date Time: 0100-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 0100-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_16 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_17
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_17 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_18
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_18 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_19
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_19 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_20
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_20 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_21
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_21 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_22
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_22 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_23
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_23: zztcalendarutility01_test.go:2218: Error:
+        Expected Julian Date Time: 0300-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 0300-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_23 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_24
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_24 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_25
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_25 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_26
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_26: zztcalendarutility01_test.go:2419: Error:
+        Expected Julian Date Time: 0500-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 0500-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_26 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_27
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_27 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_28
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_28 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_29
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_29: zztcalendarutility01_test.go:2620: Error:
+        Expected Julian Date Time: 0600-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 0600-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_29 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_30
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_30 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_31
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_31 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_32
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_32: zztcalendarutility01_test.go:2821: Error:
+        Expected Julian Date Time: 0700-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 0700-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_32 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_33
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_33 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_34
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_34 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_35
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_35: zztcalendarutility01_test.go:3022: Error:
+        Expected Julian Date Time: 0900-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 0900-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_35 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_36
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_36 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_37
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_37 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_38
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_38: zztcalendarutility01_test.go:3223: Error:
+        Expected Julian Date Time: 1000-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 1000-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_38 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_39
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_39 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_40
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_40 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_41
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_41: zztcalendarutility01_test.go:3424: Error:
+        Expected Julian Date Time: 1100-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 1100-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_41 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_42
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_42 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_43
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_43 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_44
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_44: zztcalendarutility01_test.go:3625: Error:
+        Expected Julian Date Time: 1300-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 1300-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_44 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_45
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_45 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_46
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_46 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_47
+    TestCalendarUtility_JulianDayNoTimeToJulianDateTime_47: zztcalendarutility01_test.go:3826: Error:
+        Expected Julian Date Time: 1400-03-01 10:00:00.000000000 +0000 UTC
+        Instead, Julian Date Time: 1400-03-02 10:00:00.000000000 +0000 UTC
+--- FAIL: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_47 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_48
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_48 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_49
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_49 (0.00s)
+=== RUN   TestCalendarUtility_JulianDayNoTimeToJulianDateTime_50
+--- PASS: TestCalendarUtility_JulianDayNoTimeToJulianDateTime_50 (0.00s)
 === RUN   TestDateTzDto_AddDate_01
 --- PASS: TestDateTzDto_AddDate_01 (0.00s)
 === RUN   TestDateTzDto_AddDateToThis_01
@@ -47,7 +176,7 @@
 === RUN   TestDateTzDto_CopyOut
 --- PASS: TestDateTzDto_CopyOut (0.00s)
 === RUN   TestDateTzDto_GetConvertibleTzStatusFlags_01
---- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.02s)
+--- PASS: TestDateTzDto_GetConvertibleTzStatusFlags_01 (0.00s)
 === RUN   TestDateTzDto_GetOriginalTagDescription_01
 --- PASS: TestDateTzDto_GetOriginalTagDescription_01 (0.00s)
 === RUN   TestDateTzDto_GetTimeDto_01
@@ -79,7 +208,7 @@
 === RUN   TestDateTzDto_SetFromTimeTz_01
 --- PASS: TestDateTzDto_SetFromTimeTz_01 (0.00s)
 === RUN   TestDateTzDto_SetFromTimeDto
---- PASS: TestDateTzDto_SetFromTimeDto (0.01s)
+--- PASS: TestDateTzDto_SetFromTimeDto (0.00s)
 === RUN   TestDateTzDto_Sub_01
 --- PASS: TestDateTzDto_Sub_01 (0.00s)
 === RUN   TestDTimeMechanics_AddDateTimeByUtc_01
@@ -139,23 +268,23 @@
 === RUN   TestDurationTriad_IsEmpty_01
 --- PASS: TestDurationTriad_IsEmpty_01 (0.00s)
 === RUN   TestDurationTriad_IsValid_01
---- PASS: TestDurationTriad_IsValid_01 (0.04s)
+--- PASS: TestDurationTriad_IsValid_01 (0.00s)
 === RUN   TestDurationTriad_IsValid_02
 --- PASS: TestDurationTriad_IsValid_02 (0.00s)
 === RUN   TestDurationTriad_GetYearMthDaysTimeAbbrv
 --- PASS: TestDurationTriad_GetYearMthDaysTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_GetYearsMthsWeeksTimeAbbrv
---- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.09s)
+--- PASS: TestDurationTriad_GetYearsMthsWeeksTimeAbbrv (0.00s)
 === RUN   TestDurationTriad_NewAutoEnd_01
---- PASS: TestDurationTriad_NewAutoEnd_01 (0.01s)
+--- PASS: TestDurationTriad_NewAutoEnd_01 (0.00s)
 === RUN   TestDurationTriad_NewAutoEnd_02
 --- PASS: TestDurationTriad_NewAutoEnd_02 (0.00s)
 === RUN   TestDurationTriad_NewDefaultAutoEnd_01
---- PASS: TestDurationTriad_NewDefaultAutoEnd_01 (0.12s)
+--- PASS: TestDurationTriad_NewDefaultAutoEnd_01 (0.00s)
 === RUN   TestDurationTriad_NewAutoStart_01
---- PASS: TestDurationTriad_NewAutoStart_01 (0.25s)
+--- PASS: TestDurationTriad_NewAutoStart_01 (0.01s)
 === RUN   TestDurationTriad_NewDefaultAutoStart_01
---- PASS: TestDurationTriad_NewDefaultAutoStart_01 (0.07s)
+--- PASS: TestDurationTriad_NewDefaultAutoStart_01 (0.00s)
 === RUN   TestDurationTriad_NewStartTimeDuration_01
 --- PASS: TestDurationTriad_NewStartTimeDuration_01 (0.00s)
 === RUN   TestDurationTriad_NewStartTimeDuration_02
@@ -163,7 +292,7 @@
 === RUN   TestDurationTriad_NewStartTimeDuration_03
 --- PASS: TestDurationTriad_NewStartTimeDuration_03 (0.00s)
 === RUN   TestDurationTriad_NewStartTimeDuration_04
---- PASS: TestDurationTriad_NewStartTimeDuration_04 (0.02s)
+--- PASS: TestDurationTriad_NewStartTimeDuration_04 (0.00s)
 === RUN   TestDurationTriad_NewStartTimeDuration_05
 --- PASS: TestDurationTriad_NewStartTimeDuration_05 (0.00s)
 === RUN   TestDurationTriad_NewDefaultStartTimeDuration_01
@@ -189,7 +318,7 @@
 === RUN   TestDurationTriad_NewDefaultStartEndTimesTz_01
 --- PASS: TestDurationTriad_NewDefaultStartEndTimesTz_01 (0.00s)
 === RUN   TestDurationTriad_NewStartEndTimes_01
---- PASS: TestDurationTriad_NewStartEndTimes_01 (0.14s)
+--- PASS: TestDurationTriad_NewStartEndTimes_01 (0.00s)
 === RUN   TestDurationTriad_NewStartEndTimes_02
 --- PASS: TestDurationTriad_NewStartEndTimes_02 (0.00s)
 === RUN   TestDurationTriad_NewStartEndTimes_03
@@ -197,7 +326,7 @@
 === RUN   TestDurationTriad_NewStartEndTimes_04
 --- PASS: TestDurationTriad_NewStartEndTimes_04 (0.00s)
 === RUN   TestDurationTriad_NewStartEndTimes_05
---- PASS: TestDurationTriad_NewStartEndTimes_05 (0.01s)
+--- PASS: TestDurationTriad_NewStartEndTimes_05 (0.00s)
 === RUN   TestDurationTriad_NewDefaultStartEndTimes_01
 --- PASS: TestDurationTriad_NewDefaultStartEndTimes_01 (0.00s)
 === RUN   TestDurationTriad_NewEndTimeMinusTimeDto_01
@@ -235,7 +364,7 @@
 === RUN   TestDurationTriad_SetStartEndTimes_01
 --- PASS: TestDurationTriad_SetStartEndTimes_01 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_02
---- PASS: TestDurationTriad_SetStartEndTimes_02 (0.65s)
+--- PASS: TestDurationTriad_SetStartEndTimes_02 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_03
 --- PASS: TestDurationTriad_SetStartEndTimes_03 (0.00s)
 === RUN   TestDurationTriad_SetStartEndTimes_04
@@ -257,9 +386,9 @@
 === RUN   TestDurationTriad_SetEndTimeMinusTimeDto_002
 --- PASS: TestDurationTriad_SetEndTimeMinusTimeDto_002 (0.00s)
 === RUN   TestDurationTriad_SetDefaultEndTimeMinusTimeDto_001
---- PASS: TestDurationTriad_SetDefaultEndTimeMinusTimeDto_001 (0.53s)
+--- PASS: TestDurationTriad_SetDefaultEndTimeMinusTimeDto_001 (0.00s)
 === RUN   TestDurationTriad_SetDefaultEndTimeTzMinusTimeDto_001
---- PASS: TestDurationTriad_SetDefaultEndTimeTzMinusTimeDto_001 (0.02s)
+--- PASS: TestDurationTriad_SetDefaultEndTimeTzMinusTimeDto_001 (0.00s)
 === RUN   TestDurationTriad_SetStartTimeTzMinusTimeDto_001
 --- PASS: TestDurationTriad_SetStartTimeTzMinusTimeDto_001 (0.00s)
 === RUN   TestDurationTriad_SetStartTimeDuration_01
@@ -531,14 +660,14 @@ Item: 64  Date Time String : June 1st, 2017 11:42:00PM -0700 PDT
 Item: 65  Date Time String : June 2nd 2017 11:42:00PM -0700 PDT 
 Item: 66  Date Time String : June 3rd, 2017 11:42:00PM -0700 PDT 
 Processed 67 sample dates successfully!
---- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (5.07s)
+--- PASS: TestDateTimeFormatUtility_ParseDateTimeStrings (4.66s)
 === RUN   TestDtfmtTestSuite
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString01
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString02
 === RUN   TestDtfmtTestSuite/TestParseDateTimeString04
---- PASS: TestDtfmtTestSuite (4.09s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.02s)
-    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.09s)
+--- PASS: TestDtfmtTestSuite (4.07s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString01 (0.04s)
+    --- PASS: TestDtfmtTestSuite/TestParseDateTimeString02 (0.03s)
     --- PASS: TestDtfmtTestSuite/TestParseDateTimeString04 (0.03s)
 === RUN   TestJulianDayNoDto_New_01
 --- PASS: TestJulianDayNoDto_New_01 (0.00s)
@@ -744,7 +873,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_02
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_01
 === RUN   TestTimeDuroTestSuite/TestTimeDurationDto_TestCumWeeks_02
---- PASS: TestTimeDuroTestSuite (0.08s)
+--- PASS: TestTimeDuroTestSuite (0.10s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoEnd_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewAutoStart_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartEndTimesTz_01 (0.00s)
@@ -765,7 +894,7 @@ Processed 67 sample dates successfully!
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeTzDuration_03 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeTzDuration_04 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_NewStartTimeTzDuration_05 (0.00s)
-    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_ReCalcEndDateTimeToNow_01 (0.00s)
+    --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_ReCalcEndDateTimeToNow_01 (0.01s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_01 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumDays_02 (0.00s)
     --- PASS: TestTimeDuroTestSuite/TestTimeDurationDto_TestCumMonths_01 (0.00s)
@@ -799,7 +928,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDurationDto_GetYearsMthsWeeksTimeAbbrvStr
 --- PASS: TestTimeDurationDto_GetYearsMthsWeeksTimeAbbrvStr (0.00s)
 === RUN   TestTimeDurationDto_NewStartTimeAddDate_01
---- PASS: TestTimeDurationDto_NewStartTimeAddDate_01 (0.01s)
+--- PASS: TestTimeDurationDto_NewStartTimeAddDate_01 (0.00s)
 === RUN   TestTimeDurationDto_NewStartTimeAddDate_02
 --- PASS: TestTimeDurationDto_NewStartTimeAddDate_02 (0.00s)
 === RUN   TestTimeDurationDto_NewStartTimeAddDate_03
@@ -817,15 +946,15 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeDurationDto_NewStartTimeAddTime_01
 --- PASS: TestTimeDurationDto_NewStartTimeAddTime_01 (0.00s)
 === RUN   TestTimeDurationDto_NewStartTimeAddTime_02
---- PASS: TestTimeDurationDto_NewStartTimeAddTime_02 (0.01s)
+--- PASS: TestTimeDurationDto_NewStartTimeAddTime_02 (0.00s)
 === RUN   TestTimeDurationDto_NewDefaultStartEndTimes_001
 --- PASS: TestTimeDurationDto_NewDefaultStartEndTimes_001 (0.00s)
 === RUN   TestTimeDurationDto_NewDefaultStartEndTimesTz_01
 --- PASS: TestTimeDurationDto_NewDefaultStartEndTimesTz_01 (0.00s)
 === RUN   TestTimeDurationDto_NewDefaultStartAddDate_001
---- PASS: TestTimeDurationDto_NewDefaultStartAddDate_001 (0.01s)
+--- PASS: TestTimeDurationDto_NewDefaultStartAddDate_001 (0.00s)
 === RUN   TestTimeDurationDto_NewDefaultStartTimeAddDateTime_01
---- PASS: TestTimeDurationDto_NewDefaultStartTimeAddDateTime_01 (0.01s)
+--- PASS: TestTimeDurationDto_NewDefaultStartTimeAddDateTime_01 (0.00s)
 === RUN   TestTimeDurationDto_NewDefaultStartTimeAddTime_01
 --- PASS: TestTimeDurationDto_NewDefaultStartTimeAddTime_01 (0.00s)
 === RUN   TestTimeDurationDto_NewDefaultStartTimeDuration_001
@@ -985,13 +1114,13 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneDefinition_GetConvertibleTimeZoneName_02
 --- PASS: TestTimeZoneDefinition_GetConvertibleTimeZoneName_02 (0.00s)
 === RUN   TestTimeZoneDto_AddTimeDurationDto_01
---- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.00s)
+--- PASS: TestTimeZoneDto_AddTimeDurationDto_01 (0.01s)
 === RUN   TestTimeZoneDto_AddMinusTimeDto
 --- PASS: TestTimeZoneDto_AddMinusTimeDto (0.00s)
 === RUN   TestTimeZoneDto_AddPlusTimeDto
 --- PASS: TestTimeZoneDto_AddPlusTimeDto (0.00s)
 === RUN   TestTimeZoneUtility_ConvertTz_01
---- PASS: TestTimeZoneUtility_ConvertTz_01 (0.00s)
+--- PASS: TestTimeZoneUtility_ConvertTz_01 (0.01s)
 === RUN   TestTimeZoneUtility_ConvertTz_02
 --- PASS: TestTimeZoneUtility_ConvertTz_02 (0.00s)
 === RUN   TestTimeZoneUtility_ConvertTz_03
@@ -1023,7 +1152,7 @@ Processed 67 sample dates successfully!
 === RUN   TestTimeZoneUtility_NewAddDuration_01
 --- PASS: TestTimeZoneUtility_NewAddDuration_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddDate_01
---- PASS: TestTimeZoneUtility_NewAddDate_01 (0.00s)
+--- PASS: TestTimeZoneUtility_NewAddDate_01 (0.01s)
 === RUN   TestTimeZoneUtility_NewAddDateTime_01
 --- PASS: TestTimeZoneUtility_NewAddDateTime_01 (0.00s)
 === RUN   TestTimeZoneUtility_NewAddTime_01
@@ -1050,5 +1179,6 @@ Processed 67 sample dates successfully!
 --- PASS: TestTimeZoneSpecification_03 (0.00s)
 === RUN   TestTimeZoneSpecification_04
 --- PASS: TestTimeZoneSpecification_04 (0.00s)
-PASS
-ok  	github.com/MikeAustin71/datetimeopsgo/datetime	14.006s
+FAIL
+exit status 1
+FAIL	github.com/MikeAustin71/datetimeopsgo/datetime	11.274s
