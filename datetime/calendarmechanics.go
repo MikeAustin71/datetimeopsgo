@@ -119,8 +119,8 @@ type calendarMechanics struct {
 //                                              //   Day No Time
 //           julianDayNoTime         *big.Float // JulianDayNo Plus Time Fraction accurate to
 //                                              //   within nanoseconds
-//           julianDayNoSign         int        // Sign of the Julian Day Number/Time value
-//           totalNanoSeconds        *big.Int   // Julian Day Number Time Value expressed in nano seconds.
+//           julianDayNoNumericalSign         int        // Sign of the Julian Day Number/Time value
+//           totalJulianNanoSeconds        *big.Int   // Julian Day Number Time Value expressed in nano seconds.
 //                                              //   Always represents a value less than 24-hours
 //                                              // Julian Hours
 //           hours                   int
@@ -591,16 +591,15 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 	//minutes,
 	//seconds,
 	//nanoseconds,
-	//_ := timeMech.ComputeTimeElementsBigInt(julianDayNoDto.totalNanoSeconds)
+	//_ := timeMech.ComputeTimeElementsBigInt(julianDayNoDto.totalJulianNanoSeconds)
 
 
-	//fmt.Printf("julianDayNoDto.totalNanoSeconds: hours=%d minutes=%d seconds=%d nanoseconds=%d\n",
+	//fmt.Printf("julianDayNoDto.totalJulianNanoSeconds: hours=%d minutes=%d seconds=%d nanoseconds=%d\n",
 	//	hours, minutes,seconds, nanoseconds)
 
 		//fmt.Println("Added 12-hours!")
 
-		timeDifferential := julianDayNoDto.totalNanoSeconds.Int64() +
-			(HourNanoSeconds * 12)
+		timeDifferential := julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds
 
 	gregorianDateUtc = gregorianDateUtc.Add(time.Duration(timeDifferential))
 
@@ -757,7 +756,7 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 
 	defer calMech.lock.Unlock()
 
-	ePrefix += "calMech.richardsJulianDayNoTimeToJulianCalendar() "
+	ePrefix += "calendarMechanics.richardsJulianDayNoTimeToJulianCalendar() "
 
 	julianDateUtc = time.Time{}
 	err = nil
@@ -820,6 +819,7 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 
 	Y := (e / p) - y + ((n + m - M)/ n)
 
+
 	julianDateUtc = time.Date(
 		int(Y),
 		time.Month(M),
@@ -830,9 +830,20 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 		0,
 		time.UTC)
 
-	timeDifferential := julianDayNoDto.totalNanoSeconds.Int64() + (HourNanoSeconds * 12)
+	fmt.Printf(ePrefix + "\n" +
+		"Julian Base Date: %v\n",
+		julianDateUtc.Format(FmtDateTimeYrMDayFmtStr))
+	//timeDifferential := julianDayNoDto.totalJulianNanoSeconds.Int64() + (HourNanoSeconds * 12)
+	// timeDifferential := julianDayNoDto.totalJulianNanoSeconds
+//	if Y >= 0 {
+////		julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.netGregorianNanoSeconds))
+//		julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
+//	} else {
+//		julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
+//	}
 
-	julianDateUtc = julianDateUtc.Add(time.Duration(timeDifferential))
+	julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
+
 
 	return julianDateUtc, err
 }

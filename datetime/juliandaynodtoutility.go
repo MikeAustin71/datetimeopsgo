@@ -167,11 +167,11 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		return err
 	}
 
-	jDNDto.julianDayNoSign = 1
+	jDNDto.julianDayNoNumericalSign = 1
 
 	if julianDayNo < 0 {
 
-		jDNDto.julianDayNoSign = -1
+		jDNDto.julianDayNoNumericalSign = -1
 
 		julianDayNo = julianDayNo * int64(-1)
 	}
@@ -237,17 +237,25 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		SetPrec(requestedPrecision).
 		Add(big.NewFloat(0.5), grossNanoSecs)
 
-	// Always less than 24-hours
-	jDNDto.totalNanoSeconds, _ = grossNanoSecs.Int(nil)
+	// Always less than or equal to 36-hours
+	jDNDto.totalJulianNanoSeconds, _ = grossNanoSecs.Int64()
+
+	// Always less than or equal to 24-hours
+	jDNDto.netGregorianNanoSeconds = jDNDto.totalJulianNanoSeconds
+
+	if jDNDto.netGregorianNanoSeconds >= NoonNanoSeconds {
+		jDNDto.netGregorianNanoSeconds -= NoonNanoSeconds
+	} else {
+		jDNDto.netGregorianNanoSeconds += NoonNanoSeconds
+	}
 
 	timeMech := TimeMechanics{}
-	_,
 	jDNDto.hours,
 		jDNDto.minutes,
 		jDNDto.seconds,
 		jDNDto.nanoseconds,
-		_ = timeMech.ComputeTimeElementsBigInt(
-					jDNDto.totalNanoSeconds)
+		_ = timeMech.ComputeTimeElementsInt64(
+					jDNDto.netGregorianNanoSeconds)
 
 	return  err
 }

@@ -81,7 +81,7 @@ func (timeMech *TimeMechanics) ComputeTimeElementsInt64(
 	hours,
 	minutes,
 	seconds,
-	nanoSeconds int64,
+	nanoSeconds int,
 	numericalSign int) {
 
 	if timeMech.lock == nil {
@@ -110,21 +110,21 @@ func (timeMech *TimeMechanics) ComputeTimeElementsInt64(
 	}
 
 	if grossNanoSeconds >= HourNanoSeconds {
-		hours = grossNanoSeconds/HourNanoSeconds
-		grossNanoSeconds -= hours * HourNanoSeconds
+		hours = int(grossNanoSeconds/HourNanoSeconds)
+		grossNanoSeconds -= int64(hours) * HourNanoSeconds
 	}
 
 	if grossNanoSeconds >= MinuteNanoSeconds {
-		minutes = grossNanoSeconds/MinuteNanoSeconds
-		grossNanoSeconds -= minutes * MinuteNanoSeconds
+		minutes = int(grossNanoSeconds/MinuteNanoSeconds)
+		grossNanoSeconds -= int64(minutes) * MinuteNanoSeconds
 	}
 
 	if grossNanoSeconds >= SecondNanoseconds {
-		seconds = grossNanoSeconds/SecondNanoseconds
-		grossNanoSeconds -= seconds * SecondNanoseconds
+		seconds = int(grossNanoSeconds/SecondNanoseconds)
+		grossNanoSeconds -= int64(seconds) * SecondNanoseconds
 	}
 
-	nanoSeconds = grossNanoSeconds
+	nanoSeconds = int(grossNanoSeconds)
 
 	return hours, minutes, seconds, nanoSeconds, numericalSign
 }

@@ -247,11 +247,11 @@ func (mt mainTest) mainTest092() {
 
 	lineSplitter := strings.Repeat("-", lineLen)
 // February 28, -500 13:00:00
-	testDate := time.Date(
-		-500,
-		2,
-		28,
-		13,
+	inputGregorianDate := time.Date(
+		1000,
+		3,
+		7,
+		10,
 		0,
 		0,
 		0,
@@ -259,10 +259,10 @@ func (mt mainTest) mainTest092() {
 
 	expectedJulianDateTime :=
 		time.Date(
-			-500,
+			1000,
 			3,
-			5,
-			13,
+			1,
+			10,
 			0,
 			0,
 			0,
@@ -302,7 +302,7 @@ func (mt mainTest) mainTest092() {
 	julianDayNoTimeDto,
 	err =
 		calUtil.GregorianDateToJulianDayNoTime(
-			testDate,
+			inputGregorianDate,
 			ePrefix)
 
 	if err != nil {
@@ -379,13 +379,50 @@ func (mt mainTest) mainTest092() {
 	fmt.Println(lineSplitter)
 
 	fmt.Printf("Gregorian Calendar Test Date:      %v\n",
-		testDate.Format(dateTimeFormat))
+		inputGregorianDate.Format(dateTimeFormat))
 
 	fmt.Printf("Computed Julian Date Time:         %v\n",
 		julianDateTime.Format(dateTimeFormat))
 
 	fmt.Printf("Expected Juilain Date Time:        %v\n",
 		expectedJulianDateTime.Format(dateTimeFormat))
+	if expectedJulianDateTime.Equal(julianDateTime) {
+		fmt.Println("**** SUCCESS - Computed Value Matches Expected Value ****")
+	} else {
+		fmt.Println("%%%%!!!! FAILURE - Computed Value DIFFERS from Expected Value %%%%!!!!")
+	}
+
+	fmt.Println(lineSplitter)
+
+	fmt.Println("                    Total Nanoseconds Comparison")
+
+	fmt.Printf("Noon Nanosecods:              %d\n",
+		dt.NoonNanoSeconds)
+
+	fmt.Printf("Julian Total Nanoseconds:     %d\n",
+		julianDayNoTimeDto.GetJulianTotalNanoSeconds())
+
+	fmt.Printf("Gregorian Total Nanoseconds:  %d\n",
+		julianDayNoTimeDto.GetGregorianTotalNanosecs())
+
+	fmt.Println(lineSplitter)
+
+	fmt.Println("     Computed Hours, Minutes, Seconds")
+
+	fmt.Printf("Julian Hours:    %d\n",
+		julianDayNoTimeDto.GetJulianHours())
+
+	fmt.Printf("Gregorian Hours: %d\n",
+		julianDayNoTimeDto.GetGregorianHours())
+
+	fmt.Printf("Minutes:         %d\n",
+		julianDayNoTimeDto.GetMinutes())
+
+	fmt.Printf("Seconds:         %d\n",
+		julianDayNoTimeDto.GetSeconds())
+
+	fmt.Printf("Nanoseconds:     %d\n",
+		julianDayNoTimeDto.GetNanoseconds())
 
 	fmt.Println(lineSplitter)
 	fmt.Printf("Code Execution Time:   %v\n",
