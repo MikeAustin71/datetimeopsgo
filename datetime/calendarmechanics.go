@@ -166,7 +166,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 
 	defer calMech.lock.Unlock()
 
-	ePrefix += "calMech.gregorianDateToJulianDayNoTime() "
+	ePrefix += "calendarMechanics.gregorianDateToJulianDayNoTime() "
 
 	gregorianDateUtc = gregorianDateTime.UTC()
 
@@ -535,7 +535,7 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 
 	defer calMech.lock.Unlock()
 
-	ePrefix += "calMech.richardsJulianDayNoTimeToGregorianCalendar() "
+	ePrefix += "calendarMechanics.richardsJulianDayNoTimeToGregorianCalendar() "
 
 	gregorianDateUtc = time.Time{}
 	err = nil
