@@ -858,10 +858,9 @@ func (jDNDto JulianDayNoDto) NewFromGregorianDate(
 	defer jDNDto.lock.Unlock()
 
 	ePrefix := "JulianDayNoDto.NewFromGregorianDate() "
+	calendarMech := calendarMechanics{}
 
-	calUtil := CalendarUtility{}
-
-	return calUtil.GregorianDateToJulianDayNoTime(
+	return calendarMech.gregorianDateToJulianDayNoTime(
 		gregorianDateTime,
 		ePrefix)
 }

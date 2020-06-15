@@ -82,6 +82,15 @@ type calendarMechanics struct {
 // Reference Wikipedia:
 //   https://en.wikipedia.org/wiki/Julian_day
 //
+// The algorithm employed by this method is based on the work of E.G. Richards.
+//
+// Reference:
+//   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
+//   Oxford University Press. ISBN 978-0192862051
+//
+// However, the original algorithm has been modified to provide for time
+// fractions accurate to nanoseconds.
+//
 // ------------------------------------------------------------------------
 //
 // Input Parameter
@@ -160,6 +169,32 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 	ePrefix += "calMech.gregorianDateToJulianDayNoTime() "
 
 	gregorianDateUtc = gregorianDateTime.UTC()
+
+	julianDayNoDto = JulianDayNoDto{}
+	
+	thresholdGregorianDate := time.Date(
+		-4713,
+		11,
+		24,
+		12,
+		0,
+		0,
+		0,
+		time.UTC)
+
+
+	if gregorianDateTime.Before(thresholdGregorianDate) {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "gregorianDateTime",
+			inputParameterValue: "",
+			errMsg:              "Gregorian Dates prior to -4713/11/24 12:00:00" +
+				" UTC are invalid\nfor Julian Day Number Calculations.",
+			err:                 nil,
+		}
+		return gregorianDateUtc, julianDayNoDto, err
+	}
+
 	julianDayNoDto = JulianDayNoDto{}
 
 	err = nil
@@ -179,8 +214,8 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
 			Day - int64(32075)
 
-	//fmt.Printf("julianDayNo: %v\n",
-	//	julianDayNo)
+	fmt.Printf("julianDayNo: %v\n",
+		julianDayNo)
 
 	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
 	gregorianTimeNanoSecs += int64(gregorianDateUtc.Minute()) * MinuteNanoSeconds
@@ -189,7 +224,10 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 
 	if gregorianTimeNanoSecs < NoonNanoSeconds {
 
-		julianDayNo -= 1
+		if julianDayNo > 0 {
+			julianDayNo -= 1
+		}
+
 		gregorianTimeNanoSecs += NoonNanoSeconds
 
 	} else {

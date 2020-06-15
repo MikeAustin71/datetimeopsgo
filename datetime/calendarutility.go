@@ -100,6 +100,13 @@ type CalendarUtility struct {
 //  Example: The Julian Date for 00:30:00.0 UT January 1, 2013, is 2 456 293.520 833
 //           The Julian Day Number is 2456293
 //
+// This method calls helper method calendarMechanics.gregorianDateToJulianDayNoTime().
+// The algorithm employed by this method is based on the work of E.G. Richards.
+//
+// Reference:
+//   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
+//   Oxford University Press. ISBN 978-0192862051
+//
 // ------------------------------------------------------------------------
 //
 // Input Parameter
@@ -156,7 +163,10 @@ type CalendarUtility struct {
 //
 func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 	gregorianDateTime time.Time,
-	ePrefix string) (gregorianDateUtc time.Time, julianDayNo int64, err error) {
+	ePrefix string) (
+	gregorianDateUtc time.Time,
+	julianDayNo int64,
+	err error) {
 
 	if calUtil.lock == nil {
 		calUtil.lock = new(sync.Mutex)
@@ -200,6 +210,16 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 //
 //  Example: The Julian Date for 00:30:00.0 UT January 1, 2013, is
 //  2 456 293.520 833
+//
+// This method calls helper method calendarMechanics.gregorianDateToJulianDayNoTime().
+// The algorithm employed by this method is based on the work of E.G. Richards.
+//
+// Reference:
+//   Richards, E. G. (1998). Mapping Time: The Calendar and its History.
+//   Oxford University Press. ISBN 978-0192862051
+//
+// However, the original algorithm has been modified to provide for time fractions
+// accurate to nanoseconds.
 //
 // ------------------------------------------------------------------------
 //
