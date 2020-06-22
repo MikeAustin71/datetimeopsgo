@@ -27,6 +27,9 @@ import (
 // Time elements includes years, months, weeks, days, hours, minutes, seconds,
 // milliseconds, microseconds and nanoseconds.
 //
+// 'DateTzDto' always uses the Gregorian Calendar. For alternate calendars,
+// reference type 'CalendarDateTime'.
+//
 // 'DateTzDto' is used primarily conjunction with IANA Time Zones. For more information
 // on IANA Time Zones, see type 'TimeZones', located in source file:
 //

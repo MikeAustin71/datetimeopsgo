@@ -19,7 +19,7 @@ type timeDtoSigns struct {
 	signTotTimeNanoseconds   int
 }
 
-// NewStartEndTimes - creates and returns a new timeDtoSigns
+// new - creates and returns a new timeDtoSigns
 // instance where all the sign values are set
 // to +1.
 func (tSigns timeDtoSigns) new() timeDtoSigns {

@@ -404,7 +404,9 @@ func (tDto TimeDto) New() TimeDto {
 //
 // Be advised that all time elements are normalized. That is, negative
 // time values are converted and stored as positive time elements suitable
-// for conversion to a date time.
+// for conversion to a date time. In addition, invalid values for days,
+// hours, minutes, seconds and nanoseconds are corrected in accordance
+// with Gregorian Calendar standards.
 //
 // Example: Assume you entered a value of -8 weeks and all other
 // NewStartEndTimes() input parameters were zero value. The normalized TimeDto
@@ -460,6 +462,7 @@ func (tDto TimeDto) NewTimeComponents(
 				milliseconds,
 				microseconds,
 				nanoseconds,
+				true, // Normalize Data
 				ePrefix)
 
 	if err != nil {
@@ -471,6 +474,12 @@ func (tDto TimeDto) NewTimeComponents(
 
 // NewTimeElements - Creates and returns a new TimeDto using basic
 // time components as input parameters.
+//
+// Be advised that all time elements are normalized. That is, negative
+// time values are converted and stored as positive time elements suitable
+// for conversion to a date time. In addition, invalid values for days,
+// hours, minutes, seconds and nanoseconds are corrected in accordance
+// with Gregorian Calendar standards.
 //
 func (tDto TimeDto) NewTimeElements(
 	years,
@@ -507,6 +516,7 @@ func (tDto TimeDto) NewTimeElements(
 						0,
 						0,
 						nanoseconds,
+						true, // Normalize data
 						ePrefix)
 
 	if err != nil {
@@ -704,6 +714,11 @@ func (tDto *TimeDto) NormalizeDays() (bool, error) {
 // SetTimeElements - Sets the value of date fields for the current TimeDto instance
 // based on time element input parameters.
 //
+// The input parameter normalizeData is a boolean value which determines whether
+// time data is normalized. When this parameter is set to 'true', all time elements
+// are normalized.
+//
+//
 func (tDto *TimeDto) SetTimeElements(
 	years,
 	months,
@@ -714,7 +729,8 @@ func (tDto *TimeDto) SetTimeElements(
 	seconds,
 	milliseconds,
 	microseconds,
-	nanoseconds int) error {
+	nanoseconds int,
+	normalizeData bool) error {
 
 	if tDto.lock == nil {
 		tDto.lock = new(sync.Mutex)
@@ -740,6 +756,7 @@ func (tDto *TimeDto) SetTimeElements(
 		milliseconds,
 		microseconds,
 		nanoseconds,
+		normalizeData,
 		ePrefix)
 }
 

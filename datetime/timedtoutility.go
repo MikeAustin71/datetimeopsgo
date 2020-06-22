@@ -71,6 +71,7 @@ func (tDtoUtil *timeDtoUtility) addTimeDto(
 		tDto.Milliseconds + t2Dto.Milliseconds,
 		tDto.Microseconds + t2Dto.Microseconds,
 		tDto.Nanoseconds + t2Dto.Nanoseconds,
+		true, // Normalize data
 		ePrefix)
 
 }
@@ -1201,6 +1202,7 @@ func (tDtoUtil *timeDtoUtility) setTimeElements(
 					milliseconds,
 					microseconds,
 					nanoseconds int,
+					normalizeData bool,
 					ePrefix string) error {
 
 	tDtoUtil.lock.Lock()
@@ -1248,18 +1250,22 @@ func (tDtoUtil *timeDtoUtility) setTimeElements(
 	t1Dto.lock = new(sync.Mutex)
 
 	tDtoUtil2 := timeDtoUtility{}
+	var err error
 
-	err := tDtoUtil2.normalizeTimeElements(&t1Dto, ePrefix)
+	if normalizeData {
 
-	if err != nil {
-		return err
-	}
+		err = tDtoUtil2.normalizeTimeElements(&t1Dto, ePrefix)
 
-	_, err = tDtoUtil2.normalizeDays(&t1Dto, ePrefix)
+		if err != nil {
+			return err
+		}
 
-	if err != nil {
-		return fmt.Errorf(ePrefix+"Error returned by err := t1Dto.NormalizeDays() "+
-			"Error='%v'", err.Error())
+		_, err = tDtoUtil2.normalizeDays(&t1Dto, ePrefix)
+
+		if err != nil {
+			return fmt.Errorf(ePrefix+"Error returned by err := t1Dto.NormalizeDays() "+
+				"Error='%v'", err.Error())
+		}
 	}
 
 	tDtoUtil2.copyIn(tDto, &t1Dto, ePrefix)
@@ -1361,6 +1367,7 @@ func (tDtoUtil *timeDtoUtility) subTimeDto(
 		tDto.Milliseconds - t2Dto.Milliseconds,
 		tDto.Microseconds - t2Dto.Microseconds,
 		tDto.Nanoseconds - t2Dto.Nanoseconds,
+		true, // Normalize data
 		ePrefix)
 
 }

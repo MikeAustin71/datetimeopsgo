@@ -214,7 +214,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
 			Day - int64(32075)
 
-	fmt.Printf("julianDayNo: %v\n",
+	fmt.Printf("julianDayNo: %v - calendarMechanics.gregorianDateToJulianDayNoTime\n",
 		julianDayNo)
 
 	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
@@ -824,7 +824,6 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 		return julianDateUtc, err
 	}
 
-
 	y := int64(4716)
 	j := int64(1401)
 	m := int64(2)
@@ -843,7 +842,9 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 	// Julian Day No as integer
 	J := julianDayNumInt
 
+	// Julian Day No + 1401
 	f := J + j
+
 
 	e := r * f + v // #2
 
@@ -862,15 +863,55 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 		int(Y),
 		time.Month(M),
 		int(D),
-		0,
+		12,
 		0,
 		0,
 		0,
 		time.UTC)
 
-	fmt.Printf(ePrefix + "\n" +
-		"Julian Base Date: %v\n",
+	fmt.Printf("Julian Base Date: %v -calendarMechanics.richardsJulianDayNoTimeToJulianCalendar\n",
 		julianDateUtc.Format(FmtDateTimeYrMDayFmtStr))
+
+	if julianDayNoDto.netGregorianNanoSeconds == NoonNanoSeconds {
+
+		return julianDateUtc, err
+
+	} else if julianDayNoDto.netGregorianNanoSeconds < NoonNanoSeconds {
+
+		if Y < 0 {
+
+			julianDateUtc = julianDateUtc.Add(time.Duration(
+				julianDayNoDto.totalJulianNanoSeconds))
+
+		} else {
+
+			julianDateUtc = julianDateUtc.Add(time.Duration(
+				(DayNanoSeconds * -1) + julianDayNoDto.totalJulianNanoSeconds))
+		}
+
+	} else {
+
+		// julianDayNoDto.netGregorianNanoSeconds > NoonNanoSeconds
+
+		julianDateUtc = julianDateUtc.Add(time.Duration(
+			julianDayNoDto.totalJulianNanoSeconds))
+
+	}
+
+
+
+	//if julianDayNoDto.netGregorianNanoSeconds > NoonNanoSeconds ||
+	//	{
+	//	julianDateUtc = julianDateUtc.Add(time.Duration(
+	//		julianDayNoDto.totalJulianNanoSeconds))
+	//
+	//} else if julianDayNoDto.netGregorianNanoSeconds < NoonNanoSeconds {
+	//
+	//	julianDateUtc = julianDateUtc.Add(time.Duration(
+	//		julianDayNoDto.totalJulianNanoSeconds))
+	//
+	//}
+
 	//timeDifferential := julianDayNoDto.totalJulianNanoSeconds.Int64() + (HourNanoSeconds * 12)
 	// timeDifferential := julianDayNoDto.totalJulianNanoSeconds
 //	if Y >= 0 {
@@ -880,7 +921,11 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 //		julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
 //	}
 
-	julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
+//	julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
+
+
+	//julianDateUtc = julianDateUtc.Add(time.Duration(
+	//	julianDayNoDto.netGregorianNanoSeconds - NoonNanoSeconds))
 
 
 	return julianDateUtc, err

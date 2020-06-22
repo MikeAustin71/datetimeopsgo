@@ -1511,6 +1511,75 @@ func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_13(t *testing.T) {
 
 	var err error
 	calUtil := CalendarUtility{}
+	var julianDayNoTimeDto JulianDayNoDto
+
+	_,
+	julianDayNoTimeDto,
+	err =
+		calUtil.GregorianDateToJulianDayNoTime(
+			gregorianDate,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.GregorianDateToJulianDayNoTime()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	var julianDateTime time.Time
+
+	dateTimeFormat := FmtDateTimeYrMDayFmtStr
+
+	julianDateTime,
+		err =
+		calUtil.JulianDayNoTimeToJulianCalendar(
+			julianDayNoTimeDto,
+			ePrefix)
+
+	if err != nil {
+		t.Errorf("Error returned by calUtil.JulianDayNoTimeToJulianCalendar()\n" +
+			"Error='%v'\n", err.Error())
+		return
+	}
+
+	if !expectedJulianDateTime.Equal(julianDateTime) {
+		t.Errorf("Error:\n" +
+			"Expected Julian Date Time: %v\n" +
+			"Instead, Julian Date Time: %v\n",
+			expectedJulianDateTime.Format(dateTimeFormat),
+			julianDateTime.Format(dateTimeFormat))
+	}
+}
+
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14a(t *testing.T) {
+
+	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
+
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14a() "
+
+	gregorianDate := time.Date(
+		100,
+		2,
+		28,
+		14,
+		0,
+		0,
+		0,
+		time.UTC)
+
+	expectedJulianDateTime :=
+		time.Date(
+			100,
+			3,
+			1,
+			14,
+			0,
+			0,
+			0,
+			time.UTC)
+
+	var err error
+	calUtil := CalendarUtility{}
 
 	_,
 	julianDayNoTimeDto,
@@ -1550,11 +1619,11 @@ func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_13(t *testing.T) {
 	}
 }
 
-func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14(t *testing.T) {
+func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14b(t *testing.T) {
 
 	// https://en.wikipedia.org/wiki/Conversion_between_Julian_and_Gregorian_calendars
 
-	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14() "
+	ePrefix := "TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14b() "
 
 	gregorianDate := time.Date(
 		100,
@@ -1570,7 +1639,7 @@ func TestCalendarUtility_JulianDayNoTimeToJulianDateTime_14(t *testing.T) {
 		time.Date(
 			100,
 			3,
-			1,
+			2,
 			10,
 			0,
 			0,
