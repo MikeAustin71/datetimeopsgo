@@ -3,6 +3,7 @@ package datetime
 import (
 	"errors"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -44,10 +45,33 @@ func (calDTimeUtil *calendarDateTimeUtility) empty(
 	calDTime.nanoseconds = 0
 	calDTime.totSubSecNanoseconds = 0
 	calDTime.totTimeNanoseconds = 0
+	calDTime.dateTimeFmt = ""
 
 	return nil
 }
+// preProcessDateFormatStr - Provides a standardized method
+// for implementing a default date time format string.
+//
+func (calDTimeUtil *calendarDateTimeUtility) preProcessDateFormatStr(
+	dateTimeFmtStr string) string {
 
+	calDTimeUtil.lock.Lock()
+
+	defer calDTimeUtil.lock.Unlock()
+
+	dateTimeFmtStr = strings.TrimLeft(strings.TrimRight(dateTimeFmtStr, " "), " ")
+
+	if len(dateTimeFmtStr) == 0 {
+		lockDefaultDateTimeFormat.Lock()
+		dateTimeFmtStr = DEFAULTDATETIMEFORMAT
+		lockDefaultDateTimeFormat.Unlock()
+	}
+
+	return dateTimeFmtStr
+}
+
+// setCalDateTime - populates a CalendarDateTime instance.
+//
 func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	calDTime *CalendarDateTime,
 	year int64,
@@ -59,6 +83,7 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	nanoseconds int,
 	timeZoneLocation string,
 	calendar CalendarSpec,
+	dateTimeFmt    string,
 	ePrefix string) error {
 
 	calDTimeUtil.lock.Lock()
@@ -74,8 +99,6 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	if err != nil {
 		return err
 	}
-
-	calDTime.year = year
 
 	if month < 1 || month > 12 {
 		return &InputParameterError{
@@ -146,6 +169,23 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			err:                 nil,
 		}
 	}
+	calMech := calendarMechanics{}
+
+	var jDayNoDto JulianDayNoDto
+
+	jDayNoDto, err = calMech.julianCalendarDateJulianDayNo(
+		year,
+		month,
+		day,
+		hours,
+		minutes,
+		seconds,
+		nanoseconds,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
 
 	timeZone := TimeZoneDefinition{}
 
@@ -162,7 +202,8 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 		return err
 	}
 
-
+	calDTime.year = year
+	calDTime.dateTimeFmt = calDTimeUtil2.preProcessDateFormatStr(dateTimeFmt)
 	calDTime.month = month
 	calDTime.dateDays = day
 	calDTime.hours = hours
@@ -170,7 +211,7 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	calDTime.seconds = seconds
 	calDTime.timeZone = timeZone.CopyOut()
 	calDTime.calendar = calendar
-	calDTime.julianDayNumber = JulianDayNoDto{}
+	calDTime.julianDayNumber = jDayNoDto
 
 	return nil
 }

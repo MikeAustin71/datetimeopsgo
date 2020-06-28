@@ -22,10 +22,13 @@ type CalendarDateTime struct {
 	timeZone TimeZoneDefinition // Contains a detailed definition and descriptions of the Time
 	//                             Zone and Time Zone Location associated with this date time.
 	calendar CalendarSpec       // Designates calendar associated with this date/time
+	dateTimeFmt    string       // Date Time Format String. Empty string or default is
+	//                             "2006-01-02 15:04:05.000000000 -0700 MST"
 	lock          *sync.Mutex   // Used for coordinating thread safe operations.
 }
 
-func(calDTime CalendarDateTime) New(
+// NewInt - Creates and returns a
+func(calDTime CalendarDateTime) NewInt(
 	year,
 	month,
 	day,
@@ -34,7 +37,8 @@ func(calDTime CalendarDateTime) New(
 	seconds,
 	nanoseconds int,
 	timeZoneLocation string,
-	calendar CalendarSpec) (calDateTime CalendarDateTime, err error) {
+	calendar CalendarSpec,
+	dateTimeFmt string) (calDateTime CalendarDateTime, err error) {
 
 
 	if calDTime.lock == nil {
@@ -62,6 +66,7 @@ func(calDTime CalendarDateTime) New(
 		nanoseconds,
 		timeZoneLocation,
 		calendar,
+		dateTimeFmt,
 		ePrefix)
 
 	return calDateTime, err

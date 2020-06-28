@@ -644,6 +644,95 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 	return gregorianDateUtc, err
 }
 
+// julianCalendarDateJulianDayNo - Creates and returns a 'JulianDayNoDto'
+// type populated with the Julian Day Number/Time equivalent to the input
+// parameters for a Julian Calendar Date. The 'Dogget' algorithm discussed
+// below is valid for all dates greater than or equal to Julian Day Number
+// zero.
+//
+// Julian Day numbers start on day zero at noon. This means that Julian
+// Day Number Times are valid for all dates on or after noon on Monday,
+// January 1, 4713 BCE, in the proleptic Julian calendar or November 24,
+// 4714 BCE, in the proleptic Gregorian calendar. These Date limits are
+// expressed using the 'Common Era' epoch or format ('BCE' Before Common
+// Era or 'CE' Common Era).
+//
+// The algorithm used to convert Julian Calendar Dates to a Julian Day Number
+// time was taken from L. E. Doggett, Ch. 12, "Calendars", p. 606, in
+// Seidelmann 1992.
+//
+// Reference:
+//       https://en.wikipedia.org/wiki/Julian_day
+//
+//
+func (calMech *calendarMechanics) julianCalendarDateJulianDayNo(
+	year int64,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	nanoseconds int,
+	ePrefix string) ( julianDayNo JulianDayNoDto, err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.julianCalendarDateJulianDayNo() "
+
+	err = nil
+	julianDayNo = JulianDayNoDto{}
+
+	var jDN, month, day int64
+
+	month = int64(months)
+	day = int64(days)
+	// JDN = 367 × Y − (7 × (Y + 5001 + (M − 9)/7))/4 + (275 × M)/9 + D + 1729777
+
+	jDN = 367 * year -
+		( int64(7) * (year + int64(5001) +
+			(month - int64(9))/int64(7)))/int64(4) +
+		(int64(275) * month)/int64(9) + day + int64(1729777)
+
+	if hours < 12 {
+		jDN--
+	}
+
+	totalTime := big.NewInt(int64(hours) * HourNanoSeconds)
+
+	totalTime = big.NewInt(0).Add(totalTime,
+		big.NewInt(int64(minutes) * MinuteNanoSeconds))
+
+	totalTime = big.NewInt(0).Add(totalTime,
+		big.NewInt(int64(seconds) * SecondNanoseconds))
+
+	totalTime = big.NewInt(0).Add(totalTime,
+		big.NewInt(int64(nanoseconds)))
+
+	requestedPrecision :=	uint(1024)
+
+	var totalTimeFrac *big.Float
+
+	totalTimeFrac =
+		big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(requestedPrecision).
+		SetInt(totalTime)
+
+var err2 error
+
+	julianDayNo, err2 = JulianDayNoDto{}.New(
+		jDN,
+		totalTimeFrac)
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix +
+			"%v", err2.Error())
+	}
+
+	return julianDayNo, err
+}
 
 // richardsJulianDayNoTimeToJulianCalendar - Converts a Julian Day Number and
 // Time value to the corresponding date time in the Julian Calendar.
@@ -716,9 +805,9 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 // 4714 BCE, in the proleptic Gregorian calendar. Remember that the Golang
 // 'time.Time' type uses Astronomical Year numbering with the Gregorian
 // Calendar. In other words, the 'time.Time' type recognizes the year
-// zero. Dates expressed in the 'Common Era' ('BCE' Before Common Era
-// or 'CE' Common Era). Therefore a 'time.Time' year of '-4713' is equal
-// to the year '4714 BCE'
+// zero. Dates are expressed in the 'Common Era' format ('BCE' Before
+// Common Era or 'CE' Common Era). Therefore a 'time.Time' year of '-4713'
+// is equal to the year '4714 BCE'
 //
 // This means that the 'Richards' algorithm employed by this method is valid
 // for all 'time.Time' (possibly proleptic) Julian dates on or after noon
@@ -891,42 +980,10 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 
 	} else {
 
-		// julianDayNoDto.netGregorianNanoSeconds > NoonNanoSeconds
-
 		julianDateUtc = julianDateUtc.Add(time.Duration(
 			julianDayNoDto.totalJulianNanoSeconds))
 
 	}
-
-
-
-	//if julianDayNoDto.netGregorianNanoSeconds > NoonNanoSeconds ||
-	//	{
-	//	julianDateUtc = julianDateUtc.Add(time.Duration(
-	//		julianDayNoDto.totalJulianNanoSeconds))
-	//
-	//} else if julianDayNoDto.netGregorianNanoSeconds < NoonNanoSeconds {
-	//
-	//	julianDateUtc = julianDateUtc.Add(time.Duration(
-	//		julianDayNoDto.totalJulianNanoSeconds))
-	//
-	//}
-
-	//timeDifferential := julianDayNoDto.totalJulianNanoSeconds.Int64() + (HourNanoSeconds * 12)
-	// timeDifferential := julianDayNoDto.totalJulianNanoSeconds
-//	if Y >= 0 {
-////		julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.netGregorianNanoSeconds))
-//		julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
-//	} else {
-//		julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
-//	}
-
-//	julianDateUtc = julianDateUtc.Add(time.Duration(julianDayNoDto.totalJulianNanoSeconds + NoonNanoSeconds))
-
-
-	//julianDateUtc = julianDateUtc.Add(time.Duration(
-	//	julianDayNoDto.netGregorianNanoSeconds - NoonNanoSeconds))
-
 
 	return julianDateUtc, err
 }
