@@ -861,6 +861,17 @@ func (durCalc TDurCalcType) String() string {
 // whether the current Time Duration Calculation
 // Type is valid.
 //
+// This is a standard utility method and is not part of the valid enumerations
+// for this type.
+//
+// ------------------------------------------------------------------------
+//
+// Usage
+//
+//  TimeDurationCalcType := TDurCalcType(0).StdYearMth()
+//
+//  isValid := TimeDurationCalcType.XIsValid()
+//
 func (durCalc TDurCalcType) XIsValid() bool {
 
 	lockTDurCalcType.Lock()

@@ -101,6 +101,18 @@ func TestTDurCalcType_06(t *testing.T) {
 	}
 }
 
+func TestTDurCalcTypeString_000(t *testing.T) {
+
+	r := TDurCalcType(0).None()
+
+	s := r.String()
+
+	if "None" != s {
+		t.Errorf("Expected TDurCalcType(0).None() string='%v'. Instead, string='%v' ",
+			"None", s)
+	}
+}
+
 func TestTDurCalcTypeString_001(t *testing.T) {
 
 	r := TDurCalcType(0).StdYearMth()
