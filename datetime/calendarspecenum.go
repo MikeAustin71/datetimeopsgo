@@ -19,7 +19,7 @@ var mCalendarSpecLwrCaseStringToCode = map[string]CalendarSpec{
 	"gregorian"      : CalendarSpec(1),
 	"julian"         : CalendarSpec(2),
 	"revisedjulian"  : CalendarSpec(3),
-	"goucherparker"  : CalendarSpec(3),
+	"goucherparker"  : CalendarSpec(4),
 }
 
 var mCalendarSpecCodeToString = map[CalendarSpec]string{
@@ -30,7 +30,86 @@ var mCalendarSpecCodeToString = map[CalendarSpec]string{
 	CalendarSpec(4)  : "GoucherParker",
 }
 
-
+// CalendarSpec - An enumeration of calendar designations or types.
+// CalendarSpec is used to designate the specific calendar applied
+// to a date time operation.
+//
+// Since Go does not directly support enumerations, the 'CalendarSpec'
+// has been adapted to function in a manner similar to classic enumerations.
+// 'CalendarSpec' is declared as a type 'int'. The method names are
+// effectively represent an enumeration of calendar specification types.
+// These methods are listed as follows:
+//
+//
+// None             (0) - None - Signals that the Calendar Specification
+//                        (CalendarSpec) Type is not initialized. This is
+//                        an error condition.
+//
+// Gregorian        (1) - Gregorian signals that the Gregorian Calendar is
+//                        specified and in effect.
+//
+//                        The Gregorian calendar is the calendar used for
+//                        civilian and commercial purposes throughout most
+//                        of the world. It is named after Pope Gregory XIII,
+//                        who introduced it Friday, 15 October 1582.
+//
+// Julian           (2) - Julian signals that the Julian Calendar is specified
+//                        and in effect.
+//
+//                        The Julian calendar, proposed by Julius Caesar in 708
+//                        Ab urbe condita (AUC) (46 BC), was a reform of the Roman
+//                        calendar. It took effect on 1 January 709 AUC (45 BC),
+//                        by edict. It was designed with the aid of Greek mathematicians
+//                        and Greek astronomers such as Sosigenes of Alexandria.
+//
+//                        The calendar was the predominant calendar in the Roman
+//                        world, most of Europe, and in European settlements in
+//                        the Americas and elsewhere, until it was gradually
+//                        replaced by the Gregorian calendar, promulgated in 1582
+//                        by Pope Gregory XIII. The Julian calendar is still used
+//                        in parts of the Eastern Orthodox Church and in parts of
+//                        Oriental Orthodoxy as well as by the Berbers.
+//
+// RevisedJulian    (3) - Signals that the Revised Julian Calendar is specified and
+//                        in effect.
+//
+//                        The Revised Julian calendar, also known as the Milanković
+//                        calendar, or, less formally, new calendar, is a calendar
+//                        proposed by the Serbian scientist Milutin Milanković in 1923,
+//                        which effectively discontinued the 340 years of divergence
+//                        between the naming of dates sanctioned by those Eastern
+//                        Orthodox churches adopting it and the Gregorian calendar
+//                        that has come to predominate worldwide. This calendar was
+//                        intended to replace the ecclesiastical calendar based on
+//                        the Julian calendar hitherto in use by all of the Eastern
+//                        Orthodox Church. From 1 March 1600 through 28 February 2800,
+//                        the Revised Julian calendar aligns its dates with the Gregorian
+//                        calendar, which was proclaimed in 1582 by Pope Gregory XIII
+//                        for adoption by the Christian world. The calendar has been
+//                        adopted by the Orthodox churches of Constantinople, Albania,
+//                        Alexandria, Antioch, Bulgaria, Cyprus, Greece, and Romania.
+//
+// GoucherParker    (4) - Signals that the GoucherParker Calendar developed by Adam P.
+//                        Goucher, Matt Parker, and modified by Mike Rapp, is specified
+//                        and in effect. This calendar type is used by the 'datetime'
+//                        package, or library, in order to implement standardized
+//                        calendar date time mathematics over a very large number of
+//                        years. In its current version, this calendar assumes a mean
+//                        solar year of 365.2421897 days and experiences a 1-day calendar
+//                        drift approximately every + or - 500-billion years.
+//
+//
+// For easy access to these enumeration values, use the global variable 'CalSpec'.
+// Example: CalSpec.Julian()
+//
+// Otherwise you will need to use the formal syntax.
+// Example: CalendarSpec(0).Julian()
+//
+// Depending on your editor, intellisense (a.k.a. intelligent code completion) may not
+// list the CalendarSpec methods in alphabetical order. Be advised that all 'CalendarSpec'
+// methods beginning with 'X', as well as the method 'String()', are utility methods and
+// not part of the enumeration values.
+//
 type CalendarSpec int
 
 var lockCalendarSpec sync.Mutex
@@ -52,11 +131,11 @@ func (calSpec CalendarSpec) None() CalendarSpec {
 // Gregorian - Signals that the Gregorian Calendar is specified and
 // in effect.
 //
-// The Gregorian calendar is the calendar used in most of the world.
-// It is named after Pope Gregory XIII, who introduced it Friday,
-// 15 October 1582.
+// The Gregorian calendar is the calendar used for civilian and commercial
+// purposes throughout most of the world. It is named after Pope Gregory XIII,
+// who introduced it on Friday, 15 October 1582.
 //
-//The calendar spaces leap years to make the average year 365.2425
+// The calendar spaces leap years to make the average year 365.2425
 // days long, approximating the 365.2422-day tropical year that is
 // determined by the Earth's revolution around the Sun. The rule
 // for leap years is:
@@ -85,9 +164,9 @@ func (calSpec CalendarSpec) Gregorian() CalendarSpec {
 // in effect.
 //
 // The Julian calendar, proposed by Julius Caesar in 708 Ab urbe condita
-// (AUC) (46 BC), was a reform of the Roman calendar.[1] It took effect
-// on 1 January 709 AUC (45 BC), by edict. It was designed with the aid
-// of Greek mathematicians and Greek astronomers such as Sosigenes of
+// (AUC) (46 BC), was a reform of the Roman calendar. It took effect on
+// 1 January 709 AUC (45 BC), by edict. It was designed with the aid of
+// Greek mathematicians and Greek astronomers such as Sosigenes of
 // Alexandria.
 //
 // The calendar was the predominant calendar in the Roman world, most of
@@ -155,11 +234,16 @@ func (calSpec CalendarSpec) RevisedJulian() CalendarSpec {
 
 	defer lockCalendarSpec.Unlock()
 
-	return CalendarSpec(2)
+	return CalendarSpec(3)
 }
 
 // GoucherParker - Signals that the GoucherParker Calendar developed by
-// Adam P. Goucher and Matt Parker is specified and in effect.
+// Adam P. Goucher, Matt Parker, and modified by Mike Rapp, is specified
+// and in effect. This calendar type is used by the 'datetimeops' library
+// to implement standardized calendar date time mathematics over a very
+// large number of years. In its current version, this calendar assumes
+// a mean solar year of 365.2421897 days and experiences a 1-day drift
+// every + or - 500-billion years.
 //
 // "While Matt Parker came up with this system on his own, he does
 // acknowledge that British mathematician Adam P. Goucher had suggested
@@ -180,14 +264,20 @@ func (calSpec CalendarSpec) RevisedJulian() CalendarSpec {
 //   https://www.theguardian.com/science/2011/feb/28/leap-year-alex-bellos
 //   https://www.youtube.com/watch?v=qkt_wmRKYNQ
 //
+// The Goucher Parker Calendar as used in the 'datetimeops' library has been
+// modified by Mike Rapp to provide an accurate calendar system for computing
+// date time mathematics over a very large number of years.
+//
 // Methodology
 //
-// Apply the Julian Calendar.
-// 1. If year is divisible by 4, it is a leap year; add on day to February
-// 2. If year is divisible by 128 it is NOT a leap year and no day is added to February.
-// 3. If year is divisible by 454,545, it is a leap year; add a day to February.
+// 1. Apply the Julian Calendar.
+// 2. If year is divisible by 4, it IS a leap year; add on day to February
+// 3. If year is divisible by 128 it is NOT a leap year and no day is added to February.
+// 4. If year is divisible by 454,545, it IS a leap year; add a day to February.
 //
-// This will lead to a calendar drive of 1-day every 500-billion years (500,000,000,000 years).
+// This will lead to a calendar drift of 1-day every 500-billion (500,000,000,000)
+// years. The current version of this calendar assumes a mean solar year of 365.2421897
+// days.
 //
 func (calSpec CalendarSpec) GoucherParker() CalendarSpec {
 
@@ -195,7 +285,7 @@ func (calSpec CalendarSpec) GoucherParker() CalendarSpec {
 
 	defer lockCalendarSpec.Unlock()
 
-	return CalendarSpec(3)
+	return CalendarSpec(4)
 }
 
 // String - Returns a string with the name of the enumeration associated

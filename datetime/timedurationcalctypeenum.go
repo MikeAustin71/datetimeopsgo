@@ -69,8 +69,8 @@ var mTDurCalcTypeCodeToString = map[TDurCalcType]string{
 //
 // Since Go does not directly support enumerations, the 'TDurCalcType' has
 // been adapted to function in a manner similar to classic enumerations.
-// 'TDurCalcType' is declared as an 'int'. The method names are effectively
-// an enumeration of calculation types. These methods are listed as follows:
+// 'TDurCalcType' is declared as a type 'int'. The method names are effectively
+// represent an enumeration of calculation types. These methods are listed as follows:
 //
 // None             (0) - None - Signals that Time Duration Calculation Type
 //                        is not initialized. This is an error condition.
@@ -125,7 +125,7 @@ var mTDurCalcTypeCodeToString = map[TDurCalcType]string{
 //
 // Depending on your editor, intellisense (a.k.a. intelligent code completion) may not
 // list the TDurCalcType methods in alphabetical order. Be advised that all 'TDurCalcType'
-// methods beginning with 'X' as well as the method 'String()' are utility methods and
+// methods beginning with 'X', as well as the method 'String()', are utility methods and
 // not part of the enumeration values.
 //
 type TDurCalcType int
