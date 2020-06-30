@@ -35,10 +35,10 @@ var mCalendarSpecCodeToString = map[CalendarSpec]string{
 // to a date time operation.
 //
 // Since Go does not directly support enumerations, the 'CalendarSpec'
-// has been adapted to function in a manner similar to classic enumerations.
-// 'CalendarSpec' is declared as a type 'int'. The method names are
-// effectively represent an enumeration of calendar specification types.
-// These methods are listed as follows:
+// type has been adapted to function in a manner similar to classic
+// enumerations. 'CalendarSpec' is declared as a type 'int'. The method
+// names are effectively represent an enumeration of calendar specification
+// types. These methods are listed as follows:
 //
 //
 // None             (0) - None - Signals that the Calendar Specification
@@ -317,7 +317,6 @@ func (calSpec CalendarSpec) String() string {
 	return result
 }
 
-
 // XIsValid - Returns a boolean value signaling
 // whether the current Calendar Specification
 // value is valid.
@@ -474,7 +473,6 @@ func (calSpec CalendarSpec) XValueInt() int {
 
 	return int(calSpec)
 }
-
 
 // CalSpec - public global variable of
 // type CalendarSpec.
