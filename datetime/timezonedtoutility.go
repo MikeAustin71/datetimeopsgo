@@ -2004,9 +2004,11 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTz(
 		}
 	}
 
-	dTzUtil := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+	dateTimeFormat = dtMech.PreProcessDateFormatStr(dateTimeFormat)
+
+	dTzUtil := dateTzDtoUtility{}
 
 	tzDtoOut := DateTzDto{}
 
@@ -2091,13 +2093,15 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzDef(
 		}
 	}
 
-	dTzUtil := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+	dateTimeFormat = dtMech.PreProcessDateFormatStr(dateTimeFormat)
 
 	dTz := DateTzDto{}
 
 	dTz.lock = new(sync.Mutex)
+
+	dTzUtil := dateTzDtoUtility{}
 
 	err = dTzUtil.setFromTzDef(
 		&dTz,
@@ -2165,13 +2169,16 @@ func (tZoneUtil *timeZoneDtoUtility) setTimeOutTzSpec(
 			"Error='%v'\n", err.Error())
 	}
 
-	dTzUtil := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+	dateTimeFormat =
+		dtMech.PreProcessDateFormatStr(dateTimeFormat)
 
 	tzDtoOut := DateTzDto{}
 
 	tzDtoOut.lock = new(sync.Mutex)
+
+	dTzUtil := dateTzDtoUtility{}
 
 	err = dTzUtil.setFromTzSpec(
 		&tzDtoOut,
@@ -2229,12 +2236,14 @@ func (tZoneUtil *timeZoneDtoUtility) setUTCTime(
 		}
 	}
 
-	// tzDto.TimeUTC, err = DateTzDto{}.NewStartEndTimes(dateTime.UTC(), tzDto.DateTimeFmt)
-	dTzUtil := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+	dateTimeFormat =
+		dtMech.PreProcessDateFormatStr(dateTimeFormat)
 
 	tzDtoUtc := DateTzDto{}
+
+	dTzUtil := dateTzDtoUtility{}
 
 	err := dTzUtil.setFromTimeTzName(
 						&tzDtoUtc,
@@ -2297,11 +2306,14 @@ func (tZoneUtil *timeZoneDtoUtility) setLocalTime(
 		}
 	}
 
-	dTzUtil := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFormat = dTzUtil.preProcessDateFormatStr(dateTimeFormat)
+	dateTimeFormat =
+		dtMech.PreProcessDateFormatStr(dateTimeFormat)
 
 	tzDtoLocal := DateTzDto{}
+
+	dTzUtil := dateTzDtoUtility{}
 
 	err := dTzUtil.setFromTimeTzName(
 		&tzDtoLocal,

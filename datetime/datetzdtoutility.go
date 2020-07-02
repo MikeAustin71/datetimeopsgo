@@ -3,7 +3,6 @@ package datetime
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"sync"
 	"time"
 )
@@ -1103,26 +1102,6 @@ func (dTzUtil *dateTzDtoUtility) isValidDateTzDto(
 	return nil
 }
 
-// preProcessDateFormatStr - Provides a standardized method
-// for implementing a default date time format string.
-//
-func (dTzUtil *dateTzDtoUtility) preProcessDateFormatStr(
-	dateTimeFmtStr string) string {
-
-	dTzUtil.lock.Lock()
-	defer dTzUtil.lock.Unlock()
-
-	dateTimeFmtStr = strings.TrimLeft(strings.TrimRight(dateTimeFmtStr, " "), " ")
-
-	if len(dateTimeFmtStr) == 0 {
-		lockDefaultDateTimeFormat.Lock()
-		dateTimeFmtStr = DEFAULTDATETIMEFORMAT
-		lockDefaultDateTimeFormat.Unlock()
-	}
-
-	return dateTimeFmtStr
-}
-
 // setDateTimeFormat - Sets the Date Time Format
 // string in the 'dtz' object.
 //
@@ -1180,10 +1159,10 @@ func (dTzUtil *dateTzDtoUtility) setDateTimeFormat(
 		dtz.lock = new(sync.Mutex)
 	}
 
-	dTzUtil2 := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
 	dtz.dateTimeFmt =
-		dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+		dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 }
 
 
@@ -1264,9 +1243,10 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 		dTz.lock = new(sync.Mutex)
 	}
 
-	dTzUtil2 := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+	dateTimeFmtStr =
+		dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	tDto := TimeDto{}
 
@@ -1287,6 +1267,8 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTime(
 	if err != nil {
 		return err
 	}
+
+	dTzUtil2 := dateTzDtoUtility{}
 
 	dTzUtil2.empty(dTz)
 
@@ -1444,9 +1426,10 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 			"Error='%v'", err.Error())
 	}
 
-	dTzUtil2 := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	fmtStr := dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+	fmtStr :=
+		dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	dtUtil := TimeZoneMechanics{}
 
@@ -1458,8 +1441,6 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 			"resolved to an empty string!\n" +
 			"timeZoneLocationName='%v'\n", timeZoneLocationName)
 	}
-
-	dtMech := DTimeMechanics{}
 
 	_, err = dtMech.LoadTzLocation(timeZoneLocationName, ePrefix)
 
@@ -1492,6 +1473,8 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeComponents(
 	if err != nil {
 		return err
 	}
+
+	dTzUtil2 := dateTzDtoUtility{}
 
 	dTzUtil2.empty(dTz)
 
@@ -1655,9 +1638,10 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 			"Error='%v'\n", err.Error())
 	}
 
-	dTzUtil2 := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+	dateTimeFmtStr =
+		dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	tzMech := TimeZoneMechanics{}
 
@@ -1667,8 +1651,6 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 		return errors.New(ePrefix +
 			"\nError: Input Parameter 'timeZoneLocationName' is an empty string!\n")
 	}
-
-	dtMech := DTimeMechanics{}
 
 	_, err = dtMech.LoadTzLocation(timeZoneLocationName, ePrefix)
 
@@ -1707,6 +1689,8 @@ func (dTzUtil *dateTzDtoUtility) setFromDateTimeElements(
 	if err != nil {
 		return err
 	}
+
+	dTzUtil2 := dateTzDtoUtility{}
 
 	dTzUtil2.empty(dTz)
 
@@ -2082,9 +2066,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTzDef(
 		}
 	}
 
-	dTzUtil2 := dateTzDtoUtility{}
+	dtMech := DTimeMechanics{}
 
-	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
+	dateTimeFmtStr =
+		dtMech.PreProcessDateFormatStr(dateTimeFmtStr)
 
 	tzDefUtil :=timeZoneDefUtility{}
 
@@ -2456,16 +2441,12 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 	}
 
 	dtMech := DTimeMechanics{}
-	
+
 	_, err = dtMech.LoadTzLocation(timeZoneLocation, ePrefix)
 
 	if err != nil {
 		return err
 	}
-
-	dTzUtil2 := dateTzDtoUtility{}
-
-	dateTimeFmtStr = dTzUtil2.preProcessDateFormatStr(dateTimeFmtStr)
 
 	var dateTime time.Time
 
@@ -2488,7 +2469,10 @@ func (dTzUtil *dateTzDtoUtility) setFromTimeDto(
 		return err
 	}
 
+	dTzUtil2 := dateTzDtoUtility{}
+
 	dTzUtil2.empty(dTz)
+
 	dTz.dateTimeValue = dateTime
 	dTz.timeZone = timeZoneDef.CopyOut()
 	dTz.timeComponents = tDto2.CopyOut()

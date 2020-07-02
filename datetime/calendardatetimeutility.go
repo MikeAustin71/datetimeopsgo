@@ -2,8 +2,8 @@ package datetime
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 )
@@ -45,29 +45,11 @@ func (calDTimeUtil *calendarDateTimeUtility) empty(
 	calDTime.nanoseconds = 0
 	calDTime.totSubSecNanoseconds = 0
 	calDTime.totTimeNanoseconds = 0
+	calDTime.calendar = CalendarSpec(0).None()
+	calDTime.yearNumberingMode = CalendarYearNumMode(0).None()
 	calDTime.dateTimeFmt = ""
 
 	return nil
-}
-// preProcessDateFormatStr - Provides a standardized method
-// for implementing a default date time format string.
-//
-func (calDTimeUtil *calendarDateTimeUtility) preProcessDateFormatStr(
-	dateTimeFmtStr string) string {
-
-	calDTimeUtil.lock.Lock()
-
-	defer calDTimeUtil.lock.Unlock()
-
-	dateTimeFmtStr = strings.TrimLeft(strings.TrimRight(dateTimeFmtStr, " "), " ")
-
-	if len(dateTimeFmtStr) == 0 {
-		lockDefaultDateTimeFormat.Lock()
-		dateTimeFmtStr = DEFAULTDATETIMEFORMAT
-		lockDefaultDateTimeFormat.Unlock()
-	}
-
-	return dateTimeFmtStr
 }
 
 // setCalDateTime - populates a CalendarDateTime instance.
@@ -83,6 +65,7 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	nanoseconds int,
 	timeZoneLocation string,
 	calendar CalendarSpec,
+	yearNumberMode CalendarYearNumMode,
 	dateTimeFmt    string,
 	ePrefix string) error {
 
@@ -169,19 +152,60 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			err:                 nil,
 		}
 	}
+
+	if !yearNumberMode.XIsValid()  {
+		return &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "yearNumberMode",
+			inputParameterValue: yearNumberMode.String() ,
+			errMsg:              "'yearNumberMode' is INVALID!",
+			err:                 nil,
+		}
+	}
+
 	calMech := calendarMechanics{}
 
 	var jDayNoDto JulianDayNoDto
 
-	jDayNoDto, err = calMech.julianCalendarDateJulianDayNo(
-		year,
-		month,
-		day,
-		hours,
-		minutes,
-		seconds,
-		nanoseconds,
-		ePrefix)
+	if calendar == CalendarSpec(0).Julian() {
+
+		jDayNoDto, err = calMech.julianCalendarDateJulianDayNo(
+			year,
+			month,
+			day,
+			hours,
+			minutes,
+			seconds,
+			nanoseconds,
+			ePrefix)
+
+	} else if calendar == CalendarSpec(0).Gregorian() {
+
+		gregorianDateTime := time.Date(
+			int(year),
+			time.Month(month),
+			day,
+			hours,
+			minutes,
+			seconds,
+			nanoseconds,
+			time.UTC)
+
+		_,
+		jDayNoDto,
+		err = calMech.gregorianDateToJulianDayNoTime(
+			gregorianDateTime,
+			ePrefix)
+
+	} else {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: Invalid Calendar Specification.\n" +
+			"Calendar Specification='%v'\n",
+			calendar.String())
+
+		return err
+	}
+
 
 	if err != nil {
 		return err
@@ -202,8 +226,11 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 		return err
 	}
 
+	dtMech := DTimeMechanics{}
+
 	calDTime.year = year
-	calDTime.dateTimeFmt = calDTimeUtil2.preProcessDateFormatStr(dateTimeFmt)
+	calDTime.dateTimeFmt =
+		dtMech.PreProcessDateFormatStr(dateTimeFmt)
 	calDTime.month = month
 	calDTime.dateDays = day
 	calDTime.hours = hours
