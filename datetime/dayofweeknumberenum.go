@@ -2,7 +2,6 @@ package datetime
 
 import (
 	"fmt"
-	"strings"
 	"sync"
 )
 
@@ -15,9 +14,6 @@ var mUsDayOfWeekNoStringToCode = map[string]UsDayOfWeekNo{
 	"Thursday"        : UsDayOfWeekNo(4),
 	"Friday"          : UsDayOfWeekNo(5),
 	"Saturday"        : UsDayOfWeekNo(6),
-}
-
-var mUsDayOfWeekNoLwrCaseStringToCode = map[string]UsDayOfWeekNo{
 	"none"            : UsDayOfWeekNo(-1),
 	"sunday"          : UsDayOfWeekNo(0),
 	"monday"          : UsDayOfWeekNo(1),
@@ -26,6 +22,22 @@ var mUsDayOfWeekNoLwrCaseStringToCode = map[string]UsDayOfWeekNo{
 	"thursday"        : UsDayOfWeekNo(4),
 	"friday"          : UsDayOfWeekNo(5),
 	"saturday"        : UsDayOfWeekNo(6),
+	"Sun"             : UsDayOfWeekNo(0),
+	"Mon"            : UsDayOfWeekNo(1),
+	"Tue"            : UsDayOfWeekNo(2),
+	"Wed"            : UsDayOfWeekNo(3),
+	"Thu"            : UsDayOfWeekNo(4),
+	"Thurs"          : UsDayOfWeekNo(4),
+	"Fri"            : UsDayOfWeekNo(5),
+	"Sat"            : UsDayOfWeekNo(6) ,
+	"sun"             : UsDayOfWeekNo(0),
+	"mon"            : UsDayOfWeekNo(1),
+	"tue"            : UsDayOfWeekNo(2),
+	"wed"            : UsDayOfWeekNo(3),
+	"thu"            : UsDayOfWeekNo(4),
+	"thurs"          : UsDayOfWeekNo(4),
+	"fri"            : UsDayOfWeekNo(5),
+	"sat"            : UsDayOfWeekNo(6) ,
 }
 
 var mUsDayOfWeekNoCodeToString = map[UsDayOfWeekNo]string{
@@ -46,6 +58,7 @@ var mUsDayOfWeekNoCodeToAbbrvDay = map[UsDayOfWeekNo]string{
 	UsDayOfWeekNo(3)   : "Wed",
 	UsDayOfWeekNo(4)   : "Thu",
 	UsDayOfWeekNo(5)   : "Fri",
+	UsDayOfWeekNo(6)   : "Sat",
 }
 
 
@@ -327,6 +340,47 @@ func (usDayOfWk UsDayOfWeekNo) AbbrvDay() string {
 	return result
 }
 
+// XISODayNumber - Returns the ISO Day Of Week Number as
+// an integer value.
+//
+// ISO 8601 specifies that the first day of the week is
+// 'Monday' and is numbered as weekday number 1. 'Sunday'
+// is the last day of the week and has a number value of 7.
+//
+// Reference:
+//   https://en.wikipedia.org/wiki/Julian_day
+//
+func (usDayOfWk UsDayOfWeekNo) XISODayNumber() (int, error) {
+
+	lockUsDayOfWeekNo.Lock()
+
+	defer lockUsDayOfWeekNo.Unlock()
+
+	ePrefix := "UsDayOfWeekNo.XISODayNumber() "
+
+	dayNum := int(usDayOfWk)
+
+	if dayNum > 6 {
+		return -1,
+			fmt.Errorf(ePrefix + "\n" +
+				"Error: The U.S. Day Of The Week Number is Greater Than '6' and therefore, INVALID!\n" +
+				"U.S. Day Of The Week Number='%v'\n", dayNum)
+	}
+
+	if dayNum < 0 {
+		return -1,
+			fmt.Errorf(ePrefix + "\n" +
+				"Error: The U.S. Day Of The Week Number is Less Than 'zero' and therefore, INVALID!\n" +
+				"U.S. Day Of The Week Number='%v'\n", dayNum)
+	}
+
+	if dayNum == 0 {
+		dayNum = 7
+	}
+
+	return dayNum, nil
+}
+
 // XIsValid - Returns a boolean value signaling
 // whether the current U.S. Day of Week Number
 // value is valid.
@@ -370,18 +424,13 @@ func (usDayOfWk UsDayOfWeekNo) XIsValid() bool {
 //
 // valueString   string - A string which will be matched against the
 //                        enumeration string values. If 'valueString'
-//                        is equal to one of the enumeration names, this
-//                        method will proceed to successful completion
-//                        and return the correct enumeration value.
-//
-// caseSensitive   bool - If 'true' the search for enumeration names
-//                        will be case sensitive and will require an
-//                        exact match. Therefore, 'monday' will NOT
-//                        match the enumeration name, 'Monday'.
-//
-//                        If 'false' a case insensitive search is conducted
-//                        for the enumeration name. In this case, 'monday'
-//                        will match match enumeration name 'Monday'.
+//                        is equal to a day of the week name or abbreviated
+//                        name, this method will proceed to successful
+//                        completion and return the correct enumeration
+//                        value. The 'valueString' processing is case
+//                        neutral meaning that both upper case and lower
+//                        case 'valueString' values will be successfully
+//                        processed.
 //
 // ------------------------------------------------------------------------
 //
@@ -399,15 +448,19 @@ func (usDayOfWk UsDayOfWeekNo) XIsValid() bool {
 //
 // ------------------------------------------------------------------------
 //
-// Usage
+// Example Usage:
 //
-// t, err := UsDayOfWeekNo(0).XParseString("Tuesday", true)
+// All of these examples will be successfully processed.
 //
-//     t is now equal to UsDayOfWeekNo(0).Tuesday()
+// t, err := UsDayOfWeekNo(0).XParseString("Tuesday")
+// t, err := UsDayOfWeekNo(0).XParseString("Tue")
+// t, err := UsDayOfWeekNo(0).XParseString("tuesday")
+// t, err := UsDayOfWeekNo(0).XParseString("tue")
+//
+// In all of the above cases t is now equal to UsDayOfWeekNo(0).Tuesday()
 //
 func (usDayOfWk UsDayOfWeekNo) XParseString(
-	valueString string,
-	caseSensitive bool) (UsDayOfWeekNo, error) {
+	valueString string) (UsDayOfWeekNo, error) {
 
 	lockCalendarSpec.Lock()
 
@@ -415,38 +468,13 @@ func (usDayOfWk UsDayOfWeekNo) XParseString(
 
 	ePrefix := "UsDayOfWeekNo.XParseString() "
 
-	if len(valueString) < 4 {
-		return UsDayOfWeekNo(0),
+	usDayOfWeek, ok := mUsDayOfWeekNoStringToCode[valueString]
+
+	if !ok {
+		return UsDayOfWeekNo(-1),
 			fmt.Errorf(ePrefix+
-				"\nInput parameter 'valueString' is INVALID!\n" +
-				"String length is less than '4'.\n" +
+				"\n'valueString' did NOT MATCH a valid CalendarSpec Value.\n" +
 				"valueString='%v'\n", valueString)
-	}
-
-	var ok bool
-	var usDayOfWeek UsDayOfWeekNo
-
-	if caseSensitive {
-
-		usDayOfWeek, ok = mUsDayOfWeekNoStringToCode[valueString]
-
-		if !ok {
-			return UsDayOfWeekNo(0),
-				fmt.Errorf(ePrefix+
-					"\n'valueString' did NOT MATCH a valid CalendarSpec Value.\n" +
-					"valueString='%v'\n", valueString)
-		}
-
-	} else {
-
-		usDayOfWeek, ok = mUsDayOfWeekNoLwrCaseStringToCode[strings.ToLower(valueString)]
-
-		if !ok {
-			return UsDayOfWeekNo(0),
-				fmt.Errorf(ePrefix+
-					"\n'valueString' did NOT MATCH a valid CalendarSpec Value.\n" +
-					"valueString='%v'\n", valueString)
-		}
 	}
 
 	return usDayOfWeek, nil
