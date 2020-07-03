@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -51,6 +52,198 @@ func (calDTimeUtil *calendarDateTimeUtility) empty(
 
 	return nil
 }
+
+
+// generateDateTimeStr - Converts input years, months, days, hours,
+// minutes, seconds and nanoseconds to a formatted date time string
+// the golang format string passed in input parameter 'dateFormatStr'.
+//
+func (calDTimeUtil *calendarDateTimeUtility) generateDateTimeStr(
+	year int64,
+	month,
+	days,
+	usDayOfWeekNumber,
+	hours,
+	minutes,
+	seconds,
+	nanoseconds int,
+	dateFormatStr,
+	ePrefix string) (string, error) {
+
+	calDTimeUtil.lock.Lock()
+
+	defer calDTimeUtil.lock.Unlock()
+
+	ePrefix += "calendarDateTimeUtility.generateDateTimeStr() "
+
+	var err error
+
+	/*	replacementTokens := map[string]string{
+			"!YearFourDigit!":"",
+			"!YearTwoDigit!":"",
+			"!YearOneDigit!":"",
+			"!DayOfWeek!":"",
+			"!DayOfWeekAbbrv!":"",
+			"!MonthName!":"",
+			"!MonthNameAbbrv!":"",
+			"!MonthNumberTwoDigit!":"",
+			"!MonthNumberOneDigit!":"",
+			"!DateDayTwoDigit!":"",
+			"!DateDayLeadUnderScore!":"",
+			"!DateDayOneDigit!":"",
+			"!HourTwentyFourTwoDigit!":"",
+			"!HourTwelveTwoDigit!":"",
+			"!HourTwelveOneDigit!":"",
+			"!AMPMUpperCase!",
+			"!AMPMLowerCase!",
+			"!MinutesTwoDigit!":"",
+			"!MinutesOneDigit!":"",
+			"!SecondsTwoDigit!":"",
+			"!SecondsOneDigit!":"",
+			"!NanosecondsTrailingZeros!":"",
+			"!NanosecondsNoTrailingZeros!":"",
+			"!MillisecondsTrailingZeros!":"",
+			"!MillisecondsNoTrailingZeros!":"",
+			"!MicrosecondsTrailingZeros!":"",
+			"!MicrosecondsNoTrailingZeros!":"",
+			"!OffsetUTC!":"",
+			"!TimeZone!":"",
+		}
+	*/
+
+	replacementTokens := map[string]string{}
+
+	dtMech := DTimeMechanics{}
+
+	resultStr := dtMech.PreProcessDateFormatStr(dateFormatStr)
+
+	calDtMech := calendarDateTimeMechanics{}
+
+	resultStr, err = calDtMech.processDayOfWeek(
+		resultStr,
+		usDayOfWeekNumber,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr = calDtMech.processYears(
+		resultStr,
+		year,
+		replacementTokens)
+
+	resultStr, err = calDtMech.processMonths(
+		resultStr,
+		month,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processDateDay(
+		resultStr,
+		days,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processHours(
+		resultStr,
+		hours,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processMinutes(
+		resultStr,
+		minutes,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processSeconds(
+		resultStr,
+		seconds,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processNanoseconds(
+		resultStr,
+		nanoseconds,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processMicroseconds(
+		resultStr,
+		nanoseconds,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processMilliseconds(
+		resultStr,
+		nanoseconds,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr, err = calDtMech.processAmPm(
+		resultStr,
+		hours,
+		replacementTokens,
+		ePrefix)
+
+	if err != nil {
+		return resultStr, err
+	}
+
+	resultStr = calDtMech.processOffset(
+		resultStr,
+		-999,
+		-999,
+		replacementTokens)
+
+	resultStr = calDtMech.processTimeZone(
+		resultStr,
+		"UTC",
+		replacementTokens)
+
+	for key, value := range replacementTokens {
+
+		resultStr = strings.Replace(resultStr,key,value,1)
+
+	}
+
+	return resultStr, err
+}
+
 
 // setCalDateTime - populates a CalendarDateTime instance.
 //
