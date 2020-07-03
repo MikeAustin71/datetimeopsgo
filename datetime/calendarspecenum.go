@@ -37,7 +37,7 @@ var mCalendarSpecCodeToString = map[CalendarSpec]string{
 // Since Go does not directly support enumerations, the 'CalendarSpec'
 // type has been adapted to function in a manner similar to classic
 // enumerations. 'CalendarSpec' is declared as a type 'int'. The method
-// names are effectively represent an enumeration of calendar specification
+// names effectively represent an enumeration of calendar specification
 // types. These methods are listed as follows:
 //
 //
