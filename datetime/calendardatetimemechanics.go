@@ -60,6 +60,8 @@ func (calDtMech *calendarDateTimeMechanics) isMonthDayNoValid(
 	if dayNo > stdDays {
 		return false
 	}
+
+	return true
 }
 
 // processAmPm - processes and returns correct AM/PM format
