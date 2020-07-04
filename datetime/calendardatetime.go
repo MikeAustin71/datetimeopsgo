@@ -17,14 +17,15 @@ type CalendarDateTime struct {
 	nanoseconds          int   // Remaining Nanoseconds after Milliseconds & Microseconds
 	totSubSecNanoseconds int   // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
 	//  plus remaining Nanoseconds
-	totTimeNanoseconds int64 // Total Number of equivalent Nanoseconds for Hours + Minutes
+	totTimeNanoseconds int64   // Total Number of equivalent Nanoseconds for Hours + Minutes
 	//                              + Seconds + Milliseconds + Nanoseconds
-	julianDayNumber JulianDayNoDto     // Encapsulates Julian Day Number/Time
-	timeZone        TimeZoneDefinition // Contains a detailed definition and descriptions of the Time
+	julianDayNumber JulianDayNoDto      // Encapsulates Julian Day Number/Time
+	usDayOfWeekNo   UsDayOfWeekNo       // U.S. Day of Week Number 0=Sunday beginning of week.
+	timeZone        TimeZoneDefinition  // Contains a detailed definition and descriptions of the Time
 	//                                        Zone and Time Zone Location associated with this date time.
-	calendar          CalendarSpec        // Designates the calendar associated with this date/time.
-	yearNumberingMode CalendarYearNumMode // Designates the year numbering system associated
-	//                                         with this date/time.
+	calendar          CalendarSpec         // Designates the calendar associated with this date/time.
+	yearNumberingMode CalendarYearNumMode  // Designates the year numbering system associated
+	//                                          with this date/time.
 	dateTimeFmt string // Date Time Format String. Empty string or default is
 	//                     "2006-01-02 15:04:05.000000000 -0700 MST"
 	lock *sync.Mutex // Used for coordinating thread safe operations.
@@ -32,6 +33,40 @@ type CalendarDateTime struct {
 
 // NewGregorianDate - Creates a new instance of 'CalendarDateTime' formatted
 // for a Gregorian Date Time.
+//
+// Taken collectively, the 'input' parameters years, months, days, hours,
+// minutes, seconds and nanoseconds represents a Gregorian date/time using
+// the time zone specified by input parameter 'timeZoneLocation'. Gregorian
+// dates which precede November 24, 4714 BCE or 11/24/-4713 (using Astronomical
+// Year Numbering System) are invalid and will generate an error.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  years              int
+//    - The year number expressed as an int value. This 'years' value
+//      should be formatted using Astronomical Year Numbering; that is,
+//      a year numbering system which includes year zero. Year values which
+//      are less than -4713, using the using Astronomical Year Numbering System,
+//      are invalid and will generate an error.
+//
+//  months             int
+//    - The month number
+//
+//  days               int
+//    - The day number
+//
+//  hours              int
+//    - The hour number expressed on a 24-hour time scale.
+//      Example: 3:00PM is passed as the hour 15
+//
+//  minutes            int
+//    - The minutes number
+//
+//  seconds            int
+//    - The number of seconds
 //
 func (calDTime CalendarDateTime) NewGregorianDate(
 	year,

@@ -355,11 +355,26 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 		}
 	}
 
+	timeZone := TimeZoneDefinition{}
+
+	tzDefUtil := timeZoneDefUtility{}
+
+	baseDateTime := time.Now().UTC()
+
+	err = tzDefUtil.setFromTimeZoneName(
+		&timeZone,
+		baseDateTime,
+		TimeZoneConversionType(0).Relative(),
+		timeZoneLocation,
+		ePrefix)
+
+	if err != nil {
+		return err
+	}
+
 	calMech := calendarMechanics{}
 
 	var jDayNoDto JulianDayNoDto
-
-	baseDateTime := time.Now().UTC()
 
 	if calendar == CalendarSpec(0).Julian() {
 
@@ -375,7 +390,7 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	} else if calendar == CalendarSpec(0).Gregorian() {
 
-		baseDateTime = time.Date(
+		gregorianDateTime := time.Date(
 			int(year),
 			time.Month(month),
 			day,
@@ -383,17 +398,19 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			minutes,
 			seconds,
 			nanoseconds,
-			time.UTC)
+			timeZone.originalTimeZone.locationPtr)
+
+		gregorianDateTimeUtc := gregorianDateTime.UTC()
 
 		jDayNoDto,
 		err = calMech.gregorianDateToJulianDayNoTime(
-			year,
-			month,
-			day,
-			hours,
-			minutes,
-			seconds,
-			nanoseconds,
+			int64(gregorianDateTimeUtc.Year()),
+			int(gregorianDateTimeUtc.Month()),
+			gregorianDateTimeUtc.Day(),
+			gregorianDateTimeUtc.Hour(),
+			gregorianDateTimeUtc.Minute(),
+			gregorianDateTimeUtc.Second(),
+			gregorianDateTimeUtc.Nanosecond(),
 			ePrefix)
 
 	} else {
@@ -402,26 +419,6 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			"Calendar Specification='%v'\n",
 			calendar.String())
 
-		return err
-	}
-
-
-	if err != nil {
-		return err
-	}
-
-	timeZone := TimeZoneDefinition{}
-
-	tzDefUtil := timeZoneDefUtility{}
-
-	err = tzDefUtil.setFromTimeZoneName(
-		&timeZone,
-		baseDateTime,
-		TimeZoneConversionType(0).Relative(),
-		timeZoneLocation,
-		ePrefix)
-
-	if err != nil {
 		return err
 	}
 

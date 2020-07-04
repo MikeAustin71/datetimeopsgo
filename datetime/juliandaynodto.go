@@ -89,7 +89,7 @@ type JulianDayNoDto struct {
 	//                                  Always represents a positive value less than 36-hours
 	netGregorianNanoSeconds int64 // Gregorian nanoseconds. Always represents a value in
 	//                                  nanoseconds which is less than 24-hours.
-	hours       int
+	hours       int // Gregorian Hours
 	minutes     int
 	seconds     int
 	nanoseconds int

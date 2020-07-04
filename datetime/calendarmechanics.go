@@ -62,13 +62,147 @@ import (
 //
 // Astronomical Year Numbering
 //
+// Year numbering system which includes year zero. Under this system, the date
+// January 1st of year 1 is immediately preceded by the date December 31st, year
+// zero.
+//
 // Proleptic Gregorian
 //
+// Refers to an extrapolated Gregorian date. The Gregorian Calendar was implemented
+// on October 15, 1582. Gregorian dates prior to this implementation date are said
+// to be 'proleptic' Gregorian dates because they are projected dates dates prior
+// to the introduction of the Gregorian calendar.
 //
 type calendarMechanics struct {
 	input  string
 	output string
 	lock   sync.Mutex
+}
+
+// usDayOfWeekNumber - Receives a Julian Day Number and returns
+// the equivalent U.S. Day of the Week number. The U.S. Day
+// of the Week Number begins numbering week days with 'Sunday',
+// which is assigned day number '0' (zero).
+//
+// The algorithm used to calculate the U.S. Day of the Week number
+// is taken from:
+//   https://en.wikipedia.org/wiki/Julian_day
+//   Richards 2013, pp. 592, 618
+//   Richards, E. G. (2013). Calendars. In S. E. Urban & P. K.
+//   Seidelmann, eds. Explanatory Supplement to the Astronomical Almanac,
+//   3rd ed. (pp. 585–624). Mill Valley, Calif.: University Science Books.
+//   ISBN 978-1-89138-985-6
+//
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  julianDayNumber    JulianDayNoDto
+//    - The Julian Day Number (and time) which will be converted
+//      to a day of the week number.
+//
+//        type JulianDayNoDto struct {
+//          julianDayNo         *big.Int   // Julian Day Number expressed as integer value
+//          julianDayNoFraction *big.Float // The Fractional Time value of the Julian
+//                                             Day No Time
+//          julianDayNoTime *big.Float     // Julian Day Number Plus Time Fraction accurate to
+//                                             within nanoseconds
+//          julianDayNoNumericalSign int   // Sign of the Julian Day Number/Time value
+//          totalJulianNanoSeconds   int64 // Julian Day Number Time Value expressed in nanoseconds.
+//                                             Always represents a positive value less than 36-hours
+//          netGregorianNanoSeconds int64  // Gregorian nanoseconds. Always represents a value in
+//                                             nanoseconds which is less than 24-hours.
+//          hours       int                // Gregorian Hours
+//          minutes     int
+//          seconds     int
+//          nanoseconds int
+//          lock        *sync.Mutex
+//        }
+//
+//
+//  ePrefix            string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+// usDayOfWeekNo       UsDayOfWeekNo
+//    - If the method completes successfully this enumeration
+//      type is returned specifying the U. S. day of the week
+//      number associated with the input parameter, 'julianDayNumber'.
+//
+//
+//  err                error
+//     - If successful the returned error Type is set equal to 'nil'.
+//       If errors are encountered this error Type will encapsulate
+//       an error message.
+//
+//
+func (calMech *calendarMechanics) usDayOfWeekNumber(
+	julianDayNumber JulianDayNoDto,
+	ePrefix string) (usDayOfWeekNo UsDayOfWeekNo, err error) {
+
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.usDayOfWeekNumber() "
+
+	err = nil
+
+	usDayOfWeekNo = UsDayOfWeekNo(0).None()
+
+	jDN, err2 := julianDayNumber.GetJulianDayBigInt()
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Input parameter julianDayNumber is INVALID!\n" +
+			"Error='%v'\n", err2.Error())
+
+		return usDayOfWeekNo, err
+	}
+
+	// Richards Algorithm
+	//  W1 = mod(J + 1, 7)
+
+	bigOne := big.NewInt(1)
+
+	bigSeven := big.NewInt(7)
+
+	jDN = big.NewInt(0).Add(jDN, bigOne)
+
+	w1 := big.NewInt(0).Mod(jDN, bigSeven)
+
+	if ! w1.IsInt64() {
+		err = errors.New(ePrefix + "\n" +
+			"Error: Algorithm returned invalid result!\n" +
+			"'w1' cannot be represented by an int64.")
+
+		return usDayOfWeekNo, err
+	}
+
+	w1Int64 := w1.Int64()
+
+	if w1Int64 > 6 ||
+		w1Int64 < 0 {
+
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: w1Int64 result is out of bounds.\n" +
+			"Day of week number is invalid!\n" +
+			"Day Of Week='%v'\n", w1Int64)
+
+		return usDayOfWeekNo, err
+	}
+
+	usDayOfWeekNo = UsDayOfWeekNo(int(w1Int64))
+
+	return usDayOfWeekNo, err
 }
 
 // gregorianDateToJulianDayNoTime - Converts a Gregorian Date to a
@@ -93,11 +227,11 @@ type calendarMechanics struct {
 // However, the original algorithm has been modified to provide for time
 // fractions accurate to nanoseconds.
 //
-// The 'input' parameters years, months, days, hours, minutes, seconds
-// and nanoseconds represents a Gregorian date/time using the Universal
-// Coordinated Time Zone (UTC). Gregorian dates which precede November 24,
-// 4714 BCE or 11/24/-4713 (using Astronomical Year Numbering System) are
-// invalid and will generate an error.
+// Taken collectively, the 'input' parameters years, months, days, hours,
+// minutes, seconds and nanoseconds represents a Gregorian date/time using
+// the Universal Coordinated Time (UTC Time Zone). Gregorian dates which
+// precede November 24, 4714 BCE or 11/24/-4713 (using Astronomical Year
+// Numbering System) are invalid and will generate an error.
 //
 // ------------------------------------------------------------------------
 //
