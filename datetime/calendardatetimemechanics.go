@@ -10,6 +10,57 @@ type calendarDateTimeMechanics struct {
 	lock   sync.Mutex
 }
 
+// isMonthDayNoValid - Tests a month and day combination to
+// determine if they are valid. If month and day are valid,
+// this method returns true.
+//
+func (calDtMech *calendarDateTimeMechanics) isMonthDayNoValid(
+	monthNo int,
+	dayNo int,
+	isLeapYear bool) bool {
+
+	calDtMech.lock.Lock()
+
+	defer calDtMech.lock.Unlock()
+
+	if dayNo < 1 {
+		return false
+	}
+
+	// Month No : Standard Num Of Days In Month
+	standardMthDays := map[int]int {
+		 1 : 31,
+		 2 : 28,
+		 3 : 31,
+		 4 : 30,
+		 5 : 31,
+		 6 : 30,
+		 7 : 31,
+		 8 : 31,
+		 9 : 30,
+		10 : 31,
+		11 : 30,
+		12 : 31,
+	}
+
+	var ok bool
+	var stdDays int
+
+	stdDays, ok = standardMthDays[monthNo]
+
+	if !ok {
+		return false
+	}
+
+	if monthNo == 2 &&
+		isLeapYear {
+		stdDays++
+	}
+
+	if dayNo > stdDays {
+		return false
+	}
+}
 
 // processAmPm - processes and returns correct AM/PM format
 // for 12-Hour presentations.

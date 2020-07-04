@@ -79,132 +79,6 @@ type calendarMechanics struct {
 	lock   sync.Mutex
 }
 
-// usDayOfWeekNumber - Receives a Julian Day Number and returns
-// the equivalent U.S. Day of the Week number. The U.S. Day
-// of the Week Number begins numbering week days with 'Sunday',
-// which is assigned day number '0' (zero).
-//
-// The algorithm used to calculate the U.S. Day of the Week number
-// is taken from:
-//   https://en.wikipedia.org/wiki/Julian_day
-//   Richards 2013, pp. 592, 618
-//   Richards, E. G. (2013). Calendars. In S. E. Urban & P. K.
-//   Seidelmann, eds. Explanatory Supplement to the Astronomical Almanac,
-//   3rd ed. (pp. 585–624). Mill Valley, Calif.: University Science Books.
-//   ISBN 978-1-89138-985-6
-//
-//
-// ------------------------------------------------------------------------
-//
-// Input Parameters
-//
-//  julianDayNumber    JulianDayNoDto
-//    - The Julian Day Number (and time) which will be converted
-//      to a day of the week number.
-//
-//        type JulianDayNoDto struct {
-//          julianDayNo         *big.Int   // Julian Day Number expressed as integer value
-//          julianDayNoFraction *big.Float // The Fractional Time value of the Julian
-//                                             Day No Time
-//          julianDayNoTime *big.Float     // Julian Day Number Plus Time Fraction accurate to
-//                                             within nanoseconds
-//          julianDayNoNumericalSign int   // Sign of the Julian Day Number/Time value
-//          totalJulianNanoSeconds   int64 // Julian Day Number Time Value expressed in nanoseconds.
-//                                             Always represents a positive value less than 36-hours
-//          netGregorianNanoSeconds int64  // Gregorian nanoseconds. Always represents a value in
-//                                             nanoseconds which is less than 24-hours.
-//          hours       int                // Gregorian Hours
-//          minutes     int
-//          seconds     int
-//          nanoseconds int
-//          lock        *sync.Mutex
-//        }
-//
-//
-//  ePrefix            string
-//     - A string containing the names of the calling functions
-//       which invoked this method. The last character in this
-//       string should be a blank space.
-//
-//
-// ------------------------------------------------------------------------
-//
-// Return Values
-//
-// usDayOfWeekNo       UsDayOfWeekNo
-//    - If the method completes successfully this enumeration
-//      type is returned specifying the U. S. day of the week
-//      number associated with the input parameter, 'julianDayNumber'.
-//
-//
-//  err                error
-//     - If successful the returned error Type is set equal to 'nil'.
-//       If errors are encountered this error Type will encapsulate
-//       an error message.
-//
-//
-func (calMech *calendarMechanics) usDayOfWeekNumber(
-	julianDayNumber JulianDayNoDto,
-	ePrefix string) (usDayOfWeekNo UsDayOfWeekNo, err error) {
-
-
-	calMech.lock.Lock()
-
-	defer calMech.lock.Unlock()
-
-	ePrefix += "calendarMechanics.usDayOfWeekNumber() "
-
-	err = nil
-
-	usDayOfWeekNo = UsDayOfWeekNo(0).None()
-
-	jDN, err2 := julianDayNumber.GetJulianDayBigInt()
-
-	if err2 != nil {
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Input parameter julianDayNumber is INVALID!\n" +
-			"Error='%v'\n", err2.Error())
-
-		return usDayOfWeekNo, err
-	}
-
-	// Richards Algorithm
-	//  W1 = mod(J + 1, 7)
-
-	bigOne := big.NewInt(1)
-
-	bigSeven := big.NewInt(7)
-
-	jDN = big.NewInt(0).Add(jDN, bigOne)
-
-	w1 := big.NewInt(0).Mod(jDN, bigSeven)
-
-	if ! w1.IsInt64() {
-		err = errors.New(ePrefix + "\n" +
-			"Error: Algorithm returned invalid result!\n" +
-			"'w1' cannot be represented by an int64.")
-
-		return usDayOfWeekNo, err
-	}
-
-	w1Int64 := w1.Int64()
-
-	if w1Int64 > 6 ||
-		w1Int64 < 0 {
-
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Error: w1Int64 result is out of bounds.\n" +
-			"Day of week number is invalid!\n" +
-			"Day Of Week='%v'\n", w1Int64)
-
-		return usDayOfWeekNo, err
-	}
-
-	usDayOfWeekNo = UsDayOfWeekNo(int(w1Int64))
-
-	return usDayOfWeekNo, err
-}
-
 // gregorianDateToJulianDayNoTime - Converts a Gregorian Date to a
 // Julian Day Number and Time.
 //
@@ -312,9 +186,9 @@ func (calMech *calendarMechanics) usDayOfWeekNumber(
 //
 //
 //  err                 error
-//     - If successful the returned error Type is set equal to 'nil'.
-//       If errors are encountered this error Type will encapsulate
-//       an error message.
+//     - If this method is successful the returned error Type
+//       is set equal to 'nil'. If errors are encountered this
+//       error Type will encapsulate an appropriate error message.
 //
 //
 func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
@@ -683,9 +557,9 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 //
 //
 //  err                 error
-//     - If successful the returned error Type is set equal to 'nil'.
-//       If errors are encountered this error Type will encapsulate
-//       an error message.
+//     - If this method is successful the returned error Type
+//       is set equal to 'nil'. If errors are encountered this
+//       error Type will encapsulate an appropriate error message.
 //
 //
 // ------------------------------------------------------------------------
@@ -905,6 +779,119 @@ var err2 error
 	return julianDayNo, err
 }
 
+// ordinalDayNumber - Returns the ordinal day number for a
+// given month and day.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  monthNo             int
+//    - The number of a month numbered 1 through 12.
+//      Month number 1 is January and month number 12
+//      is December.
+//
+//
+//  dayNo               int
+//    - The number of the day with in the month designated
+//      by input parameter 'monthNo'.
+//
+//
+//  isLeapYear          bool
+//     - If set to 'true', this parameter signals that the
+//       month specified in input parameter 'monthNo' is contained
+//       within a leap year.
+//
+//
+//  ePrefix             string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//
+//  ordDayNo            int
+//     - If successful, this method returns an integer value
+//       identifying the ordinal day number associated with
+//       input parameters 'monthNo' and 'dayNo'
+//
+//
+//  err                 error
+//     - If this method is successful the returned error Type
+//       is set equal to 'nil'. If errors are encountered this
+//       error Type will encapsulate an appropriate error message.
+//
+func (calMech *calendarMechanics) ordinalDayNumber(
+	monthNo int,
+	dayNo int,
+	isLeapYear bool,
+	ePrefix string) (ordDayNo int, err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.ordinalDayNumber() "
+
+	err = nil
+
+	ordDays := map[int]int {
+		 1 : 0,
+		 2 : 31,
+		 3 : 59,
+		 4 : 90,
+		 5 : 120,
+		 6 : 151,
+		 7 : 181,
+		 8 : 212,
+		 9 : 243,
+		10 : 273,
+		11 : 304,
+		12 : 334,
+	}
+
+	var ok bool
+	ordDayNo = -1
+
+	calDtMech := calendarDateTimeMechanics{}
+
+	ok = calDtMech.isMonthDayNoValid(
+		monthNo,
+		dayNo,
+		isLeapYear)
+
+	if !ok {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: 'monthNo' and 'dayNo' combination is INVALID!\n" +
+			"monthNo='%v'  dayNo='%v'\n",
+			monthNo, dayNo)
+
+		return ordDayNo, err
+	}
+
+	ordDayNo, ok = ordDays[monthNo]
+
+	if !ok {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: Input parameter 'monthNo' is INVALID!\n" +
+			"monthNo='%v'\n", monthNo)
+
+		return ordDayNo, err
+	}
+
+	ordDayNo += dayNo
+
+	if isLeapYear && monthNo > 2 {
+		ordDayNo++
+	}
+
+	return ordDayNo, err
+}
+
 // richardsJulianDayNoTimeToJulianCalendar - Converts a Julian Day Number and
 // Time value to the corresponding date time in the Julian Calendar.
 //
@@ -1028,9 +1015,9 @@ var err2 error
 //
 //
 //  err                 error
-//     - If successful the returned error Type is set equal to 'nil'.
-//       If errors are encountered this error Type will encapsulate
-//       an error message.
+//     - If this method is successful the returned error Type
+//       is set equal to 'nil'. If errors are encountered this
+//       error Type will encapsulate an appropriate error message.
 //
 //
 // ------------------------------------------------------------------------
@@ -1157,4 +1144,130 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 	}
 
 	return julianDateUtc, err
+}
+
+// usDayOfWeekNumber - Receives a Julian Day Number and returns
+// the equivalent U.S. Day of the Week number. The U.S. Day
+// of the Week Number begins numbering week days with 'Sunday',
+// which is assigned day number '0' (zero).
+//
+// The algorithm used to calculate the U.S. Day of the Week number
+// is taken from:
+//   https://en.wikipedia.org/wiki/Julian_day
+//   Richards 2013, pp. 592, 618
+//   Richards, E. G. (2013). Calendars. In S. E. Urban & P. K.
+//   Seidelmann, eds. Explanatory Supplement to the Astronomical Almanac,
+//   3rd ed. (pp. 585–624). Mill Valley, Calif.: University Science Books.
+//   ISBN 978-1-89138-985-6
+//
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  julianDayNumber    JulianDayNoDto
+//    - The Julian Day Number (and time) which will be converted
+//      to a day of the week number.
+//
+//        type JulianDayNoDto struct {
+//          julianDayNo         *big.Int   // Julian Day Number expressed as integer value
+//          julianDayNoFraction *big.Float // The Fractional Time value of the Julian
+//                                             Day No Time
+//          julianDayNoTime *big.Float     // Julian Day Number Plus Time Fraction accurate to
+//                                             within nanoseconds
+//          julianDayNoNumericalSign int   // Sign of the Julian Day Number/Time value
+//          totalJulianNanoSeconds   int64 // Julian Day Number Time Value expressed in nanoseconds.
+//                                             Always represents a positive value less than 36-hours
+//          netGregorianNanoSeconds int64  // Gregorian nanoseconds. Always represents a value in
+//                                             nanoseconds which is less than 24-hours.
+//          hours       int                // Gregorian Hours
+//          minutes     int
+//          seconds     int
+//          nanoseconds int
+//          lock        *sync.Mutex
+//        }
+//
+//
+//  ePrefix            string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+// usDayOfWeekNo       UsDayOfWeekNo
+//    - If the method completes successfully this enumeration
+//      type is returned specifying the U. S. day of the week
+//      number associated with the input parameter, 'julianDayNumber'.
+//
+//
+//  err                 error
+//     - If this method is successful the returned error Type
+//       is set equal to 'nil'. If errors are encountered this
+//       error Type will encapsulate an appropriate error message.
+//
+//
+func (calMech *calendarMechanics) usDayOfWeekNumber(
+	julianDayNumber JulianDayNoDto,
+	ePrefix string) (usDayOfWeekNo UsDayOfWeekNo, err error) {
+
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.usDayOfWeekNumber() "
+
+	err = nil
+
+	usDayOfWeekNo = UsDayOfWeekNo(0).None()
+
+	jDN, err2 := julianDayNumber.GetJulianDayBigInt()
+
+	if err2 != nil {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Input parameter julianDayNumber is INVALID!\n" +
+			"Error='%v'\n", err2.Error())
+
+		return usDayOfWeekNo, err
+	}
+
+	// Richards Algorithm
+	//  W1 = mod(J + 1, 7)
+
+	bigOne := big.NewInt(1)
+
+	bigSeven := big.NewInt(7)
+
+	jDN = big.NewInt(0).Add(jDN, bigOne)
+
+	w1 := big.NewInt(0).Mod(jDN, bigSeven)
+
+	if ! w1.IsInt64() {
+		err = errors.New(ePrefix + "\n" +
+			"Error: Algorithm returned invalid result!\n" +
+			"'w1' cannot be represented by an int64.")
+
+		return usDayOfWeekNo, err
+	}
+
+	w1Int64 := w1.Int64()
+
+	if w1Int64 > 6 ||
+		w1Int64 < 0 {
+
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: w1Int64 result is out of bounds.\n" +
+			"Day of week number is invalid!\n" +
+			"Day Of Week='%v'\n", w1Int64)
+
+		return usDayOfWeekNo, err
+	}
+
+	usDayOfWeekNo = UsDayOfWeekNo(int(w1Int64))
+
+	return usDayOfWeekNo, err
 }
