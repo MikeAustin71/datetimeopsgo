@@ -34,6 +34,10 @@ type calendarDateTimeMechanics struct {
 func (calDtMech *calendarDateTimeMechanics) isGregorianLeapYear(
 	year int64) bool {
 
+	calDtMech.lock.Lock()
+
+	defer calDtMech.lock.Unlock()
+
 	var by4Remainder, by100Remainder int64
 
 	by100Remainder = year % 100
@@ -71,6 +75,10 @@ func (calDtMech *calendarDateTimeMechanics) isGregorianLeapYear(
 func (calDtMech *calendarDateTimeMechanics) isJulianLeapYear(
 	year int64) bool {
 
+	calDtMech.lock.Lock()
+
+	defer calDtMech.lock.Unlock()
+
 	remainder := year % 4
 
 	if remainder == 0 {
@@ -106,6 +114,10 @@ func (calDtMech *calendarDateTimeMechanics) isJulianLeapYear(
 func (calDtMech *calendarDateTimeMechanics) isRevisedJulianLeapYear(
 	year int64) bool {
 
+	calDtMech.lock.Lock()
+
+	defer calDtMech.lock.Unlock()
+
 	var by4Remainder, by100Remainder, by900Remainder int64
 
 	by100Remainder = year % 100
@@ -131,10 +143,77 @@ func (calDtMech *calendarDateTimeMechanics) isRevisedJulianLeapYear(
 	return false
 }
 
-func (calDtMech *calendarDateTimeMechanics) isGoucherParkerLeapYear(
+// isRevisedGoucherParkerLeapYear - Returns 'true' if the year
+// value is a leap year under the Revised Goucher-Parker calendar.
+//
+// Reference:
+//  Documentation for Type CalendarSpec: datetime\calendarspecenum.go
+//
+//   https://www.inverse.com/article/12152-how-to-make-a-better-leap-year-with-math
+//   https://www.theguardian.com/science/2011/feb/28/leap-year-alex-bellos
+//   https://www.youtube.com/watch?v=qkt_wmRKYNQ
+//
+// Summary
+//
+// 1. If year is divisible by 4, it IS a leap year; add on day to February
+// 2. If year is divisible by 128 it is NOT a leap year and no day is added to February.
+// 3. If year is divisible by 454,545, it IS a leap year; add a day to February.
+//
+func (calDtMech *calendarDateTimeMechanics) isRevisedGoucherParkerLeapYear(
 	year int64) bool {
 
+	calDtMech.lock.Lock()
+
+	defer calDtMech.lock.Unlock()
+
+	var by4Remainder, by128Remainder, byCycleRemainder int64
+
+	by128Remainder = year % 128
+
+	if by128Remainder == 0 {
+		return false
+	}
+
+	byCycleRemainder = year % 454545
+
+	if byCycleRemainder == 0 {
+		return true
+	}
+
+	by4Remainder = year % 4
+
+	if by4Remainder == 0 {
+		return true
+	}
+
 	return false
+}
+
+func (calDtMech *calendarDateTimeMechanics) isLeapYear(
+	year int64,
+	calendar CalendarSpec) bool {
+
+	calDtMech.lock.Lock()
+
+	defer calDtMech.lock.Unlock()
+
+	calDtMech2 := calendarDateTimeMechanics{}
+	var isALeapYear bool
+
+	switch calendar {
+	case CalSpec.Gregorian():
+		isALeapYear = calDtMech2.isGregorianLeapYear(year)
+	case CalSpec.Julian():
+		isALeapYear = calDtMech2.isJulianLeapYear(year)
+	case CalSpec.RevisedJulian():
+		isALeapYear = calDtMech2.isRevisedJulianLeapYear(year)
+	case CalSpec.RevisedGoucherParker():
+		isALeapYear = calDtMech.isRevisedGoucherParkerLeapYear(year)
+	default:
+		isALeapYear = false
+	}
+
+	return isALeapYear
 }
 
 // isMonthDayNoValid - Tests a month and day combination to
@@ -189,6 +268,119 @@ func (calDtMech *calendarDateTimeMechanics) isMonthDayNoValid(
 	}
 
 	return true
+}
+
+// ordinalDayNumber - Returns the ordinal day number for a
+// given month and day.
+//
+// ------------------------------------------------------------------------
+//
+// Input Parameters
+//
+//  monthNo             int
+//    - The number of a month numbered 1 through 12.
+//      Month number 1 is January and month number 12
+//      is December.
+//
+//
+//  dayNo               int
+//    - The number of the day with in the month designated
+//      by input parameter 'monthNo'.
+//
+//
+//  isLeapYear          bool
+//     - If set to 'true', this parameter signals that the
+//       month specified in input parameter 'monthNo' is contained
+//       within a leap year.
+//
+//
+//  ePrefix             string
+//     - A string containing the names of the calling functions
+//       which invoked this method. The last character in this
+//       string should be a blank space.
+//
+//
+// ------------------------------------------------------------------------
+//
+// Return Values
+//
+//
+//  ordDayNo            int
+//     - If successful, this method returns an integer value
+//       identifying the ordinal day number associated with
+//       input parameters 'monthNo' and 'dayNo'
+//
+//
+//  err                 error
+//     - If this method is successful the returned error Type
+//       is set equal to 'nil'. If errors are encountered this
+//       error Type will encapsulate an appropriate error message.
+//
+func (calDtMech *calendarDateTimeMechanics) ordinalDayNumber(
+	monthNo int,
+	dayNo int,
+	isLeapYear bool,
+	ePrefix string) (ordDayNo int, err error) {
+
+	calDtMech.lock.Lock()
+
+	defer calDtMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.ordinalDayNumber() "
+
+	err = nil
+
+	ordDays := map[int]int {
+		1 : 0,
+		2 : 31,
+		3 : 59,
+		4 : 90,
+		5 : 120,
+		6 : 151,
+		7 : 181,
+		8 : 212,
+		9 : 243,
+		10 : 273,
+		11 : 304,
+		12 : 334,
+	}
+
+	var ok bool
+	ordDayNo = -1
+
+	calDtMech2 := calendarDateTimeMechanics{}
+
+	ok = calDtMech2.isMonthDayNoValid(
+		monthNo,
+		dayNo,
+		isLeapYear)
+
+	if !ok {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: 'monthNo' and 'dayNo' combination is INVALID!\n" +
+			"monthNo='%v'  dayNo='%v'\n",
+			monthNo, dayNo)
+
+		return ordDayNo, err
+	}
+
+	ordDayNo, ok = ordDays[monthNo]
+
+	if !ok {
+		err = fmt.Errorf(ePrefix + "\n" +
+			"Error: Input parameter 'monthNo' is INVALID!\n" +
+			"monthNo='%v'\n", monthNo)
+
+		return ordDayNo, err
+	}
+
+	ordDayNo += dayNo
+
+	if isLeapYear && monthNo > 2 {
+		ordDayNo++
+	}
+
+	return ordDayNo, err
 }
 
 // processAmPm - processes and returns correct AM/PM format

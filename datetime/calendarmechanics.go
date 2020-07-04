@@ -779,119 +779,6 @@ var err2 error
 	return julianDayNo, err
 }
 
-// ordinalDayNumber - Returns the ordinal day number for a
-// given month and day.
-//
-// ------------------------------------------------------------------------
-//
-// Input Parameters
-//
-//  monthNo             int
-//    - The number of a month numbered 1 through 12.
-//      Month number 1 is January and month number 12
-//      is December.
-//
-//
-//  dayNo               int
-//    - The number of the day with in the month designated
-//      by input parameter 'monthNo'.
-//
-//
-//  isLeapYear          bool
-//     - If set to 'true', this parameter signals that the
-//       month specified in input parameter 'monthNo' is contained
-//       within a leap year.
-//
-//
-//  ePrefix             string
-//     - A string containing the names of the calling functions
-//       which invoked this method. The last character in this
-//       string should be a blank space.
-//
-//
-// ------------------------------------------------------------------------
-//
-// Return Values
-//
-//
-//  ordDayNo            int
-//     - If successful, this method returns an integer value
-//       identifying the ordinal day number associated with
-//       input parameters 'monthNo' and 'dayNo'
-//
-//
-//  err                 error
-//     - If this method is successful the returned error Type
-//       is set equal to 'nil'. If errors are encountered this
-//       error Type will encapsulate an appropriate error message.
-//
-func (calMech *calendarMechanics) ordinalDayNumber(
-	monthNo int,
-	dayNo int,
-	isLeapYear bool,
-	ePrefix string) (ordDayNo int, err error) {
-
-	calMech.lock.Lock()
-
-	defer calMech.lock.Unlock()
-
-	ePrefix += "calendarMechanics.ordinalDayNumber() "
-
-	err = nil
-
-	ordDays := map[int]int {
-		 1 : 0,
-		 2 : 31,
-		 3 : 59,
-		 4 : 90,
-		 5 : 120,
-		 6 : 151,
-		 7 : 181,
-		 8 : 212,
-		 9 : 243,
-		10 : 273,
-		11 : 304,
-		12 : 334,
-	}
-
-	var ok bool
-	ordDayNo = -1
-
-	calDtMech := calendarDateTimeMechanics{}
-
-	ok = calDtMech.isMonthDayNoValid(
-		monthNo,
-		dayNo,
-		isLeapYear)
-
-	if !ok {
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Error: 'monthNo' and 'dayNo' combination is INVALID!\n" +
-			"monthNo='%v'  dayNo='%v'\n",
-			monthNo, dayNo)
-
-		return ordDayNo, err
-	}
-
-	ordDayNo, ok = ordDays[monthNo]
-
-	if !ok {
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Error: Input parameter 'monthNo' is INVALID!\n" +
-			"monthNo='%v'\n", monthNo)
-
-		return ordDayNo, err
-	}
-
-	ordDayNo += dayNo
-
-	if isLeapYear && monthNo > 2 {
-		ordDayNo++
-	}
-
-	return ordDayNo, err
-}
-
 // richardsJulianDayNoTimeToJulianCalendar - Converts a Julian Day Number and
 // Time value to the corresponding date time in the Julian Calendar.
 //
@@ -1144,6 +1031,140 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 	}
 
 	return julianDateUtc, err
+}
+
+// revisedGoucherParkerToJulianDayNo - Uses an algorithm by Mike Rapp
+// to compute the julian day number for a date on the Revised Goucher-Parker
+// calendar.
+//
+// The Revised Goucher-Parker Calendar implements the Julian Calendar date
+// system. Therefore, Julian Day numbers start on day zero at noon. This
+// means that Julian Day Number Zero begins at noon on Monday, January 1, 4713 BCE,
+// in the proleptic Julian calendar. Using astronomical year numbering this translates
+// to Monday, January 1, -4712.
+//
+// Reference:
+//  See documentation for Type, 'CalendarSpec' at datetime\calendarspecenum.go
+//
+func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
+	years int64,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	nanoseconds int,
+	ePrefix string) (
+	julianDayNoDto JulianDayNoDto,
+	err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.revisedGoucherParkerToJulianDayNo() "
+
+	err = nil
+
+	julianDayNoDto = JulianDayNoDto{}
+
+	calDtMech := calendarDateTimeMechanics{}
+
+	numSign := int64(1)
+
+	// Generate absolute years value
+	if years < 0 {
+		numSign = -1
+		years *= -1
+	}
+
+	// Julian Day numbers start on day zero at noon. This means that Julian
+	// Day Number Zero begins at noon on Monday, January 1, 4713 BCE, in the
+	// proleptic Julian calendar. Using astronomical year numbering this is
+	// Monday Monday, January 1, -4712
+
+	// baseYear is year prior to years - 4712
+
+	baseYear := years - 4712 - 1
+
+	baseDays := baseYear * 365
+
+	plus4YrLeapYrs := baseYear / 4
+
+	less128YrNonLeapYrs := baseYear / 128
+
+	plusCycleLeapYrs := baseYear / 454545
+
+	LeapYrDays := plus4YrLeapYrs -
+		less128YrNonLeapYrs +
+		plusCycleLeapYrs
+
+	isCurrentLeapYear := calDtMech.isRevisedGoucherParkerLeapYear(years)
+
+	var ordinalDayNum int
+
+	ordinalDayNum, err = calDtMech.ordinalDayNumber(
+		months,
+		days,
+		isCurrentLeapYear,
+		ePrefix)
+
+	if err != nil {
+		return julianDayNoDto, err
+	}
+
+	julianDayNo :=
+		baseDays + LeapYrDays + int64(ordinalDayNum)
+
+	//	fmt.Printf("julianDayNo: %v - calendarMechanics.gregorianDateToJulianDayNoTime\n",
+	//		julianDayNo)
+
+	gregorianTimeNanoSecs := int64(hours) * HourNanoSeconds
+	gregorianTimeNanoSecs += int64(minutes) * MinuteNanoSeconds
+	gregorianTimeNanoSecs += int64(seconds) * SecondNanoseconds
+	gregorianTimeNanoSecs += int64(nanoseconds)
+
+	if gregorianTimeNanoSecs < NoonNanoSeconds {
+
+		if julianDayNo > 0 {
+			julianDayNo -= 1
+		}
+
+		gregorianTimeNanoSecs += NoonNanoSeconds
+
+	} else {
+
+		gregorianTimeNanoSecs -= NoonNanoSeconds
+	}
+
+	bfGregorianTimeNanoSecs :=
+		big.NewFloat(0.0).
+			SetMode(big.ToZero).
+			SetPrec(0).
+			SetInt64(gregorianTimeNanoSecs)
+
+	bfDayNanoSeconds := big.NewFloat(0.0).
+		SetMode(big.ToZero).
+		SetPrec(0).
+		SetInt64(DayNanoSeconds)
+
+	bfTimeFraction := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(0).
+		Quo(bfGregorianTimeNanoSecs,
+			bfDayNanoSeconds)
+
+	jDNDtoUtil := julianDayNoDtoUtility{}
+
+	julianDayNo = julianDayNo * numSign
+
+	err = jDNDtoUtil.setDto(
+		&julianDayNoDto,
+		julianDayNo,
+		bfTimeFraction,
+		ePrefix)
+
+	return julianDayNoDto, err
 }
 
 // usDayOfWeekNumber - Receives a Julian Day Number and returns

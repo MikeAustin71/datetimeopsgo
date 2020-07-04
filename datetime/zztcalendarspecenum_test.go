@@ -24,7 +24,7 @@ func TestCalendarSpec_02 (t *testing.T) {
 
 	isError := false
 
-	if testCalendarSpecification > CalSpec.GoucherParker() {
+	if testCalendarSpecification > CalSpec.RevisedGoucherParker() {
 		isError = true
 	}
 
@@ -75,13 +75,13 @@ func TestCalendarSpec_05 (t *testing.T) {
 
 func TestCalendarSpec_06 (t *testing.T) {
 
-	testCalendarSpecification := CalSpec.GoucherParker()
+	testCalendarSpecification := CalSpec.RevisedGoucherParker()
 
 	testString := testCalendarSpecification.String()
 
-	if testString != "GoucherParker" {
-		t.Errorf("Error: Expected String() to return 'GoucherParker'\n" +
-			"because testCalendarSpecification='CalSpec.GoucherParker()'\n" +
+	if testString != "RevisedGoucherParker" {
+		t.Errorf("Error: Expected String() to return 'RevisedGoucherParker'\n" +
+			"because testCalendarSpecification='CalSpec.RevisedGoucherParker()'\n" +
 			"However, testCalendarSpecification='%v'\n", testString)
 	}
 }
@@ -140,14 +140,14 @@ func TestCalendarSpecString_004(t *testing.T) {
 
 func TestCalendarSpecString_005(t *testing.T) {
 
-	r := CalendarSpec(0).GoucherParker()
+	r := CalendarSpec(0).RevisedGoucherParker()
 
 	s := r.String()
 
-	if "GoucherParker" != s {
-		t.Errorf("Expected CalendarSpec(0).GoucherParker() string='%v'.\n" +
+	if "RevisedGoucherParker" != s {
+		t.Errorf("Expected CalendarSpec(0).RevisedGoucherParker() string='%v'.\n" +
 			"Instead, string='%v' ",
-			"GoucherParker", s)
+			"RevisedGoucherParker", s)
 	}
 }
 
@@ -234,7 +234,7 @@ func TestCalendarSpecXParseString_004(t *testing.T) {
 
 func TestCalendarSpecXParseString_005(t *testing.T) {
 
-	expectedStr := "GoucherParker"
+	expectedStr := "RevisedGoucherParker"
 
 	r, err :=  CalSpec.XParseString(expectedStr, true)
 
@@ -347,7 +347,7 @@ func TestCalendarSpecXParseString_009(t *testing.T) {
 
 func TestCalendarSpecXParseString_010(t *testing.T) {
 
-	expectedStr := "GoucherParker"
+	expectedStr := "RevisedGoucherParker"
 
 	actualStr := "goucherparker"
 
@@ -480,12 +480,12 @@ func TestCalendarSpecValue_005(t *testing.T) {
 
 	var i int
 
-	r = CalendarSpec(0).GoucherParker()
+	r = CalendarSpec(0).RevisedGoucherParker()
 
 	i = int(r)
 
 	if i != expectedValue {
-		t.Errorf("Expected 'CalendarSpec(0).GoucherParker()' value = '%v'.\n" +
+		t.Errorf("Expected 'CalendarSpec(0).RevisedGoucherParker()' value = '%v'.\n" +
 			"Instead, returned value was '%v'\n",
 			expectedValue, i)
 	}
@@ -553,14 +553,14 @@ func TestCalendarSpec_XValueInt_004(t *testing.T) {
 
 func TestCalendarSpec_XValueInt_005(t *testing.T) {
 
-	testCalendarSpec := CalendarSpec(0).GoucherParker()
+	testCalendarSpec := CalendarSpec(0).RevisedGoucherParker()
 
 	actualIntValue := testCalendarSpec.XValueInt()
 
-	expectedIntValue := int(CalSpec.GoucherParker())
+	expectedIntValue := int(CalSpec.RevisedGoucherParker())
 
 	if expectedIntValue != actualIntValue {
-		t.Errorf("Error Expected CalSpec.GoucherParker() actualIntValue='%v'.\n" +
+		t.Errorf("Error Expected CalSpec.RevisedGoucherParker() actualIntValue='%v'.\n" +
 			"Instead, actualIntValue='%v'",
 			expectedIntValue, actualIntValue)
 	}
@@ -568,11 +568,11 @@ func TestCalendarSpec_XValueInt_005(t *testing.T) {
 
 func TestCalendarSpec_XisValid_001(t *testing.T) {
 
-	testCalendarSpec := CalendarSpec(0).GoucherParker()
+	testCalendarSpec := CalendarSpec(0).RevisedGoucherParker()
 
 	if !testCalendarSpec.XIsValid() {
 		t.Error("Error: Expected testCalendarSpec.XIsValid()=='true'.\n" +
-			"Value is CalendarSpec(0).GoucherParker().\n" +
+			"Value is CalendarSpec(0).RevisedGoucherParker().\n" +
 			"Instead, testCalendarSpec.XIsValid()=='false'.\n")
 	}
 }

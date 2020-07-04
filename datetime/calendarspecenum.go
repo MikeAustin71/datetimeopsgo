@@ -11,7 +11,7 @@ var mCalendarSpecStringToCode = map[string]CalendarSpec{
 	"Gregorian"      : CalendarSpec(1),
 	"Julian"         : CalendarSpec(2),
 	"RevisedJulian"  : CalendarSpec(3),
-	"GoucherParker"  : CalendarSpec(4),
+	"RevisedGoucherParker"  : CalendarSpec(4),
 }
 
 var mCalendarSpecLwrCaseStringToCode = map[string]CalendarSpec{
@@ -19,7 +19,7 @@ var mCalendarSpecLwrCaseStringToCode = map[string]CalendarSpec{
 	"gregorian"      : CalendarSpec(1),
 	"julian"         : CalendarSpec(2),
 	"revisedjulian"  : CalendarSpec(3),
-	"goucherparker"  : CalendarSpec(4),
+	"revisedgoucherparker"  : CalendarSpec(4),
 }
 
 var mCalendarSpecCodeToString = map[CalendarSpec]string{
@@ -27,7 +27,7 @@ var mCalendarSpecCodeToString = map[CalendarSpec]string{
 	CalendarSpec(1)  : "Gregorian",
 	CalendarSpec(2)  : "Julian",
 	CalendarSpec(3)  : "RevisedJulian",
-	CalendarSpec(4)  : "GoucherParker",
+	CalendarSpec(4)  : "RevisedGoucherParker",
 }
 
 // CalendarSpec - An enumeration of calendar designations or types.
@@ -89,7 +89,7 @@ var mCalendarSpecCodeToString = map[CalendarSpec]string{
 //                        adopted by the Orthodox churches of Constantinople, Albania,
 //                        Alexandria, Antioch, Bulgaria, Cyprus, Greece, and Romania.
 //
-// GoucherParker    (4) - Signals that the GoucherParker Calendar developed by Adam P.
+// RevisedGoucherParker    (4) - Signals that the RevisedGoucherParker Calendar developed by Adam P.
 //                        Goucher, Matt Parker, and modified by Mike Rapp, is specified
 //                        and in effect. This calendar type is used by the 'datetime'
 //                        package, or library, in order to implement standardized
@@ -263,13 +263,23 @@ func (calSpec CalendarSpec) RevisedJulian() CalendarSpec {
 	return CalendarSpec(3)
 }
 
-// GoucherParker - Signals that the GoucherParker Calendar developed by
-// Adam P. Goucher, Matt Parker, and modified by Mike Rapp, is specified
-// and in effect. This calendar type is used by the 'datetimeops' library
-// to implement standardized calendar date time mathematics over a very
-// large number of years. In its current version, this calendar assumes
-// a mean solar year of 365.2421897 days and experiences a 1-day drift
-// every + or - 500-billion years.
+// RevisedGoucherParker - Signals that the RevisedGoucherParker Calendar
+// developed by Adam P. Goucher, Matt Parker, and modified by Mike Rapp,
+// is specified and in effect. This calendar type is used by the
+// 'datetimeops' library to implement standardized calendar date time
+// mathematics over a very large number of years. In its current version,
+// this calendar cycle is 454,545. The calendar assumes a mean solar year
+// of 365.2421897 days and therefore experiences a 1-day drift every + or
+// - 500-billion years.
+//
+// Be advised that the Revised Goucher Parker Calendar implements
+// Astronomical year numbering. This means that the Revised Goucher
+// Parker Calendar has a year zero; that is the date immediately
+// preceding the date January 1, year 1 is December 31, year 0.
+//
+// Future versions of this calendar may incorporate a sliding scale
+// mean solar year to account for variances in the earth's rotational
+// dynamics.
 //
 // "While Matt Parker came up with this system on his own, he does
 // acknowledge that British mathematician Adam P. Goucher had suggested
@@ -305,7 +315,7 @@ func (calSpec CalendarSpec) RevisedJulian() CalendarSpec {
 // years. The current version of this calendar assumes a mean solar year of 365.2421897
 // days.
 //
-func (calSpec CalendarSpec) GoucherParker() CalendarSpec {
+func (calSpec CalendarSpec) RevisedGoucherParker() CalendarSpec {
 
 	lockCalendarSpec.Lock()
 
@@ -511,6 +521,6 @@ func (calSpec CalendarSpec) XValueInt() int {
 // CalSpec.Gregorian(),
 // CalSpec.Julian(),
 // CalSpec.RevisedJulian(),
-// CalSpec.GoucherParker(),
+// CalSpec.RevisedGoucherParker(),
 //
 var CalSpec CalendarSpec
