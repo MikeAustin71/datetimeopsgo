@@ -146,8 +146,24 @@ func (calSpec CalendarSpec) None() CalendarSpec {
 // by 400. For example, the years 1700, 1800, and 1900 are not
 // leap years, but the years 1600 and 2000 are.
 //
-// For additional information reference:
-//    https://en.wikipedia.org/wiki/Gregorian_calendar
+//
+// In the Gregorian calendar, three criteria must be taken
+// into account to identify leap years:
+//
+// The year must be evenly divisible by 4;
+//
+// If the year can also be evenly divided by 100, it is not a leap year;
+// unless...
+//
+// The year is also evenly divisible by 400. Then it is a leap year.
+//
+//
+// According to these rules, the years 2000 and 2400 are leap years,
+// while 1800, 1900, 2100, 2200, 2300, and 2500 are not leap years.
+//
+// Reference:
+//   https://www.timeanddate.com/date/leapyear.html
+//   https://en.wikipedia.org/wiki/Gregorian_calendar
 //
 // This method is part of the standard enumeration.
 //
@@ -225,6 +241,16 @@ func (calSpec CalendarSpec) Julian() CalendarSpec {
 //
 // For additional information, reference:
 //    https://en.wikipedia.org/wiki/Revised_Julian_calendar
+//
+//
+// Summary
+//
+// 1. Years evenly divisible by 4 are leap years unless they are
+//    century years.
+//
+// 2. Years evenly divisible by 100 are not leap years unless when
+//    divided by 900 those years have remainders of 200 or 600 in
+//    which case they are leap years.
 //
 // This method is part of the standard enumeration.
 //

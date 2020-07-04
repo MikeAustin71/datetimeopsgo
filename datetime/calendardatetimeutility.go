@@ -375,8 +375,29 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	calMech := calendarMechanics{}
 
 	var jDayNoDto JulianDayNoDto
+	var isLeapYear bool
+
+	calDtMech := calendarDateTimeMechanics{}
 
 	if calendar == CalendarSpec(0).Julian() {
+
+		isLeapYear = calDtMech.isJulianLeapYear(year)
+
+		if !calDtMech.isMonthDayNoValid(month, day, isLeapYear) {
+
+			mthDayVal := fmt.Sprintf("month=%v day=%v",
+				month, day)
+
+			err = &InputParameterError{
+				ePrefix:             ePrefix,
+				inputParameterName:  "month/day",
+				inputParameterValue: mthDayVal,
+				errMsg:              "Month and Day combination is INVALID!",
+				err:                 nil,
+			}
+
+			return err
+		}
 
 		jDayNoDto, err = calMech.julianCalendarDateJulianDayNo(
 			year,

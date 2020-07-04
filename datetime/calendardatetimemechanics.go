@@ -10,6 +10,133 @@ type calendarDateTimeMechanics struct {
 	lock   sync.Mutex
 }
 
+// isGregorianLeapYear - Returns true if the year number is
+// a leap year under the Gregorian Calendar.
+//
+// In the Gregorian calendar, three criteria must be taken
+// into account to identify leap years:
+//
+// The year must be evenly divisible by 4;
+//
+// If the year can also be evenly divided by 100, it is not a leap year;
+// unless...
+//
+// The year is also evenly divisible by 400. Then it is a leap year.
+//
+//
+// According to these rules, the years 2000 and 2400 are leap years,
+// while 1800, 1900, 2100, 2200, 2300, and 2500 are not leap years.
+//
+// Reference:
+//   https://www.timeanddate.com/date/leapyear.html
+//   https://en.wikipedia.org/wiki/Gregorian_calendar
+//
+func (calDtMech *calendarDateTimeMechanics) isGregorianLeapYear(
+	year int64) bool {
+
+	var by4Remainder, by100Remainder int64
+
+	by100Remainder = year % 100
+
+	if by100Remainder == 0 {
+
+		if year % 400 == 0 {
+			return true
+		}
+
+		return false
+	}
+
+	by4Remainder = year % 4
+
+	if by4Remainder == 0 {
+		return true
+	}
+
+	return false
+}
+
+// isJulianLeapYear - Determines whether the input parameter
+// 'year' is a leap year under the Julian Calendar.
+//
+// If 'year' is a Julian leap year, this method returns 'true'.
+//
+// Note: This method should NOT be used to determine leap years
+// for the Revised Julian Calendar or the Goucher-Parker
+// calendar.
+//
+// Reference:
+//   https://en.wikipedia.org/wiki/Julian_calendar
+//
+func (calDtMech *calendarDateTimeMechanics) isJulianLeapYear(
+	year int64) bool {
+
+	remainder := year % 4
+
+	if remainder == 0 {
+		return true
+	}
+
+	return false
+}
+
+// isRevisedJulianLeapYear - Determines whether the input
+// parameter 'year' is a leap year under the Revised Julian
+// Calendar.
+//
+// The Revised Julian calendar has the same months and month
+// lengths as the Julian calendar, but, in the Revised Julian
+// calendar, years evenly divisible by 100 are not leap years,
+// except that years with remainders of 200 or 600 when divided
+// by 900 remain leap years, e.g. 2000 and 2400 as in the Gregorian
+// Calendar.
+//
+// For additional information, reference:
+//    https://en.wikipedia.org/wiki/Revised_Julian_calendar
+//
+// Summary
+//
+// 1. Years evenly divisible by 4 are leap years unless they are
+//    century years.
+//
+// 2. Years evenly divisible by 100 are not leap years unless when
+//    divided by 900 those years have remainders of 200 or 600 in
+//    which case they are leap years.
+//
+func (calDtMech *calendarDateTimeMechanics) isRevisedJulianLeapYear(
+	year int64) bool {
+
+	var by4Remainder, by100Remainder, by900Remainder int64
+
+	by100Remainder = year % 100
+
+	if by100Remainder == 0 {
+
+		by900Remainder = year % 900
+
+		if by900Remainder == 200 ||
+			by900Remainder == 900 {
+			return true
+		}
+
+		return false
+	}
+
+	by4Remainder = year % 4
+
+	if by4Remainder == 0 {
+		return true
+	}
+
+	return false
+}
+
+func (calDtMech *calendarDateTimeMechanics) isGoucherParkerLeapYear(
+	year int64) bool {
+
+	return false
+}
+
 // isMonthDayNoValid - Tests a month and day combination to
 // determine if they are valid. If month and day are valid,
 // this method returns true.
@@ -29,15 +156,15 @@ func (calDtMech *calendarDateTimeMechanics) isMonthDayNoValid(
 
 	// Month No : Standard Num Of Days In Month
 	standardMthDays := map[int]int {
-		 1 : 31,
-		 2 : 28,
-		 3 : 31,
-		 4 : 30,
-		 5 : 31,
-		 6 : 30,
-		 7 : 31,
-		 8 : 31,
-		 9 : 30,
+		1 : 31,
+		2 : 28,
+		3 : 31,
+		4 : 30,
+		5 : 31,
+		6 : 30,
+		7 : 31,
+		8 : 31,
+		9 : 30,
 		10 : 31,
 		11 : 30,
 		12 : 31,
