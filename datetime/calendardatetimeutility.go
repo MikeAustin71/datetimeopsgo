@@ -244,7 +244,6 @@ func (calDTimeUtil *calendarDateTimeUtility) generateDateTimeStr(
 	return resultStr, err
 }
 
-
 // setCalDateTime - populates a CalendarDateTime instance.
 //
 func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(

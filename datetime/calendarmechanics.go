@@ -95,12 +95,10 @@ type calendarMechanics struct {
 //
 // Input Parameter
 //
-//  gregorianDateTime  time.Time
-//     - This date time value will be converted to Universal
-//       Coordinated Time (UTC) before conversion to a Julian
-//       Day Number/Time.
-//
-//
+//  year               int64
+//    - The year number expressed as an int64 value. Must be
+//      greater than or equal to -4713. T
+// 11/24/-4713
 //  ePrefix            string
 //     - A string containing the names of the calling functions
 //       which invoked this method. The last character in this
@@ -156,6 +154,168 @@ type calendarMechanics struct {
 //
 //
 func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
+	year int64,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	nanoseconds int,
+	ePrefix string) (
+	julianDayNoDto JulianDayNoDto,
+	err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.gregorianDateToJulianDayNoTime() "
+
+	err = nil
+
+	julianDayNoDto = JulianDayNoDto{}
+
+	// Threshold date. Any date before this is
+	// invalid!
+	// 11/24/-4713 (Astronomical Year Numbering)
+	// 12:00:00.000000000
+	//thresholdGregorianDate := time.Date(
+	//	-4713,
+	//	11,
+	//	24,
+	//	12,
+	//	0,
+	//	0,
+	//	0,
+	//	time.UTC)
+
+//	gregorianDateUtc = gregorianDateTime.UTC()
+
+	if year < int64(-4713) {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "year",
+			inputParameterValue: "",
+			errMsg:              "Gregorian Dates prior to -4713/11/24 12:00:00" +
+				" UTC are invalid\nfor Julian Day Number Calculations.",
+			err:                 nil,
+		}
+
+		return julianDayNoDto, err
+	}
+
+	if year == int64(-4713) &&
+		months < 1 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "months",
+			inputParameterValue: "",
+			errMsg:              "Gregorian Dates prior to -4713/11/24 12:00:00" +
+				" UTC are invalid\nfor Julian Day Number Calculations.",
+			err:                 nil,
+		}
+
+		return julianDayNoDto, err
+	}
+
+	if year == int64 (-4713) &&
+		months == 11 &&
+		days < 24 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "days",
+			inputParameterValue: "",
+			errMsg:              "Gregorian Dates prior to -4713/11/24 12:00:00" +
+				" UTC are invalid\nfor Julian Day Number Calculations.",
+			err:                 nil,
+		}
+
+		return julianDayNoDto, err
+	}
+
+	if year == int64 (-4713) &&
+		months == 11 &&
+		days == 24 &&
+		hours < 12 {
+		err = &InputParameterError{
+			ePrefix:             ePrefix,
+			inputParameterName:  "hours",
+			inputParameterValue: "",
+			errMsg:              "Gregorian Dates prior to -4713/11/24 12:00:00" +
+				" UTC are invalid\nfor Julian Day Number Calculations.",
+			err:                 nil,
+		}
+		return julianDayNoDto, err
+	}
+
+	julianDayNoDto = JulianDayNoDto{}
+
+	err = nil
+
+	Month := int64(months)
+	Day := int64(days)
+
+	// JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
+
+	julianDayNo :=
+		(int64(1461) * (year + int64(4800) +
+			(Month - int64(14))/int64(12)))/int64(4) +
+			(int64(367) * (Month - int64(2) -
+				int64(12) * ((Month - int64(14))/int64(12))))/int64(12) -
+			(int64(3) * ((year + int64(4900) +
+				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
+			Day - int64(32075)
+
+//	fmt.Printf("julianDayNo: %v - calendarMechanics.gregorianDateToJulianDayNoTime\n",
+//		julianDayNo)
+
+	gregorianTimeNanoSecs := int64(hours) * HourNanoSeconds
+	gregorianTimeNanoSecs += int64(minutes) * MinuteNanoSeconds
+	gregorianTimeNanoSecs += int64(seconds) * SecondNanoseconds
+	gregorianTimeNanoSecs += int64(nanoseconds)
+
+	if gregorianTimeNanoSecs < NoonNanoSeconds {
+
+		if julianDayNo > 0 {
+			julianDayNo -= 1
+		}
+
+		gregorianTimeNanoSecs += NoonNanoSeconds
+
+	} else {
+
+		gregorianTimeNanoSecs -= NoonNanoSeconds
+	}
+
+	bfGregorianTimeNanoSecs :=
+		big.NewFloat(0.0).
+				SetMode(big.ToZero).
+				SetPrec(0).
+				SetInt64(gregorianTimeNanoSecs)
+
+	bfDayNanoSeconds := big.NewFloat(0.0).
+		SetMode(big.ToZero).
+		SetPrec(0).
+		SetInt64(DayNanoSeconds)
+
+	bfTimeFraction := big.NewFloat(0.0).
+		SetMode(big.ToNearestAway).
+		SetPrec(0).
+		Quo(bfGregorianTimeNanoSecs,
+			bfDayNanoSeconds)
+
+	jDNDtoUtil := julianDayNoDtoUtility{}
+
+	err = jDNDtoUtil.setDto(
+		&julianDayNoDto,
+		julianDayNo,
+		bfTimeFraction,
+		ePrefix)
+
+	return julianDayNoDto, err
+}
+
+/*func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 	gregorianDateTime time.Time,
 	ePrefix string) (
 	gregorianDateUtc time.Time,
@@ -171,7 +331,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 	gregorianDateUtc = gregorianDateTime.UTC()
 
 	julianDayNoDto = JulianDayNoDto{}
-	
+
 	thresholdGregorianDate := time.Date(
 		-4713,
 		11,
@@ -261,159 +421,6 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 		ePrefix)
 
 	return gregorianDateUtc, julianDayNoDto, err
-}
-
-/*
-func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
-	gregorianDateTime time.Time,
-	digitsAfterDecimal int,
-	ePrefix string) (
-	gregorianDateUtc time.Time,
-	julianDayNoTime *big.Float,
-	err error) {
-
-	calMech.lock.Lock()
-
-	defer calMech.lock.Unlock()
-
-	ePrefix += "calMech.gregorianDateToJulianDayNoTime() "
-
-	gregorianDateUtc = gregorianDateTime.UTC()
-	julianDayNoTime = big.NewFloat(0.0)
-	err = nil
-
-	if digitsAfterDecimal < 0 {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "digitsAfterDecimal",
-			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
-				"less than ZERO!",
-			err:                 nil,
-		}
-
-		return gregorianDateUtc, julianDayNoTime, err
-	}
-
-	if digitsAfterDecimal > 100 {
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "digitsAfterDecimal",
-			inputParameterValue: "",
-			errMsg:              "Error: Input parameter 'digitsAfterDecimal' is " +
-				"greater than 100!",
-			err:                 nil,
-		}
-
-		return gregorianDateUtc, julianDayNoTime, err
-	}
-
-	Year := int64(gregorianDateUtc.Year())
-	Month := int64(gregorianDateUtc.Month())
-	Day := int64(gregorianDateUtc.Day())
-
-	// JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
-
-	julianDayNo :=
-		(int64(1461) * (Year + int64(4800) +
-			(Month - int64(14))/int64(12)))/int64(4) +
-			(int64(367) * (Month - int64(2) -
-				int64(12) * ((Month - int64(14))/int64(12))))/int64(12) -
-			(int64(3) * ((Year + int64(4900) +
-				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
-			Day - int64(32075)
-
-	gregorianTimeNanoSecs := int64(gregorianDateUtc.Hour()) * HourNanoSeconds
-	gregorianTimeNanoSecs += int64(gregorianDateUtc.Minute()) * MinuteNanoSeconds
-	gregorianTimeNanoSecs += int64(gregorianDateUtc.Second()) * SecondNanoseconds
-	gregorianTimeNanoSecs += int64(gregorianDateUtc.Nanosecond())
-
-	if gregorianTimeNanoSecs < NoonNanoSeconds {
-
-		julianDayNo -= 1
-		gregorianTimeNanoSecs += NoonNanoSeconds
-
-	} else {
-
-		gregorianTimeNanoSecs -= NoonNanoSeconds
-	}
-
-	newDigitsAfterDecimal := uint(digitsAfterDecimal)
-
-	bfGregorianTimeNanoSecs := big.NewFloat(0.0).
-		SetMode(big.ToNearestAway).
-		SetPrec(newDigitsAfterDecimal).
-		SetInt64(gregorianTimeNanoSecs)
-
-	bfDayNanoSeconds := big.NewFloat(0.0).
-		SetMode(big.ToNearestAway).
-		SetPrec(newDigitsAfterDecimal).
-		SetInt64(DayNanoSeconds)
-
-	bfTimeFraction := big.NewFloat(0.0).
-		SetMode(big.ToNearestAway).
-		SetPrec(newDigitsAfterDecimal).
-		Quo(bfGregorianTimeNanoSecs,
-			bfDayNanoSeconds)
-
-	bfTimeFractionStr :=
-		bfTimeFraction.Text('f', int(newDigitsAfterDecimal))
-
-	fmt.Printf("Internal Time Fraction:                            %v\n",
-		bfTimeFraction.Text('f', int(newDigitsAfterDecimal)))
-
-	julianDayNoTimeStr :=
-		fmt.Sprintf("%v", julianDayNo) +
-			bfTimeFractionStr[1:]
-
-	fmt.Printf("julianDayNoTimeStr                           %v\n",
-		julianDayNoTimeStr)
-
-	var err2 error
-
-	bfJulianDayNoTime := big.NewFloat(0.0).
-		SetMode(big.ToNearestAway).
-		SetPrec(newDigitsAfterDecimal)
-
-	b := 0
-
-	julianDayNoTime,
-	b,
-	err2 =
-			big.ParseFloat(
-					julianDayNoTimeStr,
-					10,
-					0,
-					big.ToNearestAway)
-
-	if err2 != nil {
-
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Error returned by " +
-			"big.ParseFloat(julianDayNoTimeStr)\n" +
-			"julianDayNoTimeStr='%v'\n" +
-			"Error='%v'\n",
-			julianDayNoTimeStr, err2)
-
-		return gregorianDateUtc, julianDayNoTime, err
-	}
-
-	if b != 10 {
-
-		err = fmt.Errorf(ePrefix + "\n" +
-			"Error: Expected base 10 to be returned from " +
-			"big.ParseFloat(julianDayNoTimeStr)\n" +
-			"julianDayNoTimeStr='%v'\n" +
-			"base='%v'\n",
-			julianDayNoTimeStr, b)
-
-		return gregorianDateUtc, julianDayNoTime, err
-	}
-
-	fmt.Printf("julianDayNoTime                            %v\n",
-		bfJulianDayNoTime.Text('f', int(newDigitsAfterDecimal)))
-
-	return gregorianDateUtc, julianDayNoTime, err
 }
 */
 
