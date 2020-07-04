@@ -414,7 +414,7 @@ func (calUtil *CalendarUtility) JulianDayNoTimeToGregorianCalendar(
 
 	gregorianDateUtc,
 		err =
-		calendarMech.richardsJulianDayNoTimeToGregorianCalendar(
+		calendarMech.julianDayNoTimeToGregorianCalendar(
 			julianDayNoDto,
 			ePrefix)
 

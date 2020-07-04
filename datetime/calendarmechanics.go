@@ -588,7 +588,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 }
 */
 
-// richardsJulianDayNoTimeToGregorianCalendar - Converts a Julian Day
+// julianDayNoTimeToGregorianCalendar - Converts a Julian Day
 // Number and Time value to the corresponding date time in the
 // Gregorian Calendar.
 //
@@ -696,7 +696,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 //   https://stackoverflow.com/questions/45586444/php-julian-date-converter-algorithms
 //
 //
-func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
+func (calMech *calendarMechanics) julianDayNoTimeToGregorianCalendar(
 	julianDayNoDto JulianDayNoDto,
 	ePrefix string) (
 	gregorianDateUtc time.Time,
@@ -706,7 +706,7 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToGregorianCalendar(
 
 	defer calMech.lock.Unlock()
 
-	ePrefix += "calendarMechanics.richardsJulianDayNoTimeToGregorianCalendar() "
+	ePrefix += "calendarMechanics.julianDayNoTimeToGregorianCalendar() "
 
 	gregorianDateUtc = time.Time{}
 	err = nil
