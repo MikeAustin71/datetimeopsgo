@@ -186,11 +186,18 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 
 	var julianDayNoDto JulianDayNoDto
 
-	gregorianDateUtc,
+	gregorianDateUtc = gregorianDateTime.UTC()
+
 		julianDayNoDto,
 		err =
 	calendarMech.gregorianDateToJulianDayNoTime(
-		gregorianDateTime,
+		int64(gregorianDateUtc.Year()),
+		int(gregorianDateUtc.Month()),
+		gregorianDateUtc.Day(),
+		gregorianDateUtc.Hour(),
+		gregorianDateUtc.Minute(),
+		gregorianDateUtc.Second(),
+		gregorianDateUtc.Nanosecond(),
 		ePrefix)
 
 		if err != nil {
@@ -282,9 +289,21 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNoTime(
 
 	calendarMech := calendarMechanics{}
 
-	return calendarMech.gregorianDateToJulianDayNoTime(
-		gregorianDateTime,
-		ePrefix)
+	gregorianDateUtc = gregorianDateTime.UTC()
+
+	julianDayNoDto,
+		err =
+		calendarMech.gregorianDateToJulianDayNoTime(
+			int64(gregorianDateUtc.Year()),
+			int(gregorianDateUtc.Month()),
+			gregorianDateUtc.Day(),
+			gregorianDateUtc.Hour(),
+			gregorianDateUtc.Minute(),
+			gregorianDateUtc.Second(),
+			gregorianDateUtc.Nanosecond(),
+			ePrefix)
+
+	return gregorianDateUtc, julianDayNoDto, err
 }
 
 

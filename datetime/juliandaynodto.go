@@ -860,7 +860,19 @@ func (jDNDto JulianDayNoDto) NewFromGregorianDate(
 	ePrefix := "JulianDayNoDto.NewFromGregorianDate() "
 	calendarMech := calendarMechanics{}
 
-	return calendarMech.gregorianDateToJulianDayNoTime(
-		gregorianDateTime,
-		ePrefix)
+	gregorianDateTimeUtc = gregorianDateTime.UTC()
+
+	julianDayNoDto,
+		err =
+		calendarMech.gregorianDateToJulianDayNoTime(
+			int64(gregorianDateTimeUtc.Year()),
+			int(gregorianDateTimeUtc.Month()),
+			gregorianDateTimeUtc.Day(),
+			gregorianDateTimeUtc.Hour(),
+			gregorianDateTimeUtc.Minute(),
+			gregorianDateTimeUtc.Second(),
+			gregorianDateTimeUtc.Nanosecond(),
+			ePrefix)
+
+	return gregorianDateTimeUtc, julianDayNoDto, err
 }

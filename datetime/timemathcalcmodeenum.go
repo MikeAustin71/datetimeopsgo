@@ -37,7 +37,7 @@ var mTimeMathCalcModeToString = map[TimeMathCalcMode]string{
 // adding or subtracting date times using 'days'. Depending on
 // whether the date times being added or subtracted exist in a
 // time zone which observes daylight savings time, the term
-// 'days'might not be defined as a time span of 24-consecutive
+// 'days' might not be defined as a time span of 24-consecutive
 // hours.
 //
 // Consider the example of a date time like:

@@ -719,7 +719,7 @@ func (tDur *TimeDurationDto) AddTime(
 // current TimeDurationDto instance. To change the Time
 // Calculation Math Mode, call method,
 // 'TimeDurationDto.SetTimeMathCalcMode()'. For more
-// information see the type documentation for'TimeMathCalcMode'
+// information see the type documentation for 'TimeMathCalcMode'
 // at:
 //         datetime\timemathcalcmodeenum.go
 //
@@ -10656,7 +10656,7 @@ func (tDur *TimeDurationDto) SetTimeDurationAllocationType(
 //         month day time duration allocation while 'TDurCalc.CumSeconds()'
 //         seconds, milliseconds, microseconds and nanoseconds allocations.
 //
-//         Reference Type'TDurCalcType' located in source file:
+//         Reference Type 'TDurCalcType' located in source file:
 //            'datetime\timemathcalcmodeenum.go'
 //
 //        'TZones.US.Central()' is a constant available int source file,
@@ -10721,7 +10721,7 @@ func (tDur *TimeDurationDto) SetTimeMathCalcMode(
 // current TimeDurationDto instance. To change the Time
 // Calculation Math Mode, call method,
 // 'TimeDurationDto.SetTimeMathCalcMode()'. For more
-// information see the type documentation for'TimeMathCalcMode'
+// information see the type documentation for 'TimeMathCalcMode'
 // at:
 //         datetime\timemathcalcmodeenum.go
 //

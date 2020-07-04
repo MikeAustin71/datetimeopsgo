@@ -17,6 +17,7 @@ import (
 //
 //
 // Gregorian Calendar
+//
 // The Gregorian calendar, which is the calendar used today, was first
 // introduced by Pope Gregory XIII via a papal bull in February 1582
 // to correct an error in the old Julian calendar.
@@ -40,6 +41,7 @@ import (
 //
 //
 // Double Dating
+//
 // New Year's Day had been celebrated on March 25 under the Julian calendar
 // in Great Britain and its colonies, but with the introduction of the
 // Gregorian Calendar in 1752, New Year's Day was now observed on January 1.
@@ -73,8 +75,8 @@ type calendarMechanics struct {
 // Julian Day Number and Time.
 //
 // Remember that Julian Day Number Times are valid for all dates
-// after noon on Monday, January 1, 4713 BC, proleptic Julian calendar
-// or November 24, 4714 BC, in the proleptic Gregorian calendar. Therefore,
+// after noon on Monday, January 1, 4713 BCE, proleptic Julian calendar
+// or November 24, 4714 BCE, in the proleptic Gregorian calendar. Therefore,
 // using astronomical years encapsulated in the Golang type time.Time,
 // this algorithm is valid for all Golang date/times after Gregorian
 // calendar (possibly proleptic) values after November 23, −4713.
@@ -91,14 +93,42 @@ type calendarMechanics struct {
 // However, the original algorithm has been modified to provide for time
 // fractions accurate to nanoseconds.
 //
+// The 'input' parameters years, months, days, hours, minutes, seconds
+// and nanoseconds represents a Gregorian date/time using the Universal
+// Coordinated Time Zone (UTC). Gregorian dates which precede November 24,
+// 4714 BCE or 11/24/-4713 (using Astronomical Year Numbering System) are
+// invalid and will generate an error.
+//
 // ------------------------------------------------------------------------
 //
-// Input Parameter
+// Input Parameters
 //
-//  year               int64
-//    - The year number expressed as an int64 value. Must be
-//      greater than or equal to -4713. T
-// 11/24/-4713
+//  years              int64
+//    - The year number expressed as an int64 value. This 'years' value
+//      should be formatted using Astronomical Year Numbering; that is,
+//      a year numbering system which includes year zero. Year values which
+//      are less than -4713, using the using Astronomical Year Numbering System,
+//      are invalid and will generate an error.
+//
+//  months             int
+//    - The month number
+//
+//  days               int
+//    - The day number
+//
+//  hours              int
+//    - The hour number expressed on a 24-hour time scale.
+//      Example: 3:00PM is passed as the hour 15
+//
+//  minutes            int
+//    - The minutes number
+//
+//  seconds            int
+//    - The number of seconds
+//
+//  nanoseconds        int
+//    - The number of nanoseconds
+//
 //  ePrefix            string
 //     - A string containing the names of the calling functions
 //       which invoked this method. The last character in this
@@ -154,7 +184,7 @@ type calendarMechanics struct {
 //
 //
 func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
-	year int64,
+	years int64,
 	months,
 	days,
 	hours,
@@ -191,10 +221,10 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 
 //	gregorianDateUtc = gregorianDateTime.UTC()
 
-	if year < int64(-4713) {
+	if years < int64(-4713) {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "year",
+			inputParameterName:  "years",
 			inputParameterValue: "",
 			errMsg:              "Gregorian Dates prior to -4713/11/24 12:00:00" +
 				" UTC are invalid\nfor Julian Day Number Calculations.",
@@ -204,8 +234,8 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 		return julianDayNoDto, err
 	}
 
-	if year == int64(-4713) &&
-		months < 1 {
+	if years == int64(-4713) &&
+		months < 11 {
 		err = &InputParameterError{
 			ePrefix:             ePrefix,
 			inputParameterName:  "months",
@@ -218,7 +248,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 		return julianDayNoDto, err
 	}
 
-	if year == int64 (-4713) &&
+	if years == int64 (-4713) &&
 		months == 11 &&
 		days < 24 {
 		err = &InputParameterError{
@@ -233,7 +263,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 		return julianDayNoDto, err
 	}
 
-	if year == int64 (-4713) &&
+	if years == int64 (-4713) &&
 		months == 11 &&
 		days == 24 &&
 		hours < 12 {
@@ -258,11 +288,11 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 	// JDN = (1461 × (Y + 4800 + (M − 14)/12))/4 +(367 × (M − 2 − 12 × ((M − 14)/12)))/12 − (3 × ((Y + 4900 + (M - 14)/12)/100))/4 + D − 32075
 
 	julianDayNo :=
-		(int64(1461) * (year + int64(4800) +
+		(int64(1461) * (years+ int64(4800) +
 			(Month - int64(14))/int64(12)))/int64(4) +
 			(int64(367) * (Month - int64(2) -
 				int64(12) * ((Month - int64(14))/int64(12))))/int64(12) -
-			(int64(3) * ((year + int64(4900) +
+			(int64(3) * ((years+ int64(4900) +
 				(Month - int64(14))/int64(12))/int64(100)))/int64(4) +
 			Day - int64(32075)
 
@@ -349,7 +379,7 @@ func (calMech *calendarMechanics) gregorianDateToJulianDayNoTime(
 			inputParameterName:  "gregorianDateTime",
 			inputParameterValue: "",
 			errMsg:              "Gregorian Dates prior to -4713/11/24 12:00:00" +
-				" UTC are invalid\nfor Julian Day Number Calculations.",
+				" UTC are invalid\n for Julian Day Number Calculations.",
 			err:                 nil,
 		}
 		return gregorianDateUtc, julianDayNoDto, err

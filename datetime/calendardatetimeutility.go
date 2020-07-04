@@ -359,6 +359,8 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	var jDayNoDto JulianDayNoDto
 
+	baseDateTime := time.Now().UTC()
+
 	if calendar == CalendarSpec(0).Julian() {
 
 		jDayNoDto, err = calMech.julianCalendarDateJulianDayNo(
@@ -373,7 +375,7 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	} else if calendar == CalendarSpec(0).Gregorian() {
 
-		gregorianDateTime := time.Date(
+		baseDateTime = time.Date(
 			int(year),
 			time.Month(month),
 			day,
@@ -383,10 +385,15 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			nanoseconds,
 			time.UTC)
 
-		_,
 		jDayNoDto,
 		err = calMech.gregorianDateToJulianDayNoTime(
-			gregorianDateTime,
+			year,
+			month,
+			day,
+			hours,
+			minutes,
+			seconds,
+			nanoseconds,
 			ePrefix)
 
 	} else {
@@ -409,7 +416,7 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	err = tzDefUtil.setFromTimeZoneName(
 		&timeZone,
-		time.Now().UTC(),
+		baseDateTime,
 		TimeZoneConversionType(0).Relative(),
 		timeZoneLocation,
 		ePrefix)

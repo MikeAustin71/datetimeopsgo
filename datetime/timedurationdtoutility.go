@@ -1581,7 +1581,7 @@ func (tDurDtoUtil *timeDurationDtoUtility) equal(
 // Return Values:
 //
 //  bool  - If 'true' it signals that all relevant data fields in
-//          'tDur'are empty or contain a zero value. If any of the
+//          'tDur' are empty or contain a zero value. If any of the
 //          data fields are populated, or if an error is encountered,
 //          this value is set to 'false'.
 //
