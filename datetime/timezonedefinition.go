@@ -1714,7 +1714,7 @@ func (tzdef TimeZoneDefinition) NewDateTime(
 // NewFromTimeComponents - Creates and returns a new 'TimeZoneDefinition' instance based on
 // date time components and Time Zone Name input parameters.
 //
-// The date time components, years, months, days, hours, seconds and nanoseconds are used
+// The date time components, years, months, days, hours, seconds and subMicrosecondNanoseconds are used
 // in the Time Zone Name to construct an instance of 'TimeZoneDefinition'.
 
 // Input Parameter
@@ -1732,7 +1732,7 @@ func (tzdef TimeZoneDefinition) NewDateTime(
 //
 //  seconds     int        - Seconds value used to construct a date time object (time.Time).
 //
-//  nanoseconds int        - Nanoseconds value used to construct a date time object (time.Time).
+//  subMicrosecondNanoseconds int        - Nanoseconds value used to construct a date time object (time.Time).
 //
 //  timeZoneName string    - This string contains the name of a valid time zone.
 //                           The 'timeZoneName' string must be set to one of three values:
@@ -1834,7 +1834,7 @@ func (tzdef TimeZoneDefinition) NewFromTimeComponents(
 //
 //  timeDto      TimeDto
 //     - The 'TimeDto' type contains time components such as years,
-//       months, days, seconds and nanoseconds which is used to
+//       months, days, seconds and subMicrosecondNanoseconds which is used to
 //       construct a date time value (time.Time).
 //
 //

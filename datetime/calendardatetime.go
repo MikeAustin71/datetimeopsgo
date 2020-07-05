@@ -5,18 +5,17 @@ import (
 )
 
 type CalendarDateTime struct {
-	year                 int64 // Number of Years
-	month                int   // Number of Months
-	dateDays             int   // Total Number of Days. Weeks x 7 plus WeekDays
-	usDayOfWeekNumber    int   // Day of week beginning with Sunday=0
-	hours                int   // Number of Hours.
-	minutes              int   // Number of Minutes
-	seconds              int   // Number of Seconds
-	milliseconds         int   // Number of Milliseconds
-	microseconds         int   // Number of Microseconds
-	nanoseconds          int   // Remaining Nanoseconds after Milliseconds & Microseconds
-	totSubSecNanoseconds int   // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-	//  plus remaining Nanoseconds
+	year                      int64 // Number of Years
+	month                     int   // Number of Months
+	dateDays                  int   // Total Number of Days. Weeks x 7 plus WeekDays
+	hours                     int   // Number of Hours.
+	minutes                   int   // Number of Minutes
+	seconds                   int   // Number of Seconds
+	milliseconds              int   // Number of Milliseconds
+	microseconds              int   // Number of Microseconds
+	subMicrosecondNanoseconds int   // Remaining Nanoseconds after Milliseconds & Microseconds
+	totSubSecNanoseconds      int   // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
+	//                              plus remaining Nanoseconds
 	totTimeNanoseconds int64   // Total Number of equivalent Nanoseconds for Hours + Minutes
 	//                              + Seconds + Milliseconds + Nanoseconds
 	julianDayNumber JulianDayNoDto      // Encapsulates Julian Day Number/Time
@@ -35,7 +34,7 @@ type CalendarDateTime struct {
 // for a Gregorian Date Time.
 //
 // Taken collectively, the 'input' parameters years, months, days, hours,
-// minutes, seconds and nanoseconds represents a Gregorian date/time using
+// minutes, seconds and subMicrosecondNanoseconds represents a Gregorian date/time using
 // the time zone specified by input parameter 'timeZoneLocation'. Gregorian
 // dates which precede November 24, 4714 BCE or 11/24/-4713 (using Astronomical
 // Year Numbering System) are invalid and will generate an error.
@@ -103,8 +102,7 @@ func (calDTime CalendarDateTime) NewGregorianDate(
 		seconds,
 		nanoseconds,
 		timeZoneLocation,
-		CalendarSpec(0).Gregorian(),
-		CalendarYearNumMode(0).Astronomical(),
+		CalSpec.Gregorian(),
 		dateTimeFmt,
 		ePrefix)
 
@@ -149,8 +147,7 @@ func (calDTime CalendarDateTime) NewJulianDate(
 		seconds,
 		nanoseconds,
 		timeZoneLocation,
-		CalendarSpec(0).Julian(),
-		CalendarYearNumMode(0).Astronomical(),
+		CalSpec.Julian(),
 		dateTimeFmt,
 		ePrefix)
 
@@ -169,7 +166,6 @@ func (calDTime CalendarDateTime) NewInt(
 	nanoseconds int,
 	timeZoneLocation string,
 	calendar CalendarSpec,
-	yearNumberingSystem CalendarYearNumMode,
 	dateTimeFmt string) (calDateTime CalendarDateTime, err error) {
 
 	if calDTime.lock == nil {
@@ -197,7 +193,6 @@ func (calDTime CalendarDateTime) NewInt(
 		nanoseconds,
 		timeZoneLocation,
 		calendar,
-		yearNumberingSystem,
 		dateTimeFmt,
 		ePrefix)
 
@@ -226,11 +221,11 @@ func (calDTime *CalendarDateTime) GetDateTimeStr() (string, error) {
 		calDTime.year,
 		calDTime.month,
 		calDTime.dateDays,
-		calDTime.usDayOfWeekNumber,
+		calDTime.usDayOfWeekNo,
 		calDTime.hours,
 		calDTime.minutes,
 		calDTime.seconds,
-		calDTime.nanoseconds,
+		calDTime.subMicrosecondNanoseconds,
 		calDTime.dateTimeFmt,
 		ePrefix)
 }

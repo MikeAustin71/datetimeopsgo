@@ -186,13 +186,13 @@ func (tDtoUtil *timeDtoUtility) allocateSeconds(
 	return nil
 }
 
-// allocateTotalNanoseconds - Allocates total nanoseconds to current
+// allocateTotalNanoseconds - Allocates total subMicrosecondNanoseconds to current
 // TimeDto instance data fields: milliseconds, microseconds and
-// nanoseconds.
+// subMicrosecondNanoseconds.
 //
 // In addition, this method calculates TimeDto.TotTimeNanoseconds which
 // is the sum of hours, minutes, seconds, milliseconds, microseconds and
-// nanoseconds. Before calling this method, TimeDto Hours, Minutes and
+// subMicrosecondNanoseconds. Before calling this method, TimeDto Hours, Minutes and
 // Seconds must be properly initialized.
 //
 func (tDtoUtil *timeDtoUtility) allocateTotalNanoseconds(
@@ -240,7 +240,7 @@ func (tDtoUtil *timeDtoUtility) allocateTotalNanoseconds(
 
 	tDto.Nanoseconds = totalNanoSeconds
 
-	// calculate total time nanoseconds
+	// calculate total time subMicrosecondNanoseconds
 	tDto.TotTimeNanoseconds += int64(time.Hour) * int64(tDto.Hours)
 	tDto.TotTimeNanoseconds += int64(time.Minute) * int64(tDto.Minutes)
 	tDto.TotTimeNanoseconds += int64(time.Second) * int64(tDto.Seconds)

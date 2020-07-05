@@ -654,7 +654,7 @@ func TestTimeDurationDto_NewStartTimeAddDateTime_01(t *testing.T) {
 	var tDurDto TimeDurationDto
 	// 5-years, 6-months, 12-days,
 	// 1-hour, 1-minute, 1-second, 0-milliseconds,
-	// 0-microseconds, 10-nanoseconds
+	// 0-microseconds, 10-subMicrosecondNanoseconds
 
 	tDurDto, err = TimeDurationDto{}.NewStartTimeAddDateTime(
 		startDateTime,
@@ -730,7 +730,7 @@ func TestTimeDurationDto_NewStartTimeAddDateTime_02(t *testing.T) {
 	var tDurDto TimeDurationDto
 	// -5-years, -6-months, -12-days,
 	// -1-hour, -1-minute, -1-second, 0-milliseconds,
-	// 0-microseconds, -10-nanoseconds
+	// 0-microseconds, -10-subMicrosecondNanoseconds
 
 	tDurDto, err = TimeDurationDto{}.NewStartTimeAddDateTime(
 		endDateTime,
@@ -810,7 +810,7 @@ func TestTimeDurationDto_NewStartTimeAddTime_01(t *testing.T) {
 
 	// Subtract -
 	// -24-hours, -1-minute, -1-second, 0-milliseconds,
-	// 0-microseconds, -1-nanoseconds
+	// 0-microseconds, -1-subMicrosecondNanoseconds
 
 	tDurDto, err = TimeDurationDto{}.NewStartTimeAddTime(
 		endDateTimeLocal,
@@ -888,7 +888,7 @@ func TestTimeDurationDto_NewStartTimeAddTime_02(t *testing.T) {
 
 	// Subtract -
 	// -24-hours, -1-minute, -1-second, 0-milliseconds,
-	// 0-microseconds, -1-nanoseconds
+	// 0-microseconds, -1-subMicrosecondNanoseconds
 
 	tDurDto, err = TimeDurationDto{}.NewStartTimeAddTime(
 		endDateTimeLocal,
@@ -1244,7 +1244,7 @@ func TestTimeDurationDto_NewDefaultStartTimeAddDateTime_01(t *testing.T) {
 	var tDurDto TimeDurationDto
 	// 5-years, 6-months, 12-days,
 	// 1-hour, 1-minute, 1-second, 0-milliseconds,
-	// 0-microseconds, 10-nanoseconds
+	// 0-microseconds, 10-subMicrosecondNanoseconds
 
 	tDurDto, err = TimeDurationDto{}.NewDefaultStartTimeAddDateTime(
 		startDateTime,
@@ -1319,7 +1319,7 @@ func TestTimeDurationDto_NewDefaultStartTimeAddTime_01(t *testing.T) {
 
 	// Subtract -
 	// -24-hours, -1-minute, -1-second, 0-milliseconds,
-	// 0-microseconds, -1-nanoseconds
+	// 0-microseconds, -1-subMicrosecondNanoseconds
 
 	tDurDto, err = TimeDurationDto{}.NewDefaultStartTimeAddTime(
 		endDateTimeLocal,

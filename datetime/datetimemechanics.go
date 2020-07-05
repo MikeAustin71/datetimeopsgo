@@ -14,7 +14,7 @@ type DTimeMechanics struct {
 // AbsoluteTimeToTimeZoneDefConversion - Converts a given time to
 // another time zone using the 'Absolute' conversion method.
 // This means that the years, months, days, hours, minutes,
-// seconds and nanoseconds of the original 'dateTime' are not
+// seconds and subMicrosecondNanoseconds of the original 'dateTime' are not
 // changed. That time value is simply assigned to another
 // designated time zone. The target time zone is derived from
 // input parameter 'timeZoneDefDto', an instance of type
@@ -85,7 +85,7 @@ func (dtMech *DTimeMechanics) AbsoluteTimeToTimeZoneDefConversion(
 // AbsoluteTimeToTimeZoneNameConversion - Converts a given time to
 // another time zone using the 'Absolute' conversion method.
 // This means that the years, months, days, hours, minutes,
-// seconds and nanoseconds of the original 'dateTime' are not
+// seconds and subMicrosecondNanoseconds of the original 'dateTime' are not
 // changed. That time value is simply assigned to another
 // designated time zone. The target time zone is derived from
 // input parameter 'timeZoneDefDto', an instance of type
@@ -823,7 +823,7 @@ func (dtMech *DTimeMechanics) ComputeDurationByUtc(
 
 // GetDurationFromTimeComponents - Receives time components
 // such as days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds and returns time duration
+// microseconds and subMicrosecondNanoseconds and returns time duration
 // (time.Duration)
 //
 func (dtMech *DTimeMechanics) GetDurationFromTimeComponents(

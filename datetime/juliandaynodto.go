@@ -577,7 +577,7 @@ func (jDNDto *JulianDayNoDto) GetJulianHours() int {
 // this fractional number is always zero. Only the time value is
 // returned.
 //
-// This time fraction will convert to an accuracy of nanoseconds.
+// This time fraction will convert to an accuracy of subMicrosecondNanoseconds.
 // However, remember that this value represents Julian Time associated
 // with a Julian Day. Julian Days start at noon whereas Gregorian Days
 // start at midnight.
@@ -609,12 +609,12 @@ func (jDNDto *JulianDayNoDto) GetJulianTimeFraction() (*big.Float, error) {
 	return big.NewFloat(0.0).Copy(jDNDto.julianDayNoFraction), nil
 }
 
-// GetJulianTotalNanoSeconds - Returns the total nanoseconds
+// GetJulianTotalNanoSeconds - Returns the total subMicrosecondNanoseconds
 // associated with this Julian Day Time. As such the Julian Day
-// Number is ignored and only the time of day is returned in nanoseconds.
+// Number is ignored and only the time of day is returned in subMicrosecondNanoseconds.
 //
-// The returned int64 value represents the total nanoseconds equaling
-// the sum of the hours, minutes, seconds and nanoseconds encapsulated
+// The returned int64 value represents the total subMicrosecondNanoseconds equaling
+// the sum of the hours, minutes, seconds and subMicrosecondNanoseconds encapsulated
 // in this Julian Day Number/Time instance. The hours are Julian hours,
 // not Gregorian Calendar Hours.
 //
@@ -623,7 +623,7 @@ func (jDNDto *JulianDayNoDto) GetJulianTimeFraction() (*big.Float, error) {
 // noon (12:00:00.000000 12-hundred hours). By comparison, the
 // Gregorian calendar day starts at midnight (00:00:00.000000 Zero hours).
 //
-// This method returns the Julian time of day in total nanoseconds.
+// This method returns the Julian time of day in total subMicrosecondNanoseconds.
 //
 func (jDNDto *JulianDayNoDto) GetJulianTotalNanoSeconds() int64 {
 
@@ -669,10 +669,10 @@ func (jDNDto *JulianDayNoDto) GetMinutes() int {
 	return minutesInt
 }
 
-// GetGregorianTotalNanosecs - Returns the total nanoseconds
+// GetGregorianTotalNanosecs - Returns the total subMicrosecondNanoseconds
 // associated with this Julian Day Time. The returned int64 value
-// represents the total nanoseconds equaling the sum of the hours,
-// minutes, seconds and nanoseconds encapsulated in this Julian Day
+// represents the total subMicrosecondNanoseconds equaling the sum of the hours,
+// minutes, seconds and subMicrosecondNanoseconds encapsulated in this Julian Day
 // Number/Time instance as converted to a Gregorian Calendar day.
 //
 // Gregorian time represented by this total nanosecond value differs
@@ -680,7 +680,7 @@ func (jDNDto *JulianDayNoDto) GetMinutes() int {
 // (00:00:00.000000 Zero hours). Whereas the Day starts at noon
 // (12:00:00.000000 12-hundred hours).
 //
-// This method returns the Gregorian time in total nanoseconds which
+// This method returns the Gregorian time in total subMicrosecondNanoseconds which
 // in turn represents a value which is always less than or equal to
 // 24-hours.
 //
@@ -777,7 +777,7 @@ func (jDNDto JulianDayNoDto) New(
 // NewFromFloat64 - Computes and returns a new instance
 // of JulianDayNoDto based on the value of a float64
 // input parameter. 'float64' time fractions are only
-// accurate to a second. Fractional nanoseconds are
+// accurate to a second. Fractional subMicrosecondNanoseconds are
 // rounded to the nearest second.
 //
 func (jDNDto JulianDayNoDto) NewFromFloat64(
@@ -856,7 +856,7 @@ func (jDNDto JulianDayNoDto) NewFromFloat64(
 //           julianDayNoFraction     *big.Float // The Fractional Time value of the Julian
 //                                              //   Day No Time
 //           julianDayNoTime         *big.Float // JulianDayNo Plus Time Fraction accurate to
-//                                              //   within nanoseconds
+//                                              //   within subMicrosecondNanoseconds
 //           julianDayNoNumericalSign         int        // Sign of the Julian Day Number/Time value
 //           totalJulianNanoSeconds        *big.Int   // Julian Day Number Time Value expressed in nano seconds.
 //                                              //   Always represents a value less than 24-hours
@@ -864,7 +864,7 @@ func (jDNDto JulianDayNoDto) NewFromFloat64(
 //           hours                   int
 //           minutes                 int
 //           seconds                 int
-//           nanoseconds             int
+//           subMicrosecondNanoseconds             int
 //           lock                    *sync.Mutex
 //        }
 //
@@ -915,4 +915,27 @@ func (jDNDto JulianDayNoDto) NewFromGregorianDate(
 			ePrefix)
 
 	return gregorianDateTimeUtc, julianDayNoDto, err
+}
+
+// NewZero - Returns a new instance of JulianDayNoDto with
+// all internal data elements initialized to their zero
+// values.
+//
+func (jDNDto JulianDayNoDto) NewZero() JulianDayNoDto {
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
+	}
+
+	jDNDto.lock.Lock()
+
+	defer jDNDto.lock.Unlock()
+
+	newJDNDto := JulianDayNoDto{}
+
+	jDNDtoUtil := julianDayNoDtoUtility{}
+
+	jDNDtoUtil.rationalizeJulianDayNoDto(&newJDNDto)
+
+	return newJDNDto
 }

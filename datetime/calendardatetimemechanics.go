@@ -535,7 +535,7 @@ func (calDtMech *calendarDateTimeMechanics) processDateDay(
 // processDayOfWeek - processes and returns correct day of week format
 func (calDtMech *calendarDateTimeMechanics) processDayOfWeek(
 	inputStr string,
-	dayOfWeekNumber int,
+	dayOfWeekNumber UsDayOfWeekNo,
 	tokenMap map[string]string,
 	ePrefix string) (resultStr string, err error) {
 
@@ -543,40 +543,32 @@ func (calDtMech *calendarDateTimeMechanics) processDayOfWeek(
 
 	defer calDtMech.lock.Unlock()
 
-	daysOfWeek := map[int]string{
-		0: "Sunday",
-		1: "Monday",
-		2: "Tuesday",
-		3: "Wednesday",
-		4: "Thursday",
-		5: "Friday",
-		6: "Saturday",
-	}
-
 	ePrefix += "calendarDateTimeMechanics.processDayOfWeek() "
 
 	resultStr = inputStr
 
-	if dayOfWeekNumber < 0 {
+	if ! dayOfWeekNumber.XIsValid() {
 		err = fmt.Errorf(ePrefix + "\n" +
-			"Error: Input parameter 'dayOfWeekNumber' is LESS THAN ZERO!\n" +
-			"dayOfWeekNumber='%v'\n", dayOfWeekNumber)
+			"Error: Input parameter 'dayOfWeekNumber' is INVALID!\n" +
+			"dayOfWeekNumber='%v'\n", dayOfWeekNumber.String())
 
 		return resultStr, err
 	}
 
 	// Process Day Of Week
 	if strings.Contains(resultStr, "Monday") {
-		dayOfWeek := daysOfWeek[dayOfWeekNumber]
-		tokenMap["!DayOfWeek!"] = dayOfWeek
+
+		tokenMap["!DayOfWeek!"] = dayOfWeekNumber.String()
+
 		resultStr = strings.Replace(resultStr,
 			"Monday",
 			"!DayOfWeek!",
 			1)
 
 	} else if strings.Contains(resultStr, "Mon") {
-		dayOfWeek := daysOfWeek[dayOfWeekNumber][0:3]
-		tokenMap["!DayOfWeek!"] = dayOfWeek
+
+		tokenMap["!DayOfWeek!"] = dayOfWeekNumber.AbbrvDay()
+
 		resultStr = strings.Replace(resultStr,
 			"Mon",
 			"!DayOfWeek!",
@@ -961,7 +953,7 @@ func (calDtMech *calendarDateTimeMechanics) processMonths(
 	return resultStr, err
 }
 
-// processNanoseconds - processes and returns correct nanoseconds format
+// processNanoseconds - processes and returns correct subMicrosecondNanoseconds format
 // Make certain to call this method before calling 'processMicroseconds()'
 // and 'processMilliseconds()'.
 //

@@ -11,7 +11,7 @@ type TimeMechanics struct {
 }
 
 // ComputeBigIntNanoseconds - Utility method to sum days, hours, minutes,
-// seconds and nanoseconds and return total nanoseconds as a type *big.Int.
+// seconds and subMicrosecondNanoseconds and return total subMicrosecondNanoseconds as a type *big.Int.
 //
 func (timeMech *TimeMechanics) ComputeBigIntNanoseconds(
 	days *big.Int,
@@ -72,8 +72,8 @@ func (timeMech *TimeMechanics) ComputeBigIntNanoseconds(
 	return totalNanoseconds, err
 }
 
-// ComputeTimeElementsInt64 - Utility method to break gross nanoseconds
-// int constituent hours, minutes, seconds and remaining nanoseconds. As
+// ComputeTimeElementsInt64 - Utility method to break gross subMicrosecondNanoseconds
+// int constituent hours, minutes, seconds and remaining subMicrosecondNanoseconds. As
 // the method name implies, the return values are of type Int64.
 //
 func (timeMech *TimeMechanics) ComputeTimeElementsInt64(
@@ -129,8 +129,8 @@ func (timeMech *TimeMechanics) ComputeTimeElementsInt64(
 	return hours, minutes, seconds, nanoSeconds, numericalSign
 }
 
-// ComputeTimeElementsBigInt - Utility routine to break gross nanoseconds
-// int constituent hours, minutes, seconds and remaining nanoseconds. As
+// ComputeTimeElementsBigInt - Utility routine to break gross subMicrosecondNanoseconds
+// int constituent hours, minutes, seconds and remaining subMicrosecondNanoseconds. As
 // the method name implies, the return values are of type 'int'.
 //
 func (timeMech *TimeMechanics) ComputeTimeElementsBigInt(
@@ -219,8 +219,8 @@ func (timeMech *TimeMechanics) ComputeTimeElementsBigInt(
 	return days, hours, minutes, seconds, nanoseconds, numericalSign
 }
 
-// ComputeTimeElementsInt - Utility routine to break gross nanoseconds
-// int constituent hours, minutes, seconds and remaining nanoseconds. As
+// ComputeTimeElementsInt - Utility routine to break gross subMicrosecondNanoseconds
+// int constituent hours, minutes, seconds and remaining subMicrosecondNanoseconds. As
 // the method name implies, the return values are of type 'int'.
 //
 func (timeMech *TimeMechanics) ComputeTimeElementsInt(

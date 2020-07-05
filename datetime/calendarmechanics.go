@@ -99,10 +99,10 @@ type calendarMechanics struct {
 //   Oxford University Press. ISBN 978-0192862051
 //
 // However, the original algorithm has been modified to provide for time
-// fractions accurate to nanoseconds.
+// fractions accurate to subMicrosecondNanoseconds.
 //
 // Taken collectively, the 'input' parameters years, months, days, hours,
-// minutes, seconds and nanoseconds represents a Gregorian date/time using
+// minutes, seconds and subMicrosecondNanoseconds represents a Gregorian date/time using
 // the Universal Coordinated Time (UTC Time Zone). Gregorian dates which
 // precede November 24, 4714 BCE or 11/24/-4713 (using Astronomical Year
 // Numbering System) are invalid and will generate an error.
@@ -134,8 +134,8 @@ type calendarMechanics struct {
 //  seconds            int
 //    - The number of seconds
 //
-//  nanoseconds        int
-//    - The number of nanoseconds
+//  subMicrosecondNanoseconds        int
+//    - The number of subMicrosecondNanoseconds
 //
 //  ePrefix            string
 //     - A string containing the names of the calling functions
@@ -163,7 +163,7 @@ type calendarMechanics struct {
 //           julianDayNoFraction     *big.Float // The Fractional Time value of the Julian
 //                                              //   Day No Time
 //           julianDayNoTime         *big.Float // JulianDayNo Plus Time Fraction accurate to
-//                                              //   within nanoseconds
+//                                              //   within subMicrosecondNanoseconds
 //           julianDayNoNumericalSign         int        // Sign of the Julian Day Number/Time value
 //           totalJulianNanoSeconds        *big.Int   // Julian Day Number Time Value expressed in nano seconds.
 //                                              //   Always represents a value less than 24-hours
@@ -171,7 +171,7 @@ type calendarMechanics struct {
 //           hours                   int
 //           minutes                 int
 //           seconds                 int
-//           nanoseconds             int
+//           subMicrosecondNanoseconds             int
 //           lock                    *sync.Mutex
 //        }
 //
@@ -673,12 +673,12 @@ func (calMech *calendarMechanics) julianDayNoTimeToGregorianCalendar(
 	//hours,
 	//minutes,
 	//seconds,
-	//nanoseconds,
+	//subMicrosecondNanoseconds,
 	//_ := timeMech.ComputeTimeElementsBigInt(julianDayNoDto.totalJulianNanoSeconds)
 
 
-	//fmt.Printf("julianDayNoDto.totalJulianNanoSeconds: hours=%d minutes=%d seconds=%d nanoseconds=%d\n",
-	//	hours, minutes,seconds, nanoseconds)
+	//fmt.Printf("julianDayNoDto.totalJulianNanoSeconds: hours=%d minutes=%d seconds=%d subMicrosecondNanoseconds=%d\n",
+	//	hours, minutes,seconds, subMicrosecondNanoseconds)
 
 		//fmt.Println("Added 12-hours!")
 
@@ -1046,6 +1046,14 @@ func (calMech *calendarMechanics) richardsJulianDayNoTimeToJulianCalendar(
 // Reference:
 //  See documentation for Type, 'CalendarSpec' at datetime\calendarspecenum.go
 //
+//
+// Summary
+//
+// 1. Apply the Julian Calendar.
+// 2. If year is divisible by 4, it IS a leap year; add on day to February
+// 3. If year is divisible by 128 it is NOT a leap year and no day is added to February.
+// 4. If year is divisible by 454,545, it IS a leap year; add a day to February.
+//
 func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
 	years int64,
 	months,
@@ -1078,10 +1086,17 @@ func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
 		years *= -1
 	}
 
-	// Julian Day numbers start on day zero at noon. This means that Julian
-	// Day Number Zero begins at noon on Monday, January 1, 4713 BCE, in the
-	// proleptic Julian calendar. Using astronomical year numbering this is
-	// Monday Monday, January 1, -4712
+	// Julian Day numbers start on day zero at noon. For the Julian Calendar,
+	// this means that Julian Day Number Zero begins at noon on Monday,
+	// January 1, 4713 BCE, in the proleptic Julian calendar. Using
+	// astronomical year numbering this is Monday, January 1, -4712
+	//
+	// Leap Year Formula
+	//
+	// 1. Apply the Julian Calendar.
+	// 2. If year is divisible by 4, it IS a leap year; add on day to February
+	// 3. If year is divisible by 128 it is NOT a leap year and no day is added to February.
+	// 4. If year is divisible by 454,545, it IS a leap year; add a day to February.
 
 	// baseYear is year prior to years - 4712
 
@@ -1167,6 +1182,106 @@ func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
 	return julianDayNoDto, err
 }
 
+// revisedJulianCalendarToJulianDayNo - Converts a date time under the revised
+// Julian Calendar to a Julian Day Number/Time.
+//
+// The Revised Julian calendar, also known as the Milanković calendar, or,
+// less formally, new calendar, is a calendar proposed by the Serbian scientist
+// Milutin Milanković in 1923, which effectively discontinued the 340 years
+// of divergence between the naming of dates sanctioned by those Eastern
+// Orthodox churches adopting it and the Gregorian calendar that has come
+// to predominate worldwide. This calendar was intended to replace the
+// ecclesiastical calendar based on the Julian calendar hitherto in use
+// by all of the Eastern Orthodox Church. From 1 March 1600 through 28 February 2800,
+// the Revised Julian calendar aligns its dates with the Gregorian calendar,
+// which was proclaimed in 1582 by Pope Gregory XIII for adoption by the
+// Christian world. The calendar has been adopted by the Orthodox churches
+// of Constantinople, Albania, Alexandria, Antioch, Bulgaria, Cyprus,
+// Greece, and Romania.
+//
+// The Revised Julian calendar has the same months and month lengths as the
+// Julian calendar, but, in the Revised Julian calendar, years evenly
+// divisible by 100 are not leap years, except that years with remainders
+// of 200 or 600 when divided by 900 remain leap years, e.g. 2000 and 2400
+// as in the Gregorian Calendar.
+//
+// For additional information, reference:
+//    https://en.wikipedia.org/wiki/Revised_Julian_calendar
+//
+//
+// Summary
+//
+// 1. Years evenly divisible by 4 are leap years unless they are
+//    century years.
+//
+// 2. Years evenly divisible by 100 are not leap years unless when
+//    divided by 900 those years have remainders of 200 or 600 in
+//    which case they are leap years.
+//
+func (calMech *calendarMechanics) revisedJulianCalendarToJulianDayNo(
+	years int64,
+	months,
+	days,
+	hours,
+	minutes,
+	seconds,
+	nanoseconds int,
+	ePrefix string) (
+	julianDayNoDto JulianDayNoDto,
+	err error) {
+
+	calMech.lock.Lock()
+
+	defer calMech.lock.Unlock()
+
+	ePrefix += "calendarMechanics.revisedJulianCalendarToJulianDayNo() "
+
+	err = nil
+
+	julianDayNoDto = JulianDayNoDto{}
+
+	calDtMech := calendarDateTimeMechanics{}
+
+	numSign := int64(1)
+
+	// Generate absolute years value
+	if years < 0 {
+		numSign = -1
+		years *= -1
+	}
+
+	// Julian Day numbers start on day zero at noon. For the Julian Calendar,
+	// this means that Julian Day Number Zero begins at noon on Monday,
+	// January 1, 4713 BCE, in the proleptic Julian calendar. Using
+	// astronomical year numbering this is Monday, January 1, -4712
+	//
+	// Julian Day Calculation Summary
+	//
+	// 1. Julian Day 0 is Julian Calendar Day: Monday, January 1, -4712
+	// using Astronomical year numbering.
+	//
+	// 2. Years evenly divisible by 4 are leap years unless they are
+	//    century years.
+	//
+	// 3. Years evenly divisible by 100 are not leap years unless when
+	//    divided by 900 those years have remainders of 200 or 600 in
+	//    which case they are leap years.
+
+	// baseYear is year prior to years - 4712
+
+	baseYear := years - 4712 - 1
+
+	baseDays := baseYear * 365
+
+	plus4YrLeapYrs := baseYear / 4
+
+	less100YrLeapYrs := baseYear / 100
+
+	plus100YrLeapYrsBy900
+
+	return julianDayNoDto, err
+}
+
 // Week Number
 // https://www.timeanddate.com/date/week-numbers.html
 
@@ -1201,16 +1316,16 @@ func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
 //          julianDayNoFraction *big.Float // The Fractional Time value of the Julian
 //                                             Day No Time
 //          julianDayNoTime *big.Float     // Julian Day Number Plus Time Fraction accurate to
-//                                             within nanoseconds
+//                                             within subMicrosecondNanoseconds
 //          julianDayNoNumericalSign int   // Sign of the Julian Day Number/Time value
-//          totalJulianNanoSeconds   int64 // Julian Day Number Time Value expressed in nanoseconds.
+//          totalJulianNanoSeconds   int64 // Julian Day Number Time Value expressed in subMicrosecondNanoseconds.
 //                                             Always represents a positive value less than 36-hours
-//          netGregorianNanoSeconds int64  // Gregorian nanoseconds. Always represents a value in
-//                                             nanoseconds which is less than 24-hours.
+//          netGregorianNanoSeconds int64  // Gregorian subMicrosecondNanoseconds. Always represents a value in
+//                                             subMicrosecondNanoseconds which is less than 24-hours.
 //          hours       int                // Gregorian Hours
 //          minutes     int
 //          seconds     int
-//          nanoseconds int
+//          subMicrosecondNanoseconds int
 //          lock        *sync.Mutex
 //        }
 //

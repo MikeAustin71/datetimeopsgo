@@ -208,7 +208,7 @@ func TestDateTzDto_AddTime_01(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error returned by dTz1.AddTime(hours, minutes, seconds, " +
 			"milliseconds, microseconds, " +
-			"nanoseconds, fmtstr).\n" +
+			"subMicrosecondNanoseconds, fmtstr).\n" +
 			"Error='%v'\n", err.Error())
 		return
 	}
@@ -262,7 +262,7 @@ func TestDateTzDto_AddTimeToThis_01(t *testing.T) {
 	err = dTz1.AddTimeToThis(hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
 
 	if err != nil {
-		t.Errorf("Error returned by dTz1.AddTimeToThis(hours, minutes, seconds, milliseconds, microseconds, nanoseconds). Error='%v'", err.Error())
+		t.Errorf("Error returned by dTz1.AddTimeToThis(hours, minutes, seconds, milliseconds, microseconds, subMicrosecondNanoseconds). Error='%v'", err.Error())
 	}
 
 	expectedOutputStr = t2.Format(fmtstr)

@@ -305,7 +305,7 @@ func (usDayOfWk UsDayOfWeekNo) String() string {
 	result, ok := mUsDayOfWeekNoCodeToString[usDayOfWk]
 
 	if !ok {
-		return ""
+		return fmt.Sprintf("Error: Value= %d", int(usDayOfWk))
 	}
 
 	return result

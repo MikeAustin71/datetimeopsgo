@@ -77,40 +77,40 @@ var mTDurCalcTypeCodeToString = map[TDurCalcType]string{
 //
 // StdYearMth       (1) - StdYearMth Calculation type. Allocates time duration by
 //                        Standard Year, months, weeks, days, hours, minutes, seconds,
-//                        milliseconds, microseconds, and nanoseconds.
+//                        milliseconds, microseconds, and subMicrosecondNanoseconds.
 //
 // CumMonths        (2) - Cumulative Months Calculation. Allocates time duration by
 //                       cumulative months plus weeks, week days, date days, hours,
-//                       minutes, seconds, milliseconds, microseconds and nanoseconds.
+//                       minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds.
 //
 // CumWeeks         (3) - Cumulative Weeks Calculation. Allocates time duration by cumulative
 //                        weeks, plus week days, hours, minutes, seconds, milliseconds,
-//                        microseconds and nanoseconds.
+//                        microseconds and subMicrosecondNanoseconds.
 //
 // CumDays          (4) - Cumulative Days calculation. Allocates time duration by cumulative
 //                        days plus hours, minutes, seconds, milliseconds, microseconds and
-//                        nanoseconds.
+//                        subMicrosecondNanoseconds.
 //
 // CumHours         (5) - Cumulative Hours calculation. Allocates time duration by cumulative
 //                        hours plus minutes, seconds, milliseconds, microseconds and
-//                        nanoseconds.
+//                        subMicrosecondNanoseconds.
 //
 // CumMinutes       (6) - Cumulative Minutes calculation. Allocates time duration by
 //                        cumulative minutes plus seconds, milliseconds, microseconds and
-//                        nanoseconds.
+//                        subMicrosecondNanoseconds.
 //
 // CumSeconds       (7) - Cumulative Seconds calculation. Allocates time duration by
 //                        cumulative seconds plus milliseconds, microseconds and
-//                        nanoseconds.
+//                        subMicrosecondNanoseconds.
 //
 // CumMilliseconds  (8) - Cumulative Milliseconds calculation. Allocates time duration
-//                        by cumulative milliseconds plus microseconds and nanoseconds.
+//                        by cumulative milliseconds plus microseconds and subMicrosecondNanoseconds.
 //
 // CumMicroseconds  (9) - Cumulative Microseconds calculation. Allocates time duration
-//                        by cumulative microseconds plus nanoseconds.
+//                        by cumulative microseconds plus subMicrosecondNanoseconds.
 //
 // CumNanoseconds  (10) - Cumulative Nanoseconds calculation. Allocates time duration
-//                        by cumulative nanoseconds.
+//                        by cumulative subMicrosecondNanoseconds.
 //
 // GregorianYears  (11) - Gregorian Year calculation. Allocates time duration by Years,
 //                        Months, Weeks, WeekDays, Date Days, Hours, Minutes, Seconds,
@@ -149,7 +149,7 @@ func (durCalc TDurCalcType) None() TDurCalcType {
 
 // StdYearMth - Allocates time duration by Standard Year, months, weeks,
 // weekdays, date days, hours, minutes, seconds, milliseconds, microseconds
-// and nanoseconds. For the 'StdYearMth' time duration calculation type, all
+// and subMicrosecondNanoseconds. For the 'StdYearMth' time duration calculation type, all
 // data fields in the TimeDurationDto	structure are populated.
 //
 // type TimeDurationDto struct {
@@ -208,7 +208,7 @@ func (durCalc TDurCalcType) StdYearMth() TDurCalcType {
 // Years and Months are consolidated and counted as cumulative months. Years
 // duration is not provided. The entire duration is broken down by cumulative
 // months plus weeks, week days, date days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds.
+// microseconds and subMicrosecondNanoseconds.
 //
 // The Data Fields for Years is set to zero.
 //
@@ -269,7 +269,7 @@ func (durCalc TDurCalcType) CumMonths() TDurCalcType {
 // years, months, weeks are consolidated and counted as cumulative weeks. Years and
 // months duration are not calculated. The entire duration is broken down by cumulative
 // weeks, plus week days, hours, minutes, seconds, milliseconds, microseconds and
-// nanoseconds. Data Fields for Years and Months are always set to zero.
+// subMicrosecondNanoseconds. Data Fields for Years and Months are always set to zero.
 //
 // For the 'CumWeeks' time duration calculation type, the following data fields are
 // populated in the TimeDurationDto structure:
@@ -328,7 +328,7 @@ func (durCalc TDurCalcType) CumWeeks() TDurCalcType {
 // Years, months, weeks and days are consolidated and counted as cumulative days.
 // Years, months and weeks duration are not calculated. The entire time duration
 // is broken down by cumulative days plus hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds. Data Fields for years, months, weeks, and weekdays
+// microseconds and subMicrosecondNanoseconds. Data Fields for years, months, weeks, and weekdays
 // are always set to zero.
 //
 // For the 'CumDays' time duration calculation type, the following data fields are
@@ -390,7 +390,7 @@ func (durCalc TDurCalcType) CumDays() TDurCalcType {
 //
 // Years, months, weeks and days duration are not calculated. The entire duration
 // is broken down by cumulative hours plus minutes, seconds, milliseconds,
-// microseconds and nanoseconds.  Data Fields for years, months, weeks, and days
+// microseconds and subMicrosecondNanoseconds.  Data Fields for years, months, weeks, and days
 // are always set to zero.
 //
 // For the 'CumHours' time duration calculation type, the following data fields
@@ -452,7 +452,7 @@ func (durCalc TDurCalcType) CumHours() TDurCalcType {
 //
 // Years, months, weeks, days and hours duration are not calculated. The entire
 // duration is broken down by cumulative minutes plus seconds, milliseconds,
-// microseconds and nanoseconds.  Data Fields for years, months, weeks, days
+// microseconds and subMicrosecondNanoseconds.  Data Fields for years, months, weeks, days
 // and hours are always set to zero.
 //
 // For the 'CumMinutes' time duration calculation type, the following data fields
@@ -514,7 +514,7 @@ func (durCalc TDurCalcType) CumMinutes() TDurCalcType {
 //
 // Years, months, weeks, days, hours and minutes duration are not calculated. The
 // entire duration is broken down by cumulative seconds plus milliseconds, microseconds
-// and nanoseconds. Data Fields for years, months, weeks, days hours and minutes are
+// and subMicrosecondNanoseconds. Data Fields for years, months, weeks, days hours and minutes are
 // always set to zero.
 //
 // For the 'CumSeconds' time duration calculation type, the following data fields are
@@ -576,7 +576,7 @@ func (durCalc TDurCalcType) CumSeconds() TDurCalcType {
 //
 // Years, months, weeks, days, hours, minutes and seconds duration are not calculated.
 // The entire time duration is broken down by cumulative milliseconds plus microseconds
-// and nanoseconds.  Data Fields for years, months, weeks, days, hours, minutes and seconds
+// and subMicrosecondNanoseconds.  Data Fields for years, months, weeks, days, hours, minutes and seconds
 // are always set to zero.
 //
 // For the 'CumMilliseconds' time duration calculation type, the following data fields are populated:
@@ -638,7 +638,7 @@ func (durCalc TDurCalcType) CumMilliseconds() TDurCalcType {
 //
 // Years, months, weeks, days, hours, minutes, seconds and milliseconds duration are
 // not calculated. The entire time duration is broken down by cumulative microseconds
-// plus nanoseconds. Data Fields for years, months, weeks, days, hours, minutes, seconds
+// plus subMicrosecondNanoseconds. Data Fields for years, months, weeks, days, hours, minutes, seconds
 // and milliseconds are always set to zero.
 //
 // For the 'CumMicroseconds' time duration calculation type, the following data fields
@@ -696,12 +696,12 @@ func (durCalc TDurCalcType) CumMicroseconds() TDurCalcType {
 
 // CumNanoSeconds - Cumulative Nanoseconds calculation. Years, months, weeks, days,
 // hours, minutes, seconds milliseconds and microseconds are ignored. Years, months,
-// weeks, days, hours, minutes, seconds, milliseconds, microseconds and nanoseconds
+// weeks, days, hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds
 // are consolidated and counted as cumulative Nanoseconds.
 //
 // Years, months, weeks, days, hours, minutes, seconds, milliseconds and microseconds
 // duration are not calculated. The entire time duration is broken down by cumulative
-// nanoseconds. Data Fields for years, months, weeks, days, hours, minutes, seconds,
+// subMicrosecondNanoseconds. Data Fields for years, months, weeks, days, hours, minutes, seconds,
 // milliseconds and microseconds are always set to zero.
 //
 // For the 'CumNanoseconds' time duration calculation type, the following data fields

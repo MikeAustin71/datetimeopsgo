@@ -185,7 +185,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 //  dTz *DateTzDto
 //     - Provides the base date to which input parameters 'years',
 //       'months', 'days', 'hours', 'minutes', 'seconds',
-//       'milliseconds', 'microseconds' and 'nanoseconds' are added.
+//       'milliseconds', 'microseconds' and 'subMicrosecondNanoseconds' are added.
 //
 //  timeCalcMode    TimeMathCalcMode
 //     - TimeMathCalcMode is an enumeration which specifies the
@@ -213,7 +213,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 //  seconds           int   - Number of seconds to add to the value of parameter 'dTz'.
 //  milliseconds      int   - Number of milliseconds to add to the value of parameter 'dTz'.
 //  microseconds      int   - Number of microseconds to add to the value of parameter 'dTz'.
-//  nanoseconds       int   - Number of nanoseconds to add to the value of parameter 'dTz'.
+//  subMicrosecondNanoseconds       int   - Number of subMicrosecondNanoseconds to add to the value of parameter 'dTz'.
 //
 //          Note: Date Component input parameters may be either negative
 //                or positive. Negative values will subtract time from
@@ -230,7 +230,7 @@ func (dTzUtil *dateTzDtoUtility) addDate(
 //  DateTzDto - If successful the method returns a new, valid, fully populated
 //              DateTzDto type updated to reflect the added input parameters,
 //              years, months, days, hours, minutes, seconds, milliseconds,
-//              microseconds and nanoseconds.
+//              microseconds and subMicrosecondNanoseconds.
 //
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are
@@ -744,14 +744,14 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 //
 //  dTz *DateTzDto - Provides the base date to which input parameters 'hours',
 //                  'minutes', 'seconds', 'milliseconds', 'microseconds' and
-//                   'nanoseconds' are added.
+//                   'subMicrosecondNanoseconds' are added.
 //
 //  hours             int   - Number of hours to add to the value of parameter 'dTz'.
 //  minutes           int   - Number of minutes to add to the value of parameter 'dTz'.
 //  seconds           int   - Number of seconds to add to the value of parameter 'dTz'.
 //  milliseconds      int   - Number of milliseconds to add to the value of parameter 'dTz'.
 //  microseconds      int   - Number of microseconds to add to the value of parameter 'dTz'.
-//  nanoseconds       int   - Number of hours to add to the value of parameter 'dTz'.
+//  subMicrosecondNanoseconds       int   - Number of hours to add to the value of parameter 'dTz'.
 //
 //          Note: Date Component input parameters may be either negative
 //                or positive. Negative values will subtract time from
@@ -786,7 +786,7 @@ func (dTzUtil *dateTzDtoUtility) addPlusTimeDto(
 //  DateTzDto - If successful the method returns a new, valid, fully populated
 //              DateTzDto type updated to reflect the added input parameters,
 //              years, months, days, hours, minutes, seconds, milliseconds,
-//              microseconds and nanoseconds.
+//              microseconds and subMicrosecondNanoseconds.
 //
 //
 //  error     - If successful the returned error Type is set equal to 'nil'. If errors are

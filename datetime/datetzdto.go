@@ -25,7 +25,7 @@ import (
 // identify a specific point in time. In addition to date and time identifiers,
 // this type also includes information on associated Time Zones and Time Elements.
 // Time elements includes years, months, weeks, days, hours, minutes, seconds,
-// milliseconds, microseconds and nanoseconds.
+// milliseconds, microseconds and subMicrosecondNanoseconds.
 //
 // 'DateTzDto' always uses the Gregorian Calendar. For alternate calendars,
 // reference type 'CalendarDateTime'.
@@ -90,7 +90,7 @@ import (
 //
 // A requirement for presentation of date time strings is a specific format
 // for displaying years, months, days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds. Many 'DateTzDto' methods require calling functions
+// microseconds and subMicrosecondNanoseconds. Many 'DateTzDto' methods require calling functions
 // to provide a date time format string, ('dateTimeFmtStr'). This format string
 // is used to configure date times for display purposes.
 //
@@ -283,7 +283,7 @@ func (dtz *DateTzDto) AddDate(
 //  seconds           int   - Number of seconds to add.
 //  milliseconds      int   - Number of milliseconds to add.
 //  microseconds      int   - Number of microseconds to add.
-//  nanoseconds       int   - Number of nanoseconds to add.
+//  subMicrosecondNanoseconds       int   - Number of subMicrosecondNanoseconds to add.
 //
 //  Note: Date Time Component input parameters may be either negative
 //        or positive. Negative values will subtract time from
@@ -335,7 +335,7 @@ func (dtz *DateTzDto) AddDate(
 //                   seconds,
 //                   milliseconds,
 //                   microseconds,
-//                   nanoseconds,
+//                   subMicrosecondNanoseconds,
 //                   FmtDateTimeYrMDayFmtStr)
 //
 //  Note:
@@ -429,7 +429,7 @@ func (dtz *DateTzDto) AddDateTime(
 //  seconds       int - Number of seconds to add.
 //  milliseconds  int - Number of milliseconds to add.
 //  microseconds  int - Number of microseconds to add.
-//  nanoseconds   int - Number of nanoseconds to add.
+//  subMicrosecondNanoseconds   int - Number of subMicrosecondNanoseconds to add.
 //
 //  Note: Date Time Component input parameters may be either negative
 //        or positive. Negative values will subtract time from
@@ -459,7 +459,7 @@ func (dtz *DateTzDto) AddDateTime(
 //                seconds,
 //                milliseconds,
 //                microseconds,
-//                nanoseconds)
+//                subMicrosecondNanoseconds)
 //
 //  Note:
 //        'TCalcMode.LocalTimeZone()' is of type 'TimeMathCalcMode'.
@@ -1190,7 +1190,7 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(
 //..seconds           int   - Number of seconds to add.
 //..milliseconds      int   - Number of milliseconds to add.
 //..microseconds      int   - Number of microseconds to add.
-//..nanoseconds       int   - Number of nanoseconds to add.
+//..subMicrosecondNanoseconds       int   - Number of subMicrosecondNanoseconds to add.
 //
 //..Note: Time Component input parameters may be either negative
 //        or positive. Negative values will subtract time from
@@ -1239,7 +1239,7 @@ func (dtz *DateTzDto) AddPlusTimeDtoToThis(
 //                seconds,
 //                milliseconds,
 //                microseconds,
-//                nanoseconds,
+//                subMicrosecondNanoseconds,
 //                FmtDateTimeYrMDayFmtStr)
 //
 //  Note:
@@ -1295,7 +1295,7 @@ func (dtz *DateTzDto) AddTime(
 //  seconds      int - Number of seconds to add.
 //  milliseconds int - Number of milliseconds to add.
 //  microseconds int - Number of microseconds to add.
-//  nanoseconds  int - Number of nanoseconds to add.
+//  subMicrosecondNanoseconds  int - Number of subMicrosecondNanoseconds to add.
 //
 //  Note: Time Component input parameters may be either negative
 //        or positive. Negative values will subtract time from
@@ -1322,7 +1322,7 @@ func (dtz *DateTzDto) AddTime(
 //                seconds,
 //                milliseconds,
 //                microseconds,
-//                nanoseconds,
+//                subMicrosecondNanoseconds,
 //                FmtDateTimeYrMDayFmtStr)
 //
 //  Note:
@@ -1876,7 +1876,7 @@ func (dtz *DateTzDto) GetDateTimeEverything() string {
 }
 
 // GetDateTimeNanoSecText - Returns formatted
-// date time string with nanoseconds
+// date time string with subMicrosecondNanoseconds
 // 	EXAMPLE: 2006-01-02 15:04:05.000000000
 //
 func (dtz *DateTzDto) GetDateTimeNanoSecText() string {

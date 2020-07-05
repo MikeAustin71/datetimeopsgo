@@ -162,7 +162,7 @@ func (tzDto *TimeZoneDto) AddDate(years, months, days int) error {
 // seconds      int  - Number of seconds added to current TimeZoneDto
 // milliseconds int  - Number of milliseconds added to current TimeZoneDto
 // microseconds int  - Number of microseconds added to current TimeZoneDto
-// nanoseconds  int  - Number of nanoseconds added to current TimeZoneDto
+// subMicrosecondNanoseconds  int  - Number of subMicrosecondNanoseconds added to current TimeZoneDto
 //
 // Note:  Date Time input parameters may be either negative or positive.
 //        Negative values will subtract time from the current TimeZoneDto
@@ -406,7 +406,7 @@ func (tzDto *TimeZoneDto) AddPlusTimeDto(timeDto TimeDto) error {
 //
 //  microseconds - microseconds to be added to current TimeZoneDto
 //
-//  nanoseconds  - nanoseconds to be added to current TimeZoneDto
+//  subMicrosecondNanoseconds  - subMicrosecondNanoseconds to be added to current TimeZoneDto
 //
 //  Note:  The time component input parameter may be either negative
 //         or positive. Negative values will subtract time from
@@ -1075,7 +1075,7 @@ func (tzDto TimeZoneDto) NewAddDate(
 		0,          // seconds
 		0,          // milliseconds
 		0,          // microseconds
-		0,          // nanoseconds
+		0,          // subMicrosecondNanoseconds
 		dateTimeFmtStr,
 		ePrefix)
 }
@@ -1106,7 +1106,7 @@ func (tzDto TimeZoneDto) NewAddDate(
 //
 //   microseconds int  - Number of microseconds added to 'tzuIn'
 //
-//   nanoseconds int  - Number of nanoseconds added to 'tzuIn'
+//   subMicrosecondNanoseconds int  - Number of subMicrosecondNanoseconds added to 'tzuIn'
 //
 //   Note:  Input time element parameters may be either negative or positive.
 //       Negative values will subtract time from the returned TimeZoneDto instance.
@@ -1301,7 +1301,7 @@ func (tzDto TimeZoneDto) NewAddDuration(
 //
 //   microseconds int    - Number of microseconds to be added to tzuIn
 //
-//   nanoseconds  int    - Number of nanoseconds to be added to tzuIn
+//   subMicrosecondNanoseconds  int    - Number of subMicrosecondNanoseconds to be added to tzuIn
 //
 //   Note: Negative time values may be used to subtract time from 'tzuIn'.
 //
@@ -1411,7 +1411,7 @@ func (tzDto TimeZoneDto) NewAddTime(
 //               Millisecond   int       // Number of MilliSeconds - A Millisecond is 1 one-thousandth or 1/1,000 of a second
 //               Microsecond   int       // Number of MicroSeconds - A Microsecond is 1 one-millionth or 1/1,000,000 of a second
 //               Nanosecond    int       // Number of Nanoseconds - A Nanosecond is 1 one-billionth or 1/1,000,000,000 of a second.
-//                                       // Nanosecond = TotalNanoSecs - millisecond nanoseconds - microsecond nanoseconds
+//                                       // Nanosecond = TotalNanoSecs - millisecond subMicrosecondNanoseconds - microsecond subMicrosecondNanoseconds
 //               TotalNanoSecs int64     // Total Nanoseconds = MilliSecond Nanoseconds + MicroSeconds Nanoseconds + Nanoseconds
 //               DateTime      time.Time // DateTime value for this DateTzDto Type
 //               DateTimeFmt   string    // Date Time Format String. Default is "2006-01-02 15:04:05.000000000 -0700 MST"
@@ -1898,7 +1898,7 @@ func (tzDto TimeZoneDto) NewTimeAddDate(
 //  seconds   int  - Number of seconds to be added to initial TimeZoneDto value.
 //  milliseconds int  - Number of milliseconds to be added to initial TimeZoneDto value.
 //  microseconds int  - Number of microseconds to be added to initial TimeZoneDto value.
-//  nanoseconds int  - Number of nanoseconds to be added to initial TimeZoneDto value.
+//  subMicrosecondNanoseconds int  - Number of subMicrosecondNanoseconds to be added to initial TimeZoneDto value.
 //
 //  Note: Negative date-time values may be used to subtract date-time from the initial TimeZoneDto.
 //
@@ -2205,7 +2205,7 @@ func (tzDto TimeZoneDto) NewTimeAddDuration(
 //
 //  microseconds int    - Number of microseconds to be added to initial time, 'tIn'
 //
-//  nanoseconds  int    - Number of nanoseconds to be added to initial time, 'tIn'
+//  subMicrosecondNanoseconds  int    - Number of subMicrosecondNanoseconds to be added to initial time, 'tIn'
 //
 //              Note: Negative time values may be used to subtract time from
 //                    initial time parameter, 'tIn'.

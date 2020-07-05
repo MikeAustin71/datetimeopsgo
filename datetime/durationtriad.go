@@ -105,7 +105,7 @@ References -
    A number of methods require the use of a Date Time Format string. These
    strings provide specific formats for displaying dates, time zones and
    time components such is hours, minutes, seconds, milliseconds, microseconds
-   and nanoseconds.
+   and subMicrosecondNanoseconds.
 
    dateTimeFmtStr string - A date time format string which will be used
                            to format and display 'dateTime'. Example:
@@ -533,7 +533,7 @@ func (durT DurationTriad) New() DurationTriad {
 // which will control the output of the time duration calculation. The standard
 // date time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means
 // that time duration is allocated over years, months, weeks, weekdays, date
-// days, hours, minutes, seconds, milliseconds, microseconds and nanoseconds.
+// days, hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds.
 // For a discussion of Time Duration Calculation type, see Type TDurCalcType
 // located in source file:
 //
@@ -799,7 +799,7 @@ func (durT DurationTriad) NewAutoEnd(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -2032,7 +2032,7 @@ func (durT DurationTriad) NewDefaultStartTimePlusTimeDto(
 // 'timeDto' is an instance of type 'TimeDto'. This time duration value is added to
 // 'startDateTimeTz' in order to calculate ending date time. Type 'TimeDto' stores time
 // values by granular components such as years, months, days, hours, minutes, seconds,
-// milliseconds, microseconds and nanoseconds.
+// milliseconds, microseconds and subMicrosecondNanoseconds.
 //
 // 'startDateTimeTz' is passed as an instance of 'DateTzDto' and marks the starting date
 // time for the time duration calculation.
@@ -2153,7 +2153,7 @@ func (durT DurationTriad) NewDefaultStartTimeTzPlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -2432,7 +2432,7 @@ func (durT DurationTriad) NewEndTimeMinusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -2715,7 +2715,7 @@ func (durT DurationTriad) NewEndTimeTzMinusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -2972,7 +2972,7 @@ func (durT DurationTriad) NewStartEndTimes(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -3214,7 +3214,7 @@ func (durT DurationTriad) NewStartEndTimesTz(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -3481,7 +3481,7 @@ func (durT DurationTriad) NewStartTimeDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -3741,7 +3741,7 @@ func (durT DurationTriad) NewStartTimeTzDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -4018,7 +4018,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 // 'timeDto' is an instance of type 'TimeDto'. This time duration value is added to
 // 'startDateTimeTz' in order to calculate ending date time. Type 'TimeDto' stores time
 // values by granular components such as years, months, days, hours, minutes, seconds,
-// milliseconds, microseconds and nanoseconds.
+// milliseconds, microseconds and subMicrosecondNanoseconds.
 //
 // 'startDateTimeTz' is passed as an instance of 'DateTzDto' and marks the starting date
 // time for the time duration calculation.
@@ -4030,7 +4030,7 @@ func (durT DurationTriad) NewStartTimePlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5193,7 +5193,7 @@ func (durT *DurationTriad) SetDefaultStartTimeTzPlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5476,7 +5476,7 @@ func (durT *DurationTriad) SetEndTimeMinusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5744,7 +5744,7 @@ func (durT *DurationTriad) SetEndTimeTzMinusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5983,7 +5983,7 @@ func (durT *DurationTriad) SetStartEndTimes(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -6224,7 +6224,7 @@ func (durT *DurationTriad) SetStartEndTimesTz(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -6467,7 +6467,7 @@ func (durT *DurationTriad) SetStartTimeDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -6716,7 +6716,7 @@ func (durT *DurationTriad) SetStartTimeTzDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -6984,7 +6984,7 @@ func (durT *DurationTriad) SetStartTimePlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //

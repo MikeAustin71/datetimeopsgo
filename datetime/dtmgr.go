@@ -92,7 +92,7 @@ func (dt DtMgr) GetDateTimeEverything(t time.Time) string {
 }
 
 // GetDateTimeNanoSecText - Returns formatted date time string with
-// nanoseconds.
+// subMicrosecondNanoseconds.
 //
 //  EXAMPLE: "2006-01-02 15:04:05.000000000"
 //
@@ -152,7 +152,7 @@ func (dt DtMgr) GetDateTimeTzNanoSecDowYMDText(t time.Time) string {
 
 // GetDateTimeTzNanoSecText - Receives input parameter 't' as a type 'time.Time'.
 // This date time is then returned as a string formatted with the 'FmtDateTimeDMYNanoTz'
-// format. This format presents date time down to nanoseconds in addition to the
+// format. This format presents date time down to subMicrosecondNanoseconds in addition to the
 // associated time zone.
 //
 //  EXAMPLE: "01/02/2006 15:04:05.000000000 -0700 MST"
@@ -163,7 +163,7 @@ func (dt DtMgr) GetDateTimeTzNanoSecText(t time.Time) string {
 
 // GetDateTimeTzNanoSecYMDText - Receives input parameter 't' as a type 'time.Time'.
 // This date time is then returned in string format using the FmtDateTimeTzNanoYMD
-// format which presents date time down to nanoseconds in addition to the
+// format which presents date time down to subMicrosecondNanoseconds in addition to the
 // associated time zone. In this format, the date is expressed as
 // Year-Month-Day (Example: 2017-12-06)
 //

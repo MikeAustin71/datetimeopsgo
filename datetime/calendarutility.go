@@ -226,7 +226,7 @@ func (calUtil *CalendarUtility) GregorianDateToJulianDayNo(
 //   Oxford University Press. ISBN 978-0192862051
 //
 // However, the original algorithm has been modified to provide for time fractions
-// accurate to nanoseconds.
+// accurate to subMicrosecondNanoseconds.
 //
 // ------------------------------------------------------------------------
 //

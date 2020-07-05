@@ -405,7 +405,7 @@ func (tDto TimeDto) New() TimeDto {
 // Be advised that all time elements are normalized. That is, negative
 // time values are converted and stored as positive time elements suitable
 // for conversion to a date time. In addition, invalid values for days,
-// hours, minutes, seconds and nanoseconds are corrected in accordance
+// hours, minutes, seconds and subMicrosecondNanoseconds are corrected in accordance
 // with Gregorian Calendar standards.
 //
 // Example: Assume you entered a value of -8 weeks and all other
@@ -478,7 +478,7 @@ func (tDto TimeDto) NewTimeComponents(
 // Be advised that all time elements are normalized. That is, negative
 // time values are converted and stored as positive time elements suitable
 // for conversion to a date time. In addition, invalid values for days,
-// hours, minutes, seconds and nanoseconds are corrected in accordance
+// hours, minutes, seconds and subMicrosecondNanoseconds are corrected in accordance
 // with Gregorian Calendar standards.
 //
 func (tDto TimeDto) NewTimeElements(

@@ -108,7 +108,7 @@ const (
   // a Millisecond.
   MicroSecondsPerMilliSecond = int64(1000)
 
-  // NanoSecondsPerMicroSecond - The number of nanoseconds in
+  // NanoSecondsPerMicroSecond - The number of subMicrosecondNanoseconds in
   // a microsecond.
   NanoSecondsPerMicroSecond = int64(1000)
 

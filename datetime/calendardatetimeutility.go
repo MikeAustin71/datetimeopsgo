@@ -13,6 +13,54 @@ type calendarDateTimeUtility struct {
 	lock   sync.Mutex
 }
 
+
+// copyOut - Returns a deep copy of input parameter
+// 'calDTime' which is a pointer to a type 'CalendarDateTime'.
+//
+func (calDTimeUtil *calendarDateTimeUtility) copyOut(
+	calDTime *CalendarDateTime,
+	ePrefix string) ( newCalDTime CalendarDateTime, err error) {
+
+	calDTimeUtil.lock.Lock()
+
+	defer calDTimeUtil.lock.Unlock()
+
+	ePrefix += "calendarDateTimeUtility.copyOut() "
+
+	newCalDTime = CalendarDateTime{}
+
+	if calDTime == nil {
+		err = errors.New(ePrefix +
+			"\nInput parameter 'calDTime' is a nil pointer!")
+
+		return newCalDTime, err
+	}
+
+	if calDTime.lock == nil {
+		calDTime.lock = new(sync.Mutex)
+	}
+
+	newCalDTime.year = calDTime.year
+	newCalDTime.month = calDTime.month
+	newCalDTime.dateDays = calDTime.dateDays
+	newCalDTime.hours = calDTime.hours
+	newCalDTime.minutes = calDTime.minutes
+	newCalDTime.seconds = calDTime.seconds
+	newCalDTime.milliseconds = calDTime.milliseconds
+	newCalDTime.microseconds = calDTime.microseconds
+	newCalDTime.subMicrosecondNanoseconds = calDTime.subMicrosecondNanoseconds
+	newCalDTime.totSubSecNanoseconds = calDTime.totSubSecNanoseconds
+	newCalDTime.totTimeNanoseconds = calDTime.totTimeNanoseconds
+	newCalDTime.julianDayNumber = calDTime.julianDayNumber.CopyOut()
+	newCalDTime.usDayOfWeekNo = calDTime.usDayOfWeekNo
+	newCalDTime.timeZone = calDTime.timeZone.CopyOut()
+	newCalDTime.calendar = calDTime.calendar
+	newCalDTime.yearNumberingMode = calDTime.yearNumberingMode
+	newCalDTime.dateTimeFmt = calDTime.dateTimeFmt
+
+	return newCalDTime, err
+}
+
 // empty - Receives a pointer to a CalendarDateTime instance
 // and proceeds to set the internal data elements to their
 // zero values.
@@ -43,9 +91,19 @@ func (calDTimeUtil *calendarDateTimeUtility) empty(
 	calDTime.seconds = 0
 	calDTime.milliseconds = 0
 	calDTime.microseconds = 0
-	calDTime.nanoseconds = 0
+	calDTime.subMicrosecondNanoseconds = 0
 	calDTime.totSubSecNanoseconds = 0
 	calDTime.totTimeNanoseconds = 0
+	calDTime.julianDayNumber = JulianDayNoDto{}.NewZero()
+	var err error
+
+	calDTime.timeZone, err = TimeZoneDefinition{}.New()
+
+	if err != nil {
+		calDTime.timeZone = TimeZoneDefinition{}
+	}
+
+	calDTime.usDayOfWeekNo = UsWeekDayNo.None()
 	calDTime.calendar = CalendarSpec(0).None()
 	calDTime.yearNumberingMode = CalendarYearNumMode(0).None()
 	calDTime.dateTimeFmt = ""
@@ -55,14 +113,14 @@ func (calDTimeUtil *calendarDateTimeUtility) empty(
 
 
 // generateDateTimeStr - Converts input years, months, days, hours,
-// minutes, seconds and nanoseconds to a formatted date time string
+// minutes, seconds and subMicrosecondNanoseconds to a formatted date time string
 // the golang format string passed in input parameter 'dateFormatStr'.
 //
 func (calDTimeUtil *calendarDateTimeUtility) generateDateTimeStr(
 	year int64,
 	month,
-	days,
-	usDayOfWeekNumber,
+	days int,
+	usDayOfWeekNumber UsDayOfWeekNo,
 	hours,
 	minutes,
 	seconds,
@@ -257,7 +315,6 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	nanoseconds int,
 	timeZoneLocation string,
 	calendar CalendarSpec,
-	yearNumberMode CalendarYearNumMode,
 	dateTimeFmt    string,
 	ePrefix string) error {
 
@@ -328,9 +385,9 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	if nanoseconds < 0 || nanoseconds > 999999999 {
 		return &InputParameterError{
 			ePrefix:             ePrefix,
-			inputParameterName:  "nanoseconds",
+			inputParameterName:  "subMicrosecondNanoseconds",
 			inputParameterValue: strconv.Itoa(nanoseconds) ,
-			errMsg:              "'nanoseconds' is INVALID!",
+			errMsg:              "'subMicrosecondNanoseconds' is INVALID!",
 			err:                 nil,
 		}
 	}
@@ -341,16 +398,6 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			inputParameterName:  "calendar",
 			inputParameterValue: calendar.String() ,
 			errMsg:              "'calendar' is INVALID!",
-			err:                 nil,
-		}
-	}
-
-	if !yearNumberMode.XIsValid()  {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "yearNumberMode",
-			inputParameterValue: yearNumberMode.String() ,
-			errMsg:              "'yearNumberMode' is INVALID!",
 			err:                 nil,
 		}
 	}
@@ -397,6 +444,8 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 		return err
 	}
 
+	yearNumberingMode := CalYearMode.None()
+
 	if calendar == CalendarSpec(0).Julian() {
 
 		jDayNoDto, err = calMech.julianCalendarDateJulianDayNo(
@@ -408,6 +457,12 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			seconds,
 			nanoseconds,
 			ePrefix)
+
+		if err != nil {
+			return err
+		}
+
+		yearNumberingMode = CalYearMode.Astronomical()
 
 	} else if calendar == CalendarSpec(0).Gregorian() {
 
@@ -434,9 +489,34 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			gregorianDateTimeUtc.Nanosecond(),
 			ePrefix)
 
-		} else if calendar == CalendarSpec(0).RevisedGoucherParker() {
+		if err != nil {
+			return err
+		}
+
+		yearNumberingMode = CalYearMode.Astronomical()
+
+	} else if calendar == CalendarSpec(0).RevisedGoucherParker() {
+
+		jDayNoDto, err = calMech.revisedGoucherParkerToJulianDayNo(
+			year,
+			month,
+			day,
+			hours,
+			minutes,
+			seconds,
+			nanoseconds,
+			ePrefix)
+
+		if err != nil {
+			return err
+		}
+
+		yearNumberingMode = CalYearMode.Astronomical()
+
+	} else if calendar == CalendarSpec(0).RevisedJulian() {
 
 
+		yearNumberingMode = CalYearMode.Astronomical()
 
 	} else {
 		err = fmt.Errorf(ePrefix + "\n" +
@@ -449,17 +529,50 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	dtMech := DTimeMechanics{}
 
+	var usDayOfWeekNo UsDayOfWeekNo
+
+	usDayOfWeekNo, err =
+		calMech.usDayOfWeekNumber(jDayNoDto, ePrefix)
+
+	if err != nil {
+		return err
+	}
+
 	calDTime.year = year
-	calDTime.dateTimeFmt =
-		dtMech.PreProcessDateFormatStr(dateTimeFmt)
 	calDTime.month = month
 	calDTime.dateDays = day
 	calDTime.hours = hours
 	calDTime.minutes = minutes
 	calDTime.seconds = seconds
+	calDTime.totSubSecNanoseconds = nanoseconds
+
+	remainingNanoseconds := int64(nanoseconds)
+
+	if remainingNanoseconds >= MilliSecondNanoseconds {
+		calDTime.milliseconds = int(remainingNanoseconds/MilliSecondNanoseconds)
+		remainingNanoseconds -= int64(calDTime.milliseconds) * MilliSecondNanoseconds
+	}
+
+	if remainingNanoseconds >= MicroSecondNanoseconds {
+		calDTime.microseconds = int(remainingNanoseconds/MicroSecondNanoseconds)
+		remainingNanoseconds -= int64(calDTime.microseconds) * MicroSecondNanoseconds
+	}
+
+	calDTime.subMicrosecondNanoseconds = int(remainingNanoseconds)
+
+	calDTime.totTimeNanoseconds =
+		int64(hours) * HourNanoSeconds +
+			int64(minutes) * MinuteNanoSeconds +
+			int64(seconds) * SecondNanoseconds +
+			int64(nanoseconds)
+
+	calDTime.julianDayNumber = jDayNoDto.CopyOut()
+	calDTime.usDayOfWeekNo = usDayOfWeekNo
 	calDTime.timeZone = timeZone.CopyOut()
 	calDTime.calendar = calendar
-	calDTime.julianDayNumber = jDayNoDto
+	calDTime.yearNumberingMode = yearNumberingMode
+	calDTime.dateTimeFmt =
+		dtMech.PreProcessDateFormatStr(dateTimeFmt)
 
 	return nil
 }

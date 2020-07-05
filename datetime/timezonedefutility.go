@@ -532,7 +532,7 @@ func (tzDefUtil *timeZoneDefUtility) newFromTimeZoneName(
 
 // SetFromDateTimeComponents - Re-initializes the values of a
 // 'TimeZoneDefinition' instance based on time components (i.e.
-// years, months, days, hours, minutes, seconds and nanoseconds)
+// years, months, days, hours, minutes, seconds and subMicrosecondNanoseconds)
 // passed through input parameter 'TimeDto' ('tDto').
 //
 func (tzDefUtil *timeZoneDefUtility) setFromTimeDto(

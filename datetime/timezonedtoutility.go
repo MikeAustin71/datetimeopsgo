@@ -28,7 +28,7 @@ type timeZoneDtoUtility struct {
 // seconds      int  - Number of seconds added to current TimeZoneDto
 // milliseconds int  - Number of milliseconds added to current TimeZoneDto
 // microseconds int  - Number of microseconds added to current TimeZoneDto
-// nanoseconds  int  - Number of nanoseconds added to current TimeZoneDto
+// subMicrosecondNanoseconds  int  - Number of subMicrosecondNanoseconds added to current TimeZoneDto
 //
 // Note:  Date Time input parameters may be either negative or positive.
 //        Negative values will subtract time from the current TimeZoneDto
@@ -1365,7 +1365,7 @@ func (tZoneUtil *timeZoneDtoUtility) isValidTimeZoneName(
 // seconds      int  - Number of seconds added to 'tzuIn'
 // milliseconds int  - Number of milliseconds added to 'tzuIn'
 // microseconds int  - Number of microseconds added to 'tzuIn'
-// nanoseconds  int  - Number of nanoseconds added to 'tzuIn'
+// subMicrosecondNanoseconds  int  - Number of subMicrosecondNanoseconds added to 'tzuIn'
 //
 // Note:  Input time element parameters may be either negative or positive.
 //     Negative values will subtract time from the returned TimeZoneDto instance.

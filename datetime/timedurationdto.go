@@ -18,7 +18,7 @@ import (
 // duration value specifying the time span between starting and ending
 // date time, and a breakdown of time duration by a series of time
 // components including years, months, weeks, days, hours, minutes,
-// seconds, milliseconds, microseconds and nanoseconds.
+// seconds, milliseconds, microseconds and subMicrosecondNanoseconds.
 //
 // Dependencies
 //
@@ -50,7 +50,7 @@ type TimeDurationDto struct {
 	WeekDays             int64            // WeekDays = DateDays - (Weeks * 7)
 	WeekDaysNanosecs     int64            // Equivalent WeekDays in NanoSeconds
 	DateDays             int64            // Day Number in Month (1-31)
-	DateDaysNanosecs     int64            // DateDays in equivalent nanoseconds
+	DateDaysNanosecs     int64            // DateDays in equivalent subMicrosecondNanoseconds
 	Hours                int64            // Number of Hours
 	HoursNanosecs        int64            // Number of Hours in Nanoseconds
 	Minutes              int64            // Number of Minutes
@@ -63,9 +63,9 @@ type TimeDurationDto struct {
 	MicrosecondsNanosecs int64            // Number of Microseconds in Nanoseconds
 	Nanoseconds          int64            // Number of Nanoseconds (Remainder after Milliseconds & Microseconds)
 	TotSubSecNanoseconds int64            // Equivalent Nanoseconds for Milliseconds + Microseconds + Nanoseconds
-	TotDateNanoseconds   int64            // Equal to Years + Months + DateDays in equivalent nanoseconds.
+	TotDateNanoseconds   int64            // Equal to Years + Months + DateDays in equivalent subMicrosecondNanoseconds.
 	TotTimeNanoseconds   int64            // Equal to Hours + Seconds + Milliseconds + Microseconds + Nanoseconds in
-	// in equivalent nanoseconds
+	// in equivalent subMicrosecondNanoseconds
 
 	lock *sync.Mutex // Used to enforce thread safe operations
 }
@@ -286,8 +286,8 @@ func (tDur *TimeDurationDto) AddDate(
 //     A microsecond is equal to one millionth of a second.
 //
 //
-//  nanoseconds   int
-//     The number of nanoseconds to be added to the current
+//  subMicrosecondNanoseconds   int
+//     The number of subMicrosecondNanoseconds to be added to the current
 //     duration. If this value is negative the value
 //     will be effectively subtracted from the current
 //     duration.
@@ -331,7 +331,7 @@ func (tDur *TimeDurationDto) AddDate(
 //                      3, // seconds
 //                    500, // milliseconds
 //                    800, // microseconds
-//                    150) // nanoseconds
+//                    150) // subMicrosecondNanoseconds
 //
 //
 //  Note:
@@ -521,7 +521,7 @@ func (tDur *TimeDurationDto) AddDuration(
 }
 
 // AddTime - Adds hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds to the duration value of
+// microseconds and subMicrosecondNanoseconds to the duration value of
 // the current TimeDurationDto instance. Starting Date Time and Ending date
 // Time are then recalculated accordingly.
 //
@@ -594,8 +594,8 @@ func (tDur *TimeDurationDto) AddDuration(
 //     A microsecond is equal to one millionth of a second.
 //
 //
-//  nanoseconds   int
-//     The number of nanoseconds to be added to the current
+//  subMicrosecondNanoseconds   int
+//     The number of subMicrosecondNanoseconds to be added to the current
 //     duration. If this value is negative the value
 //     will be effectively subtracted from the current
 //     duration.
@@ -636,7 +636,7 @@ func (tDur *TimeDurationDto) AddDuration(
 //                   3, // seconds
 //                 500, // milliseconds
 //                 800, // microseconds
-//                 150) // nanoseconds
+//                 150) // subMicrosecondNanoseconds
 //
 //
 //  Note:
@@ -1108,7 +1108,7 @@ func (tDur *TimeDurationDto) GetCumDaysCalcDto() (TimeDurationDto, error) {
 }
 
 // GetCumDaysTimeStr - Returns duration formatted as days, hours,
-// minutes, seconds, milliseconds, microseconds, and nanoseconds.
+// minutes, seconds, milliseconds, microseconds, and subMicrosecondNanoseconds.
 // Years, months and weeks are always excluded and included in
 // cumulative 'days'.
 //
@@ -1251,7 +1251,7 @@ func (tDur *TimeDurationDto) GetCumHoursCalcDto() (TimeDurationDto, error) {
 }
 
 // GetCumHoursTimeStr - Returns duration formatted as hours,
-// minutes, seconds, milliseconds, microseconds, nanoseconds.
+// minutes, seconds, milliseconds, microseconds, subMicrosecondNanoseconds.
 //
 // Years, months and days are ignored and set to a zero value.
 // Instead, years, months, days and hours are consolidated and
@@ -1613,13 +1613,13 @@ func (tDur *TimeDurationDto) GetCumMonthsDaysTimeStr() (string, error) {
 
 // GetCumNanosecondsCalcDto - Returns a new TimeDurationDto. The time
 // values of the current TimeDurationDto are recalculated for
-// 'cumulative nanoseconds' and returned as the new TimeDurationDto
+// 'cumulative subMicrosecondNanoseconds' and returned as the new TimeDurationDto
 // object.
 //
 // This means that years, months, days, seconds, milliseconds and
 // microseconds are ignored and set to a zero value.  Instead,
-// months, days, seconds, milliseconds, microseconds and nanoseconds
-// are consolidated and stored as cumulative nanoseconds.
+// months, days, seconds, milliseconds, microseconds and subMicrosecondNanoseconds
+// are consolidated and stored as cumulative subMicrosecondNanoseconds.
 //
 // This method will NOT modify the internal data fields of the current
 // TimeDurationDto instance, 'tDur'.
@@ -1688,8 +1688,8 @@ func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error)
 // This means that years, months, days, seconds, milliseconds and
 // microseconds are ignored and set to a zero value.  Instead,
 // years, months, days, seconds, milliseconds, microseconds and
-// nanoseconds are consolidated and stored as cumulative
-// nanoseconds.
+// subMicrosecondNanoseconds are consolidated and stored as cumulative
+// subMicrosecondNanoseconds.
 //
 // This method will NOT modify the internal data fields of the current
 // TimeDurationDto instance, 'tDur'.
@@ -1700,7 +1700,7 @@ func (tDur *TimeDurationDto) GetCumNanosecondsCalcDto() (TimeDurationDto, error)
 //
 //  string
 //     - A string containing the time duration for the current TimeDurationDto
-//       object (tDur) formatted as cumulative nanoseconds. See Example String
+//       object (tDur) formatted as cumulative subMicrosecondNanoseconds. See Example String
 //       below.
 // __________________________________________________________________________
 //
@@ -1731,7 +1731,7 @@ func (tDur *TimeDurationDto) GetCumNanosecondsTimeStr() string {
 // This means that Years, months, weeks, week days, date days, hours,
 // and minutes are ignored and assigned a zero value. Instead,
 // time duration is consolidated and presented as 'cumulative seconds'
-// including seconds, milliseconds, microseconds and nanoseconds.
+// including seconds, milliseconds, microseconds and subMicrosecondNanoseconds.
 //
 // This method will NOT modify the internal data fields of the current
 // TimeDurationDto instance, 'tDur'.
@@ -2006,7 +2006,7 @@ func (tDur *TimeDurationDto) GetCumWeeksDaysTimeStr() (string, error) {
 }
 
 // GetDefaultDurationStr - Returns duration formatted
-// as nanoseconds. The DisplayStr shows the default
+// as subMicrosecondNanoseconds. The DisplayStr shows the default
 // string value for duration.
 //
 // __________________________________________________________________________
@@ -2187,7 +2187,7 @@ func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration 
 // GetDurationFromTime - Calculates and returns a cumulative
 // time duration based on time component input parameters
 // consisting of hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds.
+// microseconds and subMicrosecondNanoseconds.
 //
 // Any combination of non-zero input parameters will be
 // accumulated and converted to a valid time duration value.
@@ -2214,8 +2214,8 @@ func (tDur TimeDurationDto) GetDurationFromSeconds(seconds int64) time.Duration 
 //  microseconds   int
 //     - Number of microseconds to be accumulated in the summary time duration
 //
-//  nanoseconds    int
-//     - Number of nanoseconds to be accumulated in the summary time duration
+//  subMicrosecondNanoseconds    int
+//     - Number of subMicrosecondNanoseconds to be accumulated in the summary time duration
 //
 // __________________________________________________________________________
 //
@@ -2342,7 +2342,7 @@ func (tDur *TimeDurationDto) GetElapsedMinutesStr() string {
 
 // GetElapsedSecsNanosecsStr - Provides a means of formatting Years,
 // Months, DateDays, Hours, Minutes, Seconds and/ Nanoseconds. At a
-// minimum, only seconds and nanoseconds are included in the returned
+// minimum, only seconds and subMicrosecondNanoseconds are included in the returned
 // display string.
 //
 // Years, months, days, hours and minutes are only included if the
@@ -3317,7 +3317,7 @@ func (tDur TimeDurationDto) New() (TimeDurationDto, error) {
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -3566,7 +3566,7 @@ func (tDur TimeDurationDto) NewAutoEnd(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -4068,13 +4068,13 @@ func (tDur TimeDurationDto) NewDefaultStartTimeAddDate(
 
 // NewDefaultStartTimeAddDateTime - Receives a starting date time and proceeds to
 // add years, months, days, hours, minutes, seconds, milliseconds, microseconds
-// and nanoseconds passed as input parameters. These time components are used to
+// and subMicrosecondNanoseconds passed as input parameters. These time components are used to
 // generate an ending date time as well as a time duration value. These values
 // are then returned in a new instance of TimeDurationDto.
 //
 // Negative time components are accepted and will be processed correctly. For
 // example, negative years, months,  days, hours, minutes, seconds, milliseconds,
-// microseconds or nanoseconds, will be subtracted to compute new staring date time,
+// microseconds or subMicrosecondNanoseconds, will be subtracted to compute new staring date time,
 // ending date time and time duration.
 //
 // This method will supply default values for Time Duration Calculation Type,
@@ -4135,7 +4135,7 @@ func (tDur TimeDurationDto) NewDefaultStartTimeAddDate(
 //       compute ending date time and time duration.
 //
 //
-//  nanoseconds       int
+//  subMicrosecondNanoseconds       int
 //     - Nanoseconds to be added to starting date time in order to
 //       compute ending date time and time duration.
 //
@@ -4221,14 +4221,14 @@ func (tDur TimeDurationDto) NewDefaultStartTimeAddDateTime(
 }
 
 // NewDefaultStartTimeAddTime - Receives a starting date time and proceeds to
-// add hours, minutes, seconds, milliseconds, microseconds and nanoseconds passed
+// add hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds passed
 // as input parameters. These time components are used to generate an ending date
 // time as well as a time duration value. These values are then returned in a new
 // instance of TimeDurationDto.
 //
 // Negative time components are accepted and will be processed correctly. For
 // example, negative hours, minutes, seconds, milliseconds, microseconds or
-// nanoseconds, will be subtracted to compute new staring date time, ending date
+// subMicrosecondNanoseconds, will be subtracted to compute new staring date time, ending date
 // time and time duration.
 //
 // This method will supply default values for Time Duration Calculation Type,
@@ -4274,7 +4274,7 @@ func (tDur TimeDurationDto) NewDefaultStartTimeAddDateTime(
 //       compute ending date time and time duration.
 //
 //
-//  nanoseconds       int
+//  subMicrosecondNanoseconds       int
 //     - Nanoseconds to be added to starting date time in order to
 //       compute ending date time and time duration.
 //
@@ -4538,7 +4538,7 @@ func (tDur TimeDurationDto) NewDefaultStartTimeTzDuration(
 // The time components of the TimeDto are added to the starting date time to compute
 // the ending date time and the time duration. TimeDto components are typically
 // expressed as years, months, days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds.
+// microseconds and subMicrosecondNanoseconds.
 //
 // This method will supply default values for Time Duration Calculation Type,
 // Time Zone Location and Time Math Calculation Mode.
@@ -4651,7 +4651,7 @@ func (tDur TimeDurationDto) NewDefaultStartTimePlusTimeDto(
 // The time components of the TimeDto are added to the starting date time to compute
 // the ending date time and the time duration. TimeDto components are typically
 // expressed as years, months, days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds.
+// microseconds and subMicrosecondNanoseconds.
 //
 // This method will supply default values for Time Duration Calculation Type,
 // Time Zone Location and Time Math Calculation Mode.
@@ -4762,7 +4762,7 @@ func (tDur TimeDurationDto) NewDefaultStartTimeTzPlusTimeDto(
 // input parameter 'endDateTime'.  Input parameter 'minusTimeDto' is passed as
 // an instance of 'TimeDto' which encapsulates time duration formatted as a series
 // time components such as years, months, days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds. To compute starting date time, the 'minusTimeDto'
+// microseconds and subMicrosecondNanoseconds. To compute starting date time, the 'minusTimeDto'
 // time duration value is subtracted from 'endDateTime'.
 //
 // Input parameter 'minusTimeDto' is first converted to absolute, or positive,
@@ -4877,7 +4877,7 @@ func (tDur TimeDurationDto) NewDefaultEndTimeMinusTimeDto(
 // input parameter 'endDateTimeTz'.  Input parameter 'minusTimeDto' is passed as
 // an instance of 'TimeDto' which encapsulates time duration formatted as a series
 // time components such as years, months, days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds. To compute starting date time, the 'minusTimeDto'
+// microseconds and subMicrosecondNanoseconds. To compute starting date time, the 'minusTimeDto'
 // time duration value is subtracted from 'endDateTimeTz'.
 //
 // Input parameter 'minusTimeDto' is first converted to absolute, or positive,
@@ -5001,7 +5001,7 @@ func (tDur TimeDurationDto) NewDefaultEndTimeTzMinusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5262,12 +5262,12 @@ func (tDur TimeDurationDto) NewStartTimeAddDate(
 
 // NewStartTimeAddDateTime - Receives a starting date time and proceeds to add
 // years, months, days, hours, minutes, seconds, milliseconds, microseconds and
-// nanoseconds passed as input parameters. These time components are used to
+// subMicrosecondNanoseconds passed as input parameters. These time components are used to
 // generate an ending date time as well as a time duration value. These values
 // are then returned in a new instance of TimeDurationDto.
 //
 // example, negative years, months,  days, hours, minutes, seconds, milliseconds,
-// microseconds or nanoseconds, will be subtracted to compute new staring date time,
+// microseconds or subMicrosecondNanoseconds, will be subtracted to compute new staring date time,
 // ending date time and time duration.
 //
 // The required input parameter, 'timeZoneLocation' specifies the time zone
@@ -5277,7 +5277,7 @@ func (tDur TimeDurationDto) NewStartTimeAddDate(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5331,7 +5331,7 @@ func (tDur TimeDurationDto) NewStartTimeAddDate(
 //       compute ending date time and time duration.
 //
 //
-//  nanoseconds       int
+//  subMicrosecondNanoseconds       int
 //     - Nanoseconds to be added to starting date time in order to
 //       compute ending date time and time duration.
 //
@@ -5594,7 +5594,7 @@ func (tDur TimeDurationDto) NewStartTimeAddDateTime(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5836,13 +5836,13 @@ func (tDur TimeDurationDto) NewStartTimeAddDuration(
 
 // NewStartTimeAddTime - Receives a starting date time and proceeds to add
 // time components of hours, minutes, seconds, milliseconds, microseconds and
-// nanoseconds passed as input parameters. These time components are used to
+// subMicrosecondNanoseconds passed as input parameters. These time components are used to
 // generate an ending date time as well as a time duration value. These values
 // are then returned in a new instance of TimeDurationDto.
 //
 // Negative time components are accepted and will be processed correctly. For
 // example, negative hours, minutes, seconds, milliseconds, microseconds or
-// nanoseconds, will be subtracted to compute new staring date time, ending
+// subMicrosecondNanoseconds, will be subtracted to compute new staring date time, ending
 // date time and time duration.
 //
 // The required input parameter, 'timeZoneLocation' specifies the time zone
@@ -5852,7 +5852,7 @@ func (tDur TimeDurationDto) NewStartTimeAddDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -5890,7 +5890,7 @@ func (tDur TimeDurationDto) NewStartTimeAddDuration(
 //       compute ending date time and time duration.
 //
 //
-//  nanoseconds       int
+//  subMicrosecondNanoseconds       int
 //     - Nanoseconds to be added to starting date time in order to
 //       compute ending date time and time duration.
 //
@@ -6142,7 +6142,7 @@ func (tDur TimeDurationDto) NewStartTimeAddTime(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -6390,7 +6390,7 @@ func (tDur TimeDurationDto) NewStartEndTimes(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -6643,7 +6643,7 @@ func (tDur TimeDurationDto) NewStartEndTimesTz(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -6885,7 +6885,7 @@ func (tDur TimeDurationDto) NewStartTimeTzDuration(
 // The time components of the TimeDto are added to the starting date time to compute
 // the ending date time and the time duration. TimeDto components are typically
 // expressed as years, months, days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds.
+// microseconds and subMicrosecondNanoseconds.
 //
 // The required input parameter, 'timeZoneLocation' specifies the time zone
 // used to configure both the starting date time and ending date time.
@@ -6894,7 +6894,7 @@ func (tDur TimeDurationDto) NewStartTimeTzDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -7167,7 +7167,7 @@ func (tDur TimeDurationDto) NewStartTimePlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -7435,7 +7435,7 @@ func (tDur TimeDurationDto) NewStartTimeTzPlusTimeDto(
 // input parameter 'endDateTime'.  Input parameter 'minusTimeDto' is passed as
 // an instance of 'TimeDto' which encapsulates time duration formatted as a series
 // time components such as years, months, days, hours, minutes, seconds, milliseconds,
-// microseconds and nanoseconds. To compute starting date time, the 'minusTimeDto'
+// microseconds and subMicrosecondNanoseconds. To compute starting date time, the 'minusTimeDto'
 // time duration value is subtracted from 'endDateTime'.
 //
 // Input parameter 'minusTimeDto' is first converted to absolute, or positive,
@@ -7449,7 +7449,7 @@ func (tDur TimeDurationDto) NewStartTimeTzPlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -7718,7 +7718,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 // through input parameter 'endDateTimeTz'.  Input parameter 'minusTimeDto' is
 // passed as an instance of 'TimeDto' which encapsulates time duration formatted
 // as a series time components such as years, months, days, hours, minutes, seconds,
-// milliseconds, microseconds and nanoseconds. To compute starting date time, the
+// milliseconds, microseconds and subMicrosecondNanoseconds. To compute starting date time, the
 // 'minusTimeDto' time duration value is subtracted from 'endDateTimeTz'.
 //
 // Input parameter 'minusTimeDto' is first converted to absolute, or positive,
@@ -7732,7 +7732,7 @@ func (tDur TimeDurationDto) NewEndTimeMinusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -8126,7 +8126,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 // 'endDateTime'.  Input parameter 'minusTimeDto' is passed as an instance of
 // 'TimeDto' which encapsulates time duration formatted as a series time components
 // such as years, months, days, hours, minutes, seconds, milliseconds, microseconds
-// and nanoseconds. To compute starting date time, the 'minusTimeDto' time duration
+// and subMicrosecondNanoseconds. To compute starting date time, the 'minusTimeDto' time duration
 // value is subtracted from 'endDateTime'.
 //
 // Input parameter 'minusTimeDto' is first converted to absolute, or positive,
@@ -8140,7 +8140,7 @@ func (tDur *TimeDurationDto) SetAutoEnd() error {
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -8398,7 +8398,7 @@ func (tDur *TimeDurationDto) SetEndTimeMinusTimeDto(
 // 'endDateTime'.  Input parameter 'minusTimeDto' is passed as an instance of
 // 'TimeDto' which encapsulates time duration formatted as a series time components
 // such as years, months, days, hours, minutes, seconds, milliseconds, microseconds
-// and nanoseconds. To compute starting date time, the 'minusTimeDto' time duration
+// and subMicrosecondNanoseconds. To compute starting date time, the 'minusTimeDto' time duration
 // value is subtracted from 'endDateTime'.
 //
 // Input parameter 'minusTimeDto' is first converted to absolute, or positive,
@@ -9047,7 +9047,7 @@ func (tDur *TimeDurationDto) SetDefaultStartTimeTzPlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -9265,7 +9265,7 @@ func (tDur *TimeDurationDto) SetStartEndTimes(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -9483,7 +9483,7 @@ func (tDur *TimeDurationDto) SetStartEndTimesTz(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -9729,7 +9729,7 @@ func (tDur *TimeDurationDto) SetStartTimeDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -9956,7 +9956,7 @@ func (tDur *TimeDurationDto) SetStartTimeTzDuration(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -10223,7 +10223,7 @@ func (tDur *TimeDurationDto) SetStartTimePlusTimeDto(
 // will control the output of the time duration calculation. The standard date
 // time calculation type is, 'TDurCalcType(0).StdYearMth()'. This means that
 // time duration is allocated over years, months, weeks, weekdays, date days,
-// hours, minutes, seconds, milliseconds, microseconds and nanoseconds. For a
+// hours, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds. For a
 // discussion of Time Duration Calculation type, see Type TDurCalcType located
 // in source file:
 //
@@ -10476,7 +10476,7 @@ func (tDur *TimeDurationDto) SetStartTimeTzPlusTimeDto(
 
 // SetTimeDurationAllocationType - Re-calculates and allocates time duration for the current
 // TimeDurationDto instance over the various time components (years, months, weeks, weekdays,
-// datedays, hour, minutes, seconds, milliseconds, microseconds and nanoseconds) depending
+// datedays, hour, minutes, seconds, milliseconds, microseconds and subMicrosecondNanoseconds) depending
 // on the value of the 'TDurCalcType' input parameter.
 //
 // Type 'TDurCalcType' is located in source file:
@@ -10554,7 +10554,7 @@ func (tDur *TimeDurationDto) SetStartTimeTzPlusTimeDto(
 //        'TDurCalc.StdYearMth()' and 'TDurCalc.CumSeconds()' are of type
 //        'TDurCalcType'. 'TDurCalc.StdYearMth()' signals  standard year
 //         month day time duration allocation while 'TDurCalc.CumSeconds()'
-//         seconds, milliseconds, microseconds and nanoseconds allocations.
+//         seconds, milliseconds, microseconds and subMicrosecondNanoseconds allocations.
 //
 //        'TZones.US.Central()' is a constant available int source file,
 //        'timezonedata.go'. TZones.US.Central() is equivalent to
@@ -10654,7 +10654,7 @@ func (tDur *TimeDurationDto) SetTimeDurationAllocationType(
 //        'TDurCalc.StdYearMth()' and 'TDurCalc.CumSeconds()' are of type
 //        'TDurCalcType'. 'TDurCalc.StdYearMth()' signals  standard year
 //         month day time duration allocation while 'TDurCalc.CumSeconds()'
-//         seconds, milliseconds, microseconds and nanoseconds allocations.
+//         seconds, milliseconds, microseconds and subMicrosecondNanoseconds allocations.
 //
 //         Reference Type 'TDurCalcType' located in source file:
 //            'datetime\timemathcalcmodeenum.go'
