@@ -13,6 +13,11 @@ import (
 // JulianDayNoDto - This type is used to transfer information
 // on a Julian Day Number/Time.
 //
+// Julian day is the continuous count of days since the beginning
+// of the Julian Period and is used primarily by astronomers, and
+// in software for easily calculating elapsed days between two events
+// (e.g. food production date and sell by date).
+//
 // ------------------------------------------------------------------------
 //
 // Background
@@ -94,6 +99,41 @@ type JulianDayNoDto struct {
 	seconds     int
 	nanoseconds int
 	lock        *sync.Mutex
+}
+
+// CopyOut - Returns a deep copy of of the current
+// JulianDayNoDto instance.
+//
+func (jDNDto *JulianDayNoDto) CopyOut() JulianDayNoDto {
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
+	}
+
+	jDNDto.lock.Lock()
+
+	defer jDNDto.lock.Unlock()
+
+	jDNDtoUtil := julianDayNoDtoUtility{}
+
+	return jDNDtoUtil.copyOut(jDNDto)
+}
+
+func (jDNDto *JulianDayNoDto) Empty() {
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
+	}
+
+	jDNDto.lock.Lock()
+
+	defer jDNDto.lock.Unlock()
+
+	jDNDtoUtil := julianDayNoDtoUtility{}
+
+	jDNDtoUtil.empty(jDNDto)
+
+	return
 }
 
 // GetDayNoTimeBigFloat - Returns a *big.Float type representing

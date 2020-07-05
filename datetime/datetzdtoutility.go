@@ -890,6 +890,8 @@ func (dTzUtil *dateTzDtoUtility) copyIn(
 
 // copyOut - Returns a deep copy of input parameter
 // 'dTz' which is a pointer to a type 'DateTzDto'.
+///
+// If 'dTz' is nil, this method will panic.
 //
 func (dTzUtil *dateTzDtoUtility) copyOut(
 	dTz *DateTzDto) DateTzDto {

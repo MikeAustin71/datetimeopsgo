@@ -13,6 +13,138 @@ type julianDayNoDtoUtility struct {
 
 }
 
+// copyOut - Returns a deep copy of input parameter
+// 'jDNDto' which is a pointer to a type 'JulianDayNoDto'.
+//
+// If 'jDNDto' is nil, this method will panic.
+//
+func (jDNDtoUtil *julianDayNoDtoUtility) copyOut(
+	jDNDto *JulianDayNoDto ) JulianDayNoDto {
+
+	jDNDtoUtil.lock.Lock()
+
+	defer jDNDtoUtil.lock.Unlock()
+
+	if jDNDto == nil {
+		panic("jDNDtoUtil.copyOut() - Input " +
+			"parameter 'jDNDto' is a 'nil' pointer!\n")
+	}
+
+	jDNDtoUtil2 := julianDayNoDtoUtility{}
+
+	jDNDtoUtil2.rationalizeJulianDayNoDto(jDNDto)
+
+	newJDNDto := JulianDayNoDto{}
+
+	newJDNDto.julianDayNo =
+		big.NewInt(0).
+			Set(jDNDto.julianDayNo)
+
+	newJDNDto.julianDayNoFraction =
+		big.NewFloat(0.0).
+			Set(jDNDto.julianDayNoFraction)
+
+	newJDNDto.julianDayNoTime =
+		big.NewFloat(0.0).
+			Set(jDNDto.julianDayNoTime)
+
+	newJDNDto.julianDayNoNumericalSign =
+		jDNDto.julianDayNoNumericalSign
+
+	newJDNDto.totalJulianNanoSeconds =
+		jDNDto.totalJulianNanoSeconds
+
+	newJDNDto.netGregorianNanoSeconds =
+		jDNDto.netGregorianNanoSeconds
+
+	newJDNDto.hours =
+		jDNDto.hours
+
+	newJDNDto.minutes =
+		jDNDto.minutes
+
+	newJDNDto.seconds =
+		jDNDto.seconds
+
+	newJDNDto.nanoseconds =
+		jDNDto.nanoseconds
+
+	newJDNDto.lock =  new(sync.Mutex)
+
+	return newJDNDto
+}
+
+// empty - Receives a pointer to a type JulianDayNoDto,
+// 'jDNDto'. The method then proceeds to set all internal
+// member variables to their 'zero' or uninitialized values.
+//
+// If 'jDNDto' is nil, this method will panic.
+//
+func (jDNDtoUtil *julianDayNoDtoUtility) empty(
+	jDNDto *JulianDayNoDto) {
+
+
+	jDNDtoUtil.lock.Lock()
+
+	defer jDNDtoUtil.lock.Unlock()
+
+	if jDNDto == nil {
+		panic("jDNDtoUtil.copyOut() - Input " +
+			"parameter 'jDNDto' is a 'nil' pointer!\n")
+	}
+
+	jDNDto.julianDayNo = big.NewInt(0)
+	jDNDto.julianDayNoFraction = big.NewFloat(0.0)
+	jDNDto.julianDayNoTime = big.NewFloat(0.0)
+	jDNDto.julianDayNoNumericalSign = 0
+	jDNDto.totalJulianNanoSeconds = 0
+	jDNDto.netGregorianNanoSeconds = 0
+	jDNDto.hours = 0
+	jDNDto.minutes = 0
+	jDNDto.seconds = 0
+	jDNDto.nanoseconds = 0
+
+	return
+}
+
+// rationalizeJulianDayNoDto - Receives a pointer to a
+// JulianDayNoDto instance, 'JulianDayNoDto'. The method
+// will then test internal Big.Int and Big.Float pointers
+// to ensure that all such pointers are valid. Invalid
+// pointers are initialized to new objects with a zero value.
+//
+// If 'jDNDto' is nil, this method will panic.
+//
+func (jDNDtoUtil *julianDayNoDtoUtility) rationalizeJulianDayNoDto(
+	jDNDto *JulianDayNoDto) {
+
+	jDNDtoUtil.lock.Lock()
+
+	defer jDNDtoUtil.lock.Unlock()
+
+	if jDNDto == nil {
+		panic("jDNDtoUtil.copyOut() - Input " +
+			"parameter 'jDNDto' is a 'nil' pointer!\n")
+	}
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
+	}
+
+	if jDNDto.julianDayNo == nil {
+		jDNDto.julianDayNo = big.NewInt(0)
+	}
+
+	if jDNDto.julianDayNoFraction == nil {
+		jDNDto.julianDayNoFraction = big.NewFloat(0.0)
+	}
+
+	if jDNDto.julianDayNoTime == nil {
+		jDNDto.julianDayNoTime = big.NewFloat(0.0)
+	}
+
+}
+
 // setDtoFromFloat64 - Receives a pointer to a type JulianDayNoDto
 // and proceeds to compute an populate its Julian Day Number
 // and Time data elements using a float64 input parameter.
@@ -41,6 +173,10 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDtoFromFloat64(
 		}
 
 		return err
+	}
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
 	}
 
 	numericalSign := 1
@@ -152,6 +288,10 @@ func (jDNDtoUtil *julianDayNoDtoUtility) setDto(
 		}
 
 		return err
+	}
+
+	if jDNDto.lock == nil {
+		jDNDto.lock = new(sync.Mutex)
 	}
 
 	if julianDayNoTimeFraction == nil {

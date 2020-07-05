@@ -1167,6 +1167,9 @@ func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
 	return julianDayNoDto, err
 }
 
+// Week Number
+// https://www.timeanddate.com/date/week-numbers.html
+
 // usDayOfWeekNumber - Receives a Julian Day Number and returns
 // the equivalent U.S. Day of the Week number. The U.S. Day
 // of the Week Number begins numbering week days with 'Sunday',
@@ -1181,6 +1184,9 @@ func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
 //   3rd ed. (pp. 585–624). Mill Valley, Calif.: University Science Books.
 //   ISBN 978-1-89138-985-6
 //
+// Reference:
+//   https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
+
 //
 // ------------------------------------------------------------------------
 //
@@ -1234,7 +1240,6 @@ func (calMech *calendarMechanics) revisedGoucherParkerToJulianDayNo(
 func (calMech *calendarMechanics) usDayOfWeekNumber(
 	julianDayNumber JulianDayNoDto,
 	ePrefix string) (usDayOfWeekNo UsDayOfWeekNo, err error) {
-
 
 	calMech.lock.Lock()
 

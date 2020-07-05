@@ -433,7 +433,8 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			gregorianDateTimeUtc.Second(),
 			gregorianDateTimeUtc.Nanosecond(),
 			ePrefix)
-		} else if (calendar == CalendarSpec(0).RevisedGoucherParker()) {
+
+		} else if calendar == CalendarSpec(0).RevisedGoucherParker() {
 
 
 
