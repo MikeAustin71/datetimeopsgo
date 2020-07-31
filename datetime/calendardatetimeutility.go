@@ -3,7 +3,7 @@ package datetime
 import (
 	"errors"
 	"fmt"
-	"strconv"
+	"math/big"
 	"strings"
 	"sync"
 	"time"
@@ -40,17 +40,7 @@ func (calDTimeUtil *calendarDateTimeUtility) copyOut(
 		calDTime.lock = new(sync.Mutex)
 	}
 
-	newCalDTime.year = calDTime.year
-	newCalDTime.month = calDTime.month
-	newCalDTime.dateDays = calDTime.dateDays
-	newCalDTime.hours = calDTime.hours
-	newCalDTime.minutes = calDTime.minutes
-	newCalDTime.seconds = calDTime.seconds
-	newCalDTime.milliseconds = calDTime.milliseconds
-	newCalDTime.microseconds = calDTime.microseconds
-	newCalDTime.subMicrosecondNanoseconds = calDTime.subMicrosecondNanoseconds
-	newCalDTime.totSubSecNanoseconds = calDTime.totSubSecNanoseconds
-	newCalDTime.totTimeNanoseconds = calDTime.totTimeNanoseconds
+	newCalDTime.dateTime = calDTime.dateTime.CopyOut()
 	newCalDTime.julianDayNumber = calDTime.julianDayNumber.CopyOut()
 	newCalDTime.usDayOfWeekNo = calDTime.usDayOfWeekNo
 	newCalDTime.timeZone = calDTime.timeZone.CopyOut()
@@ -83,17 +73,7 @@ func (calDTimeUtil *calendarDateTimeUtility) empty(
 		calDTime.lock = new(sync.Mutex)
 	}
 
-	calDTime.year = 0
-	calDTime.month = 0
-	calDTime.dateDays = 0
-	calDTime.hours = 0
-	calDTime.minutes = 0
-	calDTime.seconds = 0
-	calDTime.milliseconds = 0
-	calDTime.microseconds = 0
-	calDTime.subMicrosecondNanoseconds = 0
-	calDTime.totSubSecNanoseconds = 0
-	calDTime.totTimeNanoseconds = 0
+	calDTime.dateTime.Empty()
 	calDTime.julianDayNumber = JulianDayNoDto{}.NewZero()
 	var err error
 
@@ -309,10 +289,10 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 	year int64,
 	month,
 	day,
-	hours,
-	minutes,
-	seconds,
-	nanoseconds int,
+	hour,
+	minute,
+	second,
+	nanosecond int,
 	timeZoneLocation string,
 	calendar CalendarSpec,
 	dateTimeFmt    string,
@@ -322,7 +302,7 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	defer calDTimeUtil.lock.Unlock()
 
-	ePrefix += "timeDtoUtility.setZeroTimeDto() "
+	ePrefix += "calendarDateTimeUtility.setCalDateTime() "
 
 	calDTimeUtil2 := calendarDateTimeUtility{}
 
@@ -330,66 +310,6 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	if err != nil {
 		return err
-	}
-
-	if month < 1 || month > 12 {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "month",
-			inputParameterValue: strconv.Itoa(month) ,
-			errMsg:              "'month' is INVALID!",
-			err:                 nil,
-		}
-	}
-
-	if day < 1 || day > 31 {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "day",
-			inputParameterValue: strconv.Itoa(day) ,
-			errMsg:              "'day' is INVALID!",
-			err:                 nil,
-		}
-	}
-
-	if hours < 0 || hours > 23 {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "hours",
-			inputParameterValue: strconv.Itoa(hours) ,
-			errMsg:              "'hours' is INVALID!",
-			err:                 nil,
-		}
-	}
-
-	if minutes < 0 || minutes > 59 {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "minutes",
-			inputParameterValue: strconv.Itoa(minutes) ,
-			errMsg:              "'minutes' is INVALID!",
-			err:                 nil,
-		}
-	}
-
-	if seconds < 0 || seconds > 59 {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "seconds",
-			inputParameterValue: strconv.Itoa(seconds) ,
-			errMsg:              "'seconds' is INVALID!",
-			err:                 nil,
-		}
-	}
-
-	if nanoseconds < 0 || nanoseconds > 999999999 {
-		return &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "subMicrosecondNanoseconds",
-			inputParameterValue: strconv.Itoa(nanoseconds) ,
-			errMsg:              "'subMicrosecondNanoseconds' is INVALID!",
-			err:                 nil,
-		}
 	}
 
 	if !calendar.XIsValid()  {
@@ -419,32 +339,43 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 		return err
 	}
 
-	calMech := calendarMechanics{}
+	isLeapYear := false
 
-	var jDayNoDto JulianDayNoDto
-	var isLeapYear bool
+	switch calendar {
 
-	calDtMech := calendarDateTimeMechanics{}
+	case CalSpec.Gregorian():
 
-	isLeapYear = calDtMech.isLeapYear(year, calendar)
+		calGregMech := calendarGregorianMechanics{}
 
-	if !calDtMech.isMonthDayNoValid(month, day, isLeapYear) {
+		isLeapYear = calGregMech.isLeapYear(year)
 
-		mthDayVal := fmt.Sprintf("month=%v day=%v",
-			month, day)
+	default:
+		return fmt.Errorf(ePrefix + "\n" +
+			"Error: Only Gregorian Calendar is currently supported!\n" +
+			"calendar='%s'\n", calendar.String())
+	}
 
-		err = &InputParameterError{
-			ePrefix:             ePrefix,
-			inputParameterName:  "month/day",
-			inputParameterValue: mthDayVal,
-			errMsg:              "Month and Day combination is INVALID!",
-			err:                 nil,
-		}
+	calUtil := CalendarUtility{}
 
+	err = calUtil.IsValidDateTimeComponents(
+		isLeapYear,
+		month,
+		day,
+		hour,
+		minute,
+		second,
+		nanosecond,
+		ePrefix)
+
+	if err != nil {
 		return err
 	}
 
+	var jDayNoDto JulianDayNoDto
+
 	yearNumberingMode := CalYearMode.None()
+
+	calMech := calendarMechanics{}
 
 	if calendar == CalendarSpec(0).Julian() {
 
@@ -452,10 +383,10 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 			year,
 			month,
 			day,
-			hours,
-			minutes,
-			seconds,
-			nanoseconds,
+			hour,
+			minute,
+			second,
+			nanosecond,
 			ePrefix)
 
 		if err != nil {
@@ -466,45 +397,45 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 
 	} else if calendar == CalendarSpec(0).Gregorian() {
 
-		gregorianDateTime := time.Date(
-			int(year),
-			time.Month(month),
+		var julianDayNo int64
+		var julianDayNoTimeFraction *big.Float
+
+		calGregUtil := CalendarGregorianUtility{}
+
+		julianDayNo,
+		_,
+		julianDayNoTimeFraction,
+		err =	calGregUtil.GetJDN(
+			year,
+			month,
 			day,
-			hours,
-			minutes,
-			seconds,
-			nanoseconds,
-			timeZone.originalTimeZone.locationPtr)
-
-		gregorianDateTimeUtc := gregorianDateTime.UTC()
-
-		jDayNoDto,
-		err = calMech.gregorianDateToJulianDayNoTime(
-			int64(gregorianDateTimeUtc.Year()),
-			int(gregorianDateTimeUtc.Month()),
-			gregorianDateTimeUtc.Day(),
-			gregorianDateTimeUtc.Hour(),
-			gregorianDateTimeUtc.Minute(),
-			gregorianDateTimeUtc.Second(),
-			gregorianDateTimeUtc.Nanosecond(),
+			hour,
+			minute,
+			second,
+			nanosecond,
 			ePrefix)
 
-		if err != nil {
-			return err
-		}
+		jDNDtoUtil := julianDayNoDtoUtility{}
+
+		err = jDNDtoUtil.setDto(
+			&jDayNoDto,
+			julianDayNo,
+			julianDayNoTimeFraction,
+			ePrefix)
 
 		yearNumberingMode = CalYearMode.Astronomical()
 
 	} else if calendar == CalendarSpec(0).RevisedGoucherParker() {
 
+
 		jDayNoDto, err = calMech.revisedGoucherParkerToJulianDayNo(
 			year,
 			month,
 			day,
-			hours,
-			minutes,
-			seconds,
-			nanoseconds,
+			hour,
+			minute,
+			second,
+			nanosecond,
 			ePrefix)
 
 		if err != nil {
@@ -538,34 +469,16 @@ func (calDTimeUtil *calendarDateTimeUtility) setCalDateTime(
 		return err
 	}
 
-	calDTime.year = year
-	calDTime.month = month
-	calDTime.dateDays = day
-	calDTime.hours = hours
-	calDTime.minutes = minutes
-	calDTime.seconds = seconds
-	calDTime.totSubSecNanoseconds = nanoseconds
-
-	remainingNanoseconds := int64(nanoseconds)
-
-	if remainingNanoseconds >= MilliSecondNanoseconds {
-		calDTime.milliseconds = int(remainingNanoseconds/MilliSecondNanoseconds)
-		remainingNanoseconds -= int64(calDTime.milliseconds) * MilliSecondNanoseconds
-	}
-
-	if remainingNanoseconds >= MicroSecondNanoseconds {
-		calDTime.microseconds = int(remainingNanoseconds/MicroSecondNanoseconds)
-		remainingNanoseconds -= int64(calDTime.microseconds) * MicroSecondNanoseconds
-	}
-
-	calDTime.subMicrosecondNanoseconds = int(remainingNanoseconds)
-
-	calDTime.totTimeNanoseconds =
-		int64(hours) * HourNanoSeconds +
-			int64(minutes) * MinuteNanoSeconds +
-			int64(seconds) * SecondNanoseconds +
-			int64(nanoseconds)
-
+	calDTime.dateTime.isLeapYear = isLeapYear
+	calDTime.dateTime.year = year
+	calDTime.dateTime.month = month
+	calDTime.dateTime.day = day
+	calDTime.dateTime.hour = hour
+	calDTime.dateTime.minute = minute
+	calDTime.dateTime.second = second
+	calDTime.dateTime.nanosecond = nanosecond
+	calDTime.dateTime.isThisInstanceValid = true
+	calDTime.lock = new(sync.Mutex)
 	calDTime.julianDayNumber = jDayNoDto.CopyOut()
 	calDTime.usDayOfWeekNo = usDayOfWeekNo
 	calDTime.timeZone = timeZone.CopyOut()

@@ -5,22 +5,10 @@ import (
 )
 
 type CalendarDateTime struct {
-	year                      int64 // Number of Years
-	month                     int   // Number of Months
-	dateDays                  int   // Total Number of Days. Weeks x 7 plus WeekDays
-	hours                     int   // Number of Hours.
-	minutes                   int   // Number of Minutes
-	seconds                   int   // Number of Seconds
-	milliseconds              int   // Number of Milliseconds
-	microseconds              int   // Number of Microseconds
-	subMicrosecondNanoseconds int   // Remaining Nanoseconds after Milliseconds & Microseconds
-	totSubSecNanoseconds      int   // Total Nanoseconds. Millisecond NanoSecs + Microsecond NanoSecs
-	//                              plus remaining Nanoseconds
-	totTimeNanoseconds int64   // Total Number of equivalent Nanoseconds for Hours + Minutes
-	//                              + Seconds + Milliseconds + Nanoseconds
-	julianDayNumber JulianDayNoDto      // Encapsulates Julian Day Number/Time
-	usDayOfWeekNo   UsDayOfWeekNo       // U.S. Day of Week Number 0=Sunday beginning of week.
-	timeZone        TimeZoneDefinition  // Contains a detailed definition and descriptions of the Time
+	dateTime          DateTransferDto
+	julianDayNumber   JulianDayNoDto      // Encapsulates Julian Day Number/Time
+	usDayOfWeekNo     UsDayOfWeekNo       // U.S. Day of Week Number 0=Sunday beginning of week.
+	timeZone          TimeZoneDefinition  // Contains a detailed definition and descriptions of the Time
 	//                                        Zone and Time Zone Location associated with this date time.
 	calendar          CalendarSpec         // Designates the calendar associated with this date/time.
 	yearNumberingMode CalendarYearNumMode  // Designates the year numbering system associated
@@ -218,14 +206,14 @@ func (calDTime *CalendarDateTime) GetDateTimeStr() (string, error) {
 	calDTimeUtil := calendarDateTimeUtility{}
 
 	return calDTimeUtil.generateDateTimeStr(
-		calDTime.year,
-		calDTime.month,
-		calDTime.dateDays,
+		calDTime.dateTime.year,
+		calDTime.dateTime.month,
+		calDTime.dateTime.day,
 		calDTime.usDayOfWeekNo,
-		calDTime.hours,
-		calDTime.minutes,
-		calDTime.seconds,
-		calDTime.subMicrosecondNanoseconds,
+		calDTime.dateTime.hour,
+		calDTime.dateTime.minute,
+		calDTime.dateTime.second,
+		calDTime.dateTime.nanosecond,
 		calDTime.dateTimeFmt,
 		ePrefix)
 }

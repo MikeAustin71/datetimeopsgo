@@ -243,7 +243,7 @@ func (calSpec CalendarSpec) Julian() CalendarSpec {
 //    https://en.wikipedia.org/wiki/Revised_Julian_calendar
 //
 //
-// Summary
+// Methodology:
 //
 // 1. Years evenly divisible by 4 are leap years unless they are
 //    century years.
@@ -307,7 +307,7 @@ func (calSpec CalendarSpec) RevisedJulian() CalendarSpec {
 // Methodology
 //
 // 1. Apply the Julian Calendar.
-// 2. If year is divisible by 4, it IS a leap year; add on day to February
+// 2. If year is divisible by 4, it IS a leap year; add one day to February.
 // 3. If year is divisible by 128 it is NOT a leap year and no day is added to February.
 // 4. If year is divisible by 454,545, it IS a leap year; add a day to February.
 //
