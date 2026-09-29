@@ -6,7 +6,7 @@ source code repository:
 https://github.com/MikeAustin71/datetimeopsgo.git
 
 ### Installing 'datetime' Library
-Use this command to down load and install the datetime library
+Use this command to download and install the datetime library
 locally. 
 
     go get github.com/MikeAustin71/datetimeopsgo/datetime
@@ -20,7 +20,7 @@ as follows:
 
 
 
-To update the library run: 
+To update the library, run:
 
     go get -u github.com/MikeAustin71/datetimeopsgo/datetime
 
@@ -28,11 +28,11 @@ To update the library run:
 
 ### Installing 'datetime' Library In Your Project
 
-As an alternative you could clone the library to a local drive:
+As an alternative, you could clone the library to a local drive:
 
     git clone https://github.com/MikeAustin71/datetimeopsgo.git
 
-Thereafter just copy the 'MikeAustin71/datetimeopsgo/datetime'
+Thereafter, just copy the 'MikeAustin71/datetimeopsgo/datetime'
 directory to your local drive and reference it using the '../datetime'
 syntax. Example:
 
@@ -44,7 +44,7 @@ syntax. Example:
 ### Date Time Utilities Written In The Go Programming Language
 
 The Date Time Utilities currently consist of separate libraries maintained
-in the sub-directory, 'datetime'. This directory also contains tests used to 
+in the subdirectory, 'datetime'. This directory also contains tests used to
 validate these libraries. For additional documentation, see the source code
 files identified below.
 
@@ -59,7 +59,7 @@ files identified below.
      Location: MikeAustin71\datetimeopsgo\datetime\datetimeconstants.go
      
  3. DateTzDto - A type used to identify a specific point in time by date time,
-     time zone and time element (year, month, day, hours etc.). Compatible
+     time zone and time element (year, month, day, hours, etc.). Compatible
      with IANA Time Zones.
      Location: MikeAustin71\datetimeopsgo\datetime\datetzdto.go 
 
