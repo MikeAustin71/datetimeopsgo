@@ -10,7 +10,7 @@ Use this command to down load and install the datetime library
 locally. 
 
     go get github.com/MikeAustin71/datetimeopsgo/datetime
-    
+
 After installation, you may import and reference the library
 as follows:
 
@@ -18,12 +18,16 @@ as follows:
             "MikeAustin71/datetimeopsgo/datetime"
         )    
 
-To update the library run:
-    
+
+
+To update the library run: 
+
     go get -u github.com/MikeAustin71/datetimeopsgo/datetime
 
 
+
 ### Installing 'datetime' Library In Your Project
+
 As an alternative you could clone the library to a local drive:
 
     git clone https://github.com/MikeAustin71/datetimeopsgo.git
